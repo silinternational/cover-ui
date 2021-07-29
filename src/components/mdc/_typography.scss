@@ -1,0 +1,6 @@
+// https://material.io/develop/web/components/typography
+@use '@material/typography';
+
+h2 {
+  @include typography.typography(headline2);
+}

@@ -1,15 +1,22 @@
 import { route } from '@roxi/routify'
 
+const GA_MEASUREMENT_ID = process.env.ANALYTICS_ID
+
 init()
 
-// https://developers.google.com/analytics/devguides/collection/analyticsjs
+// https://developers.google.com/analytics/devguides/collection/gtagjs
+// https://developers.google.com/analytics/devguides/collection/upgrade/analyticsjs
 function init() {
-  window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)}
-  ga.l=+new Date
-
-  ga('create', process.env.ANALYTICS_ID, 'auto')
-
   loadLib()
+
+  window.dataLayer = window.dataLayer || []
+  window.gtag = function(){window.dataLayer.push(arguments)}
+  gtag('js', new Date())
+
+  //since we are sending manually we need to disable the default of sending each pageview
+  gtag('config', GA_MEASUREMENT_ID, {
+    send_page_view: false
+  })
 
   route.subscribe(trackPageView)
 }
@@ -17,7 +24,7 @@ function init() {
 function loadLib() {
   const script = document.createElement('script')
 
-  script.src = 'https://www.google-analytics.com/analytics.js'
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`
   script.async = true
   
   document.head.appendChild(script)
@@ -25,16 +32,16 @@ function loadLib() {
 
 function trackPageView(page) {
   if (page) {
-    // https://developers.google.com/analytics/devguides/collection/analyticsjs/single-page-applications#tracking_virtual_pageviews
-    ga('set', 'page', location.pathname) 
-    // https://developers.google.com/analytics/devguides/collection/analyticsjs/pages#pageview_fields
-    ga('send', 'pageview')
+    // https://developers.google.com/analytics/devguides/collection/gtagjs/pages#default_behavior
+    gtag('event', 'page_view', {
+      page_path: location.pathname, //page.path or page.shortPath are also available
+    })
   }
 }
 
-function trackEvent(primary, secondary, tertiary) {
-  // https://developers.google.com/analytics/devguides/collection/analyticsjs/events#event_fields
-  ga('send', 'event', primary, secondary, tertiary)
+// https://developers.google.com/analytics/devguides/collection/gtagjs/events
+function trackEvent(eventName, eventParameters) {
+  gtag('event', eventName, eventParameters)
 }
 
 export const notFound = () => trackEvent('Error', 'Page not found')

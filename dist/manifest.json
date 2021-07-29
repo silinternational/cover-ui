@@ -1,0 +1,15 @@
+{
+   "background_color": "blue",
+   "display": "standalone",
+   "icons": [
+      {
+         "src": "favicons/favicon-96x96.png",
+         "sizes": "96x96",
+         "type": "image/png",
+         "purpose": "any maskable"
+      }
+   ],
+   "name": "WeCarry",
+   "short_name": "WeCarry",
+   "start_url": "/"
+}

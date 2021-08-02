@@ -1,6 +1,7 @@
 <script>
     import Breadcrumb from "../../../components/Breadcrumb.svelte"
     import { Page, List } from "@silintl/ui-components"
+import { prevent_default } from "svelte/internal";
 
     // TODO: make this dependent on backend
     let members = [
@@ -22,6 +23,10 @@
     #members-div {
         margin: 30px;
     }
+
+    .members-list:hover {
+        background-color: white;
+    }
 </style>
 
 <Page>
@@ -31,10 +36,11 @@
 
     </div>
     <strong>Members</strong>
+    <!--TODO: replace this with custom List component (doesn't have hover and select animation)-->
     <List>
         {#each members as m}
             <List.Divider />
-            <List.Item on:click={() => console.log(`You clicked on ${m.name}`)}>
+            <List.Item>
                 {m.name} {m.isYou ? "(you)" : ""}
                 <br />
                 <small>{m.isDependent ? "Dependent" : m.email}</small>

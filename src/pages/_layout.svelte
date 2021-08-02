@@ -1,27 +1,43 @@
 <script>
-import AppFooter from '../components/AppFooter.svelte'
-import AppHeader from '../components/AppHeader.svelte'
+  import { Drawer, Button } from '@silintl/ui-components'
+  import { goto } from '@roxi/routify'
 
+  $: menuItems = [
+    {},
+    {
+      url: '/home',
+      icon: 'house',
+      label: 'policies',
+    },
+    {
+      url: '/claims',
+      icon: 'label',
+      label: 'claims',
+    },
+    {
+      url: '/faq',
+      icon: 'article',
+      label: 'faq',
+    },
+    {
+      url: '/chat',
+      icon: 'chat',
+      label: 'chat',
+    },
+    {
+      url: '/item',
+      icon: 'add_circle',
+      label: ''
+    },
+  ]
+
+  const logoClickHandler = () => $goto('/home')
 </script>
 
-<style>
-:global(body) {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-main {
-  flex: 1 0 auto;
-}
-</style>
-
-<AppHeader />
-
-<main>  
+<Drawer {menuItems} title={'Riskman'}>
+  <span class="pointer" on:click={logoClickHandler} slot="header">
+    <img class="w-100" src="/logo.png" alt="logo">
+  </span>
+  
   <slot />
-</main>
-
-<AppFooter />
-
-
+</Drawer>

@@ -57,17 +57,17 @@ export default {
 		production ? terser() : livereload('dist'),
 
 		// https://developers.google.com/web/tools/workbox/reference-docs/latest/module-workbox-build#.generateSW
-		generateSW({
-			additionalManifestEntries: [
-				'https://fonts.googleapis.com/icon?family=Material+Icons&display=swap', // request for this generated in `components/mdc/index.js`
-				'https://fonts.gstatic.com/s/materialicons/v53/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2', // this response might need to be tweaked periodically for the lastest version
-			],
-			globDirectory: 'dist',
-			globPatterns: ['**/*.{css,html,js,json,png}'],
-			navigateFallback: 'index.html',
-			offlineGoogleAnalytics: true,
-			swDest: 'dist/service-worker.js',
-		}),
+		// generateSW({
+		// 	additionalManifestEntries: [
+		// 		'https://fonts.googleapis.com/icon?family=Material+Icons&display=swap', // request for this generated in `components/mdc/index.js`
+		// 		'https://fonts.gstatic.com/s/materialicons/v53/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2', // this response might need to be tweaked periodically for the lastest version
+		// 	],
+		// 	globDirectory: 'dist',
+		// 	globPatterns: ['**/*.{css,html,js,json,png}'],
+		// 	navigateFallback: 'index.html',
+		// 	offlineGoogleAnalytics: true,
+		// 	swDest: 'dist/service-worker.js',
+		// }),
 	],
 	watch: {
 		clearScreen: false,

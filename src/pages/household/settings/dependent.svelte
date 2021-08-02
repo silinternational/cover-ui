@@ -6,8 +6,12 @@ import DependentForm from '../../../components/DependentForm.svelte'
 const onCancel = () => {
   $goto('../settings')
 }
+const onSubmit = event => {
+  const formData = event.detail
+  console.log('DependentForm submitted', formData)
+}
 </script>
 
 <Page>
-  <DependentForm on:cancel={onCancel}></DependentForm>
+  <DependentForm on:cancel={onCancel} on:submit={onSubmit}></DependentForm>
 </Page>

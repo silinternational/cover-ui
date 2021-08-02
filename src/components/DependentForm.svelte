@@ -8,7 +8,7 @@ const onCancel = () => {
   dispatch('cancel')
 }
 const onSubmit = () => {
-  console.log('Form submitted:', name)
+  dispatch('submit', { name })
 }
 
 let name = ''

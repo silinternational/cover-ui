@@ -10,7 +10,7 @@ function init() {
   loadLib()
 
   window.dataLayer = window.dataLayer || []
-  window.gtag = function(){window.dataLayer.push(arguments)}
+  window.gtag = () => window.dataLayer.push(arguments)
   gtag('js', new Date())
 
   //since we are sending manually we need to disable the default of sending each pageview

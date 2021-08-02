@@ -2,6 +2,11 @@
 
 > You will need [Node.js](https://nodejs.org) installed.
 
+## env variables
+```bash
+cp .env.example .env
+```
+
 ## Local development
 Install the dependencies...
 ```bash

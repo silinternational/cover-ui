@@ -1,10 +1,10 @@
 {
-  "name": "the-way-svelte",
+  "name": "riskman-ui",
   "version": "1.0.0",
   "scripts": {
     "prebuild:dev": "npm run clean:build",
     "build:dev": "rollup -c -w",
-    "prebuild:prod": "echo ANALYTICS_ID=${ANALYTICS_ID} >> .env; echo ANSWER=${ANSWER} >> .env; echo API_HOST=${API_HOST} >> .env; echo THE_ONE=${THE_ONE} >> .env; npm run clean:build",
+    "prebuild:prod": "echo GA_MEASUREMENT_ID=${GA_MEASUREMENT_ID} >> .env; echo ANSWER=${ANSWER} >> .env; echo API_HOST=${API_HOST} >> .env; echo THE_ONE=${THE_ONE} >> .env; npm run clean:build",
     "build:prod": "rollup -c",
     "clean": "run-p -l clean:build clean:deps",
     "clean:build": "rimraf dist/bundle* dist/service-worker* dist/workbox*",

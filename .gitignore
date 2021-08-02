@@ -1,3 +1,14 @@
+# build files
+dist/bundle*
+dist/service-worker*
+dist/workbox*
+
+# cert for https
+*.pem
+
+# routify
+.routify
+
 # Logs
 logs
 *.log
@@ -80,7 +91,6 @@ typings/
 
 # Nuxt.js build / generate output
 .nuxt
-dist
 
 # Gatsby files
 .cache/
@@ -102,6 +112,3 @@ dist
 
 # TernJS port file
 .tern-port
-
-# routify
-.routify

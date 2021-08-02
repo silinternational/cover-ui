@@ -1,5 +1,12 @@
 <script>
+import { Page } from '@silintl/ui-components'
 import DependentForm from '../../../components/DependentForm.svelte'
 </script>
 
-<DependentForm></DependentForm>
+<style>
+
+</style>
+
+<Page>
+  <DependentForm></DependentForm>
+</Page>

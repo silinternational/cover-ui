@@ -1,6 +1,12 @@
 <script>
 import { Button, Form, TextField } from '@silintl/ui-components'
+import { createEventDispatcher } from 'svelte'
 
+const dispatch = createEventDispatcher()
+
+const onCancel = () => {
+  dispatch('cancel')
+}
 const onSubmit = () => {
   console.log('Form submitted:', name)
 }
@@ -16,6 +22,7 @@ let name = ''
       married or finished college. Coverage for dependents is limited to $3,000
       per person.
     </p>
+    <Button on:click={onCancel}>Cancel</Button>
     <Button raised>Save</Button>
   </Form>
 </div>

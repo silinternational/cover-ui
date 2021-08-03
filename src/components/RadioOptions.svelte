@@ -8,7 +8,7 @@ const onInput = event => {
 }
 </script>
 
-{#each options as option, i}
+{#each options as option (option.value)}
   <p>
     <label>
       <input type="radio" {name} value={option.value} on:input={onInput} />

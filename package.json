@@ -1,5 +1,5 @@
 {
-  "name": "riskman-ui",
+  "name": "@silintl/riskman-ui",
   "version": "1.0.0",
   "scripts": {
     "prebuild:dev": "npm run clean:build",

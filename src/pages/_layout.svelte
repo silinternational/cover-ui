@@ -36,7 +36,7 @@
   const logoClickHandler = () => $goto('/home')
 </script>
 
-<Drawer modal {menuItems} title='Riskman'>
+<Drawer modal {menuItems} title='Riskman' class="auto-width">
   <span class="pointer" on:click={logoClickHandler} slot="header">
     <img class="w-100" src="/logo.png" alt="logo">
   </span>

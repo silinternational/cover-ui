@@ -25,6 +25,8 @@ const riskCategoryOptions = [
     value: 'stationary',
   },
 ]
+
+/** @todo Pull this from the API / backend */
 let accountablePersonOptions = [
   {
     name: 'Jeff Smith',

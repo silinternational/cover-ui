@@ -4,14 +4,14 @@ import { createEventDispatcher } from 'svelte'
 
 const dispatch = createEventDispatcher()
 
+let name = ''
+
 const onCancel = () => {
   dispatch('cancel')
 }
 const onSubmit = () => {
   dispatch('submit', { name })
 }
-
-let name = ''
 </script>
 
 <div class="w-50">

@@ -13,7 +13,7 @@
          "type": "image/png"
       }
    ],
-   "name": "The Way I Like My Svelte",
-   "short_name": "TW-S",
+   "name": "Cover",
+   "short_name": "Cover",
    "start_url": "/"
 }

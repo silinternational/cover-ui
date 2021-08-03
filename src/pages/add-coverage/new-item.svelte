@@ -15,7 +15,7 @@ let riskCategoryOptions = [
     'value': 'stationary',
   },
 ]
-let riskCategory
+let riskCategory = ''
 let uniqueIdentifier
 let make
 let model

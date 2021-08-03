@@ -15,7 +15,7 @@ const itemTypeOptions = [
 ]
 let shortName = ''
 let itemTypeUuid
-let itemDescription = ' '
+let itemDescription = ''
 
 const onChange = event => console.log('Item type changed:', event.detail)
 const onSubmit = event => console.log('Form submitted:', event.detail)
@@ -31,7 +31,7 @@ const onSubmit = event => console.log('Form submitted:', event.detail)
       <Description>This label will appear on your statements.</Description>
     </p>
     <p>
-      <TextArea bind:value={itemDescription} rows="4"></TextArea>
+      <TextArea label="Item description" bind:value={itemDescription} rows="4"></TextArea>
       <Description>For personal use.</Description>
     </p>
   </Form>

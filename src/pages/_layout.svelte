@@ -1,39 +1,39 @@
 <script>
-  import AppFooter from '../components/AppFooter.svelte'
-  import AppHeader from '../components/AppHeader.svelte'
-  import { goto } from '@roxi/routify'
-  import { Drawer } from '@silintl/ui-components'
+import AppFooter from '../components/AppFooter.svelte'
+import AppHeader from '../components/AppHeader.svelte'
+import { goto } from '@roxi/routify'
+import { Drawer } from '@silintl/ui-components'
 
-  $: menuItems = [
-    {},
-    {
-      url: '/policies',
-      icon: 'house',
-      label: 'Policies',
-    },
-    {
-      url: '/claims',
-      icon: 'label',
-      label: 'Claims',
-    },
-    {
-      url: '/faq',
-      icon: 'article',
-      label: 'FAQ',
-    },
-    {
-      url: '/chat',
-      icon: 'chat',
-      label: 'Chat',
-    },
-    {
-      url: '/item',
-      icon: 'add_circle',
-      label: 'Add Item'
-    },
-  ]
+$: menuItems = [
+  {},
+  {
+    url: '/policies',
+    icon: 'house',
+    label: 'Policies',
+  },
+  {
+    url: '/claims',
+    icon: 'label',
+    label: 'Claims',
+  },
+  {
+    url: '/faq',
+    icon: 'article',
+    label: 'FAQ',
+  },
+  {
+    url: '/chat',
+    icon: 'chat',
+    label: 'Chat',
+  },
+  {
+    url: '/item',
+    icon: 'add_circle',
+    label: 'Add Item'
+  },
+]
 
-  const logoClickHandler = () => $goto('/home')
+const logoClickHandler = () => $goto('/home')
 </script>
 
 <Drawer modal {menuItems} title='Riskman' class="auto-width">

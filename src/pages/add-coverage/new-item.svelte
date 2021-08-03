@@ -26,8 +26,11 @@ let riskCategoryOptions = [
 ]
 
 const onSubmit = event => {
+  // TEMP
   console.log('Form submitted:', event)
   console.log(formData)
+  /* @todo Save this to the API / backend. */
+  $goto('/home')
 }
 const saveForLater = () => {
   /* @todo Save this as an item draft. */

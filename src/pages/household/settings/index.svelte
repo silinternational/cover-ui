@@ -33,13 +33,13 @@ let members = [
 #members-list {
     counter-reset: item;
     list-style-type: none;
-    padding-left: 0 !important;
+    padding-left: 0;
     margin: 10px 0;
 }
 
 .members-list-item {
     border: 0 solid rgba(0, 0, 0, 0.12);
-    border-top-width: 1px !important;
+    border-top-width: 1px;
     padding: 10px;
 }
 </style>
@@ -60,7 +60,7 @@ let members = [
           <small>{m.isDependent ? "Dependent" : m.email}</small>
         </li>
         {#if i == members.length - 1}
-          <li class="members-list-item" style="padding: 0 !important;" />
+          <li class="members-list-item" style="padding: 0;" />
         {/if}
       {/each}
     </ul>

@@ -1,7 +1,7 @@
 <script>
-    import Breadcrumb from "../../../components/Breadcrumb.svelte"
-    import { Page, List } from "@silintl/ui-components"
-import { prevent_default } from "svelte/internal";
+    import Breadcrumb from "../../../components/Breadcrumb.svelte";
+    import { Page, List, Button } from "@silintl/ui-components";
+    import { goto } from "@roxi/routify";
 
     // TODO: make this dependent on backend
     let members = [
@@ -20,9 +20,9 @@ import { prevent_default } from "svelte/internal";
         {
             name: "Pax Mercado",
             isYou: false,
-            isDependent: true
-        }
-    ]
+            isDependent: true,
+        },
+    ];
 </script>
 
 <style>
@@ -34,6 +34,7 @@ import { prevent_default } from "svelte/internal";
         counter-reset: item;
         list-style-type: none;
         padding-left: 0 !important;
+        margin: 10px 0;
     }
 
     .members-list-item {
@@ -53,14 +54,16 @@ import { prevent_default } from "svelte/internal";
         <ul id="members-list">
             {#each members as m, i}
                 <li class="members-list-item">
-                    {m.name} {m.isYou ? "(you)" : ""}
+                    {m.name}
+                    {m.isYou ? "(you)" : ""}
                     <br />
                     <small>{m.isDependent ? "Dependent" : m.email}</small>
                 </li>
-                {#if i == (members.length - 1)}
-                    <li class="members-list-item"></li>
+                {#if i == members.length - 1}
+                    <li class="members-list-item" style="padding: 0 !important;" />
                 {/if}
             {/each}
         </ul>
+        <Button prependIcon="add" on:click={() => $goto("./dependent")} outlined>Add dependent</Button>
     </div>
 </Page>

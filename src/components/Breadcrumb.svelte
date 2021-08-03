@@ -5,7 +5,7 @@ export let links
 
 let urls = []
 if (!links) {
-  let href = $url().replace("https://", "").replace("http://", "").split("/")
+  let href = $url().split("/")
 
   while (href.length > 1) {
     let name = href[href.length - 1].toLowerCase()

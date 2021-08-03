@@ -5,19 +5,19 @@ export let links
 
 let urls = []
 if (!links) {
-  let href = $url().split("/")
+  let path = $url().split("/")
 
-  while (href.length > 1) {
-    let name = href[href.length - 1].toLowerCase()
-    urls.unshift({ url: href.join("/"), name: name })
+  while (path.length > 0) {
+    let name = path[path.length - 1]
+    if (name != "") urls.unshift({ url: path.join("/"), name: name.toLowerCase() })
 
-    href.pop()
+    path.pop()
   }
 } else {
-  links.forEach((val, i) => {
-    let name = val.split("/")[val.split("/").length - 1]
+  links.forEach(val => {
+    if (!val.url || !val.name) { console.log("no url or name field for provided links array"); return }
 
-    urls.push({ url: val, name: name })
+    urls.push({ url: val.url, name: val.name })
   })
 }
 

@@ -1,6 +1,6 @@
 <script>
 import Breadcrumb from "../../../components/Breadcrumb.svelte";
-import { Page, List, Button } from "@silintl/ui-components";
+import { Page, Button } from "@silintl/ui-components";
 import { goto } from "@roxi/routify";
 
 // TODO: make this dependent on backend
@@ -22,7 +22,7 @@ let members = [
     isYou: false,
     isDependent: true,
   },
-];
+]
 </script>
 
 <style>

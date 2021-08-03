@@ -10,7 +10,12 @@ if (!links) {
 
   while (path.length > 0) {
     let name = path[path.length - 1]
-    if (name != "") urls.unshift({ url: path.join("/"), name: name.toLowerCase() })
+    if (name != "") {
+      urls.unshift({
+        url: path.join("/"),
+        name: name.toLowerCase().replaceAll('-', ' '),
+      })
+    }
 
     path.pop()
   }

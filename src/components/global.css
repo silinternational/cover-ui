@@ -5,5 +5,5 @@ html, body {
 body {
 	margin: 0;
 	box-sizing: border-box;
-	align-items: initial !important;
+	width: 100;
 }

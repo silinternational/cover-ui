@@ -9,27 +9,27 @@
     {
       url: '/policies',
       icon: 'house',
-      label: 'policies',
+      label: 'Policies',
     },
     {
       url: '/claims',
       icon: 'label',
-      label: 'claims',
+      label: 'Claims',
     },
     {
       url: '/faq',
       icon: 'article',
-      label: 'faq',
+      label: 'FAQ',
     },
     {
       url: '/chat',
       icon: 'chat',
-      label: 'chat',
+      label: 'Chat',
     },
     {
       url: '/item',
       icon: 'add_circle',
-      label: ''
+      label: 'Add Item'
     },
   ]
 

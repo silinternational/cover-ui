@@ -1,5 +1,5 @@
 <script>
-import { Form, Page, Select, TextField } from '@silintl/ui-components'
+import { Form, Page, Select, TextArea, TextField } from '@silintl/ui-components'
 
 /* @todo Pull this from the database eventually: */
 const itemTypeOptions = [
@@ -14,6 +14,7 @@ const itemTypeOptions = [
 ]
 let shortName = ''
 let itemTypeUuid
+let itemDescription = ' '
 
 const onChange = event => console.log('Item type changed:', event.detail)
 const onSubmit = event => console.log('Form submitted:', event.detail)
@@ -26,6 +27,9 @@ const onSubmit = event => console.log('Form submitted:', event.detail)
     </p>
     <p>
       <TextField label="Short name" bind:value={shortName}></TextField>
+    </p>
+    <p>
+      <TextArea bind:value={itemDescription} rows="4"></TextArea>
     </p>
   </Form>
 </Page>

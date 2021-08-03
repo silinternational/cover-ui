@@ -21,11 +21,11 @@ $: menuItems = [
     icon: 'article',
     label: 'FAQ',
   },
-  {
-    url: '/chat',
-    icon: 'chat',
-    label: 'Chat',
-  },
+  // {
+  //   url: '/chat',
+  //   icon: 'chat',
+  //   label: 'Chat',
+  // },
   {
     url: '/item',
     icon: 'add_circle',

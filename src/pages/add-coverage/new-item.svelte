@@ -1,4 +1,5 @@
 <script>
+import Breadcrumb from '../../components/Breadcrumb.svelte'
 import Description from '../../components/Description.svelte'
 import RadioOptions from '../../components/RadioOptions.svelte'
 import { goto } from '@roxi/routify'
@@ -39,6 +40,7 @@ const saveForLater = () => {
 </script>
 
 <Page>
+  <Breadcrumb />
   <Form on:submit={onSubmit}>
     <p>
       <TextField label="Short name" bind:value={formData.shortName}></TextField>

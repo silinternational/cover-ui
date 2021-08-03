@@ -25,7 +25,10 @@ const onSubmit = event => {
   console.log(
     shortName,
     itemDescription,
-    riskCategory
+    riskCategory,
+    uniqueIdentifier,
+    make,
+    model
   )
 }
 </script>
@@ -42,5 +45,17 @@ const onSubmit = event => {
     </p>
     <p>This item primarily stays:</p>
     <RadioOptions name="riskCategory" options={riskCategoryOptions} bind:value={riskCategory} />
+    <p>
+      <TextField label="Unique identifier" bind:value={uniqueIdentifier}></TextField>
+      <Description>Optional. Serial number, IMEI, service tag, VIN</Description>
+    </p>
+    <p>
+      <TextField label="Make" bind:value={make}></TextField>
+      <Description>Required for mobile items.</Description>
+    </p>
+    <p>
+      <TextField label="Model" bind:value={model}></TextField>
+      <Description>Required for mobile items.</Description>
+    </p>
   </Form>
 </Page>

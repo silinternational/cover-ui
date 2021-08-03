@@ -16,6 +16,9 @@ let riskCategoryOptions = [
   },
 ]
 let riskCategory
+let uniqueIdentifier
+let make
+let model
 
 const onSubmit = event => {
   console.log('Form submitted:', event)
@@ -37,8 +40,7 @@ const onSubmit = event => {
       <TextArea label="Item description" bind:value={itemDescription} rows="4"></TextArea>
       <Description>For personal use.</Description>
     </p>
-    <p>
-      <RadioOptions name="riskCategory" options={riskCategoryOptions} bind:value={riskCategory} />
-    </p>
+    <p>This item primarily stays:</p>
+    <RadioOptions name="riskCategory" options={riskCategoryOptions} bind:value={riskCategory} />
   </Form>
 </Page>

@@ -1,4 +1,5 @@
 <script>
+import { throwError } from "../error"
 import { goto, url } from "@roxi/routify";
 
 export let links
@@ -15,7 +16,7 @@ if (!links) {
   }
 } else {
   links.forEach(val => {
-    if (!val.url || !val.name) { console.log("no url or name field for provided links array"); return }
+    if (!val.url || !val.name) { throwError(new Error("no url or name field for provided links array")) }
 
     urls.push({ url: val.url, name: val.name })
   })

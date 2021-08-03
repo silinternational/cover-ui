@@ -1,4 +1,5 @@
 <script>
+import Description from '../../components/Description.svelte'
 import { Form, Page, Select, TextArea, TextField } from '@silintl/ui-components'
 
 /* @todo Pull this from the database eventually: */
@@ -20,14 +21,6 @@ const onChange = event => console.log('Item type changed:', event.detail)
 const onSubmit = event => console.log('Form submitted:', event.detail)
 </script>
 
-<style>
-.field-details {
-    color: rgba(0, 0, 0, 0.5);
-    display: block;
-    padding: 0.5rem 1rem;
-}
-</style>
-
 <Page>
   <Form on:submit={onSubmit}>
     <p>
@@ -35,11 +28,11 @@ const onSubmit = event => console.log('Form submitted:', event.detail)
     </p>
     <p>
       <TextField label="Short name" bind:value={shortName}></TextField>
-      <span class="field-details">This label will appear on your statements.</span>
+      <Description>This label will appear on your statements.</Description>
     </p>
     <p>
       <TextArea bind:value={itemDescription} rows="4"></TextArea>
-      <span class="field-details">For personal use.</span>
+      <Description>For personal use.</Description>
     </p>
   </Form>
 </Page>

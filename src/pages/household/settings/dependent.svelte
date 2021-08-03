@@ -1,7 +1,7 @@
 <script>
+import DependentForm from '../../../components/DependentForm.svelte'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
-import DependentForm from '../../../components/DependentForm.svelte'
 
 const onCancel = () => {
   $goto('../settings')

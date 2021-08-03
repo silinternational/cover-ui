@@ -7,7 +7,7 @@
   $: menuItems = [
     {},
     {
-      url: '/home',
+      url: '/policies',
       icon: 'house',
       label: 'policies',
     },

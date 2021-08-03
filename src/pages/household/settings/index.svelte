@@ -1,28 +1,28 @@
 <script>
-    import Breadcrumb from "../../../components/Breadcrumb.svelte";
-    import { Page, List, Button } from "@silintl/ui-components";
-    import { goto } from "@roxi/routify";
+import Breadcrumb from "../../../components/Breadcrumb.svelte";
+import { Page, List, Button } from "@silintl/ui-components";
+import { goto } from "@roxi/routify";
 
-    // TODO: make this dependent on backend
-    let members = [
-        {
-            name: "Alex Mercado",
-            isYou: true,
-            isDependent: false,
-            email: "alex_mercado@sil.org",
-        },
-        {
-            name: "Megan Mercado",
-            isYou: false,
-            isDependent: false,
-            email: "megan_mercado@sil.org",
-        },
-        {
-            name: "Pax Mercado",
-            isYou: false,
-            isDependent: true,
-        },
-    ];
+// TODO: make this dependent on backend
+let members = [
+    {
+        name: "Alex Mercado",
+        isYou: true,
+        isDependent: false,
+        email: "alex_mercado@sil.org",
+    },
+    {
+        name: "Megan Mercado",
+        isYou: false,
+        isDependent: false,
+        email: "megan_mercado@sil.org",
+    },
+    {
+        name: "Pax Mercado",
+        isYou: false,
+        isDependent: true,
+    },
+];
 </script>
 
 <style>

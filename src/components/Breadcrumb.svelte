@@ -1,17 +1,17 @@
 <script>
-    let urls = []
-    let href = window.location.href.replace("https://", "").replace("http://", "").split("/")
+let urls = []
+let href = window.location.href.replace("https://", "").replace("http://", "").split("/")
 
-    while (href.length > 1) {
-        let name = href[href.length - 1].toLowerCase()
-        urls.unshift({url: href.join("/"), name: capitalize(name) })
+while (href.length > 1) {
+    let name = href[href.length - 1].toLowerCase()
+    urls.unshift({url: href.join("/"), name: capitalize(name) })
 
-        href.pop()
-    }
+    href.pop()
+}
 
-    function capitalize(string) {
-        return string.replace(/^\w/, (c) => c.toUpperCase());
-    }
+function capitalize(string) {
+    return string.replace(/^\w/, (c) => c.toUpperCase());
+}
 </script>
 
 <!--TODO: change the '>' with the actual icon-->

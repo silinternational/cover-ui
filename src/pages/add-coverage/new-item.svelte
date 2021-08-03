@@ -17,12 +17,12 @@ let formData = {
 }
 let riskCategoryOptions = [
   {
-    'label': 'Carried with me',
-    'value': 'mobile',
+    label: 'Carried with me',
+    value: 'mobile',
   },
   {
-    'label': 'In one place (home or office)',
-    'value': 'stationary',
+    label: 'In one place (home or office)',
+    value: 'stationary',
   },
 ]
 

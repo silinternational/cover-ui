@@ -39,7 +39,7 @@ const logoClickHandler = () => $goto('/home')
 
 <Drawer modal {menuItems} title='Riskman' isFullHeightMenu={false} class="auto-width">
   <span class="pointer" on:click={logoClickHandler} slot="header">
-    <img class="w-100" src="/logo.png" alt="logo">
+    <img class="w-100" src="/logo.svg" alt="Cover">
   </span>
   
   <AppHeader />

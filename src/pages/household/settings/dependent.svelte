@@ -13,5 +13,5 @@ const onSubmit = event => {
 </script>
 
 <Page>
-  <DependentForm on:cancel={onCancel} on:submit={onSubmit}></DependentForm>
+  <DependentForm on:cancel={onCancel} on:submit={onSubmit} />
 </Page>

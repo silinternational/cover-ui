@@ -1,5 +1,5 @@
 <script>
-import DependentForm from '../../../components/DependentForm.svelte'
+import { DependentForm } from '../../../components'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 

@@ -1,5 +1,5 @@
 <script>
-import Breadcrumb from "../../../components/Breadcrumb.svelte";
+import { Breadcrumb } from "../../../components";
 import { Button, IconButton, Page } from "@silintl/ui-components";
 import { goto } from "@roxi/routify";
 

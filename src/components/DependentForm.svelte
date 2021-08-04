@@ -31,7 +31,15 @@ const onRemove = event => {
   dispatch('remove', { dependentUuid })
 }
 const onSubmit = () => {
-  dispatch('submit', { name })
+  const formData = {
+    name,
+    location,
+    relationship,
+  }
+  if (relationship === 'child') {
+    formData.childBirthYear = childBirthYear
+  }
+  dispatch('submit', formData)
 }
 </script>
 

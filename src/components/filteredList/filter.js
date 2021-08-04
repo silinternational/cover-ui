@@ -21,7 +21,9 @@ export default class Filter {
      * @returns {Array} 
      */
     filter(items) {
-        if (!this.func) return items
+        if (!this.func) {
+            return items
+        }
         return items.filter(i => this.func(i))
     }
 

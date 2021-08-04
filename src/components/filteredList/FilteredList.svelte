@@ -7,7 +7,9 @@ export let items
 
 let filteredItems = writable(items)
 
-if (!filters || !items) throwError(new Error("`filters` and `items` parameter are required for this component"))
+if (!filters || !items) {
+  throwError(new Error("`filters` and `items` parameter are required for this component"))
+}
 
 $: applyFilters(filters)
 

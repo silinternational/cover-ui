@@ -1,4 +1,5 @@
 <script>
+import './mdc/_index.scss'
 import t from '../i18n'
 import { parse, stringify } from 'qs'
 import { Router } from "@roxi/routify"

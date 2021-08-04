@@ -68,9 +68,11 @@ const edit = uuid => $goto(`./dependent/${uuid}`)
         {person.isYou ? "(you)" : ""}
         <br />
         <small>{person.isDependent ? "Dependent" : person.email}</small>
-        <span class="edit-button" title="Edit">
-          <IconButton icon="edit" ariaLabel="Edit" on:click={() => edit(person.uuid)} />
-        </span>
+        {#if person.isDependent}
+          <span class="edit-button" title="Edit">
+            <IconButton icon="edit" ariaLabel="Edit" on:click={() => edit(person.uuid)} />
+          </span>
+        {/if}
       </li>
     {/each}
   </ul>

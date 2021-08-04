@@ -1,29 +1,33 @@
 <script>
 import Breadcrumb from "../../../components/Breadcrumb.svelte";
-import { Page, Button } from "@silintl/ui-components";
+import { Button, IconButton, Page } from "@silintl/ui-components";
 import { goto } from "@roxi/routify";
 
 // TODO: make this dependent on backend
 let accountablePeople = [
   {
+    uuid: '11111111-1111-4111-1111-111111111111',
     name: "Jeff Smith",
     isYou: true,
     isDependent: false,
     email: "jeff_smith@sil.org",
   },
   {
+    uuid: '22222222-2222-4222-2222-222222222222',
     name: "Sarah Smith",
     isYou: false,
     isDependent: false,
     email: "sarah_smith@sil.org",
   },
   {
+    uuid: '33333333-3333-4333-3333-333333333333',
     name: "Junior Smith",
     isYou: false,
     isDependent: true,
   },
 ]
 
+const edit = uuid => $goto(`./dependent/${uuid}`)
 </script>
 
 <style>
@@ -54,6 +58,7 @@ let accountablePeople = [
       <li class="accountable-people-list-item">
         {person.name}
         {person.isYou ? "(you)" : ""}
+        <IconButton icon="edit" ariaLabel="Edit" on:click={() => edit(person.uuid)} />
         <br />
         <small>{person.isDependent ? "Dependent" : person.email}</small>
       </li>

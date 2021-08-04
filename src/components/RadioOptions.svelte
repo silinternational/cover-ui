@@ -13,6 +13,9 @@ const onInput = event => {
     <label>
       <input type="radio" {name} value={option.value} on:input={onInput} />
       {option.label}
+      {#if option.description}
+        <small>{option.description}</small>
+      {/if}
     </label>
   </p>
 {/each}

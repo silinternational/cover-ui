@@ -37,7 +37,7 @@ $: menuItems = [
   },
 ]
 
-const logoClickHandler = () => $goto('/home')
+const logoClickHandler = () => $goto('/')
 </script>
 
 <Drawer modal {hasTopAppBar} {menuItems} title='Covered' {isFullHeightMenu} class="auto-width border-white">

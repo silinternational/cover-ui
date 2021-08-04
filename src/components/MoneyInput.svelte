@@ -27,10 +27,6 @@ const focus = node => autofocus && node.focus()
 </script>
 
 <style>
-.NotoSans {
-  font-family: 'Noto Sans' !important;
-}
-
 .money-icon {
   width: 24px;
   height: 24px;

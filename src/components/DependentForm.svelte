@@ -85,8 +85,10 @@ const onSubmit = () => {
     <div class="float-right form-button">
       <Button on:click={onCancel}>Cancel</Button>
     </div>
-    <div class="float-left form-button">
-      <Button on:click={onRemove} outlined class="mdc-theme--error">Remove</Button>
-    </div>
+    {#if dependentUuid !== undefined}
+      <div class="float-left form-button">
+        <Button on:click={onRemove} outlined class="mdc-theme--error">Remove</Button>
+      </div>
+    {/if}
   </Form>
 </div>

@@ -6,7 +6,7 @@ import { Card, Checkbox, CustomCard } from '@silintl/ui-components'
 let selected = []
 let loading = false
 let shownMenu
-let clickedOnVert = false
+// let clickedOnVert = false
 let exampleItems = [
   {
     id: 1234,
@@ -48,12 +48,12 @@ const handleUnchecked = id => {
 const handleMoreVertClick = id => {
   if (shownMenu == id) shownMenu = null
   else shownMenu = id
-  clickedOnVert = true
+  // clickedOnVert = true
 }
-const handlePageClick = () => {
-  if (!clickedOnVert && shownMenu != null) shownMenu = null
-  else if (clickedOnVert) clickedOnVert = false
-}
+// const handlePageClick = () => {
+//   if (!clickedOnVert && shownMenu != null) shownMenu = null
+//   else if (clickedOnVert) clickedOnVert = false
+// }
 
 </script>
 
@@ -61,6 +61,7 @@ const handlePageClick = () => {
 /* TODO: make this more accurate when design is finialized */
 .home-page-content {
   margin: 0 5px;
+  height: 100%;
 }
 
 .card-header {
@@ -103,7 +104,7 @@ const handlePageClick = () => {
 }
 </style>
 
-<div class="home-page-content" on:click={handlePageClick}>
+<div class="home-page-content">
   <Card color="#103066">
     <h2 class="card-header">To-Dos</h2>
   </Card>
@@ -152,7 +153,8 @@ const handlePageClick = () => {
                   <path fill="currentColor" d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z" />
                 </svg>
               </Datatable.Data.Row.Item>
-              <div class="home-floating-menu {shownMenu == item.id ? "shown" : "not-shown"}" on:click={() => clickedOnVert = true}>
+              <!--TODO FUTURE: make it so that when you lose focus on this menu, it closes-->
+              <div class="home-floating-menu {shownMenu == item.id ? "shown" : "not-shown"}">
                 hey there
               </div>
             </Datatable.Data.Row>

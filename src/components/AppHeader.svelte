@@ -1,7 +1,7 @@
 <script>
 import Error from './Error.svelte'
 import Progress from './progress/Progress.svelte'
-import { Badge, Button, IconButton, isAboveTablet } from '@silintl/ui-components'
+import { Badge, IconButton, isAboveTablet } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 import Menu from './mdc/Menu/Menu.svelte'
 
@@ -40,6 +40,10 @@ header {
   background-color: #fff;
   min-height: 4rem;
 }
+
+.clickable:hover {
+  cursor: pointer;
+}
 </style>
 <svelte:window on:resize={showOrHideDrawerToggle}/>
 
@@ -51,13 +55,13 @@ header {
   </div>
 
   <div id="toolbar" class="flex justify-end toolbar mdc-menu-surface--anchor">
-    <Button on:click={toggleMenu} class="pr-1">
+    <div on:click={toggleMenu} class="clickable pr-1">
       {#if showImage && src}
           <img {src} {alt} on:error={avatarError}/>
       {:else}
           <Badge padding='.4em' color='#005CB9'>{ownerInitial}</Badge>
       {/if}
-    </Button>
+    </div>
 
     <!-- TODO set menuToggler to false when menu closes -->
     <Menu autofocus bind:menuToggler {menuItems} on:syncToggler={() => menuToggler = false}/>

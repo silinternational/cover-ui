@@ -24,7 +24,6 @@ let accountablePeople = [
   },
 ]
 
-const goToAddDependent = () => $goto("./dependent")
 </script>
 
 <style>
@@ -60,5 +59,5 @@ const goToAddDependent = () => $goto("./dependent")
       </li>
     {/each}
   </ul>
-  <Button prependIcon="add" on:click={goToAddDependent} outlined>Add dependent</Button>
+  <Button prependIcon="add" url="settings/dependent" outlined>Add dependent</Button>
 </Page>

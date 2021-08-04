@@ -19,6 +19,7 @@ const onCancel = () => {
 const onRemove = event => {
   const dependentUuid = event.detail
   console.log('Remove', dependentUuid)
+  $goto('../../settings')
 }
 const onSubmit = event => {
   const formData = event.detail

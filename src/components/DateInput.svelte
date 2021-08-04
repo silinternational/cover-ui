@@ -18,12 +18,17 @@ const focus = node => autofocus && node.focus()
 </script>
 
 <style>
+
+.input-label {
+    width: 228px;
+}
+
 .date-input {
     padding-right: 60px;
 }
 </style>
 
-<label class="mdc-text-field mdc-text-field--outlined {$$props.class} textfield-radius"
+<label class="mdc-text-field mdc-text-field--outlined {$$props.class} textfield-radius input-label"
        class:mdc-text-field--disabled={disabled}
        bind:this={element}>
   <input type="date" class="mdc-text-field__input NotoSans date-input" bind:value on:blur use:focus {disabled}>

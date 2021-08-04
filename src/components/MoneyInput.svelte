@@ -5,7 +5,7 @@ import { generateRandomID } from '@silintl/ui-components/random'
 import { onMount } from 'svelte'
 
 export let label = ''
-export let value = ''
+export let value = null
 export let placeholder = ''
 export let maxlength = undefined
 export let autofocus = false
@@ -16,7 +16,7 @@ const labelID = generateRandomID('text-label-')
 let element = {}
 let mdcTextField = {}
 
-$: mdcTextField.value = value
+$: value && (mdcTextField.value = value)
 
 onMount(() => {
   mdcTextField = new MDCTextField(element)

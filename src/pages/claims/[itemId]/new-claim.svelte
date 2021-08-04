@@ -51,11 +51,11 @@ let formData = {
 // TODO: make this based on a calculation
 $: moneyReceiveOptions = [
   {
-    label: `Repair and get reimbursed later (~$${formData.repairCost === '' ? 0 : formData.repairCost})`,
+    label: `Repair and get reimbursed later (~$${!formData.repairCost ? 0 : formData.repairCost})`,
     value: 'repair_and_later',
   },
   {
-    label: `Cash now ($${formData.fairMarketValue === '' ? 0 : formData.fairMarketValue})`,
+    label: `Cash now ($${!formData.fairMarketValue ? 0 : formData.fairMarketValue})`,
     value: 'cash_now'
   }
 ]

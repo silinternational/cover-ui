@@ -2,15 +2,26 @@
 import Error from './Error.svelte'
 import Progress from './progress/Progress.svelte'
 import { Badge, Button, IconButton, isAboveTablet } from '@silintl/ui-components'
-import { createEventDispatcher } from 'svelte';
+import { createEventDispatcher } from 'svelte'
+import Menu from './mdc/Menu/Menu.svelte'
 
 let showImage = true
 let alt = 'avatar'
 let showDrawerButton
+let menuToggler = false
+
+const menuItems = [
+  {
+    icon: 'settings', label: 'User settings', url: '/household/settings'
+  },
+  {
+    icon: 'logout', label: 'Sign out', url: '/logout'
+  }
+]
 
 const dispatch = createEventDispatcher()
 
-const user = {
+const user = { //TODO get this from the api
   nickname: 'Jon',
   avatar_url: '',
 }
@@ -19,7 +30,7 @@ $: src = user.avatar_url
 $: ownerInitial = user.nickname?.charAt(0) || ''
 
 const avatarError = () => showImage = false
-const openMenu = () => console.log('this will open the menu')
+const toggleMenu = () => menuToggler = !menuToggler
 const showOrHideDrawerToggle = () => isAboveTablet() ? (showDrawerButton = false) : (showDrawerButton = true)
 const toggleDrawerHandler = () => dispatch('toggleDrawer') //TODO toggle drawer
 </script>
@@ -39,14 +50,17 @@ header {
     {/if}
   </div>
 
-  <div class="flex justify-end">
-    <Button on:click={openMenu} class="pr-1">
+  <div id="toolbar" class="flex justify-end toolbar mdc-menu-surface--anchor">
+    <Button on:click={toggleMenu} class="pr-1">
       {#if showImage && src}
           <img {src} {alt} on:error={avatarError}/>
       {:else}
           <Badge padding='.4em' color='#005CB9'>{ownerInitial}</Badge>
       {/if}
     </Button>
+
+    <!-- TODO set menuToggler to false when menu closes -->
+    <Menu autofocus bind:menuToggler {menuItems} on:syncToggler={() => menuToggler = false}/>
   </div>
 </header>
 

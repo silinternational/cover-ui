@@ -1,7 +1,5 @@
 <script>
-import Breadcrumb from '../../components/Breadcrumb.svelte'
-import Description from '../../components/Description.svelte'
-import RadioOptions from '../../components/RadioOptions.svelte'
+import { Breadcrumb, Description, RadioOptions } from '../../components'
 import { goto } from '@roxi/routify'
 import { Button, Form, Page, Select, TextArea, TextField } from '@silintl/ui-components'
 

@@ -3,7 +3,7 @@ import Breadcrumb from '../../components/Breadcrumb.svelte'
 import Description from '../../components/Description.svelte'
 import RadioOptions from '../../components/RadioOptions.svelte'
 import { goto } from '@roxi/routify'
-import { Button, Form, Page, TextArea, TextField } from '@silintl/ui-components'
+import { Button, Form, Page, Select, TextArea, TextField } from '@silintl/ui-components'
 
 let formData = {
   shortName: '',
@@ -12,20 +12,35 @@ let formData = {
   uniqueIdentifier: '',
   make: '',
   model: '',
-  accountablePerson: '',
+  accountablePersonUuid: '',
   itemCostUSD: '',
 }
-let riskCategoryOptions = [
+const riskCategoryOptions = [
   {
-    'label': 'Carried with me',
-    'value': 'mobile',
+    label: 'Carried with me',
+    value: 'mobile',
   },
   {
-    'label': 'In one place (home or office)',
-    'value': 'stationary',
+    label: 'In one place (home or office)',
+    value: 'stationary',
   },
 ]
 
+/** @todo Pull this from the API / backend */
+let accountablePersonOptions = [
+  {
+    name: 'Jeff Smith',
+    id: '11111111-1111-4111-1111-111111111111',
+  },
+  {
+    name: 'Sarah Smith',
+    id: '22222222-2222-4222-2222-222222222222',
+  },
+]
+
+const onAccountablePersonChange = event => {
+  formData.accountablePersonUuid = event.detail.id
+}
 const onSubmit = event => {
   // TEMP
   console.log('Form submitted:', event)
@@ -65,7 +80,8 @@ const saveForLater = () => {
       <Description>Required for mobile items.</Description>
     </p>
     <p>
-      <TextField label="Accountable person" bind:value={formData.accountablePerson}></TextField>
+      <Select label="Accountable person" on:change={onAccountablePersonChange}
+              options={accountablePersonOptions}></Select>
       <Description>
         Dependents are eligible. Dependents include spouses and children under 26 who haven't
         married or finished college. Coverage for children is limited to $3,000 per household.

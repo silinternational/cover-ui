@@ -4,7 +4,7 @@ import { Page, Button } from "@silintl/ui-components";
 import { goto } from "@roxi/routify";
 
 // TODO: make this dependent on backend
-let members = [
+let accountablePeople = [
   {
     name: "Jeff Smith",
     isYou: true,
@@ -23,47 +23,42 @@ let members = [
     isDependent: true,
   },
 ]
+
+const goToAddDependent = () => $goto("./dependent")
 </script>
 
 <style>
-#members-page {
-    margin-top: 30px;
-}
-
-#members-list {
+#accountable-people-list {
     counter-reset: item;
     list-style-type: none;
     padding-left: 0;
     margin: 10px 0;
 }
 
-.members-list-item {
+.accountable-people-list-item {
     border: 0 solid rgba(0, 0, 0, 0.12);
     border-top-width: 1px;
     padding: 10px;
+}
+.accountable-people-list-item:last-of-type {
+  border-bottom-width: 1px;
 }
 </style>
 
 <Page>
   <Breadcrumb />
-  <br />
+  
+  <h3>Accountable people</h3>
 
-  <div id="members-page">
-    <strong>Members</strong>
-
-    <ul id="members-list">
-      {#each members as m, i}
-        <li class="members-list-item">
-          {m.name}
-          {m.isYou ? "(you)" : ""}
-          <br />
-          <small>{m.isDependent ? "Dependent" : m.email}</small>
-        </li>
-        {#if i == members.length - 1}
-          <li class="members-list-item" style="padding: 0;" />
-        {/if}
-      {/each}
-    </ul>
-    <Button prependIcon="add" on:click={() => $goto("./dependent")} outlined>Add dependent</Button>
-  </div>
+  <ul id="accountable-people-list">
+    {#each accountablePeople as person}
+      <li class="accountable-people-list-item">
+        {person.name}
+        {person.isYou ? "(you)" : ""}
+        <br />
+        <small>{person.isDependent ? "Dependent" : person.email}</small>
+      </li>
+    {/each}
+  </ul>
+  <Button prependIcon="add" on:click={goToAddDependent} outlined>Add dependent</Button>
 </Page>

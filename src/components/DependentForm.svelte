@@ -3,7 +3,7 @@ import RadioOptions from './RadioOptions.svelte'
 import { Button, Form, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
-export let uuid = undefined
+export let dependent = {}
 
 const dispatch = createEventDispatcher()
 const relationshipOptions = [
@@ -17,10 +17,13 @@ const relationshipOptions = [
   },
 ]
 
-let name = ''
-let location = ''
-let relationship = ''
-let childBirthYear
+let formData = {
+  uuid: dependent.uuid,
+  name: '',
+  location: '',
+  relationship: '',
+  childBirthYear: undefined,
+}
 
 const onCancel = event => {
   event.preventDefault()
@@ -28,16 +31,11 @@ const onCancel = event => {
 }
 const onRemove = event => {
   event.preventDefault()
-  dispatch('remove', { uuid })
+  dispatch('remove', { uuid: formData.uuid })
 }
 const onSubmit = () => {
-  const formData = {
-    name,
-    location,
-    relationship,
-  }
-  if (relationship === 'child') {
-    formData.childBirthYear = childBirthYear
+  if (formData.relationship !== 'child') {
+    delete formData.childBirthYear
   }
   dispatch('submit', formData)
 }
@@ -61,7 +59,7 @@ const onSubmit = () => {
   <Form on:submit={onSubmit}>
     <h4>Dependent</h4>
     <p>
-      <TextField label="Dependent Name" bind:value={name} class="w-100" autofocus />
+      <TextField label="Dependent Name" bind:value={formData.name} class="w-100" autofocus />
     </p>
     <p>
       Dependents include non-member spouses and children under 26 who haven't
@@ -69,14 +67,14 @@ const onSubmit = () => {
       per person.
     </p>
     <p>
-      <TextField label="Location" bind:value={location} class="w-100" />
+      <TextField label="Location" bind:value={formData.location} class="w-100" />
     </p>
     <p>
-      <RadioOptions name="relationship" options={relationshipOptions} bind:value={relationship} />
+      <RadioOptions name="relationship" options={relationshipOptions} bind:value={formData.relationship} />
     </p>
-    {#if relationship === 'child'}
+    {#if formData.relationship === 'child'}
       <p>
-        <TextField label="Child's birth year" bind:value={childBirthYear} class="w-100" />
+        <TextField label="Child's birth year" bind:value={formData.childBirthYear} class="w-100" />
       </p>
     {/if}
     <div class="float-right form-button">
@@ -85,7 +83,7 @@ const onSubmit = () => {
     <div class="float-right form-button">
       <Button on:click={onCancel}>Cancel</Button>
     </div>
-    {#if uuid !== undefined}
+    {#if formData.uuid !== undefined}
       <div class="float-left form-button">
         <Button on:click={onRemove} outlined class="mdc-theme--error">Remove</Button>
       </div>

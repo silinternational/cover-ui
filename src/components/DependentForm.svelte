@@ -3,7 +3,7 @@ import RadioOptions from './RadioOptions.svelte'
 import { Button, Form, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
-export let dependentUuid = undefined
+export let uuid = undefined
 
 const dispatch = createEventDispatcher()
 const relationshipOptions = [
@@ -28,7 +28,7 @@ const onCancel = event => {
 }
 const onRemove = event => {
   event.preventDefault()
-  dispatch('remove', { dependentUuid })
+  dispatch('remove', { uuid })
 }
 const onSubmit = () => {
   const formData = {
@@ -85,7 +85,7 @@ const onSubmit = () => {
     <div class="float-right form-button">
       <Button on:click={onCancel}>Cancel</Button>
     </div>
-    {#if dependentUuid !== undefined}
+    {#if uuid !== undefined}
       <div class="float-left form-button">
         <Button on:click={onRemove} outlined class="mdc-theme--error">Remove</Button>
       </div>

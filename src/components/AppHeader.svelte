@@ -3,7 +3,7 @@ import Error from './Error.svelte'
 import Progress from './progress/Progress.svelte'
 import { Badge, IconButton, isAboveTablet } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
-import Menu from './mdc/Menu/Menu.svelte'
+import { Menu } from './index';
 
 let showImage = true
 let alt = 'avatar'

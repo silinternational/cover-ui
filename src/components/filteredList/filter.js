@@ -26,14 +26,3 @@ export default class Filter {
     }
 
 }
-
-export function getMultiLayerItem(item) {
-    let fields = this.fieldName.split(".")
-
-    let obj = item
-    fields.forEach(val => {
-        obj = obj[val]
-    })
-
-    return obj
-}

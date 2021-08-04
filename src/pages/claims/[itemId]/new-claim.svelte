@@ -2,22 +2,12 @@
 import Breadcrumb from '../../../components/Breadcrumb.svelte'
 import Description from '../../../components/Description.svelte'
 import RadioOptions from '../../../components/RadioOptions.svelte'
-import Required from '../../../components/Required.svelte'
 import DateInput from '../../../components/DateInput.svelte'
 import MoneyInput from '../../../components/MoneyInput.svelte'
 import { goto } from '@roxi/routify'
-import { Button, Form, Page, Select, TextArea, TextField } from '@silintl/ui-components'
+import { Button, Form, Page, TextArea, TextField } from '@silintl/ui-components'
+import { fade } from 'svelte/transition'
 
-let formData = {
-  lostDate: new Date().toISOString().split('T')[0],
-  lossReason: '',
-  situationDescription: '',
-  uniqueIdentifier: '',
-  make: '',
-  model: '',
-  accountablePersonUuid: '',
-  itemCostUSD: '',
-}
 const reasonsForLoss = [
   {
     label: 'Theft',
@@ -37,32 +27,44 @@ const reasonsForLoss = [
     description: 'For bulk claims due to large-scale events',
   }
 ]
-
-/** @todo Pull this from the API / backend */
-let accountablePersonOptions = [
+const repairableOptions = [
   {
-    name: 'Jeff Smith',
-    id: '11111111-1111-4111-1111-111111111111',
+    label: 'Repairable',
+    value: 'repairable',
   },
   {
-    name: 'Sarah Smith',
-    id: '22222222-2222-4222-2222-222222222222',
-  },
+    label: "Not Repairable",
+    value: "not_repairable"
+  }
 ]
 
-const onAccountablePersonChange = event => {
-  formData.accountablePersonUuid = event.detail.id
+let formData = {
+  lostDate: new Date().toISOString().split('T')[0],
+  lossReason: '',
+  situationDescription: '',
+  fairMarketValue: '',
+  isRepairable: '',
+  repairCost: '',
+  receiveOption: '',
 }
+
+// TODO: make this based on a calculation
+$: moneyReceiveOptions = [
+  {
+    label: `Repair and get reimbursed later (~$${formData.repairCost == '' ? 0 : formData.repairCost})`,
+    value: 'repair_and_later',
+  },
+  {
+    label: `Cash now ($${formData.fairMarketValue == '' ? 0 : formData.fairMarketValue})`,
+    value: 'cash_now'
+  }
+]
+
 const onSubmit = event => {
-  // TEMP
-  console.log('Form submitted:', event)
-  console.log(formData)
-  /* @todo Save this to the API / backend. */
-  $goto('/home')
-}
-const saveForLater = () => {
-  /* @todo Save this as an item draft. */
-  $goto('/home')
+  // TODO: change this to POST to backend endpoint
+  console.log('Form submitted:', formData)
+  // TODO: make this go back a url
+  $goto('/')
 }
 </script>
 
@@ -71,51 +73,38 @@ const saveForLater = () => {
   <Form on:submit={onSubmit}>
     <p>
       <DateInput bind:value={formData.lostDate} />
-      <Description>Date lost or damaged<Required /></Description>
+      <Description>Date lost or damaged</Description>
     </p>
-    <p>Reason for loss or damage<Required /></p>
+    <p>Reason for loss or damage</p>
     <RadioOptions name="lossReason" options={reasonsForLoss} bind:value={formData.lossReason} />
     <p>
       <TextArea label="Describe the situation" bind:value={formData.situationDescription} rows="4"></TextArea>
-      <Description>What happened?<Required /></Description>
+      <Description>What happened?</Description>
     </p>
     <p>
-      <MoneyInput label="Fair market value" bind:value={formData.itemCostUSD}></MoneyInput>
+      <MoneyInput label="Fair market value" bind:value={formData.fairMarketValue}></MoneyInput>
       <Description>
         To convert to USD, use 
         <a href="https://www.google.com/search?q=currency+converter" target="_blank">this converter</a>.
       </Description>
     </p>
+    <RadioOptions name="isRepairable" options={repairableOptions} bind:value={formData.isRepairable} />
+    {#if formData.isRepairable == "repairable"}
+      <p transition:fade>
+        <MoneyInput label="Cost of repair" bind:value={formData.repairCost}></MoneyInput>
+        <Description>
+          How much will it cost to be repaired?
+          <br />
+          To convert to USD, use 
+          <a href="https://www.google.com/search?q=currency+converter" target="_blank">this converter</a>.
+        </Description>
+      </p>
+    {/if}
+    <!--TODO: add checks to determine what text to display and which radio options to display-->
+    <p>You are approved to have your item repaired. What would you like to do next? </p>
+    <RadioOptions name="receiveOption" options={moneyReceiveOptions} bind:value={formData.receiveOption} />
     <p>
-      <TextField label="Unique identifier" bind:value={formData.uniqueIdentifier}></TextField>
-      <Description>Optional. Serial number, IMEI, service tag, VIN</Description>
-    </p>
-    <p>
-      <TextField label="Make" bind:value={formData.make}></TextField>
-      <Description>Required for mobile items.</Description>
-    </p>
-    <p>
-      <TextField label="Model" bind:value={formData.model}></TextField>
-      <Description>Required for mobile items.</Description>
-    </p>
-    <p>
-      <Select label="Accountable person" on:change={onAccountablePersonChange}
-              options={accountablePersonOptions}></Select>
-      <Description>
-        Dependents are eligible. Dependents include spouses and children under 26 who haven't
-        married or finished college. Coverage for children is limited to $3,000 per household.
-      </Description>
-    </p>
-    <p>
-      <TextField label="Item cost (USD)" bind:value={formData.itemCostUSD}></TextField>
-      <Description>
-        To convert to USD, use 
-        <a href="https://www.google.com/search?q=currency+converter" target="_blank">this converter</a>.
-      </Description>
-    </p>
-    <p>
-      <Button outlined on:click={saveForLater}>Save for later</Button>
-      <Button raised>Get approval</Button>
+      <Button raised>Submit</Button>
     </p>
   </Form>
 </Page>

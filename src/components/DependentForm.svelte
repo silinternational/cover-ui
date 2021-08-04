@@ -22,8 +22,6 @@ let location = ''
 let relationship = ''
 let childBirthYear
 
-$: console.log(relationship)
-
 const onCancel = event => {
   event.preventDefault()
   dispatch('cancel')

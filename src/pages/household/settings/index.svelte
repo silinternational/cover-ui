@@ -32,19 +32,27 @@ const edit = uuid => $goto(`./dependent/${uuid}`)
 
 <style>
 #accountable-people-list {
-    counter-reset: item;
-    list-style-type: none;
-    padding-left: 0;
-    margin: 10px 0;
+  counter-reset: item;
+  list-style-type: none;
+  padding-left: 0;
+  margin: 10px 0;
 }
 
 .accountable-people-list-item {
-    border: 0 solid rgba(0, 0, 0, 0.12);
-    border-top-width: 1px;
-    padding: 10px;
+  border: 0 solid rgba(0, 0, 0, 0.12);
+  border-top-width: 1px;
+  padding: 10px;
+  position: relative;
 }
 .accountable-people-list-item:last-of-type {
   border-bottom-width: 1px;
+}
+
+.edit-button {
+  position: absolute;
+  right: 1rem;
+  top: 0.25rem;
+  color: rgba(0, 0, 0, 0.5);
 }
 </style>
 
@@ -58,9 +66,11 @@ const edit = uuid => $goto(`./dependent/${uuid}`)
       <li class="accountable-people-list-item">
         {person.name}
         {person.isYou ? "(you)" : ""}
-        <IconButton icon="edit" ariaLabel="Edit" on:click={() => edit(person.uuid)} />
         <br />
         <small>{person.isDependent ? "Dependent" : person.email}</small>
+        <span class="edit-button" title="Edit">
+          <IconButton icon="edit" ariaLabel="Edit" on:click={() => edit(person.uuid)} />
+        </span>
       </li>
     {/each}
   </ul>

@@ -19,10 +19,10 @@ const relationshipOptions = [
 
 let formData = {
   uuid: dependent.uuid,
-  name: '',
-  location: '',
-  relationship: '',
-  childBirthYear: undefined,
+  name: dependent.name || '',
+  location: dependent.location || '',
+  relationship: dependent.relationship || '',
+  childBirthYear: dependent.childBirthYear || undefined,
 }
 
 const onCancel = event => {

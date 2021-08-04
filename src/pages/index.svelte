@@ -1,7 +1,6 @@
 <script>
-import Datatable from '../components/tempDatatable/index.js'
+import Datatable from '../components/Datatable/index.js'
 import { Card, Checkbox, CustomCard } from '@silintl/ui-components'
-import Alert from '@silintl/ui-components/components/mdc/Dialog/Alert.svelte'
 
 // TODO: update this to be dependent on backend endpoint
 let selected = []

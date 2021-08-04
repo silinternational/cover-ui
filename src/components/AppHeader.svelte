@@ -55,13 +55,13 @@ header {
   </div>
 
   <div id="toolbar" class="flex justify-end toolbar mdc-menu-surface--anchor">
-    <div on:click={toggleMenu} class="clickable pr-1">
+    <button class="mdc-button clickable pr-1" on:click={toggleMenu} >
       {#if showImage && src}
           <img {src} {alt} on:error={avatarError}/>
       {:else}
           <Badge padding='.4em' color='#005CB9'>{ownerInitial}</Badge>
       {/if}
-    </div>
+    </button>
 
     <!-- TODO set menuToggler to false when menu closes -->
     <Menu autofocus bind:menuToggler {menuItems} on:syncToggler={() => menuToggler = false}/>

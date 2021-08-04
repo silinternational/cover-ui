@@ -7,9 +7,9 @@ import { Drawer } from '@silintl/ui-components'
 $: menuItems = [
   {},
   {
-    url: '/policies',
+    url: '/',
     icon: 'house',
-    label: 'Policies',
+    label: 'Home',
   },
   {
     url: '/claims',

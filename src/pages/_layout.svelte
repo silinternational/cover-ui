@@ -41,8 +41,6 @@ const logoClickHandler = () => $goto('/home')
   <span class="pointer" on:click={logoClickHandler} slot="header">
     <img class="w-100" src="/logo.png" alt="logo">
   </span>
-  
-  <AppHeader />
 
   <main>  
     <slot />

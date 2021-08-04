@@ -15,13 +15,17 @@ const labelID = generateRandomID('column-label-')
   {#if sortable}
     <div class="mdc-data-table__header-cell-wrapper">
       <div class="mdc-data-table__header-cell-label">
-        <slot />
+        <strong>
+          <slot />
+        </strong>
       </div>
       <IconButton icon="arrow_upward" ariaLabel={`Sort by ${columnID}`} class="mdc-data-table__sort-icon-button" />
       <div class="mdc-data-table__sort-status-label" aria-hidden="true" id={labelID}>
       </div>
     </div>
   {:else}
-    <slot />
+    <strong>
+      <slot />
+    </strong>
   {/if}
 </th>

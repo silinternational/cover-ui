@@ -1,5 +1,7 @@
 <script>
+/** @type {{label, value}[]} */
 export let options = []
+
 export let name
 export let value
 
@@ -8,11 +10,16 @@ const onInput = event => {
 }
 </script>
 
+<style>
+label {
+  display: block;
+  margin: 1rem 0;
+}
+</style>
+
 {#each options as option (option.value)}
-  <p>
-    <label>
-      <input type="radio" {name} value={option.value} on:input={onInput} />
-      {option.label}
-    </label>
-  </p>
+  <label>
+    <input type="radio" {name} value={option.value} on:input={onInput} />
+    {option.label}
+  </label>
 {/each}

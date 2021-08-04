@@ -1,9 +1,5 @@
 <script>
-import Breadcrumb from '../../../components/Breadcrumb.svelte'
-import Description from '../../../components/Description.svelte'
-import RadioOptions from '../../../components/RadioOptions.svelte'
-import DateInput from '../../../components/DateInput.svelte'
-import MoneyInput from '../../../components/MoneyInput.svelte'
+import { Breadcrumb, Description, RadioOptions, DateInput, MoneyInput } from '../../../components'
 import { goto } from '@roxi/routify'
 import { Button, Form, Page, TextArea, TextField } from '@silintl/ui-components'
 import { fade } from 'svelte/transition'

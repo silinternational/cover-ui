@@ -2,11 +2,10 @@
 import Datatable from '../components/Datatable/index.js'
 import { Card, Checkbox, CustomCard } from '@silintl/ui-components'
 
-// TODO: update this to be dependent on backend endpoint
 let selected = []
 let loading = false
 let shownMenu
-// let clickedOnVert = false
+// TODO: update this to be dependent on backend endpoint
 let exampleItems = [
   {
     id: 1234,
@@ -46,14 +45,12 @@ const handleUnchecked = id => {
   console.log(selected)
 }
 const handleMoreVertClick = id => {
-  if (shownMenu == id) shownMenu = null
-  else shownMenu = id
-  // clickedOnVert = true
+  if (shownMenu == id) {
+    shownMenu = null
+  } else {
+    shownMenu = id
+  }
 }
-// const handlePageClick = () => {
-//   if (!clickedOnVert && shownMenu != null) shownMenu = null
-//   else if (clickedOnVert) clickedOnVert = false
-// }
 
 </script>
 

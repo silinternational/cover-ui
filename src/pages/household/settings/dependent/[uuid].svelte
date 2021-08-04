@@ -23,6 +23,7 @@ const onRemove = event => {
 const onSubmit = event => {
   const formData = event.detail
   console.log('DependentForm submitted', formData)
+  $goto('../../settings')
 }
 </script>
 

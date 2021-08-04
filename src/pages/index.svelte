@@ -1,6 +1,6 @@
 <script>
 import Datatable from '../components/tempDatatable'
-import { Card, Checkbox } from '@silintl/ui-components'
+import { Card, Checkbox, CustomCard } from '@silintl/ui-components'
 
 // TODO: update this to be dependent on backend endpoint
 let selected = []
@@ -75,6 +75,14 @@ const rowCheckboxList = () => {
     <h2 class="card-header">To-Dos</h2>
   </Card>
   <!--TODO: make this a grid (I think) when design is finialized-->
+  <div style="display: flex">
+    <CustomCard title="Title" footerText="Footer Text" buttons="{[ { label: "Primary Button", url: "/idk-where-to-go" } ]}">
+      Accountable Person
+    </CustomCard>
+    <CustomCard title="Title" footerText="Footer Text" buttons="{[ { label: "Primary Button", url: "/idk-where-to-go" } ]}">
+      Accountable Person
+    </CustomCard>
+  </div>
   <div class="home-todo-list">
     <Card></Card>
   </div>

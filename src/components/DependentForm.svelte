@@ -28,10 +28,9 @@ const onCancel = event => {
 }
 const onRemove = event => {
   event.preventDefault()
-  dispatch('remove', { name })
+  dispatch('remove', { dependentUuid })
 }
-const onSubmit = event => {
-  event.preventDefault()
+const onSubmit = () => {
   dispatch('submit', { name })
 }
 </script>

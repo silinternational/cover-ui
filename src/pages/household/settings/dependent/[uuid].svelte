@@ -14,7 +14,7 @@ const dependent =   {
 }
 
 const onCancel = () => {
-  $goto('../settings')
+  $goto('../../settings')
 }
 const onRemove = event => {
   const dependentUuid = event.detail

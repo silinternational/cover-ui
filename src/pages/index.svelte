@@ -1,5 +1,5 @@
 <script>
-import Datatable from '../components/Datatable/index.js'
+import { Datatable } from '../components/'
 import { Card, Checkbox, CustomCard } from '@silintl/ui-components'
 
 let selected = []

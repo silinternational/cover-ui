@@ -11,3 +11,7 @@ body {
 .auto-width {
 	width: auto;
 }
+
+#main-drawer-content {
+	background: #fff;
+}

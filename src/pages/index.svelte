@@ -7,6 +7,7 @@ import Alert from '@silintl/ui-components/components/mdc/Dialog/Alert.svelte'
 let selected = []
 let loading = false
 let shownMenu
+let clickedOnVert = false
 let exampleItems = [
   {
     id: 1234,
@@ -48,6 +49,11 @@ const handleUnchecked = id => {
 const handleMoreVertClick = id => {
   if (shownMenu == id) shownMenu = null
   else shownMenu = id
+  clickedOnVert = true
+}
+const handlePageClick = () => {
+  if (!clickedOnVert && shownMenu != null) shownMenu = null
+  else if (clickedOnVert) clickedOnVert = false
 }
 
 </script>
@@ -98,16 +104,16 @@ const handleMoreVertClick = id => {
 }
 </style>
 
-<div class="home-page-content">
+<div class="home-page-content" on:click={handlePageClick}>
   <Card color="#103066">
     <h2 class="card-header">To-Dos</h2>
   </Card>
   <!--TODO: make this a grid (I think) when design is finialized-->
   <div class="home-sub-content" style="display: flex">
-    <CustomCard title="Title" footerText="Footer Text" buttons="{[ { label: "Primary Button", url: "/idk-where-to-go" } ]}">
+    <CustomCard alt="Status" title="Title" footerText="Footer Text" buttons="{[ { label: "Primary Button", url: "/idk-where-to-go" } ]}">
       Accountable Person
     </CustomCard>
-    <CustomCard title="Title" footerText="Footer Text" buttons="{[ { label: "Primary Button", url: "/idk-where-to-go" } ]}">
+    <CustomCard alt="Status" title="Title" footerText="Footer Text" buttons="{[ { label: "Primary Button", url: "/idk-where-to-go" } ]}">
       Accountable Person
     </CustomCard>
   </div>
@@ -147,7 +153,7 @@ const handleMoreVertClick = id => {
                   <path fill="currentColor" d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z" />
                 </svg>
               </Datatable.Data.Row.Item>
-              <div class="home-floating-menu {shownMenu == item.id ? "shown" : "not-shown"}">
+              <div class="home-floating-menu {shownMenu == item.id ? "shown" : "not-shown"}" on:click={() => clickedOnVert = true}>
                 hey there
               </div>
             </Datatable.Data.Row>

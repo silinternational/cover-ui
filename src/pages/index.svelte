@@ -140,7 +140,6 @@ const handleMoreVertClick = id => {
         <Datatable.Data>
           {#each exampleItems as item}
             <Datatable.Data.Row>
-              <!--TODO: fix `_this.rowCheckboxList is undefined` error with Checkbox-->
               <Datatable.Data.Row.Item><Checkbox on:checked={() => handleChecked(item.id)} on:unchecked={() => handleUnchecked(item.id)}/></Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{item.item_name}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{item.recent_activity}</Datatable.Data.Row.Item>

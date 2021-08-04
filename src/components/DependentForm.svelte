@@ -3,6 +3,8 @@ import RadioOptions from './RadioOptions.svelte'
 import { Button, Form, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
+export let dependentUuid = undefined
+
 const dispatch = createEventDispatcher()
 const relationshipOptions = [
   {
@@ -14,8 +16,6 @@ const relationshipOptions = [
     value: 'child',
   },
 ]
-
-export let dependentUuid = undefined
 
 let name = ''
 let location = ''

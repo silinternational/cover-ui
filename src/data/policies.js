@@ -28,7 +28,7 @@ export async function updatePolicy(id, policyData) {
     const updatedPolicy = await PUT(`/policies/${id}`, parsedPolicyData)
 
     policies.update(currPolicies => {
-        let i = currPolicies.findIndex(pol => pol.id == id)
+        let i = currPolicies.findIndex(pol => pol.id === id)
         currPolicies[i] = updatedPolicy
         return currPolicies
     })

@@ -5,11 +5,6 @@ import { Badge, IconButton, isAboveTablet } from '@silintl/ui-components'
 import { createEventDispatcher, onMount } from 'svelte'
 import { Menu } from './index';
 
-let showImage = true
-let alt = 'avatar'
-let showDrawerButton
-let menuToggler = false
-
 const menuItems = [
   {
     icon: 'settings', label: 'User settings', url: '/household/settings'
@@ -23,6 +18,11 @@ const user = { //TODO get this from the api
   nickname: 'Jon',
   avatar_url: '',
 }
+
+let showImage = true
+let alt = 'avatar'
+let showDrawerButton
+let menuToggler = false
 
 const dispatch = createEventDispatcher()
 

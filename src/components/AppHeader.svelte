@@ -4,6 +4,7 @@ import Progress from './progress/Progress.svelte'
 import { Badge, IconButton, isAboveTablet } from '@silintl/ui-components'
 import { createEventDispatcher, onMount } from 'svelte'
 import { Menu } from './index';
+import user from '../authn/user'
 
 const menuItems = [
   {
@@ -14,11 +15,6 @@ const menuItems = [
   }
 ]
 
-const user = { //TODO get this from the api
-  nickname: 'Jon',
-  avatar_url: '',
-}
-
 let showImage = true
 let alt = 'avatar'
 let showDrawerButton
@@ -26,8 +22,8 @@ let menuToggler = false
 
 const dispatch = createEventDispatcher()
 
-$: src = user.avatar_url
-$: ownerInitial = user.nickname?.charAt(0) || ''
+$: src = $user.AvatarUrl
+$: ownerInitial = $user.FirstName?.charAt(0) || ''
 
 onMount(() => showOrHideDrawerButton())
 

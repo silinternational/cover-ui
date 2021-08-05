@@ -1,26 +1,39 @@
 <script>
 import Error from './Error.svelte'
 import Progress from './progress/Progress.svelte'
-import { Badge, Button, IconButton, isAboveTablet } from '@silintl/ui-components'
-import { createEventDispatcher } from 'svelte';
+import { Badge, IconButton, isAboveTablet } from '@silintl/ui-components'
+import { createEventDispatcher, onMount } from 'svelte'
+import { Menu } from './index';
 
-let showImage = true
-let alt = 'avatar'
-let showDrawerButton
+const menuItems = [
+  {
+    icon: 'settings', label: 'User settings', url: '/household/settings'
+  },
+  {
+    icon: 'logout', label: 'Sign out', url: '/logout'
+  }
+]
 
-const dispatch = createEventDispatcher()
-
-const user = {
+const user = { //TODO get this from the api
   nickname: 'Jon',
   avatar_url: '',
 }
 
+let showImage = true
+let alt = 'avatar'
+let showDrawerButton
+let menuToggler = false
+
+const dispatch = createEventDispatcher()
+
 $: src = user.avatar_url
 $: ownerInitial = user.nickname?.charAt(0) || ''
 
+onMount(() => showOrHideDrawerButton())
+
 const avatarError = () => showImage = false
-const openMenu = () => console.log('this will open the menu')
-const showOrHideDrawerToggle = () => isAboveTablet() ? (showDrawerButton = false) : (showDrawerButton = true)
+const toggleMenu = () => menuToggler = !menuToggler
+const showOrHideDrawerButton = () => isAboveTablet() ? (showDrawerButton = false) : (showDrawerButton = true)
 const toggleDrawerHandler = () => dispatch('toggleDrawer') //TODO toggle drawer
 </script>
 
@@ -29,8 +42,12 @@ header {
   background-color: #fff;
   min-height: 4rem;
 }
+
+.clickable:hover {
+  cursor: pointer;
+}
 </style>
-<svelte:window on:resize={showOrHideDrawerToggle}/>
+<svelte:window on:resize={showOrHideDrawerButton}/>
 
 <header class="flex justify-between align-items-center w-100">
   <div class="flex justify-start">
@@ -39,14 +56,17 @@ header {
     {/if}
   </div>
 
-  <div class="flex justify-end">
-    <Button on:click={openMenu} class="pr-1">
+  <div id="toolbar" class="flex justify-end toolbar mdc-menu-surface--anchor">
+    <button class="mdc-button clickable pr-1" on:click={toggleMenu} >
       {#if showImage && src}
           <img {src} {alt} on:error={avatarError}/>
       {:else}
           <Badge padding='.4em' color='#005CB9'>{ownerInitial}</Badge>
       {/if}
-    </Button>
+    </button>
+
+    <!-- TODO set menuToggler to false when menu closes -->
+    <Menu autofocus bind:menuToggler {menuItems} on:syncToggler={() => menuToggler = false}/>
   </div>
 </header>
 

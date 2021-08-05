@@ -9,6 +9,7 @@ import DependentForm from './DependentForm.svelte'
 import Description from './Description.svelte'
 import MoneyInput from './MoneyInput.svelte'
 import RadioOptions from './RadioOptions.svelte'
+import Menu from './mdc/Menu'
 
 export {
     Datatable as Datatable, 
@@ -21,5 +22,6 @@ export {
     DependentForm as DependentForm,
     Description as Description, 
     MoneyInput as MoneyInput,
-    RadioOptions as RadioOptions
+    RadioOptions as RadioOptions,
+    Menu
 }

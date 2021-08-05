@@ -11,7 +11,7 @@ let toggle = false
 $: menuItems = [
   {},
   {
-    url: '/',
+    url: '/home',
     icon: 'house',
     label: 'Home',
   },

@@ -1,7 +1,8 @@
 
 <script>
 import { Datatable } from '../components/'
-import { Card, Checkbox, CustomCard } from '@silintl/ui-components'
+import { Checkbox } from '@silintl/ui-components'
+import ClaimCard from '../components/ClaimCard.svelte';
 
 // TODO: update this to be dependent on backend endpoint
 const examplePolicies = [
@@ -141,9 +142,7 @@ const handleMoreVertClick = id => {
   <div class="home-sub-content" style="display: flex">
     <div class="grid">
       {#each exampleItems as item}
-        <CustomCard alt='' title="{item.name}" buttons="{[ { label: "Edit coverage", url: "/items/edit-coverage" } ]}" footerText="Last changed {item.last_changed} ago">
-          {item.accountable_person}
-        </CustomCard>
+        <ClaimCard {item} buttons={[ { label: "Edit coverage", url: "/items/edit-coverage" } ]} />
       {/each}
     </div>
   </div>

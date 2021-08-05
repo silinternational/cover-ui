@@ -1,9 +1,9 @@
 import { writable } from 'svelte/store'
-import { GET, POST, PUT, DELETE } from './index'
+import { GET, POST, UPDATE, DELETE } from './index'
 
 export const policies = writable([])
 export const loading = writable(false)
-export const isInitialized = writable(false)
+export const initialized = writable(false)
 
 export function init() {
     loadPolicies()
@@ -25,7 +25,7 @@ export async function updatePolicy(id, policyData) {
         entity_code: policyData.entity_code
     }
 
-    const updatedPolicy = await PUT(`/policies/${id}`, parsedPolicyData)
+    const updatedPolicy = await UPDATE(`/policies/${id}`, parsedPolicyData)
 
     policies.update(currPolicies => {
         let i = currPolicies.findIndex(pol => pol.id === id)
@@ -79,10 +79,10 @@ export async function addItem(id, itemData) {
 export function clear() {
     policies.set([])
 
-    isInitialized.set(false)
+    initialized.set(false)
 }
 
-async function loadPolicies() {
+export async function loadPolicies() {
     loading.set(true)
 
     const plcs = await GET('/policies')
@@ -90,5 +90,5 @@ async function loadPolicies() {
     policies.set(plcs)
 
     loading.set(false)
-    isInitialized.set(true)
+    initialized.set(true)
 }

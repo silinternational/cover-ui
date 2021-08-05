@@ -15,3 +15,7 @@ body {
 #main-drawer-content {
 	background: #fff;
 }
+
+.height-fit-content {
+	height: fit-content;
+}

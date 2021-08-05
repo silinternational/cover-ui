@@ -10,6 +10,10 @@
   --progress-bar-color: #005CB9;
 }
 
+.mdc-theme--primary {
+  color: var(--mdc-theme-primary);
+}
+
 .mdc-theme--primary-variant {
   color: var(--mdc-theme-primary-variant);
 }

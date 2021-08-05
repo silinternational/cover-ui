@@ -18,14 +18,14 @@ export function init() {
  * @return {Object} 
  */
 export async function updatePolicy(id, policyData) {
-    let parsedPolicyData = {
+    const parsedPolicyData = {
         household_id: policyData.household_id,
         cost_center: policyData.cost_center,
         account: policyData.account,
         entity_code: policyData.entity_code
     }
 
-    let updatedPolicy = await PUT(`/policies/${id}`, parsedPolicyData)
+    const updatedPolicy = await PUT(`/policies/${id}`, parsedPolicyData)
 
     policies.update(currPolicies => {
         let i = currPolicies.findIndex(pol => pol.id == id)
@@ -46,7 +46,7 @@ export async function updatePolicy(id, policyData) {
 export async function getItems(id) {
     loading.set(true)
 
-    let items = await GET(`/policies/${id}/items`)
+    const items = await GET(`/policies/${id}/items`)
 
     loading.set(false)
     return items
@@ -61,7 +61,7 @@ export async function getItems(id) {
  * @return {Object} 
  */
 export async function addItem(id, itemData) {
-    let parsedItemData = {
+    const parsedItemData = {
         name: itemData.name,
         category_id: itemData.category_id,
         country: itemData.country,
@@ -71,7 +71,7 @@ export async function addItem(id, itemData) {
         serial_number: itemData.serial_number,
     }
 
-    let item = await POST(`/policies/${id}/items`, parsedItemData)
+    const item = await POST(`/policies/${id}/items`, parsedItemData)
 
     return item
 }

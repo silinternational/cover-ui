@@ -1,7 +1,7 @@
 <script>
 import { Breadcrumb, Description, RadioOptions, DateInput, MoneyInput } from '../../../components'
 import { goto } from '@roxi/routify'
-import { Button, Form, Page, TextArea, TextField } from '@silintl/ui-components'
+import { Button, Form, Page, TextArea } from '@silintl/ui-components'
 import { fade } from 'svelte/transition'
 
 const reasonsForLoss = [
@@ -33,8 +33,8 @@ const repairableOptions = [
     value: 'repairable',
   },
   {
-    label: "Not Repairable",
-    value: "not_repairable"
+    label: 'Not Repairable',
+    value: 'not_repairable'
   }
 ]
 
@@ -49,9 +49,17 @@ let formData = {
 }
 
 // TODO: add reimbursed value
-$: isLossReasonSet = formData.lossReason
 $: isNotRepairableOrMoneyInputsAreSet = (formData.isRepairable !== "repairable" || (formData.repairCost && formData.fairMarketValue))
 $: seventyPercentCheck = (!formData.repairCost || !formData.fairMarketValue || (formData.repairCost/formData.fairMarketValue) >= .7)
+$: payoutOptionCheck = formData.lossReason && isNotRepairableOrMoneyInputsAreSet && seventyPercentCheck
+$: canRepair = formData.lossReason === "impact" || formData.lossReason === "lightning" || formData.lossReason === "water_damage"
+
+$: !payoutOptionCheck && unSetPayoutOption()
+$: !(formData.isRepairable === "repairable" || formData.payoutOption === "cash_now") && unSetFairMarketValue()
+$: formData.isRepairable !== "repairable" && unSetRepairCost()
+$: !canRepair && unSetIsRepairable()
+$: payoutOptionCheck && formData.payoutOption == "evacuation" && unSetPayoutOption()
+
 $: moneyPayoutOptions = [
   {
     label: `Replace and get reimbursed later (max $[covered value-deductible])`,
@@ -74,19 +82,15 @@ const onSubmit = () => {
 }
 const unSetPayoutOption = () => {
   formData.payoutOption = null
-  return ''
 }
 const unSetFairMarketValue = () => {
   formData.fairMarketValue = null
-  return ''
 }
 const unSetIsRepairable = () => {
   formData.isRepairable = null
-  return ''
 }
 const unSetRepairCost = () => {
   formData.repairCost = null
-  return ''
 }
 </script>
 
@@ -107,12 +111,10 @@ const unSetRepairCost = () => {
       <TextArea label="Describe the situation" bind:value={formData.situationDescription} rows="4"></TextArea>
       <Description>What happened?</Description>
     </p>
-    {#if formData.lossReason === "impact" || formData.lossReason === "lightning" || formData.lossReason === "water_damage"}
+    {#if canRepair}
       <div transition:fade>
         <RadioOptions name="isRepairable" options={repairableOptions} bind:value={formData.isRepairable} />
       </div>
-    {:else}
-      {unSetIsRepairable()}
     {/if}
     {#if formData.isRepairable === "repairable"}
       <p transition:fade>
@@ -124,25 +126,20 @@ const unSetRepairCost = () => {
           <a href="https://www.google.com/search?q=currency+converter" target="_blank">this converter</a>.
         </Description>
       </p>
-    {:else}
-      {unSetRepairCost()}
     {/if}
-    {#if isLossReasonSet && isNotRepairableOrMoneyInputsAreSet && seventyPercentCheck }
+    {#if payoutOptionCheck }
       {#if formData.lossReason !== "evacuation"}
         <div transition:fade>
           <p>Payout options</p>
           <RadioOptions name="payoutOption" options={moneyPayoutOptions} bind:value={formData.payoutOption} />
         </div>
       {:else}
-        {unSetPayoutOption()}
         <div transition:fade>
           <p>We are sorry you are experiencing this situation and will keep you in our prayers.</p>
           <p>We will reach out to SIL HR to get more context about this situation.</p>
           <p>If approved, you are eligible for 2/3 payout of covered lost assets.</p>
         </div>
       {/if}
-    {:else}
-      {unSetPayoutOption()}
     {/if}
     {#if formData.isRepairable === "repairable" || formData.payoutOption === "cash_now"}
       <p transition:fade>
@@ -152,8 +149,6 @@ const unSetRepairCost = () => {
           <a href="https://www.google.com/search?q=currency+converter" target="_blank">this converter</a>.
         </Description>
       </p>
-    {:else}
-      {unSetFairMarketValue()}
     {/if}
     <p>
       <Button raised>Submit</Button>

@@ -78,8 +78,6 @@ let selected = []
 let loading = false
 let shownMenus = {}
 
-$: console.log(shownMenus)
-
 const handleChecked = id => {
   selected.push(id)
   console.log(selected)

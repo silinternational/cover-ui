@@ -8,7 +8,7 @@ export const login = async () => {
   if (responseData.RedirectURL) {
     location = responseData.RedirectURL
   } else {
-    throwError('Unexpected response during login', responseData)
+    throwError('Unexpected response during login: ' + responseData)
   }
 }
 

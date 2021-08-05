@@ -1,5 +1,7 @@
 <script>
+import { Banner } from '../../../components'
 import { Button } from '@silintl/ui-components'
+import { goto } from '@roxi/routify'
 
 // TODO: make this dependent on backend endpoint
 const itemDetails = {
@@ -29,7 +31,48 @@ const itemDetails = {
     "updated_at": "2021-08-05T16:05:27.357298Z"
   }
 }
+
+const handlePrimaryClicked = () => {
+  $goto('./edit')
+}
+const handleSeconaryClicked = () => {
+  $goto(`/claim/${itemDetails.id}/new-claim`)
+}
+const handleDeleteClicked = () => {
+  $goto('./delete')
+}
 </script>
 
+<style>
+  .delete-button {
+    color: var(--mdc-theme-status-error);
+    text-decoration: none;
+    margin: 5px;
+  }
+
+  p {
+    font-weight: 600;
+  }
+</style>
+
 <h1>{itemDetails.name}</h1>
-<h3>{itemDetails.description}</h3>
+<h3>{itemDetails.make} {itemDetails.model}</h3>
+<Banner background="var(--mdc-theme-neutral">{itemDetails.category.name}</Banner>
+<p>Market value: ${itemDetails.coverage_amount}</p>
+<!--TODO: get this from backend when available-->
+<p>Annual premium: ${16.20}</p>
+<p>Description: {itemDetails.description}</p>
+<!--TODO: get this from backend when available-->
+<p>Accountable person: {"Jeff Smith"}</p>
+<p>Unique identifier: {itemDetails.serial_number}</p>
+<p>Coverage added: {new Date(itemDetails.coverage_start_date).toDateString()}</p>
+<p>Coverage ends: {"13 December 2029"}</p>
+<div>
+  <Button on:click={handlePrimaryClicked} raised>Edit Details</Button>
+  <!-- svelte-ignore a11y-invalid-attribute -->
+  <a on:click={handleDeleteClicked} class="delete-button" href="">Remove Coverage</a>
+</div>
+<br />
+<div>
+  <Button class="mdc-theme--secondary-background" on:click={handleSeconaryClicked} raised>File Claim</Button>
+</div>

@@ -5,11 +5,21 @@
 :root {
   --mdc-theme-primary: #005CB9;
   --mdc-theme-primary-variant: #5885b3;
-  --mdc-theme-secondary: #103066;
+  --mdc-theme-secondary: #FFB619;
   --mdc-theme-error: #C30000;
+  --mdc-theme-neutral: #6D7580;
   --progress-bar-color: #005CB9;
+  --mdc-theme-status-error: #DA1414;
 }
 
 .mdc-theme--primary-variant {
   color: var(--mdc-theme-primary-variant);
+}
+
+.mdc-theme--neutral {
+  color: var(--mdc-theme-neutral)
+}
+
+.mdc-theme--secondary-background {
+  background-color: var(--mdc-theme-secondary) !important;
 }

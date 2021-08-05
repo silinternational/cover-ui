@@ -97,7 +97,9 @@ const unSetRepairCost = () => {
     <p>Reason for loss or damage</p>
     <!--TODO: make description text on next line and inline with the above, label text-->
     <!--TODO: minimize spacing-->
-    <RadioOptions name="lossReason" options={reasonsForLoss} bind:value={formData.lossReason} />
+    <div>
+      <RadioOptions name="lossReason" options={reasonsForLoss} bind:value={formData.lossReason} />
+    </div>
     <p>
       <TextArea label="Describe the situation" bind:value={formData.situationDescription} rows="4"></TextArea>
       <Description>What happened?</Description>

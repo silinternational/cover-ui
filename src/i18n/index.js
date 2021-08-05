@@ -3,6 +3,7 @@ import phrases from './phrases.json'
 export default function t(key) {
   const phrase = phrases[key]
   if (phrase === undefined) {
+    console.log(key)
     return '⤂ translation key not found! ⤃'
   }
 

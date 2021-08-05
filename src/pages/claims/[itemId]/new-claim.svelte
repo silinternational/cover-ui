@@ -49,6 +49,9 @@ let formData = {
 }
 
 // TODO: add reimbursed value
+$: isLossReasonSet = formData.lossReason
+$: ifIsRepairableAndMoneyInputsAreSet = (formData.isRepairable !== "repairable" || (formData.repairCost && formData.fairMarketValue))
+$: seventyPercentCheck = (!formData.repairCost || !formData.fairMarketValue || (formData.repairCost/formData.fairMarketValue) >= .7)
 $: moneyPayoutOptions = [
   {
     label: `Replace and get reimbursed later (max $[covered value-deductible])`,
@@ -124,7 +127,7 @@ const unSetRepairCost = () => {
     {:else}
       {unSetRepairCost()}
     {/if}
-    {#if formData.lossReason && (formData.isRepairable !== "repairable" || (formData.repairCost && formData.fairMarketValue)) && (!formData.repairCost || !formData.fairMarketValue || (formData.repairCost/formData.fairMarketValue) >= .7) }
+    {#if isLossReasonSet && ifIsRepairableAndMoneyInputsAreSet && seventyPercentCheck }
       {#if formData.lossReason !== "evacuation"}
         <div transition:fade>
           <p>Payout options</p>

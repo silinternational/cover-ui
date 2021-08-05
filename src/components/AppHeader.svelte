@@ -31,7 +31,7 @@ $: ownerInitial = user.nickname?.charAt(0) || ''
 
 const avatarError = () => showImage = false
 const toggleMenu = () => menuToggler = !menuToggler
-const showOrHideDrawerToggle = () => isAboveTablet() ? (showDrawerButton = false) : (showDrawerButton = true)
+const showOrHideDrawerButton = () => isAboveTablet() ? (showDrawerButton = false) : (showDrawerButton = true)
 const toggleDrawerHandler = () => dispatch('toggleDrawer') //TODO toggle drawer
 </script>
 
@@ -45,7 +45,7 @@ header {
   cursor: pointer;
 }
 </style>
-<svelte:window on:resize={showOrHideDrawerToggle}/>
+<svelte:window on:resize={showOrHideDrawerButton}/>
 
 <header class="flex justify-between align-items-center w-100">
   <div class="flex justify-start">

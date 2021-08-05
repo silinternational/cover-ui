@@ -10,7 +10,7 @@
     "clean:deps": "npm prune",
     "local:dev": "run-p -l build:dev serve:http",
     "local:prod": "run-p -l build:prod serve:http",
-    "serve:http": "sirv dist --dev --host 0.0.0.0 --port 8080 --single",
+    "serve:http": "sirv dist --dev --host 0.0.0.0 --port 8081 --single",
     "serve:https": "sirv dist --dev --host 0.0.0.0 --port 8443 --single --http2 --key key.pem --cert cert.pem"
   },
   "devDependencies": {
@@ -18,7 +18,7 @@
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.0.2",
     "@roxi/routify": "^2.18.2",
-    "@silintl/ui-components": "^2.4.0",
+    "@silintl/ui-components": "^2.6.0",
     "material-components-web": "^10.0.0",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.2.13",

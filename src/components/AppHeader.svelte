@@ -1,55 +1,73 @@
 <script>
 import Error from './Error.svelte'
 import Progress from './progress/Progress.svelte'
-import { url, isActive } from '@roxi/routify'
+import { Badge, IconButton, isAboveTablet } from '@silintl/ui-components'
+import { createEventDispatcher, onMount } from 'svelte'
+import { Menu } from './index';
 
-const rng = () => Math.floor(Math.random() * 1000) + 1
+const menuItems = [
+  {
+    icon: 'settings', label: 'User settings', url: '/household/settings'
+  },
+  {
+    icon: 'logout', label: 'Sign out', url: '/logout'
+  }
+]
+
+const user = { //TODO get this from the api
+  nickname: 'Jon',
+  avatar_url: '',
+}
+
+let showImage = true
+let alt = 'avatar'
+let showDrawerButton
+let menuToggler = false
+
+const dispatch = createEventDispatcher()
+
+$: src = user.avatar_url
+$: ownerInitial = user.nickname?.charAt(0) || ''
+
+onMount(() => showOrHideDrawerButton())
+
+const avatarError = () => showImage = false
+const toggleMenu = () => menuToggler = !menuToggler
+const showOrHideDrawerButton = () => isAboveTablet() ? (showDrawerButton = false) : (showDrawerButton = true)
+const toggleDrawerHandler = () => dispatch('toggleDrawer') //TODO toggle drawer
 </script>
 
 <style>
 header {
-  background-color: orange;
+  background-color: #fff;
   min-height: 4rem;
-  width: 100%;
-
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
 }
-a {
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-bottom: 0.25rem;
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
 
-  color: whitesmoke;
-  text-decoration: none;
-
-  font-size: x-large;
-}
-a:hover, .active {
-  background-color: whitesmoke;
-  color: black;
-
-  border-radius: 1rem;
+.clickable:hover {
+  cursor: pointer;
 }
 </style>
+<svelte:window on:resize={showOrHideDrawerButton}/>
 
-<header>
-  <a href={$url('/')} class:active={$isActive('/index')}>/</a>
-  <a href={$url('/login')} class:active={$isActive('/login')}>login</a>
-  <a href={$url('/home')} class:active={$isActive('/home')}>home</a>
-  <a href={$url('/non-existent')} class:active={$isActive('/non-existent')}>non-existent</a>
-  <a href={$url(`/param/${rng()}`)} class:active={$isActive('/param')}>param</a>
-  <a href={$url('/qs?a=1&b=2&c=3&d=4&d=5')} class:active={$isActive('/qs')}>qs</a>
-  <a href={$url('/env')} class:active={$isActive('/env')}>env</a>
-  <a href={$url('/sass')} class:active={$isActive('/sass')}>sass</a>
-  <a href={$url('/backend')} class:active={$isActive('/backend')}>backend</a>
-  <a href={$url('/errorhandling')} class:active={$isActive('/errorhandling')}>errorhandling</a>
-  <a href={$url('/progress')} class:active={$isActive('/progress')}>progress</a>
-  <a href={$url('/mdc')} class:active={$isActive('/mdc')}>mdc</a>
+<header class="flex justify-between align-items-center w-100">
+  <div class="flex justify-start">
+    {#if showDrawerButton}
+      <IconButton on:click={toggleDrawerHandler} icon={'menu'}/>
+    {/if}
+  </div>
+
+  <div id="toolbar" class="flex justify-end toolbar mdc-menu-surface--anchor">
+    <button class="mdc-button clickable pr-1" on:click={toggleMenu} >
+      {#if showImage && src}
+          <img {src} {alt} on:error={avatarError}/>
+      {:else}
+          <Badge padding='.4em' color='#005CB9'>{ownerInitial}</Badge>
+      {/if}
+    </button>
+
+    <!-- TODO set menuToggler to false when menu closes -->
+    <Menu autofocus bind:menuToggler {menuItems} on:syncToggler={() => menuToggler = false}/>
+  </div>
 </header>
 
 <Progress />

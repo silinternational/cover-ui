@@ -1,7 +1,7 @@
 
 <script>
-import { Datatable } from '../components/'
-import { Card, Checkbox, CustomCard } from '@silintl/ui-components'
+import { Datatable, Menu } from '../components/'
+import { Checkbox, CustomCard } from '@silintl/ui-components'
 
 // TODO: update this to be dependent on backend endpoint
 const examplePolicies = [
@@ -65,10 +65,20 @@ const exampleItems = [
     last_changed: "5 days"
   },
 ]
+const menuItems = id => [
+  {
+    label: 'Edit', url: `/items/${id}/edit`
+  },
+  {
+    label: 'Remove Coverage', url: `/items/${id}/remove-coverage`
+  }
+]
 
 let selected = []
 let loading = false
-let shownMenu
+let shownMenus = {}
+
+$: console.log(shownMenus)
 
 const handleChecked = id => {
   selected.push(id)
@@ -79,11 +89,7 @@ const handleUnchecked = id => {
   console.log(selected)
 }
 const handleMoreVertClick = id => {
-  if (shownMenu == id) {
-    shownMenu = null
-  } else {
-    shownMenu = id
-  }
+  shownMenus[id] = shownMenus[id] !== true
 }
 
 </script>
@@ -117,22 +123,9 @@ const handleMoreVertClick = id => {
   color: #6e7377;
 }
 
-.home-floating-menu {
+.item-menu {
   position: absolute;
-  background: white;
-  box-shadow: 0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12),0px 5px 5px -3px rgba(0,0,0,0.2);
-  padding: 20px;
-  left: 88%;
-  margin-top: 45px;
-  border-radius: 3px;
-}
-
-.shown {
-  display: inherit;
-}
-
-.not-shown {
-  display: none;
+  right: 235px;
 }
 </style>
 
@@ -178,11 +171,8 @@ const handleMoreVertClick = id => {
                 <svg class="home-table-more-vert" viewBox="0 0 30 30" on:click={() => handleMoreVertClick(item.id)}>
                   <path fill="currentColor" d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z" />
                 </svg>
+                <div class="item-menu"><Menu bind:menuToggler={shownMenus[item.id]} menuItems="{menuItems(item.id)}" on:syncToggler={() => shownMenus[item.id] = false}/></div>
               </Datatable.Data.Row.Item>
-              <!--TODO FUTURE: make it so that when you lose focus on this menu, it closes-->
-              <div class="home-floating-menu {shownMenu == item.id ? "shown" : "not-shown"}">
-                hey there
-              </div>
             </Datatable.Data.Row>
           {/each}
         </Datatable.Data>

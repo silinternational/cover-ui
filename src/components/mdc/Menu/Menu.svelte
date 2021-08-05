@@ -2,6 +2,7 @@
 import { onDestroy, onMount } from 'svelte'
 import { MDCMenu } from '@material/menu'
 import { createEventDispatcher } from 'svelte'
+import { goto } from '@roxi/routify';
 
 export let menuItems = []
 export let menuToggler = false
@@ -27,15 +28,20 @@ onDestroy(() => {
 })
 
 const isMenuItemActive = (currentUrl, menuItemUrl) => currentUrl === menuItemUrl
+const handleItemClick = url => {
+  if (url) {
+    $goto(url)
+  }
+}
 </script>
 
 <div class="mdc-menu mdc-menu-surface" bind:this={element}>
   <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical" tabindex="-1">
     {#each menuItems as {icon, label, url}, i}
-      <li class="mdc-list-item" role="menuitem">
+      <li on:click={() => handleItemClick(url)} class="mdc-list-item" role="menuitem">
         <span class="mdc-list-item__ripple"></span>
         {#if url}
-          <a class="mdc-list-item" class:mdc-list-item--activated={isMenuItemActive(currentUrl, url)} href={url}
+          <a class="mdc-list-item" class:mdc-list-item--activated={isMenuItemActive(currentUrl, url)} href=""
             aria-current={isMenuItemActive(currentUrl, url) ? "page" : null} tabindex={i === 0 ? 0 : undefined}>
             {#if icon}
               <i class="material-icons mdc-list-item__graphic" aria-hidden="true">{icon}</i>

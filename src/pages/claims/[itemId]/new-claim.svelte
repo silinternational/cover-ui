@@ -96,6 +96,7 @@ const unSetRepairCost = () => {
     </p>
     <p>Reason for loss or damage</p>
     <!--TODO: make description text on next line and inline with the above, label text-->
+    <!--TODO: minimize spacing-->
     <RadioOptions name="lossReason" options={reasonsForLoss} bind:value={formData.lossReason} />
     <p>
       <TextArea label="Describe the situation" bind:value={formData.situationDescription} rows="4"></TextArea>
@@ -131,9 +132,7 @@ const unSetRepairCost = () => {
         {unSetPayoutOption()}
         <div transition:fade>
           <p>We are sorry you are experiencing this situation and will keep you in our prayers.</p>
-          <br />
           <p>We will reach out to SIL HR to get more context about this situation.</p>
-          <br />
           <p>If approved, you are eligible for 2/3 payout of covered lost assets.</p>
         </div>
       {/if}

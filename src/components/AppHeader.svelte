@@ -59,9 +59,9 @@ header {
   <div id="toolbar" class="flex justify-end toolbar mdc-menu-surface--anchor">
     <button class="mdc-button clickable pr-1" on:click={toggleMenu} >
       {#if showImage && src}
-          <img {src} {alt} on:error={avatarError}/>
+        <img {src} {alt} on:error={avatarError}/>
       {:else}
-          <Badge padding='.4em' color='#005CB9'>{ownerInitial}</Badge>
+        <Badge padding='.4em' color='#005CB9'>{ownerInitial}</Badge>
       {/if}
     </button>
 

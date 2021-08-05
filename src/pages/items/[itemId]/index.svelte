@@ -32,13 +32,13 @@ const itemDetails = {
   }
 }
 
-const handlePrimaryClicked = () => {
+const goToEditItem = () => {
   $goto('./edit')
 }
-const handleSeconaryClicked = () => {
+const goToNewClaim = () => {
   $goto(`/claim/${itemDetails.id}/new-claim`)
 }
-const handleDeleteClicked = () => {
+const goToDelete = () => {
   $goto('./delete')
 }
 </script>
@@ -68,11 +68,11 @@ const handleDeleteClicked = () => {
 <p>Coverage added: {new Date(itemDetails.coverage_start_date).toDateString()}</p>
 <p>Coverage ends: {"13 December 2029"}</p>
 <div>
-  <Button on:click={handlePrimaryClicked} raised>Edit Details</Button>
+  <Button on:click={goToEditItem} raised>Edit Details</Button>
   <!-- svelte-ignore a11y-invalid-attribute -->
-  <a on:click={handleDeleteClicked} class="delete-button" href="">Remove Coverage</a>
+  <a on:click={goToDelete} class="delete-button" href="">Remove Coverage</a>
 </div>
 <br />
 <div>
-  <Button class="mdc-theme--secondary-background" on:click={handleSeconaryClicked} raised>File Claim</Button>
+  <Button class="mdc-theme--secondary-background" on:click={goToNewClaim} raised>File Claim</Button>
 </div>

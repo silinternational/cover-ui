@@ -1,22 +1,15 @@
 <script>
-import { logout } from '../authn'
-import { GET } from '../data'
+import { loadUser } from '../data/user'
+import { goto } from '@roxi/routify'
 import { onMount } from 'svelte'
-import user from '../authn/user'
 
 onMount(async () => {
-  await GET('bearer')  // this helps simulate a page accessed that may require the user be authenticated
+  loadUser().then(() => {
+    $goto('/home')
+  }).catch(error => {
+    if (error.code === 401) {
+      $goto('/login')
+    }
+  })
 })
 </script>
-
-<p>
-  home 
-</p>
-
-<p>
-  {#if $user.id}
-    Welcome {$user.first} {$user.last} ({$user.email})
-  {/if}
-  
-  <button on:click={logout}>logout (simulated)</button>
-</p>

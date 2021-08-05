@@ -1,12 +1,11 @@
+
 <script>
 import { Datatable } from '../components/'
-import { Card, Checkbox, CustomCard } from '@silintl/ui-components'
+import { Checkbox } from '@silintl/ui-components'
+import ClaimCard from '../components/ClaimCard.svelte';
 
-let selected = []
-let loading = false
-let shownMenu
 // TODO: update this to be dependent on backend endpoint
-let exampleItems = [
+const examplePolicies = [
   {
     id: 1234,
     item_name: "Laptop",
@@ -35,6 +34,42 @@ let exampleItems = [
     type: "Stationary",
   }
 ]
+const exampleItems = [
+  {
+    name: "Saxophone",
+    accountable_person: "John Russel",
+    last_changed: "5 days",
+  },
+  {
+    name: "GoPro",
+    accountable_person: "Priscilla Russel",
+    last_changed: "5 days"
+  },
+  {
+    name: "GoPro",
+    accountable_person: "Priscilla Russel",
+    last_changed: "5 days"
+  },
+  {
+    name: "GoPro",
+    accountable_person: "Priscilla Russel",
+    last_changed: "5 days"
+  },
+  {
+    name: "GoPro",
+    accountable_person: "Priscilla Russel",
+    last_changed: "5 days"
+  },
+  {
+    name: "GoPro",
+    accountable_person: "Priscilla Russel",
+    last_changed: "5 days"
+  },
+]
+
+let selected = []
+let loading = false
+let shownMenu
 
 const handleChecked = id => {
   selected.push(id)
@@ -61,9 +96,10 @@ const handleMoreVertClick = id => {
   height: 100%;
 }
 
-.card-header {
-  margin: 10px;
-  color: #FFEB98;
+.grid {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  grid-gap: 10px;
 }
 
 .home-sub-content {
@@ -101,22 +137,15 @@ const handleMoreVertClick = id => {
 }
 </style>
 
-<div class="home-page-content">
-  <Card color="#103066">
-    <h2 class="card-header">To-Dos</h2>
-  </Card>
+<div class="home-page-content">   
   <!--TODO: make this a grid (I think) when design is finialized-->
   <div class="home-sub-content" style="display: flex">
-    <CustomCard alt="Status" title="Title" footerText="Footer Text" buttons="{[ { label: "Primary Button", url: "/idk-where-to-go" } ]}">
-      Accountable Person
-    </CustomCard>
-    <CustomCard alt="Status" title="Title" footerText="Footer Text" buttons="{[ { label: "Primary Button", url: "/idk-where-to-go" } ]}">
-      Accountable Person
-    </CustomCard>
+    <div class="grid">
+      {#each exampleItems as item}
+        <ClaimCard {item} buttons={[ { label: "Edit coverage", url: "/items/edit-coverage" } ]} />
+      {/each}
+    </div>
   </div>
-  <Card color="#103066">
-    <h2 class="card-header">Covered Items</h2>
-  </Card>
   <div class="home-sub-content">
     <!--TODO: add an '$' before the 'loading' when it because a store-->
     {#if loading }
@@ -135,7 +164,7 @@ const handleMoreVertClick = id => {
         </Datatable.Header>
     
         <Datatable.Data>
-          {#each exampleItems as item}
+          {#each examplePolicies as item}
             <Datatable.Data.Row>
               <Datatable.Data.Row.Item><Checkbox on:checked={() => handleChecked(item.id)} on:unchecked={() => handleUnchecked(item.id)}/></Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{item.item_name}</Datatable.Data.Row.Item>

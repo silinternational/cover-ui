@@ -25,7 +25,11 @@ const reasonsForLoss = [
     label: 'Evacuation',
     value: 'evacuation',
     description: 'For bulk claims due to large-scale events',
-  }
+  },
+  {
+    label: 'Other',
+    value: 'other'
+  },
 ]
 const repairableOptions = [
   {
@@ -52,7 +56,7 @@ let formData = {
 $: isNotRepairableOrMoneyInputsAreSet = (formData.isRepairable !== "repairable" || (formData.repairCost && formData.fairMarketValue))
 $: seventyPercentCheck = (!formData.repairCost || !formData.fairMarketValue || (formData.repairCost/formData.fairMarketValue) >= .7)
 $: payoutOptionCheck = formData.lossReason && isNotRepairableOrMoneyInputsAreSet && seventyPercentCheck
-$: canRepair = formData.lossReason === "impact" || formData.lossReason === "lightning" || formData.lossReason === "water_damage"
+$: canRepair = formData.lossReason === "impact" || formData.lossReason === "lightning" || formData.lossReason === "water_damage" || formData.lossReason === "other"
 
 $: !payoutOptionCheck && unSetPayoutOption()
 $: !(formData.isRepairable === "repairable" || formData.payoutOption === "cash_now") && unSetFairMarketValue()
@@ -127,6 +131,15 @@ const unSetRepairCost = () => {
         </Description>
       </p>
     {/if}
+    {#if formData.isRepairable === "repairable" || formData.payoutOption === "cash_now"}
+      <p transition:fade>
+        <MoneyInput label="Fair market value" bind:value={formData.fairMarketValue}></MoneyInput>
+        <Description>
+          To convert to USD, use 
+          <a href="https://www.google.com/search?q=currency+converter" target="_blank">this converter</a>.
+        </Description>
+      </p>
+    {/if}
     {#if payoutOptionCheck }
       {#if formData.lossReason !== "evacuation"}
         <div transition:fade>
@@ -140,15 +153,6 @@ const unSetRepairCost = () => {
           <p>If approved, you are eligible for 2/3 payout of covered lost assets.</p>
         </div>
       {/if}
-    {/if}
-    {#if formData.isRepairable === "repairable" || formData.payoutOption === "cash_now"}
-      <p transition:fade>
-        <MoneyInput label="Fair market value" bind:value={formData.fairMarketValue}></MoneyInput>
-        <Description>
-          To convert to USD, use 
-          <a href="https://www.google.com/search?q=currency+converter" target="_blank">this converter</a>.
-        </Description>
-      </p>
     {/if}
     <p>
       <Button raised>Submit</Button>

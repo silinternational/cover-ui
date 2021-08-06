@@ -16,9 +16,10 @@ export async function updateItem(item) {
     
     loading.set(true)
 
+    let itemId = item.id
     delete item.id
     // TODO: create `parsedItem` to validate item
-    let item = await UPDATE(`/items/${item.id}`, item)
+    let item = await UPDATE(`/items/${itemId}`, item)
 
     loading.set(false)
     return item

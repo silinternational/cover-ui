@@ -1,6 +1,7 @@
 <script>
 import { Breadcrumb, Description, RadioOptions, DateInput, MoneyInput } from '../../../components'
-import { goto } from '@roxi/routify'
+import { claims, initialized, createClaim, getClaim } from '../../../data/claims.js'
+import { goto, params } from '@roxi/routify'
 import { Button, Form, Page, TextArea } from '@silintl/ui-components'
 import { fade } from 'svelte/transition'
 
@@ -52,11 +53,13 @@ let formData = {
   payoutOption: '',
 }
 
+// TODO: get accountable person from item 
 // TODO: add reimbursed value
 $: isNotRepairableOrMoneyInputsAreSet = (formData.isRepairable !== "repairable" || (formData.repairCost && formData.fairMarketValue))
 $: seventyPercentCheck = (!formData.repairCost || !formData.fairMarketValue || (formData.repairCost/formData.fairMarketValue) >= .7)
 $: payoutOptionCheck = formData.lossReason && isNotRepairableOrMoneyInputsAreSet && seventyPercentCheck
 $: canRepair = formData.lossReason === "impact" || formData.lossReason === "lightning" || formData.lossReason === "water_damage" || formData.lossReason === "other"
+$: claimExists = $claims.find(clm => clm.itemId === $params.itemId)
 
 $: !payoutOptionCheck && unSetPayoutOption()
 $: !(formData.isRepairable === "repairable" || formData.payoutOption === "cash_now") && unSetFairMarketValue()
@@ -75,14 +78,14 @@ $: moneyPayoutOptions = [
   }
 ]
 
-const onSubmit = () => {
+const onSubmit = async () => {
   if (formData.isRepairable === "repairable" && !formData.payoutOption) {
     formData.payoutOption = "repair"
   }
   // TODO: change this to POST to backend endpoint
-  console.log('Form submitted:', formData)
+  await createClaim($params.itemId, formData)
   // TODO: make this go back a url
-  $goto('/')
+  $goto('/home')
 }
 const unSetPayoutOption = () => {
   formData.payoutOption = null
@@ -98,64 +101,68 @@ const unSetRepairCost = () => {
 }
 </script>
 
-<Page>
-  <Breadcrumb />
-  <Form on:submit={onSubmit}>
-    <p>
-      <DateInput bind:value={formData.lostDate} />
-      <Description>Date lost or damaged</Description>
-    </p>
-    <p>Reason for loss or damage</p>
-    <!--TODO: make description text on next line and inline with the above, label text-->
-    <!--TODO: minimize spacing-->
-    <div>
-      <RadioOptions name="lossReason" options={reasonsForLoss} bind:value={formData.lossReason} />
-    </div>
-    <p>
-      <TextArea label="Describe the situation" bind:value={formData.situationDescription} rows="4"></TextArea>
-      <Description>What happened?</Description>
-    </p>
-    {#if canRepair}
-      <div transition:fade>
-        <RadioOptions name="isRepairable" options={repairableOptions} bind:value={formData.isRepairable} />
+{#if $initialized && claimExists}
+  <h2>Claim already exists!</h2>
+{:else if $initialized}
+  <Page>
+    <Breadcrumb />
+    <Form on:submit={onSubmit}>
+      <p>
+        <DateInput bind:value={formData.lostDate} />
+        <Description>Date lost or damaged</Description>
+      </p>
+      <p>Reason for loss or damage</p>
+      <!--TODO: make description text on next line and inline with the above, label text-->
+      <!--TODO: minimize spacing-->
+      <div>
+        <RadioOptions name="lossReason" options={reasonsForLoss} bind:value={formData.lossReason} />
       </div>
-    {/if}
-    {#if formData.isRepairable === "repairable"}
-      <p transition:fade>
-        <MoneyInput label="Cost of repair" bind:value={formData.repairCost}></MoneyInput>
-        <Description>
-          How much will it cost to be repaired?
-          <br />
-          To convert to USD, use 
-          <a href="https://www.google.com/search?q=currency+converter" target="_blank">this converter</a>.
-        </Description>
+      <p>
+        <TextArea label="Describe the situation" bind:value={formData.situationDescription} rows="4"></TextArea>
+        <Description>What happened?</Description>
       </p>
-    {/if}
-    {#if formData.isRepairable === "repairable" || formData.payoutOption === "cash_now"}
-      <p transition:fade>
-        <MoneyInput label="Fair market value" bind:value={formData.fairMarketValue}></MoneyInput>
-        <Description>
-          To convert to USD, use 
-          <a href="https://www.google.com/search?q=currency+converter" target="_blank">this converter</a>.
-        </Description>
-      </p>
-    {/if}
-    {#if payoutOptionCheck }
-      {#if formData.lossReason !== "evacuation"}
+      {#if canRepair}
         <div transition:fade>
-          <p>Payout options</p>
-          <RadioOptions name="payoutOption" options={moneyPayoutOptions} bind:value={formData.payoutOption} />
-        </div>
-      {:else}
-        <div transition:fade>
-          <p>We are sorry you are experiencing this situation and will keep you in our prayers.</p>
-          <p>We will reach out to SIL HR to get more context about this situation.</p>
-          <p>If approved, you are eligible for 2/3 payout of covered lost assets.</p>
+          <RadioOptions name="isRepairable" options={repairableOptions} bind:value={formData.isRepairable} />
         </div>
       {/if}
-    {/if}
-    <p>
-      <Button raised>Submit</Button>
-    </p>
-  </Form>
-</Page>
+      {#if formData.isRepairable === "repairable"}
+        <p transition:fade>
+          <MoneyInput label="Cost of repair" bind:value={formData.repairCost}></MoneyInput>
+          <Description>
+            How much will it cost to be repaired?
+            <br />
+            To convert to USD, use 
+            <a href="https://www.google.com/search?q=currency+converter" target="_blank">this converter</a>.
+          </Description>
+        </p>
+      {/if}
+      {#if formData.isRepairable === "repairable" || formData.payoutOption === "cash_now"}
+        <p transition:fade>
+          <MoneyInput label="Fair market value" bind:value={formData.fairMarketValue}></MoneyInput>
+          <Description>
+            To convert to USD, use 
+            <a href="https://www.google.com/search?q=currency+converter" target="_blank">this converter</a>.
+          </Description>
+        </p>
+      {/if}
+      {#if payoutOptionCheck }
+        {#if formData.lossReason !== "evacuation"}
+          <div transition:fade>
+            <p>Payout options</p>
+            <RadioOptions name="payoutOption" options={moneyPayoutOptions} bind:value={formData.payoutOption} />
+          </div>
+        {:else}
+          <div transition:fade>
+            <p>We are sorry you are experiencing this situation and will keep you in our prayers.</p>
+            <p>We will reach out to SIL HR to get more context about this situation.</p>
+            <p>If approved, you are eligible for 2/3 payout of covered lost assets.</p>
+          </div>
+        {/if}
+      {/if}
+      <p>
+        <Button raised>Submit</Button>
+      </p>
+    </Form>
+  </Page>
+{/if}

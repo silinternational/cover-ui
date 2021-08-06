@@ -41,6 +41,7 @@ const handleItemClick = url => {
       <li on:click={() => handleItemClick(url)} class="mdc-list-item" role="menuitem">
         <span class="mdc-list-item__ripple"></span>
         {#if url}
+          <!-- svelte-ignore a11y-invalid-attribute -->
           <a class="mdc-list-item" class:mdc-list-item--activated={isMenuItemActive(currentUrl, url)} href=""
             aria-current={isMenuItemActive(currentUrl, url) ? "page" : null} tabindex={i === 0 ? 0 : undefined}>
             {#if icon}

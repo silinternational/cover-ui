@@ -5,14 +5,15 @@ import App from './App.svelte'
 import AppFooter from './AppFooter.svelte'
 import Banner from './Banner.svelte'
 import Breadcrumb from './Breadcrumb.svelte'
+import ClaimCard from './ClaimCard.svelte'
+import ClaimCards from './ClaimCards.svelte'
 import DateInput from './DateInput.svelte'
 import DependentForm from './DependentForm.svelte'
 import Description from './Description.svelte'
 import MoneyInput from './MoneyInput.svelte'
 import RadioOptions from './RadioOptions.svelte'
 import Menu from './mdc/Menu'
-import ClaimCard from './ClaimCard.svelte'
-import ClaimCards from './ClaimCards.svelte'
+import Row from './mdc/Row.svelte'
 
 export {
     Datatable as Datatable, 
@@ -29,5 +30,6 @@ export {
     RadioOptions as RadioOptions,
     Menu,
     ClaimCard,
-    ClaimCards
+    ClaimCards,
+    Row
 }

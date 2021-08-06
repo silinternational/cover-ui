@@ -1,7 +1,7 @@
 
 <script>
 import { Datatable } from '../components/'
-import { Checkbox } from '@silintl/ui-components'
+import { Checkbox, Page } from '@silintl/ui-components'
 import ClaimCard from '../components/ClaimCard.svelte';
 
 // TODO: update this to be dependent on backend endpoint
@@ -91,19 +91,10 @@ const handleMoreVertClick = id => {
 
 <style>
 /* TODO: make this more accurate when design is finialized */
-.home-page-content {
-  margin: 0 5px;
-  height: 100%;
-}
-
 .grid {
   display: grid;
   grid-template-columns: auto auto auto auto;
   grid-gap: 10px;
-}
-
-.home-sub-content {
-  margin: 20px 0;
 }
 
 .home-table-more-vert {
@@ -137,16 +128,18 @@ const handleMoreVertClick = id => {
 }
 </style>
 
-<div class="home-page-content">   
-  <!--TODO: make this a grid (I think) when design is finialized-->
-  <div class="home-sub-content" style="display: flex">
+<Page layout="grid">   
+  <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-1"/>
+  <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-10">
     <div class="grid">
       {#each exampleItems as item}
         <ClaimCard {item} buttons={[ { label: "Edit coverage", url: "/items/edit-coverage" } ]} />
       {/each}
     </div>
   </div>
-  <div class="home-sub-content">
+  <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-1"/>
+
+  <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
     <!--TODO: add an '$' before the 'loading' when it because a store-->
     {#if loading }
       Loading items...
@@ -188,4 +181,4 @@ const handleMoreVertClick = id => {
       </Datatable>
     {/if}
   </div>
-</div>
+</Page>

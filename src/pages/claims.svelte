@@ -49,6 +49,6 @@ const exampleItems = [
   </Row>
 
   <Row cols={'12'}>
-    <ClaimCards exampleItems={$claims} />
+    <ClaimCards items={$claims} />
   </Row>
 </Page>

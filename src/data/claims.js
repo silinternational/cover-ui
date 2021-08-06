@@ -20,22 +20,22 @@ export function init() {
  * @param {Object} claimData
  */
 export function createClaim(itemId, claimData) {
-    loading.set(true)
+  loading.set(true)
 
-    claimData.itemId = itemId
+  claimData.itemId = itemId
 
-    claims.update(currClaims => {
-        currClaims.push(claimData)
-        return currClaims
-    })
+  claims.update(currClaims => {
+    currClaims.push(claimData)
+    return currClaims
+  })
 
-    loading.set(false)
+  loading.set(false)
 
-    return null
+  return null
 }
 
 export function getClaim(claims, itemId) {
-    return claims.find(clm => clm.itemId === itemId)
+  return claims.find(clm => clm.itemId === itemId)
 }
 
 /**
@@ -51,9 +51,9 @@ export function updateClaim(itemId, newClaimData) {
     newClaimData.itemId = itemId
 
     claims.update(currClaims => {
-        let i = currClaims.findIndex(clm => clm.itemId === itemId)
-        currClaims[i] = newClaimData
-        return currClaims
+      let i = currClaims.findIndex(clm => clm.itemId === itemId)
+      currClaims[i] = newClaimData
+      return currClaims
     })
 
     loading.set(false)
@@ -68,18 +68,18 @@ export function updateClaim(itemId, newClaimData) {
  * @param {Number} itemId 
  */
 export function deleteClaim(itemId) {
-    loading.set(true)
+  loading.set(true)
 
-    claims.update(currClaims => currClaims.filter(clm => clm.itemId !== itemId))
+  claims.update(currClaims => currClaims.filter(clm => clm.itemId !== itemId))
 
-    loading.set(false)
+  loading.set(false)
 
-    return null
+  return null
 }
 
 export function clear() {
-    claims.set([])
-    initialized.set(false)
+  claims.set([])
+  initialized.set(false)
 }
 
 /*

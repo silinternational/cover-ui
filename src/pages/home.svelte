@@ -1,9 +1,9 @@
 
 <script>
 import { Datatable, Menu } from '../components/'
-import { Checkbox, isAboveMobile, isAboveTablet } from '@silintl/ui-components'
+import { Checkbox, isAboveMobile, isAboveTablet, Page } from '@silintl/ui-components'
 import ClaimCard from '../components/ClaimCard.svelte'
-import { onMount } from 'svelte';
+import { onMount } from 'svelte'
 
 // TODO: update this to be dependent on backend endpoint
 const examplePolicies = [
@@ -110,30 +110,21 @@ const setCardCols = () => {
 
 <style>
 /* TODO: make this more accurate when design is finialized */
-.home-page-content {
-  margin: 0 5px;
-  height: 100%;
-}
-
 .grid {
   display: grid;
   grid-gap: 8px;
 }
 
 .cols-lg {
-  grid-template-columns:  minmax(220px, 330px) minmax(220px, 330px) minmax(220px, 330px);
+  grid-template-columns: minmax(220px, 330px) minmax(220px, 330px) minmax(220px, 330px);
 }
 
 .cols-md {
-  grid-template-columns:  minmax(220px, 330px) minmax(220px, 330px);
+  grid-template-columns: minmax(220px, 330px) minmax(220px, 330px);
 }
 
 .cols-sm {
-  grid-template-columns:  minmax(220px, 330px);
-}
-
-.home-sub-content {
-  margin: 20px 0;
+  grid-template-columns: minmax(220px, 330px);
 }
 
 .home-table-more-vert {
@@ -156,16 +147,18 @@ const setCardCols = () => {
 
 <svelte:window on:resize={setCardCols}/>
 
-<div class="home-page-content">   
-  <!--TODO: make this a grid (I think) when design is finialized-->
-  <div class="home-sub-content flex justify-center">
-    <div class="grid {gridCols}">
-      {#each exampleItems as item}
-        <ClaimCard {item} buttons={[ { label: "Edit coverage", url: "/items/edit-coverage" } ]} />
-      {/each}
+<Page layout="grid">   
+  <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
+    <div class="flex justify-center">
+      <div class="grid {gridCols}">
+        {#each exampleItems as item}
+          <ClaimCard {item} buttons={[ { label: "Edit coverage", url: "/items/edit-coverage" } ]} />
+        {/each}
+      </div>
     </div>
   </div>
-  <div class="home-sub-content">
+
+  <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
     <!--TODO: add an '$' before the 'loading' when it because a store-->
     {#if loading }
       Loading items...
@@ -204,4 +197,4 @@ const setCardCols = () => {
       </Datatable>
     {/if}
   </div>
-</div>
+</Page>

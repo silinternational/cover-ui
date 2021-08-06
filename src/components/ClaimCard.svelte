@@ -34,17 +34,21 @@ const gotoItem = () => item.id && $goto(`/requests/${item.id}`)
   background: #eef2fa;
 }
 
-.pl-50px {
+.ml-50px {
   margin-left: 50px;
 }
 
-.pl-10px{
+.pl-10px {
   padding-left: 10px;
+}
+
+.pl-50px {
+  padding-left: 50px;
 }
 </style>
 
 <Card isClickable noPadding on:click={gotoItem} on:keypress={gotoItem} class="height-fit-content py-0 {$$props.class}">
-  <div class="flex justify-center align-items-center bg-color black mb-2 p-1">
+  <div class="flex justify-start align-items-center bg-color black mb-2 p-1 pl-50px">
     <span class="material-icons">{state.icon}</span>
 
     <div class="mdc-theme--primary pl-10px">
@@ -53,15 +57,15 @@ const gotoItem = () => item.id && $goto(`/requests/${item.id}`)
     </div>
   </div>
 
-  <div class="mdc-typography--headline5 multi-line-truncate content pl-50px">
+  <div class="mdc-typography--headline5 multi-line-truncate content ml-50px">
     {item.name}
   </div>
 
-  <div class="content multi-line-truncate pl-50px">
+  <div class="content multi-line-truncate ml-50px">
     {item.accountable_person}
   </div>
 
-  <div class="action pb-2 pl-50px" slot="actions">
+  <div class="action pb-2 ml-50px" slot="actions">
     {#if buttons}
       {#each buttons as btn}
         <Button raised url={btn.url}>{btn.label}</Button>

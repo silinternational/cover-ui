@@ -2,8 +2,6 @@
 import { throwError } from "../error"
 import { goto, url } from "@roxi/routify";
 
-const homeURL = "/home"
-
 export let links
 export let hasHome = true
 
@@ -56,7 +54,7 @@ a {
 <div class="bottom-margin flex text-align-center align-items-center">
   <!-- svelte-ignore a11y-invalid-attribute -->
   {#if hasHome }
-  <a on:click={() => $goto(homeURL)} href="" class="capitalize"><i class="material-icons mdc-list-item__graphic money-icon breadcrumb-icon breadcrumb-home" aria-hidden="true">home</i></a><!--
+  <a href="/home" class="capitalize"><i class="material-icons mdc-list-item__graphic money-icon breadcrumb-icon breadcrumb-home" aria-hidden="true">home</i></a><!--
   --><i class="material-icons mdc-list-item__graphic money-icon breadcrumb-icon" aria-hidden="true">chevron_right</i>
   {/if}
   {#each urls as val, i}

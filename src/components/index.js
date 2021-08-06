@@ -11,6 +11,8 @@ import Description from './Description.svelte'
 import MoneyInput from './MoneyInput.svelte'
 import RadioOptions from './RadioOptions.svelte'
 import Menu from './mdc/Menu'
+import ClaimCard from './ClaimCard.svelte'
+import ClaimCards from './ClaimCards.svelte'
 
 export {
     Datatable as Datatable, 
@@ -25,5 +27,7 @@ export {
     Description as Description, 
     MoneyInput as MoneyInput,
     RadioOptions as RadioOptions,
-    Menu
+    Menu,
+    ClaimCard,
+    ClaimCards
 }

@@ -52,7 +52,7 @@ const gotoItem = () => item.id && $goto(`/requests/${item.id}`)
     <span class="material-icons">{state.icon}</span>
 
     <div class="mdc-theme--primary pl-10px">
-      <div class="mdc-typography--headline6 multi-line-truncate content">From ${item.from}</div>
+      <div class="mdc-typography--headline6 multi-line-truncate content">{item.title}</div>
       <div class="multi-line-truncate fs-14">{item.message}</div>
     </div>
   </div>

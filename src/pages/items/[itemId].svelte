@@ -1,4 +1,6 @@
 <script>
+import user from '../../authn/user.js'
+import { getItems } from '../../data/items.js'
 import { Banner, Breadcrumb } from '../../components'
 import { Button } from '@silintl/ui-components'
 import { goto, params } from '@roxi/routify'
@@ -43,14 +45,20 @@ const breadcrumbLinks = [
   },
 ]
 
+let items
+let item
+getItems(user.policy_id).then(loadedItems => items = loadedItems)
+
+$: items && (item = items.find(itm => itm.id === $params.itemId))
+
 const goToEditItem = () => {
-  $goto('./edit')
+  $goto(`/items/${$params.itemId}/edit`)
 }
 const goToNewClaim = () => {
-  $goto(`/items/${itemDetails.id}/new-claim`)
+  $goto(`/items/${$params.itemId}/new-claim`)
 }
 const goToDelete = () => {
-  $goto('./delete')
+  $goto(`/items/${$params.itemId}/delete`)
 }
 </script>
 
@@ -66,25 +74,29 @@ p {
 }
 </style>
 
-<Breadcrumb links={breadcrumbLinks} />
-<h1>{itemDetails.name}</h1>
-<h3>{itemDetails.make} {itemDetails.model}</h3>
-<Banner background="var(--mdc-theme-neutral">{itemDetails.category.name}</Banner>
-<p>Market value: ${itemDetails.coverage_amount}</p>
-<!--TODO: get this from backend when available-->
-<p>Annual premium: ${16.20}</p>
-<p>Description: {itemDetails.description}</p>
-<!--TODO: get this from backend when available-->
-<p>Accountable person: {"Jeff Smith"}</p>
-<p>Unique identifier: {itemDetails.serial_number}</p>
-<p>Coverage added: {new Date(itemDetails.coverage_start_date).toDateString()}</p>
-<p>Coverage ends: {"13 December 2029"}</p>
-<div>
-  <Button on:click={goToEditItem} raised>Edit Details</Button>
-  <!-- svelte-ignore a11y-invalid-attribute -->
-  <a on:click={goToDelete} class="delete-button" href="">Remove Coverage</a>
-</div>
-<br />
-<div>
-  <Button class="mdc-theme--secondary-background" on:click={goToNewClaim} raised>File Claim</Button>
-</div>
+{#if items && !item } 
+  Item does not exist!
+{:else if items }
+  <Breadcrumb links={breadcrumbLinks} />
+  <h1>{itemDetails.name}</h1>
+  <h3>{itemDetails.make} {itemDetails.model}</h3>
+  <Banner background="var(--mdc-theme-neutral">{itemDetails.category.name}</Banner>
+  <p>Market value: ${itemDetails.coverage_amount}</p>
+  <!--TODO: get this from backend when available-->
+  <p>Annual premium: ${16.20}</p>
+  <p>Description: {itemDetails.description}</p>
+  <!--TODO: get this from backend when available-->
+  <p>Accountable person: {"Jeff Smith"}</p>
+  <p>Unique identifier: {itemDetails.serial_number}</p>
+  <p>Coverage added: {new Date(itemDetails.coverage_start_date).toDateString()}</p>
+  <p>Coverage ends: {"13 December 2029"}</p>
+  <div>
+    <Button on:click={goToEditItem} raised>Edit Details</Button>
+    <!-- svelte-ignore a11y-invalid-attribute -->
+    <a on:click={goToDelete} class="delete-button" href="">Remove Coverage</a>
+  </div>
+  <br />
+  <div>
+    <Button class="mdc-theme--secondary-background" on:click={goToNewClaim} raised>File Claim</Button>
+  </div>
+{/if}

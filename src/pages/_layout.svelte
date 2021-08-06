@@ -48,9 +48,7 @@ const logoClickHandler = () => $goto('/')
 
   <AppHeader on:toggleDrawer={() => toggle = !toggle} />
 
-  <main>  
-    <slot />
-  </main>
+  <slot />
 
   <AppFooter />
   

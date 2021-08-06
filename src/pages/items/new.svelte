@@ -1,26 +1,28 @@
 <script>
-import { Breadcrumb, Description, RadioOptions } from '../../components'
+import { Breadcrumb, Description, MoneyInput } from '../../components'
 import { goto } from '@roxi/routify'
 import { Button, Form, Page, Select, TextArea, TextField } from '@silintl/ui-components'
 
 let formData = {
+  categoryUuid: '',
   shortName: '',
   itemDescription: '',
-  riskCategory: '',
   uniqueIdentifier: '',
   make: '',
   model: '',
   accountablePersonUuid: '',
-  itemCostUSD: '',
+  marketValueUSD: '',
 }
-const riskCategoryOptions = [
+
+/* @todo Pull this from the database eventually: */
+let categoryOptions = [
   {
-    label: 'Carried with me',
-    value: 'mobile',
+    "name": "Musical Instrument",
+    "id": "11111111-1111-4111-1111-111111111111",
   },
   {
-    label: 'In one place (home or office)',
-    value: 'stationary',
+    "name": "Cell Phone",
+    "id": "22222222-2222-4222-2222-222222222222",
   },
 ]
 
@@ -57,6 +59,9 @@ const saveForLater = () => {
   <Breadcrumb />
   <Form on:submit={onSubmit}>
     <p>
+      <Select label="Category" bind:selectedID={formData.categoryUuid} options={categoryOptions} />
+    </p>
+    <p>
       <TextField label="Short name" bind:value={formData.shortName}></TextField>
       <Description>This label will appear on your statements.</Description>
     </p>
@@ -64,8 +69,6 @@ const saveForLater = () => {
       <TextArea label="Item description" bind:value={formData.itemDescription} rows="4"></TextArea>
       <Description>For personal use.</Description>
     </p>
-    <p>This item primarily stays:</p>
-    <RadioOptions name="riskCategory" options={riskCategoryOptions} bind:value={formData.riskCategory} />
     <p>
       <TextField label="Unique identifier" bind:value={formData.uniqueIdentifier}></TextField>
       <Description>Optional. Serial number, IMEI, service tag, VIN</Description>
@@ -87,7 +90,7 @@ const saveForLater = () => {
       </Description>
     </p>
     <p>
-      <TextField label="Item cost (USD)" bind:value={formData.itemCostUSD}></TextField>
+      <MoneyInput label="Market value (USD)" bind:value={formData.marketValueUSD} />
       <Description>
         To convert to USD, use 
         <a href="https://www.google.com/search?q=currency+converter" target="_blank">this converter</a>.

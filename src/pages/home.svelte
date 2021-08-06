@@ -37,31 +37,37 @@ const exampleItems = [
     name: "Saxophone",
     accountable_person: "John Russel",
     last_changed: "5 days",
+    sate: { icon: 'chat' }
   },
   {
     name: "GoPro",
     accountable_person: "Priscilla Russel",
-    last_changed: "5 days"
+    last_changed: "5 days",
+    state: { icon: 'chat' }
   },
   {
     name: "GoPro",
     accountable_person: "Priscilla Russel",
-    last_changed: "5 days"
+    last_changed: "5 days",
+    state: { icon: 'chat' }
   },
   {
     name: "GoPro",
     accountable_person: "Priscilla Russel",
-    last_changed: "5 days"
+    last_changed: "5 days",
+    state: { icon: 'chat' }
   },
   {
     name: "GoPro",
     accountable_person: "Priscilla Russel",
-    last_changed: "5 days"
+    last_changed: "5 days",
+    state: { icon: 'chat' }
   },
   {
     name: "GoPro",
     accountable_person: "Priscilla Russel",
-    last_changed: "5 days"
+    last_changed: "5 days",
+    state: { icon: 'chat' }
   },
 ]
 const menuItems = id => [

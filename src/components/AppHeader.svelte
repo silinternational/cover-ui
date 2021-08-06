@@ -22,8 +22,8 @@ let menuToggler = false
 
 const dispatch = createEventDispatcher()
 
-$: src = $user.AvatarUrl
-$: ownerInitial = $user.FirstName?.charAt(0) || ''
+$: src = $user.avatar_url
+$: ownerInitial = $user.first_name?.charAt(0) || ''
 
 onMount(() => showOrHideDrawerButton())
 

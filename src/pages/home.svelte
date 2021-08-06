@@ -1,6 +1,7 @@
 
 <script>
 import { Datatable, Menu } from '../components/'
+import { claims } from '../data/claims.js'
 import { Checkbox } from '@silintl/ui-components'
 import ClaimCard from '../components/ClaimCard.svelte'
 
@@ -132,8 +133,8 @@ const handleMoreVertClick = id => {
   <!--TODO: make this a grid (I think) when design is finialized-->
   <div class="home-sub-content" style="display: flex">
     <div class="grid">
-      {#each exampleItems as item}
-        <ClaimCard {item} buttons={[ { label: "Edit coverage", url: "/items/edit-coverage" } ]} />
+      {#each $claims as claim}
+        <ClaimCard {claim} buttons={[ { label: "Edit coverage", url: `/items/${claim.itemId}` } ]} />
       {/each}
     </div>
   </div>

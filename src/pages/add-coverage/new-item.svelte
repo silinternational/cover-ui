@@ -38,6 +38,7 @@ let accountablePersonOptions = [
 
 const onAccountablePersonChange = event => {
   formData.accountablePersonUuid = event.detail.id
+  formData.accountablePersonName = event.detail.name
 }
 const onSubmit = event => {
   // TEMP

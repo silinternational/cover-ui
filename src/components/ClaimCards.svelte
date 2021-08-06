@@ -1,7 +1,10 @@
 <script>
 import { ClaimCard } from './index'
+import { states } from '../data/claims'
 
 export let items
+
+const getState = item => states[item.state]
 </script>
 
 <style>

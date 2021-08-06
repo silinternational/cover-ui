@@ -11,7 +11,7 @@ let formData = {
   make: '',
   model: '',
   accountablePersonUuid: '',
-  itemCostUSD: '',
+  marketValueUSD: '',
 }
 
 /* @todo Pull this from the database eventually: */
@@ -90,7 +90,7 @@ const saveForLater = () => {
       </Description>
     </p>
     <p>
-      <TextField label="Item cost (USD)" bind:value={formData.itemCostUSD}></TextField>
+      <TextField label="Market value (USD)" bind:value={formData.marketValueUSD}></TextField>
       <Description>
         To convert to USD, use 
         <a href="https://www.google.com/search?q=currency+converter" target="_blank">this converter</a>.

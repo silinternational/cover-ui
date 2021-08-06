@@ -1,6 +1,9 @@
 // https://material.io/develop/web/components/typography
-@use '@material/typography';
+@use '@material/typography/mdc-typography';
 
-h2 {
-  @include typography.typography(headline2);
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans&family=Source+Sans+Pro:wght@300;400;600&display=swap');
+
+:root {
+  font-family: Source Sans Pro, Roboto, sans-serif;
+  --mdc-typography-font-family: Source Sans Pro, Roboto, sans-serif;
 }

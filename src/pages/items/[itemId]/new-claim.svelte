@@ -1,6 +1,6 @@
 <script>
 import { Breadcrumb, Description, RadioOptions, DateInput, MoneyInput } from '../../../components'
-import { claims, initialized, createClaim, getClaim } from '../../../data/claims.js'
+import { claims, initialized, createClaim } from '../../../data/claims.js'
 import { goto, params } from '@roxi/routify'
 import { Button, Form, Page, TextArea } from '@silintl/ui-components'
 import { fade } from 'svelte/transition'

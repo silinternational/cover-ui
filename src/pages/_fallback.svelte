@@ -6,5 +6,5 @@ onMount(notFound)
 </script>
 
 <p>
-  unknown route
+These aren't the droids you're looking for...
 </p>

@@ -19,7 +19,57 @@ export const claims = writable([
   },
 ])
 export const loading = writable(false)
-export const initialized = writable(true)  
+export const initialized = writable(true)
+export const states = {
+    message: {
+        icon: 'chat',
+        color: '--mdc-theme-primary',
+        bgColor: '--mdc-theme-primary-header-bg',
+        title: 'From '
+    },
+    draft: {
+        icon: 'edit',
+        color: '--mdc-theme-primary',
+        bgColor: '--mdc-theme-primary-header-bg',
+        title: 'Draft'
+    },
+    awaiting: {
+        icon: 'watch_later',
+        color: '--mdc-theme-neutral-variant',
+        bgColor: '--mdc-theme-neutral-bg',
+        title: 'Awaiting review'
+    },
+    needsChanges: {
+        icon: 'error',
+        color: '--mdc-theme-status-warning',
+        bgColor: '--mdc-theme-status-warning-bg',
+        title: 'Needs changes'
+    },
+    denied: {
+        icon: 'remove_circle',
+        color: '--mdc-theme-status-error',
+        bgColor: '--mdc-theme-status-error-bg',
+        title: 'Denied'
+    },
+    approvedRepair: {
+        icon: 'done',
+        color: '--mdc-theme-status-success',
+        bgColor: '--mdc-theme-status-success-bg',
+        title: 'Approved for repair'
+    },
+    payout: {
+        icon: 'paid',
+        color: '--mdc-theme-status-success',
+        bgColor: '--mdc-theme-status-success-bg',
+        title: 'Approved for payout'
+    },
+    complete: {
+        icon: 'paid',
+        color: '--mdc-theme-status-success',
+        bgColor: '--mdc-theme-status-success-bg',
+        title: 'Complete'
+    }
+}
 
 // TODO: add backend endpoints when they get finished
 // TODO: uncomment when backend has claims endpoints

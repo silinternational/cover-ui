@@ -3,7 +3,12 @@ import { goto } from '@roxi/routify'
 import { Card, Button } from '@silintl/ui-components'
 
 export let item = {}
-export let state = { icon: 'chat' }
+export let state = {
+  icon: 'paid',
+  color: '--mdc-theme-status-success',
+  bgColor: '--mdc-theme-status-success-bg',
+  title: 'Approved for payout'
+}
 export let buttons = []
 
 $: user = item.created_by || {}
@@ -30,10 +35,6 @@ const gotoItem = () => item.id && $goto(`/requests/${item.id}`)
   -webkit-line-clamp: 2; /* number of lines to show */
 }
 
-.bg-color {
-  background: #eef2fa;
-}
-
 .ml-50px {
   margin-left: 50px;
 }
@@ -48,12 +49,12 @@ const gotoItem = () => item.id && $goto(`/requests/${item.id}`)
 </style>
 
 <Card isClickable noPadding on:click={gotoItem} on:keypress={gotoItem} class="height-fit-content py-0 {$$props.class}">
-  <div class="flex justify-start align-items-center bg-color black mb-2 p-1 pl-50px">
-    <span class="material-icons">{state.icon}</span>
+  <div class="flex justify-start align-items-center black mb-2 p-1 pl-50px" style="background: var({state.bgColor});">
+    <span class="material-icons" style="color: var({state.color});">{state.icon}</span>
 
     <div class="mdc-theme--primary pl-10px">
-      <div class="mdc-typography--headline6 multi-line-truncate content">{item.title}</div>
-      <div class="multi-line-truncate fs-14">{item.message}</div>
+      <div class="mdc-typography--headline6 multi-line-truncate content" style="color: var({state.color});">{item.title}</div>
+      <div class="multi-line-truncate fs-14" style="color: var({state.color});">{item.message || ''}</div>
     </div>
   </div>
 

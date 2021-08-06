@@ -41,37 +41,49 @@ const exampleItems = [
     name: "Saxophone",
     accountable_person: "John Russel",
     last_changed: "5 days",
-    sate: { icon: 'chat' }
+    state: 'draft'
   },
   {
     name: "GoPro",
     accountable_person: "Priscilla Russel",
     last_changed: "5 days",
-    state: { icon: 'chat' }
+    state: 'awaiting'
   },
   {
     name: "GoPro",
     accountable_person: "Priscilla Russel",
     last_changed: "5 days",
-    state: { icon: 'chat' }
+    state: 'denied'
   },
   {
     name: "GoPro",
     accountable_person: "Priscilla Russel",
     last_changed: "5 days",
-    state: { icon: 'chat' }
+    state: 'payout'
   },
   {
     name: "GoPro",
     accountable_person: "Priscilla Russel",
     last_changed: "5 days",
-    state: { icon: 'chat' }
+    state: 'complete'
   },
   {
     name: "GoPro",
     accountable_person: "Priscilla Russel",
     last_changed: "5 days",
-    state: { icon: 'chat' }
+    state: 'approvedRepair'
+  },
+  {
+    name: "GoPro",
+    accountable_person: "Priscilla Russel",
+    last_changed: "5 days",
+    state: 'needsChanges'
+  },
+  {
+    name: "GoPro",
+    accountable_person: "Priscilla Russel",
+    last_changed: "5 days",
+    state: 'message'
   },
 ]
 const menuItems = id => [
@@ -136,7 +148,7 @@ const handleMoreVertClick = id => {
 
 <Page layout="grid">   
   <Row cols={'12'}>
-    <ClaimCards exampleItems={$claims} />
+    <ClaimCards items={$claims} />
   </Row>
 
   <Row cols={'12'}>

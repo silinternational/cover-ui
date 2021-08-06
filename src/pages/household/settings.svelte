@@ -1,29 +1,22 @@
 <script>
 import { Breadcrumb } from "../../components";
+import { dependents } from '../../data/dependents'
 import { Button, IconButton, Page } from "@silintl/ui-components";
 import { goto } from "@roxi/routify";
 
 // TODO: make this dependent on backend
-let accountablePeople = [
+let householdMembers = [
   {
     uuid: '11111111-1111-4111-1111-111111111111',
     name: "Jeff Smith",
     isYou: true,
-    isDependent: false,
     email: "jeff_smith@sil.org",
   },
   {
     uuid: '22222222-2222-4222-2222-222222222222',
     name: "Sarah Smith",
     isYou: false,
-    isDependent: false,
     email: "sarah_smith@sil.org",
-  },
-  {
-    uuid: '33333333-3333-4333-3333-333333333333',
-    name: "Junior Smith",
-    isYou: false,
-    isDependent: true,
   },
 ]
 
@@ -31,7 +24,7 @@ const edit = uuid => $goto(`/household/settings/dependent/${uuid}`)
 </script>
 
 <style>
-#accountable-people-list {
+.accountable-people-list {
   counter-reset: item;
   list-style-type: none;
   padding-left: 0;
@@ -54,6 +47,9 @@ const edit = uuid => $goto(`/household/settings/dependent/${uuid}`)
   top: 0.25rem;
   color: rgba(0, 0, 0, 0.5);
 }
+.muted {
+  color: rgba(0, 0, 0, 0.5);
+}
 </style>
 
 <Page>
@@ -61,18 +57,32 @@ const edit = uuid => $goto(`/household/settings/dependent/${uuid}`)
   
   <h3>Accountable people</h3>
 
-  <ul id="accountable-people-list">
-    {#each accountablePeople as person}
+  <h4>Household members</h4>
+  <ul class="accountable-people-list">
+    {#each householdMembers as person}
       <li class="accountable-people-list-item">
         {person.name}
         {person.isYou ? "(you)" : ""}
         <br />
-        <small>{person.isDependent ? "Dependent" : person.email}</small>
-        {#if person.isDependent}
-          <span class="edit-button" title="Edit">
-            <IconButton icon="edit" ariaLabel="Edit" on:click={() => edit(person.uuid)} />
-          </span>
-        {/if}
+        <small>{person.email}</small>
+      </li>
+    {/each}
+  </ul>
+
+  <h4>Dependents</h4>
+  <ul class="accountable-people-list">
+    {#each $dependents as dependent}
+      <li class="accountable-people-list-item">
+        {dependent.name}
+        <br />
+        <small>Dependent</small>
+        <span class="edit-button" title="Edit">
+          <IconButton icon="edit" ariaLabel="Edit" on:click={() => edit(dependent.uuid)} />
+        </span>
+      </li>
+    {:else}
+      <li class="accountable-people-list-item">
+        <i class="muted">None</i>
       </li>
     {/each}
   </ul>

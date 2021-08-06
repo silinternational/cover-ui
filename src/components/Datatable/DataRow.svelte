@@ -1,16 +1,8 @@
 <script>
-import { createEventDispatcher } from 'svelte';
-
-const dispatch = createEventDispatcher()
-
-export let redirect = false
-
-const handleOnClick = event => {
-  dispatch('click', event)
-}
+export let clickable = false
 </script>
 
-{#if redirect}
+{#if clickable}
   <style>
     tr {
       cursor: pointer;
@@ -18,6 +10,6 @@ const handleOnClick = event => {
   </style>
 {/if}
 
-<tr on:click={handleOnClick} class="mdc-data-table__row">
+<tr on:click class="mdc-data-table__row">
   <slot />
 </tr>

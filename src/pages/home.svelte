@@ -82,7 +82,7 @@ const menuItems = id => [
 
 let selected = []
 let loading = false
-let otherClick = false
+let goToItemDetails = true
 let shownMenus = {}
 let gridCols = ''
 
@@ -90,11 +90,11 @@ onMount(() => {
   setCardCols()
 })
 
-const redirect = (url) => {
-  if (!otherClick) {
+const redirect = url => {
+  if (goToItemDetails) {
     $goto(url)
   } else {
-    otherClick = false
+    goToItemDetails = true
   }
 }
 const handleChecked = id => {
@@ -104,7 +104,7 @@ const handleUnchecked = id => {
   selected = selected.filter(val => val != id)
 }
 const handleMoreVertClick = id => {
-  otherClick = true
+  goToItemDetails = false
   shownMenus[id] = shownMenus[id] !== true
 }
 const setCardCols = () => {
@@ -188,9 +188,9 @@ const setCardCols = () => {
     
         <Datatable.Data>
           {#each examplePolicies as item}
-              <Datatable.Data.Row on:click={() => redirect(`/items/${item.id}`)} redirect>
+              <Datatable.Data.Row on:click={() => redirect(`/items/${item.id}`)} clickable>
                 <Datatable.Data.Row.Item>
-                  <div on:click={() => otherClick = true}>
+                  <div on:click={() => goToItemDetails = false}>
                     <Checkbox on:checked={() => handleChecked(item.id)} on:unchecked={() => handleUnchecked(item.id)}/>
                   </div>
                 </Datatable.Data.Row.Item>

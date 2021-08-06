@@ -4,7 +4,6 @@ import { claims, initialized, createClaim } from '../../../data/claims.js'
 import { goto, params } from '@roxi/routify'
 import { Button, Form, Page, TextArea } from '@silintl/ui-components'
 import { fade } from 'svelte/transition'
-import Item from '@silintl/ui-components/components/mdc/List/Item.svelte'
 
 const deductible = 0.05
 const regularFraction = (1 - deductible)

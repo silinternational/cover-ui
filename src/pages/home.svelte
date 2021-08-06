@@ -1,9 +1,7 @@
-
 <script>
 import { Datatable, Menu } from '../components/'
 import ClaimCard from '../components/ClaimCard.svelte'
-import { Checkbox, isAboveMobile, isAboveTablet, Page } from '@silintl/ui-components'
-import { onMount } from 'svelte'
+import { Checkbox, Page } from '@silintl/ui-components'
 
 // TODO: update this to be dependent on backend endpoint
 const examplePolicies = [
@@ -79,11 +77,6 @@ const menuItems = id => [
 let selected = []
 let loading = false
 let shownMenus = {}
-let gridCols = ''
-
-onMount(() => {
-  setCardCols()
-})
 
 const handleChecked = id => {
   selected.push(id)
@@ -96,36 +89,11 @@ const handleUnchecked = id => {
 const handleMoreVertClick = id => {
   shownMenus[id] = shownMenus[id] !== true
 }
-const setCardCols = () => {
-  if ( isAboveTablet() ) {
-    gridCols = 'cols-lg'
-  } else if ( isAboveMobile() ) {
-    gridCols = 'cols-md'
-  } else {
-    gridCols = 'cols-sm'
-  }
-}
 
 </script>
 
 <style>
 /* TODO: make this more accurate when design is finialized */
-.grid {
-  display: grid;
-  grid-gap: 8px;
-}
-
-.cols-lg {
-  grid-template-columns: minmax(220px, 330px) minmax(220px, 330px) minmax(220px, 330px);
-}
-
-.cols-md {
-  grid-template-columns: minmax(220px, 330px) minmax(220px, 330px);
-}
-
-.cols-sm {
-  grid-template-columns: minmax(220px, 330px);
-}
 
 .home-table-more-vert {
   width: 30px;
@@ -143,18 +111,21 @@ const setCardCols = () => {
   position: absolute;
   right: 235px;
 }
-</style>
 
-<svelte:window on:resize={setCardCols}/>
+.cards {
+  margin: 8px 8px 8px 0;
+  flex-basis: 330px;
+}
+</style>
 
 <Page layout="grid">   
   <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
-    <div class="flex justify-center">
-      <div class="grid {gridCols}">
-        {#each exampleItems as item}
+    <div class="flex justify-start flex-wrap">
+      {#each exampleItems as item}
+        <div class="cards">
           <ClaimCard {item} buttons={[ { label: "Edit coverage", url: "/items/edit-coverage" } ]} />
-        {/each}
-      </div>
+        </div>
+      {/each}
     </div>
   </div>
 

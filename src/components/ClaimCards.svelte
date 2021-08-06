@@ -1,7 +1,7 @@
 <script>
 import { ClaimCard } from './index'
 
-export let exampleItems
+export let items
 </script>
 
 <style>
@@ -13,7 +13,7 @@ export let exampleItems
 </style>
 
 <div class="flex justify-start flex-wrap {$$props.class}">
-  {#each exampleItems as item}
+  {#each items as item}
     <div class="cards">
       <ClaimCard state={ getState(item) } {item} buttons={[ { label: "Edit coverage", url: "/items/edit-coverage" } ]} />
     </div>

@@ -43,10 +43,10 @@ export async function updatePolicy(id, policyData) {
  * @param {Number} id
  * @return {Object} 
  */
-export async function getItems(id) {
+export async function getItems(policyId) {
     loading.set(true)
 
-    const items = await GET(`/policies/${id}/items`)
+    const items = await GET(`/policies/${policyId}/items`)
 
     loading.set(false)
     return items
@@ -56,22 +56,23 @@ export async function getItems(id) {
  *
  * @description a function to create an item
  * @export
- * @param {Number} id
+ * @param {Number} policyId
  * @param {Object} itemData
  * @return {Object} 
  */
-export async function addItem(id, itemData) {
+export async function addItem(policyId, itemData) {
     const parsedItemData = {
-        name: itemData.name,
-        category_id: itemData.category_id,
+        name: itemData.shortName,
+        category_name: itemData.riskCategory,
         country: itemData.country,
-        description: itemData.description,
+        description: itemData.itemDescription,
         make: itemData.make,
         model: itemData.model,
-        serial_number: itemData.serial_number,
+        serial_number: itemData.uniqueIdentifier,
+        accountable_person: itemData.accountablePersonUuid,
     }
 
-    const item = await POST(`/policies/${id}/items`, parsedItemData)
+    const item = await POST(`/policies/${policyId}/items`, parsedItemData)
 
     return item
 }

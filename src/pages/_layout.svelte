@@ -31,7 +31,7 @@ $: menuItems = [
   //   label: 'Chat',
   // },
   {
-    url: '/item',
+    url: '/items/new',
     icon: 'add_circle',
     label: 'Add Item',
     button: true,

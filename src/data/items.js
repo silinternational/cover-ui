@@ -130,5 +130,4 @@ export async function deleteItem(id) {
   await DELETE(`/items/${id}`)
 
   loading.set(false)
-  return null
 }

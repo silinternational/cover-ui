@@ -30,8 +30,6 @@ export function createClaim(itemId, claimData) {
   })
 
   loading.set(false)
-
-  return null
 }
 
 export function getClaim(claims, itemId) {
@@ -57,8 +55,6 @@ export function updateClaim(itemId, newClaimData) {
     })
 
     loading.set(false)
-
-    return null
 }
 
 /**
@@ -73,8 +69,6 @@ export function deleteClaim(itemId) {
   claims.update(currClaims => currClaims.filter(clm => clm.itemId !== itemId))
 
   loading.set(false)
-
-  return null
 }
 
 export function clear() {

@@ -60,7 +60,6 @@ export async function deleteDependent(depId) {
     })
 
     loading.set(false)
-    return null
 }
 
 /**

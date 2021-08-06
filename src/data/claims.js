@@ -17,7 +17,7 @@ export const states = {
         title: 'Draft'
     },
     awaiting: {
-        icon: 'clock-time-four',
+        icon: 'watch_later',
         color: '#394452',
         bgColor: '#EBEEF2',
         title: 'Awaiting review'
@@ -29,7 +29,7 @@ export const states = {
         title: 'Needs changes'
     },
     denied: {
-        icon: 'minus-circle',
+        icon: 'remove_circle',
         color: '--mdc-theme-status-error',
         bgColor: '--mdc-theme-status-error-bg',
         title: 'Denied'
@@ -41,13 +41,13 @@ export const states = {
         title: 'Approved for repair'
     },
     payout: {
-        icon: 'done',
+        icon: 'paid',
         color: '--mdc-theme-status-success',
         bgColor: '--mdc-theme-status-success-bg',
         title: 'Approved for payout'
     },
     complete: {
-        icon: 'done',
+        icon: 'paid',
         color: '--mdc-theme-status-success',
         bgColor: '--mdc-theme-status-success-bg',
         title: 'Complete'

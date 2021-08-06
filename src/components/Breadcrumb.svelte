@@ -2,7 +2,10 @@
 import { throwError } from "../error"
 import { goto, url } from "@roxi/routify";
 
+const homeURL = "/home"
+
 export let links
+export let hasHome = true
 
 let urls = []
 if (!links) {
@@ -36,8 +39,13 @@ a {
   color: var(--mdc-theme-primary)
 }
 
-.breadcrumb-arrow {
+.breadcrumb-icon {
   margin: 0 3px;
+}
+
+.breadcrumb-home {
+  display: inherit;
+  color: var(--mdc-theme-primary)
 }
 
 .bottom-margin {
@@ -46,12 +54,16 @@ a {
 </style>
 
 <div class="bottom-margin flex text-align-center align-items-center">
-  <!--TODO: change the '>' with the actual icon-->
+  <!-- svelte-ignore a11y-invalid-attribute -->
+  {#if hasHome }
+  <a on:click={() => $goto(homeURL)} href="" class="capitalize"><i class="material-icons mdc-list-item__graphic money-icon breadcrumb-icon breadcrumb-home" aria-hidden="true">home</i></a><!--
+  --><i class="material-icons mdc-list-item__graphic money-icon breadcrumb-icon" aria-hidden="true">chevron_right</i>
+  {/if}
   {#each urls as val, i}
     <!-- svelte-ignore a11y-invalid-attribute -->
     <a on:click={() => $goto(val.url)} href="" class="capitalize">{val.name}</a><!--
     -->{#if (urls.length - 1) != i}
-      <i class="material-icons mdc-list-item__graphic money-icon breadcrumb-arrow" aria-hidden="true">chevron_right</i>
+      <i class="material-icons mdc-list-item__graphic money-icon breadcrumb-icon" aria-hidden="true">chevron_right</i>
     {/if}
   {/each}
 </div>

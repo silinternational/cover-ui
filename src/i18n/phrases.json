@@ -2,7 +2,7 @@
   "appname": {
     "en": "Cover"
   },
-  "UNAUTHORIZED": {
+  "Unauthorized": {
     "en": "login required"
   }
 }

@@ -39,11 +39,17 @@ function initializeToken() {
 }
 
 function getAccessToken() {
-  return localStorage.getItem('access-token') || ''
+  return 'john.smith@example.org' // TEMP - dummy value for local dev work
+  
+  /** @todo Re-enable once real authentication is ready. */
+  //return localStorage.getItem('access-token') || ''
 }
 
 function createSeed() {
-  return Math.random()     // doesn't need to be cryptographically strong
-             .toString(36) // convert to base-36 so we get more letters
-             .substring(2) // strip off the leading '0.'
+  return ''
+  
+  /** @todo Re-enable once real authentication is ready. */
+  // return Math.random()     // doesn't need to be cryptographically strong
+  //            .toString(36) // convert to base-36 so we get more letters
+  //            .substring(2) // strip off the leading '0.'
 }

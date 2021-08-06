@@ -14,14 +14,14 @@ export const upload = async formData => await CREATE('post', formData)
 // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#Supplying_request_options
 async function customFetch(method, uri, body) {
   const headers = {
-    authorization: `Bearer ${getToken()}`,
-    'content-type': 'application/json',
+    Authorization: `Bearer ${getToken()}`,
+    'Content-Type': 'application/json',
   }
 
   // when dealing with FormData, i.e., when uploading files, allow the browser to set the request up
   // so boundary information is built properly.
   if (body instanceof FormData) {
-    delete headers['content-type']
+    delete headers['Content-Type']
   } else {
     body = JSON.stringify(body)
   }

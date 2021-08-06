@@ -53,7 +53,7 @@ const gotoItem = () => item.id && $goto(`/requests/${item.id}`)
     <span class="material-icons" style="color: var({state.color});">{state.icon}</span>
 
     <div class="mdc-theme--primary pl-10px">
-      <div class="mdc-typography--headline6 multi-line-truncate content" style="color: var({state.color});">{state.title}</div>
+      <div class="mdc-typography--headline6 multi-line-truncate content" style="color: var({state.color});">{item.title}</div>
       <div class="multi-line-truncate fs-14" style="color: var({state.color});">{item.message || ''}</div>
     </div>
   </div>

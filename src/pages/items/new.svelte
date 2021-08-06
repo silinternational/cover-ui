@@ -1,10 +1,12 @@
 <script>
+import user from '../../authn/user.js'
+import { addItem } from '../../data/items.js'
 import { Breadcrumb, Description, MoneyInput } from '../../components'
 import { goto } from '@roxi/routify'
 import { Button, Form, Page, Select, TextArea, TextField } from '@silintl/ui-components'
 
 let formData = {
-  categoryUuid: '',
+  category: '',
   shortName: '',
   itemDescription: '',
   uniqueIdentifier: '',
@@ -45,8 +47,8 @@ const onAccountablePersonChange = event => {
 }
 const onSubmit = event => {
   // TEMP
-  console.log('Form submitted:', event)
-  console.log(formData)
+  formData.category = categoryOptions.find(cat => cat.id === formData.category)
+  addItem(user.policy_id, formData)
   /* @todo Save this to the API / backend. */
   $goto('/home')
 }
@@ -60,7 +62,7 @@ const saveForLater = () => {
   <Breadcrumb />
   <Form on:submit={onSubmit}>
     <p>
-      <Select label="Category" bind:selectedID={formData.categoryUuid} options={categoryOptions} />
+      <Select label="Category" bind:selectedID={formData.category} options={categoryOptions} />
     </p>
     <p>
       <TextField label="Short name" bind:value={formData.shortName}></TextField>

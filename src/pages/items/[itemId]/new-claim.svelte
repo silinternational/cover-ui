@@ -1,6 +1,8 @@
 <script>
-import { Breadcrumb, Description, RadioOptions, DateInput, MoneyInput } from '../../../components'
+import user from '../../../authn/user'
+import { getItems } from '../../../data/items.js'
 import { claims, initialized, createClaim } from '../../../data/claims.js'
+import { Breadcrumb, Description, RadioOptions, DateInput, MoneyInput } from '../../../components'
 import { goto, params } from '@roxi/routify'
 import { Button, Form, Page, TextArea } from '@silintl/ui-components'
 import { fade } from 'svelte/transition'
@@ -70,6 +72,12 @@ let formData = {
   repairCost: '',
   payoutOption: '',
 }
+let items
+let item
+getItems(user.policy_id).then(loadedItems => {
+  items = loadedItems
+  item = items.find(itm => itm.id === $params.itemId)
+})
 
 // TODO: get accountable person from item 
 // TODO: add reimbursed value
@@ -99,13 +107,14 @@ $: moneyPayoutOptions = [
 ]
 
 const onSubmit = async () => {
+  let parsedFormData = formData
   if (formData.isRepairable === "repairable" && !formData.payoutOption) {
-    formData.payoutOption = "repair"
+    parsedFormData.payoutOption = "repair"
   }
   // TODO: change this to POST to backend endpoint
-  await createClaim($params.itemId, formData)
+  await createClaim(item, parsedFormData)
   // TODO: make this go back a url
-  $goto('/home')
+  $goto('/claims')
 }
 const unSetPayoutOption = () => {
   formData.payoutOption = null
@@ -121,9 +130,12 @@ const unSetRepairCost = () => {
 }
 </script>
 
-{#if $initialized && claimExists}
-  <h2>Claim already exists!</h2>
-{:else if $initialized}
+<!--TODO: add transitions but not after submit-->
+{#if items && $initialized && claimExists}
+  Claim already exists!
+{:else if items && !item}
+  Item does not exist!
+{:else if items && $initialized}
   <Page>
     <Breadcrumb links={breadcrumbLinks} />
     <Form on:submit={onSubmit}>
@@ -142,12 +154,12 @@ const unSetRepairCost = () => {
         <Description>What happened?</Description>
       </p>
       {#if canRepair}
-        <div transition:fade>
+        <div>
           <RadioOptions name="isRepairable" options={repairableOptions} bind:value={formData.isRepairable} />
         </div>
       {/if}
       {#if formData.isRepairable === "repairable"}
-        <p transition:fade>
+        <p>
           <MoneyInput label="Cost of repair" bind:value={formData.repairCost}></MoneyInput>
           <Description>
             How much will it cost to be repaired?
@@ -158,7 +170,7 @@ const unSetRepairCost = () => {
         </p>
       {/if}
       {#if formData.isRepairable === "repairable" || formData.payoutOption === "cash_now"}
-        <p transition:fade>
+        <p>
           <MoneyInput label="Fair market value" bind:value={formData.fairMarketValue}></MoneyInput>
           <Description>
             To convert to USD, use 
@@ -168,12 +180,12 @@ const unSetRepairCost = () => {
       {/if}
       {#if payoutOptionCheck }
         {#if formData.lossReason !== "evacuation"}
-          <div transition:fade>
+          <div>
             <p>Payout options</p>
             <RadioOptions name="payoutOption" options={moneyPayoutOptions} bind:value={formData.payoutOption} />
           </div>
         {:else}
-          <div transition:fade>
+          <div>
             <p>We are sorry you are experiencing this situation and will keep you in our prayers.</p>
             <p>We will reach out to SIL HR to get more context about this situation.</p>
             <p>If approved, you are eligible for 2/3 payout of covered lost assets.</p>

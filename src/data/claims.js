@@ -1,6 +1,23 @@
 import { writable } from "svelte/store";
 
-export const claims = writable([])
+export const claims = writable([
+  {
+    name: "Saxophone",
+    accountable_person: "John Russel",
+    last_changed: "5 days",
+    state: { icon: 'message' },
+    title: "Awaiting review",
+    message: "Submitted 5 days ago"
+  },
+  {
+    name: "GoPro",
+    accountable_person: "Priscilla Russel",
+    last_changed: "2 weeks",
+    state: { icon: 'message' },
+    title: "Awaiting review",
+    message: "Submitted 2 weeks ago",
+  },
+])
 export const loading = writable(false)
 export const initialized = writable(true)
 export const states = {
@@ -66,16 +83,31 @@ export function init() {
  *
  * @description a function to create a new claim for an existing item
  * @export
- * @param {Number} itemId
+ * @param {Object} item
  * @param {Object} claimData
  */
-export function createClaim(itemId, claimData) {
+export async function createClaim(item, claimData) {
   loading.set(true)
 
-  claimData.itemId = itemId
+  // TODO: make an item field to store details about claim item
+  let parsedClaim = {
+    item_id: item.id,
+    name: item.item_name,
+    accountable_person: item.accountable_person,
+    state: { icon: 'message' },
+    title: "Awaiting review",
+    last_changed: "Now",
+    message: "Submitted Now",
+    lost_date: claimData.lostDate,
+    loss_reason: claimData.loss_reason,
+    description: claimData.situationDescription,
+    fair_market_value: claimData.fairMarketValue,
+    is_repairable: claimData.isRepairable,
+    repair_cost: claimData.repair_cost,
+  }
 
   claims.update(currClaims => {
-    currClaims.push(claimData)
+    currClaims.push(parsedClaim)
     return currClaims
   })
 

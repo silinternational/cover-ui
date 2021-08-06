@@ -43,7 +43,7 @@ const gotoItem = () => item.id && $goto(`/requests/${item.id}`)
 }
 </style>
 
-<Card isClickable noPadding on:click={gotoItem} on:keypress={gotoItem} class="height-fit-content py-0">
+<Card isClickable noPadding on:click={gotoItem} on:keypress={gotoItem} class="height-fit-content py-0 {$$props.class}">
   <div class="flex justify-center align-items-center bg-color black mb-2 p-1">
     <span class="material-icons">{state.icon}</span>
 

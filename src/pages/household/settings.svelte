@@ -1,6 +1,7 @@
 <script>
+import user from '../../authn/user'
 import { Breadcrumb } from "../../components";
-import { dependents } from '../../data/dependents'
+import { dependents, loadDependents } from '../../data/dependents'
 import { Button, IconButton, Page } from "@silintl/ui-components";
 import { goto } from "@roxi/routify";
 
@@ -19,6 +20,8 @@ let householdMembers = [
     email: "sarah_smith@sil.org",
   },
 ]
+
+$: loadDependents($user.policy_id)
 
 const edit = uuid => $goto(`/household/settings/dependent/${uuid}`)
 </script>

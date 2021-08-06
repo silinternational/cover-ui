@@ -1,14 +1,10 @@
-import { GET, CREATE, DELETE } from ".";
+import { GET } from ".";
 import user from "../authn/user"
 import { writable } from "svelte/store";
 
 export const dependents = writable([])
 export const loading = writable(false)
 export const initialized = writable(false)
-
-export function init() {
-  loadDependents()
-}
 
 /**
  *
@@ -97,8 +93,7 @@ export async function updateDependent(depId, depData) {
  * @description a function to load the dependents of a policy
  * @export
  */
-export async function loadDependents() {
-  let policyId = user.policy_id
+export async function loadDependents(policyId) {
   loading.set(true)
 
   let dpndts = await GET(`/policies/${policyId}/dependents`)

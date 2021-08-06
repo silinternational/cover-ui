@@ -3,6 +3,7 @@
 import { Datatable, Menu } from '../components/'
 import ClaimCard from '../components/ClaimCard.svelte'
 import { Checkbox, isAboveMobile, isAboveTablet, Page } from '@silintl/ui-components'
+import { goto } from '@roxi/routify'
 import { onMount } from 'svelte'
 
 // TODO: update this to be dependent on backend endpoint
@@ -78,22 +79,31 @@ const menuItems = id => [
 
 let selected = []
 let loading = false
+let otherClick = false
 let shownMenus = {}
 let gridCols = ''
+
+$: console.log(otherClick)
 
 onMount(() => {
   setCardCols()
 })
 
+const redirect = (url) => {
+  if (!otherClick) {
+    $goto(url)
+  } else {
+    otherClick = false
+  }
+}
 const handleChecked = id => {
   selected.push(id)
-  console.log(selected)
 }
 const handleUnchecked = id => {
   selected = selected.filter(val => val != id)
-  console.log(selected)
 }
 const handleMoreVertClick = id => {
+  otherClick = true
   shownMenus[id] = shownMenus[id] !== true
 }
 const setCardCols = () => {
@@ -177,21 +187,25 @@ const setCardCols = () => {
     
         <Datatable.Data>
           {#each examplePolicies as item}
-            <Datatable.Data.Row>
-              <Datatable.Data.Row.Item><Checkbox on:checked={() => handleChecked(item.id)} on:unchecked={() => handleUnchecked(item.id)}/></Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item>{item.item_name}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item>{item.recent_activity}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item>{item.accountable_person}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item>${item.cost}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item>${item.premium}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item>{item.type}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item>
-                <svg class="home-table-more-vert" viewBox="0 0 30 30" on:click={() => handleMoreVertClick(item.id)}>
-                  <path fill="currentColor" d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z" />
-                </svg>
-                <div class="item-menu"><Menu bind:menuToggler={shownMenus[item.id]} menuItems="{menuItems(item.id)}" on:syncToggler={() => shownMenus[item.id] = false}/></div>
-              </Datatable.Data.Row.Item>
-            </Datatable.Data.Row>
+              <Datatable.Data.Row on:click={() => redirect(`/items/${item.id}`)} redirect>
+                <Datatable.Data.Row.Item>
+                  <div on:click={() => otherClick = true}>
+                    <Checkbox on:checked={() => handleChecked(item.id)} on:unchecked={() => handleUnchecked(item.id)}/>
+                  </div>
+                </Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>{item.item_name}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>{item.recent_activity}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>{item.accountable_person}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>${item.cost}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>${item.premium}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>{item.type}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>
+                  <svg class="home-table-more-vert" viewBox="0 0 30 30" on:click={() => handleMoreVertClick(item.id)}>
+                    <path fill="currentColor" d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z" />
+                  </svg>
+                  <div class="item-menu"><Menu bind:menuToggler={shownMenus[item.id]} menuItems="{menuItems(item.id)}" on:syncToggler={() => shownMenus[item.id] = false}/></div>
+                </Datatable.Data.Row.Item>
+              </Datatable.Data.Row>
           {/each}
         </Datatable.Data>
       </Datatable>

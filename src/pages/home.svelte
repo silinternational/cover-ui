@@ -1,7 +1,8 @@
 
 <script>
 import { Datatable, Menu } from '../components/'
-import { Checkbox, CustomCard } from '@silintl/ui-components'
+import { Checkbox } from '@silintl/ui-components'
+import ClaimCard from '../components/ClaimCard.svelte'
 
 // TODO: update this to be dependent on backend endpoint
 const examplePolicies = [

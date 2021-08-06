@@ -1,5 +1,5 @@
 <script>
-import { Banner } from '../../../components'
+import { Banner } from '../../components'
 import { Button } from '@silintl/ui-components'
 import { goto } from '@roxi/routify'
 
@@ -44,15 +44,15 @@ const goToDelete = () => {
 </script>
 
 <style>
-  .delete-button {
-    color: var(--mdc-theme-status-error);
-    text-decoration: none;
-    margin: 5px;
-  }
+.delete-button {
+  color: var(--mdc-theme-status-error);
+  text-decoration: none;
+  margin: 5px;
+}
 
-  p {
-    font-weight: 600;
-  }
+p {
+  font-weight: 600;
+}
 </style>
 
 <h1>{itemDetails.name}</h1>

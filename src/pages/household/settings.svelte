@@ -1,5 +1,5 @@
 <script>
-import { Breadcrumb } from "../../../components";
+import { Breadcrumb } from "../../components";
 import { Button, IconButton, Page } from "@silintl/ui-components";
 import { goto } from "@roxi/routify";
 
@@ -27,7 +27,7 @@ let accountablePeople = [
   },
 ]
 
-const edit = uuid => $goto(`./dependent/${uuid}`)
+const edit = uuid => $goto(`/household/settings/dependent/${uuid}`)
 </script>
 
 <style>

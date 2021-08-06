@@ -1,8 +1,8 @@
 
 <script>
 import { Datatable, Menu } from '../components/'
-import { Checkbox, isAboveMobile, isAboveTablet, Page } from '@silintl/ui-components'
 import ClaimCard from '../components/ClaimCard.svelte'
+import { Checkbox, isAboveMobile, isAboveTablet, Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 // TODO: update this to be dependent on backend endpoint

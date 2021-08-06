@@ -1,17 +1,12 @@
 <script>
+import { dependents } from '../../../../data/dependents'
 import DependentForm from '../../../../components/DependentForm.svelte'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
 export let uuid
 
-/** @todo Pull the actual dependent's data from the API / backend */
-const dependent =   {
-  uuid: '33333333-3333-4333-3333-333333333333',
-  name: "Junior Smith",
-  isYou: false,
-  isDependent: true,
-}
+$: dependent = $dependents.find(d => d.uuid === uuid)
 
 const onCancel = () => {
   $goto('../../settings')

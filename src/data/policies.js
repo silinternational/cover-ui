@@ -25,7 +25,7 @@ export async function updatePolicy(id, policyData) {
     entity_code: policyData.entity_code
   }
 
-  const updatedPolicy = await UPDATE(`/policies/${id}`, parsedPolicyData)
+  const updatedPolicy = await UPDATE(`policies/${id}`, parsedPolicyData)
 
   policies.update(currPolicies => {
     let i = currPolicies.findIndex(pol => pol.id === id)
@@ -45,7 +45,7 @@ export function clear() {
 export async function loadPolicies() {
   loading.set(true)
 
-  const plcs = await GET('/policies')
+  const plcs = await GET('policies')
 
   policies.set(plcs)
 

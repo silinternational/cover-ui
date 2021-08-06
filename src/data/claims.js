@@ -162,7 +162,7 @@ export function clear() {
 export function loadClaims() {
     loading.set(true)
 
-    let clms = await GET('/claims')
+    let clms = await GET('claims')
 
     claims.set(clms)
 

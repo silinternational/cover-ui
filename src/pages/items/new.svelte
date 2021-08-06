@@ -1,5 +1,5 @@
 <script>
-import { Breadcrumb, Description, RadioOptions } from '../../components'
+import { Breadcrumb, Description } from '../../components'
 import { goto } from '@roxi/routify'
 import { Button, Form, Page, Select, TextArea, TextField } from '@silintl/ui-components'
 

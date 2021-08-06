@@ -12,7 +12,7 @@ const exampleItems = [
     accountable_person: "John Smith",
     coverage_amount: 650,
     premium: 20,
-    type: "Mobile",
+    type: "Electronic",
     make: "Lenovo",
     model: "Ideapad 14 5",
     serial_number: "2009d-asdddd",
@@ -25,7 +25,7 @@ const exampleItems = [
     accountable_person: "Mary Smith",
     coverage_amount: 200,
     premium: 6,
-    type: "Stationary",
+    type: "Furniture",
     make: "Vader Furniture",
     model: "v1 X",
     serial_number: "03810345",
@@ -38,7 +38,7 @@ const exampleItems = [
     accountable_person: "George Smith",
     coverage_amount: 950,
     premium: 30,
-    type: "Mobile",
+    type: "Electronic",
     make: "Samsung",
     model: "Galaxy S21",
     serial_number: "123456",
@@ -74,18 +74,17 @@ export async function getItems(policyId) {
 export async function addItem(policyId, itemData) {
   const parsedItemData = {
     id: "fb34d3d4-f6de-11eb-9a03-0242ac130003",
-    name: itemData.shortName,
-    category_name: itemData.riskCategory,
+    item_name: itemData.shortName,
+    type: itemData.category.name,
     country: itemData.country,
     description: itemData.itemDescription,
     make: itemData.make,
     model: itemData.model,
     serial_number: itemData.uniqueIdentifier,
-    accountable_person: {
-      name: itemData.accountablePersonName,
-      uuid: itemData.accountablePersonUuid,
-    },
-    cost: itemData.itemCostUSD,
+    accountable_person: itemData.accountablePersonName,
+    coverage_amount: itemData.marketValueUSD,
+    recent_activity: "Added just now",
+    premium: itemData.marketValueUSD*0.05
   }
 
   // const item = await CREATE(`policies/${policyId}/items`, parsedItemData)
@@ -111,10 +110,10 @@ export async function updateItem(item) {
   let itemId = item.id
   delete item.id
   // TODO: create `parsedItem` to validate item
-  let item = await UPDATE(`items/${itemId}`, item)
+  let newItem = await UPDATE(`items/${itemId}`, item)
 
   loading.set(false)
-  return item
+  return newItem
 }
 
 /**

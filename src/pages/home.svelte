@@ -1,4 +1,7 @@
 <script>
+import user from '../authn/user.js'
+import { getItems } from '../data/items.js'
+import { claims } from '../data/claims.js'
 import { Datatable, Menu, ClaimCards, Row } from '../components/'
 import { Checkbox, Page } from '@silintl/ui-components'
 import { goto } from '@roxi/routify'
@@ -38,37 +41,49 @@ const exampleItems = [
     name: "Saxophone",
     accountable_person: "John Russel",
     last_changed: "5 days",
-    sate: { icon: 'chat' }
+    state: 'draft'
   },
   {
     name: "GoPro",
     accountable_person: "Priscilla Russel",
     last_changed: "5 days",
-    state: { icon: 'chat' }
+    state: 'awaiting'
   },
   {
     name: "GoPro",
     accountable_person: "Priscilla Russel",
     last_changed: "5 days",
-    state: { icon: 'chat' }
+    state: 'denied'
   },
   {
     name: "GoPro",
     accountable_person: "Priscilla Russel",
     last_changed: "5 days",
-    state: { icon: 'chat' }
+    state: 'payout'
   },
   {
     name: "GoPro",
     accountable_person: "Priscilla Russel",
     last_changed: "5 days",
-    state: { icon: 'chat' }
+    state: 'complete'
   },
   {
     name: "GoPro",
     accountable_person: "Priscilla Russel",
     last_changed: "5 days",
-    state: { icon: 'chat' }
+    state: 'approvedRepair'
+  },
+  {
+    name: "GoPro",
+    accountable_person: "Priscilla Russel",
+    last_changed: "5 days",
+    state: 'needsChanges'
+  },
+  {
+    name: "GoPro",
+    accountable_person: "Priscilla Russel",
+    last_changed: "5 days",
+    state: 'message'
   },
 ]
 const menuItems = id => [
@@ -87,6 +102,8 @@ let selected = []
 let loading = false
 let goToItemDetails = true
 let shownMenus = {}
+let items = [] 
+getItems(user.policy_id).then(loadedItems => items = loadedItems)
 
 const redirect = url => {
   if (goToItemDetails) {
@@ -131,7 +148,7 @@ const handleMoreVertClick = id => {
 
 <Page layout="grid">   
   <Row cols={'12'}>
-    <ClaimCards {exampleItems} />
+    <ClaimCards items={$claims} />
   </Row>
 
   <Row cols={'12'}>
@@ -150,9 +167,8 @@ const handleMoreVertClick = id => {
           <Datatable.Header.Item>Premium</Datatable.Header.Item>
           <Datatable.Header.Item>Type</Datatable.Header.Item>
         </Datatable.Header>
-    
         <Datatable.Data>
-          {#each examplePolicies as item}
+          {#each items as item}
               <Datatable.Data.Row on:click={() => redirect(`/items/${item.id}`)} clickable>
                 <Datatable.Data.Row.Item>
                   <div on:click={() => goToItemDetails = false}>
@@ -162,7 +178,7 @@ const handleMoreVertClick = id => {
                 <Datatable.Data.Row.Item>{item.item_name}</Datatable.Data.Row.Item>
                 <Datatable.Data.Row.Item>{item.recent_activity}</Datatable.Data.Row.Item>
                 <Datatable.Data.Row.Item>{item.accountable_person}</Datatable.Data.Row.Item>
-                <Datatable.Data.Row.Item>${item.cost}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>${item.coverage_amount}</Datatable.Data.Row.Item>
                 <Datatable.Data.Row.Item>${item.premium}</Datatable.Data.Row.Item>
                 <Datatable.Data.Row.Item>{item.type}</Datatable.Data.Row.Item>
                 <Datatable.Data.Row.Item>

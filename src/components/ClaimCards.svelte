@@ -15,7 +15,7 @@ export let exampleItems
 <div class="flex justify-start flex-wrap {$$props.class}">
   {#each exampleItems as item}
     <div class="cards">
-      <ClaimCard {item} buttons={[ { label: "Edit coverage", url: "/items/edit-coverage" } ]} />
+      <ClaimCard state={ getState(item) } {item} buttons={[ { label: "Edit coverage", url: "/items/edit-coverage" } ]} />
     </div>
   {/each}
 </div>

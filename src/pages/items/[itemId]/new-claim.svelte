@@ -4,7 +4,11 @@ import { claims, initialized, createClaim } from '../../../data/claims.js'
 import { goto, params } from '@roxi/routify'
 import { Button, Form, Page, TextArea } from '@silintl/ui-components'
 import { fade } from 'svelte/transition'
+import Item from '@silintl/ui-components/components/mdc/List/Item.svelte'
 
+const deductible = 0.05
+const regularFraction = (1 - deductible)
+const evacuationFraction = 2/3
 const reasonsForLoss = [
   {
     label: 'Theft',
@@ -84,11 +88,13 @@ $: payoutOptionCheck && formData.payoutOption == "evacuation" && unSetPayoutOpti
 
 $: moneyPayoutOptions = [
   {
-    label: `Replace and get reimbursed later (max $[covered value-deductible])`,
+    // TODO: make this the covered amount
+    label: `Replace and get reimbursed later `,
     value: 'replace_and_reimburse',
   },
+  // TODO: make this the min of either covered amount or FMV
   {
-    label: `Cash now ($${!formData.fairMarketValue ? 0 : formData.fairMarketValue})`,
+    label: `Cash now ($${(!formData.fairMarketValue ? 0 : formData.fairMarketValue)*regularFraction})`,
     value: 'cash_now'
   }
 ]
@@ -175,6 +181,10 @@ const unSetRepairCost = () => {
           </div>
         {/if}
       {/if}
+      {#if formData.isRepairable === "repairable" && (isNotRepairableOrMoneyInputsAreSet && !seventyPercentCheck)}
+        <p>You will receive ${formData.repairCost*regularFraction} to repair your insured Item.</p>
+      {/if}
+      <!--TODO: add evacuation amount when items is done (covered_value*(2/3))-->
       <p>
         <Button raised>Submit</Button>
       </p>

@@ -1,6 +1,5 @@
 <script>
-import { Datatable, Menu } from '../components/'
-import ClaimCard from '../components/ClaimCard.svelte'
+import { Datatable, Menu, ClaimCards } from '../components/'
 import { Checkbox, Page } from '@silintl/ui-components'
 
 // TODO: update this to be dependent on backend endpoint
@@ -111,22 +110,11 @@ const handleMoreVertClick = id => {
   position: absolute;
   right: 235px;
 }
-
-.cards {
-  margin: 8px 8px 8px 0;
-  flex-basis: 330px;
-}
 </style>
 
 <Page layout="grid">   
   <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
-    <div class="flex justify-start flex-wrap">
-      {#each exampleItems as item}
-        <div class="cards">
-          <ClaimCard {item} buttons={[ { label: "Edit coverage", url: "/items/edit-coverage" } ]} />
-        </div>
-      {/each}
-    </div>
+    <ClaimCards {exampleItems} />
   </div>
 
   <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">

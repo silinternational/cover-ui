@@ -1,5 +1,5 @@
 <script>
-import { Breadcrumb, Description } from '../../components'
+import { Breadcrumb, Description, MoneyInput } from '../../components'
 import { goto } from '@roxi/routify'
 import { Button, Form, Page, Select, TextArea, TextField } from '@silintl/ui-components'
 
@@ -90,7 +90,7 @@ const saveForLater = () => {
       </Description>
     </p>
     <p>
-      <TextField label="Market value (USD)" bind:value={formData.marketValueUSD}></TextField>
+      <MoneyInput label="Market value (USD)" bind:value={formData.marketValueUSD} />
       <Description>
         To convert to USD, use 
         <a href="https://www.google.com/search?q=currency+converter" target="_blank">this converter</a>.

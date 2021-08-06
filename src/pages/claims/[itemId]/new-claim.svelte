@@ -59,7 +59,7 @@ $: isNotRepairableOrMoneyInputsAreSet = (formData.isRepairable !== "repairable" 
 $: seventyPercentCheck = (!formData.repairCost || !formData.fairMarketValue || (formData.repairCost/formData.fairMarketValue) >= .7)
 $: payoutOptionCheck = formData.lossReason && isNotRepairableOrMoneyInputsAreSet && seventyPercentCheck
 $: canRepair = formData.lossReason === "impact" || formData.lossReason === "lightning" || formData.lossReason === "water_damage" || formData.lossReason === "other"
-$: claimExists = $claims.length !== undefined && $claims.find(clm => clm.itemId === $params.itemId)
+$: claimExists = $claims.find(clm => clm.itemId === $params.itemId)
 
 $: !payoutOptionCheck && unSetPayoutOption()
 $: !(formData.isRepairable === "repairable" || formData.payoutOption === "cash_now") && unSetFairMarketValue()

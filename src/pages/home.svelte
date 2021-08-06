@@ -1,5 +1,5 @@
 <script>
-import { Datatable, Menu, ClaimCards } from '../components/'
+import { Datatable, Menu, ClaimCards, Row } from '../components/'
 import { Checkbox, Page } from '@silintl/ui-components'
 
 // TODO: update this to be dependent on backend endpoint
@@ -119,11 +119,11 @@ const handleMoreVertClick = id => {
 </style>
 
 <Page layout="grid">   
-  <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
+  <Row cols={'12'}>
     <ClaimCards {exampleItems} />
-  </div>
+  </Row>
 
-  <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
+  <Row cols={'12'}>
     <!--TODO: add an '$' before the 'loading' when it because a store-->
     {#if loading }
       Loading items...
@@ -161,5 +161,5 @@ const handleMoreVertClick = id => {
         </Datatable.Data>
       </Datatable>
     {/if}
-  </div>
+    </Row>
 </Page>

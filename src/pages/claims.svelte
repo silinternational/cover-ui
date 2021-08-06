@@ -1,6 +1,6 @@
 <script>
-  import { ClaimCards } from '../components/'
-  import { Page } from '@silintl/ui-components'
+  import { ClaimCards, Row } from '../components/'
+  import { Page, Button } from '@silintl/ui-components'
   
   const exampleItems = [
     {
@@ -42,8 +42,12 @@
   ]
   </script>
   
-  <Page layout="grid">   
-    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
+  <Page layout="grid">
+    <Row cols={'12'}>
+      <Button raised url="./claims/newClaim">New claim</Button>
+    </Row>
+
+    <Row cols={'12'}>
       <ClaimCards {exampleItems} />
-    </div>
+    </Row>
   </Page>

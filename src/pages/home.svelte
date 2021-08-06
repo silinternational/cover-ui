@@ -1,9 +1,6 @@
-
 <script>
-import { Datatable, Menu } from '../components/'
-import ClaimCard from '../components/ClaimCard.svelte'
-import { Checkbox, isAboveMobile, isAboveTablet, Page } from '@silintl/ui-components'
-import { onMount } from 'svelte'
+import { Datatable, Menu, ClaimCards, Row } from '../components/'
+import { Checkbox, Page } from '@silintl/ui-components'
 
 // TODO: update this to be dependent on backend endpoint
 const examplePolicies = [
@@ -40,31 +37,37 @@ const exampleItems = [
     name: "Saxophone",
     accountable_person: "John Russel",
     last_changed: "5 days",
+    sate: { icon: 'chat' }
   },
   {
     name: "GoPro",
     accountable_person: "Priscilla Russel",
-    last_changed: "5 days"
+    last_changed: "5 days",
+    state: { icon: 'chat' }
   },
   {
     name: "GoPro",
     accountable_person: "Priscilla Russel",
-    last_changed: "5 days"
+    last_changed: "5 days",
+    state: { icon: 'chat' }
   },
   {
     name: "GoPro",
     accountable_person: "Priscilla Russel",
-    last_changed: "5 days"
+    last_changed: "5 days",
+    state: { icon: 'chat' }
   },
   {
     name: "GoPro",
     accountable_person: "Priscilla Russel",
-    last_changed: "5 days"
+    last_changed: "5 days",
+    state: { icon: 'chat' }
   },
   {
     name: "GoPro",
     accountable_person: "Priscilla Russel",
-    last_changed: "5 days"
+    last_changed: "5 days",
+    state: { icon: 'chat' }
   },
 ]
 const menuItems = id => [
@@ -79,11 +82,6 @@ const menuItems = id => [
 let selected = []
 let loading = false
 let shownMenus = {}
-let gridCols = ''
-
-onMount(() => {
-  setCardCols()
-})
 
 const handleChecked = id => {
   selected.push(id)
@@ -96,36 +94,11 @@ const handleUnchecked = id => {
 const handleMoreVertClick = id => {
   shownMenus[id] = shownMenus[id] !== true
 }
-const setCardCols = () => {
-  if ( isAboveTablet() ) {
-    gridCols = 'cols-lg'
-  } else if ( isAboveMobile() ) {
-    gridCols = 'cols-md'
-  } else {
-    gridCols = 'cols-sm'
-  }
-}
 
 </script>
 
 <style>
 /* TODO: make this more accurate when design is finialized */
-.grid {
-  display: grid;
-  grid-gap: 8px;
-}
-
-.cols-lg {
-  grid-template-columns: minmax(220px, 330px) minmax(220px, 330px) minmax(220px, 330px);
-}
-
-.cols-md {
-  grid-template-columns: minmax(220px, 330px) minmax(220px, 330px);
-}
-
-.cols-sm {
-  grid-template-columns: minmax(220px, 330px);
-}
 
 .home-table-more-vert {
   width: 30px;
@@ -145,20 +118,12 @@ const setCardCols = () => {
 }
 </style>
 
-<svelte:window on:resize={setCardCols}/>
-
 <Page layout="grid">   
-  <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
-    <div class="flex justify-center">
-      <div class="grid {gridCols}">
-        {#each exampleItems as item}
-          <ClaimCard {item} buttons={[ { label: "Edit coverage", url: "/items/edit-coverage" } ]} />
-        {/each}
-      </div>
-    </div>
-  </div>
+  <Row cols={'12'}>
+    <ClaimCards {exampleItems} />
+  </Row>
 
-  <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
+  <Row cols={'12'}>
     <!--TODO: add an '$' before the 'loading' when it because a store-->
     {#if loading }
       Loading items...
@@ -196,5 +161,5 @@ const setCardCols = () => {
         </Datatable.Data>
       </Datatable>
     {/if}
-  </div>
+    </Row>
 </Page>

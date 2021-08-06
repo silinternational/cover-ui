@@ -14,7 +14,7 @@ export async function init() {
  * @export
  */
 export async function loadCategories() {
-  let catz = await GET('/item-categories')
+  let catz = await GET('item-categories')
 
   categories.set(catz)
   initialized.set(true)

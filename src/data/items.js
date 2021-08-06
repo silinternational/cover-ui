@@ -57,7 +57,7 @@ export async function getItems(policyId) {
   loading.set(true)
 
   // TODO: finish this when endpoint is done
-  // const items = await GET(`/policies/${policyId}/items`)
+  // const items = await GET(`policies/${policyId}/items`)
 
   loading.set(false)
   return exampleItems
@@ -88,7 +88,7 @@ export async function addItem(policyId, itemData) {
     cost: itemData.itemCostUSD,
   }
 
-  // const item = await CREATE(`/policies/${policyId}/items`, parsedItemData)
+  // const item = await CREATE(`policies/${policyId}/items`, parsedItemData)
 
   // TODO: change this when endpoint is done and push item
   exampleItems.push(parsedItemData)
@@ -111,7 +111,7 @@ export async function updateItem(item) {
   let itemId = item.id
   delete item.id
   // TODO: create `parsedItem` to validate item
-  let item = await UPDATE(`/items/${itemId}`, item)
+  let item = await UPDATE(`items/${itemId}`, item)
 
   loading.set(false)
   return item
@@ -127,7 +127,7 @@ export async function updateItem(item) {
 export async function deleteItem(id) {
   loading.set(true)
 
-  await DELETE(`/items/${id}`)
+  await DELETE(`items/${id}`)
 
   loading.set(false)
 }

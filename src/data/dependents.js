@@ -26,7 +26,7 @@ export function addDependent(depData) {
     }
 
     // TODO: uncomment when endpoint is finished
-    // let dpndt = await CREATE(`/policies/${policyId}/dependents`, parsedDep)
+    //let dpndt = await CREATE(`policies/${policyId}/dependents`, parsedDep)
 
     dependents.update(currDeps => {
       currDeps.push(parsedDep)
@@ -49,7 +49,7 @@ export async function deleteDependent(depId) {
     loading.set(true)
 
     // TODO: uncomment when endpoint is finished
-    // await DELETE(`/dependents/${depId}`)
+    // await DELETE(`dependents/${depId}`)
 
     dependents.update(currDeps => {
       return currDeps.filter(dep => dep.id !== depId)
@@ -77,7 +77,7 @@ export async function updateDependent(depId, depData) {
   }
 
   // TODO: uncomment when endpoint is finished
-  // let dpndt = await UPDATE(`/dependents/${depId}`)
+  // let dpndt = await UPDATE(`dependents/${depId}`)
 
   dependents.update(currDeps => {
     let i = currDeps.findIndex(dep => dep.id === depId)
@@ -96,7 +96,7 @@ export async function updateDependent(depId, depData) {
 export async function loadDependents(policyId) {
   loading.set(true)
 
-  let dpndts = await GET(`/policies/${policyId}/dependents`)
+  let dpndts = await GET(`policies/${policyId}/dependents`)
 
   dependents.set(dpndts)
 

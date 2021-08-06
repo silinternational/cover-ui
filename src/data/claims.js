@@ -24,7 +24,10 @@ export function createClaim(itemId, claimData) {
 
     claimData.itemId = itemId
 
-    claims.update(currClaims => currClaims.push(claimData))
+    claims.update(currClaims => {
+        currClaims.push(claimData)
+        return currClaims
+    })
 
     loading.set(false)
 

@@ -29,17 +29,17 @@ export function addDependent(depData) {
       child_birth_year: depData.childBirthYear
     }
 
-    // TODO: uncomment when endpoitn is finished
+    // TODO: uncomment when endpoint is finished
     // let dpndt = await CREATE(`/policies/${policyId}/dependets`, parsedDep)
 
     dependents.update(currDeps => {
-      currDeps.push(dpndt)
+      currDeps.push(parsedDep)
       return currDeps
     })
 
     loading.set(false)
 
-    return dpndt
+    return parsedDep
 } 
 
 /**
@@ -86,7 +86,6 @@ export async function updateDependent(depId, depData) {
 
   dependents.update(currDeps => {
     let i = currDeps.findIndex(dep => dep.id === depId)
-    parsedDep.id = currDeps[i].id
     currDeps[i] = parsedDep
     return currDeps
   })

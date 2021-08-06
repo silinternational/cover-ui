@@ -90,7 +90,10 @@ export async function addItem(policyId, itemData) {
 
   // const item = await CREATE(`/policies/${policyId}/items`, parsedItemData)
 
-  return item
+  // TODO: change this when endpoint is done and push item
+  exampleItems.push(parsedItemData)
+
+  return parsedItemData
 }
 
 /**

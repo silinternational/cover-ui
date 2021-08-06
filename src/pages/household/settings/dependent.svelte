@@ -1,4 +1,6 @@
 <script>
+import user from '../../../authn/user'
+import { addDependent } from '../../../data/dependents'
 import { DependentForm } from '../../../components'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
@@ -6,9 +8,9 @@ import { Page } from '@silintl/ui-components'
 const onCancel = () => {
   $goto('../settings')
 }
-const onSubmit = event => {
+const onSubmit = async event => {
   const formData = event.detail
-  console.log('DependentForm submitted', formData)
+  await addDependent($user.policy_id, formData)
 }
 </script>
 

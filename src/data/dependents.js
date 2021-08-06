@@ -1,4 +1,4 @@
-import { GET } from ".";
+import { CREATE, GET } from ".";
 import user from "../authn/user"
 import { writable } from "svelte/store";
 
@@ -10,23 +10,21 @@ export const initialized = writable(false)
  *
  * @description a function to create a dependent for a certain policy
  * @export
+ * @param {string} policyId
  * @param {Object} depData
  * @return {Object} 
  */
-export function addDependent(depData) {
-    let policyId = user.policy_id
+export async function addDependent(policyId, depData) {
     loading.set(true)
 
     let parsedDep = {
-      id: "3dfd1ee6-f6e0-11eb-9a03-0242ac130003",
       name: depData.name,
       relationship: depData.relationship,
       location: depData.location,
-      child_birth_year: depData.childBirthYear
+      child_birth_year: depData.childBirthYear && parseInt(depData.childBirthYear)
     }
 
-    // TODO: uncomment when endpoint is finished
-    //let dpndt = await CREATE(`policies/${policyId}/dependents`, parsedDep)
+    let dpndt = await CREATE(`policies/${policyId}/dependents`, parsedDep)
 
     dependents.update(currDeps => {
       currDeps.push(parsedDep)
@@ -91,6 +89,7 @@ export async function updateDependent(depId, depData) {
 /**
  *
  * @description a function to load the dependents of a policy
+ * @param {string} policyId
  * @export
  */
 export async function loadDependents(policyId) {

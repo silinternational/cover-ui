@@ -9,11 +9,11 @@ const dispatch = createEventDispatcher()
 const relationshipOptions = [
   {
     label: 'Spouse',
-    value: 'spouse',
+    value: 'Spouse',
   },
   {
     label: 'Child',
-    value: 'child',
+    value: 'Child',
   },
 ]
 
@@ -34,7 +34,7 @@ const onRemove = event => {
   dispatch('remove', { uuid: formData.uuid })
 }
 const onSubmit = () => {
-  if (formData.relationship !== 'child') {
+  if (formData.relationship !== 'Child') {
     delete formData.childBirthYear
   }
   dispatch('submit', formData)
@@ -72,7 +72,7 @@ const onSubmit = () => {
     <p>
       <RadioOptions name="relationship" options={relationshipOptions} bind:value={formData.relationship} />
     </p>
-    {#if formData.relationship === 'child'}
+    {#if formData.relationship === 'Child'}
       <p>
         <TextField label="Child's birth year" bind:value={formData.childBirthYear} class="w-100" />
       </p>

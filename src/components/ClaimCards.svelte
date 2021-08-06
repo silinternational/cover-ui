@@ -1,7 +1,11 @@
 <script>
 import { ClaimCard } from './index'
+import { states } from '../data/claims'
 
-export let exampleItems
+export let items = []
+
+const getState = item => states[item.state]
+
 </script>
 
 <style>
@@ -13,9 +17,9 @@ export let exampleItems
 </style>
 
 <div class="flex justify-start flex-wrap {$$props.class}">
-  {#each exampleItems as item}
+  {#each items as item}
     <div class="cards">
-      <ClaimCard {item} buttons={[ { label: "Edit coverage", url: "/items/edit-coverage" } ]} />
+      <ClaimCard state={ getState(item) } {item} buttons={[ { label: "Edit coverage", url: "/items/edit-coverage" } ]} />
     </div>
   {/each}
 </div>

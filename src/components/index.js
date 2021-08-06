@@ -3,6 +3,7 @@ import filteredList from './filteredList'
 import table from './table'
 import App from './App.svelte'
 import AppFooter from './AppFooter.svelte'
+import Banner from './Banner.svelte'
 import Breadcrumb from './Breadcrumb.svelte'
 import DateInput from './DateInput.svelte'
 import DependentForm from './DependentForm.svelte'
@@ -17,6 +18,7 @@ export {
     table as Table,
     App as App,
     AppFooter as AppFooter,
+    Banner as Banner,
     Breadcrumb as Breadcrumb,
     DateInput as DateInput,
     DependentForm as DependentForm,

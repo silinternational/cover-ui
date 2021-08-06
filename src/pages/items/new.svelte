@@ -4,6 +4,7 @@ import { goto } from '@roxi/routify'
 import { Button, Form, Page, Select, TextArea, TextField } from '@silintl/ui-components'
 
 let formData = {
+  categoryUuid: '',
   shortName: '',
   itemDescription: '',
   riskCategory: '',
@@ -13,6 +14,19 @@ let formData = {
   accountablePersonUuid: '',
   itemCostUSD: '',
 }
+
+/* @todo Pull this from the database eventually: */
+let categoryOptions = [
+  {
+    "name": "Musical Instrument",
+    "id": "11111111-1111-4111-1111-111111111111",
+  },
+  {
+    "name": "Cell Phone",
+    "id": "22222222-2222-4222-2222-222222222222",
+  },
+]
+
 const riskCategoryOptions = [
   {
     label: 'Carried with me',
@@ -56,6 +70,9 @@ const saveForLater = () => {
 <Page>
   <Breadcrumb />
   <Form on:submit={onSubmit}>
+    <p>
+      <Select label="Category" bind:selectedID={formData.categoryUuid} options={categoryOptions} />
+    </p>
     <p>
       <TextField label="Short name" bind:value={formData.shortName}></TextField>
       <Description>This label will appear on your statements.</Description>

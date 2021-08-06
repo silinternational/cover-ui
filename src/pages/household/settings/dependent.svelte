@@ -11,6 +11,7 @@ const onCancel = () => {
 const onSubmit = async event => {
   const formData = event.detail
   await addDependent($user.policy_id, formData)
+  $goto('../settings')
 }
 </script>
 

@@ -70,6 +70,9 @@ const exampleItems = [
 ]
 const menuItems = id => [
   {
+    label: 'View Details', url: `/items/${id}`
+  },
+  {
     label: 'Edit', url: `/items/${id}/edit`
   },
   {
@@ -82,8 +85,6 @@ let loading = false
 let otherClick = false
 let shownMenus = {}
 let gridCols = ''
-
-$: console.log(otherClick)
 
 onMount(() => {
   setCardCols()

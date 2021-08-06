@@ -7,7 +7,6 @@ let formData = {
   categoryUuid: '',
   shortName: '',
   itemDescription: '',
-  riskCategory: '',
   uniqueIdentifier: '',
   make: '',
   model: '',
@@ -24,17 +23,6 @@ let categoryOptions = [
   {
     "name": "Cell Phone",
     "id": "22222222-2222-4222-2222-222222222222",
-  },
-]
-
-const riskCategoryOptions = [
-  {
-    label: 'Carried with me',
-    value: 'mobile',
-  },
-  {
-    label: 'In one place (home or office)',
-    value: 'stationary',
   },
 ]
 
@@ -81,8 +69,6 @@ const saveForLater = () => {
       <TextArea label="Item description" bind:value={formData.itemDescription} rows="4"></TextArea>
       <Description>For personal use.</Description>
     </p>
-    <p>This item primarily stays:</p>
-    <RadioOptions name="riskCategory" options={riskCategoryOptions} bind:value={formData.riskCategory} />
     <p>
       <TextField label="Unique identifier" bind:value={formData.uniqueIdentifier}></TextField>
       <Description>Optional. Serial number, IMEI, service tag, VIN</Description>

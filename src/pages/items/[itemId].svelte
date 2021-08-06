@@ -1,7 +1,7 @@
 <script>
-import { Banner } from '../../components'
+import { Banner, Breadcrumb } from '../../components'
 import { Button } from '@silintl/ui-components'
-import { goto } from '@roxi/routify'
+import { goto, params } from '@roxi/routify'
 
 // TODO: make this dependent on backend endpoint
 const itemDetails = {
@@ -31,12 +31,23 @@ const itemDetails = {
     "updated_at": "2021-08-05T16:05:27.357298Z"
   }
 }
+const breadcrumbLinks = [
+  {
+    name: "Items",
+    url: "/items",
+  },
+  // TODO: make this fetch the name of the item and have that as the name 
+  {
+    name: "This Item",
+    url: `/items/${$params.itemId}`
+  },
+]
 
 const goToEditItem = () => {
   $goto('./edit')
 }
 const goToNewClaim = () => {
-  $goto(`/claim/${itemDetails.id}/new-claim`)
+  $goto(`/items/${itemDetails.id}/new-claim`)
 }
 const goToDelete = () => {
   $goto('./delete')
@@ -55,6 +66,7 @@ p {
 }
 </style>
 
+<Breadcrumb links={breadcrumbLinks} />
 <h1>{itemDetails.name}</h1>
 <h3>{itemDetails.make} {itemDetails.model}</h3>
 <Banner background="var(--mdc-theme-neutral">{itemDetails.category.name}</Banner>

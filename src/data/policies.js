@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store'
-import { GET, POST, UPDATE, DELETE } from './index'
+import { GET, UPDATE } from './index'
 
 export const policies = writable([])
 export const loading = writable(false)

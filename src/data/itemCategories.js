@@ -5,7 +5,7 @@ export const categories = writable([])
 export const initialized = writable(false)
 
 export async function init() {
-    loadCategories()
+  loadCategories()
 }
 
 /**
@@ -14,9 +14,8 @@ export async function init() {
  * @export
  */
 export async function loadCategories() {
+  let catz = await GET('/item-categories')
 
-    let catz = await GET('/item-categories')
-
-    categories.set(catz)
-    initialized.set(true)
+  categories.set(catz)
+  initialized.set(true)
 }

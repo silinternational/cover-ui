@@ -41,10 +41,14 @@ const gotoItem = () => item.id && $goto(`/requests/${item.id}`)
 .pl-10px{
   padding-left: 10px;
 }
+
+.card-heading {
+  padding-left: 50px;
+}
 </style>
 
 <Card isClickable noPadding on:click={gotoItem} on:keypress={gotoItem} class="height-fit-content py-0">
-  <div class="flex justify-center align-items-center bg-color black mb-2 p-1">
+  <div class="flex justify-start align-items-center bg-color black mb-2 p-1 card-heading">
     <span class="material-icons">{state.icon}</span>
 
     <div class="mdc-theme--primary pl-10px">

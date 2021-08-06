@@ -1,8 +1,9 @@
 
 <script>
 import { Datatable, Menu } from '../components/'
-import { Checkbox } from '@silintl/ui-components'
+import { Checkbox, isAboveMobile, isAboveTablet } from '@silintl/ui-components'
 import ClaimCard from '../components/ClaimCard.svelte'
+import { onMount } from 'svelte';
 
 // TODO: update this to be dependent on backend endpoint
 const examplePolicies = [
@@ -78,6 +79,11 @@ const menuItems = id => [
 let selected = []
 let loading = false
 let shownMenus = {}
+let gridCols = ''
+
+onMount(() => {
+  setCardCols()
+})
 
 const handleChecked = id => {
   selected.push(id)
@@ -89,6 +95,15 @@ const handleUnchecked = id => {
 }
 const handleMoreVertClick = id => {
   shownMenus[id] = shownMenus[id] !== true
+}
+const setCardCols = () => {
+  if ( isAboveTablet() ) {
+    gridCols = 'cols-lg'
+  } else if ( isAboveMobile() ) {
+    gridCols = 'cols-md'
+  } else {
+    gridCols = 'cols-sm'
+  }
 }
 
 </script>
@@ -102,8 +117,19 @@ const handleMoreVertClick = id => {
 
 .grid {
   display: grid;
-  grid-template-columns: auto auto auto auto;
-  grid-gap: 10px;
+  grid-gap: 8px;
+}
+
+.cols-lg {
+  grid-template-columns:  minmax(220px, 330px) minmax(220px, 330px) minmax(220px, 330px);
+}
+
+.cols-md {
+  grid-template-columns:  minmax(220px, 330px) minmax(220px, 330px);
+}
+
+.cols-sm {
+  grid-template-columns:  minmax(220px, 330px);
 }
 
 .home-sub-content {
@@ -128,10 +154,12 @@ const handleMoreVertClick = id => {
 }
 </style>
 
+<svelte:window on:resize={setCardCols}/>
+
 <div class="home-page-content">   
   <!--TODO: make this a grid (I think) when design is finialized-->
-  <div class="home-sub-content" style="display: flex">
-    <div class="grid">
+  <div class="home-sub-content flex justify-center">
+    <div class="grid {gridCols}">
       {#each exampleItems as item}
         <ClaimCard {item} buttons={[ { label: "Edit coverage", url: "/items/edit-coverage" } ]} />
       {/each}

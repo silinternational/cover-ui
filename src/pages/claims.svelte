@@ -7,7 +7,7 @@
       name: "Saxophone",
       accountable_person: "John Russel",
       last_changed: "5 days",
-      sate: { icon: 'chat' }
+      state: { icon: 'chat' }
     },
     {
       name: "GoPro",

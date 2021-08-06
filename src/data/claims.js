@@ -18,8 +18,8 @@ export const states = {
     },
     awaiting: {
         icon: 'watch_later',
-        color: '#394452',
-        bgColor: '#EBEEF2',
+        color: '--mdc-theme-neutral-variant',
+        bgColor: '--mdc-theme-neutral-bg',
         title: 'Awaiting review'
     },
     needsChanges: {

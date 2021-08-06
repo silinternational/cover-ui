@@ -30,7 +30,7 @@ export function addDependent(depData) {
     }
 
     // TODO: uncomment when endpoint is finished
-    // let dpndt = await CREATE(`/policies/${policyId}/dependets`, parsedDep)
+    // let dpndt = await CREATE(`/policies/${policyId}/dependents`, parsedDep)
 
     dependents.update(currDeps => {
       currDeps.push(parsedDep)

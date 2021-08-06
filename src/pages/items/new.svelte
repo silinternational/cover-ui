@@ -11,6 +11,7 @@ let formData = {
   make: '',
   model: '',
   accountablePersonUuid: '',
+  accountablePersonName: '',
   marketValueUSD: '',
 }
 

@@ -1,8 +1,50 @@
-import { DELETE, UPDATE } from "./index.js";
+import { CREATE, DELETE, UPDATE } from "./index.js";
 import { throwError } from "../error";
 import { writable } from "svelte/store";
 
 export const loading = writable(false)
+
+const exampleItems = [
+  {
+    id: "0e3ed6ce-f6de-11eb-9a03-0242ac130003",
+    item_name: "Laptop",
+    recent_activity: "Awaiting approval",
+    accountable_person: "John Smith",
+    coverage_amount: 650,
+    premium: 20,
+    type: "Mobile",
+    make: "Lenovo",
+    model: "Ideapad 14 5",
+    serial_number: "2009d-asdddd",
+    description: "My humble laptop"
+  }, 
+  {
+    id: "38573852-f6de-11eb-9a03-0242ac130003",
+    item_name: "Favorite Couch",
+    recent_activity: "Added 3 months ago",
+    accountable_person: "Mary Smith",
+    coverage_amount: 200,
+    premium: 6,
+    type: "Stationary",
+    make: "Vader Furniture",
+    model: "v1 X",
+    serial_number: "03810345",
+    description: "My couch that I've had for 10 years"
+  }, 
+  {
+    id: "6402a540-f6de-11eb-9a03-0242ac130003",
+    item_name: "Samsung S21",
+    recent_activity: "Removed 3 days ago",
+    accountable_person: "George Smith",
+    coverage_amount: 950,
+    premium: 30,
+    type: "Mobile",
+    make: "Samsung",
+    model: "Galaxy S21",
+    serial_number: "123456",
+    description: "My awesome phone that I don't want to lose"
+  }
+]
 
 /**
  *
@@ -14,10 +56,11 @@ export const loading = writable(false)
 export async function getItems(policyId) {
   loading.set(true)
 
-  const items = await GET(`/policies/${policyId}/items`)
+  // TODO: finish this when endpoint is done
+  // const items = await GET(`/policies/${policyId}/items`)
 
   loading.set(false)
-  return items
+  return exampleItems
 }
 
 /**
@@ -30,6 +73,7 @@ export async function getItems(policyId) {
  */
 export async function addItem(policyId, itemData) {
   const parsedItemData = {
+    id: "fb34d3d4-f6de-11eb-9a03-0242ac130003",
     name: itemData.shortName,
     category_name: itemData.riskCategory,
     country: itemData.country,
@@ -37,12 +81,19 @@ export async function addItem(policyId, itemData) {
     make: itemData.make,
     model: itemData.model,
     serial_number: itemData.uniqueIdentifier,
-    accountable_person: itemData.accountablePersonUuid,
+    accountable_person: {
+      name: itemData.accountablePersonName,
+      uuid: itemData.accountablePersonUuid,
+    },
+    cost: itemData.itemCostUSD,
   }
 
-  const item = await POST(`/policies/${policyId}/items`, parsedItemData)
+  // const item = await CREATE(`/policies/${policyId}/items`, parsedItemData)
 
-  return item
+  // TODO: change this when endpoint is done and push item
+  exampleItems.push(parsedItemData)
+
+  return parsedItemData
 }
 
 /**
@@ -79,5 +130,4 @@ export async function deleteItem(id) {
   await DELETE(`/items/${id}`)
 
   loading.set(false)
-  return null
 }

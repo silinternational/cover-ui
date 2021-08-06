@@ -44,7 +44,7 @@
   
   <Page layout="grid">
     <Row cols={'12'}>
-      <Button raised url="./claims/newClaim">New claim</Button>
+      <Button raised url="/claims/newClaim">New claim</Button>
     </Row>
 
     <Row cols={'12'}>

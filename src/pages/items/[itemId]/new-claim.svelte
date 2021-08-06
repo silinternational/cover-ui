@@ -42,6 +42,21 @@ const repairableOptions = [
     value: 'not_repairable'
   }
 ]
+const breadcrumbLinks = [
+  {
+    name: "Items",
+    url: "/items",
+  },
+  // TODO: make this fetch the name of the item and have that as the name 
+  {
+    name: "This Item",
+    url: `/items/${$params.itemId}`
+  },
+  {
+    name: "New Claim",
+    url: `/items/${$params.itemId}/new-claim`
+  }
+]
 
 let formData = {
   lostDate: new Date().toISOString().split('T')[0],
@@ -105,7 +120,7 @@ const unSetRepairCost = () => {
   <h2>Claim already exists!</h2>
 {:else if $initialized}
   <Page>
-    <Breadcrumb />
+    <Breadcrumb links={breadcrumbLinks} />
     <Form on:submit={onSubmit}>
       <p>
         <DateInput bind:value={formData.lostDate} />

@@ -1,3 +1,4 @@
+<!-- https://github.com/material-components/material-components-web/tree/master/packages/mdc-menu -->
 <script>
 import { onDestroy, onMount } from 'svelte'
 import { MDCMenu } from '@material/menu'
@@ -33,17 +34,19 @@ const handleItemClick = url => {
     $goto(url)
   }
 }
+const onMenuClose = () => !menu.open && (menuToggler = false)
 </script>
+<svelte:body on:click={onMenuClose} />
 
 <div class="mdc-menu mdc-menu-surface" bind:this={element}>
   <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical" tabindex="-1">
     {#each menuItems as {icon, label, url}, i}
-      <li on:click={() => handleItemClick(url)} class="mdc-list-item" role="menuitem">
+      <li on:click={() => handleItemClick(url)} class="mdc-list-item" role="menuitem" on:blur={onMenuClose}>
         <span class="mdc-list-item__ripple"></span>
         {#if url}
           <!-- svelte-ignore a11y-invalid-attribute -->
           <a class="mdc-list-item" class:mdc-list-item--activated={isMenuItemActive(currentUrl, url)} href=""
-            aria-current={isMenuItemActive(currentUrl, url) ? "page" : null} tabindex={i === 0 ? 0 : undefined}>
+            aria-current={isMenuItemActive(currentUrl, url) ? "page" : null} tabindex={i === 0 ? 0 : undefined} on:blur={onMenuClose}>
             {#if icon}
               <i class="material-icons mdc-list-item__graphic" aria-hidden="true">{icon}</i>
             {/if}

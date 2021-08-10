@@ -34,6 +34,7 @@ const handleItemClick = url => {
     $goto(url)
   }
 }
+const handleItemKeydown = (e, url) => (e.code == 'Space' || e.code == 'Enter') && handleItemClick(url)
 const onMenuClose = () => !menu.open && (menuToggler = false)
 </script>
 <svelte:body on:click={onMenuClose} />
@@ -42,7 +43,7 @@ const onMenuClose = () => !menu.open && (menuToggler = false)
   <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical" tabindex="-1">
     {#each menuItems as {icon, label, url}, i}
       <!-- svelte-ignore a11y-invalid-attribute -->
-      <a on:click={() => handleItemClick(url)} role="menuitem" class="mdc-list-item" class:mdc-list-item--activated={isMenuItemActive(currentUrl, url)} href=""
+      <a on:click|preventDefault={() => handleItemClick(url)} on:keydown|preventDefault={ e => handleItemKeydown(e, url)} role="menuitem" class="mdc-list-item" class:mdc-list-item--activated={isMenuItemActive(currentUrl, url)} href=""
         aria-current={isMenuItemActive(currentUrl, url) ? "page" : null} tabindex={i === 0 ? 0 : undefined} on:blur={onMenuClose}>
         <span class="mdc-list-item__ripple"></span>
         {#if icon}

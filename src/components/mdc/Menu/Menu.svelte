@@ -41,21 +41,17 @@ const onMenuClose = () => !menu.open && (menuToggler = false)
 <div class="mdc-menu mdc-menu-surface" bind:this={element}>
   <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical" tabindex="-1">
     {#each menuItems as {icon, label, url}, i}
-      <li on:click={() => handleItemClick(url)} class="mdc-list-item" role="menuitem" on:blur={onMenuClose}>
+      <!-- svelte-ignore a11y-invalid-attribute -->
+      <a on:click={() => handleItemClick(url)} role="menuitem" class="mdc-list-item" class:mdc-list-item--activated={isMenuItemActive(currentUrl, url)} href=""
+        aria-current={isMenuItemActive(currentUrl, url) ? "page" : null} tabindex={i === 0 ? 0 : undefined} on:blur={onMenuClose}>
         <span class="mdc-list-item__ripple"></span>
-        {#if url}
-          <!-- svelte-ignore a11y-invalid-attribute -->
-          <a class="mdc-list-item" class:mdc-list-item--activated={isMenuItemActive(currentUrl, url)} href=""
-            aria-current={isMenuItemActive(currentUrl, url) ? "page" : null} tabindex={i === 0 ? 0 : undefined} on:blur={onMenuClose}>
-            {#if icon}
-              <i class="material-icons mdc-list-item__graphic" aria-hidden="true">{icon}</i>
-            {/if}
-            {#if label}
-              <span class="mdc-list-item__text">{label}</span>
-            {/if}
-          </a>
+        {#if icon}
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">{icon}</i>
         {/if}
-      </li>
+        {#if label}
+          <span class="mdc-list-item__text">{label}</span>
+        {/if}
+      </a>
     {/each}
   </ul>
 </div>

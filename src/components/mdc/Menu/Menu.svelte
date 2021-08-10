@@ -48,7 +48,7 @@ const closeMenuHandler = () => {
   <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical" tabindex="-1">
     {#each menuItems as {icon, label, url}, i}
       <!-- svelte-ignore a11y-invalid-attribute -->
-      <a on:click|preventDefault={() => handleItemClick(url)} on:keydown|preventDefault={ e => handleItemKeydown(e, url)} role="menuitem" class="mdc-list-item" class:mdc-list-item--activated={isMenuItemActive(currentUrl, url)} href=""
+      <li on:click|preventDefault={() => handleItemClick(url)} on:keydown|preventDefault={ e => handleItemKeydown(e, url)} role="menuitem" class="mdc-list-item" class:mdc-list-item--activated={isMenuItemActive(currentUrl, url)}
         aria-current={isMenuItemActive(currentUrl, url) ? "page" : null} tabindex={i === 0 ? 0 : undefined} on:blur={closeMenuHandler}>
         <span class="mdc-list-item__ripple"></span>
         {#if icon}
@@ -57,7 +57,7 @@ const closeMenuHandler = () => {
         {#if label}
           <span class="mdc-list-item__text">{label}</span>
         {/if}
-      </a>
+      </li>
     {/each}
   </ul>
 </div>

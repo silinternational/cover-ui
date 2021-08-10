@@ -1,3 +1,4 @@
+<!-- https://github.com/material-components/material-components-web/tree/master/packages/mdc-menu -->
 <script>
 import { onDestroy, onMount } from 'svelte'
 import { MDCMenu } from '@material/menu'
@@ -5,7 +6,7 @@ import { createEventDispatcher } from 'svelte'
 import { goto } from '@roxi/routify';
 
 export let menuItems = []
-export let menuToggler = false
+export let menuOpen = false
 
 let menu = {}
 let element = {}
@@ -13,7 +14,7 @@ let element = {}
 const dispatch = createEventDispatcher()
 
 $: currentUrl = window.location.pathname
-$: menu.open = menuToggler
+$: menu.open = menuOpen
 
 onMount(() => {
   menu = new MDCMenu(element)
@@ -33,24 +34,28 @@ const handleItemClick = url => {
     $goto(url)
   }
 }
+const handleItemKeydown = (e, url) => (e.code == 'Space' || e.code == 'Enter') && handleItemClick(url)
+const closeMenuHandler = () => {
+  if (!menu.open) { //checks to make sure the click wasn't opening the menu or on the menu
+    menuOpen = false
+  }
+}
 </script>
+<!-- mdc-menu doesn't have a method to let us know when it closes so this listens for clicks -->
+<svelte:body on:click={closeMenuHandler} />
 
 <div class="mdc-menu mdc-menu-surface" bind:this={element}>
   <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical" tabindex="-1">
     {#each menuItems as {icon, label, url}, i}
-      <li on:click={() => handleItemClick(url)} class="mdc-list-item" role="menuitem">
+      <!-- svelte-ignore a11y-invalid-attribute -->
+      <li on:click|preventDefault={() => handleItemClick(url)} on:keydown|preventDefault={ e => handleItemKeydown(e, url)} role="menuitem" class="mdc-list-item" class:mdc-list-item--activated={isMenuItemActive(currentUrl, url)}
+        aria-current={isMenuItemActive(currentUrl, url) ? "page" : null} tabindex={i === 0 ? 0 : undefined} on:blur={closeMenuHandler}>
         <span class="mdc-list-item__ripple"></span>
-        {#if url}
-          <!-- svelte-ignore a11y-invalid-attribute -->
-          <a class="mdc-list-item" class:mdc-list-item--activated={isMenuItemActive(currentUrl, url)} href=""
-            aria-current={isMenuItemActive(currentUrl, url) ? "page" : null} tabindex={i === 0 ? 0 : undefined}>
-            {#if icon}
-              <i class="material-icons mdc-list-item__graphic" aria-hidden="true">{icon}</i>
-            {/if}
-            {#if label}
-              <span class="mdc-list-item__text">{label}</span>
-            {/if}
-          </a>
+        {#if icon}
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">{icon}</i>
+        {/if}
+        {#if label}
+          <span class="mdc-list-item__text">{label}</span>
         {/if}
       </li>
     {/each}

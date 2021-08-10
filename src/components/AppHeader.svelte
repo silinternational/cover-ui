@@ -18,7 +18,7 @@ const menuItems = [
 let showImage = true
 let alt = 'avatar'
 let showDrawerButton
-let menuToggler = false
+let menuOpen = false
 
 const dispatch = createEventDispatcher()
 
@@ -28,7 +28,7 @@ $: ownerInitial = $user.first_name?.charAt(0) || ''
 onMount(() => showOrHideDrawerButton())
 
 const avatarError = () => showImage = false
-const toggleMenu = () => menuToggler = !menuToggler
+const toggleMenu = () => menuOpen = !menuOpen
 const showOrHideDrawerButton = () => isAboveTablet() ? (showDrawerButton = false) : (showDrawerButton = true)
 const toggleDrawerHandler = () => dispatch('toggleDrawer') //TODO toggle drawer
 </script>
@@ -61,8 +61,7 @@ header {
       {/if}
     </button>
 
-    <!-- TODO set menuToggler to false when menu closes -->
-    <Menu autofocus bind:menuToggler {menuItems} on:syncToggler={() => menuToggler = false}/>
+    <Menu autofocus bind:menuOpen {menuItems} on:syncToggler={() => menuOpen = false}/>
   </div>
 </header>
 

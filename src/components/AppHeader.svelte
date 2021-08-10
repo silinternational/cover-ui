@@ -61,7 +61,6 @@ header {
       {/if}
     </button>
 
-    <!-- TODO set menuOpen to false when menu closes -->
     <Menu autofocus bind:menuOpen {menuItems} on:syncToggler={() => menuOpen = false}/>
   </div>
 </header>

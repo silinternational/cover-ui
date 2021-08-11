@@ -1,15 +1,17 @@
 <script>
+import { Linear } from '@silintl/ui-components'
+
 import { loading } from './index'
 </script>
 
 <style>
-progress {
-  width: 100%;
-  position: relative;
+.progress {
   top: -5px;
 }
 </style>
 
 {#if $loading}
-  <progress />
+  <div  class='progress w-100 relative'>
+    <Linear/>
+  </div>
 {/if}

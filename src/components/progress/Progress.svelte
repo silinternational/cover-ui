@@ -1,5 +1,5 @@
 <script>
-import { Linear } from '@silintl/ui-components'
+import { Progress } from '@silintl/ui-components'
 
 import { loading } from './index'
 </script>
@@ -12,6 +12,6 @@ import { loading } from './index'
 
 {#if $loading}
   <div  class='progress w-100 relative'>
-    <Linear/>
+    <Progress.Linear indeterminate/>
   </div>
 {/if}

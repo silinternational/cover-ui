@@ -1,9 +1,9 @@
-import { CREATE, GET } from ".";
+import { CREATE, GET } from "."
 import user from "../authn/user"
-import { writable } from "svelte/store";
+import { writable } from "svelte/store"
+import { start, stop } from "../components/progress"
 
 export const dependents = writable([])
-export const loading = writable(false)
 export const initialized = writable(false)
 
 /**
@@ -15,7 +15,7 @@ export const initialized = writable(false)
  * @return {Object} 
  */
 export async function addDependent(policyId, depData) {
-    loading.set(true)
+    start(policyId)
 
     let parsedDep = {
       name: depData.name,
@@ -31,7 +31,7 @@ export async function addDependent(policyId, depData) {
       return currDeps
     })
 
-    loading.set(false)
+    stop(policyId)
 
     return parsedDep
 } 
@@ -44,7 +44,7 @@ export async function addDependent(policyId, depData) {
  * @return {null} 
  */
 export async function deleteDependent(depId) {
-    loading.set(true)
+    start(depId)
 
     // TODO: uncomment when endpoint is finished
     // await DELETE(`dependents/${depId}`)
@@ -53,7 +53,7 @@ export async function deleteDependent(depId) {
       return currDeps.filter(dep => dep.id !== depId)
     })
 
-    loading.set(false)
+    stop(depId)
 }
 
 /**
@@ -64,7 +64,7 @@ export async function deleteDependent(depId) {
  * @param {Object} depData
  */
 export async function updateDependent(depId, depData) {
-  loading.set(true)
+  start(depId)
 
   let parsedDep = {
     id: depId,
@@ -83,7 +83,7 @@ export async function updateDependent(depId, depData) {
     return currDeps
   })
 
-  loading.set(false)
+  stop(depId)
 }
 
 /**
@@ -93,12 +93,12 @@ export async function updateDependent(depId, depData) {
  * @export
  */
 export async function loadDependents(policyId) {
-  loading.set(true)
+  start(policyId)
 
   let dpndts = await GET(`policies/${policyId}/dependents`)
 
   dependents.set(dpndts)
 
-  loading.set(false)
+  stop(policyId)
   initialized.set(true)
 }

@@ -1,7 +1,8 @@
 import { clear as clearToken, getSeed } from './token'
 import { clear as clearUser } from './user'
-import { CREATE as POST } from '../data'
+import { CREATE as POST, GET } from '../data'
 import { throwError } from '../error'
+import { goto } from '@roxi/routify'
 
 export const login = async () => {
   const responseData = await POST(`auth/login/?client-id=${getSeed()}`)
@@ -12,13 +13,9 @@ export const login = async () => {
   }
 }
 
-export const logout = () => {
-  // normally this would be a GET api/logout?token={getToken()} 
-  // and the api would respond with a 302 to /login or a /logged-out page
-  // but I couldn't get this dance to work with httpbin.org/redirect-to because of CORS stuff so
-  // I'm just simulating it.
-  location = `${location.origin}/logged-out`
-
+export const logout = async () => {
+  await GET('auth/logout')
   clearToken()
   clearUser()
+  $goto('/logged-out')
 }

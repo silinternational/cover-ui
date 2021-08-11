@@ -5,6 +5,7 @@ import { claims } from '../data/claims.js'
 import { Datatable, Menu, ClaimCards, Row } from '../components/'
 import { Checkbox, Page } from '@silintl/ui-components'
 import { goto } from '@roxi/routify'
+import { loading } from '../components/progress/index'
 
 // TODO: update this to be dependent on backend endpoint
 const examplePolicies = [
@@ -99,7 +100,6 @@ const menuItems = id => [
 ]
 
 let selected = []
-let loading = false
 let goToItemDetails = true
 let shownMenus = {}
 let items = [] 
@@ -152,8 +152,7 @@ const handleMoreVertClick = id => {
   </Row>
 
   <Row cols={'12'}>
-    <!--TODO: add an '$' before the 'loading' when it because a store-->
-    {#if loading }
+    {#if $loading }
       Loading items...
     {:else}
       <Datatable>

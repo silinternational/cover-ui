@@ -4,8 +4,6 @@ import AppHeader from '../components/AppHeader.svelte'
 import { goto } from '@roxi/routify'
 import { Drawer } from '@silintl/ui-components'
 
-let isFullHeightMenu = false
-let hasTopAppBar = false
 let toggle = false
 
 $: menuItems = [
@@ -41,7 +39,7 @@ $: menuItems = [
 const logoClickHandler = () => $goto('/')
 </script>
 
-<Drawer modal {toggle} {hasTopAppBar} {menuItems} title='Covered' {isFullHeightMenu} class="auto-width border-white">
+<Drawer miniMenu modal hideForPhonesOnly {toggle} {menuItems} title='Covered' class="auto-width border-white">
   <span class="pointer" on:click={logoClickHandler} slot="header">
     <img class="w-100" src="/logo.svg" alt="Cover">
   </span>

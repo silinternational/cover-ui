@@ -3,9 +3,9 @@ import user from '../authn/user.js'
 import { getItems } from '../data/items.js'
 import { claims } from '../data/claims.js'
 import { Datatable, Menu, ClaimCards, Row } from '../components/'
+import { isLoadingById } from '../components/progress/index'
 import { Checkbox, Page } from '@silintl/ui-components'
 import { goto } from '@roxi/routify'
-import { loading } from '../components/progress/index'
 
 // TODO: update this to be dependent on backend endpoint
 const examplePolicies = [
@@ -146,13 +146,13 @@ const handleMoreVertClick = id => {
 }
 </style>
 
-<Page layout="grid">   
+<Page loading={isLoadingById(user.policy_id)} layout="grid">   
   <Row cols={'12'}>
     <ClaimCards items={$claims} />
   </Row>
 
   <Row cols={'12'}>
-    {#if $loading }
+    {#if isLoadingById(user.policy_id) }
       Loading items...
     {:else}
       <Datatable>

@@ -13,28 +13,28 @@ const evacuationFraction = 2/3
 const reasonsForLoss = [
   {
     label: 'Theft',
-    value: 'theft',
+    value: 'Theft',
   },
   {
     label: 'Impact',
-    value: 'impact',
+    value: 'Impact',
   },
   {
     label: 'Lightning',
-    value: 'lightning',
+    value: 'Lightning',
   },
   {
     label: 'Water damage',
-    value: 'water_damage',
+    value: 'Water',
   },
   {
     label: 'Evacuation',
-    value: 'evacuation',
+    value: 'Evacuation',
     description: 'For bulk claims due to large-scale events',
   },
   {
     label: 'Other',
-    value: 'other'
+    value: 'Other'
   },
 ]
 const repairableOptions = [

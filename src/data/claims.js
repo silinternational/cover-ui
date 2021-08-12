@@ -1,8 +1,8 @@
 import { writable } from "svelte/store"
+import { start, stop } from "../components/progress"
 import { GET } from "."
 
 export const claims = writable([])
-export const loading = writable(false)
 export const initialized = writable(true)
 export const states = {
   message: {
@@ -70,7 +70,7 @@ export function init() {
  * @param {Object} claimData
  */
 export async function createClaim(item, claimData) {
-  loading.set(true)
+  start(item.id)
 
   // TODO: make an item field to store details about claim item
   let parsedClaim = {
@@ -94,7 +94,7 @@ export async function createClaim(item, claimData) {
     return currClaims
   })
 
-  loading.set(false)
+  stop(item.id)
 }
 
 export function getClaim(claims, itemId) {
@@ -109,17 +109,17 @@ export function getClaim(claims, itemId) {
  * @param {Object} newClaimData
  */
 export function updateClaim(itemId, newClaimData) {
-    loading.set(true)
+  start(itemId)
 
-    newClaimData.itemId = itemId
+  newClaimData.itemId = itemId
 
-    claims.update(currClaims => {
-      let i = currClaims.findIndex(clm => clm.itemId === itemId)
-      currClaims[i] = newClaimData
-      return currClaims
-    })
+  claims.update(currClaims => {
+    let i = currClaims.findIndex(clm => clm.itemId === itemId)
+    currClaims[i] = newClaimData
+    return currClaims
+  })
 
-    loading.set(false)
+  stop(itemId)
 }
 
 /**
@@ -129,11 +129,11 @@ export function updateClaim(itemId, newClaimData) {
  * @param {Number} itemId 
  */
 export function deleteClaim(itemId) {
-  loading.set(true)
+  start(itemId)
 
   claims.update(currClaims => currClaims.filter(clm => clm.itemId !== itemId))
 
-  loading.set(false)
+  stop(itemId)
 }
 
 export function clear() {
@@ -142,12 +142,12 @@ export function clear() {
 }
 
 export async function loadClaims() {
-    loading.set(true)
+  start()
 
-    let clms = await GET('claims')
+  let clms = await GET('claims')
 
-    claims.set(clms)
+  claims.set(clms)
 
-    loading.set(false)
-    initialized.set(true)
+  stop()
+  initialized.set(true)
 }

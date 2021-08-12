@@ -3,62 +3,11 @@ import user from '../authn/user.js'
 import { getItems } from '../data/items.js'
 import { claims, loadClaims } from '../data/claims.js'
 import { Datatable, Menu, ClaimCards, Row } from '../components/'
+import { isLoadingById } from '../components/progress/index'
 import { goto } from '@roxi/routify'
 import { Checkbox, Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
-// TODO: update this to be dependent on backend endpoint
-const examplePolicies = []
-const exampleItems = [
-  {
-    name: "Saxophone",
-    accountable_person: "John Russel",
-    last_changed: "5 days",
-    state: 'draft'
-  },
-  {
-    name: "GoPro",
-    accountable_person: "Priscilla Russel",
-    last_changed: "5 days",
-    state: 'awaiting'
-  },
-  {
-    name: "GoPro",
-    accountable_person: "Priscilla Russel",
-    last_changed: "5 days",
-    state: 'denied'
-  },
-  {
-    name: "GoPro",
-    accountable_person: "Priscilla Russel",
-    last_changed: "5 days",
-    state: 'payout'
-  },
-  {
-    name: "GoPro",
-    accountable_person: "Priscilla Russel",
-    last_changed: "5 days",
-    state: 'complete'
-  },
-  {
-    name: "GoPro",
-    accountable_person: "Priscilla Russel",
-    last_changed: "5 days",
-    state: 'approvedRepair'
-  },
-  {
-    name: "GoPro",
-    accountable_person: "Priscilla Russel",
-    last_changed: "5 days",
-    state: 'needsChanges'
-  },
-  {
-    name: "GoPro",
-    accountable_person: "Priscilla Russel",
-    last_changed: "5 days",
-    state: 'message'
-  },
-]
 const menuItems = id => [
   {
     label: 'View Details', url: `/items/${id}`
@@ -72,7 +21,6 @@ const menuItems = id => [
 ]
 
 let selected = []
-let loading = false
 let goToItemDetails = true
 let shownMenus = {}
 let items = []
@@ -124,14 +72,13 @@ const handleMoreVertClick = id => {
 }
 </style>
 
-<Page layout="grid">   
+<Page loading={isLoadingById(user.policy_id)} layout="grid">   
   <Row cols={'12'}>
     <ClaimCards items={$claims} />
   </Row>
 
   <Row cols={'12'}>
-    <!--TODO: add an '$' before the 'loading' when it because a store-->
-    {#if loading }
+    {#if isLoadingById(user.policy_id) }
       Loading items...
     {:else}
       <Datatable>

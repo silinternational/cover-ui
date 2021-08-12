@@ -1,8 +1,6 @@
 <script>
-import { writable } from "svelte/store";
-
 export let headers
-export let loading = new writable(false)
+export let loading
 
 </script>
 
@@ -16,7 +14,7 @@ export let loading = new writable(false)
   }
 </style>
 
-{#if $loading }
+{#if loading }
   Loading...
 {:else}
   <table class="filtered-table">

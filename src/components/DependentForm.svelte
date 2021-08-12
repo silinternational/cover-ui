@@ -18,7 +18,7 @@ const relationshipOptions = [
 ]
 
 let formData = {
-  uuid: dependent.uuid,
+  id: dependent.id,
   name: dependent.name || '',
   location: dependent.location || '',
   relationship: dependent.relationship || '',

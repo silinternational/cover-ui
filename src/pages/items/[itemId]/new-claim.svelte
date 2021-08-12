@@ -111,7 +111,6 @@ const onSubmit = async () => {
   if (formData.isRepairable === "repairable" && !formData.payoutOption) {
     parsedFormData.payoutOption = "repair"
   }
-  // TODO: change this to POST to backend endpoint
   await createClaim(item, parsedFormData)
   // TODO: make this go back a url
   $goto('/claims')

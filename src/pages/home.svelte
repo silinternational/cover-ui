@@ -1,6 +1,7 @@
 <script>
 import user from '../authn/user.js'
 import { getItems } from '../data/items.js'
+import { loadPolicies } from '../data/policies.js'
 import { claims, loadClaims } from '../data/claims.js'
 import { Datatable, Menu, ClaimCards, Row } from '../components/'
 import { isLoadingById } from '../components/progress/index'
@@ -25,10 +26,12 @@ let goToItemDetails = true
 let shownMenus = {}
 let items = []
 
-onMount(() => {
+onMount( () => {
   loadClaims()
+
+  loadPolicies()
   
-  getItems(user.policy_id).then(loadedItems => items = loadedItems)
+  getItems($user.policy_id).then(loadedItems => items = loadedItems)
 })
 
 const redirect = url => {

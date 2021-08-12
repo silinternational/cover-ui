@@ -3,6 +3,7 @@ import user from '../authn/user.js'
 import { getItems } from '../data/items.js'
 import { claims } from '../data/claims.js'
 import { Datatable, Menu, ClaimCards, Row } from '../components/'
+import { isLoadingById } from '../components/progress/index'
 import { Checkbox, Page } from '@silintl/ui-components'
 import { goto } from '@roxi/routify'
 
@@ -99,7 +100,6 @@ const menuItems = id => [
 ]
 
 let selected = []
-let loading = false
 let goToItemDetails = true
 let shownMenus = {}
 let items = [] 
@@ -146,14 +146,13 @@ const handleMoreVertClick = id => {
 }
 </style>
 
-<Page layout="grid">   
+<Page loading={isLoadingById(user.policy_id)} layout="grid">   
   <Row cols={'12'}>
     <ClaimCards items={$claims} />
   </Row>
 
   <Row cols={'12'}>
-    <!--TODO: add an '$' before the 'loading' when it because a store-->
-    {#if loading }
+    {#if isLoadingById(user.policy_id) }
       Loading items...
     {:else}
       <Datatable>

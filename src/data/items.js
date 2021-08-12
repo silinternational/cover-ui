@@ -1,8 +1,7 @@
-import { CREATE, DELETE, UPDATE } from "./index.js";
-import { throwError } from "../error";
-import { writable } from "svelte/store";
-
-export const loading = writable(false)
+import { CREATE, DELETE, UPDATE } from "./index.js"
+import { throwError } from "../error"
+import { writable } from "svelte/store"
+import { start, stop } from "../components/progress/index.js"
 
 const exampleItems = [
   {
@@ -54,12 +53,12 @@ const exampleItems = [
  * @return {Object} 
  */
 export async function getItems(policyId) {
-  loading.set(true)
+  start(policyId)
 
   // TODO: finish this when endpoint is done
   // const items = await GET(`policies/${policyId}/items`)
 
-  loading.set(false)
+  stop(policyId)
   return exampleItems
 }
 
@@ -105,14 +104,14 @@ export async function addItem(policyId, itemData) {
 export async function updateItem(item) {
   if (!item.id) throwError("item id not set")
   
-  loading.set(true)
+  start(item.id)
 
   let itemId = item.id
   delete item.id
   // TODO: create `parsedItem` to validate item
   let newItem = await UPDATE(`items/${itemId}`, item)
 
-  loading.set(false)
+  stop(itemId)
   return newItem
 }
 
@@ -124,9 +123,9 @@ export async function updateItem(item) {
  * @return {null} 
  */
 export async function deleteItem(id) {
-  loading.set(true)
+  start(id)
 
   await DELETE(`items/${id}`)
 
-  loading.set(false)
+  stop(id)
 }

@@ -4,12 +4,7 @@ import { Card, Button } from '@silintl/ui-components'
 import { isLoadingById } from './progress'
 
 export let item = {}
-export let state = {
-  icon: 'paid',
-  color: '--mdc-theme-status-success',
-  bgColor: '--mdc-theme-status-success-bg',
-  title: 'Approved for payout'
-}
+export let state = {}
 export let buttons = []
 
 $: user = item.created_by || {}

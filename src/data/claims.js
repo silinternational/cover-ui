@@ -152,4 +152,4 @@ export async function loadClaims() {
   initialized.set(true)
 }
 
-export const getState = item => states[item.state]
+export const getState = item => states[item.state || 'message']

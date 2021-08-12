@@ -47,7 +47,7 @@ const breadcrumbLinks = [
 
 let items
 let item
-getItems(user.policy_id).then(loadedItems => items = loadedItems)
+getItems($user.policy_id).then(loadedItems => items = loadedItems)
 
 $: items && (item = items.find(itm => itm.id === $params.itemId))
 

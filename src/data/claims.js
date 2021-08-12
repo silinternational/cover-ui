@@ -1,6 +1,6 @@
-import { writable } from "svelte/store"
-import { start, stop } from "../components/progress"
 import { CREATE, GET } from "."
+import { start, stop } from "../components/progress"
+import { writable } from "svelte/store"
 
 export const claims = writable([])
 export const initialized = writable(true)
@@ -74,19 +74,9 @@ export async function createClaim(item, claimData) {
 
   // TODO: make an item field to store details about claim item
   let parsedClaim = {
-    event_date: claimData.lostDate,
+    event_date: new Date(claimData.lostDate),
     event_description: claimData.situationDescription,
-    event_type: claimData.loss_reason,
-    // item_id: item.id,
-    // name: item.item_name,
-    // accountable_person: item.accountable_person,
-    // state: item.state,
-    // title: "Awaiting review",
-    // last_changed: "Now",
-    // message: "Submitted Now",
-    // fair_market_value: claimData.fairMarketValue,
-    // is_repairable: claimData.isRepairable,
-    // repair_cost: claimData.repair_cost,
+    event_type: claimData.lossReason,
   }
 
   const claim = await CREATE(`policies/${item.policy_id}/claims`, parsedClaim)

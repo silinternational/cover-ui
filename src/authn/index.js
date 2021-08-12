@@ -1,4 +1,5 @@
-import { clear as clearToken, getSeed } from './token'
+
+import { clear as clearToken, getSeed, getToken } from './token'
 import { clear as clearUser } from './user'
 import { CREATE as POST, GET } from '../data'
 import { throwError } from '../error'
@@ -14,8 +15,8 @@ export const login = async () => {
 }
 
 export const logout = async () => {
-  await GET('auth/logout')
+  const logoutUrl = 'auth/logout?token=' + encodeURIComponent(getToken())
   clearToken()
   clearUser()
-  $goto('/logged-out')
+  location.replace(logoutUrl)
 }

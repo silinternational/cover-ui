@@ -15,7 +15,7 @@ export const login = async () => {
 }
 
 export const logout = async () => {
-  const logoutUrl = 'auth/logout?token=' + encodeURIComponent(getToken())
+  const logoutUrl = `${process.env.API_HOST}/auth/logout?token=${encodeURIComponent(getToken())}`
   clearToken()
   clearUser()
   location.replace(logoutUrl)

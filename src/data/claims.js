@@ -1,115 +1,66 @@
-import { writable } from "svelte/store";
+import { writable } from "svelte/store"
+import { GET } from "."
 
-export const claims = writable([
-    {
-      name: "Saxophone",
-      accountable_person: "John Russel",
-      last_changed: "5 days",
-      state: 'draft'
-    },
-    {
-      name: "GoPro",
-      accountable_person: "Priscilla Russel",
-      last_changed: "5 days",
-      state: 'awaiting'
-    },
-    {
-      name: "GoPro",
-      accountable_person: "Priscilla Russel",
-      last_changed: "5 days",
-      state: 'denied'
-    },
-    {
-      name: "GoPro",
-      accountable_person: "Priscilla Russel",
-      last_changed: "5 days",
-      state: 'payout'
-    },
-    {
-      name: "GoPro",
-      accountable_person: "Priscilla Russel",
-      last_changed: "5 days",
-      state: 'complete'
-    },
-    {
-      name: "GoPro",
-      accountable_person: "Priscilla Russel",
-      last_changed: "5 days",
-      state: 'approvedRepair'
-    },
-    {
-      name: "GoPro",
-      accountable_person: "Priscilla Russel",
-      last_changed: "5 days",
-      state: 'needsChanges'
-    },
-    {
-      name: "GoPro",
-      accountable_person: "Priscilla Russel",
-      last_changed: "5 days",
-      state: 'message'
-    },
-  ])
+export const claims = writable([])
 export const loading = writable(false)
 export const initialized = writable(true)
 export const states = {
-    message: {
-        icon: 'chat',
-        color: '--mdc-theme-primary',
-        bgColor: '--mdc-theme-primary-header-bg',
-        title: 'From '
-    },
-    draft: {
-        icon: 'edit',
-        color: '--mdc-theme-primary',
-        bgColor: '--mdc-theme-primary-header-bg',
-        title: 'Draft'
-    },
-    awaiting: {
-        icon: 'watch_later',
-        color: '--mdc-theme-neutral-variant',
-        bgColor: '--mdc-theme-neutral-bg',
-        title: 'Awaiting review'
-    },
-    needsChanges: {
-        icon: 'error',
-        color: '--mdc-theme-status-warning',
-        bgColor: '--mdc-theme-status-warning-bg',
-        title: 'Needs changes'
-    },
-    denied: {
-        icon: 'remove_circle',
-        color: '--mdc-theme-status-error',
-        bgColor: '--mdc-theme-status-error-bg',
-        title: 'Denied'
-    },
-    approvedRepair: {
-        icon: 'done',
-        color: '--mdc-theme-status-success',
-        bgColor: '--mdc-theme-status-success-bg',
-        title: 'Approved for repair'
-    },
-    payout: {
-        icon: 'paid',
-        color: '--mdc-theme-status-success',
-        bgColor: '--mdc-theme-status-success-bg',
-        title: 'Approved for payout'
-    },
-    complete: {
-        icon: 'paid',
-        color: '--mdc-theme-status-success',
-        bgColor: '--mdc-theme-status-success-bg',
-        title: 'Complete'
-    }
+  message: {
+      icon: 'chat',
+      color: '--mdc-theme-primary',
+      bgColor: '--mdc-theme-primary-header-bg',
+      title: 'From '
+  },
+  draft: {
+      icon: 'edit',
+      color: '--mdc-theme-primary',
+      bgColor: '--mdc-theme-primary-header-bg',
+      title: 'Draft'
+  },
+  awaiting: {
+      icon: 'watch_later',
+      color: '--mdc-theme-neutral-variant',
+      bgColor: '--mdc-theme-neutral-bg',
+      title: 'Awaiting review'
+  },
+  needsChanges: {
+      icon: 'error',
+      color: '--mdc-theme-status-warning',
+      bgColor: '--mdc-theme-status-warning-bg',
+      title: 'Needs changes'
+  },
+  denied: {
+      icon: 'remove_circle',
+      color: '--mdc-theme-status-error',
+      bgColor: '--mdc-theme-status-error-bg',
+      title: 'Denied'
+  },
+  approvedRepair: {
+      icon: 'done',
+      color: '--mdc-theme-status-success',
+      bgColor: '--mdc-theme-status-success-bg',
+      title: 'Approved for repair'
+  },
+  payout: {
+      icon: 'paid',
+      color: '--mdc-theme-status-success',
+      bgColor: '--mdc-theme-status-success-bg',
+      title: 'Approved for payout'
+  },
+  complete: {
+      icon: 'paid',
+      color: '--mdc-theme-status-success',
+      bgColor: '--mdc-theme-status-success-bg',
+      title: 'Complete'
+  }
 }
 
 // TODO: add backend endpoints when they get finished
 // TODO: uncomment when backend has claims endpoints
-/*
+
 export function init() {
-    loadClaims()
+  loadClaims()
 }
-*/
 
 /**
  *
@@ -190,8 +141,7 @@ export function clear() {
   initialized.set(false)
 }
 
-/*
-export function loadClaims() {
+export async function loadClaims() {
     loading.set(true)
 
     let clms = await GET('claims')
@@ -201,4 +151,3 @@ export function loadClaims() {
     loading.set(false)
     initialized.set(true)
 }
-*/

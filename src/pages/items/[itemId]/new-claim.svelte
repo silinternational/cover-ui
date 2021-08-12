@@ -74,7 +74,7 @@ let formData = {
 }
 let items
 let item
-getItems(user.policy_id).then(loadedItems => {
+getItems($user.policy_id).then(loadedItems => {
   items = loadedItems
   item = items.find(itm => itm.id === $params.itemId)
 })

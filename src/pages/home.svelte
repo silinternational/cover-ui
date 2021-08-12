@@ -75,13 +75,13 @@ const handleMoreVertClick = id => {
 }
 </style>
 
-<Page loading={isLoadingById(user.policy_id)} layout="grid">   
+<Page loading={isLoadingById($user.policy_id)} layout="grid">   
   <Row cols={'12'}>
     <ClaimCards items={$claims} />
   </Row>
 
   <Row cols={'12'}>
-    {#if isLoadingById(user.policy_id) }
+    {#if isLoadingById($user.policy_id) }
       Loading items...
     {:else}
       <Datatable>

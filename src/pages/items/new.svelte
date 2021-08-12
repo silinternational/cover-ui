@@ -48,7 +48,7 @@ const onAccountablePersonChange = event => {
 const onSubmit = event => {
   // TEMP
   formData.category = categoryOptions.find(cat => cat.id === formData.category)
-  addItem(user.policy_id, formData)
+  addItem($user.policy_id, formData)
   /* @todo Save this to the API / backend. */
   $goto('/home')
 }

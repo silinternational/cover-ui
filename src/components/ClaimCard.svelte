@@ -74,7 +74,11 @@ const gotoItem = () => item.id && $goto(`/requests/${item.id}`)
     {/if}
 
     <div class="fs-12 gray mt-1">
-      "Last changed {item.last_changed} ago"
+      {#if item.last_changed}
+        "Last changed {item.last_changed} ago"
+      {:else}
+        <div>No changes</div>
+      {/if}
     </div>
   </div>
 </Card>

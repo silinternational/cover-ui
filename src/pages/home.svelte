@@ -1,41 +1,14 @@
 <script>
 import user from '../authn/user.js'
 import { getItems } from '../data/items.js'
-import { claims } from '../data/claims.js'
+import { claims, loadClaims } from '../data/claims.js'
 import { Datatable, Menu, ClaimCards, Row } from '../components/'
-import { Checkbox, Page } from '@silintl/ui-components'
 import { goto } from '@roxi/routify'
+import { Checkbox, Page } from '@silintl/ui-components'
+import { onMount } from 'svelte'
 
 // TODO: update this to be dependent on backend endpoint
-const examplePolicies = [
-  {
-    id: 1234,
-    item_name: "Laptop",
-    recent_activity: "Awaiting approval",
-    accountable_person: "Bob Smith",
-    cost: 943,
-    premium: 18.86,
-    type: "Mobile",
-  },
-  {
-    id: 5678,
-    item_name: "Saxophone",
-    recent_activity: "Added a month ago",
-    accountable_person: "Mary Smith",
-    cost: 54,
-    premium: 1.08,
-    type: "Mobile",
-  },
-  {
-    id: 9101,
-    item_name: "Couch",
-    recent_activity: "Removed last week",
-    accountable_person: "Jim Smith",
-    cost: 943,
-    premium: 18.86,
-    type: "Stationary",
-  }
-]
+const examplePolicies = []
 const exampleItems = [
   {
     name: "Saxophone",
@@ -102,8 +75,13 @@ let selected = []
 let loading = false
 let goToItemDetails = true
 let shownMenus = {}
-let items = [] 
-getItems(user.policy_id).then(loadedItems => items = loadedItems)
+let items = []
+
+onMount(() => {
+  loadClaims()
+  
+  getItems(user.policy_id).then(loadedItems => items = loadedItems)
+})
 
 const redirect = url => {
   if (goToItemDetails) {

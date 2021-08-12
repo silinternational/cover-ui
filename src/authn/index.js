@@ -8,7 +8,7 @@ import { goto } from '@roxi/routify'
 export const login = async () => {
   const responseData = await POST(`auth/login/?client-id=${getSeed()}`)
   if (responseData.RedirectURL) {
-    location = responseData.RedirectURL
+    location.replace(responseData.RedirectURL)
   } else {
     throwError('Unexpected response during login: ' + responseData)
   }

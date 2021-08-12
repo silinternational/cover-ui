@@ -18,3 +18,5 @@ export const stop = id => {
     !pending.length && loading.set(false)
   }
 }
+
+export const isLoadingById = id => pending.includes(anId => anId === id)

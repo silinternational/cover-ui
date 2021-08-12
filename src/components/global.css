@@ -19,3 +19,7 @@ body {
 .height-fit-content {
 	height: fit-content;
 }
+
+.absolute {
+	position: absolute !important;
+}

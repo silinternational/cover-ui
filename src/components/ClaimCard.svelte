@@ -77,7 +77,7 @@ const checkIfLoading = id => isLoadingById(id) ? 'loading...' : ''
 
     <div class="fs-12 gray mt-1">
       {#if item.last_changed}
-        "Last changed {item.last_changed} ago"
+        "Last changed {item.last_changed || checkIfLoading(item.id)} ago"
       {:else}
         <div>No changes</div>
       {/if}

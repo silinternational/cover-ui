@@ -10,7 +10,7 @@ export let buttons = []
 $: user = item.created_by || {}
 
 const gotoItem = () => item.id && $goto(`/requests/${item.id}`)
-const checkIfLoading = id => isLoadingById(id) ? 'loading...' : ''
+const checkIfLoading = (id, string = '') => isLoadingById(id) ? 'loading...' : string
 </script>
 
 <style>
@@ -72,9 +72,9 @@ const checkIfLoading = id => isLoadingById(id) ? 'loading...' : ''
 
     <div class="fs-12 gray mt-1">
       {#if item.last_changed}
-        "Last changed {item.last_changed || checkIfLoading(item.id)} ago"
+        "Last changed {item.last_changed} ago"
       {:else}
-        <div>No changes</div>
+        <div>{checkIfLoading(item.id, 'No changes')}</div>
       {/if}
     </div>
   </div>

@@ -1,12 +1,14 @@
 <script>
-import { dependents } from '../../../../data/dependents'
+import { dependents, initialized, loadDependents } from '../../../../data/dependents'
 import DependentForm from '../../../../components/DependentForm.svelte'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
+import user from "../../../../authn/user";
 
 export let uuid
 
-$: dependent = $dependents.find(d => d.uuid === uuid)
+$: $initialized || loadDependents($user.policy_id)
+$: dependent = $dependents.find(d => uuid && (d.id === uuid))
 
 const onCancel = () => {
   $goto('../../settings')

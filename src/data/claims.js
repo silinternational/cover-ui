@@ -89,8 +89,14 @@ export async function createClaim(item, claimData) {
   stop(item.id)
 }
 
-export function getClaim(claims, itemId) {
-  return claims.find(clm => clm.itemId === itemId)
+export async function getClaim(itemId) {
+  start(itemId)
+
+  let claim = await GET(`claims/${id}`)
+
+  return claim
+
+  stop(itemId)
 }
 
 /**

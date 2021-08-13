@@ -94,9 +94,9 @@ export async function getClaim(itemId) {
 
   let claim = await GET(`claims/${id}`)
 
-  return claim
-
   stop(itemId)
+  
+  return claim
 }
 
 /**

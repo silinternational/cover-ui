@@ -1,4 +1,5 @@
 <script>
+import { day } from './const'
 import { goto } from '@roxi/routify'
 import { Card, Button } from '@silintl/ui-components'
 import { isLoadingById } from './progress'
@@ -7,7 +8,10 @@ export let item = {}
 export let state = {}
 export let buttons = []
 
-$: user = item.created_by || {}
+const now = Date.now()
+
+$: msAgo = now - Date.parse(item.updated_at)
+$: daysAgo = msAgo > 0 ? Math.floor(msAgo/day) : '-'
 
 const gotoItem = () => item.id && $goto(`/requests/${item.id}`)
 const checkIfLoading = (id, string = '') => isLoadingById(id) ? 'loading...' : string
@@ -71,9 +75,8 @@ const checkIfLoading = (id, string = '') => isLoadingById(id) ? 'loading...' : s
     {/if}
 
     <div class="fs-12 gray mt-1">
-      <!-- TODO get and format item.updated_at -->
-      {#if item.last_changed}
-        "Last changed {item.last_changed} ago"
+      {#if daysAgo}
+        Last changed {daysAgo} days ago
       {:else}
         <div>{checkIfLoading(item.id, 'No changes')}</div>
       {/if}

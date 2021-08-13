@@ -71,6 +71,7 @@ const checkIfLoading = (id, string = '') => isLoadingById(id) ? 'loading...' : s
     {/if}
 
     <div class="fs-12 gray mt-1">
+      <!-- TODO get and format item.updated_at -->
       {#if item.last_changed}
         "Last changed {item.last_changed} ago"
       {:else}

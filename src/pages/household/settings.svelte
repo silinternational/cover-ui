@@ -1,9 +1,9 @@
 <script>
 import user from '../../authn/user'
-import { Breadcrumb } from "../../components";
+import { Breadcrumb } from "../../components"
 import { dependents, loadDependents } from '../../data/dependents'
-import { Button, IconButton, Page } from "@silintl/ui-components";
-import { goto } from "@roxi/routify";
+import { goto } from "@roxi/routify"
+import { Button, IconButton, Page } from "@silintl/ui-components"
 
 // TODO: make this dependent on backend
 let householdMembers = [

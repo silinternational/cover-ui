@@ -1,19 +1,20 @@
 <script>
+import { day } from './const'
 import { goto } from '@roxi/routify'
 import { Card, Button } from '@silintl/ui-components'
+import { isLoadingById } from './progress'
 
 export let item = {}
-export let state = {
-  icon: 'paid',
-  color: '--mdc-theme-status-success',
-  bgColor: '--mdc-theme-status-success-bg',
-  title: 'Approved for payout'
-}
+export let state = {}
 export let buttons = []
 
-$: user = item.created_by || {}
+const now = Date.now()
+
+$: msAgo = now - Date.parse(item.updated_at)
+$: daysAgo = msAgo > 0 ? Math.floor(msAgo/day) : '-'
 
 const gotoItem = () => item.id && $goto(`/requests/${item.id}`)
+const checkIfLoading = (id, string = '') => isLoadingById(id) ? 'loading...' : string
 </script>
 
 <style>
@@ -54,16 +55,16 @@ const gotoItem = () => item.id && $goto(`/requests/${item.id}`)
 
     <div class="mdc-theme--primary pl-10px">
       <div class="mdc-typography--headline6 multi-line-truncate content" style="color: var({state.color});">{state.title}</div>
-      <div class="multi-line-truncate fs-14" style="color: var({state.color});">{item.message || ''}</div>
+      <div class="multi-line-truncate fs-14" style="color: var({state.color});">{item.message || checkIfLoading(item.id)}</div>
     </div>
   </div>
 
   <div class="mdc-typography--headline5 multi-line-truncate content ml-50px">
-    {item.name}
+    {item.name || checkIfLoading(item.id)}
   </div>
 
   <div class="content multi-line-truncate ml-50px">
-    {item.accountable_person}
+    {item.accountable_person || checkIfLoading(item.id)}
   </div>
 
   <div class="action pb-2 ml-50px" slot="actions">
@@ -74,7 +75,11 @@ const gotoItem = () => item.id && $goto(`/requests/${item.id}`)
     {/if}
 
     <div class="fs-12 gray mt-1">
-      "Last changed {item.last_changed} ago"
+      {#if daysAgo}
+        Last changed {daysAgo} days ago
+      {:else}
+        <div>{checkIfLoading(item.id, 'No changes')}</div>
+      {/if}
     </div>
   </div>
 </Card>

@@ -13,28 +13,28 @@ const evacuationFraction = 2/3
 const reasonsForLoss = [
   {
     label: 'Theft',
-    value: 'theft',
+    value: 'Theft',
   },
   {
     label: 'Impact',
-    value: 'impact',
+    value: 'Impact',
   },
   {
     label: 'Lightning',
-    value: 'lightning',
+    value: 'Lightning',
   },
   {
     label: 'Water damage',
-    value: 'water_damage',
+    value: 'Water',
   },
   {
     label: 'Evacuation',
-    value: 'evacuation',
+    value: 'Evacuation',
     description: 'For bulk claims due to large-scale events',
   },
   {
     label: 'Other',
-    value: 'other'
+    value: 'Other'
   },
 ]
 const repairableOptions = [
@@ -74,7 +74,7 @@ let formData = {
 }
 let items
 let item
-getItems(user.policy_id).then(loadedItems => {
+getItems($user.policy_id).then(loadedItems => {
   items = loadedItems
   item = items.find(itm => itm.id === $params.itemId)
 })
@@ -111,7 +111,6 @@ const onSubmit = async () => {
   if (formData.isRepairable === "repairable" && !formData.payoutOption) {
     parsedFormData.payoutOption = "repair"
   }
-  // TODO: change this to POST to backend endpoint
   await createClaim(item, parsedFormData)
   // TODO: make this go back a url
   $goto('/claims')

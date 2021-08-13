@@ -7,6 +7,7 @@ export let item = {}
 export let state = {}
 export let buttons = []
 
+$: lastChanged = item.last_changed
 $: user = item.created_by || {}
 
 const gotoItem = () => item.id && $goto(`/requests/${item.id}`)
@@ -71,8 +72,10 @@ const checkIfLoading = (id, string = '') => isLoadingById(id) ? 'loading...' : s
     {/if}
 
     <div class="fs-12 gray mt-1">
-      {#if item.last_changed}
-        "Last changed {item.last_changed} ago"
+      {#if lastChanged == 'now'}
+        {lastChanged}
+      {:else if lastChanged}
+        "Last changed {lastChanged} ago"
       {:else}
         <div>{checkIfLoading(item.id, 'No changes')}</div>
       {/if}

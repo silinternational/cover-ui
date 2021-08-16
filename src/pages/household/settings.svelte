@@ -1,7 +1,7 @@
 <script>
 import user from '../../authn/user'
 import { Breadcrumb } from "../../components"
-import { dependents, loadDependents } from '../../data/dependents'
+import { dependents, initialized, loadDependents } from '../../data/dependents'
 import { goto } from "@roxi/routify"
 import { Button, IconButton, Page } from "@silintl/ui-components"
 
@@ -21,7 +21,7 @@ let householdMembers = [
   },
 ]
 
-$: if ($user.policy_id) {
+$: if ($user.policy_id && !$initialized) {
   loadDependents($user.policy_id)
 }
 

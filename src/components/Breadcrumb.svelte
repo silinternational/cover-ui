@@ -2,16 +2,16 @@
 import { throwError } from "../error"
 import { goto, url } from "@roxi/routify";
 
-export let links
+export let links = []
 export let hasHome = true
 
 let urls = []
-if (!links) {
+if (links.length === 0) {
   let path = $url().split("/")
 
   while (path.length > 0) {
     let name = path[path.length - 1]
-    if (name != "") {
+    if (name !== "") {
       urls.unshift({
         url: path.join("/"),
         name: name.toLowerCase().replaceAll('-', ' '),

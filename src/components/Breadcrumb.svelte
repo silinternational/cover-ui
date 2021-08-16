@@ -2,11 +2,11 @@
 import { throwError } from "../error"
 import { goto, url } from "@roxi/routify";
 
-export let links
+export let links = []
 export let hasHome = true
 
 let urls = []
-if (!links) {
+if (links.length === 0) {
   let path = $url().split("/")
 
   while (path.length > 0) {

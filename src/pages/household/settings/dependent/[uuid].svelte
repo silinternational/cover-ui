@@ -1,5 +1,11 @@
 <script>
-import { dependents, initialized, loadDependents, updateDependent } from '../../../../data/dependents'
+import {
+  deleteDependent,
+  dependents,
+  initialized,
+  loadDependents,
+  updateDependent
+} from '../../../../data/dependents'
 import DependentForm from '../../../../components/DependentForm.svelte'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
@@ -13,9 +19,9 @@ $: dependent = $dependents.find(d => uuid && (d.id === uuid))
 const onCancel = () => {
   $goto('../../settings')
 }
-const onRemove = event => {
-  const dependentUuid = event.detail
-  console.log('Remove', dependentUuid)
+const onRemove = async event => {
+  const dependentId = event.detail
+  await deleteDependent(dependentId)
   $goto('../../settings')
 }
 const onSubmit = async event => {

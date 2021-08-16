@@ -2,8 +2,8 @@
 import user from '../authn/user.js'
 import { getItems } from '../data/items.js'
 import { claims } from '../data/claims.js'
-import { Datatable, Menu, ClaimCards, Row } from '../components/'
-import { Checkbox, Page } from '@silintl/ui-components'
+import { Menu, ClaimCards, Row } from '../components/'
+import { Checkbox, Datatable, Page } from '@silintl/ui-components'
 import { goto } from '@roxi/routify'
 
 // TODO: update this to be dependent on backend endpoint

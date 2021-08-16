@@ -61,7 +61,7 @@ header {
       {/if}
     </button>
 
-    <Menu autofocus bind:menuOpen {menuItems} on:syncToggler={() => menuOpen = false}/>
+    <Menu bind:menuOpen {menuItems} on:syncToggler={() => menuOpen = false}/>
   </div>
 </header>
 

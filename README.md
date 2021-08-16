@@ -8,7 +8,10 @@
 cp .env.example .env
 ```
 - set the necessary variables. Ask another team member if you think you are missing any.
-`http://riskman.local:3000`
+
+- `API_HOST=http://riskman.local:3000/`
+
+- Add `127.0.0.1 riskman.local` to `/etc/hosts` (or equivalent for your OS)
 
 ## Local development
 Install the dependencies...

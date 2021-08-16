@@ -1,8 +1,8 @@
 import { writable } from 'svelte/store'
+import { start, stop } from '../components/progress'
 import { GET, UPDATE } from './index'
 
 export const policies = writable([])
-export const loading = writable(false)
 export const initialized = writable(false)
 
 export function init() {
@@ -43,12 +43,12 @@ export function clear() {
 }
 
 export async function loadPolicies() {
-  loading.set(true)
+  start()
 
   const plcs = await GET('policies')
 
   policies.set(plcs)
 
-  loading.set(false)
+  stop()
   initialized.set(true)
 }

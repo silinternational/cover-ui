@@ -3,9 +3,12 @@
 > You will need [Node.js](https://nodejs.org) installed.
 
 ## env variables
+- run the following command from the project root directory in your terminal:
 ```bash
 cp .env.example .env
 ```
+- set the necessary variables. Ask another team member if you think you are missing any.
+`http://riskman.local:3000`
 
 ## Local development
 Install the dependencies...
@@ -18,7 +21,7 @@ npm i
 npm run local:dev
 ```
 
-Navigate to [localhost:8080](http://localhost:8080). You should see your app running app _(configured to auto-reload page for any changes)_
+Navigate to [localhost:8081](http://localhost:8081). You should see your app running app _(configured to auto-reload page for any changes)_
 
 ### Running in prod mode
 ```bash

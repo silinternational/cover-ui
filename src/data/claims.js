@@ -1,115 +1,66 @@
-import { writable } from "svelte/store";
+import { CREATE, GET } from "."
+import { start, stop } from "../components/progress"
+import { writable } from "svelte/store"
 
-export const claims = writable([
-    {
-      name: "Saxophone",
-      accountable_person: "John Russel",
-      last_changed: "5 days",
-      state: 'draft'
-    },
-    {
-      name: "GoPro",
-      accountable_person: "Priscilla Russel",
-      last_changed: "5 days",
-      state: 'awaiting'
-    },
-    {
-      name: "GoPro",
-      accountable_person: "Priscilla Russel",
-      last_changed: "5 days",
-      state: 'denied'
-    },
-    {
-      name: "GoPro",
-      accountable_person: "Priscilla Russel",
-      last_changed: "5 days",
-      state: 'payout'
-    },
-    {
-      name: "GoPro",
-      accountable_person: "Priscilla Russel",
-      last_changed: "5 days",
-      state: 'complete'
-    },
-    {
-      name: "GoPro",
-      accountable_person: "Priscilla Russel",
-      last_changed: "5 days",
-      state: 'approvedRepair'
-    },
-    {
-      name: "GoPro",
-      accountable_person: "Priscilla Russel",
-      last_changed: "5 days",
-      state: 'needsChanges'
-    },
-    {
-      name: "GoPro",
-      accountable_person: "Priscilla Russel",
-      last_changed: "5 days",
-      state: 'message'
-    },
-  ])
-export const loading = writable(false)
+export const claims = writable([])
 export const initialized = writable(true)
 export const states = {
-    message: {
-        icon: 'chat',
-        color: '--mdc-theme-primary',
-        bgColor: '--mdc-theme-primary-header-bg',
-        title: 'From '
-    },
-    draft: {
-        icon: 'edit',
-        color: '--mdc-theme-primary',
-        bgColor: '--mdc-theme-primary-header-bg',
-        title: 'Draft'
-    },
-    awaiting: {
-        icon: 'watch_later',
-        color: '--mdc-theme-neutral-variant',
-        bgColor: '--mdc-theme-neutral-bg',
-        title: 'Awaiting review'
-    },
-    needsChanges: {
-        icon: 'error',
-        color: '--mdc-theme-status-warning',
-        bgColor: '--mdc-theme-status-warning-bg',
-        title: 'Needs changes'
-    },
-    denied: {
-        icon: 'remove_circle',
-        color: '--mdc-theme-status-error',
-        bgColor: '--mdc-theme-status-error-bg',
-        title: 'Denied'
-    },
-    approvedRepair: {
-        icon: 'done',
-        color: '--mdc-theme-status-success',
-        bgColor: '--mdc-theme-status-success-bg',
-        title: 'Approved for repair'
-    },
-    payout: {
-        icon: 'paid',
-        color: '--mdc-theme-status-success',
-        bgColor: '--mdc-theme-status-success-bg',
-        title: 'Approved for payout'
-    },
-    complete: {
-        icon: 'paid',
-        color: '--mdc-theme-status-success',
-        bgColor: '--mdc-theme-status-success-bg',
-        title: 'Complete'
-    }
+  message: {
+      icon: 'chat',
+      color: '--mdc-theme-primary',
+      bgColor: '--mdc-theme-primary-header-bg',
+      title: 'From '
+  },
+  draft: {
+      icon: 'edit',
+      color: '--mdc-theme-primary',
+      bgColor: '--mdc-theme-primary-header-bg',
+      title: 'Draft'
+  },
+  awaiting: {
+      icon: 'watch_later',
+      color: '--mdc-theme-neutral-variant',
+      bgColor: '--mdc-theme-neutral-bg',
+      title: 'Awaiting review'
+  },
+  needsChanges: {
+      icon: 'error',
+      color: '--mdc-theme-status-warning',
+      bgColor: '--mdc-theme-status-warning-bg',
+      title: 'Needs changes'
+  },
+  denied: {
+      icon: 'remove_circle',
+      color: '--mdc-theme-status-error',
+      bgColor: '--mdc-theme-status-error-bg',
+      title: 'Denied'
+  },
+  approvedRepair: {
+      icon: 'done',
+      color: '--mdc-theme-status-success',
+      bgColor: '--mdc-theme-status-success-bg',
+      title: 'Approved for repair'
+  },
+  payout: {
+      icon: 'paid',
+      color: '--mdc-theme-status-success',
+      bgColor: '--mdc-theme-status-success-bg',
+      title: 'Approved for payout'
+  },
+  complete: {
+      icon: 'paid',
+      color: '--mdc-theme-status-success',
+      bgColor: '--mdc-theme-status-success-bg',
+      title: 'Complete'
+  }
 }
 
 // TODO: add backend endpoints when they get finished
 // TODO: uncomment when backend has claims endpoints
-/*
+
 export function init() {
-    loadClaims()
+  loadClaims()
 }
-*/
 
 /**
  *
@@ -119,35 +70,33 @@ export function init() {
  * @param {Object} claimData
  */
 export async function createClaim(item, claimData) {
-  loading.set(true)
+  start(item.id)
 
   // TODO: make an item field to store details about claim item
   let parsedClaim = {
-    item_id: item.id,
-    name: item.item_name,
-    accountable_person: item.accountable_person,
-    state: { icon: 'message' },
-    title: "Awaiting review",
-    last_changed: "Now",
-    message: "Submitted Now",
-    lost_date: claimData.lostDate,
-    loss_reason: claimData.loss_reason,
-    description: claimData.situationDescription,
-    fair_market_value: claimData.fairMarketValue,
-    is_repairable: claimData.isRepairable,
-    repair_cost: claimData.repair_cost,
+    event_date: new Date(claimData.lostDate),
+    event_description: claimData.situationDescription,
+    event_type: claimData.lossReason,
   }
 
+  const claim = await CREATE(`policies/${item.policy_id}/claims`, parsedClaim)
+
   claims.update(currClaims => {
-    currClaims.push(parsedClaim)
+    currClaims.push(claim)
     return currClaims
   })
 
-  loading.set(false)
+  stop(item.id)
 }
 
-export function getClaim(claims, itemId) {
-  return claims.find(clm => clm.itemId === itemId)
+export async function getClaim(itemId) {
+  start(itemId)
+
+  const claim = await GET(`claims/${id}`)
+
+  stop(itemId)
+  
+  return claim
 }
 
 /**
@@ -158,17 +107,17 @@ export function getClaim(claims, itemId) {
  * @param {Object} newClaimData
  */
 export function updateClaim(itemId, newClaimData) {
-    loading.set(true)
+  start(itemId)
 
-    newClaimData.itemId = itemId
+  newClaimData.itemId = itemId
 
-    claims.update(currClaims => {
-      let i = currClaims.findIndex(clm => clm.itemId === itemId)
-      currClaims[i] = newClaimData
-      return currClaims
-    })
+  claims.update(currClaims => {
+    let i = currClaims.findIndex(clm => clm.itemId === itemId)
+    currClaims[i] = newClaimData
+    return currClaims
+  })
 
-    loading.set(false)
+  stop(itemId)
 }
 
 /**
@@ -178,11 +127,11 @@ export function updateClaim(itemId, newClaimData) {
  * @param {Number} itemId 
  */
 export function deleteClaim(itemId) {
-  loading.set(true)
+  start(itemId)
 
   claims.update(currClaims => currClaims.filter(clm => clm.itemId !== itemId))
 
-  loading.set(false)
+  stop(itemId)
 }
 
 export function clear() {
@@ -190,15 +139,15 @@ export function clear() {
   initialized.set(false)
 }
 
-/*
-export function loadClaims() {
-    loading.set(true)
+export async function loadClaims() {
+  start()
 
-    let clms = await GET('claims')
+  let clms = await GET('claims')
 
-    claims.set(clms)
+  claims.set(clms)
 
-    loading.set(false)
-    initialized.set(true)
+  stop()
+  initialized.set(true)
 }
-*/
+
+export const getState = item => states[item.state || 'message']

@@ -22,7 +22,7 @@ let formData = {
   name: dependent.name || '',
   location: dependent.location || '',
   relationship: dependent.relationship || '',
-  childBirthYear: dependent.childBirthYear || undefined,
+  childBirthYear: dependent.child_birth_year || undefined,
 }
 
 const onCancel = event => {

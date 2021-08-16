@@ -1,7 +1,9 @@
 import { CREATE, DELETE, GET, UPDATE } from "./index.js"
 import { throwError } from "../error"
 import { start, stop } from "../components/progress/index.js"
+import { writable } from "svelte/store"
 
+const items = writable([])
 
 /**
  *
@@ -28,27 +30,30 @@ export async function getItems(policyId) {
  * @return {Object} 
  */
 export async function addItem(policyId, itemData) {
+  start(policyId)
+
   const parsedItemData = {
-    id: "fb34d3d4-f6de-11eb-9a03-0242ac130003",
-    item_name: itemData.shortName,
-    type: itemData.category.name,
+    category_id: itemData.category.name,
     country: itemData.country,
+    coverage_amount: Number(itemData.marketValueUSD),
+    coverage_start_date: itemData.coverage_start_date,
+    coverage_status: itemData.coverage_status,
     description: itemData.itemDescription,
+    in_storage: itemData,
     make: itemData.make,
     model: itemData.model,
-    serial_number: itemData.uniqueIdentifier,
-    accountable_person: itemData.accountablePersonName,
-    coverage_amount: itemData.marketValueUSD,
-    recent_activity: "Added just now",
-    premium: itemData.marketValueUSD*0.05
+    name: itemData.shortName,
+    purchase_date: itemData.purchase_date,
+    serial_number: itemData.uniqueIdentifier
   }
 
-  // const item = await CREATE(`policies/${policyId}/items`, parsedItemData)
+  const item = await CREATE(`policies/${policyId}/items`, parsedItemData)
 
-  // TODO: change this when endpoint is done and push item
-  exampleItems.push(parsedItemData)
+  stop(policyId)
 
-  return parsedItemData
+  items.push(item)
+
+  return item
 }
 
 /**

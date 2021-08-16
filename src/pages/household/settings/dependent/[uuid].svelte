@@ -1,24 +1,32 @@
 <script>
-import { dependents } from '../../../../data/dependents'
+import user from '../../../../authn/user'
 import DependentForm from '../../../../components/DependentForm.svelte'
+import {
+  deleteDependent,
+  dependents,
+  initialized,
+  loadDependents,
+  updateDependent
+} from '../../../../data/dependents'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
 export let uuid
 
-$: dependent = $dependents.find(d => d.uuid === uuid)
+$: $initialized || loadDependents($user.policy_id)
+$: dependent = $dependents.find(d => uuid && (d.id === uuid))
 
 const onCancel = () => {
   $goto('../../settings')
 }
-const onRemove = event => {
-  const dependentUuid = event.detail
-  console.log('Remove', dependentUuid)
+const onRemove = async event => {
+  const dependentId = event.detail
+  await deleteDependent(dependentId)
   $goto('../../settings')
 }
-const onSubmit = event => {
+const onSubmit = async event => {
   const formData = event.detail
-  console.log('DependentForm submitted', formData)
+  await updateDependent(formData.id, formData)
   $goto('../../settings')
 }
 </script>

@@ -18,11 +18,11 @@ const relationshipOptions = [
 ]
 
 let formData = {
-  uuid: dependent.uuid,
+  id: dependent.id,
   name: dependent.name || '',
   location: dependent.location || '',
   relationship: dependent.relationship || '',
-  childBirthYear: dependent.childBirthYear || undefined,
+  childBirthYear: dependent.child_birth_year || undefined,
 }
 
 const onCancel = event => {
@@ -31,7 +31,7 @@ const onCancel = event => {
 }
 const onRemove = event => {
   event.preventDefault()
-  dispatch('remove', { uuid: formData.uuid })
+  dispatch('remove', formData.id)
 }
 const onSubmit = () => {
   if (formData.relationship !== 'Child') {
@@ -83,7 +83,7 @@ const onSubmit = () => {
     <div class="float-right form-button">
       <Button on:click={onCancel}>Cancel</Button>
     </div>
-    {#if formData.uuid !== undefined}
+    {#if formData.id !== undefined}
       <div class="float-left form-button">
         <Button on:click={onRemove} outlined class="mdc-theme--error">Remove</Button>
       </div>

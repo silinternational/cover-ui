@@ -5,6 +5,9 @@ export let options = []
 export let name
 export let value
 
+const isSelected = (option) => {
+  return (option.value === value) ? 'checked' : undefined
+}
 const onInput = event => {
   value = event.target.value
 }
@@ -19,7 +22,7 @@ label {
 
 {#each options as option (option.value)}
   <label>
-    <input type="radio" {name} value={option.value} on:input={onInput} />
+    <input type="radio" {name} value={option.value} checked={isSelected(option)} on:input={onInput} />
     {option.label}
     {#if option.description}
       <small>{option.description}</small>

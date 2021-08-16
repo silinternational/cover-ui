@@ -9,7 +9,7 @@ import {
 import DependentForm from '../../../../components/DependentForm.svelte'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
-import user from "../../../../authn/user";
+import user from "../../../../authn/user"
 
 export let uuid
 

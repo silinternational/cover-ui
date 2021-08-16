@@ -1,31 +1,31 @@
 <script>
 import user from '../../authn/user'
 import { Breadcrumb } from "../../components"
-import { dependents, loadDependents } from '../../data/dependents'
+import { dependents, initialized, loadDependents } from '../../data/dependents'
 import { goto } from "@roxi/routify"
 import { Button, IconButton, Page } from "@silintl/ui-components"
 
 // TODO: make this dependent on backend
 let householdMembers = [
   {
-    uuid: '11111111-1111-4111-1111-111111111111',
+    id: '11111111-1111-4111-1111-111111111111',
     name: "Jeff Smith",
     isYou: true,
     email: "jeff_smith@sil.org",
   },
   {
-    uuid: '22222222-2222-4222-2222-222222222222',
+    id: '22222222-2222-4222-2222-222222222222',
     name: "Sarah Smith",
     isYou: false,
     email: "sarah_smith@sil.org",
   },
 ]
 
-$: if ($user.policy_id) {
+$: if ($user.policy_id && !$initialized) {
   loadDependents($user.policy_id)
 }
 
-const edit = uuid => $goto(`/household/settings/dependent/${uuid}`)
+const edit = id => $goto(`/household/settings/dependent/${id}`)
 </script>
 
 <style>
@@ -82,7 +82,7 @@ const edit = uuid => $goto(`/household/settings/dependent/${uuid}`)
         <br />
         <small>Dependent</small>
         <span class="edit-button" title="Edit">
-          <IconButton icon="edit" ariaLabel="Edit" on:click={() => edit(dependent.uuid)} />
+          <IconButton icon="edit" ariaLabel="Edit" on:click={() => edit(dependent.id)} />
         </span>
       </li>
     {:else}

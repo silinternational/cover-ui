@@ -26,12 +26,14 @@ let goToItemDetails = true
 let shownMenus = {}
 let items = []
 
+$: if ($user.policy_id) {
+  getItems($user.policy_id).then(loadedItems => items = loadedItems)
+}
+
 onMount( () => {
   loadClaims()
 
   loadPolicies()
-  
-  getItems($user.policy_id).then(loadedItems => items = loadedItems)
 })
 
 const redirect = url => {

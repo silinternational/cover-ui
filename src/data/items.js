@@ -7,7 +7,7 @@ import { start, stop } from "../components/progress/index.js"
  *
  * @description a function to fetch the items of a policy
  * @export
- * @param {Number} id
+ * @param {string} policyId -- The UUID for the desired policy
  * @return {Object} 
  */
 export async function getItems(policyId) {

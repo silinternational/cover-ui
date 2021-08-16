@@ -1,53 +1,40 @@
 <script>
 import user from '../../authn/user.js'
 import { addItem } from '../../data/items.js'
+import { dependents, loadDependents, initialized as depsInitialized } from '../../data/dependents.js'
+import { categories as categoryOptions, init, initialized as CatItemsInitialized } from '../../data/itemCategories'
 import { Breadcrumb, Description, MoneyInput } from '../../components'
 import { goto } from '@roxi/routify'
 import { Button, Form, Page, Select, TextArea, TextField } from '@silintl/ui-components'
+import { onMount } from 'svelte'
 
 let formData = {
   category: '',
-  shortName: '',
+  country: '',
+  marketValueUSD: '',
+  coverage_start_date: '',  //TODO get data from somewhere or use purchase_date
+  coverage_status: '', //TODO get data from somewhere
   itemDescription: '',
-  uniqueIdentifier: '',
+  in_storage: false,  //TODO get data from somewhere
   make: '',
   model: '',
-  accountablePersonUuid: '',
-  accountablePersonName: '',
-  marketValueUSD: '',
+  shortName: '',
+  purchase_date: '',  //TODO get data from somewhere
+  uniqueIdentifier: '',
 }
 
-/* @todo Pull this from the database eventually: */
-let categoryOptions = [
-  {
-    "name": "Musical Instrument",
-    "id": "11111111-1111-4111-1111-111111111111",
-  },
-  {
-    "name": "Cell Phone",
-    "id": "22222222-2222-4222-2222-222222222222",
-  },
-]
+onMount(() => {
+  if($CatItemsInitialized === false) init()
 
-/** @todo Pull this from the API / backend */
-let accountablePersonOptions = [
-  {
-    name: 'Jeff Smith',
-    id: '11111111-1111-4111-1111-111111111111',
-  },
-  {
-    name: 'Sarah Smith',
-    id: '22222222-2222-4222-2222-222222222222',
-  },
-]
+  if($depsInitialized === false) loadDependents()
+})
 
 const onAccountablePersonChange = event => {
-  formData.accountablePersonUuid = event.detail.id
-  formData.accountablePersonName = event.detail.name
+  formData.country = event.detail.location
 }
 const onSubmit = event => {
   // TEMP
-  formData.category = categoryOptions.find(cat => cat.id === formData.category)
+  formData.category = $categoryOptions.find(cat => cat.id === formData.category)
   addItem($user.policy_id, formData)
   /* @todo Save this to the API / backend. */
   $goto('/home')
@@ -62,7 +49,7 @@ const saveForLater = () => {
   <Breadcrumb />
   <Form on:submit={onSubmit}>
     <p>
-      <Select label="Category" bind:selectedID={formData.category} options={categoryOptions} />
+      <Select label="Category" bind:selectedID={formData.category} options={$categoryOptions} />
     </p>
     <p>
       <TextField label="Short name" bind:value={formData.shortName}></TextField>
@@ -86,7 +73,7 @@ const saveForLater = () => {
     </p>
     <p>
       <Select label="Accountable person" on:change={onAccountablePersonChange}
-              options={accountablePersonOptions}></Select>
+              options={$dependents}></Select>
       <Description>
         Dependents are eligible. Dependents include spouses and children under 26 who haven't
         married or finished college. Coverage for children is limited to $3,000 per household.

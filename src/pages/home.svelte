@@ -1,12 +1,12 @@
 <script>
 import user from '../authn/user.js'
+import { Menu, ClaimCards, Row } from '../components/'
+import { isLoadingById } from '../components/progress/index'
+import { claims, loadClaims } from '../data/claims.js'
 import { getItems } from '../data/items.js'
 import { loadPolicies } from '../data/policies.js'
-import { claims, loadClaims } from '../data/claims.js'
-import { Datatable, Menu, ClaimCards, Row } from '../components/'
-import { isLoadingById } from '../components/progress/index'
 import { goto } from '@roxi/routify'
-import { Checkbox, Page } from '@silintl/ui-components'
+import { Checkbox, Page, Datatable } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 const menuItems = id => [

@@ -11,7 +11,7 @@ if (links.length === 0) {
 
   while (path.length > 0) {
     let name = path[path.length - 1]
-    if (name != "") {
+    if (name !== "") {
       urls.unshift({
         url: path.join("/"),
         name: name.toLowerCase().replaceAll('-', ' '),

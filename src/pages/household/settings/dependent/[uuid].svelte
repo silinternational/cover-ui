@@ -1,4 +1,6 @@
 <script>
+import user from '../../../../authn/user'
+import DependentForm from '../../../../components/DependentForm.svelte'
 import {
   deleteDependent,
   dependents,
@@ -6,10 +8,8 @@ import {
   loadDependents,
   updateDependent
 } from '../../../../data/dependents'
-import DependentForm from '../../../../components/DependentForm.svelte'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
-import user from "../../../../authn/user"
 
 export let uuid
 

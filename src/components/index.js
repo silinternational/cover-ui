@@ -1,4 +1,3 @@
-import Datatable from './Datatable'
 import filteredList from './filteredList'
 import table from './table'
 import App from './App.svelte'
@@ -18,7 +17,6 @@ import SuccessBanner from './banners/SuccessBanner.svelte'
 import WarningBanner from './banners/WarningBanner.svelte'
 
 export {
-    Datatable as Datatable, 
     filteredList as FilteredList,
     table as Table,
     App as App,

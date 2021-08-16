@@ -8,7 +8,10 @@
 cp .env.example .env
 ```
 - set the necessary variables. Ask another team member if you think you are missing any.
-`http://riskman.local:3000`
+
+- `API_HOST=//riskman.local:3000`
+
+- Add `127.0.0.1 riskman.local` to `/etc/hosts` (or equivalent for your OS)
 
 ## Local development
 Install the dependencies...
@@ -21,7 +24,7 @@ npm i
 npm run local:dev
 ```
 
-Navigate to [localhost:8081](http://localhost:8081). You should see your app running app _(configured to auto-reload page for any changes)_
+Navigate to <http://riskman.local:8081>. You should see your app running app _(configured to auto-reload page for any changes)_
 
 ### Running in prod mode
 ```bash

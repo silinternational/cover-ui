@@ -21,7 +21,9 @@ let householdMembers = [
   },
 ]
 
-$: loadDependents($user.policy_id)
+$: if ($user.policy_id) {
+  loadDependents($user.policy_id)
+}
 
 const edit = id => $goto(`/household/settings/dependent/${id}`)
 </script>

@@ -1,5 +1,5 @@
 <script>
-import { dependents, initialized, loadDependents } from '../../../../data/dependents'
+import { dependents, initialized, loadDependents, updateDependent } from '../../../../data/dependents'
 import DependentForm from '../../../../components/DependentForm.svelte'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
@@ -18,9 +18,9 @@ const onRemove = event => {
   console.log('Remove', dependentUuid)
   $goto('../../settings')
 }
-const onSubmit = event => {
+const onSubmit = async event => {
   const formData = event.detail
-  console.log('DependentForm submitted', formData)
+  await updateDependent(formData.id, formData)
   $goto('../../settings')
 }
 </script>

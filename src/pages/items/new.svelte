@@ -1,9 +1,9 @@
 <script>
 import user from '../../authn/user.js'
+import { Breadcrumb, Description, MoneyInput } from '../../components'
 import { addItem } from '../../data/items.js'
 import { dependentsByPolicyId, loadDependents } from '../../data/dependents.js'
 import { categories as categoryOptions, init, initialized as catItemsInitialized } from '../../data/itemCategories'
-import { Breadcrumb, Description, MoneyInput } from '../../components'
 import { goto } from '@roxi/routify'
 import { Button, Form, Page, Select, TextArea, TextField } from '@silintl/ui-components'
 

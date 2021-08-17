@@ -12,13 +12,14 @@ export const membersByPolicyId = writable({})
  * @return {Object[]} 
  */
 export async function loadMembersOfPolicy(policyId) {
-  start(policyId)
+  const urlPath = `policies/${policyId}/members`
+  start(urlPath)
 
-  const policyMembers = await GET(`policies/${policyId}/members`)
+  const policyMembers = await GET(urlPath)
   membersByPolicyId.update(data => {
     data[policyId] = policyMembers
     return data
   })
 
-  stop(policyId)
+  stop(urlPath)
 }

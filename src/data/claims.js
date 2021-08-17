@@ -140,13 +140,13 @@ export function clear() {
 }
 
 export async function loadClaims() {
-  start()
+  start('loadClaims')
 
   let clms = await GET('claims')
 
   claims.set(clms)
 
-  stop()
+  stop('loadClaims')
   initialized.set(true)
 }
 

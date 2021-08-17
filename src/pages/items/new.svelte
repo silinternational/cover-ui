@@ -1,7 +1,7 @@
 <script>
 import user from '../../authn/user.js'
 import { addItem } from '../../data/items.js'
-import { dependents, loadDependents, initialized as depsInitialized } from '../../data/dependents.js'
+import { dependentsByPolicyId, loadDependents } from '../../data/dependents.js'
 import { categories as categoryOptions, init, initialized as catItemsInitialized } from '../../data/itemCategories'
 import { Breadcrumb, Description, MoneyInput } from '../../components'
 import { goto } from '@roxi/routify'
@@ -27,9 +27,9 @@ let today = new Date()
 
 $: formData.coverage_start_date = today.toISOString().slice(0, 10) //api requires yyyy-mm-dd
 $: formData.purchase_date = formData.coverage_start_date
-$: accountablePersons = $dependents //TODO add current User to this: = [$dependents..., currentUser]
+$: accountablePersons = $dependentsByPolicyId[$user.policy_id] || [] //TODO add current User to this: = [$dependents..., currentUser]
 $: if ($catItemsInitialized) categories = $categoryOptions.length ? $categoryOptions : [{name: 'Electronics', id: '63bcf980-e1f0-42d3-b2b0-2e4704159f4f'}] //TODO categoriesOptions isn't hydrating yet, remove mock data
-$: ! $depsInitialized && $user.policy_id && loadDependents($user.policy_id)
+$: $user.policy_id && loadDependents($user.policy_id)
 $: ! $catItemsInitialized && init()
 
 const onAccountablePersonChange = event => {

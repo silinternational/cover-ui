@@ -43,12 +43,12 @@ export function clear() {
 }
 
 export async function loadPolicies() {
-  start()
+  start('loadPolicies')
 
   const plcs = await GET('policies')
 
   policies.set(plcs)
 
-  stop()
+  stop('loadPolicies')
   initialized.set(true)
 }

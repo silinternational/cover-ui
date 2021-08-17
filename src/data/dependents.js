@@ -41,9 +41,10 @@ export async function addDependent(policyId, depData) {
  *
  * @description a function to delete a dependent
  * @export
+ * @param {string} policyId -- The UUID for the applicable policy
  * @param {string} dependentId -- The UUID for the desired dependent
  */
-export async function deleteDependent(dependentId) {
+export async function deleteDependent(policyId, dependentId) {
   const urlPath = `dependents/${dependentId}`
   start(urlPath)
   

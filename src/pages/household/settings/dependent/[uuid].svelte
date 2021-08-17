@@ -25,7 +25,7 @@ const onCancel = () => {
 }
 const onRemove = async event => {
   const dependentId = event.detail
-  await deleteDependent(dependentId)
+  await deleteDependent(policyId, dependentId)
   $goto('../../settings')
 }
 const onSubmit = async event => {

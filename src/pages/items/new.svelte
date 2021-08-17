@@ -2,7 +2,7 @@
 import user from '../../authn/user.js'
 import { addItem } from '../../data/items.js'
 import { dependents, loadDependents, initialized as depsInitialized } from '../../data/dependents.js'
-import { categories as categoryOptions, init, initialized as CatItemsInitialized } from '../../data/itemCategories'
+import { categories as categoryOptions, init, initialized as catItemsInitialized } from '../../data/itemCategories'
 import { formatDate } from '../../dates.js'
 import { Breadcrumb, Description, MoneyInput } from '../../components'
 import { goto } from '@roxi/routify'
@@ -42,7 +42,7 @@ onMount(async () => {
   if (! $depsInitialized && $user.policy_id) {
     loadDependents($user.policy_id)
   }
-  if (! $CatItemsInitialized) {
+  if (! $catItemsInitialized) {
     await init()
   }
 

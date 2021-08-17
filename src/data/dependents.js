@@ -2,8 +2,7 @@ import { CREATE, GET } from "."
 import { writable } from "svelte/store"
 import { start, stop } from "../components/progress"
 
-export const dependents = writable([])
-export const initialized = writable(false)
+export const dependentsByPolicyId = writable({})
 
 /**
  *
@@ -23,16 +22,18 @@ export async function addDependent(policyId, depData) {
     child_birth_year: depData.childBirthYear && parseInt(depData.childBirthYear)
   }
   
-  let dpndt = await CREATE(`policies/${policyId}/dependents`, parsedDep)
+  const addedDependent = await CREATE(`policies/${policyId}/dependents`, parsedDep)
   
-  dependents.update(currDeps => {
-    currDeps.push(parsedDep)
-    return currDeps
+  dependentsByPolicyId.update(data => {
+    const dependents = data[policyId] || []
+    dependents.push(addedDependent)
+    data[policyId] = dependents
+    return data
   })
   
   stop(policyId)
   
-  return parsedDep
+  return addedDependent
 }
 
 /**
@@ -47,8 +48,10 @@ export async function deleteDependent(dependentId) {
   // TODO: uncomment when endpoint is finished
   // await DELETE(`dependents/${depId}`)
   
-  dependents.update(currDeps => {
-    return currDeps.filter(dep => dep.id !== dependentId)
+  dependentsByPolicyId.update(data => {
+    const dependents = data[policyId] || []
+    data[policyId] = dependents.filter(dependent => dependent.id !== dependentId)
+    return data
   })
   
   stop(dependentId)
@@ -58,10 +61,11 @@ export async function deleteDependent(dependentId) {
  *
  * @description a function to update a dependent
  * @export
+ * @param {string} policyId -- The UUID for the applicable policy
  * @param {string} dependentId -- The UUID for the desired dependent
  * @param {Object} depData
  */
-export async function updateDependent(dependentId, depData) {
+export async function updateDependent(policyId, dependentId, depData) {
   start(dependentId)
   
   let parsedDep = {
@@ -73,12 +77,15 @@ export async function updateDependent(dependentId, depData) {
   }
   
   // TODO: uncomment when endpoint is finished
-  // let dpndt = await UPDATE(`dependents/${dependentId}`)
+  // const updatedDependent = await UPDATE(`dependents/${dependentId}`)
+  const updatedDependent = parsedDep // TEMP - until we can use API return value.
   
-  dependents.update(currDeps => {
-    let i = currDeps.findIndex(dep => dep.id === dependentId)
-    currDeps[i] = parsedDep
-    return currDeps
+  dependentsByPolicyId.update(data => {
+    const dependents = data[policyId] || []
+    const i = dependents.findIndex(dependent => dependent.id === dependentId)
+    dependents[i] = updatedDependent
+    data[policyId] = dependents
+    return data
   })
   
   stop(dependentId)
@@ -93,10 +100,11 @@ export async function updateDependent(dependentId, depData) {
 export async function loadDependents(policyId) {
   start(policyId)
   
-  let dpndts = await GET(`policies/${policyId}/dependents`)
-  
-  dependents.set(dpndts)
+  const loadedDependents = await GET(`policies/${policyId}/dependents`)
+  dependentsByPolicyId.update(data => {
+    data[policyId] = loadedDependents
+    return data
+  })
   
   stop(policyId)
-  initialized.set(true)
 }

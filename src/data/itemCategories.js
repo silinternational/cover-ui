@@ -1,6 +1,6 @@
 import { GET } from "."
-import { writable } from "svelte/store"
 import { start, stop } from "../components/progress"
+import { writable } from "svelte/store"
 
 export const categories = writable([])
 export const initialized = writable(false)

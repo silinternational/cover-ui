@@ -12,7 +12,6 @@ export const membersByPolicyId = writable({})
  * @return {Object[]} 
  */
 export async function loadMembersOfPolicy(policyId) {
-  console.log('loadMembersOfPolicy(', policyId, ')')
   start(policyId)
 
   const policyMembers = await GET(`policies/${policyId}/members`)

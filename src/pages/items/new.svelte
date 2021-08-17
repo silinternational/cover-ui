@@ -46,7 +46,7 @@ onMount(async () => {
     await init()
   }
 
-  categories = $categoryOptions.length ? $categoryOptions : [{name: 'Electronics', id: 'f81291e9-6de0-4f7d-a98a-4d8bf86b520e'}] //TODO categoriesOptions isn't hydrating yet, remove mock data
+  categories = $categoryOptions.length ? $categoryOptions : [{name: 'Electronics', id: '63bcf980-e1f0-42d3-b2b0-2e4704159f4f'}] //TODO categoriesOptions isn't hydrating yet, remove mock data
 })
 
 const formatMonthOrDay = unit => unit.length === 1 ? `0${unit}` : unit

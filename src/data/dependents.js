@@ -39,33 +39,33 @@ export async function addDependent(policyId, depData) {
  *
  * @description a function to delete a dependent
  * @export
- * @param {string} depId -- The UUID for the desired dependent
+ * @param {string} dependentId -- The UUID for the desired dependent
  */
-export async function deleteDependent(depId) {
-    start(depId)
+export async function deleteDependent(dependentId) {
+    start(dependentId)
 
     // TODO: uncomment when endpoint is finished
     // await DELETE(`dependents/${depId}`)
 
     dependents.update(currDeps => {
-      return currDeps.filter(dep => dep.id !== depId)
+      return currDeps.filter(dep => dep.id !== dependentId)
     })
 
-    stop(depId)
+    stop(dependentId)
 }
 
 /**
  *
  * @description a function to update a dependent 
  * @export
- * @param {string} depId -- The UUID for the desired dependent
+ * @param {string} dependentId -- The UUID for the desired dependent
  * @param {Object} depData
  */
-export async function updateDependent(depId, depData) {
-  start(depId)
+export async function updateDependent(dependentId, depData) {
+  start(dependentId)
 
   let parsedDep = {
-    id: depId,
+    id: dependentId,
     name: depData.name,
     relationship: depData.relationship,
     location: depData.location,
@@ -73,15 +73,15 @@ export async function updateDependent(depId, depData) {
   }
 
   // TODO: uncomment when endpoint is finished
-  // let dpndt = await UPDATE(`dependents/${depId}`)
+  // let dpndt = await UPDATE(`dependents/${dependentId}`)
 
   dependents.update(currDeps => {
-    let i = currDeps.findIndex(dep => dep.id === depId)
+    let i = currDeps.findIndex(dep => dep.id === dependentId)
     currDeps[i] = parsedDep
     return currDeps
   })
 
-  stop(depId)
+  stop(dependentId)
 }
 
 /**

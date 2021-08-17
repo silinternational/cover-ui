@@ -2,7 +2,7 @@
 import user from '../../authn/user'
 import { Breadcrumb } from "../../components"
 import { dependents, initialized as haveLoadedDependents, loadDependents } from '../../data/dependents'
-import { getPolicyMembers } from '../../data/policy-members'
+import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
 import { goto } from "@roxi/routify"
 import { Button, IconButton, Page } from "@silintl/ui-components"
 
@@ -13,9 +13,12 @@ $: if ($user.policy_id && !$haveLoadedDependents) {
 }
 
 $: if ($user.policy_id) {
-  getPolicyMembers($user.policy_id).then(policyMembers => {
-    householdMembers = policyMembers
-  })
+  loadMembersOfPolicy($user.policy_id)
+}
+
+$: haveLoadedPolicyMembers = $membersByPolicyId[$user.policy_id] !== undefined
+$: if ($user.policy_id && haveLoadedPolicyMembers) {
+  householdMembers = $membersByPolicyId[$user.policy_id]
 }
 
 const edit = id => $goto(`/household/settings/dependent/${id}`)

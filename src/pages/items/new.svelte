@@ -13,7 +13,7 @@ const formData = {
   category: '',
   country: '',
   marketValueUSD: '',
-  coverage_start_date: startDate,
+  coverage_start_date: '',
   coverage_status: 'Draft',
   itemDescription: '',
   in_storage: false,  //TODO get data from somewhere
@@ -30,26 +30,34 @@ const dateFormat = {
   day: 'numeric'
 }
   
-const [day, month, year] = formatDate(Date(), 'en-US', dateFormat).split('/')  //en-US to give consistent response
+const [month, day, year] = formatDate(Date(), 'en-US', dateFormat).split('/')  //en-US to give consistent response
 
-$: startDate = `${year}/${formatMonthOrDay(month)}/${formatMonthOrDay(day)}` //api requires yyyy-mm-dd
+let categories = []
 
-onMount(() => {
-  if($CatItemsInitialized === false) init()
+$: formData.coverage_start_date = `${year}-${formatMonthOrDay(month)}-${formatMonthOrDay(day)}` //api requires yyyy-mm-dd
+$: formData.purchase_date = formData.coverage_start_date
 
-  if($depsInitialized === false && $user.policy_id) loadDependents($user.policy_id)
+onMount(async () => {
+  if (! $depsInitialized && $user.policy_id) {
+    loadDependents($user.policy_id)
+  }
+  if (! $CatItemsInitialized) {
+    await init()
+  }
+
+  categories = $categoryOptions.length ? $categoryOptions : [{name: 'Electronics', id: '123e4567-e89b-12d3-a456-426655440000'}] //TODO categoriesOptions isn't hydrating yet, remove mock data
 })
 
 const formatMonthOrDay = unit => unit.length === 1 ? `0${unit}` : unit
 
 const onAccountablePersonChange = event => {
-  formData.country = event.detail.location
+  formData.country = event.detail.location || 'USA' //TODO handle when Dependents is empty, redirect to settings?
 }
-const onSubmit = event => {
-  // TEMP
-  formData.category = $categoryOptions.find(cat => cat.id === formData.category)
+const onSubmit = () => {
+  formData.category = categories.find(cat => cat.id === formData.category).id
+
   addItem($user.policy_id, formData)
-  /* @todo Save this to the API / backend. */
+
   $goto('/home')
 }
 const saveForLater = () => {
@@ -62,7 +70,7 @@ const saveForLater = () => {
   <Breadcrumb />
   <Form on:submit={onSubmit}>
     <p>
-      <Select label="Category" bind:selectedID={formData.category} options={$categoryOptions} />
+      <Select label="Category" bind:selectedID={formData.category} options={categories} />
     </p>
     <p>
       <TextField label="Short name" bind:value={formData.shortName}></TextField>

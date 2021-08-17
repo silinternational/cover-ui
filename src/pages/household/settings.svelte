@@ -1,31 +1,25 @@
 <script>
 import user from '../../authn/user'
 import { Breadcrumb } from "../../components"
-import { dependents, initialized, loadDependents } from '../../data/dependents'
+import { dependents, initialized as haveLoadedDependents, loadDependents } from '../../data/dependents'
+import { getPolicyMembers } from '../../data/policy-members'
 import { goto } from "@roxi/routify"
 import { Button, IconButton, Page } from "@silintl/ui-components"
 
-// TODO: make this dependent on backend
-let householdMembers = [
-  {
-    id: '11111111-1111-4111-1111-111111111111',
-    name: "Jeff Smith",
-    isYou: true,
-    email: "jeff_smith@sil.org",
-  },
-  {
-    id: '22222222-2222-4222-2222-222222222222',
-    name: "Sarah Smith",
-    isYou: false,
-    email: "sarah_smith@sil.org",
-  },
-]
+let householdMembers = []
 
-$: if ($user.policy_id && !$initialized) {
+$: if ($user.policy_id && !$haveLoadedDependents) {
   loadDependents($user.policy_id)
 }
 
+$: if ($user.policy_id) {
+  getPolicyMembers($user.policy_id).then(policyMembers => {
+    householdMembers = policyMembers
+  })
+}
+
 const edit = id => $goto(`/household/settings/dependent/${id}`)
+const isYou = householdMember => householdMember.id === $user.id
 </script>
 
 <style>
@@ -64,12 +58,12 @@ const edit = id => $goto(`/household/settings/dependent/${id}`)
 
   <h4>Household members</h4>
   <ul class="accountable-people-list">
-    {#each householdMembers as person}
+    {#each householdMembers as householdMember}
       <li class="accountable-people-list-item">
-        {person.name}
-        {person.isYou ? "(you)" : ""}
+        {householdMember.first_name} {householdMember.last_name}
+        {isYou(householdMember) ? "(you)" : ""}
         <br />
-        <small>{person.email}</small>
+        <small>{householdMember.email}</small>
       </li>
     {/each}
   </ul>

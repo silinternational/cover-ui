@@ -59,8 +59,8 @@ const onSelectCategory = event => {
   formData.category = event.detail?.id
 }
 
-const onSubmit = () => {
-  addItem($user.policy_id, formData)
+const onSubmit = async () => {
+  await addItem($user.policy_id, formData)
 
   $goto('/home')
 }

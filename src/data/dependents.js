@@ -13,7 +13,8 @@ export const dependentsByPolicyId = writable({})
  * @return {Object}
  */
 export async function addDependent(policyId, depData) {
-  start(policyId)
+  const urlPath = `policies/${policyId}/dependents`
+  start(urlPath)
   
   let parsedDep = {
     name: depData.name,
@@ -22,7 +23,7 @@ export async function addDependent(policyId, depData) {
     child_birth_year: depData.childBirthYear && parseInt(depData.childBirthYear)
   }
   
-  const addedDependent = await CREATE(`policies/${policyId}/dependents`, parsedDep)
+  const addedDependent = await CREATE(urlPath, parsedDep)
   
   dependentsByPolicyId.update(data => {
     const dependents = data[policyId] || []
@@ -31,7 +32,7 @@ export async function addDependent(policyId, depData) {
     return data
   })
   
-  stop(policyId)
+  stop(urlPath)
   
   return addedDependent
 }
@@ -43,10 +44,11 @@ export async function addDependent(policyId, depData) {
  * @param {string} dependentId -- The UUID for the desired dependent
  */
 export async function deleteDependent(dependentId) {
-  start(dependentId)
+  const urlPath = `dependents/${dependentId}`
+  start(urlPath)
   
   // TODO: uncomment when endpoint is finished
-  // await DELETE(`dependents/${depId}`)
+  // await DELETE(urlPath)
   
   dependentsByPolicyId.update(data => {
     const dependents = data[policyId] || []
@@ -54,7 +56,7 @@ export async function deleteDependent(dependentId) {
     return data
   })
   
-  stop(dependentId)
+  stop(urlPath)
 }
 
 /**
@@ -66,7 +68,8 @@ export async function deleteDependent(dependentId) {
  * @param {Object} depData
  */
 export async function updateDependent(policyId, dependentId, depData) {
-  start(dependentId)
+  const urlPath = `dependents/${dependentId}`
+  start(urlPath)
   
   let parsedDep = {
     id: dependentId,
@@ -77,7 +80,7 @@ export async function updateDependent(policyId, dependentId, depData) {
   }
   
   // TODO: uncomment when endpoint is finished
-  // const updatedDependent = await UPDATE(`dependents/${dependentId}`)
+  // const updatedDependent = await UPDATE(urlPath)
   const updatedDependent = parsedDep // TEMP - until we can use API return value.
   
   dependentsByPolicyId.update(data => {
@@ -88,7 +91,7 @@ export async function updateDependent(policyId, dependentId, depData) {
     return data
   })
   
-  stop(dependentId)
+  stop(urlPath)
 }
 
 /**
@@ -98,13 +101,14 @@ export async function updateDependent(policyId, dependentId, depData) {
  * @export
  */
 export async function loadDependents(policyId) {
-  start(policyId)
+  const urlPath = `policies/${policyId}/dependents`
+  start(urlPath)
   
-  const loadedDependents = await GET(`policies/${policyId}/dependents`)
+  const loadedDependents = await GET(urlPath)
   dependentsByPolicyId.update(data => {
     data[policyId] = loadedDependents
     return data
   })
   
-  stop(policyId)
+  stop(urlPath)
 }

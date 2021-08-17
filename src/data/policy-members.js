@@ -1,6 +1,6 @@
 import { GET } from './index.js'
 import { start, stop } from '../components/progress'
-import { writable } from 'svelte/store';
+import { writable } from 'svelte/store'
 
 export const membersByPolicyId = writable({})
 

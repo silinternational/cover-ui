@@ -45,17 +45,20 @@ onMount(async () => {
     await init()
   }
 
-  categories = $categoryOptions.length ? $categoryOptions : [{name: 'Electronics', id: '123e4567-e89b-12d3-a456-426655440000'}] //TODO categoriesOptions isn't hydrating yet, remove mock data
+  categories = $categoryOptions.length ? $categoryOptions : [{name: 'Electronics', id: '1111-2222-3333-4444'}] //TODO categoriesOptions isn't hydrating yet, remove mock data
 })
 
 const formatMonthOrDay = unit => unit.length === 1 ? `0${unit}` : unit
 
 const onAccountablePersonChange = event => {
-  formData.country = event.detail.location || 'USA' //TODO handle when Dependents is empty, redirect to settings?
+  formData.country = event.detail?.location //TODO handle when Dependents is empty, redirect to settings?
 }
-const onSubmit = () => {
-  formData.category = categories.find(cat => cat.id === formData.category).id
 
+const onSelectCategory = event => {
+  formData.category = event.detail?.name
+}
+
+const onSubmit = () => {
   addItem($user.policy_id, formData)
 
   $goto('/home')
@@ -70,7 +73,7 @@ const saveForLater = () => {
   <Breadcrumb />
   <Form on:submit={onSubmit}>
     <p>
-      <Select label="Category" bind:selectedID={formData.category} options={categories} />
+      <Select label="Category" on:change={onSelectCategory} options={categories} />
     </p>
     <p>
       <TextField label="Short name" bind:value={formData.shortName}></TextField>

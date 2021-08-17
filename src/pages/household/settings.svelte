@@ -6,20 +6,14 @@ import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-member
 import { goto } from "@roxi/routify"
 import { Button, IconButton, Page } from "@silintl/ui-components"
 
-let householdMembers = []
 $: policyId = $user.policy_id
-
 $: if (policyId) {
   loadDependents(policyId)
   loadMembersOfPolicy(policyId)
 }
 
-$: haveLoadedPolicyMembers = $membersByPolicyId[policyId] !== undefined
-$: if (policyId && haveLoadedPolicyMembers) {
-  householdMembers = $membersByPolicyId[policyId]
-}
-
 $: dependents = $dependentsByPolicyId[policyId] || []
+$: householdMembers = $membersByPolicyId[policyId] || []
 
 const edit = id => $goto(`/household/settings/dependent/${id}`)
 const isYou = householdMember => householdMember.id === $user.id

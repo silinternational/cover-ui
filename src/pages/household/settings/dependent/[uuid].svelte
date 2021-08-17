@@ -12,18 +12,12 @@ import { Page } from '@silintl/ui-components'
 
 export let uuid
 
-let dependents = []
 $: policyId = $user.policy_id
-
 $: if (policyId) {
   loadDependents(policyId)
 }
 
-$: haveLoadedPolicyDependents = $dependentsByPolicyId[policyId] !== undefined
-$: if (policyId && haveLoadedPolicyDependents) {
-  dependents = $dependentsByPolicyId[policyId]
-}
-
+$: dependents = $dependentsByPolicyId[policyId] || []
 $: dependent = dependents.find(d => uuid && (d.id === uuid))
 
 const onCancel = () => {

@@ -36,6 +36,7 @@ let categories = []
 
 $: formData.coverage_start_date = `${year}-${formatMonthOrDay(month)}-${formatMonthOrDay(day)}` //api requires yyyy-mm-dd
 $: formData.purchase_date = formData.coverage_start_date
+$: accountablePersons = $dependents //TODO add current User to this: = [$dependents..., currentUser]
 
 onMount(async () => {
   if (! $depsInitialized && $user.policy_id) {
@@ -97,7 +98,7 @@ const saveForLater = () => {
     </p>
     <p>
       <Select label="Accountable person" on:change={onAccountablePersonChange}
-              options={$dependents}></Select>
+              options={accountablePersons}></Select>
       <Description>
         Dependents are eligible. Dependents include spouses and children under 26 who haven't
         married or finished college. Coverage for children is limited to $3,000 per household.

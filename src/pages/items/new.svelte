@@ -37,7 +37,7 @@ $: startDate = `${year}/${formatMonthOrDay(month)}/${formatMonthOrDay(day)}` //a
 onMount(() => {
   if($CatItemsInitialized === false) init()
 
-  if($depsInitialized === false) loadDependents()
+  if($depsInitialized === false && $user.policy_id) loadDependents($user.policy_id)
 })
 
 const formatMonthOrDay = unit => unit.length === 1 ? `0${unit}` : unit

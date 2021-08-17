@@ -3,17 +3,18 @@ import user from '../../authn/user.js'
 import { addItem } from '../../data/items.js'
 import { dependents, loadDependents, initialized as depsInitialized } from '../../data/dependents.js'
 import { categories as categoryOptions, init, initialized as CatItemsInitialized } from '../../data/itemCategories'
+import { formatDate } from '../../dates.js'
 import { Breadcrumb, Description, MoneyInput } from '../../components'
 import { goto } from '@roxi/routify'
 import { Button, Form, Page, Select, TextArea, TextField } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
-let formData = {
+const formData = {
   category: '',
   country: '',
   marketValueUSD: '',
-  coverage_start_date: '',  //TODO get data from somewhere or use purchase_date
-  coverage_status: '', //TODO get data from somewhere
+  coverage_start_date: startDate,
+  coverage_status: 'Draft',
   itemDescription: '',
   in_storage: false,  //TODO get data from somewhere
   make: '',
@@ -23,11 +24,23 @@ let formData = {
   uniqueIdentifier: '',
 }
 
+const dateFormat = {
+  year: 'numeric',
+  month: 'numeric',
+  day: 'numeric'
+}
+  
+const [day, month, year] = formatDate(Date(), 'en-US', dateFormat).split('/')  //en-US to give consistent response
+
+$: startDate = `${year}/${formatMonthOrDay(month)}/${formatMonthOrDay(day)}` //api requires yyyy-mm-dd
+
 onMount(() => {
   if($CatItemsInitialized === false) init()
 
   if($depsInitialized === false) loadDependents()
 })
+
+const formatMonthOrDay = unit => unit.length === 1 ? `0${unit}` : unit
 
 const onAccountablePersonChange = event => {
   formData.country = event.detail.location

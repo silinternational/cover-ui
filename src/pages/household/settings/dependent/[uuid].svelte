@@ -3,8 +3,7 @@ import user from '../../../../authn/user'
 import DependentForm from '../../../../components/DependentForm.svelte'
 import {
   deleteDependent,
-  dependents,
-  initialized,
+  dependentsByPolicyId,
   loadDependents,
   updateDependent
 } from '../../../../data/dependents'
@@ -13,20 +12,25 @@ import { Page } from '@silintl/ui-components'
 
 export let uuid
 
-$: $initialized || loadDependents($user.policy_id)
-$: dependent = $dependents.find(d => uuid && (d.id === uuid))
+$: policyId = $user.policy_id
+$: if (policyId) {
+  loadDependents(policyId)
+}
+
+$: dependents = $dependentsByPolicyId[policyId] || []
+$: dependent = dependents.find(d => uuid && (d.id === uuid))
 
 const onCancel = () => {
   $goto('../../settings')
 }
 const onRemove = async event => {
   const dependentId = event.detail
-  await deleteDependent(dependentId)
+  await deleteDependent(policyId, dependentId)
   $goto('../../settings')
 }
 const onSubmit = async event => {
   const formData = event.detail
-  await updateDependent(formData.id, formData)
+  await updateDependent(policyId, formData.id, formData)
   $goto('../../settings')
 }
 </script>

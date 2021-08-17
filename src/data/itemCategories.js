@@ -15,11 +15,11 @@ export async function init() {
  * @export
  */
 export async function loadCategories() {
-  start()
+  start('itemCategories')
 
   let catz = await GET('item-categories')
 
-  stop()
+  stop('itemCategories')
   
   categories.set(catz)
   initialized.set(true)

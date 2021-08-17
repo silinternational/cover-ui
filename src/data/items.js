@@ -33,13 +33,13 @@ export async function addItem(policyId, itemData) {
   start(policyId)
 
   const parsedItemData = {
-    category_id: itemData.category.name,
+    category_id: itemData.category,
     country: itemData.country,
     coverage_amount: Number(itemData.marketValueUSD),
     coverage_start_date: itemData.coverage_start_date,
     coverage_status: itemData.coverage_status,
     description: itemData.itemDescription,
-    in_storage: itemData,
+    in_storage: itemData.in_storage,
     make: itemData.make,
     model: itemData.model,
     name: itemData.shortName,

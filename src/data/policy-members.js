@@ -1,5 +1,4 @@
 import { GET } from './index.js'
-import { throwError } from '../error'
 import { start, stop } from '../components/progress'
 
 /**

@@ -59,7 +59,6 @@ const isYou = householdMember => householdMember.id === $user.id
   
   <h3>Accountable people</h3>
 
-  <h4>Household members</h4>
   <ul class="accountable-people-list">
     {#each householdMembers as householdMember}
       <li class="accountable-people-list-item">
@@ -69,10 +68,6 @@ const isYou = householdMember => householdMember.id === $user.id
         <small>{householdMember.email}</small>
       </li>
     {/each}
-  </ul>
-
-  <h4>Dependents</h4>
-  <ul class="accountable-people-list">
     {#each $dependents as dependent}
       <li class="accountable-people-list-item">
         {dependent.name}

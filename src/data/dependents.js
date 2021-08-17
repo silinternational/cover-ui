@@ -10,7 +10,7 @@ export const initialized = writable(false)
  *
  * @description a function to create a dependent for a certain policy
  * @export
- * @param {string} policyId
+ * @param {string} policyId -- The UUID for the desired policy
  * @param {Object} depData
  * @return {Object} 
  */
@@ -40,8 +40,7 @@ export async function addDependent(policyId, depData) {
  *
  * @description a function to delete a dependent
  * @export
- * @param {Number} depId
- * @return {null} 
+ * @param {string} depId -- The UUID for the desired dependent
  */
 export async function deleteDependent(depId) {
     start(depId)
@@ -60,7 +59,7 @@ export async function deleteDependent(depId) {
  *
  * @description a function to update a dependent 
  * @export
- * @param {Number} depId
+ * @param {string} depId -- The UUID for the desired dependent
  * @param {Object} depData
  */
 export async function updateDependent(depId, depData) {
@@ -89,7 +88,7 @@ export async function updateDependent(depId, depData) {
 /**
  *
  * @description a function to load the dependents of a policy
- * @param {string} policyId
+ * @param {string} policyId -- The UUID for the desired policy
  * @export
  */
 export async function loadDependents(policyId) {

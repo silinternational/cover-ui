@@ -3,7 +3,7 @@ import { throwError } from "../error"
 import { start, stop } from "../components/progress/index.js"
 import { writable } from "svelte/store"
 
-const items = writable([])
+export const items = writable([])
 
 /**
  *

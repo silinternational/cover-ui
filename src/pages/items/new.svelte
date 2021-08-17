@@ -3,7 +3,6 @@ import user from '../../authn/user.js'
 import { addItem } from '../../data/items.js'
 import { dependents, loadDependents, initialized as depsInitialized } from '../../data/dependents.js'
 import { categories as categoryOptions, init, initialized as catItemsInitialized } from '../../data/itemCategories'
-import { formatDate } from '../../dates.js'
 import { Breadcrumb, Description, MoneyInput } from '../../components'
 import { goto } from '@roxi/routify'
 import { Button, Form, Page, Select, TextArea, TextField } from '@silintl/ui-components'
@@ -23,24 +22,15 @@ const formData = {
   uniqueIdentifier: '',
 }
 
-const dateFormat = {
-  year: 'numeric',
-  month: 'numeric',
-  day: 'numeric'
-}
-  
-const [month, day, year] = formatDate(Date(), 'en-US', dateFormat).split('/')  //en-US to give consistent response
-
 let categories = []
+let today = new Date()
 
-$: formData.coverage_start_date = `${year}-${formatMonthOrDay(month)}-${formatMonthOrDay(day)}` //api requires yyyy-mm-dd
+$: formData.coverage_start_date = today.toISOString().slice(0, 10) //api requires yyyy-mm-dd
 $: formData.purchase_date = formData.coverage_start_date
 $: accountablePersons = $dependents //TODO add current User to this: = [$dependents..., currentUser]
 $: if ($catItemsInitialized) categories = $categoryOptions.length ? $categoryOptions : [{name: 'Electronics', id: '63bcf980-e1f0-42d3-b2b0-2e4704159f4f'}] //TODO categoriesOptions isn't hydrating yet, remove mock data
 $: ! $depsInitialized && $user.policy_id && loadDependents($user.policy_id)
 $: ! $catItemsInitialized && init()
-
-const formatMonthOrDay = unit => unit.length === 1 ? `0${unit}` : unit
 
 const onAccountablePersonChange = event => {
   formData.country = event.detail?.location //TODO handle when Dependents is empty, redirect to settings?

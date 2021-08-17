@@ -16,7 +16,7 @@ export async function addDependent(policyId, depData) {
   const urlPath = `policies/${policyId}/dependents`
   start(urlPath)
   
-  let parsedDep = {
+  const parsedDep = {
     name: depData.name,
     relationship: depData.relationship,
     location: depData.location,

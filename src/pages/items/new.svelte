@@ -45,7 +45,7 @@ onMount(async () => {
     await init()
   }
 
-  categories = $categoryOptions.length ? $categoryOptions : [{name: 'Electronics', id: '1111-2222-3333-4444'}] //TODO categoriesOptions isn't hydrating yet, remove mock data
+  categories = $categoryOptions.length ? $categoryOptions : [{name: 'Electronics', id: 'f81291e9-6de0-4f7d-a98a-4d8bf86b520e'}] //TODO categoriesOptions isn't hydrating yet, remove mock data
 })
 
 const formatMonthOrDay = unit => unit.length === 1 ? `0${unit}` : unit
@@ -55,7 +55,7 @@ const onAccountablePersonChange = event => {
 }
 
 const onSelectCategory = event => {
-  formData.category = event.detail?.name
+  formData.category = event.detail?.id
 }
 
 const onSubmit = () => {

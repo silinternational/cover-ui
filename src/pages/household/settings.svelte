@@ -1,25 +1,25 @@
 <script>
 import user from '../../authn/user'
 import { Breadcrumb } from "../../components"
-import { dependents, initialized as haveLoadedDependents, loadDependents } from '../../data/dependents'
+import { dependentsByPolicyId, loadDependents } from '../../data/dependents'
 import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
 import { goto } from "@roxi/routify"
 import { Button, IconButton, Page } from "@silintl/ui-components"
 
 let householdMembers = []
+$: policyId = $user.policy_id
 
-$: if ($user.policy_id && !$haveLoadedDependents) {
-  loadDependents($user.policy_id)
+$: if (policyId) {
+  loadDependents(policyId)
+  loadMembersOfPolicy(policyId)
 }
 
-$: if ($user.policy_id) {
-  loadMembersOfPolicy($user.policy_id)
+$: haveLoadedPolicyMembers = $membersByPolicyId[policyId] !== undefined
+$: if (policyId && haveLoadedPolicyMembers) {
+  householdMembers = $membersByPolicyId[policyId]
 }
 
-$: haveLoadedPolicyMembers = $membersByPolicyId[$user.policy_id] !== undefined
-$: if ($user.policy_id && haveLoadedPolicyMembers) {
-  householdMembers = $membersByPolicyId[$user.policy_id]
-}
+$: dependents = $dependentsByPolicyId[policyId] || []
 
 const edit = id => $goto(`/household/settings/dependent/${id}`)
 const isYou = householdMember => householdMember.id === $user.id
@@ -73,7 +73,7 @@ const isYou = householdMember => householdMember.id === $user.id
 
   <h4>Dependents</h4>
   <ul class="accountable-people-list">
-    {#each $dependents as dependent}
+    {#each dependents as dependent}
       <li class="accountable-people-list-item">
         {dependent.name}
         <br />

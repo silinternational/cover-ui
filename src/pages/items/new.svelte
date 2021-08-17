@@ -7,7 +7,6 @@ import { formatDate } from '../../dates.js'
 import { Breadcrumb, Description, MoneyInput } from '../../components'
 import { goto } from '@roxi/routify'
 import { Button, Form, Page, Select, TextArea, TextField } from '@silintl/ui-components'
-import { onMount } from 'svelte'
 
 const formData = {
   category: '',
@@ -37,17 +36,9 @@ let categories = []
 $: formData.coverage_start_date = `${year}-${formatMonthOrDay(month)}-${formatMonthOrDay(day)}` //api requires yyyy-mm-dd
 $: formData.purchase_date = formData.coverage_start_date
 $: accountablePersons = $dependents //TODO add current User to this: = [$dependents..., currentUser]
-
-onMount(async () => {
-  if (! $depsInitialized && $user.policy_id) {
-    loadDependents($user.policy_id)
-  }
-  if (! $catItemsInitialized) {
-    await init()
-  }
-
-  categories = $categoryOptions.length ? $categoryOptions : [{name: 'Electronics', id: '63bcf980-e1f0-42d3-b2b0-2e4704159f4f'}] //TODO categoriesOptions isn't hydrating yet, remove mock data
-})
+$: if ($catItemsInitialized) categories = $categoryOptions.length ? $categoryOptions : [{name: 'Electronics', id: '63bcf980-e1f0-42d3-b2b0-2e4704159f4f'}] //TODO categoriesOptions isn't hydrating yet, remove mock data
+$: ! $depsInitialized && $user.policy_id && loadDependents($user.policy_id)
+$: ! $catItemsInitialized && init()
 
 const formatMonthOrDay = unit => unit.length === 1 ? `0${unit}` : unit
 

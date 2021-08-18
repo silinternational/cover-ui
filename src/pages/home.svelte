@@ -3,7 +3,7 @@ import user from '../authn/user.js'
 import { Menu, ClaimCards, Row } from '../components/'
 import { isLoadingById } from '../components/progress/index'
 import { claims, loadClaims } from '../data/claims.js'
-import { getItems } from '../data/items.js'
+import { itemsByPolicyId, loadItems } from '../data/items.js'
 import { loadPolicies } from '../data/policies.js'
 import { goto } from '@roxi/routify'
 import { Checkbox, Page, Datatable } from '@silintl/ui-components'
@@ -24,11 +24,9 @@ const menuItems = id => [
 let selected = []
 let goToItemDetails = true
 let shownMenus = {}
-let items = []
 
-$: if ($user.policy_id) {
-  getItems($user.policy_id).then(loadedItems => items = loadedItems)
-}
+$: $user.policy_id && loadItems($user.policy_id)
+$: items = $itemsByPolicyId[$user.policy_id] || []
 
 onMount( () => {
   loadClaims()

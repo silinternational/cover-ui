@@ -1,64 +1,31 @@
 <script>
 import user from '../../authn/user.js'
-import { getItems } from '../../data/items.js'
 import { Banner, Breadcrumb } from '../../components'
+import { loading } from '../../components/progress'
+import { itemsByPolicyId, loadItems } from '../../data/items.js'
+import { goto } from '@roxi/routify'
 import { Button } from '@silintl/ui-components'
-import { goto, params } from '@roxi/routify'
 
-// TODO: make this dependent on backend endpoint
-const itemDetails = {
-  "id": "7321f980-e1f0-42d3-b2b0-2e4704159f4f",
-  "name": "IName-2",
-  "category_id": "63bcf980-e1f0-42d3-b2b0-2e4704159f4f",
-  "in_storage": false,
-  "country": "ICountry2",
-  "description": "This is the description for item 2.",
-  "make": "IMAke-2",
-  "model": "IModel-2",
-  "serial_number": "ISN-2",
-  "coverage_amount": 100,
-  "purchase_date": "2021-07-30T16:05:27.361297Z",
-  "coverage_status": "",
-  "coverage_start_date": "0001-01-01T00:00:00Z",
-  "created_at": "0001-01-01T00:00:00Z",
-  "updated_at": "0001-01-01T00:00:00Z",
-  "category": {
-    "id": "63bcf980-e1f0-42d3-b2b0-2e4704159f4f",
-    "risk_category_id": "3be38915-7092-44f2-90ef-26f48214b34f",
-    "name": "ItemCat-2",
-    "help_text": "This is help text for ItemCat-2",
-    "status": "Enabled",
-    "auto_approve_max": 200,
-    "created_at": "2021-08-05T16:05:27.357297Z",
-    "updated_at": "2021-08-05T16:05:27.357298Z"
-  }
-}
-const breadcrumbLinks = [
-  {
-    name: "Items",
-    url: "/items",
-  },
-  // TODO: make this fetch the name of the item and have that as the name 
-  {
-    name: "This Item",
-    url: `/items/${$params.itemId}`
-  },
-]
+export let itemId
 
-let items
-let item
-getItems($user.policy_id).then(loadedItems => items = loadedItems)
+$: $user.policy_id && loadItems($user.policy_id)
+$: items = $itemsByPolicyId[$user.policy_id] || []
+$: item = items.find(itm => itm.id === itemId) || {}
+$: itemName = item.name || ''
 
-$: items && (item = items.find(itm => itm.id === $params.itemId))
+// Dynamic breadcrumbs data:
+const itemsBreadcrumb = { name: 'Items', url: '/items' }
+$: thisItemBreadcrumb = { name: itemName || 'This item', url: `/items/${itemId}` }
+$: breadcrumbLinks = [itemsBreadcrumb, thisItemBreadcrumb]
 
 const goToEditItem = () => {
-  $goto(`/items/${$params.itemId}/edit`)
+  $goto(`/items/${itemId}/edit`)
 }
 const goToNewClaim = () => {
-  $goto(`/items/${$params.itemId}/new-claim`)
+  $goto(`/items/${itemId}/new-claim`)
 }
 const goToDelete = () => {
-  $goto(`/items/${$params.itemId}/delete`)
+  $goto(`/items/${itemId}/delete`)
 }
 </script>
 
@@ -74,21 +41,26 @@ p {
 }
 </style>
 
-{#if items && !item } 
-  Item does not exist!
-{:else if items }
+{#if !item.id } 
+  {#if $loading}
+    Loading...
+  {:else}
+    We could not find that item. Please <a href="/items">go back</a> and select
+    an item from the list.
+  {/if}
+{:else}
   <Breadcrumb links={breadcrumbLinks} />
-  <h1>{itemDetails.name}</h1>
-  <h3>{itemDetails.make} {itemDetails.model}</h3>
-  <Banner background="var(--mdc-theme-neutral">{itemDetails.category.name}</Banner>
-  <p>Market value: ${itemDetails.coverage_amount}</p>
+  <h1>{item.name}</h1>
+  <h3>{item.make} {item.model}</h3>
+  <Banner background="var(--mdc-theme-neutral">{item.category?.name}</Banner>
+  <p>Market value: ${item.coverage_amount}</p>
   <!--TODO: get this from backend when available-->
   <p>Annual premium: ${16.20}</p>
-  <p>Description: {itemDetails.description}</p>
+  <p>Description: {item.description}</p>
   <!--TODO: get this from backend when available-->
   <p>Accountable person: {"Jeff Smith"}</p>
-  <p>Unique identifier: {itemDetails.serial_number}</p>
-  <p>Coverage added: {new Date(itemDetails.coverage_start_date).toDateString()}</p>
+  <p>Unique identifier: {item.serial_number}</p>
+  <p>Coverage added: {new Date(item.coverage_start_date).toDateString()}</p>
   <p>Coverage ends: {"13 December 2029"}</p>
   <div>
     <Button on:click={goToEditItem} raised>Edit Details</Button>

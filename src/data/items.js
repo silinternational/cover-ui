@@ -1,36 +1,40 @@
-import { CREATE, DELETE, GET, UPDATE } from "./index.js"
+import { CREATE, DELETE, GET, UPDATE } from "."
+import { start, stop } from "../components/progress"
 import { throwError } from "../error"
-import { start, stop } from "../components/progress/index.js"
 import { writable } from "svelte/store"
 
-export const items = writable([])
+export const itemsByPolicyId = writable({})
 
 /**
+ * Load the items for the specified policy.
  *
- * @description a function to fetch the items of a policy
  * @export
  * @param {string} policyId -- The UUID for the desired policy
- * @return {Object} 
  */
-export async function getItems(policyId) {
-  start(policyId)
+export async function loadItems(policyId) {
+  const urlPath = `policies/${policyId}/items`
+  start(urlPath)
 
-  const items = await GET(`policies/${policyId}/items`)
+  const items = await GET(urlPath)
+  itemsByPolicyId.update(data => {
+    data[policyId] = items
+    return data
+  })
 
-  stop(policyId)
-  return items
+  stop(urlPath)
 }
 
 /**
+ * Add an item.
  *
- * @description a function to create an item
  * @export
- * @param {Number} policyId
+ * @param {string} policyId -- The UUID for the applicable policy
  * @param {Object} itemData
  * @return {Object} 
  */
 export async function addItem(policyId, itemData) {
-  start(policyId)
+  const urlPath = `policies/${policyId}/items`
+  start(urlPath)
 
   const parsedItemData = {
     category_id: itemData.category,
@@ -47,50 +51,70 @@ export async function addItem(policyId, itemData) {
     serial_number: itemData.uniqueIdentifier
   }
 
-  const item = await CREATE(`policies/${policyId}/items`, parsedItemData)
+  const addedItem = await CREATE(urlPath, parsedItemData)
 
-  stop(policyId)
+  itemsByPolicyId.update(data => {
+    const items = data[policyId] || []
+    items.push(addedItem)
+    data[policyId] = items
+    return data
+  })
+  
+  stop(urlPath)
 
-  items.update(data => {
-    data.push(item)
+  return addedItem
+}
+
+/**
+ * Update an item.
+ *
+ * @export
+ * @param {string} policyId -- The UUID for the applicable policy
+ * @param {Object} itemData
+ * @return {Object} 
+ */
+export async function updateItem(policyId, itemData) {
+  const itemId = itemData.id
+  if (!itemId) {
+    throwError("item id not set")
+  }
+  const urlPath = `items/${itemId}`
+  start(urlPath)
+
+  delete itemData.id
+  // TODO: create `parsedItem` to validate item
+  const updatedItem = await UPDATE(urlPath, itemData)
+  
+  itemsByPolicyId.update(data => {
+    const items = data[policyId] || []
+    const i = items.findIndex(item => item.id === itemId)
+    items[i] = updatedItem
+    data[policyId] = items
     return data
   })
 
-  return item
+  stop(urlPath)
+  return updatedItem
 }
 
 /**
+ * Delete an item.
  *
- * @description a function to update an item
  * @export
- * @param {Object} item
- * @return {Object} 
+ * @param {string} policyId -- The UUID for the applicable policy
+ * @param {string} itemId -- The UUID for the item to delete
  */
-export async function updateItem(item) {
-  if (!item.id) throwError("item id not set")
-  
-  start(item.id)
+export async function deleteItem(policyId, itemId) {
+  const urlPath = `items/${itemId}`
+  start(urlPath)
 
-  let itemId = item.id
-  delete item.id
-  // TODO: create `parsedItem` to validate item
-  let newItem = await UPDATE(`items/${itemId}`, item)
+  await DELETE(urlPath)
 
-  stop(itemId)
-  return newItem
-}
+  itemsByPolicyId.update(data => {
+    const items = data[policyId] || []
+    data[policyId] = items.filter(item => item.id !== itemId)
+    return data
+  })
 
-/**
- *
- * @description a function to delete an item
- * @export
- * @param {Number} id
- * @return {null} 
- */
-export async function deleteItem(id) {
-  start(id)
-
-  await DELETE(`items/${id}`)
-
-  stop(id)
+  stop(urlPath)
 }

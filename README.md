@@ -1,4 +1,4 @@
-# riskman-ui
+# cover-ui
 
 > You will need [Node.js](https://nodejs.org) installed.
 
@@ -9,9 +9,9 @@ cp .env.example .env
 ```
 - set the necessary variables. Ask another team member if you think you are missing any.
 
-- `API_HOST=//riskman.local:3000`
+- `API_HOST=//cover.local:3000`
 
-- Add `127.0.0.1 riskman.local` to `/etc/hosts` (or equivalent for your OS)
+- Add `127.0.0.1 cover.local` to `/etc/hosts` (or equivalent for your OS)
 
 ## Local development
 Install the dependencies...
@@ -24,7 +24,7 @@ npm i
 npm run local:dev
 ```
 
-Navigate to <http://riskman.local:8081>. You should see your app running app _(configured to auto-reload page for any changes)_
+Navigate to <http://cover.local:8081>. You should see your app running app _(configured to auto-reload page for any changes)_
 
 ### Running in prod mode
 ```bash

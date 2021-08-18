@@ -41,14 +41,6 @@ const checkIfLoading = (id, string = '') => isLoadingById(id) ? 'loading...' : s
 .ml-50px {
   margin-left: 50px;
 }
-
-.pl-10px {
-  padding-left: 10px;
-}
-
-.pl-50px {
-  padding-left: 50px;
-}
 </style>
 
 <Card isClickable noPadding on:click={gotoItem} on:keypress={gotoItem} class="height-fit-content py-0 {$$props.class}">

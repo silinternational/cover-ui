@@ -1,6 +1,10 @@
 <script>
+import { getState } from '../data/claims'
+
+export let claim = {}
 export let item = {}
-export let state = {}
+
+$: state = getState(claim)
 
 $: bgColor = state.bgColor || ''
 $: color = state.color || ''

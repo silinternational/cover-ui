@@ -134,7 +134,7 @@ const unSetRepairCost = () => {
 <!--TODO: add transitions but not after submit-->
 {#if items && $initialized && claimExists}
   Claim already exists!
-{:else if items && !item}
+{:else if items && !item.id}
   Item does not exist!
 {:else if items && $initialized}
   <Page>

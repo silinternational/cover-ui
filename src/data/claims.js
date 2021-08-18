@@ -3,7 +3,7 @@ import { start, stop } from "../components/progress"
 import { writable } from "svelte/store"
 
 export const claims = writable([])
-export const initialized = writable(true)
+export const initialized = writable(false)
 export const states = {
   message: {
       icon: 'chat',

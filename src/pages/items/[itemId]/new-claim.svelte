@@ -1,11 +1,13 @@
 <script>
 import user from '../../../authn/user'
-import { getItems } from '../../../data/items.js'
-import { claims, initialized, createClaim } from '../../../data/claims.js'
 import { Breadcrumb, Description, RadioOptions, DateInput, MoneyInput } from '../../../components'
-import { goto, params } from '@roxi/routify'
+import { claims, initialized, createClaim } from '../../../data/claims.js'
+import { itemsByPolicyId, loadItems } from '../../../data/items.js'
+import { goto } from '@roxi/routify'
 import { Button, Form, Page, TextArea } from '@silintl/ui-components'
 import { fade } from 'svelte/transition'
+
+export let itemId
 
 const deductible = 0.05
 const regularFraction = (1 - deductible)
@@ -55,11 +57,11 @@ const breadcrumbLinks = [
   // TODO: make this fetch the name of the item and have that as the name 
   {
     name: "This Item",
-    url: `/items/${$params.itemId}`
+    url: `/items/${itemId}`
   },
   {
     name: "New Claim",
-    url: `/items/${$params.itemId}/new-claim`
+    url: `/items/${itemId}/new-claim`
   }
 ]
 
@@ -74,10 +76,10 @@ let formData = {
 }
 let items
 let item
-getItems($user.policy_id).then(loadedItems => {
-  items = loadedItems
-  item = items.find(itm => itm.id === $params.itemId)
-})
+
+$: $user.policy_id && loadItems($user.policy_id)
+$: items = itemsByPolicyId[$user.policy_id] || []
+$: item = items.find(itm => itm.id === itemId) || {}
 
 // TODO: get accountable person from item 
 // TODO: add reimbursed value
@@ -85,7 +87,7 @@ $: isNotRepairableOrMoneyInputsAreSet = (formData.isRepairable !== "repairable" 
 $: seventyPercentCheck = (!formData.repairCost || !formData.fairMarketValue || (formData.repairCost/formData.fairMarketValue) >= .7)
 $: payoutOptionCheck = formData.lossReason && isNotRepairableOrMoneyInputsAreSet && seventyPercentCheck
 $: canRepair = formData.lossReason === "impact" || formData.lossReason === "lightning" || formData.lossReason === "water_damage" || formData.lossReason === "other"
-$: claimExists = $claims.find(clm => clm.itemId === $params.itemId)
+$: claimExists = $claims.find(clm => clm.itemId === itemId)
 
 $: !payoutOptionCheck && unSetPayoutOption()
 $: !(formData.isRepairable === "repairable" || formData.payoutOption === "cash_now") && unSetFairMarketValue()

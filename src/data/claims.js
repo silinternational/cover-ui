@@ -1,4 +1,4 @@
-import { CREATE, GET } from "."
+import { CREATE, GET, UPDATE } from "."
 import { start, stop } from "../components/progress"
 import { writable } from "svelte/store"
 
@@ -103,21 +103,30 @@ export async function getClaim(itemId) {
  *
  * @description a function to update a claim
  * @export
- * @param {Number} itemId
+ * @param {String} itemId
  * @param {Object} newClaimData
  */
-export function updateClaim(itemId, newClaimData) {
+export async function updateClaim(itemId, newClaimData) {
   start(itemId)
 
-  newClaimData.itemId = itemId
+  //TODO make sure these properties are what is used in update claim form when it exists
+  const parsedData = {
+    event_date: newClaimData.event_date,
+    event_type: newClaimData.event_type, //TODO will get types from future GET /config endpoint
+    event_description: newClaimData.event_description,
+  }
+
+  const updatedClaim = await UPDATE(`claims/${itemId}`, parsedData)
 
   claims.update(currClaims => {
     let i = currClaims.findIndex(clm => clm.itemId === itemId)
-    currClaims[i] = newClaimData
+    currClaims[i] = updatedClaim
     return currClaims
   })
 
   stop(itemId)
+
+  return updatedClaim
 }
 
 /**

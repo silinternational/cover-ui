@@ -105,7 +105,7 @@ const handleMoreVertClick = id => {
                     <Checkbox on:checked={() => handleChecked(item.id)} on:unchecked={() => handleUnchecked(item.id)}/>
                   </div>
                 </Datatable.Data.Row.Item>
-                <Datatable.Data.Row.Item>{item.item_name}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>{item.name}</Datatable.Data.Row.Item>
                 <Datatable.Data.Row.Item>{item.recent_activity}</Datatable.Data.Row.Item>
                 <Datatable.Data.Row.Item>{item.accountable_person}</Datatable.Data.Row.Item>
                 <Datatable.Data.Row.Item>${item.coverage_amount}</Datatable.Data.Row.Item>

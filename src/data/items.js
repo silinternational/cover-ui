@@ -51,7 +51,10 @@ export async function addItem(policyId, itemData) {
 
   stop(policyId)
 
-  items.push(item)
+  items.update(data => {
+    data.push(item)
+    return data
+  })
 
   return item
 }

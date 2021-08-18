@@ -1,8 +1,9 @@
 <script>
-import { claims } from '../data/claims.js'
+import { claims, initialized, loadClaims } from '../data/claims.js'
 import { ClaimCards, Row } from '../components/'
 import { Page, Button } from '@silintl/ui-components'
 
+$: $initialized || loadClaims()
 </script>
 
 <Page layout="grid">

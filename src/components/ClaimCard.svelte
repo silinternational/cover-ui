@@ -1,9 +1,11 @@
 <script>
+import ClaimCardBanner from './ClaimCardBanner.svelte'
 import { day } from './const'
 import { goto } from '@roxi/routify'
 import { Card, Button } from '@silintl/ui-components'
 import { isLoadingById } from './progress'
 
+export let claim = {}
 export let item = {}
 export let state = {}
 export let buttons = []
@@ -50,14 +52,7 @@ const checkIfLoading = (id, string = '') => isLoadingById(id) ? 'loading...' : s
 </style>
 
 <Card isClickable noPadding on:click={gotoItem} on:keypress={gotoItem} class="height-fit-content py-0 {$$props.class}">
-  <div class="flex justify-start align-items-center black mb-2 p-1 pl-50px" style="background: var({state.bgColor});">
-    <span class="material-icons" style="color: var({state.color});">{state.icon}</span>
-
-    <div class="mdc-theme--primary pl-10px">
-      <div class="mdc-typography--headline6 multi-line-truncate content" style="color: var({state.color});">{state.title}</div>
-      <div class="multi-line-truncate fs-14" style="color: var({state.color});">{item.message || checkIfLoading(item.id)}</div>
-    </div>
-  </div>
+  <ClaimCardBanner {state} {item} />
 
   <div class="mdc-typography--headline5 multi-line-truncate content ml-50px">
     {item.name || checkIfLoading(item.id)}

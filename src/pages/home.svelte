@@ -77,7 +77,7 @@ const handleMoreVertClick = id => {
 
 <Page loading={isLoadingById($user.policy_id)} layout="grid">   
   <Row cols={'12'}>
-    <ClaimCards items={$claims} />
+    <ClaimCards claims={$claims} />
   </Row>
 
   <Row cols={'12'}>

@@ -13,7 +13,7 @@ $: $initialized || loadClaims()
 
   <Row cols={'12'}>
     {#if $claims.length}
-      <ClaimCards items={$claims} />
+      <ClaimCards claims={$claims} />
     {:else}
       No claims at this time.
     {/if}

@@ -2,7 +2,7 @@
 import { ClaimCard } from './index'
 import { getState } from '../data/claims'
 
-export let items
+export let claims
 </script>
 
 <style>

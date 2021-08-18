@@ -78,7 +78,7 @@ let items
 let item
 
 $: $user.policy_id && loadItems($user.policy_id)
-$: items = itemsByPolicyId[$user.policy_id] || []
+$: items = $itemsByPolicyId[$user.policy_id] || []
 $: item = items.find(itm => itm.id === itemId) || {}
 
 // TODO: get accountable person from item 

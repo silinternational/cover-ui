@@ -6,52 +6,60 @@ export const claims = writable([])
 export const initialized = writable(false)
 export const states = {
   message: {
-      icon: 'chat',
-      color: '--mdc-theme-primary',
-      bgColor: '--mdc-theme-primary-header-bg',
-      title: 'From '
+    icon: 'chat',
+    color: '--mdc-theme-primary',
+    bgColor: '--mdc-theme-primary-header-bg',
+    title: 'From ',
+    actionLabel: 'View message',
   },
   draft: {
-      icon: 'edit',
-      color: '--mdc-theme-primary',
-      bgColor: '--mdc-theme-primary-header-bg',
-      title: 'Draft'
+    icon: 'edit',
+    color: '--mdc-theme-primary',
+    bgColor: '--mdc-theme-primary-header-bg',
+    title: 'Draft',
+    actionLabel: 'Edit claim',
   },
   awaiting: {
-      icon: 'watch_later',
-      color: '--mdc-theme-neutral-variant',
-      bgColor: '--mdc-theme-neutral-bg',
-      title: 'Awaiting review'
+    icon: 'watch_later',
+    color: '--mdc-theme-neutral-variant',
+    bgColor: '--mdc-theme-neutral-bg',
+    title: 'Awaiting review',
+    actionLabel: 'View claim',
   },
   needsChanges: {
-      icon: 'error',
-      color: '--mdc-theme-status-warning',
-      bgColor: '--mdc-theme-status-warning-bg',
-      title: 'Needs changes'
+    icon: 'error',
+    color: '--mdc-theme-status-warning',
+    bgColor: '--mdc-theme-status-warning-bg',
+    title: 'Needs changes',
+    actionLabel: 'Make changes',
   },
   denied: {
-      icon: 'remove_circle',
-      color: '--mdc-theme-status-error',
-      bgColor: '--mdc-theme-status-error-bg',
-      title: 'Denied'
+    icon: 'remove_circle',
+    color: '--mdc-theme-status-error',
+    bgColor: '--mdc-theme-status-error-bg',
+    title: 'Denied',
+    actionLabel: 'View denial',
   },
   approvedRepair: {
-      icon: 'done',
-      color: '--mdc-theme-status-success',
-      bgColor: '--mdc-theme-status-success-bg',
-      title: 'Approved for repair'
+    icon: 'done',
+    color: '--mdc-theme-status-success',
+    bgColor: '--mdc-theme-status-success-bg',
+    title: 'Approved for repair',
+    actionLabel: 'View and upload receipt',
   },
   payout: {
-      icon: 'paid',
-      color: '--mdc-theme-status-success',
-      bgColor: '--mdc-theme-status-success-bg',
-      title: 'Approved for payout'
+    icon: 'paid',
+    color: '--mdc-theme-status-success',
+    bgColor: '--mdc-theme-status-success-bg',
+    title: 'Approved for payout',
+    actionLabel: 'View claim',
   },
   complete: {
-      icon: 'paid',
-      color: '--mdc-theme-status-success',
-      bgColor: '--mdc-theme-status-success-bg',
-      title: 'Complete'
+    icon: 'paid',
+    color: '--mdc-theme-status-success',
+    bgColor: '--mdc-theme-status-success-bg',
+    title: 'Complete',
+    actionLabel: 'View claim',
   }
 }
 

@@ -18,6 +18,10 @@ $: item = items[0]
 .left-detail {
   margin: 0.5rem 0;
 }
+
+.width {
+  width: max-content;
+}
 </style>
 
 <Page layout="grid">
@@ -25,7 +29,8 @@ $: item = items[0]
     <h3 class="mdc-typography--headline5 my-0">Saxophone</h3>
     <div class="left-detail">Claim 12345</div>
     <Banner background="var(--mdc-theme-status-info-bg)"
-            color="var(--mdc-theme-status-info)">
+            color="var(--mdc-theme-status-info)"
+            class="width">
       <b>Theft</b>
     </Banner>
     <div class="left-detail">01 Jan 2001</div>

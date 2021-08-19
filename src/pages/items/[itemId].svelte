@@ -39,6 +39,10 @@ const goToDelete = () => {
 p {
   font-weight: 600;
 }
+
+.width {
+  width: max-content;
+}
 </style>
 
 {#if !item.id } 
@@ -52,7 +56,7 @@ p {
   <Breadcrumb links={breadcrumbLinks} />
   <h1>{item.name}</h1>
   <h3>{item.make} {item.model}</h3>
-  <Banner background="var(--mdc-theme-neutral">{item.category?.name}</Banner>
+  <Banner background="var(--mdc-theme-neutral" class="width">{item.category?.name}</Banner>
   <p>Market value: ${item.coverage_amount}</p>
   <!--TODO: get this from backend when available-->
   <p>Annual premium: ${16.20}</p>

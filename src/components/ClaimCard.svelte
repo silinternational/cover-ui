@@ -14,7 +14,7 @@ const now = Date.now()
 
 $: msAgo = now - Date.parse(item.updated_at)
 $: daysAgo = msAgo > 0 ? Math.floor(msAgo/day) : '-'
-$: state = getState(claim)
+$: state = getState(claim) || {}
 
 const editClaim = () => dispatch('edit-claim', claim.id)
 const gotoClaim = () => dispatch('goto-claim', claim.id)
@@ -61,7 +61,7 @@ const onKeyPress = event => {
   </div>
 
   <div class="action pb-2 ml-50px" slot="actions">
-    <Button raised on:click={editClaim}>{state?.actionLabel || 'Edit Claim'}</Button>
+    <Button raised on:click={editClaim}>{state.actionLabel || 'Edit Claim'}</Button>
 
     <div class="fs-12 gray mt-1">
       {#if daysAgo}

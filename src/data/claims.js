@@ -159,4 +159,4 @@ export async function loadClaims() {
   initialized.set(true)
 }
 
-export const getState = claim => states[claim.status || 'message']
+export const getState = claim => states[claim.status] || {}

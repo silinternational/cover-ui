@@ -11,7 +11,6 @@ export let background = 'var(--mdc-theme-primary)'
   padding: 8px;
   align-items: center;
   display: flex;
-  width: max-content;
   border-radius: 4px;
 }
 </style>

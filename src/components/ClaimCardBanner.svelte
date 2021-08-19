@@ -13,16 +13,6 @@ $: message = item.message || ''
 $: title = state.title || ''
 </script>
 
-<style>
-.pl-10px {
-  padding-left: 10px;
-}
-
-.pl-50px {
-  padding-left: 50px;
-}
-</style>
-
 <div class="flex justify-start align-items-center black mb-2 p-1 pl-50px" style="background: var({bgColor});">
   <span class="material-icons" style="color: var({color});">{icon}</span>
 

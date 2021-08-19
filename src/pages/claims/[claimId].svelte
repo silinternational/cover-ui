@@ -1,6 +1,17 @@
 <script>
-import { Banner, MoneyInput, Row, SuccessBanner, WarningBanner } from '../../components'
+import user from '../../authn/user.js'
+import { Banner, MoneyInput, Row, ClaimBanner } from '../../components'
+import { loadClaims, claims } from '../../data/claims'
+import { loadItems, itemsByPolicyId } from '../../data/items'
 import { Button, Page } from '@silintl/ui-components'
+import { params } from '@roxi/routify'
+
+loadClaims()
+loadItems()
+
+$: claim = $claims.find(claim => claim.id === $params.ClaimId)
+$: items = $itemsByPolicyId[$user.policy_id] || []
+$: item = items[0]
 </script>
 
 <style>
@@ -20,13 +31,7 @@ import { Button, Page } from '@silintl/ui-components'
     <div class="left-detail">01 Jan 2001</div>
   </Row>
   <Row cols="9">
-    <SuccessBanner>
-      <b>Approved for replacement</b>
-    </SuccessBanner>
-    <WarningBanner>
-      <b>Needs changes: </b>
-      Upload a repair receipt to get reimbursed.
-    </WarningBanner>
+    <ClaimBanner {claim} {item}/>
     <p>
       Description sint blue bottle messenger bag. Vexillologist craft beer
       normcore, taxidermy direct trade paleo echo park brooklyn stumptown lorem

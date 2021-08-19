@@ -13,25 +13,23 @@ import MoneyInput from './MoneyInput.svelte'
 import RadioOptions from './RadioOptions.svelte'
 import Menu from './mdc/Menu'
 import Row from './mdc/Row.svelte'
-import SuccessBanner from './banners/SuccessBanner.svelte'
-import WarningBanner from './banners/WarningBanner.svelte'
+import ClaimBanner from './banners/ClaimBanner.svelte'
 
 export {
     filteredList as FilteredList,
     table as Table,
-    App as App,
-    AppFooter as AppFooter,
-    Banner as Banner,
-    Breadcrumb as Breadcrumb,
-    DateInput as DateInput,
-    DependentForm as DependentForm,
-    Description as Description, 
-    MoneyInput as MoneyInput,
-    RadioOptions as RadioOptions,
+    App,
+    AppFooter,
+    Banner,
+    Breadcrumb,
+    DateInput,
+    DependentForm,
+    Description, 
+    MoneyInput,
+    RadioOptions,
     Menu,
     ClaimCard,
     ClaimCards,
     Row,
-    SuccessBanner,
-    WarningBanner,
+    ClaimBanner,
 }

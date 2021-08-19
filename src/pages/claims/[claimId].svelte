@@ -1,17 +1,12 @@
 <script>
-import user from '../../authn/user.js'
 import { Banner, MoneyInput, Row, ClaimBanner } from '../../components'
-import { loadClaims, claims } from '../../data/claims'
-import { loadItems, itemsByPolicyId } from '../../data/items'
+import { loadClaims, claims, initialized } from '../../data/claims'
 import { Button, Page } from '@silintl/ui-components'
 import { params } from '@roxi/routify'
 
-loadClaims()
-loadItems()
+$: ! initialized && loadClaims()
 
 $: claim = $claims.find(claim => claim.id === $params.ClaimId)
-$: items = $itemsByPolicyId[$user.policy_id] || []
-$: item = items[0]
 </script>
 
 <style>
@@ -29,14 +24,14 @@ $: item = items[0]
     <h3 class="mdc-typography--headline5 my-0">Saxophone</h3>
     <div class="left-detail">Claim 12345</div>
     <Banner background="var(--mdc-theme-status-info-bg)"
-            color="var(--mdc-theme-status-info)"
-            class="width">
+      color="var(--mdc-theme-status-info)"
+      class="width">
       <b>Theft</b>
     </Banner>
     <div class="left-detail">01 Jan 2001</div>
   </Row>
   <Row cols="9">
-    <ClaimBanner {claim} {item}/>
+    <ClaimBanner {claim} />
     <p>
       Description sint blue bottle messenger bag. Vexillologist craft beer
       normcore, taxidermy direct trade paleo echo park brooklyn stumptown lorem

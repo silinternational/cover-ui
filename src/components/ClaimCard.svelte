@@ -1,20 +1,26 @@
 <script>
+import ClaimCardBanner from './ClaimCardBanner.svelte'
 import { day } from './const'
-import { goto } from '@roxi/routify'
 import { Card, Button } from '@silintl/ui-components'
-import { isLoadingById } from './progress'
+import { createEventDispatcher } from 'svelte'
 
+const dispatch = createEventDispatcher()
+
+export let claim = {}
 export let item = {}
-export let state = {}
-export let buttons = []
 
 const now = Date.now()
 
 $: msAgo = now - Date.parse(item.updated_at)
 $: daysAgo = msAgo > 0 ? Math.floor(msAgo/day) : '-'
 
-const gotoItem = () => item.id && $goto(`/requests/${item.id}`)
-const checkIfLoading = (id, string = '') => isLoadingById(id) ? 'loading...' : string
+const editClaim = () => dispatch('edit-claim', claim.id)
+const gotoClaim = () => dispatch('goto-claim', claim.id)
+const onKeyPress = event => {
+  if (event.code === 'Space' || event.code === 'Enter') {
+    gotoClaim()
+  }
+}
 </script>
 
 <style>
@@ -39,46 +45,27 @@ const checkIfLoading = (id, string = '') => isLoadingById(id) ? 'loading...' : s
 .ml-50px {
   margin-left: 50px;
 }
-
-.pl-10px {
-  padding-left: 10px;
-}
-
-.pl-50px {
-  padding-left: 50px;
-}
 </style>
 
-<Card isClickable noPadding on:click={gotoItem} on:keypress={gotoItem} class="height-fit-content py-0 {$$props.class}">
-  <div class="flex justify-start align-items-center black mb-2 p-1 pl-50px" style="background: var({state.bgColor});">
-    <span class="material-icons" style="color: var({state.color});">{state.icon}</span>
-
-    <div class="mdc-theme--primary pl-10px">
-      <div class="mdc-typography--headline6 multi-line-truncate content" style="color: var({state.color});">{state.title}</div>
-      <div class="multi-line-truncate fs-14" style="color: var({state.color});">{item.message || checkIfLoading(item.id)}</div>
-    </div>
-  </div>
+<Card isClickable noPadding on:click={gotoClaim} on:keypress={onKeyPress} class="height-fit-content py-0 {$$props.class}">
+  <ClaimCardBanner {claim} {item} />
 
   <div class="mdc-typography--headline5 multi-line-truncate content ml-50px">
-    {item.name || checkIfLoading(item.id)}
+    {item.name || ''}
   </div>
 
   <div class="content multi-line-truncate ml-50px">
-    {item.accountable_person || checkIfLoading(item.id)}
+    {item.accountable_person || ''}
   </div>
 
   <div class="action pb-2 ml-50px" slot="actions">
-    {#if buttons}
-      {#each buttons as btn}
-        <Button raised url={btn.url}>{btn.label}</Button>
-      {/each}
-    {/if}
+    <Button raised on:click={editClaim}>Edit Claim</Button>
 
     <div class="fs-12 gray mt-1">
       {#if daysAgo}
         Last changed {daysAgo} days ago
       {:else}
-        <div>{checkIfLoading(item.id, 'No changes')}</div>
+        No changes
       {/if}
     </div>
   </div>

@@ -16,13 +16,10 @@ $: title = state.title || ''
 i.material-icons {
   margin-right: 0.5rem;
 }
-.width {
-  width: unset;
-}
 </style>
 
 <Banner background="var({bgColor})"
-        color="var({color})" class="{$$props.class} width">
+        color="var({color})" class="{$$props.class}">
   <i class="material-icons mdc-list-item__graphic" style="color: var({color});" aria-hidden="true">{icon}</i>
   <div class="d-block">
     <div class="mdc-typography--headline6" style="color: var({color});" >{title}</div>

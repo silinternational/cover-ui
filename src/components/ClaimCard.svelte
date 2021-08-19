@@ -1,6 +1,7 @@
 <script>
 import ClaimCardBanner from './ClaimCardBanner.svelte'
 import { day } from './const'
+import { getState } from '../data/claims'
 import { Card, Button } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
@@ -13,6 +14,7 @@ const now = Date.now()
 
 $: msAgo = now - Date.parse(item.updated_at)
 $: daysAgo = msAgo > 0 ? Math.floor(msAgo/day) : '-'
+$: state = getState(claim)
 
 const editClaim = () => dispatch('edit-claim', claim.id)
 const gotoClaim = () => dispatch('goto-claim', claim.id)
@@ -48,7 +50,7 @@ const onKeyPress = event => {
 </style>
 
 <Card isClickable noPadding on:click={gotoClaim} on:keypress={onKeyPress} class="height-fit-content py-0 {$$props.class}">
-  <ClaimCardBanner {claim} {item} />
+  <ClaimCardBanner {item} {state} />
 
   <div class="mdc-typography--headline5 multi-line-truncate content ml-50px">
     {item.name || ''}
@@ -59,7 +61,7 @@ const onKeyPress = event => {
   </div>
 
   <div class="action pb-2 ml-50px" slot="actions">
-    <Button raised on:click={editClaim}>Edit Claim</Button>
+    <Button raised on:click={editClaim}>{state.actionLabel || 'Edit Claim'}</Button>
 
     <div class="fs-12 gray mt-1">
       {#if daysAgo}

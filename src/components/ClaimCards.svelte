@@ -13,9 +13,9 @@ export let claims
 
 <div class="flex justify-start flex-wrap {$$props.class}">
   {#each claims as claim (claim.id) }
-    {#each (claim.items || []) as item (item.id) }
+    {#each (claim.claim_items || []) as claimItem (claimItem.id) }
       <div class="card">
-        <ClaimCard {claim} {item} on:edit-claim on:goto-claim />
+        <ClaimCard {claim} {claimItem} on:edit-claim on:goto-claim />
       </div>
     {/each}
   {/each}

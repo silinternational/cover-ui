@@ -7,7 +7,7 @@ import { createEventDispatcher } from 'svelte'
 
 
 export let claim = {}
-export let item = {}
+export let claimItem = {}
 
 const dispatch = createEventDispatcher()
 const now = Date.now()

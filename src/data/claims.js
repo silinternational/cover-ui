@@ -167,4 +167,9 @@ export async function loadClaims() {
   initialized.set(true)
 }
 
-export const getState = claim => states[claim.status || 'message']
+export const getState = claim => {
+  if (states[claim.status] === undefined) {
+    console.error('No such state (for claim status):', claim.status, Object.keys(states))
+  }
+  return states[claim.status || 'message']
+}

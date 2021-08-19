@@ -5,11 +5,11 @@ import { getState } from '../data/claims'
 import { Card, Button } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
-const dispatch = createEventDispatcher()
 
 export let claim = {}
 export let item = {}
 
+const dispatch = createEventDispatcher()
 const now = Date.now()
 
 $: msAgo = now - Date.parse(item.updated_at)

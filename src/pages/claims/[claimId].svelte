@@ -1,8 +1,8 @@
 <script>
 import { Banner, MoneyInput, Row, ClaimBanner } from '../../components'
 import { loadClaims, claims, initialized } from '../../data/claims'
-import { Button, Page } from '@silintl/ui-components'
 import { params } from '@roxi/routify'
+import { Button, Page } from '@silintl/ui-components'
 
 $: ! initialized && loadClaims()
 
@@ -14,9 +14,6 @@ $: claim = $claims.find(claim => claim.id === $params.ClaimId)
   margin: 0.5rem 0;
 }
 
-.width {
-  width: max-content;
-}
 </style>
 
 <Page layout="grid">
@@ -25,7 +22,7 @@ $: claim = $claims.find(claim => claim.id === $params.ClaimId)
     <div class="left-detail">Claim 12345</div>
     <Banner background="var(--mdc-theme-status-info-bg)"
       color="var(--mdc-theme-status-info)"
-      class="width">
+      class="max-content-width">
       <b>Theft</b>
     </Banner>
     <div class="left-detail">01 Jan 2001</div>

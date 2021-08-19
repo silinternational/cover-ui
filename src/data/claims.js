@@ -171,5 +171,5 @@ export const getState = claim => {
   if (states[claim.status] === undefined) {
     console.error('No such state (for claim status):', claim.status, Object.keys(states))
   }
-  return states[claim.status || 'message']
+  return states[claim.status || 'Message']
 }

@@ -12,6 +12,10 @@ body {
 	width: auto;
 }
 
+.max-content-width {
+  width: max-content;
+}
+
 #main-drawer-content {
 	background: #fff;
 }

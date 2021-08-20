@@ -40,7 +40,7 @@ $: reasonsForLoss = $claimEventTypes.map(type => ({ label: type, value: type }))
 $: isNotRepairableOrMoneyInputsAreSet = (formData.isRepairable !== "repairable" || (formData.repairCost && formData.fairMarketValue))
 $: seventyPercentCheck = (!formData.repairCost || !formData.fairMarketValue || (formData.repairCost/formData.fairMarketValue) >= .7)
 $: payoutOptionCheck = formData.lossReason && isNotRepairableOrMoneyInputsAreSet && seventyPercentCheck
-$: canRepair = formData.lossReason === "impact" || formData.lossReason === "lightning" || formData.lossReason === "water_damage" || formData.lossReason === "other"
+$: canRepair = isRepairableEventType(formData.lossReason)
 
 $: !payoutOptionCheck && unSetPayoutOption()
 $: !(formData.isRepairable === "repairable" || formData.payoutOption === "cash_now") && unSetFairMarketValue()
@@ -61,6 +61,16 @@ $: moneyPayoutOptions = [
   }
 ]
 
+const isRepairableEventType = eventType => {
+  /** @todo Change this to use an "is_repairable" field from the API once that's available. */
+  const repairableEventTypes = [
+    'Impact',
+    'Electrical Surge',
+    'Water Damage',
+    'Other',
+  ]
+  return repairableEventTypes.includes(eventType)
+}
 const onSubmit = async () => {
 
   // Shallow clone the form data to avoid UI updates as we make changes.
@@ -130,7 +140,7 @@ const unSetRepairCost = () => {
       </p>
     {/if}
     {#if payoutOptionCheck }
-      {#if formData.lossReason !== "evacuation"}
+      {#if formData.lossReason !== "Evacuation"}
         <div>
           <p>Payout options</p>
           <RadioOptions name="payoutOption" options={moneyPayoutOptions} bind:value={formData.payoutOption} />

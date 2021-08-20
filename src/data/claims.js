@@ -5,56 +5,56 @@ import { writable } from "svelte/store"
 export const claims = writable([])
 export const initialized = writable(false)
 export const states = {
-  message: {
+  Message: {
     icon: 'chat',
     color: '--mdc-theme-primary',
     bgColor: '--mdc-theme-primary-header-bg',
     title: 'From ',
     actionLabel: 'View message',
   },
-  draft: {
+  Draft: {
     icon: 'edit',
     color: '--mdc-theme-primary',
     bgColor: '--mdc-theme-primary-header-bg',
     title: 'Draft',
     actionLabel: 'Edit claim',
   },
-  awaiting: {
+  Awaiting: {
     icon: 'watch_later',
     color: '--mdc-theme-neutral-variant',
     bgColor: '--mdc-theme-neutral-bg',
     title: 'Awaiting review',
     actionLabel: 'View claim',
   },
-  needsChanges: {
+  NeedsChanges: {
     icon: 'error',
     color: '--mdc-theme-status-warning',
     bgColor: '--mdc-theme-status-warning-bg',
     title: 'Needs changes',
     actionLabel: 'Make changes',
   },
-  denied: {
+  Denied: {
     icon: 'remove_circle',
     color: '--mdc-theme-status-error',
     bgColor: '--mdc-theme-status-error-bg',
     title: 'Denied',
     actionLabel: 'View denial',
   },
-  approvedRepair: {
+  ApprovedRepair: {
     icon: 'done',
     color: '--mdc-theme-status-success',
     bgColor: '--mdc-theme-status-success-bg',
     title: 'Approved for repair',
     actionLabel: 'View and upload receipt',
   },
-  payout: {
+  Payout: {
     icon: 'paid',
     color: '--mdc-theme-status-success',
     bgColor: '--mdc-theme-status-success-bg',
     title: 'Approved for payout',
     actionLabel: 'View claim',
   },
-  complete: {
+  Complete: {
     icon: 'paid',
     color: '--mdc-theme-status-success',
     bgColor: '--mdc-theme-status-success-bg',
@@ -167,4 +167,9 @@ export async function loadClaims() {
   initialized.set(true)
 }
 
-export const getState = claim => states[claim.status || 'message']
+export const getState = claim => {
+  if (states[claim.status] === undefined) {
+    console.error('No such state (for claim status):', claim.status, Object.keys(states))
+  }
+  return states[claim.status || 'Message']
+}

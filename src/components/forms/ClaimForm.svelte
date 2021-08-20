@@ -1,5 +1,6 @@
 <script>
 import { Description, RadioOptions, DateInput, MoneyInput } from '../../components'
+import { claimEventTypes, loadClaimEventTypes } from '../../data/claim-event-types'
 import { Button, Form, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
@@ -10,33 +11,6 @@ const dispatch = createEventDispatcher()
 const deductible = 0.05
 const regularFraction = (1 - deductible)
 const evacuationFraction = 2/3
-const reasonsForLoss = [
-  {
-    label: 'Theft',
-    value: 'Theft',
-  },
-  {
-    label: 'Impact',
-    value: 'Impact',
-  },
-  {
-    label: 'Lightning',
-    value: 'Lightning',
-  },
-  {
-    label: 'Water damage',
-    value: 'Water',
-  },
-  {
-    label: 'Evacuation',
-    value: 'Evacuation',
-    description: 'For bulk claims due to large-scale events',
-  },
-  {
-    label: 'Other',
-    value: 'Other'
-  },
-]
 const repairableOptions = [
   {
     label: 'Repairable',
@@ -57,6 +31,9 @@ let formData = {
   repairCost: '',
   payoutOption: '',
 }
+
+$: $claimEventTypes.length || loadClaimEventTypes()
+$: reasonsForLoss = $claimEventTypes.map(type => ({ label: type, value: type }))
 
 // TODO: get accountable person from item 
 // TODO: add reimbursed value

@@ -51,7 +51,10 @@ const handleMoreVertClick = id => {
   goToItemDetails = false
   shownMenus[id] = shownMenus[id] !== true
 }
-
+const onEditClaim = event => {
+  const claimId = event.detail
+  $goto(`/claims/${claimId}/edit`)
+}
 </script>
 
 <style>
@@ -77,7 +80,7 @@ const handleMoreVertClick = id => {
 
 <Page loading={isLoadingById($user.policy_id)} layout="grid">   
   <Row cols={'12'}>
-    <ClaimCards claims={$claims} />
+    <ClaimCards claims={$claims} on:edit-claim={onEditClaim} />
   </Row>
 
   <Row cols={'12'}>

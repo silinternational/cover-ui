@@ -4,6 +4,7 @@ import { claimEventTypes, loadClaimEventTypes } from '../../data/claim-event-typ
 import { Button, Form, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
+export let claim = {}
 export let item = {}
 
 const dispatch = createEventDispatcher()
@@ -23,9 +24,9 @@ const repairableOptions = [
 ]
 
 let formData = {
-  lostDate: new Date().toISOString().split('T')[0],
-  lossReason: '',
-  situationDescription: '',
+  lostDate: (claim.event_date || new Date().toISOString()).split('T')[0],
+  lossReason: claim.event_type || '',
+  situationDescription: claim.event_description || '',
   fairMarketValue: '',
   isRepairable: '',
   repairCost: '',

@@ -29,8 +29,12 @@ $: items = $itemsByPolicyId[$user.policy_id] || []
 $: item = items.find(itm => itm.id === itemId) || {}
 
 $: $initialized || loadClaims()
-$: claimExists = $claims.some(clm => clm.itemId === itemId)
+$: claimExists = $claims.some(claim => isItemIdOnClaim(itemId, claim))
 
+const isItemIdOnClaim = (itemId, claim) => {
+  const claimItems = claim.claim_items || []
+  return claimItems.some(claimItem => claimItem.item_id === itemId)
+}
 const onSubmit = async event => {
   const formData = event.detail
   await createClaim(item, formData)

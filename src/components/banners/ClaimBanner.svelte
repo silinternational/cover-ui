@@ -2,9 +2,9 @@
 import { Banner } from '../../components'
 import { getState } from '../../data/claims'
 
-export let claim = {}
+export let claimStatus = ''
 
-$: state = getState(claim) || {}
+$: state = claimStatus && getState(claimStatus) || {}
 
 $: bgColor = state.bgColor || ''
 $: color = state.color || ''

@@ -19,7 +19,7 @@ $: items = $itemsByPolicyId[policyId] || []
 $: item = items.find(i => i.id = claimItem.item_id) || {}
 $: msAgo = now - Date.parse(claimItem.updated_at)
 $: daysAgo = msAgo > 0 ? Math.floor(msAgo/day) : '-'
-$: state = getState(claim) || {}
+$: state = claim.status && getState(claim.status) || {}
 
 const editClaim = () => dispatch('edit-claim', claim.id)
 const gotoClaim = () => dispatch('goto-claim', claim.id)

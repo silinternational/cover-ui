@@ -101,7 +101,7 @@ const unSetRepairCost = () => {
       <RadioOptions name="lossReason" options={reasonsForLoss} bind:value={formData.lossReason} />
     </div>
     <p>
-      <TextArea label="Describe the situation" bind:value={formData.situationDescription} rows="4"></TextArea>
+      <TextArea label="Describe the situation" bind:value={formData.situationDescription} rows="4" />
       <Description>What happened?</Description>
     </p>
     {#if canRepair}
@@ -111,7 +111,7 @@ const unSetRepairCost = () => {
     {/if}
     {#if formData.isRepairable === "repairable"}
       <p>
-        <MoneyInput label="Cost of repair" bind:value={formData.repairCost}></MoneyInput>
+        <MoneyInput label="Cost of repair" bind:value={formData.repairCost} />
         <Description>
           How much will it cost to be repaired?
           <br />
@@ -122,7 +122,7 @@ const unSetRepairCost = () => {
     {/if}
     {#if formData.isRepairable === "repairable" || formData.payoutOption === "cash_now"}
       <p>
-        <MoneyInput label="Fair market value" bind:value={formData.fairMarketValue}></MoneyInput>
+        <MoneyInput label="Fair market value" bind:value={formData.fairMarketValue} />
         <Description>
           To convert to USD, use
           <a href="https://www.google.com/search?q=currency+converter" target="_blank">this converter</a>.

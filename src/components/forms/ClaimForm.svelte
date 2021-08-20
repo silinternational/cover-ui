@@ -61,7 +61,7 @@ $: moneyPayoutOptions = [
   }
 ]
 
-const onSubmit = async event => {
+const onSubmit = async () => {
 
   // Shallow clone the form data to avoid UI updates as we make changes.
   let parsedFormData = { ...formData }

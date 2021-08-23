@@ -14,7 +14,7 @@ $: claimItem = claim.claim_items?.[0] || {} //For now there will only be one cla
 $: items = $itemsByPolicyId[$user.policy_id] || []
 $: ! items.length && loadItems($user.policy_id)
 $: item = items.find(itm => itm.id === claimItem.item_id) || {}
-$: eventDate = formatDate(claim.event_date, "default", {month: 'long', day: 'numeric', year: 'numeric'})
+$: eventDate = formatDate(claim.event_date)
 
 const onClick = () => $goto(`claims/${$params.claimId}/edit)`)
 </script>

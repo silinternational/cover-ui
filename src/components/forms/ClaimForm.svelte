@@ -28,7 +28,7 @@ let formData = {
   lossReason: claim.event_type || '',
   situationDescription: claim.event_description || '',
   fairMarketValue: '',
-  isRepairable: '',
+  repairableSelection: '',
   repairCost: '',
   payoutOption: '',
 }
@@ -38,14 +38,14 @@ $: reasonsForLoss = $claimEventTypes.map(type => ({ label: type, value: type }))
 
 // TODO: get accountable person from item 
 // TODO: add reimbursed value
-$: isNotRepairableOrMoneyInputsAreSet = (formData.isRepairable !== "repairable" || (formData.repairCost && formData.fairMarketValue))
+$: isNotRepairableOrMoneyInputsAreSet = (formData.repairableSelection !== "repairable" || (formData.repairCost && formData.fairMarketValue))
 $: seventyPercentCheck = (!formData.repairCost || !formData.fairMarketValue || (formData.repairCost/formData.fairMarketValue) >= .7)
 $: payoutOptionCheck = formData.lossReason && isNotRepairableOrMoneyInputsAreSet && seventyPercentCheck
 $: isPotentiallyRepairable = isRepairableEventType(formData.lossReason)
 
 $: !payoutOptionCheck && unSetPayoutOption()
-$: !(formData.isRepairable === "repairable" || formData.payoutOption === "cash_now") && unSetFairMarketValue()
-$: formData.isRepairable !== "repairable" && unSetRepairCost()
+$: !(formData.repairableSelection === "repairable" || formData.payoutOption === "cash_now") && unSetFairMarketValue()
+$: formData.repairableSelection !== "repairable" && unSetRepairCost()
 $: !isPotentiallyRepairable && unSetIsRepairable()
 $: payoutOptionCheck && formData.payoutOption == "evacuation" && unSetPayoutOption()
 
@@ -77,7 +77,7 @@ const onSubmit = async () => {
   // Shallow clone the form data to avoid UI updates as we make changes.
   let parsedFormData = { ...formData }
   
-  if (formData.isRepairable === "repairable" && !formData.payoutOption) {
+  if (formData.repairableSelection === "repairable" && !formData.payoutOption) {
     parsedFormData.payoutOption = "repair"
   }
   dispatch('submit', parsedFormData)
@@ -89,7 +89,7 @@ const unSetFairMarketValue = () => {
   formData.fairMarketValue = null
 }
 const unSetIsRepairable = () => {
-  formData.isRepairable = null
+  formData.repairableSelection = null
 }
 const unSetRepairCost = () => {
   formData.repairCost = null
@@ -117,10 +117,10 @@ const unSetRepairCost = () => {
     </p>
     {#if isPotentiallyRepairable}
       <div>
-        <RadioOptions name="isRepairable" options={repairableOptions} bind:value={formData.isRepairable} />
+        <RadioOptions name="repairableSelection" options={repairableOptions} bind:value={formData.repairableSelection} />
       </div>
     {/if}
-    {#if formData.isRepairable === "repairable"}
+    {#if formData.repairableSelection === "repairable"}
       <p>
         <MoneyInput label="Cost of repair" bind:value={formData.repairCost} />
         <Description>
@@ -131,7 +131,7 @@ const unSetRepairCost = () => {
         </Description>
       </p>
     {/if}
-    {#if formData.isRepairable === "repairable" || formData.payoutOption === "cash_now"}
+    {#if formData.repairableSelection === "repairable" || formData.payoutOption === "cash_now"}
       <p>
         <MoneyInput label="Fair market value" bind:value={formData.fairMarketValue} />
         <Description>
@@ -154,7 +154,7 @@ const unSetRepairCost = () => {
         </div>
       {/if}
     {/if}
-    {#if formData.isRepairable === "repairable" && (isNotRepairableOrMoneyInputsAreSet && !seventyPercentCheck)}
+    {#if formData.repairableSelection === "repairable" && (isNotRepairableOrMoneyInputsAreSet && !seventyPercentCheck)}
       <p>You will receive ${formData.repairCost*regularFraction} to repair your insured Item.</p>
     {/if}
     <!--TODO: add evacuation amount when items is done (covered_value*(2/3))-->

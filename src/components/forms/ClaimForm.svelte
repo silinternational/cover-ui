@@ -34,7 +34,7 @@ let formData = {
 }
 
 $: $claimEventTypes.length || loadClaimEventTypes()
-$: reasonsForLoss = $claimEventTypes.map(type => ({ label: type, value: type }))
+$: lossReasonOptions = $claimEventTypes.map(type => ({ label: type, value: type }))
 
 // TODO: get accountable person from item 
 // TODO: add reimbursed value
@@ -109,7 +109,7 @@ const unSetRepairCost = () => {
     <!--TODO: make description text on next line and inline with the above, label text-->
     <!--TODO: minimize spacing-->
     <div>
-      <RadioOptions name="lossReason" options={reasonsForLoss} bind:value={formData.lossReason} />
+      <RadioOptions name="lossReason" options={lossReasonOptions} bind:value={formData.lossReason} />
     </div>
     <p>
       <TextArea label="Describe the situation" bind:value={formData.situationDescription} rows="4" />

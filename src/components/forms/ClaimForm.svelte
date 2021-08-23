@@ -41,12 +41,12 @@ $: reasonsForLoss = $claimEventTypes.map(type => ({ label: type, value: type }))
 $: isNotRepairableOrMoneyInputsAreSet = (formData.isRepairable !== "repairable" || (formData.repairCost && formData.fairMarketValue))
 $: seventyPercentCheck = (!formData.repairCost || !formData.fairMarketValue || (formData.repairCost/formData.fairMarketValue) >= .7)
 $: payoutOptionCheck = formData.lossReason && isNotRepairableOrMoneyInputsAreSet && seventyPercentCheck
-$: canRepair = isRepairableEventType(formData.lossReason)
+$: isPotentiallyRepairable = isRepairableEventType(formData.lossReason)
 
 $: !payoutOptionCheck && unSetPayoutOption()
 $: !(formData.isRepairable === "repairable" || formData.payoutOption === "cash_now") && unSetFairMarketValue()
 $: formData.isRepairable !== "repairable" && unSetRepairCost()
-$: !canRepair && unSetIsRepairable()
+$: !isPotentiallyRepairable && unSetIsRepairable()
 $: payoutOptionCheck && formData.payoutOption == "evacuation" && unSetPayoutOption()
 
 $: moneyPayoutOptions = [
@@ -115,7 +115,7 @@ const unSetRepairCost = () => {
       <TextArea label="Describe the situation" bind:value={formData.situationDescription} rows="4" />
       <Description>What happened?</Description>
     </p>
-    {#if canRepair}
+    {#if isPotentiallyRepairable}
       <div>
         <RadioOptions name="isRepairable" options={repairableOptions} bind:value={formData.isRepairable} />
       </div>

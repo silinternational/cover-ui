@@ -19,7 +19,7 @@ export const states = {
     title: 'Draft',
     actionLabel: 'Edit claim',
   },
-  Awaiting: {
+  Pending: {
     icon: 'watch_later',
     color: '--mdc-theme-neutral-variant',
     bgColor: '--mdc-theme-neutral-bg',
@@ -40,7 +40,7 @@ export const states = {
     title: 'Denied',
     actionLabel: 'View denial',
   },
-  ApprovedRepair: {
+  Approved: {
     icon: 'done',
     color: '--mdc-theme-status-success',
     bgColor: '--mdc-theme-status-success-bg',
@@ -167,9 +167,9 @@ export async function loadClaims() {
   initialized.set(true)
 }
 
-export const getState = claim => {
-  if (states[claim.status] === undefined) {
-    console.error('No such state (for claim status):', claim.status, Object.keys(states))
+export const getState = status => {
+  if (states[status] === undefined) {
+    console.error('No such state (for claim status):', status, Object.keys(states))
   }
-  return states[claim.status || 'Message']
+  return states[status || 'Message']
 }

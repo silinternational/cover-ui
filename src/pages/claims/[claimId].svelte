@@ -8,9 +8,8 @@ import { loadItems, itemsByPolicyId } from '../../data/items'
 import { goto, params } from '@roxi/routify'
 import { Button, Form, Page } from '@silintl/ui-components'
 
-const formData = new FormData()
+const updatedClaimData = {}
 
-let file = {}
 let replacementCost
 let uploading = false
 
@@ -29,19 +28,20 @@ const editClaim = () => $goto(`claims/${$params.claimId}/edit)`)
 const onSubmit = () => {
   const cents = replacementCost * 100
 
-  formData.append('replacement_cost', cents)
+  updatedClaimData.replacement_cost = cents
   
-  console.log(formData) //TODO update claim with replacementCost and file to api
+  console.log(updatedClaimData) //TODO update claim with replacementCost and file to api
 }
 
 async function chosen(event) {
+  const formData = new FormData()
+
   formData.append('file', event.target.files[0])
 
   try {
     uploading = true
 
-    file = await upload(formData) //Todo verify the backend will upload files with this method
-
+    updatedClaimData.file = await upload(formData)
   } finally {
     uploading = false
   }

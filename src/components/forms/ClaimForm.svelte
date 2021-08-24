@@ -35,7 +35,7 @@ let formData = {
   fairMarketValue: '',
   repairableSelection: claimItem.is_repairable ? 'repairable' : null,
   repairCost: '',
-  payoutOption: '',
+  payoutOption: claimItem.payout_option || '',
 }
 
 $: $claimEventTypes.length || loadClaimEventTypes()

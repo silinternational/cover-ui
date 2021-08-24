@@ -21,7 +21,7 @@ $: items = $itemsByPolicyId[$user.policy_id] || []
 $: ! items.length && loadItems($user.policy_id)
 $: item = items.find(itm => itm.id === claimItem.item_id) || {}
 $: eventDate = formatDate(claim.event_date)
-$: needsInitialChangesAndReplacement = claim.status === 'Draft' && claim.event_type === 'Theft' //TODO instead of event_type this will need to allow all replacements
+$: needsInitialChangesAndReplacement = claim.status === 'Needs_initial_changes' && claim.event_type === 'Theft' //TODOinstead of event_type this will need to allow all replacements
 
 const editClaim = () => $goto(`claims/${$params.claimId}/edit)`)
 

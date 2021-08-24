@@ -27,21 +27,20 @@ const repairableOptions = [
 $: claimItems = claim.claim_items || []
 $: claimItem = claimItems.find(entry => entry.item_id === item.id) || {}
 
-let lostDate = todayDateString
-$: setInitialLostDate(claim.event_date)
-
-$: lossReason = claim.event_type || ''
-
-let situationDescription = ''
-$: setInitialSituationDescription(claim.event_description)
-
-$: fairMarketValue = ''
-$: repairableSelection = isPotentiallyRepairable ? (claimItem.is_repairable ? 'repairable' : 'not_repairable') : null
-$: repairCost = ''
-$: payoutOption = claimItem.payout_option || ''
-
 $: $claimEventTypes.length || loadClaimEventTypes()
 $: lossReasonOptions = $claimEventTypes.map(type => ({ label: type, value: type }))
+
+// Set default values.
+let lostDate = todayDateString
+let lossReason = ''
+let situationDescription = ''
+let repairableSelection = null
+let fairMarketValue = ''
+let repairCost = ''
+let payoutOption = ''
+
+// Set initial values based on the provided claim and claim-item data.
+$: setInitialValues(claim, claimItem)
 
 // TODO: get accountable person from item 
 // TODO: add reimbursed value
@@ -93,15 +92,16 @@ const onSubmit = async () => {
     payoutOption,
   })
 }
-const setInitialLostDate = (claimEventDate) => {
-  if (claimEventDate) {
-    lostDate = claimEventDate.split('T')[0]
+const setInitialValues = (claim, claimItem) => {
+  if (claim.event_date) {
+    lostDate = claim.event_date.split('T')[0]
   }
-}
-const setInitialSituationDescription = (claimEventDescription) => {
-  if (claimEventDescription) {
-    situationDescription = claimEventDescription
+  lossReason = claim.event_type || lossReason
+  situationDescription = claim.event_description || situationDescription
+  if (isPotentiallyRepairable) {
+    repairableSelection = (claimItem.is_repairable ? 'repairable' : 'not_repairable')
   }
+  payoutOption = claimItem.payout_option || payoutOption
 }
 const unSetPayoutOption = () => {
   payoutOption = null

@@ -26,7 +26,7 @@ const repairableOptions = [
 let claimItems = []
 let claimItem = {}
 $: claimItems = claim.claim_items || []
-$: claimItem = claimItems.find(entry => entry.item_id === item.id) | {}
+$: claimItem = claimItems.find(entry => entry.item_id === item.id) || {}
 
 let formData = {
   lostDate: (claim.event_date || new Date().toISOString()).split('T')[0],

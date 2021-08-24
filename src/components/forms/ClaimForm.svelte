@@ -9,6 +9,7 @@ export let item = {}
 
 const dispatch = createEventDispatcher()
 
+const todayDateString = new Date().toISOString().split('T')[0]
 const deductible = 0.05
 const regularFraction = (1 - deductible)
 const evacuationFraction = 2/3
@@ -26,7 +27,9 @@ const repairableOptions = [
 $: claimItems = claim.claim_items || []
 $: claimItem = claimItems.find(entry => entry.item_id === item.id) || {}
 
-$: lostDate = (claim.event_date || new Date().toISOString()).split('T')[0]
+let lostDate = todayDateString
+$: setInitialLostDate(claim.event_date)
+
 $: lossReason = claim.event_type || ''
 $: situationDescription = claim.event_description || ''
 $: fairMarketValue = ''
@@ -86,6 +89,11 @@ const onSubmit = async () => {
     repairCost,
     payoutOption,
   })
+}
+const setInitialLostDate = (claimEventDate) => {
+  if (claimEventDate) {
+    lostDate = claimEventDate.split('T')[0]
+  }
 }
 const unSetPayoutOption = () => {
   payoutOption = null

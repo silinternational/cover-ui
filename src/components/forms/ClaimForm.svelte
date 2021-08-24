@@ -30,7 +30,7 @@ $: lostDate = (claim.event_date || new Date().toISOString()).split('T')[0]
 $: lossReason = claim.event_type || ''
 $: situationDescription = claim.event_description || ''
 $: fairMarketValue = ''
-$: repairableSelection = claimItem.is_repairable ? 'repairable' : null
+$: repairableSelection = isPotentiallyRepairable ? (claimItem.is_repairable ? 'repairable' : 'not_repairable') : null
 $: repairCost = ''
 $: payoutOption = claimItem.payout_option || ''
 

@@ -23,12 +23,17 @@ const repairableOptions = [
   }
 ]
 
+let claimItems = []
+let claimItem = {}
+$: claimItems = claim.claim_items || []
+$: claimItem = claimItems.find(entry => entry.item_id === item.id) | {}
+
 let formData = {
   lostDate: (claim.event_date || new Date().toISOString()).split('T')[0],
   lossReason: claim.event_type || '',
   situationDescription: claim.event_description || '',
   fairMarketValue: '',
-  repairableSelection: '',
+  repairableSelection: claimItem.is_repairable ? 'repairable' : null,
   repairCost: '',
   payoutOption: '',
 }

@@ -24,7 +24,7 @@ $: item = items.find(itm => itm.id === claimItem.item_id) || {}
 $: eventDate = formatDate(claim.event_date)
 $: needsInitialChangesAndReplacement = claim.status === 'Needs_initial_changes' && claim.event_type === 'Theft'
 
-const onClick = () => $goto(`claims/${$params.claimId}/edit)`)
+const editClaim = () => $goto(`claims/${$params.claimId}/edit)`)
 
 const onSubmit = () => {
   const cents = replacementCost * 100
@@ -85,7 +85,7 @@ async function chosen(event) {
       {(item.coverage_amount * .7)  || ''}
     </p>
     <p>
-      <Button on:click={onClick} outlined>Edit claim</Button>
+      <Button on:click={editClaim} outlined>Edit claim</Button>
     </p>
     {#if needsInitialChangesAndReplacement}
       <Form on:submit={onSubmit}>

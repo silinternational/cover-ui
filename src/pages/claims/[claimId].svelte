@@ -21,6 +21,7 @@ $: items = $itemsByPolicyId[$user.policy_id] || []
 $: ! items.length && loadItems($user.policy_id)
 $: item = items.find(itm => itm.id === claimItem.item_id) || {}
 $: eventDate = formatDate(claim.event_date)
+$: needsInitialChangesAndReplacement = claim.status === 'Needs_initial_changes' && claim.event_type === 'Theft'
 
 const onClick = () => $goto(`claims/${$params.claimId}/edit)`)
 
@@ -83,7 +84,7 @@ async function chosen(event) {
     <p>
       <Button on:click={onClick} outlined>Edit claim</Button>
     </p>
-    {#if claim.status === 'Needs_initial_changes' && claim.event_type === 'Theft'}
+    {#if needsInitialChangesAndReplacement}
       <Form on:submit={onSubmit}>
         <MoneyInput bind:value={replacementCost} label="Actual cost of replacement" />
 

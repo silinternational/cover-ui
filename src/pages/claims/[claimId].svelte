@@ -2,6 +2,7 @@
 import user from '../../authn/user.js'
 import { Banner, MoneyInput, Row, ClaimBanner } from '../../components'
 import { formatDate } from '../../components/dates.js'
+import { upload } from '../../data'
 import { loadClaims, claims, initialized } from '../../data/claims'
 import { loadItems, itemsByPolicyId } from '../../data/items'
 import { goto, params } from '@roxi/routify'
@@ -26,7 +27,9 @@ $: needsInitialChangesAndReplacement = claim.status === 'Needs_initial_changes' 
 const onClick = () => $goto(`claims/${$params.claimId}/edit)`)
 
 const onSubmit = () => {
-  formData.append('replacement_cost', replacementCost)
+  const cents = replacementCost * 100
+
+  formData.append('replacement_cost', cents)
   
   console.log(formData) //TODO update claim with replacementCost and file to api
 }
@@ -37,7 +40,7 @@ async function chosen(event) {
   try {
     uploading = true
 
-    // file = await upload(formData) //Todo verify the backend will upload files with this method
+    file = await upload(formData) //Todo verify the backend will upload files with this method
 
   } finally {
     uploading = false

@@ -31,7 +31,10 @@ let lostDate = todayDateString
 $: setInitialLostDate(claim.event_date)
 
 $: lossReason = claim.event_type || ''
-$: situationDescription = claim.event_description || ''
+
+let situationDescription = ''
+$: setInitialSituationDescription(claim.event_description)
+
 $: fairMarketValue = ''
 $: repairableSelection = isPotentiallyRepairable ? (claimItem.is_repairable ? 'repairable' : 'not_repairable') : null
 $: repairCost = ''
@@ -93,6 +96,11 @@ const onSubmit = async () => {
 const setInitialLostDate = (claimEventDate) => {
   if (claimEventDate) {
     lostDate = claimEventDate.split('T')[0]
+  }
+}
+const setInitialSituationDescription = (claimEventDescription) => {
+  if (claimEventDescription) {
+    situationDescription = claimEventDescription
   }
 }
 const unSetPayoutOption = () => {

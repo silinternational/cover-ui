@@ -10,6 +10,7 @@ import ClaimForm from './forms/ClaimForm.svelte'
 import DateInput from './DateInput.svelte'
 import DependentForm from './forms/DependentForm.svelte'
 import Description from './Description.svelte'
+import ItemForm from './forms/ItemForm.svelte'
 import MoneyInput from './MoneyInput.svelte'
 import RadioOptions from './RadioOptions.svelte'
 import Menu from './mdc/Menu'
@@ -17,21 +18,22 @@ import Row from './mdc/Row.svelte'
 import ClaimBanner from './banners/ClaimBanner.svelte'
 
 export {
-    filteredList as FilteredList,
-    table as Table,
-    App,
-    AppFooter,
-    Banner,
-    Breadcrumb,
-    ClaimForm,
-    DateInput,
-    DependentForm,
-    Description, 
-    MoneyInput,
-    RadioOptions,
-    Menu,
-    ClaimCard,
-    ClaimCards,
-    Row,
-    ClaimBanner,
+  filteredList as FilteredList,
+  table as Table,
+  App,
+  AppFooter,
+  Banner,
+  Breadcrumb,
+  ClaimForm,
+  DateInput,
+  DependentForm,
+  Description,
+  ItemForm,
+  MoneyInput,
+  RadioOptions,
+  Menu,
+  ClaimCard,
+  ClaimCards,
+  Row,
+  ClaimBanner,
 }

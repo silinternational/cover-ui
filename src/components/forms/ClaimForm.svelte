@@ -28,7 +28,8 @@ $: claimItems = claim.claim_items || []
 $: claimItem = claimItems.find(entry => entry.item_id === item.id) || {}
 
 $: $claimEventTypes.length || loadClaimEventTypes()
-$: lossReasonOptions = $claimEventTypes.map(type => ({ label: type, value: type }))
+$: lossReasonOptions = $claimEventTypes.map(({name}) => ({ label: name, value: name }))
+$: repairableEventTypeNames = $claimEventTypes.filter(entry => entry.is_repairable).map(entry => entry.name)
 
 // Set default values.
 let lostDate = todayDateString
@@ -47,7 +48,7 @@ $: setInitialValues(claim, claimItem)
 $: isNotRepairableOrMoneyInputsAreSet = (repairableSelection !== "repairable" || (repairCost && fairMarketValue))
 $: seventyPercentCheck = (!repairCost || !fairMarketValue || (repairCost/fairMarketValue) >= .7)
 $: payoutOptionCheck = lossReason && isNotRepairableOrMoneyInputsAreSet && seventyPercentCheck
-$: isPotentiallyRepairable = isRepairableEventType(lossReason)
+$: isPotentiallyRepairable = repairableEventTypeNames.includes(lossReason)
 
 $: !payoutOptionCheck && unSetPayoutOption()
 $: !(repairableSelection === "repairable" || payoutOption === "cash_now") && unSetFairMarketValue()
@@ -68,16 +69,6 @@ $: moneyPayoutOptions = [
   }
 ]
 
-const isRepairableEventType = eventType => {
-  /** @todo Change this to use an "is_repairable" field from the API once that's available. */
-  const repairableEventTypes = [
-    'Impact',
-    'Electrical Surge',
-    'Water Damage',
-    'Other',
-  ]
-  return repairableEventTypes.includes(eventType)
-}
 const onSubmit = async () => {
   if (repairableSelection === "repairable" && !payoutOption) {
     payoutOption = "repair"

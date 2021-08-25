@@ -1,6 +1,6 @@
 <script>
 import user from '../../../../authn/user'
-import DependentForm from '../../../../components/DependentForm.svelte'
+import { DependentForm } from '../../../../components'
 import {
   deleteDependent,
   dependentsByPolicyId,

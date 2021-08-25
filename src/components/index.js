@@ -6,8 +6,9 @@ import Banner from './Banner.svelte'
 import Breadcrumb from './Breadcrumb.svelte'
 import ClaimCard from './ClaimCard.svelte'
 import ClaimCards from './ClaimCards.svelte'
+import ClaimForm from './forms/ClaimForm.svelte'
 import DateInput from './DateInput.svelte'
-import DependentForm from './DependentForm.svelte'
+import DependentForm from './forms/DependentForm.svelte'
 import Description from './Description.svelte'
 import MoneyInput from './MoneyInput.svelte'
 import RadioOptions from './RadioOptions.svelte'
@@ -22,6 +23,7 @@ export {
     AppFooter,
     Banner,
     Breadcrumb,
+    ClaimForm,
     DateInput,
     DependentForm,
     Description, 

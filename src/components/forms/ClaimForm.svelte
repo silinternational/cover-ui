@@ -1,5 +1,11 @@
 <script>
-import { Description, RadioOptions, DateInput, MoneyInput } from '../../components'
+import {
+  ConvertCurrencyLink,
+  Description,
+  RadioOptions,
+  DateInput,
+  MoneyInput,
+} from '../../components'
 import { claimEventTypes, loadClaimEventTypes } from '../../data/claim-event-types'
 import { Button, Form, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
@@ -135,8 +141,7 @@ const unSetRepairCost = () => {
         <Description>
           How much will it cost to be repaired?
           <br />
-          To convert to USD, use
-          <a href="https://www.google.com/search?q=currency+converter" target="_blank">this converter</a>.
+          <ConvertCurrencyLink />
         </Description>
       </p>
     {/if}
@@ -144,8 +149,7 @@ const unSetRepairCost = () => {
       <p>
         <MoneyInput label="Fair market value" bind:value={fairMarketValue} />
         <Description>
-          To convert to USD, use
-          <a href="https://www.google.com/search?q=currency+converter" target="_blank">this converter</a>.
+          <ConvertCurrencyLink />
         </Description>
       </p>
     {/if}

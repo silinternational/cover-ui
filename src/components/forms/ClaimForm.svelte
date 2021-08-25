@@ -7,6 +7,7 @@ import {
   MoneyInput,
 } from '../../components'
 import { claimEventTypes, loadClaimEventTypes } from '../../data/claim-event-types'
+import { formatMoney } from '../../helpers/money'
 import { Button, Form, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
@@ -70,7 +71,7 @@ $: moneyPayoutOptions = [
   },
   // TODO: make this the min of either covered amount or FMV
   {
-    label: `Cash now ($${Number((fairMarketValue || 0) * regularFraction).toFixed(2)})`,
+    label: `Cash now (${formatMoney((fairMarketValue || 0) * regularFraction)})`,
     value: 'cash_now'
   }
 ]
@@ -168,7 +169,7 @@ const unSetRepairCost = () => {
       {/if}
     {/if}
     {#if repairableSelection === "repairable" && (isNotRepairableOrMoneyInputsAreSet && !seventyPercentCheck)}
-      <p>You will receive ${repairCost * regularFraction} to repair your insured Item.</p>
+      <p>You will receive {formatMoney(repairCost * regularFraction)} to repair your insured Item.</p>
     {/if}
     <!--TODO: add evacuation amount when items is done (covered_value*(2/3))-->
     <p>

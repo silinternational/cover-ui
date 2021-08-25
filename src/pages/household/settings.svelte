@@ -43,9 +43,6 @@ const isYou = householdMember => householdMember.id === $user.id
   top: 0.25rem;
   color: rgba(0, 0, 0, 0.5);
 }
-.muted {
-  color: rgba(0, 0, 0, 0.5);
-}
 </style>
 
 <Page>
@@ -70,10 +67,6 @@ const isYou = householdMember => householdMember.id === $user.id
         <span class="edit-button" title="Edit">
           <IconButton icon="edit" ariaLabel="Edit" on:click={() => edit(dependent.id)} />
         </span>
-      </li>
-    {:else}
-      <li class="accountable-people-list-item">
-        <i class="muted">None</i>
       </li>
     {/each}
   </ul>

@@ -11,6 +11,7 @@ import ConvertCurrencyLink from './ConvertCurrencyLink.svelte'
 import DateInput from './DateInput.svelte'
 import DependentForm from './forms/DependentForm.svelte'
 import Description from './Description.svelte'
+import ItemForm from './forms/ItemForm.svelte'
 import MoneyInput from './MoneyInput.svelte'
 import RadioOptions from './RadioOptions.svelte'
 import Menu from './mdc/Menu'
@@ -28,7 +29,8 @@ export {
   ConvertCurrencyLink,
   DateInput,
   DependentForm,
-  Description, 
+  Description,
+  ItemForm,
   MoneyInput,
   RadioOptions,
   Menu,

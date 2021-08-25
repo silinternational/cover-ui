@@ -5,6 +5,7 @@ import { isLoadingById } from '../components/progress/index'
 import { claims, loadClaims } from '../data/claims.js'
 import { itemsByPolicyId, loadItems } from '../data/items.js'
 import { loadPolicies } from '../data/policies.js'
+import { formatMoney } from '../helpers/money'
 import { goto } from '@roxi/routify'
 import { Checkbox, Page, Datatable } from '@silintl/ui-components'
 import { onMount } from 'svelte'
@@ -109,8 +110,8 @@ const onEditClaim = event => {
                 <Datatable.Data.Row.Item>{item.name}</Datatable.Data.Row.Item>
                 <Datatable.Data.Row.Item>{item.recent_activity}</Datatable.Data.Row.Item>
                 <Datatable.Data.Row.Item>{item.accountable_person}</Datatable.Data.Row.Item>
-                <Datatable.Data.Row.Item>${item.coverage_amount}</Datatable.Data.Row.Item>
-                <Datatable.Data.Row.Item>${item.premium}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>{formatMoney(item.premium)}</Datatable.Data.Row.Item>
                 <Datatable.Data.Row.Item>{item.type}</Datatable.Data.Row.Item>
                 <Datatable.Data.Row.Item>
                   <svg class="home-table-more-vert" viewBox="0 0 30 30" on:click={() => handleMoreVertClick(item.id)}>

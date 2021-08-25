@@ -3,6 +3,7 @@ import user from '../../authn/user.js'
 import { Banner, Breadcrumb } from '../../components'
 import { loading } from '../../components/progress'
 import { itemsByPolicyId, loadItems } from '../../data/items.js'
+import { formatMoney } from '../../helpers/money'
 import { goto } from '@roxi/routify'
 import { Button } from '@silintl/ui-components'
 
@@ -54,9 +55,9 @@ p {
   <h1>{item.name}</h1>
   <h3>{item.make} {item.model}</h3>
   <Banner background="var(--mdc-theme-neutral" class="max-content-width">{item.category?.name}</Banner>
-  <p>Market value: ${item.coverage_amount}</p>
+  <p>Market value: {formatMoney(item.coverage_amount)}</p>
   <!--TODO: get this from backend when available-->
-  <p>Annual premium: ${16.20}</p>
+  <p>Annual premium: {formatMoney(1620)}</p>
   <p>Description: {item.description}</p>
   <!--TODO: get this from backend when available-->
   <p>Accountable person: {"Jeff Smith"}</p>

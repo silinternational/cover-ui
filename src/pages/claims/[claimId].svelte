@@ -29,9 +29,9 @@ $: needsReceipt = (needsRepairReceipt || needsReplaceReceipt)
 $: moneyFormLabel = needsRepairReceipt ? "Actual cost of repair" : "Actual cost of replacement"
 $: maximumPayout = needsRepairReceipt ? computeRepairMaxPayout() : computeReplaceMaxPayout()
 
-const computeRepairMaxPayout = () => Math.min(claimItem.repair_estimate, claimItem.coverage_amount, claimItem.fmv) * (1 - deductible)
+const computeRepairMaxPayout = () => Math.min(claimItem.repair_estimate, claimItem.coverage_amount, claimItem.fmv) * (1 - deductible) || ''
 
-const computeReplaceMaxPayout = () => Math.min(claimItem.replace_estimate, claimItem.coverage_amount) * (1 - deductible)
+const computeReplaceMaxPayout = () => Math.min(claimItem.replace_estimate, claimItem.coverage_amount) * (1 - deductible) || ''
 
 const editClaim = () => $goto(`claims/${$params.claimId}/edit)`)
 

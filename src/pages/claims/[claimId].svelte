@@ -12,6 +12,7 @@ const updatedClaimData = {}
 
 let repairOrReplacementCost
 let uploading = false
+let deductible = .05
 
 $: ! $initialized && loadClaims()
 
@@ -25,8 +26,12 @@ $: status = claim.status || ''
 $: needsRepairReceipt = (status === 'Needs_repair_receipt')
 $: needsReplaceReceipt = (status === 'Needs_replace_receipt')
 $: needsReceipt = (needsRepairReceipt || needsReplaceReceipt)
-$: moneyFormLabel = status === 'Needs_repair_receipt' ? "Actual cost of repair" : "Actual cost of replacement"
-$: maximumPayout = claimItem.is_repairable ? item.coverage_amount * .7 : item.coverage_amount * .95  //TODO: refine this
+$: moneyFormLabel = needsRepairReceipt ? "Actual cost of repair" : "Actual cost of replacement"
+$: maximumPayout = needsRepairReceipt ? computeRepairMaxPayout() : computeReplaceMaxPayout()
+
+const computeRepairMaxPayout = () => Math.min(claimItem.repair_estimate, claimItem.coverage_amount, claimItem.fmv) * (1 - deductible)
+
+const computeReplaceMaxPayout = () => Math.min(claimItem.replace_estimate, claimItem.coverage_amount) * (1 - deductible)
 
 const editClaim = () => $goto(`claims/${$params.claimId}/edit)`)
 
@@ -91,7 +96,6 @@ async function chosen(event) {
     </p>
     <p>
       <b>Maximum payout (if approved)</b><br />
-      <!-- TODO get the actual maximum amount -->
       {maximumPayout}
     </p>
     <p>

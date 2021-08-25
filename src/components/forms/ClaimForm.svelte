@@ -58,7 +58,7 @@ $: payoutOptionCheck && payoutOption == "evacuation" && unSetPayoutOption()
 $: moneyPayoutOptions = [
   {
     // TODO: make this the covered amount
-    label: `Replace and get reimbursed later `,
+    label: `Replace and get reimbursed later`,
     value: 'replace_and_reimburse',
   },
   // TODO: make this the min of either covered amount or FMV

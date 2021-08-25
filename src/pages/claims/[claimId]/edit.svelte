@@ -54,6 +54,7 @@ const onSubmit = async event => {
   <a href="/claims">go back to the list of claims</a>
   and try again.
 {:else}
+  <!-- @todo Handle situations where the user isn't allowed to edit this claim. -->
   <Page>
     <Breadcrumb links={breadcrumbLinks} />
     <ClaimForm {claim} {item} on:submit={onSubmit} />

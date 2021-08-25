@@ -117,9 +117,6 @@ const unSetRepairCost = () => {
 }
 </script>
 
-<style>
-</style>
-
 <div class="w-50">
   <Form on:submit={onSubmit}>
     <p>

@@ -1,5 +1,5 @@
 <script>
-import { Description, MoneyInput } from '../../components'
+import { ConvertCurrencyLink, Description, MoneyInput } from '../../components'
 import { dependentsByPolicyId, loadDependents } from '../../data/dependents.js'
 import { categories as categoryOptions, init, initialized as catItemsInitialized } from '../../data/itemCategories'
 import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
@@ -104,8 +104,7 @@ const saveForLater = () => {
   <p>
     <MoneyInput label="Market value (USD)" bind:value={formData.marketValueUSD} />
     <Description>
-      To convert to USD, use
-      <a href="https://www.google.com/search?q=currency+converter" target="_blank">this converter</a>.
+      <ConvertCurrencyLink />
     </Description>
   </p>
   <p>

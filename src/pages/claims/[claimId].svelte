@@ -1,6 +1,6 @@
 <script>
 import user from '../../authn/user.js'
-import { Banner, MoneyInput, Row, ClaimBanner } from '../../components'
+import { Banner, ConvertCurrencyLink, MoneyInput, Row, ClaimBanner } from '../../components'
 import { formatDate } from '../../components/dates.js'
 import { upload } from '../../data'
 import { loadClaims, claims, initialized } from '../../data/claims'
@@ -92,7 +92,7 @@ async function chosen(event) {
         <MoneyInput bind:value={replacementCost} label="Actual cost of replacement" />
 
         <p class="label ml-1 mt-6px">
-          To convert to USD, <a class="label" href="https://www.google.com/search?q=currency+converter">use this converter.</a>
+          <ConvertCurrencyLink />
         </p>
 
         <label for="receipt" class="ml-1">Attach replacement item receipt</label>

@@ -7,6 +7,7 @@ import Breadcrumb from './Breadcrumb.svelte'
 import ClaimCard from './ClaimCard.svelte'
 import ClaimCards from './ClaimCards.svelte'
 import ClaimForm from './forms/ClaimForm.svelte'
+import ConvertCurrencyLink from './ConvertCurrencyLink.svelte'
 import DateInput from './DateInput.svelte'
 import DependentForm from './forms/DependentForm.svelte'
 import Description from './Description.svelte'
@@ -24,6 +25,7 @@ export {
   Banner,
   Breadcrumb,
   ClaimForm,
+  ConvertCurrencyLink,
   DateInput,
   DependentForm,
   Description, 

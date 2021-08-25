@@ -1,6 +1,6 @@
 <script>
 import user from '../../authn/user.js'
-import { Breadcrumb, Description, MoneyInput } from '../../components'
+import { Breadcrumb, ConvertCurrencyLink, Description, MoneyInput } from '../../components'
 import { addItem } from '../../data/items.js'
 import { dependentsByPolicyId, loadDependents } from '../../data/dependents.js'
 import { categories as categoryOptions, init, initialized as catItemsInitialized } from '../../data/itemCategories'
@@ -104,8 +104,7 @@ const saveForLater = () => {
     <p>
       <MoneyInput label="Market value (USD)" bind:value={formData.marketValueUSD} />
       <Description>
-        To convert to USD, use 
-        <a href="https://www.google.com/search?q=currency+converter" target="_blank">this converter</a>.
+        <ConvertCurrencyLink />
       </Description>
     </p>
     <p>

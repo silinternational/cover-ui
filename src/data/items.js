@@ -81,8 +81,21 @@ export async function updateItem(policyId, itemId, itemData) {
   const urlPath = `items/${itemId}`
   start(urlPath)
 
-  // TODO: create `parsedItem` to validate item
-  const updatedItem = await UPDATE(urlPath, itemData)
+  const parsedItemData = {
+    category_id: itemData.category,
+    country: itemData.country,
+    coverage_amount: Number(itemData.marketValueUSD) * 100,
+    coverage_start_date: itemData.coverageStartDate,
+    coverage_status: itemData.coverageStatus,
+    description: itemData.itemDescription,
+    in_storage: itemData.inStorage,
+    make: itemData.make,
+    model: itemData.model,
+    name: itemData.shortName,
+    purchase_date: itemData.purchaseDate,
+    serial_number: itemData.uniqueIdentifier
+  }
+  const updatedItem = await UPDATE(urlPath, parsedItemData)
   
   itemsByPolicyId.update(data => {
     const items = data[policyId] || []

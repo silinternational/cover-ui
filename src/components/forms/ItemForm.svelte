@@ -15,7 +15,7 @@ const dispatch = createEventDispatcher()
 let category = ''
 let country = ''
 let marketValueUSD = ''
-let coverage_start_date = ''
+let coverageStartDate = ''
 let coverage_status = 'Draft'
 let itemDescription = ''
 let in_storage = false  //TODO get data from somewhere
@@ -28,8 +28,8 @@ let uniqueIdentifier = ''
 let categories = []
 let today = new Date()
 
-$: coverage_start_date = today.toISOString().slice(0, 10) //api requires yyyy-mm-dd
-$: purchase_date = coverage_start_date
+$: coverageStartDate = today.toISOString().slice(0, 10) //api requires yyyy-mm-dd
+$: purchase_date = coverageStartDate
 
 $: dependents = $dependentsByPolicyId[policyId] || []
 $: dependentOptions = dependents.map(dependent => ({
@@ -66,7 +66,7 @@ const getFormData = () => {
     category,
     country,
     marketValueUSD,
-    coverage_start_date,
+    coverageStartDate,
     coverage_status,
     itemDescription,
     in_storage,

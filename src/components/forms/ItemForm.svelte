@@ -16,7 +16,7 @@ let category = ''
 let country = ''
 let marketValueUSD = ''
 let coverageStartDate = ''
-let coverage_status = 'Draft'
+let coverageStatus = 'Draft'
 let itemDescription = ''
 let in_storage = false  //TODO get data from somewhere
 let make = ''
@@ -67,7 +67,7 @@ const getFormData = () => {
     country,
     marketValueUSD,
     coverageStartDate,
-    coverage_status,
+    coverageStatus,
     itemDescription,
     in_storage,
     make,

@@ -41,7 +41,7 @@ export async function addItem(policyId, itemData) {
     country: itemData.country,
     coverage_amount: Number(itemData.marketValueUSD) * 100,
     coverage_start_date: itemData.coverageStartDate,
-    coverage_status: itemData.coverage_status,
+    coverage_status: itemData.coverageStatus,
     description: itemData.itemDescription,
     in_storage: itemData.in_storage,
     make: itemData.make,

@@ -25,11 +25,11 @@ let shortName = ''
 let purchaseDate = ''  //TODO get data from somewhere
 let uniqueIdentifier = ''
 
+// Set initial values based on the provided item data.
+$: setInitialValues(item)
+
 let categories = []
 let today = new Date()
-
-$: coverageStartDate = today.toISOString().slice(0, 10) //api requires yyyy-mm-dd
-$: purchaseDate = coverageStartDate
 
 $: dependents = $dependentsByPolicyId[policyId] || []
 $: dependentOptions = dependents.map(dependent => ({
@@ -82,6 +82,32 @@ const onSubmit = () => {
 }
 const saveForLater = () => {
   dispatch('save-for-later', getFormData())
+}
+const setInitialValues = (item) => {
+  category = item.category_id || category
+  country = item.country || country
+  if (Number.isInteger(item.coverage_amount)) {
+    marketValueUSD = item.coverage_amount / 100
+  }
+  if (item.coverage_start_date) {
+    coverageStartDate = item.coverage_start_date
+  } else {
+    coverageStartDate = today.toISOString().slice(0, 10) //api requires yyyy-mm-dd
+  }
+  coverageStatus = item.coverage_status || coverageStatus
+  itemDescription = item.description || itemDescription
+  if (typeof item.in_storage === 'boolean') {
+    inStorage = item.in_storage
+  }
+  make = item.make || make
+  model = item.model || model
+  shortName = item.name || shortName
+  if (item.purchase_date) {
+    purchaseDate = item.purchase_date
+  } else {
+    purchaseDate = coverageStartDate
+  }
+  uniqueIdentifier = item.serial_number || uniqueIdentifier
 }
 </script>
 

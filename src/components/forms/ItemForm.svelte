@@ -22,14 +22,14 @@ let inStorage = false  //TODO get data from somewhere
 let make = ''
 let model = ''
 let shortName = ''
-let purchase_date = ''  //TODO get data from somewhere
+let purchaseDate = ''  //TODO get data from somewhere
 let uniqueIdentifier = ''
 
 let categories = []
 let today = new Date()
 
 $: coverageStartDate = today.toISOString().slice(0, 10) //api requires yyyy-mm-dd
-$: purchase_date = coverageStartDate
+$: purchaseDate = coverageStartDate
 
 $: dependents = $dependentsByPolicyId[policyId] || []
 $: dependentOptions = dependents.map(dependent => ({
@@ -73,7 +73,7 @@ const getFormData = () => {
     make,
     model,
     shortName,
-    purchase_date,
+    purchaseDate,
     uniqueIdentifier,
   }
 }

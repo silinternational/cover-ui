@@ -47,7 +47,7 @@ export async function addItem(policyId, itemData) {
     make: itemData.make,
     model: itemData.model,
     name: itemData.shortName,
-    purchase_date: itemData.purchase_date,
+    purchase_date: itemData.purchaseDate,
     serial_number: itemData.uniqueIdentifier
   }
 

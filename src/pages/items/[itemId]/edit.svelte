@@ -30,7 +30,7 @@ $: items = $itemsByPolicyId[policyId] || []
 $: item = items.find(anItem => anItem.id === itemId) || {}
 
 const onSubmit = async event => {
-  await updateItem(policyId, event.detail)
+  await updateItem(policyId, itemId, event.detail)
   $goto(`/items/${itemId}`)
 }
 const onSaveForLater = async event => {

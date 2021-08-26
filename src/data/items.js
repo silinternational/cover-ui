@@ -70,18 +70,17 @@ export async function addItem(policyId, itemData) {
  *
  * @export
  * @param {string} policyId -- The UUID for the applicable policy
+ * @param {string} itemId -- The UUID for the applicable policy item
  * @param {Object} itemData
  * @return {Object} 
  */
-export async function updateItem(policyId, itemData) {
-  const itemId = itemData.id
+export async function updateItem(policyId, itemId, itemData) {
   if (!itemId) {
     throwError("item id not set")
   }
   const urlPath = `items/${itemId}`
   start(urlPath)
 
-  delete itemData.id
   // TODO: create `parsedItem` to validate item
   const updatedItem = await UPDATE(urlPath, itemData)
   

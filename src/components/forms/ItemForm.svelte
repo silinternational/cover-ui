@@ -11,26 +11,25 @@ export let policyId = undefined
 
 const dispatch = createEventDispatcher()
 
-const formData = {
-  category: '',
-  country: '',
-  marketValueUSD: '',
-  coverage_start_date: '',
-  coverage_status: 'Draft',
-  itemDescription: '',
-  in_storage: false,  //TODO get data from somewhere
-  make: '',
-  model: '',
-  shortName: '',
-  purchase_date: '',  //TODO get data from somewhere
-  uniqueIdentifier: '',
-}
+// Set default values.
+let category = ''
+let country = ''
+let marketValueUSD = ''
+let coverage_start_date = ''
+let coverage_status = 'Draft'
+let itemDescription = ''
+let in_storage = false  //TODO get data from somewhere
+let make = ''
+let model = ''
+let shortName = ''
+let purchase_date = ''  //TODO get data from somewhere
+let uniqueIdentifier = ''
 
 let categories = []
 let today = new Date()
 
-$: formData.coverage_start_date = today.toISOString().slice(0, 10) //api requires yyyy-mm-dd
-$: formData.purchase_date = formData.coverage_start_date
+$: coverage_start_date = today.toISOString().slice(0, 10) //api requires yyyy-mm-dd
+$: purchase_date = coverage_start_date
 
 $: dependents = $dependentsByPolicyId[policyId] || []
 $: dependentOptions = dependents.map(dependent => ({
@@ -55,18 +54,34 @@ $: policyId && loadMembersOfPolicy(policyId)
 $: !$catItemsInitialized && init()
 
 const onAccountablePersonChange = event => {
-  formData.country = event.detail?.location //TODO handle when Dependents is empty, redirect to settings?
+  country = event.detail?.location //TODO handle when Dependents is empty, redirect to settings?
 }
 
 const onSelectCategory = event => {
-  formData.category = event.detail?.id
+  category = event.detail?.id
 }
 
+const getFormData = () => {
+  return {
+    category,
+    country,
+    marketValueUSD,
+    coverage_start_date,
+    coverage_status,
+    itemDescription,
+    in_storage,
+    make,
+    model,
+    shortName,
+    purchase_date,
+    uniqueIdentifier,
+  }
+}
 const onSubmit = () => {
-  dispatch('submit', formData)
+  dispatch('submit', getFormData())
 }
 const saveForLater = () => {
-  dispatch('save-for-later', formData)
+  dispatch('save-for-later', getFormData())
 }
 </script>
 
@@ -75,23 +90,23 @@ const saveForLater = () => {
     <Select label="Category" on:change={onSelectCategory} options={categories} />
   </p>
   <p>
-    <TextField label="Short name" bind:value={formData.shortName}></TextField>
+    <TextField label="Short name" bind:value={shortName}></TextField>
     <Description>This label will appear on your statements.</Description>
   </p>
   <p>
-    <TextArea label="Item description" bind:value={formData.itemDescription} rows="4"></TextArea>
+    <TextArea label="Item description" bind:value={itemDescription} rows="4"></TextArea>
     <Description>For personal use.</Description>
   </p>
   <p>
-    <TextField label="Unique identifier" bind:value={formData.uniqueIdentifier}></TextField>
+    <TextField label="Unique identifier" bind:value={uniqueIdentifier}></TextField>
     <Description>Optional. Serial number, IMEI, service tag, VIN</Description>
   </p>
   <p>
-    <TextField label="Make" bind:value={formData.make}></TextField>
+    <TextField label="Make" bind:value={make}></TextField>
     <Description>Required for mobile items.</Description>
   </p>
   <p>
-    <TextField label="Model" bind:value={formData.model}></TextField>
+    <TextField label="Model" bind:value={model}></TextField>
     <Description>Required for mobile items.</Description>
   </p>
   <p>
@@ -103,7 +118,7 @@ const saveForLater = () => {
     </Description>
   </p>
   <p>
-    <MoneyInput label="Market value (USD)" bind:value={formData.marketValueUSD} />
+    <MoneyInput label="Market value (USD)" bind:value={marketValueUSD} />
     <Description>
       <ConvertCurrencyLink />
     </Description>

@@ -6,6 +6,7 @@ import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-member
 import { Button, Form, Select, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
+export let item = {}
 export let policyId = undefined
 
 const dispatch = createEventDispatcher()

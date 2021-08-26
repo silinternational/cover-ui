@@ -20,7 +20,7 @@ $: $initialized || loadClaims()
 $: claim = $claims.find(clm => clm.id === $params.claimId) || {}
 $: claimItem = claim.claim_items?.[0] || {} //For now there will only be one claim_item
 $: items = $itemsByPolicyId[$user.policy_id] || []
-$: ! items.length && loadItems($user.policy_id)
+$: $user.policy_id && loadItems($user.policy_id)
 $: item = items.find(itm => itm.id === claimItem.item_id) || {}
 $: eventDate = formatDate(claim.event_date)
 $: status = claim.status || ''

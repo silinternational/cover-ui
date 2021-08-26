@@ -43,7 +43,7 @@ export async function addItem(policyId, itemData) {
     coverage_start_date: itemData.coverageStartDate,
     coverage_status: itemData.coverageStatus,
     description: itemData.itemDescription,
-    in_storage: itemData.in_storage,
+    in_storage: itemData.inStorage,
     make: itemData.make,
     model: itemData.model,
     name: itemData.shortName,

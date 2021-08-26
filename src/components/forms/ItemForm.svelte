@@ -18,7 +18,7 @@ let marketValueUSD = ''
 let coverageStartDate = ''
 let coverageStatus = 'Draft'
 let itemDescription = ''
-let in_storage = false  //TODO get data from somewhere
+let inStorage = false  //TODO get data from somewhere
 let make = ''
 let model = ''
 let shortName = ''
@@ -69,7 +69,7 @@ const getFormData = () => {
     coverageStartDate,
     coverageStatus,
     itemDescription,
-    in_storage,
+    inStorage,
     make,
     model,
     shortName,

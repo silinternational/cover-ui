@@ -29,6 +29,7 @@ $: needsRepairReceipt = (status === 'Needs_repair_receipt')
 $: needsReplaceReceipt = (status === 'Needs_replace_receipt')
 $: needsReceipt = (needsRepairReceipt || needsReplaceReceipt)
 $: moneyFormLabel = needsRepairReceipt ? "Actual cost of repair" : "Actual cost of replacement"
+$: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
 $: if(payoutOption === 'repair') {
     maximumPayout = computeRepairMaxPayout()
   } else if(payoutOption === 'replacement') {
@@ -101,6 +102,11 @@ async function chosen(event) {
   </Row>
   <Row cols="9">
     <ClaimBanner claimStatus={status} />
+    {#if needsReceipt}
+      <ClaimBanner claimStatus={`${status}2`} >
+        Upload a {receiptType} receipt to get reimbursed.
+      </ClaimBanner>
+    {/if}
     <p>
       {claim.event_description || ''}
     </p>

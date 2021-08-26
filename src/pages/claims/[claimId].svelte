@@ -10,8 +10,9 @@ import { Button, Form, Page } from '@silintl/ui-components'
 
 const updatedClaimData = {}
 
-let replacementCost
+let repairOrReplacementCost
 let uploading = false
+let deductible = .05
 
 $: ! $initialized && loadClaims()
 
@@ -21,16 +22,30 @@ $: items = $itemsByPolicyId[$user.policy_id] || []
 $: ! items.length && loadItems($user.policy_id)
 $: item = items.find(itm => itm.id === claimItem.item_id) || {}
 $: eventDate = formatDate(claim.event_date)
-$: needsInitialChangesAndReplacement = claim.status === 'Needs_initial_changes' && claim.event_type === 'Theft' //TODOinstead of event_type this will need to allow all replacements
+$: status = claim.status || ''
+$: needsRepairReceipt = (status === 'Needs_repair_receipt')
+$: needsReplaceReceipt = (status === 'Needs_replace_receipt')
+$: needsReceipt = (needsRepairReceipt || needsReplaceReceipt)
+$: moneyFormLabel = needsRepairReceipt ? "Actual cost of repair" : "Actual cost of replacement"
+$: maximumPayout = needsRepairReceipt ? computeRepairMaxPayout() : computeReplaceMaxPayout()
+
+const computeRepairMaxPayout = () => Math.min(claimItem.repair_estimate, claimItem.coverage_amount, claimItem.fmv) * (1 - deductible) || ''
+
+const computeReplaceMaxPayout = () => Math.min(claimItem.replace_estimate, claimItem.coverage_amount) * (1 - deductible) || ''
 
 const editClaim = () => $goto(`claims/${$params.claimId}/edit)`)
 
 const onSubmit = () => {
-  const cents = replacementCost * 100
+  const cents = repairOrReplacementCost * 100
 
-  updatedClaimData.replacement_cost = cents
+  //TODO update this when the claimUpdate payload is defined
+  if (needsRepairReceipt) {
+    updatedClaimData.repair_actual = cents
+  } else if (needsReplaceReceipt) {
+    updatedClaimData.replace_actual = cents
+  }
   
-  console.log(updatedClaimData) //TODO update claim with replacementCost and file to api
+  console.log(updatedClaimData) //TODO update claim with repairOrReplacementCost and file to api
 }
 
 async function chosen(event) {
@@ -71,7 +86,7 @@ async function chosen(event) {
     <div class="left-detail">{eventDate || ''}</div>
   </Row>
   <Row cols="9">
-    <ClaimBanner claimStatus={claim.status} />
+    <ClaimBanner claimStatus={status} />
     <p>
       {claim.event_description || ''}
     </p>
@@ -81,15 +96,14 @@ async function chosen(event) {
     </p>
     <p>
       <b>Maximum payout (if approved)</b><br />
-      <!-- TODO get the actual maximum amount -->
-      {(item.coverage_amount * .7)  || ''}
+      {maximumPayout}
     </p>
     <p>
       <Button on:click={editClaim} outlined>Edit claim</Button>
     </p>
-    {#if needsInitialChangesAndReplacement}
+    {#if needsReceipt}
       <Form on:submit={onSubmit}>
-        <MoneyInput bind:value={replacementCost} label="Actual cost of replacement" />
+        <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} />
 
         <p class="label ml-1 mt-6px">
           <ConvertCurrencyLink />

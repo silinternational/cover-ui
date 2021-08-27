@@ -63,7 +63,7 @@ function previewFile(file) {
 #drop-area {
   border: 2px dashed #ccc;
   border-radius: 20px;
-  font-family: sans-serif;
+  font-family: Source Sans Pro, Roboto, sans-serif;
 }
 #drop-area.highlighted {
   border-color: var(--mdc-theme-primary);

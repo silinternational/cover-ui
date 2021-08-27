@@ -2,9 +2,14 @@
 import user from '../../authn/user'
 import { Breadcrumb } from "../../components"
 import { dependentsByPolicyId, loadDependents } from '../../data/dependents'
+import { updatePolicy } from '../../data/policies'
 import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
 import { goto } from "@roxi/routify"
-import { Button, IconButton, Page } from "@silintl/ui-components"
+import { Button, TextField, IconButton, Page, Snackbar, setNotice } from "@silintl/ui-components"
+
+const policyData = {}
+
+let householdId = ''
 
 $: policyId = $user.policy_id
 $: if (policyId) {
@@ -14,6 +19,16 @@ $: if (policyId) {
 
 $: dependents = $dependentsByPolicyId[policyId] || []
 $: householdMembers = $membersByPolicyId[policyId] || []
+
+const udpateHouseholdId = () => {
+  if(householdId.length === 7) {
+    policyData.household_id = householdId
+    
+    updatePolicy(policyId, policyData)
+  } else {
+    setNotice('Please enter a valid Household ID')
+  }
+}
 
 const edit = id => $goto(`/household/settings/dependent/${id}`)
 const isYou = householdMember => householdMember.id === $user.id
@@ -43,12 +58,21 @@ const isYou = householdMember => householdMember.id === $user.id
   top: 0.25rem;
   color: rgba(0, 0, 0, 0.5);
 }
+.required {
+  color: var(--mdc-theme-status-error);
+;
+}
 </style>
 
 <Page>
   <Breadcrumb />
+
+  <h3 class="ml-1 mt-3">Household ID<span class="required">*</span></h3>
+  <p>
+    <TextField placeholder={'1234567'} autofocus bind:value={householdId} on:blur={udpateHouseholdId} />
+  </p>
   
-  <h3>Accountable people</h3>
+  <h3 class="mt-3">Accountable people</h3>
 
   <ul class="accountable-people-list">
     {#each householdMembers as householdMember}
@@ -71,4 +95,6 @@ const isYou = householdMember => householdMember.id === $user.id
     {/each}
   </ul>
   <Button prependIcon="add" url="settings/dependent" outlined>Add dependent</Button>
+
+  <Snackbar/>
 </Page>

@@ -1,6 +1,6 @@
 <script>
 import user from '../../authn/user.js'
-import { Banner, ConvertCurrencyLink, MoneyInput, Row, ClaimBanner } from '../../components'
+import { Banner, ClaimBanner, ConvertCurrencyLink, FileDropArea, MoneyInput, Row } from '../../components'
 import { formatDate } from '../../components/dates.js'
 import { upload } from '../../data'
 import { loadClaims, claims, initialized } from '../../data/claims'
@@ -64,14 +64,10 @@ const onSubmit = () => {
 }
 
 async function chosen(event) {
-  const formData = new FormData()
-
-  formData.append('file', event.target.files[0])
-
   try {
     uploading = true
 
-    updatedClaimData.file = await upload(formData)
+    updatedClaimData.file = await upload(event.detail)
   } finally {
     uploading = false
   }
@@ -133,8 +129,7 @@ async function chosen(event) {
 
         <br/>
 
-        <!-- TODO find a file drop component to replace this -->
-        <input id="receipt" type="file" accept="application/pdf,image/*" on:change={chosen} />
+        <FileDropArea class="w-50" raised {uploading} on:upload={chosen}/>
 
         <br/>
 

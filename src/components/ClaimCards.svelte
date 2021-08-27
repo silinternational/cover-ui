@@ -2,6 +2,7 @@
 import { ClaimCard } from './index'
 
 export let claims
+export let items
 </script>
 
 <style>
@@ -15,7 +16,8 @@ export let claims
   {#each claims as claim (claim.id) }
     {#each (claim.claim_items || []) as claimItem (claimItem.id) }
       <div class="card">
-        <ClaimCard {claim} {claimItem} on:edit-claim on:goto-claim />
+        <ClaimCard {claim} {claimItem} item={items.find(item => item.id === claimItem.item_id)}
+                   on:edit-claim on:goto-claim />
       </div>
     {/each}
   {/each}

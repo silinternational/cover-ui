@@ -4,6 +4,20 @@ import { writable } from "svelte/store"
 
 export const claims = writable([])
 export const initialized = writable(false)
+export const warning = {
+  icon: 'error',
+  color: '--mdc-theme-status-warning',
+  bgColor: '--mdc-theme-status-warning-bg',
+  title: 'Needs changes',
+  actionLabel: 'Make changes',
+}
+export const success = {
+  icon: 'done',
+  color: '--mdc-theme-status-success',
+  bgColor: '--mdc-theme-status-success-bg',
+  title: 'Approved for repair',
+  actionLabel: 'View and upload receipt',
+}
 export const states = {
   Message: {
     icon: 'chat',
@@ -26,13 +40,10 @@ export const states = {
     title: 'Awaiting review',
     actionLabel: 'View claim',
   },
-  NeedsChanges: {
-    icon: 'error',
-    color: '--mdc-theme-status-warning',
-    bgColor: '--mdc-theme-status-warning-bg',
-    title: 'Needs changes',
-    actionLabel: 'Make changes',
-  },
+  Needs_repair_receipt: success,
+  Needs_repair_receipt2: warning,
+  Needs_replace_receipt: success,
+  Needs_replace_receipt2: warning,
   Denied: {
     icon: 'remove_circle',
     color: '--mdc-theme-status-error',
@@ -40,13 +51,7 @@ export const states = {
     title: 'Denied',
     actionLabel: 'View denial',
   },
-  Approved: {
-    icon: 'done',
-    color: '--mdc-theme-status-success',
-    bgColor: '--mdc-theme-status-success-bg',
-    title: 'Approved for repair',
-    actionLabel: 'View and upload receipt',
-  },
+  Approved: success,
   Payout: {
     icon: 'paid',
     color: '--mdc-theme-status-success',

@@ -13,25 +13,40 @@ const updatedClaimData = {}
 let repairOrReplacementCost
 let uploading = false
 let deductible = .05
+let maximumPayout = ''
 
-$: ! $initialized && loadClaims()
+$: $initialized || loadClaims()
 
 $: claim = $claims.find(clm => clm.id === $params.claimId) || {}
 $: claimItem = claim.claim_items?.[0] || {} //For now there will only be one claim_item
 $: items = $itemsByPolicyId[$user.policy_id] || []
-$: ! items.length && loadItems($user.policy_id)
+$: $user.policy_id && loadItems($user.policy_id)
 $: item = items.find(itm => itm.id === claimItem.item_id) || {}
 $: eventDate = formatDate(claim.event_date)
 $: status = claim.status || ''
+$: payoutOption = claimItem.payout_option
 $: needsRepairReceipt = (status === 'Needs_repair_receipt')
 $: needsReplaceReceipt = (status === 'Needs_replace_receipt')
 $: needsReceipt = (needsRepairReceipt || needsReplaceReceipt)
 $: moneyFormLabel = needsRepairReceipt ? "Actual cost of repair" : "Actual cost of replacement"
-$: maximumPayout = needsRepairReceipt ? computeRepairMaxPayout() : computeReplaceMaxPayout()
+$: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
+$: if(payoutOption === 'repair') {
+    maximumPayout = computeRepairMaxPayout()
+  } else if(payoutOption === 'replacement') {
+    maximumPayout = computeReplaceMaxPayout()
+  } else if(payoutOption === 'fmv') {
+    maximumPayout = computeCashMaxPayout()
+  } else if(claim.event_type === 'Evacuation') {
+    maximumPayout = claimItem.coverage_amount * 2/3 || ''
+  }
 
-const computeRepairMaxPayout = () => Math.min(claimItem.repair_estimate, claimItem.coverage_amount, claimItem.fmv) * (1 - deductible) || ''
+const computePayout = (...values) => Math.min(...values) * (1 - deductible) || ''
 
-const computeReplaceMaxPayout = () => Math.min(claimItem.replace_estimate, claimItem.coverage_amount) * (1 - deductible) || ''
+const computeRepairMaxPayout = () => computePayout(claimItem.repair_estimate || claimItem.repair_actual, claimItem.coverage_amount, claimItem.fmv)
+
+const computeReplaceMaxPayout = () => computePayout(claimItem.replace_estimate, claimItem.coverage_amount)
+
+const computeCashMaxPayout = () => computePayout(claimItem.coverage_amount, claimItem.fmv)
 
 const editClaim = () => $goto(`claims/${$params.claimId}/edit)`)
 
@@ -87,6 +102,11 @@ async function chosen(event) {
   </Row>
   <Row cols="9">
     <ClaimBanner claimStatus={status} />
+    {#if needsReceipt}
+      <ClaimBanner claimStatus={`${status}2`} >
+        Upload a {receiptType} receipt to get reimbursed.
+      </ClaimBanner>
+    {/if}
     <p>
       {claim.event_description || ''}
     </p>

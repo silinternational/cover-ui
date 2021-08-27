@@ -29,7 +29,7 @@ const onGotoClaim = event => {
 
   <Row cols={'12'}>
     {#if $claims.length}
-      <ClaimCards claims={$claims} on:edit-claim={onEditClaim} on:goto-claim={onGotoClaim} />
+      <ClaimCards claims={$claims} {items} on:edit-claim={onEditClaim} on:goto-claim={onGotoClaim} />
     {:else}
       No claims at this time.
     {/if}

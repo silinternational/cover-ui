@@ -2,6 +2,7 @@
 import { ClaimCard } from './index'
 
 export let claims
+export let items
 </script>
 
 <style>

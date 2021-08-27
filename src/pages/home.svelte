@@ -81,7 +81,7 @@ const onEditClaim = event => {
 
 <Page loading={isLoadingById($user.policy_id)} layout="grid">   
   <Row cols={'12'}>
-    <ClaimCards claims={$claims} on:edit-claim={onEditClaim} />
+    <ClaimCards claims={$claims} {items} on:edit-claim={onEditClaim} />
   </Row>
 
   <Row cols={'12'}>

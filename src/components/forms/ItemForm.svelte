@@ -12,7 +12,7 @@ export let policyId = undefined
 const dispatch = createEventDispatcher()
 
 // Set default values.
-let category = ''
+let categoryId = ''
 let country = ''
 let marketValueUSD = ''
 let coverageStartDate = ''
@@ -58,12 +58,12 @@ const onAccountablePersonChange = event => {
 }
 
 const onSelectCategory = event => {
-  category = event.detail?.id
+  categoryId = event.detail?.id
 }
 
 const getFormData = () => {
   return {
-    category,
+    categoryId,
     country,
     marketValueUSD,
     coverageStartDate,
@@ -84,7 +84,7 @@ const saveForLater = () => {
   dispatch('save-for-later', getFormData())
 }
 const setInitialValues = (item) => {
-  category = item.category_id || category
+  categoryId = item.category_id || categoryId
   country = item.country || country
   if (Number.isInteger(item.coverage_amount)) {
     marketValueUSD = item.coverage_amount / 100

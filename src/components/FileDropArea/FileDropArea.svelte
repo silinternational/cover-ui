@@ -95,7 +95,7 @@ form {
     {#if ! uploading}
       <input bind:this={fileInput} type="file" id="fileElem" multiple accept="application/pdf,image/*" disabled={uploading} on:change={() => handleFiles(fileInput.files)}>
     {/if}
-    <label class="mdc-button" for="fileElem" class:mdc-button--outlined={outlined} class:disabled={uploading} class:mdc-button--raised={raised}>Choose files</label>
+    <label class="mdc-button custom-text-button" for="fileElem" class:mdc-button--outlined={outlined} class:disabled={uploading} class:mdc-button--raised={raised}>Choose files</label>
     <div>or drop files here</div>
     <i class="material-icons icon" id="upload-icon">cloud_upload</i>
   </form>

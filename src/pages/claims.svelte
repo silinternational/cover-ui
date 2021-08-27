@@ -1,10 +1,16 @@
 <script>
-import { claims, initialized, loadClaims } from '../data/claims.js'
+import user from '../authn/user'
 import { ClaimCards, Row } from '../components/'
-import { Page, Button } from '@silintl/ui-components'
+import { claims, initialized as claimsInitialized, loadClaims } from '../data/claims'
+import { itemsByPolicyId, loadItems } from '../data/items'
 import { goto } from '@roxi/routify'
+import { Page, Button } from '@silintl/ui-components'
 
-$: $initialized || loadClaims()
+$: $claimsInitialized || loadClaims()
+
+$: policyId = $user.policy_id
+$: policyId && loadItems(policyId)
+$: items = $itemsByPolicyId[policyId] || []
 
 const onEditClaim = event => {
   const claimId = event.detail
@@ -23,7 +29,7 @@ const onGotoClaim = event => {
 
   <Row cols={'12'}>
     {#if $claims.length}
-      <ClaimCards claims={$claims} on:edit-claim={onEditClaim} on:goto-claim={onGotoClaim} />
+      <ClaimCards claims={$claims} {items} on:edit-claim={onEditClaim} on:goto-claim={onGotoClaim} />
     {:else}
       No claims at this time.
     {/if}

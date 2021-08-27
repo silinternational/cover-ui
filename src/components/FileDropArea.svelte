@@ -90,7 +90,7 @@ form {
   on:drop|preventDefault|stopPropagation={handleDrop}>
   <form class="flex mb-10px">
     {#if ! uploading}
-      <input bind:this={fileInput} type="file" id="fileElem" multiple accept="application/pdf,image/*" on:change={() => handleFiles(fileInput.files)}>
+      <input bind:this={fileInput} type="file" id="fileElem" multiple accept="application/pdf,image/*" disabled={uploading} on:change={() => handleFiles(fileInput.files)}>
     {/if}
     <label class="mdc-button" for="fileElem" class:mdc-button--outlined={outlined} class:disabled={uploading} class:mdc-button--raised={raised}>Choose files</label>
     <div>or drop files here</div>

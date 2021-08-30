@@ -21,10 +21,10 @@ $: dependents = $dependentsByPolicyId[policyId] || []
 $: householdMembers = $membersByPolicyId[policyId] || []
 
 const udpateHouseholdId = () => {
-  const sanitizedId = householdId.replaceAll(' ', '')
+  householdId = householdId.replaceAll(' ', '')
 
-  if(validateId(sanitizedId)) {
-    policyData.household_id = sanitizedId
+  if(validateId(householdId)) {
+    policyData.household_id = householdId
     
     updatePolicy(policyId, policyData)
     setNotice('Your household ID has been saved')

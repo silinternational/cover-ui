@@ -27,6 +27,7 @@ const udpateHouseholdId = () => {
     policyData.household_id = sanitizedId
     
     updatePolicy(policyId, policyData)
+    setNotice('Your household ID has been saved')
   } else {
     setNotice('Please enter a valid Household ID')
   }

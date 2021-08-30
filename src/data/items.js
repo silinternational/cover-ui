@@ -100,6 +100,9 @@ export async function updateItem(policyId, itemId, itemData) {
   itemsByPolicyId.update(data => {
     const items = data[policyId] || []
     const i = items.findIndex(item => item.id === itemId)
+    if (i === -1) {
+      throwError('Failed to find local item to update it')
+    }
     items[i] = updatedItem
     data[policyId] = items
     return data

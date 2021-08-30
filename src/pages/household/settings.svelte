@@ -2,7 +2,7 @@
 import user from '../../authn/user'
 import { Breadcrumb } from "../../components"
 import { dependentsByPolicyId, loadDependents } from '../../data/dependents'
-import { updatePolicy } from '../../data/policies'
+import { policies, updatePolicy } from '../../data/policies'
 import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
 import { goto } from "@roxi/routify"
 import { Button, TextField, IconButton, Page, Snackbar, setNotice } from "@silintl/ui-components"
@@ -20,13 +20,13 @@ $: if (policyId) {
 $: dependents = $dependentsByPolicyId[policyId] || []
 $: householdMembers = $membersByPolicyId[policyId] || []
 
-const udpateHouseholdId = () => {
+const udpateHouseholdId = async () => {
   householdId = householdId.replaceAll(' ', '')
 
   if(validateId(householdId)) {
     policyData.household_id = householdId
     
-    updatePolicy(policyId, policyData)
+    await updatePolicy(policyId, policyData)
     setNotice('Your household ID has been saved')
   } else {
     setNotice('Please enter a valid Household ID')

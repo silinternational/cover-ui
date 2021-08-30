@@ -20,7 +20,7 @@ $: if (policyId) {
 $: dependents = $dependentsByPolicyId[policyId] || []
 $: householdMembers = $membersByPolicyId[policyId] || []
 
-const udpateHouseholdId = async () => {
+const updateHouseholdId = async () => {
   householdId = householdId.replaceAll(' ', '')
 
   if(validateId(householdId)) {
@@ -73,7 +73,7 @@ const isYou = householdMember => householdMember.id === $user.id
 
   <h3 class="ml-1 mt-3">Household ID<span class="required">*</span></h3>
   <p>
-    <TextField placeholder={'1234567'} autofocus bind:value={householdId} on:blur={udpateHouseholdId} />
+    <TextField placeholder={'1234567'} autofocus bind:value={householdId} on:blur={updateHouseholdId} />
   </p>
   
   <h3 class="mt-3">Accountable people</h3>

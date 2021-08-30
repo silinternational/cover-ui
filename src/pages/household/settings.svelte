@@ -21,8 +21,10 @@ $: dependents = $dependentsByPolicyId[policyId] || []
 $: householdMembers = $membersByPolicyId[policyId] || []
 
 const udpateHouseholdId = () => {
-  if(householdId.length === 7) {
-    policyData.household_id = householdId
+  const sanitizedId = householdId.replaceAll(' ', '')
+
+  if(validateId(sanitizedId)) {
+    policyData.household_id = sanitizedId
     
     updatePolicy(policyId, policyData)
   } else {
@@ -30,6 +32,7 @@ const udpateHouseholdId = () => {
   }
 }
 
+const validateId = sanitizedId => sanitizedId.split('').every(digit => /[0-9]/.test(digit))
 const edit = id => $goto(`/household/settings/dependent/${id}`)
 const isYou = householdMember => householdMember.id === $user.id
 </script>

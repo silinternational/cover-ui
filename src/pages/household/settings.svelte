@@ -2,7 +2,7 @@
 import user from '../../authn/user'
 import { Breadcrumb } from "../../components"
 import { dependentsByPolicyId, loadDependents } from '../../data/dependents'
-import { policies, updatePolicy } from '../../data/policies'
+import { policies, updatePolicy, init } from '../../data/policies'
 import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
 import { goto } from "@roxi/routify"
 import { Button, TextField, IconButton, Page, Snackbar, setNotice } from "@silintl/ui-components"
@@ -19,17 +19,24 @@ $: if (policyId) {
 
 $: dependents = $dependentsByPolicyId[policyId] || []
 $: householdMembers = $membersByPolicyId[policyId] || []
+$: $policies.length || init()
+$: policy = $policies.find(policy => policy.id === policyId) || {}
+$: policy.household_id && setPolicyHouseholdId()
+
+const setPolicyHouseholdId = () => householdId = policy.household_id || ''
 
 const updateHouseholdId = async () => {
   householdId = householdId.replaceAll(' ', '')
-
-  if(validateId(householdId)) {
-    policyData.household_id = householdId
+  if(householdId !== policy.household_id) {
+    if(validateId(householdId)) {
+      policyData.household_id = householdId
     
-    await updatePolicy(policyId, policyData)
-    setNotice('Your household ID has been saved')
-  } else {
-    setNotice('Please enter a valid Household ID')
+      await updatePolicy(policyId, policyData)
+      setNotice('Your household ID has been saved')
+    } else {
+      setNotice('Please enter a valid Household ID')
+      setPolicyHouseholdId()
+    }
   }
 }
 

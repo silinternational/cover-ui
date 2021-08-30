@@ -32,7 +32,7 @@ const udpateHouseholdId = () => {
   }
 }
 
-const validateId = sanitizedId => sanitizedId.split('').every(digit => /[0-9]/.test(digit))
+const validateId = sanitizedId => sanitizedId.length && sanitizedId.split('').every(digit => /[0-9]/.test(digit))
 const edit = id => $goto(`/household/settings/dependent/${id}`)
 const isYou = householdMember => householdMember.id === $user.id
 </script>

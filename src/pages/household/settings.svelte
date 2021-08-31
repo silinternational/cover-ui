@@ -49,7 +49,7 @@ const updateHouseholdId = async () => {
 
 const updateAffiliation = async () => {
   for (const [key, value] of Object.entries(affiliations)){
-    if(affiliationChoice === value && affiliationChoice !== policyData.entity_code) {
+    if(affiliationChoice === value && key !== policyData.entity_code) {
 
       policyData.entity_code = key
 

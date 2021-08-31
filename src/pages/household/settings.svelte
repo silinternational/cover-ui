@@ -21,9 +21,9 @@ $: dependents = $dependentsByPolicyId[policyId] || []
 $: householdMembers = $membersByPolicyId[policyId] || []
 $: $policies.length || init()
 $: policy = $policies.find(policy => policy.id === policyId) || {}
-$: policy.household_id && setPolicyHouseholdId(policy.household_id)
+$: policy.household_id && setPolicyHouseholdId()
 
-const setPolicyHouseholdId = id => householdId = id || ''
+const setPolicyHouseholdId = () => householdId = policy.household_id || ''
 
 const updateHouseholdId = async () => {
   householdId = householdId.replaceAll(' ', '')

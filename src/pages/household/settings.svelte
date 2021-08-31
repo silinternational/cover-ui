@@ -8,8 +8,13 @@ import { goto } from "@roxi/routify"
 import { Button, TextField, IconButton, Page, Snackbar, setNotice } from "@silintl/ui-components"
 
 const policyData = {}
+const affiliations = {
+  'WBT': 'Wycliffe USA',
+  'SIL': 'SIL International'
+}
 
 let householdId = ''
+let affiliationChoice = ''
 
 $: policyId = $user.policy_id
 $: if (policyId) {
@@ -22,16 +27,18 @@ $: householdMembers = $membersByPolicyId[policyId] || []
 $: $policies.length || init()
 $: policy = $policies.find(policy => policy.id === policyId) || {}
 $: policy.household_id && setPolicyHouseholdId()
+$: policy.entity_code && setAffiliation()
+
+const setAffiliation = () => affiliationChoice = affiliations[policy.entity_code]
 
 const setPolicyHouseholdId = () => householdId = policy.household_id || ''
 
 const updateHouseholdId = async () => {
   householdId = householdId.replaceAll(' ', '')
   if(householdId !== policy.household_id) {
-    if(validateId(householdId)) {
-      policyData.household_id = householdId
-    
-      await updatePolicy(policyId, policyData)
+    if(isIdValid(householdId)) {
+      await callUpdatePolicy()
+
       setNotice('Your household ID has been saved')
     } else {
       setNotice('Please enter a valid Household ID')
@@ -40,7 +47,26 @@ const updateHouseholdId = async () => {
   }
 }
 
-const validateId = sanitizedId => sanitizedId.length && sanitizedId.split('').every(digit => /[0-9]/.test(digit))
+const updateAffiliation = async () => {
+  for (const [key, value] of Object.entries(affiliations)){
+    if(affiliationChoice === value && key !== policyData.entity_code) {
+
+      policyData.entity_code = key
+
+      await callUpdatePolicy()
+      
+      setNotice('Your affiliation has been saved')
+    }
+  }
+}
+
+const callUpdatePolicy = async () => {
+  policyData.household_id = householdId
+
+  await updatePolicy(policyId, policyData)
+}
+
+const isIdValid = sanitizedId => sanitizedId.length && sanitizedId.split('').every(digit => /[0-9]/.test(digit))
 const edit = id => $goto(`/household/settings/dependent/${id}`)
 const isYou = householdMember => householdMember.id === $user.id
 </script>
@@ -71,7 +97,49 @@ const isYou = householdMember => householdMember.id === $user.id
 }
 .required {
   color: var(--mdc-theme-status-error);
-;
+}
+
+/* datalist styling */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+.custom-field {
+  font-size: 14px;
+  position: relative;
+  --field-padding: 12px;
+  border-top: 20px solid transparent;
+}
+
+.custom-field input {
+  border-radius: 8px;
+  border: 1px solid gray;
+  width: 240px;
+  padding: var(--field-padding) 0 var(--field-padding) var(--field-padding);
+}
+
+.custom-field .placeholder {
+  position: absolute;
+  bottom: -45px;
+  top: 22px;  
+  transform: translateY(-50%);
+  color: #aaa;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  left: var(--field-padding);
+  width: calc(100% - (var(--field-padding) * 2));
+  transition: 
+    top 0.3s ease,
+    color 0.3s ease,
+    font-size 0.3s ease;
+}
+
+.custom-field input:not(:placeholder-shown) + .placeholder,
+.custom-field input:focus + .placeholder {
+  top: 4px;
+  font-size: 10px;
+  color: #222;
 }
 </style>
 
@@ -82,6 +150,20 @@ const isYou = householdMember => householdMember.id === $user.id
   <p>
     <TextField placeholder={'1234567'} autofocus bind:value={householdId} on:blur={updateHouseholdId} />
   </p>
+
+  {#if policy.type === 'Corporate'}
+    <h3 class="ml-1 mt-3" >Affiliation<span class="required">*</span></h3>
+    <label class="custom-field">
+      <input class="fs-14" list="affiliations" name="affiliations-choice" placeholder="&nbsp;" bind:value={affiliationChoice} on:change={updateAffiliation}/>
+      <span class="placeholder">Your entity of affiliation</span>
+    </label>
+
+    <datalist id="affiliations">
+      {#each Object.values(affiliations) as affiliation}
+        <option value={affiliation}>  
+      {/each}
+    </datalist>
+  {/if}
   
   <h3 class="mt-3">Accountable people</h3>
 

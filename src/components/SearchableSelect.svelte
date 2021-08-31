@@ -6,7 +6,6 @@ export let choice = ''
 
 const dispatch = createEventDispatcher()
 
-
 const chosen = () => {
   for (const [key, value] of Object.entries(options)){
     if(choice === value) {

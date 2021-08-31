@@ -98,6 +98,50 @@ const isYou = householdMember => householdMember.id === $user.id
 .required {
   color: var(--mdc-theme-status-error);
 }
+
+
+/* datalist styling */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+.custom-field {
+  font-size: 14px;
+  position: relative;
+  --field-padding: 12px;
+  border-top: 20px solid transparent;
+}
+
+.custom-field input {
+  border-radius: 8px;
+  border: 1px solid gray;
+  width: 240px;
+  padding: var(--field-padding) 0 var(--field-padding) var(--field-padding);
+}
+
+.custom-field .placeholder {
+  position: absolute;
+  bottom: -45px;
+  top: 22px;  
+  transform: translateY(-50%);
+  color: #aaa;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  left: var(--field-padding);
+  width: calc(100% - (var(--field-padding) * 2));
+  transition: 
+    top 0.3s ease,
+    color 0.3s ease,
+    font-size 0.3s ease;
+}
+
+.custom-field input:not(:placeholder-shown) + .placeholder,
+.custom-field input:focus + .placeholder {
+  top: 4px;
+  font-size: 10px;
+  color: #222;
+}
 </style>
 
 <Page>
@@ -108,9 +152,10 @@ const isYou = householdMember => householdMember.id === $user.id
     <TextField placeholder={'1234567'} autofocus bind:value={householdId} on:blur={updateHouseholdId} />
   </p>
   
-  <label>
-    <h3 class="ml-1 mt-3" >Affiliation<span class="required">*</span></h3>
-    <input list="affiliations" name="affiliations-choice" bind:value={affiliationChoice} on:change={updateAffiliation}/>
+  <h3 class="ml-1 mt-3" >Affiliation<span class="required">*</span></h3>
+  <label class="custom-field">
+    <input class="fs-14" list="affiliations" name="affiliations-choice" placeholder="&nbsp;" bind:value={affiliationChoice} on:change={updateAffiliation}/>
+    <span class="placeholder">Your entity of affiliation</span>
   </label>
 
   <datalist id="affiliations">

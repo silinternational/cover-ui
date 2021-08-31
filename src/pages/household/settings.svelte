@@ -99,7 +99,6 @@ const isYou = householdMember => householdMember.id === $user.id
   color: var(--mdc-theme-status-error);
 }
 
-
 /* datalist styling */
 *, *::before, *::after {
   box-sizing: border-box;

@@ -21,14 +21,14 @@ $: dependents = $dependentsByPolicyId[policyId] || []
 $: householdMembers = $membersByPolicyId[policyId] || []
 $: $policies.length || init()
 $: policy = $policies.find(policy => policy.id === policyId) || {}
-$: policy.household_id && setPolicyHouseholdId()
+$: policy.household_id && setPolicyHouseholdId(policy.household_id)
 
-const setPolicyHouseholdId = () => householdId = policy.household_id || ''
+const setPolicyHouseholdId = id => householdId = id || ''
 
 const updateHouseholdId = async () => {
   householdId = householdId.replaceAll(' ', '')
   if(householdId !== policy.household_id) {
-    if(validateId(householdId)) {
+    if(isIdValid(householdId)) {
       policyData.household_id = householdId
     
       await updatePolicy(policyId, policyData)
@@ -40,7 +40,7 @@ const updateHouseholdId = async () => {
   }
 }
 
-const validateId = sanitizedId => sanitizedId.length && sanitizedId.split('').every(digit => /[0-9]/.test(digit))
+const isIdValid = sanitizedId => sanitizedId.length && sanitizedId.split('').every(digit => /[0-9]/.test(digit))
 const edit = id => $goto(`/household/settings/dependent/${id}`)
 const isYou = householdMember => householdMember.id === $user.id
 </script>

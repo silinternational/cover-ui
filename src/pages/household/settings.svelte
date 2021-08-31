@@ -109,7 +109,7 @@ const isYou = householdMember => householdMember.id === $user.id
 
   {#if policy.type === 'Corporate'}
     <h3 class="ml-1 mt-3" >Affiliation<span class="required">*</span></h3>
-    <SearchableSelect options={affiliations} {placeholder} on:chosen={updateAffiliation}/>
+    <SearchableSelect options={affiliations} {placeholder} padding={'19px'} on:chosen={updateAffiliation}/>
   {/if}
   
   <h3 class="mt-3">Accountable people</h3>

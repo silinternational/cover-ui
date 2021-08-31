@@ -4,6 +4,8 @@ import { createEventDispatcher } from "svelte"
 export let options = {}
 export let choice = ''
 export let placeholder = ''
+export let padding = '12px'
+export let width = '232px'
 
 const dispatch = createEventDispatcher()
 
@@ -24,14 +26,12 @@ const chosen = () => {
 .custom-field {
   font-size: 14px;
   position: relative;
-  --field-padding: 12px;
   border-top: 20px solid transparent;
 }
 
 .custom-field input {
   border-radius: 8px;
   border: 1px solid gray;
-  width: 240px;
   padding: var(--field-padding) 0 var(--field-padding) var(--field-padding);
 }
 
@@ -60,8 +60,8 @@ const chosen = () => {
 }
 </style>
 
-<label class="custom-field">
-  <input class="fs-14" list="options" placeholder="&nbsp;" bind:value={choice} on:change={chosen}/>
+<label class="custom-field" style="--field-padding: {padding};">
+  <input class="fs-14 {$$props.class}" style="width: {width}" list="options" placeholder="&nbsp;" bind:value={choice} on:change={chosen}/>
   <span class="placeholder">{placeholder}</span>
 </label>
 

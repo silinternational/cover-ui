@@ -151,18 +151,20 @@ const isYou = householdMember => householdMember.id === $user.id
   <p>
     <TextField placeholder={'1234567'} autofocus bind:value={householdId} on:blur={updateHouseholdId} />
   </p>
-  
-  <h3 class="ml-1 mt-3" >Affiliation<span class="required">*</span></h3>
-  <label class="custom-field">
-    <input class="fs-14" list="affiliations" name="affiliations-choice" placeholder="&nbsp;" bind:value={affiliationChoice} on:change={updateAffiliation}/>
-    <span class="placeholder">Your entity of affiliation</span>
-  </label>
 
-  <datalist id="affiliations">
-    {#each Object.values(affiliations) as affiliation}
-      <option value={affiliation}>  
-    {/each}
-  </datalist>
+  {#if policy.type === 'Corporate'}
+    <h3 class="ml-1 mt-3" >Affiliation<span class="required">*</span></h3>
+    <label class="custom-field">
+      <input class="fs-14" list="affiliations" name="affiliations-choice" placeholder="&nbsp;" bind:value={affiliationChoice} on:change={updateAffiliation}/>
+      <span class="placeholder">Your entity of affiliation</span>
+    </label>
+
+    <datalist id="affiliations">
+      {#each Object.values(affiliations) as affiliation}
+        <option value={affiliation}>  
+      {/each}
+    </datalist>
+  {/if}
   
   <h3 class="mt-3">Accountable people</h3>
 

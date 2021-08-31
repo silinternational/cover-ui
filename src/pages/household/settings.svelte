@@ -107,7 +107,7 @@ const isYou = householdMember => householdMember.id === $user.id
     <TextField placeholder={'1234567'} autofocus bind:value={householdId} on:blur={updateHouseholdId} />
   </p>
 
-  {#if policy.type === 'Corporate' || true}
+  {#if policy.type === 'Corporate'}
     <h3 class="ml-1 mt-3" >Affiliation<span class="required">*</span></h3>
     <SearchableSelect options={affiliations} {placeholder} on:chosen={updateAffiliation}/>
   {/if}

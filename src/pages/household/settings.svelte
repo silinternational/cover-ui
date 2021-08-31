@@ -14,6 +14,7 @@ const affiliations = {
 }
 
 let householdId = ''
+let placeholder = 'Your entity of affiliation'
 
 $: policyId = $user.policy_id
 $: if (policyId) {
@@ -108,7 +109,7 @@ const isYou = householdMember => householdMember.id === $user.id
 
   {#if policy.type === 'Corporate' || true}
     <h3 class="ml-1 mt-3" >Affiliation<span class="required">*</span></h3>
-    <SearchableSelect options={affiliations} on:chosen={updateAffiliation}/>
+    <SearchableSelect options={affiliations} {placeholder} on:chosen={updateAffiliation}/>
   {/if}
   
   <h3 class="mt-3">Accountable people</h3>

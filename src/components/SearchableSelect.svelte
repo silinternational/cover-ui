@@ -3,6 +3,7 @@ import { createEventDispatcher } from "svelte"
 
 export let options = {}
 export let choice = ''
+export let placeholder = ''
 
 const dispatch = createEventDispatcher()
 
@@ -62,7 +63,7 @@ const chosen = () => {
 
 <label class="custom-field">
   <input class="fs-14" list="options" placeholder="&nbsp;" bind:value={choice} on:change={chosen}/>
-  <span class="placeholder">Your entity of affiliation</span>
+  <span class="placeholder">{placeholder}</span>
 </label>
 
 <datalist id="options">

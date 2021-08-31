@@ -17,7 +17,6 @@ const chosen = () => {
 </script>
 
 <style>
-  /* datalist styling */
 *, *::before, *::after {
   box-sizing: border-box;
 }

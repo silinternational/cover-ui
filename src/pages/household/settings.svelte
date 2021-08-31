@@ -10,6 +10,7 @@ import { Button, TextField, IconButton, Page, Snackbar, setNotice } from "@silin
 const policyData = {}
 
 let householdId = ''
+let affiliation = ''
 
 $: policyId = $user.policy_id
 $: if (policyId) {
@@ -81,6 +82,11 @@ const isYou = householdMember => householdMember.id === $user.id
   <h3 class="ml-1 mt-3">Household ID<span class="required">*</span></h3>
   <p>
     <TextField placeholder={'1234567'} autofocus bind:value={householdId} on:blur={updateHouseholdId} />
+  </p>
+  
+  <h3 class="ml-1 mt-3">Affiliation<span class="required">*</span></h3>
+  <p>
+    <TextField placeholder={'Wycliffe USA, SIL International'} autofocus bind:value={affiliation} on:blur={updateHouseholdId} />
   </p>
   
   <h3 class="mt-3">Accountable people</h3>

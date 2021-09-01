@@ -76,14 +76,15 @@ export function init() {
 }
 
 /**
+ * Create a new claim for an existing item
  *
- * @description a function to create a new claim for an existing item
  * @export
  * @param {Object} item
  * @param {Object} claimData
  */
 export async function createClaim(item, claimData) {
-  start(item.id)
+  const urlPath = `policies/${item.policy_id}/claims`
+  start(urlPath)
 
   // TODO: make an item field to store details about claim item
   let parsedClaim = {
@@ -92,14 +93,14 @@ export async function createClaim(item, claimData) {
     event_type: claimData.lossReason,
   }
 
-  const claim = await CREATE(`policies/${item.policy_id}/claims`, parsedClaim)
+  const claim = await CREATE(urlPath, parsedClaim)
 
   claims.update(currClaims => {
     currClaims.push(claim)
     return currClaims
   })
 
-  stop(item.id)
+  stop(urlPath)
 }
 
 /**

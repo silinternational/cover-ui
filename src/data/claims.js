@@ -102,16 +102,6 @@ export async function createClaim(item, claimData) {
   stop(item.id)
 }
 
-export async function getClaim(itemId) {
-  start(itemId)
-
-  const claim = await GET(`claims/${id}`)
-
-  stop(itemId)
-  
-  return claim
-}
-
 /**
  *
  * @description a function to update a claim

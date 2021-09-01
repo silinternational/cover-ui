@@ -81,6 +81,7 @@ export function init() {
  * @export
  * @param {Object} item
  * @param {Object} claimData
+ * @return {Object} -- The newly created Claim
  */
 export async function createClaim(item, claimData) {
   const urlPath = `policies/${item.policy_id}/claims`
@@ -101,6 +102,7 @@ export async function createClaim(item, claimData) {
   })
 
   stop(urlPath)
+  return claim
 }
 
 /**

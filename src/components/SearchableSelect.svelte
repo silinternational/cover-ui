@@ -12,7 +12,7 @@ let randomId = generateRandomID('dataList-')
 
 const dispatch = createEventDispatcher()
 
-const chosen = () => {
+const onChange = () => {
   for (const [key, value] of Object.entries(options)){
     if(choice === value) {
       dispatch('chosen', key)
@@ -64,7 +64,7 @@ const chosen = () => {
 </style>
 
 <label class="custom-field" style="--field-padding: {padding};">
-  <input class="fs-14 {$$props.class}" style="width: {width}" list={randomId} placeholder="&nbsp;" bind:value={choice} on:change={chosen}/>
+  <input class="fs-14 {$$props.class}" style="width: {width}" list={randomId} placeholder="&nbsp;" bind:value={choice} on:change={onChange}/>
   <span class="placeholder">{placeholder}</span>
 </label>
 

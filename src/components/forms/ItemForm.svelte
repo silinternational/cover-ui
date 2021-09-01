@@ -1,35 +1,35 @@
 <script>
 import { ConvertCurrencyLink, Description, MoneyInput } from '../../components'
 import { dependentsByPolicyId, loadDependents } from '../../data/dependents.js'
-import { categories as categoryOptions, init, initialized as catItemsInitialized } from '../../data/itemCategories'
+import { categories, init, initialized as catItemsInitialized } from '../../data/itemCategories'
 import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
 import { Button, Form, Select, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
+export let item = {}
 export let policyId = undefined
 
 const dispatch = createEventDispatcher()
 
-const formData = {
-  category: '',
-  country: '',
-  marketValueUSD: '',
-  coverage_start_date: '',
-  coverage_status: 'Draft',
-  itemDescription: '',
-  in_storage: false,  //TODO get data from somewhere
-  make: '',
-  model: '',
-  shortName: '',
-  purchase_date: '',  //TODO get data from somewhere
-  uniqueIdentifier: '',
-}
+// Set default values.
+let categoryId = ''
+let country = ''
+let marketValueUSD = ''
+let coverageStartDate = ''
+let coverageStatus = 'Draft'
+let itemDescription = ''
+let inStorage = false
+let make = ''
+let model = ''
+let shortName = ''
+let purchaseDate = ''
+let uniqueIdentifier = ''
 
-let categories = []
+// Set initial values based on the provided item data.
+$: setInitialValues(item)
+
+let initialCategoryId = undefined
 let today = new Date()
-
-$: formData.coverage_start_date = today.toISOString().slice(0, 10) //api requires yyyy-mm-dd
-$: formData.purchase_date = formData.coverage_start_date
 
 $: dependents = $dependentsByPolicyId[policyId] || []
 $: dependentOptions = dependents.map(dependent => ({
@@ -45,55 +45,100 @@ $: policyMemberOptions = policyMembers.map(policyMember => ({
 
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions]
 
-$: if ($catItemsInitialized) categories = $categoryOptions.length ? $categoryOptions : [{
-  name: 'Electronics',
-  id: '63bcf980-e1f0-42d3-b2b0-2e4704159f4f'
-}] //TODO categoriesOptions isn't hydrating yet, remove mock data
 $: policyId && loadDependents(policyId)
 $: policyId && loadMembersOfPolicy(policyId)
 $: !$catItemsInitialized && init()
 
 const onAccountablePersonChange = event => {
-  formData.country = event.detail?.location //TODO handle when Dependents is empty, redirect to settings?
+  country = event.detail?.location //TODO handle when Dependents is empty, redirect to settings?
 }
 
 const onSelectCategory = event => {
-  formData.category = event.detail?.id
+  categoryId = event.detail?.id
 }
 
+const getFormData = () => {
+  return {
+    categoryId,
+    country,
+    marketValueUSD,
+    coverageStartDate,
+    coverageStatus,
+    itemDescription,
+    inStorage,
+    make,
+    model,
+    shortName,
+    purchaseDate,
+    uniqueIdentifier,
+  }
+}
+const onCategorySelectPopulated = () => {
+  if (item.category?.id) {
+    initialCategoryId = item.category?.id
+  }
+}
 const onSubmit = () => {
-  dispatch('submit', formData)
+  dispatch('submit', getFormData())
 }
 const saveForLater = () => {
-  dispatch('save-for-later', formData)
+  dispatch('save-for-later', getFormData())
+}
+const setInitialValues = (item) => {
+  categoryId = item.category?.id || categoryId
+  country = item.country || country
+  if (Number.isInteger(item.coverage_amount)) {
+    marketValueUSD = item.coverage_amount / 100
+  }
+  if (item.coverage_start_date) {
+    coverageStartDate = item.coverage_start_date
+  } else {
+    coverageStartDate = today.toISOString().slice(0, 10) //api requires yyyy-mm-dd
+  }
+  coverageStatus = item.coverage_status || coverageStatus
+  itemDescription = item.description || itemDescription
+  if (typeof item.in_storage === 'boolean') {
+    inStorage = item.in_storage
+  }
+  make = item.make || make
+  model = item.model || model
+  shortName = item.name || shortName
+  if (item.purchase_date) {
+    purchaseDate = item.purchase_date
+  } else {
+    purchaseDate = coverageStartDate
+  }
+  uniqueIdentifier = item.serial_number || uniqueIdentifier
 }
 </script>
 
 <Form on:submit={onSubmit}>
   <p>
-    <Select label="Category" on:change={onSelectCategory} options={categories} />
+    <Select label="Category" options={$categories} selectedID={initialCategoryId}
+            on:change={onSelectCategory} on:populated={onCategorySelectPopulated} />
   </p>
   <p>
-    <TextField label="Short name" bind:value={formData.shortName}></TextField>
+    <TextField label="Short name" bind:value={shortName}></TextField>
     <Description>This label will appear on your statements.</Description>
   </p>
   <p>
-    <TextArea label="Item description" bind:value={formData.itemDescription} rows="4"></TextArea>
+    <TextArea label="Item description" bind:value={itemDescription} rows="4"></TextArea>
     <Description>For personal use.</Description>
   </p>
   <p>
-    <TextField label="Unique identifier" bind:value={formData.uniqueIdentifier}></TextField>
+    <TextField label="Unique identifier" bind:value={uniqueIdentifier}></TextField>
     <Description>Optional. Serial number, IMEI, service tag, VIN</Description>
   </p>
   <p>
-    <TextField label="Make" bind:value={formData.make}></TextField>
+    <TextField label="Make" bind:value={make}></TextField>
     <Description>Required for mobile items.</Description>
   </p>
   <p>
-    <TextField label="Model" bind:value={formData.model}></TextField>
+    <TextField label="Model" bind:value={model}></TextField>
     <Description>Required for mobile items.</Description>
   </p>
   <p>
+    <!-- TODO: Set the initial value here (like on Category) once the API is providing it. -->
     <Select label="Accountable person" on:change={onAccountablePersonChange}
             options={accountablePersons}></Select>
     <Description>
@@ -102,7 +147,7 @@ const saveForLater = () => {
     </Description>
   </p>
   <p>
-    <MoneyInput label="Market value (USD)" bind:value={formData.marketValueUSD} />
+    <MoneyInput label="Market value (USD)" bind:value={marketValueUSD} />
     <Description>
       <ConvertCurrencyLink />
     </Description>

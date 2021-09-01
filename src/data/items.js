@@ -37,17 +37,17 @@ export async function addItem(policyId, itemData) {
   start(urlPath)
 
   const parsedItemData = {
-    category_id: itemData.category,
+    category_id: itemData.categoryId,
     country: itemData.country,
     coverage_amount: Number(itemData.marketValueUSD) * 100,
-    coverage_start_date: itemData.coverage_start_date,
-    coverage_status: itemData.coverage_status,
+    coverage_start_date: itemData.coverageStartDate,
+    coverage_status: itemData.coverageStatus,
     description: itemData.itemDescription,
-    in_storage: itemData.in_storage,
+    in_storage: itemData.inStorage,
     make: itemData.make,
     model: itemData.model,
     name: itemData.shortName,
-    purchase_date: itemData.purchase_date,
+    purchase_date: itemData.purchaseDate,
     serial_number: itemData.uniqueIdentifier
   }
 
@@ -70,24 +70,39 @@ export async function addItem(policyId, itemData) {
  *
  * @export
  * @param {string} policyId -- The UUID for the applicable policy
+ * @param {string} itemId -- The UUID for the applicable policy item
  * @param {Object} itemData
  * @return {Object} 
  */
-export async function updateItem(policyId, itemData) {
-  const itemId = itemData.id
+export async function updateItem(policyId, itemId, itemData) {
   if (!itemId) {
     throwError("item id not set")
   }
   const urlPath = `items/${itemId}`
   start(urlPath)
 
-  delete itemData.id
-  // TODO: create `parsedItem` to validate item
-  const updatedItem = await UPDATE(urlPath, itemData)
+  const parsedItemData = {
+    category_id: itemData.categoryId,
+    country: itemData.country,
+    coverage_amount: Number(itemData.marketValueUSD) * 100,
+    coverage_start_date: itemData.coverageStartDate,
+    coverage_status: itemData.coverageStatus,
+    description: itemData.itemDescription,
+    in_storage: itemData.inStorage,
+    make: itemData.make,
+    model: itemData.model,
+    name: itemData.shortName,
+    purchase_date: itemData.purchaseDate,
+    serial_number: itemData.uniqueIdentifier
+  }
+  const updatedItem = await UPDATE(urlPath, parsedItemData)
   
   itemsByPolicyId.update(data => {
     const items = data[policyId] || []
     const i = items.findIndex(item => item.id === itemId)
+    if (i === -1) {
+      throwError('Failed to find local item to update it')
+    }
     items[i] = updatedItem
     data[policyId] = items
     return data

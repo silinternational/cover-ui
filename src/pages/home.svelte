@@ -100,7 +100,7 @@ const onEditClaim = event => {
           <Datatable.Header.Item>Type</Datatable.Header.Item>
         </Datatable.Header>
         <Datatable.Data>
-          {#each items as item}
+          {#each items as item (item.id)}
               <Datatable.Data.Row on:click={() => redirect(`/items/${item.id}`)} clickable>
                 <Datatable.Data.Row.Item>
                   <div on:click={() => goToItemDetails = false}>

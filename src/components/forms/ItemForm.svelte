@@ -138,6 +138,7 @@ const setInitialValues = (item) => {
     <Description>Required for mobile items.</Description>
   </p>
   <p>
+    <!-- TODO: Set the initial value here (like on Category) once the API is providing it. -->
     <Select label="Accountable person" on:change={onAccountablePersonChange}
             options={accountablePersons}></Select>
     <Description>

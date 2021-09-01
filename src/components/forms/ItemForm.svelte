@@ -45,10 +45,6 @@ $: policyMemberOptions = policyMembers.map(policyMember => ({
 
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions]
 
-$: if ($catItemsInitialized) categories = $categoryOptions.length ? $categoryOptions : [{
-  name: 'Electronics',
-  id: '63bcf980-e1f0-42d3-b2b0-2e4704159f4f'
-}] //TODO categoriesOptions isn't hydrating yet, remove mock data
 $: policyId && loadDependents(policyId)
 $: policyId && loadMembersOfPolicy(policyId)
 $: !$catItemsInitialized && init()

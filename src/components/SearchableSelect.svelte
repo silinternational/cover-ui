@@ -1,4 +1,5 @@
 <script>
+import { generateRandomID } from "@silintl/ui-components/random"
 import { createEventDispatcher } from "svelte"
 
 export let options = {}
@@ -6,6 +7,8 @@ export let choice = ''
 export let placeholder = ''
 export let padding = '12px'
 export let width = '232px'
+
+let randomId = generateRandomID('dataList-')
 
 const dispatch = createEventDispatcher()
 
@@ -54,18 +57,18 @@ const chosen = () => {
 
 .custom-field input:not(:placeholder-shown) + .placeholder,
 .custom-field input:focus + .placeholder {
-  top: 4px;
+  top: 3px;
   font-size: 10px;
   color: #222;
 }
 </style>
 
 <label class="custom-field" style="--field-padding: {padding};">
-  <input class="fs-14 {$$props.class}" style="width: {width}" list="options" placeholder="&nbsp;" bind:value={choice} on:change={chosen}/>
+  <input class="fs-14 {$$props.class}" style="width: {width}" list={randomId} placeholder="&nbsp;" bind:value={choice} on:change={chosen}/>
   <span class="placeholder">{placeholder}</span>
 </label>
 
-<datalist id="options">
+<datalist id={randomId}>
   {#each Object.values(options) as option}
     <option value={option}>  
   {/each}

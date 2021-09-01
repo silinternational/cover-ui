@@ -18,11 +18,11 @@ let marketValueUSD = ''
 let coverageStartDate = ''
 let coverageStatus = 'Draft'
 let itemDescription = ''
-let inStorage = false  //TODO get data from somewhere
+let inStorage = false
 let make = ''
 let model = ''
 let shortName = ''
-let purchaseDate = ''  //TODO get data from somewhere
+let purchaseDate = ''
 let uniqueIdentifier = ''
 
 // Set initial values based on the provided item data.

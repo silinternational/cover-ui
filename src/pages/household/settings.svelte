@@ -13,6 +13,7 @@ const affiliations = {
 }
 
 let householdId = ''
+let costCenter = ''
 let placeholder = 'Your entity of affiliation'
 
 $: policyId = $user.policy_id
@@ -26,22 +27,30 @@ $: householdMembers = $membersByPolicyId[policyId] || []
 $: $policies.length || init()
 $: policy = $policies.find(policy => policy.id === policyId) || {}
 $: policy.household_id && setPolicyHouseholdId()
+$: policy.cost_center && setPolicyCostCenter()
 $: policy.entity_code && setAffiliation()
 
 const setAffiliation = () => affiliationChoice = affiliations[policy.entity_code]
-
 const setPolicyHouseholdId = () => householdId = policy.household_id || ''
+const setPolicyCostCenter = () => costCenter = policy.cost_center || ''
 
-const updateHouseholdId = async () => {
+const updateGenericId = async (id, idName, idPath) => {
+  id = id.replaceAll(' ', '')
   householdId = householdId.replaceAll(' ', '')
-  if(householdId !== policy.household_id) {
-    if(isIdValid(householdId)) {
-      await callUpdatePolicy(householdId)
+  costCenter = costCenter.replaceAll(' ', '')
 
-      setNotice('Your household ID has been saved')
+  if(id !== policy[idPath]) {
+    if(isIdValid(id)) {
+      if (id === householdId) {
+        await callUpdatePolicy(id)
+      } else {
+        await callUpdatePolicy(householdId, id)
+      }
+
+      setNotice(`Your ${idName} has been saved`)
     } else {
-      setNotice('Please enter a valid Household ID')
-      setPolicyHouseholdId()
+      setNotice(`Please enter a valid ${idName}`)
+      setPolicyCostCenter()
     }
   }
 }
@@ -50,15 +59,16 @@ const updateAffiliation = async e => {
   const choice = e.detail
 
   if(choice !== policyData.entity_code) {
-    await callUpdatePolicy(householdId, choice)
+    await callUpdatePolicy(householdId, costCenter, choice)
     
     setNotice('Your affiliation has been saved')
   }
 }
 
-const callUpdatePolicy = async (id, affiliation) => {
+const callUpdatePolicy = async (id, costCenter, affiliation) => {
   policyData.household_id = id
   affiliation && (policyData.entity_code = affiliation)
+  costCenter && (policyData.cost_center = costCenter)
 
   await updatePolicy(policyId, policyData)
 }
@@ -102,12 +112,17 @@ const isYou = householdMember => householdMember.id === $user.id
 
   <h3 class="ml-1 mt-3">Household ID<span class="required">*</span></h3>
   <p>
-    <TextField placeholder={'1234567'} autofocus bind:value={householdId} on:blur={updateHouseholdId} />
+    <TextField placeholder={'1234567'} autofocus bind:value={householdId} on:blur={() => updateGenericId(householdId, 'household ID', 'household_id')} />
   </p>
-
+  
   {#if policy.type === 'Corporate'}
     <h3 class="ml-1 mt-3" >Affiliation<span class="required">*</span></h3>
     <SearchableSelect options={affiliations} {placeholder} padding={'16px'} on:chosen={updateAffiliation}/>
+    
+    <h3 class="ml-1 mt-3">Cost center<span class="required">*</span></h3>
+    <p>
+      <TextField placeholder={'1234567'} bind:value={costCenter} on:blur={() => updateGenericId(costCenter, 'cost center', 'cost_center')} />
+    </p>
   {/if}
   
   <h3 class="mt-3">Accountable people</h3>

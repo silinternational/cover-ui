@@ -79,7 +79,7 @@ const saveForLater = () => {
   dispatch('save-for-later', getFormData())
 }
 const setInitialValues = (item) => {
-  categoryId = item.category_id || categoryId
+  categoryId = item.category?.id || categoryId
   country = item.country || country
   if (Number.isInteger(item.coverage_amount)) {
     marketValueUSD = item.coverage_amount / 100

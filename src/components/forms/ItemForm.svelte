@@ -1,7 +1,7 @@
 <script>
 import { ConvertCurrencyLink, Description, MoneyInput } from '../../components'
 import { dependentsByPolicyId, loadDependents } from '../../data/dependents.js'
-import { categories as categoryOptions, init, initialized as catItemsInitialized } from '../../data/itemCategories'
+import { categories, init, initialized as catItemsInitialized } from '../../data/itemCategories'
 import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
 import { Button, Form, Select, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
@@ -28,7 +28,6 @@ let uniqueIdentifier = ''
 // Set initial values based on the provided item data.
 $: setInitialValues(item)
 
-let categories = []
 let today = new Date()
 
 $: dependents = $dependentsByPolicyId[policyId] || []
@@ -109,7 +108,7 @@ const setInitialValues = (item) => {
 
 <Form on:submit={onSubmit}>
   <p>
-    <Select label="Category" on:change={onSelectCategory} options={categories} />
+    <Select label="Category" on:change={onSelectCategory} options={$categories} />
   </p>
   <p>
     <TextField label="Short name" bind:value={shortName}></TextField>

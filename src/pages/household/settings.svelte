@@ -1,15 +1,19 @@
 <script>
 import user from '../../authn/user'
-import { Breadcrumb } from "../../components"
+import { Breadcrumb, SearchableSelect } from "../../components"
 import { dependentsByPolicyId, loadDependents } from '../../data/dependents'
-import { policies, updatePolicy } from '../../data/policies'
+import { policies, updatePolicy, init } from '../../data/policies'
 import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
 import { goto } from "@roxi/routify"
 import { Button, TextField, IconButton, Page, Snackbar, setNotice } from "@silintl/ui-components"
 
 const policyData = {}
+const affiliations = {
+  'SIL': 'SIL International'
+}
 
 let householdId = ''
+let placeholder = 'Your entity of affiliation'
 
 $: policyId = $user.policy_id
 $: if (policyId) {
@@ -19,21 +23,47 @@ $: if (policyId) {
 
 $: dependents = $dependentsByPolicyId[policyId] || []
 $: householdMembers = $membersByPolicyId[policyId] || []
+$: $policies.length || init()
+$: policy = $policies.find(policy => policy.id === policyId) || {}
+$: policy.household_id && setPolicyHouseholdId()
+$: policy.entity_code && setAffiliation()
+
+const setAffiliation = () => affiliationChoice = affiliations[policy.entity_code]
+
+const setPolicyHouseholdId = () => householdId = policy.household_id || ''
 
 const updateHouseholdId = async () => {
   householdId = householdId.replaceAll(' ', '')
+  if(householdId !== policy.household_id) {
+    if(isIdValid(householdId)) {
+      await callUpdatePolicy(householdId)
 
-  if(validateId(householdId)) {
-    policyData.household_id = householdId
-    
-    await updatePolicy(policyId, policyData)
-    setNotice('Your household ID has been saved')
-  } else {
-    setNotice('Please enter a valid Household ID')
+      setNotice('Your household ID has been saved')
+    } else {
+      setNotice('Please enter a valid Household ID')
+      setPolicyHouseholdId()
+    }
   }
 }
 
-const validateId = sanitizedId => sanitizedId.length && sanitizedId.split('').every(digit => /[0-9]/.test(digit))
+const updateAffiliation = async e => {
+  const choice = e.detail
+
+  if(choice !== policyData.entity_code) {
+    await callUpdatePolicy(householdId, choice)
+    
+    setNotice('Your affiliation has been saved')
+  }
+}
+
+const callUpdatePolicy = async (id, affiliation) => {
+  policyData.household_id = id
+  affiliation && (policyData.entity_code = affiliation)
+
+  await updatePolicy(policyId, policyData)
+}
+
+const isIdValid = sanitizedId => sanitizedId.length && sanitizedId.split('').every(digit => /[0-9]/.test(digit))
 const edit = id => $goto(`/household/settings/dependent/${id}`)
 const isYou = householdMember => householdMember.id === $user.id
 </script>
@@ -64,7 +94,6 @@ const isYou = householdMember => householdMember.id === $user.id
 }
 .required {
   color: var(--mdc-theme-status-error);
-;
 }
 </style>
 
@@ -75,6 +104,11 @@ const isYou = householdMember => householdMember.id === $user.id
   <p>
     <TextField placeholder={'1234567'} autofocus bind:value={householdId} on:blur={updateHouseholdId} />
   </p>
+
+  {#if policy.type === 'Corporate'}
+    <h3 class="ml-1 mt-3" >Affiliation<span class="required">*</span></h3>
+    <SearchableSelect options={affiliations} {placeholder} padding={'16px'} on:chosen={updateAffiliation}/>
+  {/if}
   
   <h3 class="mt-3">Accountable people</h3>
 

@@ -9,7 +9,6 @@ import { Button, TextField, IconButton, Page, Snackbar, setNotice } from "@silin
 
 const policyData = {}
 const affiliations = {
-  'WBT': 'Wycliffe USA',
   'SIL': 'SIL International'
 }
 
@@ -37,7 +36,7 @@ const updateHouseholdId = async () => {
   householdId = householdId.replaceAll(' ', '')
   if(householdId !== policy.household_id) {
     if(isIdValid(householdId)) {
-      await callUpdatePolicy()
+      await callUpdatePolicy(householdId)
 
       setNotice('Your household ID has been saved')
     } else {
@@ -51,16 +50,15 @@ const updateAffiliation = async e => {
   const choice = e.detail
 
   if(choice !== policyData.entity_code) {
-    policyData.entity_code = choice
-
-    await callUpdatePolicy()
+    await callUpdatePolicy(householdId, choice)
     
     setNotice('Your affiliation has been saved')
   }
 }
 
-const callUpdatePolicy = async () => {
-  policyData.household_id = householdId
+const callUpdatePolicy = async (id, affiliation) => {
+  policyData.household_id = id
+  affiliation && (policyData.entity_code = affiliation)
 
   await updatePolicy(policyId, policyData)
 }
@@ -109,7 +107,7 @@ const isYou = householdMember => householdMember.id === $user.id
 
   {#if policy.type === 'Corporate'}
     <h3 class="ml-1 mt-3" >Affiliation<span class="required">*</span></h3>
-    <SearchableSelect options={affiliations} {placeholder} padding={'19px'} on:chosen={updateAffiliation}/>
+    <SearchableSelect options={affiliations} {placeholder} padding={'16px'} on:chosen={updateAffiliation}/>
   {/if}
   
   <h3 class="mt-3">Accountable people</h3>

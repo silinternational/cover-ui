@@ -28,6 +28,7 @@ let uniqueIdentifier = ''
 // Set initial values based on the provided item data.
 $: setInitialValues(item)
 
+let initialCategoryId = undefined
 let today = new Date()
 
 $: dependents = $dependentsByPolicyId[policyId] || []
@@ -72,6 +73,11 @@ const getFormData = () => {
     uniqueIdentifier,
   }
 }
+const onCategorySelectPopulated = () => {
+  if (item.category?.id) {
+    initialCategoryId = item.category?.id
+  }
+}
 const onSubmit = () => {
   dispatch('submit', getFormData())
 }
@@ -108,7 +114,8 @@ const setInitialValues = (item) => {
 
 <Form on:submit={onSubmit}>
   <p>
-    <Select label="Category" on:change={onSelectCategory} options={$categories} />
+    <Select label="Category" options={$categories} selectedID={initialCategoryId}
+            on:change={onSelectCategory} on:populated={onCategorySelectPopulated} />
   </p>
   <p>
     <TextField label="Short name" bind:value={shortName}></TextField>

@@ -5,6 +5,7 @@ import { createEventDispatcher } from "svelte"
 export let raised = false
 export let outlined = false
 export let uploading = false
+export let showPreview = true
 
 let fileInput = {}
 
@@ -99,7 +100,9 @@ form {
     <div>or drop files here</div>
     <i class="material-icons icon" id="upload-icon">cloud_upload</i>
   </form>
-  <div id="gallery" class="mt-10px"></div>
+  {#if showPreview}
+    <div id="gallery" class="mt-10px"></div>
+  {/if}
   {#if uploading}
     <Progress.Circular />
     <span>{`Uploading file`}</span>

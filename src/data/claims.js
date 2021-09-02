@@ -109,12 +109,12 @@ export const createClaimItem = async (claimId, claimItemData) => {
   start(urlPath)
   
   const parsedClaimItem = {
-    fmv: claimItemData.fairMarketValue,
+    fmv: claimItemData.fairMarketValueUSD * 100,
     is_repairable: claimItemData.repairableSelection === 'repairable',
     item_id: claimItemData.itemId,
     payout_option: claimItemData.payoutOption,
     repair_actual: 0,
-    repair_estimate: claimItemData.repairCost,
+    repair_estimate: claimItemData.repairCostUSD * 100,
     replace_actual: 0,
     replace_estimate: 0,
   }

@@ -43,8 +43,8 @@ let lostDate = todayDateString
 let lossReason = ''
 let situationDescription = ''
 let repairableSelection = null
-let fairMarketValue = ''
-let repairCost = ''
+let fairMarketValueUSD = ''
+let repairCostUSD = ''
 let payoutOption = ''
 
 // Set initial values based on the provided claim and claim-item data.
@@ -52,8 +52,8 @@ $: setInitialValues(claim, claimItem)
 
 // TODO: get accountable person from item 
 // TODO: add reimbursed value
-$: isNotRepairableOrMoneyInputsAreSet = (repairableSelection !== "repairable" || (repairCost && fairMarketValue))
-$: seventyPercentCheck = (!repairCost || !fairMarketValue || (repairCost/fairMarketValue) >= .7)
+$: isNotRepairableOrMoneyInputsAreSet = (repairableSelection !== "repairable" || (repairCostUSD && fairMarketValueUSD))
+$: seventyPercentCheck = (!repairCostUSD || !fairMarketValueUSD || (repairCostUSD/fairMarketValueUSD) >= .7)
 $: payoutOptionCheck = lossReason && isNotRepairableOrMoneyInputsAreSet && seventyPercentCheck
 $: isPotentiallyRepairable = repairableEventTypeNames.includes(lossReason)
 
@@ -71,7 +71,7 @@ $: moneyPayoutOptions = [
   },
   // TODO: make this the min of either covered amount or FMV
   {
-    label: `Cash now (${formatMoney((fairMarketValue || 0) * regularFraction)})`,
+    label: `Cash now (${formatMoney((fairMarketValueUSD || 0) * regularFraction)})`,
     value: 'cash_now'
   }
 ]
@@ -87,10 +87,10 @@ const onSubmit = async () => {
       situationDescription,
     },
     claimItemData: {
-      fairMarketValue,
+      fairMarketValueUSD,
       repairableSelection,
       itemId: item.id,
-      repairCost,
+      repairCostUSD,
       payoutOption,
     },
   })
@@ -110,13 +110,13 @@ const unSetPayoutOption = () => {
   payoutOption = null
 }
 const unSetFairMarketValue = () => {
-  fairMarketValue = null
+  fairMarketValueUSD = null
 }
 const unSetIsRepairable = () => {
   repairableSelection = null
 }
 const unSetRepairCost = () => {
-  repairCost = null
+  repairCostUSD = null
 }
 </script>
 
@@ -143,7 +143,7 @@ const unSetRepairCost = () => {
     {/if}
     {#if repairableSelection === "repairable"}
       <p>
-        <MoneyInput label="Cost of repair" bind:value={repairCost} />
+        <MoneyInput label="Cost of repair" bind:value={repairCostUSD} />
         <Description>
           How much will it cost to be repaired?
           <br />
@@ -153,7 +153,7 @@ const unSetRepairCost = () => {
     {/if}
     {#if repairableSelection === "repairable" || payoutOption === "cash_now"}
       <p>
-        <MoneyInput label="Fair market value" bind:value={fairMarketValue} />
+        <MoneyInput label="Fair market value" bind:value={fairMarketValueUSD} />
         <Description>
           <ConvertCurrencyLink />
         </Description>
@@ -174,7 +174,7 @@ const unSetRepairCost = () => {
       {/if}
     {/if}
     {#if repairableSelection === "repairable" && (isNotRepairableOrMoneyInputsAreSet && !seventyPercentCheck)}
-      <p>You will receive {formatMoney(repairCost * regularFraction)} to repair your insured Item.</p>
+      <p>You will receive {formatMoney(repairCostUSD * 100 * regularFraction)} to repair your insured Item.</p>
     {/if}
     <!--TODO: add evacuation amount when items is done (covered_value*(2/3))-->
     <p>

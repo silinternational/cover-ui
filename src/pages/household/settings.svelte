@@ -34,23 +34,28 @@ const setAffiliation = () => affiliationChoice = affiliations[policy.entity_code
 const setPolicyHouseholdId = () => householdId = policy.household_id || ''
 const setPolicyCostCenter = () => costCenter = policy.cost_center || ''
 
-const updateGenericId = async (id, idName, idPath) => {
-  id = id.replaceAll(' ', '')
+const updateHouseholdId = async () => {
   householdId = householdId.replaceAll(' ', '')
-  costCenter = costCenter.replaceAll(' ', '')
+  if(householdId !== policy.household_id) {
+    if(isIdValid(householdId)) {
+      await callUpdatePolicy(householdId)
 
-  if(id !== policy[idPath]) {
-    if(isIdValid(id)) {
-      if (id === householdId) {
-        await callUpdatePolicy(id)
-      } else {
-        await callUpdatePolicy(householdId, id)
-      }
-
-      setNotice(`Your ${idName} has been saved`)
+      setNotice('Your household ID has been saved')
     } else {
-      setNotice(`Please enter a valid ${idName}`)
-      setPolicyCostCenter()
+      setNotice('Please enter a valid Household ID')
+    }
+  }
+}
+
+const updateCostCenter = async () => {
+  costCenter = costCenter.replaceAll(' ', '')
+  if(costCenter !== policy.cost_center) {
+    if(isIdValid(costCenter)) {
+      await callUpdatePolicy(householdId, costCenter)
+
+      setNotice('Your cost center has been saved')
+    } else {
+      setNotice('Please enter a valid cost center')
     }
   }
 }
@@ -112,7 +117,7 @@ const isYou = householdMember => householdMember.id === $user.id
 
   <h3 class="ml-1 mt-3">Household ID<span class="required">*</span></h3>
   <p>
-    <TextField placeholder={'1234567'} autofocus bind:value={householdId} on:blur={() => updateGenericId(householdId, 'household ID', 'household_id')} />
+    <TextField placeholder={'1234567'} autofocus bind:value={householdId} on:blur={updateHouseholdId} />
   </p>
   
   {#if policy.type === 'Corporate'}
@@ -121,7 +126,7 @@ const isYou = householdMember => householdMember.id === $user.id
     
     <h3 class="ml-1 mt-3">Cost center<span class="required">*</span></h3>
     <p>
-      <TextField placeholder={'1234567'} bind:value={costCenter} on:blur={() => updateGenericId(costCenter, 'cost center', 'cost_center')} />
+      <TextField placeholder={'1234567'} bind:value={costCenter} on:blur={updateCostCenter} />
     </p>
   {/if}
   

@@ -10,7 +10,7 @@ import { Button, Form, Page } from '@silintl/ui-components'
 
 export let claimId
 
-const updatedClaimData = {}
+const updatedClaimItemData = {}
 const showImg = []
 
 let repairOrReplacementCost
@@ -68,11 +68,11 @@ const onImgError = id => showImg[id] = false
 const onSubmit = async () => {
   const cents = repairOrReplacementCost * 100
 
-  //TODO update this when the claimUpdate payload is defined
+  //TODO update this when the claimItemUpdate endpoint is finished
   if (needsRepairReceipt) {
-    updatedClaimData.repair_actual = cents
+    updatedClaimItemData.repair_actual = cents
   } else if (needsReplaceReceipt) {
-    updatedClaimData.replace_actual = cents
+    updatedClaimItemData.replace_actual = cents
   }
 
   for (let i = 0; i < files.length; i++) {
@@ -83,9 +83,9 @@ const onSubmit = async () => {
   files = []
   showPreview = false
 
-  await loadClaims() //TODO delte this once the updateClaim call is finished
+  await loadClaims()
 
-  console.log(updatedClaimData) //TODO update claim with repairOrReplacementCost and file to api
+  console.log(updatedClaimItemData) //TODO update claimItem with repairOrReplacementCost
 }
 
 async function onUpload(event) {

@@ -3,10 +3,12 @@ import user from '../../authn/user.js'
 import { Banner, ClaimBanner, ConvertCurrencyLink, FileDropArea, MoneyInput, Row } from '../../components'
 import { formatDate } from '../../components/dates.js'
 import { upload } from '../../data'
-import { loadClaims, claims, initialized } from '../../data/claims'
+import { loadClaims, claims, initialized, claimsFileAttach } from '../../data/claims'
 import { loadItems, itemsByPolicyId } from '../../data/items'
-import { goto, params } from '@roxi/routify'
+import { goto } from '@roxi/routify'
 import { Button, Form, Page } from '@silintl/ui-components'
+
+export let claimId
 
 const updatedClaimData = {}
 
@@ -14,10 +16,11 @@ let repairOrReplacementCost
 let uploading = false
 let deductible = .05
 let maximumPayout = ''
+let files = []
 
 $: $initialized || loadClaims()
 
-$: claim = $claims.find(clm => clm.id === $params.claimId) || {}
+$: claim = $claims.find(clm => clm.id === claimId) || {}
 $: claimItem = claim.claim_items?.[0] || {} //For now there will only be one claim_item
 $: items = $itemsByPolicyId[$user.policy_id] || []
 $: $user.policy_id && loadItems($user.policy_id)
@@ -30,6 +33,7 @@ $: needsReplaceReceipt = (status === 'Needs_replace_receipt')
 $: needsReceipt = (needsRepairReceipt || needsReplaceReceipt)
 $: moneyFormLabel = needsRepairReceipt ? "Actual cost of repair" : "Actual cost of replacement"
 $: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
+$: claimFiles = claim.claim_files || []
 $: if(payoutOption === 'repair') {
     maximumPayout = computeRepairMaxPayout()
   } else if(payoutOption === 'replacement') {
@@ -48,9 +52,9 @@ const computeReplaceMaxPayout = () => computePayout(claimItem.replace_estimate, 
 
 const computeCashMaxPayout = () => computePayout(claimItem.coverage_amount, claimItem.fmv)
 
-const editClaim = () => $goto(`claims/${$params.claimId}/edit)`)
+const editClaim = () => $goto(`claims/${claimId}/edit)`)
 
-const onSubmit = () => {
+const onSubmit = async () => {
   const cents = repairOrReplacementCost * 100
 
   //TODO update this when the claimUpdate payload is defined
@@ -59,15 +63,22 @@ const onSubmit = () => {
   } else if (needsReplaceReceipt) {
     updatedClaimData.replace_actual = cents
   }
-  
+
+  for (let i = 0; i < files.length; i++) {
+    await claimsFileAttach(claimId, files[i].id)
+  }
+
   console.log(updatedClaimData) //TODO update claim with repairOrReplacementCost and file to api
 }
 
-async function chosen(event) {
+async function onUpload(event) {
   try {
     uploading = true
 
-    updatedClaimData.file = await upload(event.detail)
+    const file = await upload(event.detail)
+
+    files = [...files, file]
+
   } finally {
     uploading = false
   }
@@ -114,10 +125,16 @@ async function chosen(event) {
       <b>Maximum payout (if approved)</b><br />
       {maximumPayout}
     </p>
+
+    {#if claimFiles.length}
+      {#each claimFiles as file}
+        <img src={file} alt='receipt' />
+      {/each}
+    {/if}
     <p>
       <Button on:click={editClaim} outlined>Edit claim</Button>
     </p>
-    {#if needsReceipt}
+    {#if needsReceipt || true}
       <Form on:submit={onSubmit}>
         <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} />
 
@@ -129,7 +146,7 @@ async function chosen(event) {
 
         <br/>
 
-        <FileDropArea class="w-50" raised {uploading} on:upload={chosen}/>
+        <FileDropArea class="w-50" raised {uploading} on:upload={onUpload}/>
 
         <br/>
 

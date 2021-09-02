@@ -71,7 +71,7 @@ $: moneyPayoutOptions = [
   },
   // TODO: make this the min of either covered amount or FMV
   {
-    label: `Cash now (${formatMoney((fairMarketValueUSD || 0) * regularFraction)})`,
+    label: `Cash now (${formatMoney((fairMarketValueUSD || 0) * 100 * regularFraction)})`,
     value: 'cash_now'
   }
 ]

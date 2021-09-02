@@ -87,8 +87,7 @@ export async function createClaim(item, claimData) {
   const urlPath = `policies/${item.policy_id}/claims`
   start(urlPath)
 
-  // TODO: make an item field to store details about claim item
-  let parsedClaim = {
+  const parsedClaim = {
     event_date: new Date(claimData.lostDate),
     event_description: claimData.situationDescription,
     event_type: claimData.lossReason,

@@ -105,6 +105,33 @@ export async function createClaim(item, claimData) {
   return claim
 }
 
+export const createClaimItem = async (claimId, claimItemData) => {
+  const urlPath = `claims/${claimId}/items`
+  start(urlPath)
+  
+  const parsedClaimItem = {
+    fmv: claimItemData.fairMarketValue,
+    is_repairable: claimItemData.repairableSelection === 'repairable',
+    item_id: claimItemData.itemId,
+    payout_option: claimItemData.payoutOption,
+    repair_actual: 0,
+    repair_estimate: claimItemData.repairCost,
+    replace_actual: 0,
+    replace_estimate: 0,
+  }
+  
+  const claimItem = await CREATE(urlPath, parsedClaimItem)
+  
+  claims.update(claims => {
+    const claim = claims.find(c => c.id === claimId) || {}
+    const claimItems = claim.claim_items || []
+    claimItems.push(claimItem)
+    return claims
+  })
+  
+  stop(urlPath)
+}
+
 /**
  *
  * @description a function to update a claim

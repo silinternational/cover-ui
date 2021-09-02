@@ -81,13 +81,18 @@ const onSubmit = async () => {
     payoutOption = "repair"
   }
   dispatch('submit', {
-    lostDate,
-    lossReason,
-    situationDescription,
-    fairMarketValue,
-    repairableSelection,
-    repairCost,
-    payoutOption,
+    claimData: {
+      lostDate,
+      lossReason,
+      situationDescription,
+    },
+    claimItemData: {
+      fairMarketValue,
+      repairableSelection,
+      itemId: item.id,
+      repairCost,
+      payoutOption,
+    },
   })
 }
 const setInitialValues = (claim, claimItem) => {

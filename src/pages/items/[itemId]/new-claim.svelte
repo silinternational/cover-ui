@@ -1,7 +1,7 @@
 <script>
 import user from '../../../authn/user'
 import { Breadcrumb, ClaimForm } from '../../../components'
-import { claims, initialized, createClaim, loadClaims } from '../../../data/claims.js'
+import { claims, initialized, createClaim, createClaimItem, loadClaims } from '../../../data/claims.js'
 import { itemsByPolicyId, loadItems } from '../../../data/items.js'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
@@ -36,10 +36,10 @@ const isItemIdOnClaim = (itemId, claim) => {
   return claimItems.some(claimItem => claimItem.item_id === itemId)
 }
 const onSubmit = async event => {
-  const formData = event.detail
-  await createClaim(item, formData)
-  // TODO: make this go back a url
-  $goto('/claims')
+  const { claimData, claimItemData } = event.detail
+  const claim = await createClaim(item, claimData)
+  await createClaimItem(claim.id, claimItemData)
+  $goto(`/claims/${claim.id}`)
 }
 </script>
 

@@ -11,12 +11,14 @@ import { Button, Form, Page } from '@silintl/ui-components'
 export let claimId
 
 const updatedClaimData = {}
+const showImg = []
 
 let repairOrReplacementCost
 let uploading = false
 let deductible = .05
 let maximumPayout = ''
 let files = []
+let showPreview = true
 
 $: $initialized || loadClaims()
 
@@ -34,6 +36,7 @@ $: needsReceipt = (needsRepairReceipt || needsReplaceReceipt)
 $: moneyFormLabel = needsRepairReceipt ? "Actual cost of repair" : "Actual cost of replacement"
 $: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
 $: claimFiles = claim.claim_files || []
+$: setShowImgTrue(claimFiles.length)
 $: if(payoutOption === 'repair') {
     maximumPayout = computeRepairMaxPayout()
   } else if(payoutOption === 'replacement') {
@@ -54,6 +57,14 @@ const computeCashMaxPayout = () => computePayout(claimItem.coverage_amount, clai
 
 const editClaim = () => $goto(`claims/${claimId}/edit)`)
 
+const setShowImgTrue = length => {
+  for (let i = 0; i < length; i++) {
+    showImg[i] = true
+  }
+}
+
+const onImgError = id => showImg[id] = false
+
 const onSubmit = async () => {
   const cents = repairOrReplacementCost * 100
 
@@ -68,12 +79,19 @@ const onSubmit = async () => {
     await claimsFileAttach(claimId, files[i].id)
   }
 
+  files = []
+  showPreview = false
+
+  await loadClaims() //TODO delte this once the updateClaim call is finished
+
   console.log(updatedClaimData) //TODO update claim with repairOrReplacementCost and file to api
 }
 
 async function onUpload(event) {
   try {
     uploading = true
+
+    showPreview = true
 
     const file = await upload(event.detail)
 
@@ -92,6 +110,10 @@ async function onUpload(event) {
 
 .label {
   color: hsla(219, 53%, 7%, .6);
+}
+
+.receipt {
+  max-width: 400px;
 }
 
 </style>
@@ -127,10 +149,15 @@ async function onUpload(event) {
     </p>
 
     {#if claimFiles.length}
-      {#each claimFiles as file}
-        <img src={file} alt='receipt' />
-      {/each}
+      <div class="flex column">
+        {#each claimFiles as file, i}
+          {#if showImg[i]}
+            <img class='receipt' src={file.file.url} alt='receipt' on:error={() => onImgError(i)}/>
+          {/if}
+        {/each}
+      </div>
     {/if}
+
     <p>
       <Button on:click={editClaim} outlined>Edit claim</Button>
     </p>
@@ -146,7 +173,7 @@ async function onUpload(event) {
 
         <br/>
 
-        <FileDropArea class="w-50" raised {uploading} on:upload={onUpload}/>
+        <FileDropArea class="w-50" raised {uploading} {showPreview} on:upload={onUpload}/>
 
         <br/>
 

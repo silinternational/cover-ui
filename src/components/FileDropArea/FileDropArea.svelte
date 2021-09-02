@@ -52,7 +52,7 @@ function previewFile(file) {
   reader.readAsDataURL(file)
   reader.onloadend = function() {
     let img = document.createElement('img')
-    img.style = "width: -webkit-fill-available; margin-bottom: 10px ;margin-right: 10px;vertical-align: middle;"
+    img.style = "max-width: 200px; margin-bottom: 10px ;margin-right: 10px;vertical-align: middle;"
     img.src = reader.result
     document.getElementById('gallery').appendChild(img)
   }

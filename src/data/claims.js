@@ -135,11 +135,11 @@ export const createClaimItem = async (claimId, claimItemData) => {
  *
  * @description a function to update a claim
  * @export
- * @param {String} itemId
+ * @param {String} claimId
  * @param {Object} newClaimData
  */
-export async function updateClaim(itemId, newClaimData) {
-  start(itemId)
+export async function updateClaim(claimId, newClaimData) {
+  start(claimId)
 
   //TODO make sure these properties are what is used in update claim form when it exists
   const parsedData = {
@@ -148,15 +148,15 @@ export async function updateClaim(itemId, newClaimData) {
     event_description: newClaimData.event_description,
   }
 
-  const updatedClaim = await UPDATE(`claims/${itemId}`, parsedData)
+  const updatedClaim = await UPDATE(`claims/${claimId}`, parsedData)
 
   claims.update(currClaims => {
-    let i = currClaims.findIndex(clm => clm.itemId === itemId)
+    let i = currClaims.findIndex(clm => clm.id === claimId)
     currClaims[i] = updatedClaim
     return currClaims
   })
 
-  stop(itemId)
+  stop(claimId)
 
   return updatedClaim
 }

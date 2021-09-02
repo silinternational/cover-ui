@@ -38,7 +38,7 @@ $: items = $itemsByPolicyId[$user.policy_id] || []
 $: item = items.find(anItem => anItem.id === itemId) || {}
 
 const onSubmit = async event => {
-  await updateClaim(itemId, event.detail)
+  await updateClaim(claimId, event.detail)
   $goto(`/claims/${claimId}`)
 }
 </script>

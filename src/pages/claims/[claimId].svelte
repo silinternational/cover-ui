@@ -76,8 +76,7 @@ const onSubmit = async () => {
   }
 
   for (let i = 0; i < files.length; i++) {
-    const file = await upload(files[i])
-    await claimsFileAttach(claimId, file.id)
+    await claimsFileAttach(claimId, files[i].id)
   }
 
   files = []
@@ -94,7 +93,7 @@ async function onUpload(event) {
 
     showPreview = true
 
-    const file = event.detail
+    const file = await upload(event.detail)
 
     files = [...files, file]
     

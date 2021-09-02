@@ -76,7 +76,8 @@ const onSubmit = async () => {
   }
 
   for (let i = 0; i < files.length; i++) {
-    await claimsFileAttach(claimId, files[i].id)
+    const file = await upload(files[i])
+    await claimsFileAttach(claimId, file.id)
   }
 
   files = []
@@ -93,10 +94,10 @@ async function onUpload(event) {
 
     showPreview = true
 
-    const file = await upload(event.detail)
+    const file = event.detail
 
     files = [...files, file]
-
+    
   } finally {
     uploading = false
   }
@@ -161,7 +162,7 @@ async function onUpload(event) {
     <p>
       <Button on:click={editClaim} outlined>Edit claim</Button>
     </p>
-    {#if needsReceipt}
+    {#if needsReceipt || true}
       <Form on:submit={onSubmit}>
         <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} />
 

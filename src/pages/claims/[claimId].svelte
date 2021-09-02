@@ -161,7 +161,7 @@ async function onUpload(event) {
     <p>
       <Button on:click={editClaim} outlined>Edit claim</Button>
     </p>
-    {#if needsReceipt || true}
+    {#if needsReceipt}
       <Form on:submit={onSubmit}>
         <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} />
 

@@ -36,7 +36,7 @@ $: needsReceipt = (needsRepairReceipt || needsReplaceReceipt)
 $: moneyFormLabel = needsRepairReceipt ? "Actual cost of repair" : "Actual cost of replacement"
 $: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
 $: claimFiles = claim.claim_files || []
-$: setShowImgTrue(claimFiles.length)
+$: showImages(claimFiles.length)
 $: if(payoutOption === 'repair') {
     maximumPayout = computeRepairMaxPayout()
   } else if(payoutOption === 'replacement') {
@@ -57,7 +57,7 @@ const computeCashMaxPayout = () => computePayout(claimItem.coverage_amount, clai
 
 const editClaim = () => $goto(`claims/${claimId}/edit)`)
 
-const setShowImgTrue = length => {
+const showImages = length => {
   for (let i = 0; i < length; i++) {
     showImg[i] = true
   }

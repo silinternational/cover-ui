@@ -45,18 +45,25 @@ const onSubmit = async event => {
 }
 </script>
 
-<!--TODO: add transitions but not after submit-->
-{#if $loading }
-  Loading...
-{:else if !item.id }
-  We could not find that item. Please <a href="/items">go back</a> and select
-  an item from the list.
-{:else if claimExists }
-  It looks like there is already a claim on that item. Please
-  <a href="/claims/{existingClaim.id}">click here</a> to see its details.
-{:else}
-  <Page>
-    <Breadcrumb links={breadcrumbLinks} />
-    <ClaimForm {item} on:submit={onSubmit} />
-  </Page>
-{/if}
+<Page>
+  <Breadcrumb links={breadcrumbLinks} />
+  
+  <!--TODO: add transitions but not after submit-->
+  {#if $loading }
+    <p>Loading...</p>
+  {:else}
+    {#if !item.id }
+      <p>
+        We could not find that item. Please <a href="/items">go back</a> and
+        select an item from the list.
+      </p>
+    {:else if claimExists }
+      <p>
+        It looks like there is already a claim for that item. Please
+        <a href="/claims/{existingClaim.id}">click here</a> to see its details.
+      </p>
+    {/if}
+  {/if}
+
+  <ClaimForm {item} on:submit={onSubmit} />
+</Page>

@@ -1,6 +1,7 @@
 <script>
 import user from '../../../authn/user'
 import { Breadcrumb, ClaimForm } from '../../../components'
+import { loading } from '../../../components/progress'
 import { claims, initialized, createClaim, createClaimItem, loadClaims } from '../../../data/claims.js'
 import { itemsByPolicyId, loadItems } from '../../../data/items.js'
 import { goto } from '@roxi/routify'
@@ -29,7 +30,8 @@ $: items = $itemsByPolicyId[$user.policy_id] || []
 $: item = items.find(itm => itm.id === itemId) || {}
 
 $: $initialized || loadClaims()
-$: claimExists = $claims.some(claim => isItemIdOnClaim(itemId, claim))
+$: existingClaim = $claims.find(claim => isItemIdOnClaim(itemId, claim)) || {}
+$: claimExists = !!existingClaim.id
 
 const isItemIdOnClaim = (itemId, claim) => {
   const claimItems = claim.claim_items || []
@@ -44,11 +46,15 @@ const onSubmit = async event => {
 </script>
 
 <!--TODO: add transitions but not after submit-->
-{#if items && $initialized && claimExists}
-  Claim already exists!
-{:else if items && !item.id}
-  Item does not exist!
-{:else if items && $initialized}
+{#if $loading }
+  Loading...
+{:else if !item.id }
+  We could not find that item. Please <a href="/items">go back</a> and select
+  an item from the list.
+{:else if claimExists }
+  It looks like there is already a claim on that item. Please
+  <a href="/claims/{existingClaim.id}">click here</a> to see its details.
+{:else}
   <Page>
     <Breadcrumb links={breadcrumbLinks} />
     <ClaimForm {item} on:submit={onSubmit} />

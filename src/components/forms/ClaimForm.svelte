@@ -60,7 +60,7 @@ $: isPotentiallyRepairable = repairableEventTypeNames.includes(lossReason)
 $: !payoutOptionCheck && unSetPayoutOption()
 $: !(repairableSelection === "repairable" || payoutOption === "cash_now") && unSetFairMarketValue()
 $: repairableSelection !== "repairable" && unSetRepairCost()
-$: !isPotentiallyRepairable && unSetIsRepairable()
+$: !isPotentiallyRepairable && unSetRepairableSelection()
 $: payoutOptionCheck && payoutOption == "evacuation" && unSetPayoutOption()
 
 $: moneyPayoutOptions = [
@@ -112,7 +112,7 @@ const unSetPayoutOption = () => {
 const unSetFairMarketValue = () => {
   fairMarketValueUSD = null
 }
-const unSetIsRepairable = () => {
+const unSetRepairableSelection = () => {
   repairableSelection = null
 }
 const unSetRepairCost = () => {

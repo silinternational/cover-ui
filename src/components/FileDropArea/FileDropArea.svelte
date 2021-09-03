@@ -8,6 +8,7 @@ export let uploading = false
 export let showPreview = true
 
 let fileInput = {}
+let gallery = {}
 
 let highlighted = false
 
@@ -52,10 +53,28 @@ function previewFile(file) {
   reader.readAsDataURL(file)
   reader.onloadend = function() {
     let img = document.createElement('img')
-    img.style = "max-width: 200px; margin-bottom: 10px ;margin-right: 10px;vertical-align: middle;"
+    let button = document.createElement('button')
+    button.textContent = 'Delete'
+    button.addEventListener('click', onDelete)
+    button.id = file.name.split('.')[0]
+    button.className = file.name.split('.')[1]
+    img.id = file.name.split('.')[0]
+    img.className = file.name.split('.')[1]
+    img.style = "max-width: 50px; margin-bottom: 10px ;margin-right: 10px;vertical-align: middle;"
     img.src = reader.result
-    document.getElementById('gallery').appendChild(img)
+    gallery.appendChild(img)
+    gallery.appendChild(button)
   }
+}
+
+function onDelete(event) {
+  event.preventDefault()
+  const id = event.target.id
+  const elementClass = event.target.className
+  const elements = document.querySelectorAll("#" + id + "." + elementClass)
+  elements.forEach(element => gallery.removeChild(element))
+
+  dispatch('deleted', id + "." + elementClass)
 }
 
 </script>
@@ -100,11 +119,14 @@ form {
     <div>or drop files here</div>
     <i class="material-icons icon" id="upload-icon">cloud_upload</i>
   </form>
-  {#if showPreview}
-    <div id="gallery" class="mt-10px"></div>
-  {/if}
   {#if uploading}
     <Progress.Circular />
     <span>{`Uploading file`}</span>
   {/if}
 </div>
+
+{#if showPreview}
+  <div class="flex">
+    <div id="gallery" bind:this={gallery} class="mt-10px"></div>
+  </div>
+{/if}

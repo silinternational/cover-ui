@@ -101,6 +101,11 @@ async function onUpload(event) {
     uploading = false
   }
 }
+
+function onDeleted(event) {
+  const fileName = event.detail
+  files = files.filter(file => file.filename !== fileName)
+}
 </script>
 
 <style>
@@ -173,7 +178,7 @@ async function onUpload(event) {
 
         <br/>
 
-        <FileDropArea class="w-50" raised {uploading} {showPreview} on:upload={onUpload}/>
+        <FileDropArea class="w-50" raised {uploading} {showPreview} on:upload={onUpload} on:deleted={onDeleted}/>
 
         <br/>
 

@@ -3,21 +3,26 @@ import user from '../../authn/user.js'
 import { Banner, ClaimBanner, ConvertCurrencyLink, FileDropArea, MoneyInput, Row } from '../../components'
 import { formatDate } from '../../components/dates.js'
 import { upload } from '../../data'
-import { loadClaims, claims, initialized } from '../../data/claims'
+import { loadClaims, claims, initialized, claimsFileAttach } from '../../data/claims'
 import { loadItems, itemsByPolicyId } from '../../data/items'
-import { goto, params } from '@roxi/routify'
+import { goto } from '@roxi/routify'
 import { Button, Form, Page } from '@silintl/ui-components'
 
-const updatedClaimData = {}
+export let claimId
+
+const updatedClaimItemData = {}
+const showImg = []
 
 let repairOrReplacementCost
 let uploading = false
 let deductible = .05
 let maximumPayout = ''
+let files = []
+let showPreview = true
 
 $: $initialized || loadClaims()
 
-$: claim = $claims.find(clm => clm.id === $params.claimId) || {}
+$: claim = $claims.find(clm => clm.id === claimId) || {}
 $: claimItem = claim.claim_items?.[0] || {} //For now there will only be one claim_item
 $: items = $itemsByPolicyId[$user.policy_id] || []
 $: $user.policy_id && loadItems($user.policy_id)
@@ -30,6 +35,8 @@ $: needsReplaceReceipt = (status === 'Needs_replace_receipt')
 $: needsReceipt = (needsRepairReceipt || needsReplaceReceipt)
 $: moneyFormLabel = needsRepairReceipt ? "Actual cost of repair" : "Actual cost of replacement"
 $: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
+$: claimFiles = claim.claim_files || []
+$: showImages(claimFiles.length)
 $: if(payoutOption === 'repair') {
     maximumPayout = computeRepairMaxPayout()
   } else if(payoutOption === 'replacement') {
@@ -48,26 +55,48 @@ const computeReplaceMaxPayout = () => computePayout(claimItem.replace_estimate, 
 
 const computeCashMaxPayout = () => computePayout(claimItem.coverage_amount, claimItem.fmv)
 
-const editClaim = () => $goto(`claims/${$params.claimId}/edit)`)
+const editClaim = () => $goto(`claims/${claimId}/edit)`)
 
-const onSubmit = () => {
-  const cents = repairOrReplacementCost * 100
-
-  //TODO update this when the claimUpdate payload is defined
-  if (needsRepairReceipt) {
-    updatedClaimData.repair_actual = cents
-  } else if (needsReplaceReceipt) {
-    updatedClaimData.replace_actual = cents
+const showImages = length => {
+  for (let i = 0; i < length; i++) {
+    showImg[i] = true
   }
-  
-  console.log(updatedClaimData) //TODO update claim with repairOrReplacementCost and file to api
 }
 
-async function chosen(event) {
+const onImgError = id => showImg[id] = false
+
+const onSubmit = async () => {
+  const cents = repairOrReplacementCost * 100
+
+  //TODO update this when the claimItemUpdate endpoint is finished
+  if (needsRepairReceipt) {
+    updatedClaimItemData.repair_actual = cents
+  } else if (needsReplaceReceipt) {
+    updatedClaimItemData.replace_actual = cents
+  }
+
+  for (let i = 0; i < files.length; i++) {
+    await claimsFileAttach(claimId, files[i].id)
+  }
+
+  files = []
+  showPreview = false
+
+  await loadClaims()
+
+  console.log(updatedClaimItemData) //TODO update claimItem with repairOrReplacementCost
+}
+
+async function onUpload(event) {
   try {
     uploading = true
 
-    updatedClaimData.file = await upload(event.detail)
+    showPreview = true
+
+    const file = await upload(event.detail)
+
+    files = [...files, file]
+    
   } finally {
     uploading = false
   }
@@ -81,6 +110,10 @@ async function chosen(event) {
 
 .label {
   color: hsla(219, 53%, 7%, .6);
+}
+
+.receipt {
+  max-width: 400px;
 }
 
 </style>
@@ -114,6 +147,17 @@ async function chosen(event) {
       <b>Maximum payout (if approved)</b><br />
       {maximumPayout}
     </p>
+
+    {#if claimFiles.length}
+      <div class="flex column">
+        {#each claimFiles as file, i}
+          {#if showImg[i]}
+            <img class='receipt' src={file.file.url} alt='receipt' on:error={() => onImgError(i)}/>
+          {/if}
+        {/each}
+      </div>
+    {/if}
+
     <p>
       <Button on:click={editClaim} outlined>Edit claim</Button>
     </p>
@@ -129,7 +173,7 @@ async function chosen(event) {
 
         <br/>
 
-        <FileDropArea class="w-50" raised {uploading} on:upload={chosen}/>
+        <FileDropArea class="w-50" raised {uploading} {showPreview} on:upload={onUpload}/>
 
         <br/>
 

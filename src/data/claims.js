@@ -162,6 +162,14 @@ export async function updateClaim(claimId, newClaimData) {
   return updatedClaim
 }
 
+export async function claimsFileAttach(claimId, fileId) {
+  start(fileId)
+
+  await CREATE(`claims/${claimId}/files`, { "file_id": fileId })
+
+  stop(fileId)
+}
+
 /**
  *
  * @description a function to delete a claim

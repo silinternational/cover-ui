@@ -1,5 +1,5 @@
 <script>
-import { Progress } from "@silintl/ui-components"
+import { Button, Progress } from "@silintl/ui-components"
 import { createEventDispatcher } from "svelte"
 
 export let raised = false
@@ -8,7 +8,7 @@ export let uploading = false
 export let showPreview = true
 
 let fileInput = {}
-let gallery = {}
+let previews = []
 
 let highlighted = false
 
@@ -52,37 +52,30 @@ function previewFile(file) {
   const reader = new FileReader()
   reader.readAsDataURL(file)
   reader.onloadend = function() {
-    let img = document.createElement('img')
-    let button = document.createElement('button')
-    button.textContent = 'Delete'
-    button.addEventListener('click', onDelete)
-    button.id = file.name.split('.')[0]
-    button.className = file.name.split('.')[1]
-    img.id = file.name.split('.')[0]
-    img.className = file.name.split('.')[1]
-    img.style = "max-width: 50px; margin-bottom: 10px ;margin-right: 10px;vertical-align: middle;"
-    img.src = reader.result
-    gallery.appendChild(img)
-    gallery.appendChild(button)
+    const preview = {
+      src: reader.result,
+      name: file.name
+    }
+    previews = [...previews, preview]
   }
 }
 
-function onDelete(event) {
+function onDelete(event, name) {
   event.preventDefault()
-  const id = event.target.id
-  const elementClass = event.target.className
-  const elements = document.querySelectorAll("#" + id + "." + elementClass)
-  elements.forEach(element => gallery.removeChild(element))
 
-  dispatch('deleted', id + "." + elementClass)
+  previews = previews.filter(preview => preview.name != name)
+
+  dispatch('deleted', name)
 }
 
 </script>
   
 <style>
+form > * {
+  margin-top: 0;
+}
 #drop-area {
   border: 2px dashed #ccc;
-  border-radius: 20px;
   font-family: Source Sans Pro, Roboto, sans-serif;
 }
 #drop-area.highlighted {
@@ -92,41 +85,50 @@ function onDelete(event) {
 #fileElem {
   display: none;
 }
-form {
-  gap: 10px;
-  align-items: center;
-  justify-items: center;
-}
 .disabled {
   cursor: progress;
 }
 .icon {
   color: hsla(213, 6%, 55%, 1);
 }
-
+.preview {
+  background-color: hsla(213, 26%, 23%, 1);
+}
+.preview img {
+  max-width: 50px;
+  vertical-align: middle;
+}
 </style>
 
-<div id="drop-area" class="p-20px {$$props.class}" class:highlighted
-  on:dragenter|preventDefault|stopPropagation={highlight}
-  on:dragleave|preventDefault|stopPropagation={unhighlight}
-  on:dragover|preventDefault|stopPropagation={highlight}
-  on:drop|preventDefault|stopPropagation={handleDrop}>
-  <form class="flex mb-10px">
-    {#if ! uploading}
-      <input bind:this={fileInput} type="file" id="fileElem" multiple accept="application/pdf,image/*" disabled={uploading} on:change={() => handleFiles(fileInput.files)}>
-    {/if}
-    <label class="mdc-button" for="fileElem" class:custom-text-button={raised} class:mdc-button--outlined={outlined} class:disabled={uploading} class:mdc-button--raised={raised}>Choose files</label>
-    <div>or drop files here</div>
-    <i class="material-icons icon" id="upload-icon">cloud_upload</i>
-  </form>
-  {#if uploading}
-    <Progress.Circular />
-    <span>{`Uploading file`}</span>
+<div class="{$$props.class}">
+  <div id="drop-area" class="br-8px" class:highlighted
+    on:dragenter|preventDefault|stopPropagation={highlight}
+    on:dragleave|preventDefault|stopPropagation={unhighlight}
+    on:dragover|preventDefault|stopPropagation={highlight}
+    on:drop|preventDefault|stopPropagation={handleDrop}>
+    <form class="flex justify-between align-items-center my-1 px-1">
+      {#if ! uploading}
+        <input bind:this={fileInput} type="file" id="fileElem" multiple accept="application/pdf,image/*" disabled={uploading} on:change={() => handleFiles(fileInput.files)}>
+      {/if}
+      <label class="mdc-button mt-1" for="fileElem" class:custom-text-button={raised} class:mdc-button--outlined={outlined} class:disabled={uploading} class:mdc-button--raised={raised}>Choose files</label>
+      <div>or drop files here</div>
+      <i class="material-icons icon" id="upload-icon">cloud_upload</i>
+    </form>
+  </div>
+
+  {#if showPreview}
+    <div class="mt-10px py-10px">
+      {#each previews as preview}
+        {#if uploading}
+          <Progress.Circular />
+        {/if}
+        
+        <div class="preview flex justify-between align-items-center br-8px p-10px mb-1">
+          <img class="mr-10px" src={preview.src} alt={'receipt'} />
+          <p class="white">{preview.name}</p>
+          <Button class="delete-button" raised on:click={evt => onDelete(evt, preview.name)}>Delete</Button>
+        </div>
+      {/each}
+    </div>
   {/if}
 </div>
-
-{#if showPreview}
-  <div class="flex">
-    <div id="gallery" bind:this={gallery} class="mt-10px"></div>
-  </div>
-{/if}

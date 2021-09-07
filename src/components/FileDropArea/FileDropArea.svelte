@@ -117,11 +117,10 @@ form > * {
 
   {#if showPreview}
     <div class="mt-10px py-10px">
+      {#if uploading}
+        <Progress.Circular />
+      {/if}
       {#each previews as preview}
-        {#if uploading}
-          <Progress.Circular />
-        {/if}
-        
         <div class="preview flex justify-between align-items-center br-8px p-10px mb-1">
           <img class="mr-10px" src={preview.src} alt={'receipt'} />
           <p class="white">{preview.name}</p>

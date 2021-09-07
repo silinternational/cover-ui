@@ -76,7 +76,6 @@ form > * {
 }
 #drop-area {
   border: 2px dashed #ccc;
-  font-family: Source Sans Pro, Roboto, sans-serif;
 }
 #drop-area.highlighted {
   border-color: var(--mdc-theme-primary);

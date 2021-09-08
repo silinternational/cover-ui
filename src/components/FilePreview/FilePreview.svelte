@@ -14,6 +14,7 @@ const onClick = id => dispatch('preview', id)
 
 function onDelete(event, id) {
   event.preventDefault()
+  event.stopPropagation()
 
   dispatch('deleted', id)
 }

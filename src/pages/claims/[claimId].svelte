@@ -87,7 +87,7 @@ const onBlur = () => {
 
   console.log(updatedClaimItemData)
 
-  claimItem.id && updateClaimItem(claimItem.id, updatedClaimItemData)
+  claimItem.id && updateClaimItem(claimItem.id, updatedClaimItemData) //TODO, test when claimItems is no longer empty
 }
 
 async function onUpload(event) {

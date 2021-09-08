@@ -12,6 +12,7 @@ import DateInput from './DateInput.svelte'
 import DependentForm from './forms/DependentForm.svelte'
 import Description from './Description.svelte'
 import FileDropArea from './FileDropArea'
+import FilePreview from './FilePreview'
 import ItemForm from './forms/ItemForm.svelte'
 import MoneyInput from './MoneyInput.svelte'
 import RadioOptions from './RadioOptions.svelte'
@@ -33,6 +34,7 @@ export {
   DependentForm,
   Description,
   FileDropArea,
+  FilePreview,
   ItemForm,
   MoneyInput,
   RadioOptions,

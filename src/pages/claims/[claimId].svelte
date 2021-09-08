@@ -167,7 +167,7 @@ function onDeleted(event) {
         <br/>
 
         <div class="w-50">
-          <FileDropArea raised previews={claimFiles} {uploading} on:upload={onUpload} on:deleted={onDeleted}/>
+          <FileDropArea raised {uploading} on:upload={onUpload} />
 
           <FilePreview previews={claimFiles} on:deleted={onDeleted} />
         </div>

@@ -11,12 +11,13 @@ import { Button, Form, Page } from '@silintl/ui-components'
 export let claimId
 
 const updatedClaimItemData = {}
-const showImg = []
 
+let showImg = false
 let repairOrReplacementCost
 let uploading = false
 let deductible = .05
 let maximumPayout = ''
+let previewFile = {}
 
 $: $initialized || loadClaims()
 
@@ -34,7 +35,6 @@ $: needsReceipt = (needsRepairReceipt || needsReplaceReceipt)
 $: moneyFormLabel = needsRepairReceipt ? "Actual cost of repair" : "Actual cost of replacement"
 $: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
 $: claimFiles = claim.claim_files || []
-$: showImages(claimFiles.length)
 $: if(payoutOption === 'repair') {
     maximumPayout = computeRepairMaxPayout()
   } else if(payoutOption === 'replacement') {
@@ -55,13 +55,13 @@ const computeCashMaxPayout = () => computePayout(claimItem.coverage_amount, clai
 
 const editClaim = () => $goto(`claims/${claimId}/edit)`)
 
-const showImages = length => {
-  for (let i = 0; i < length; i++) {
-    showImg[i] = true
-  }
+const onPreview = event => {
+  showImg = true
+  
+  previewFile = claimFiles.find(file => file.id === event.detail)
 }
 
-const onImgError = id => showImg[id] = false
+const onImgError = () => showImg = false
 
 const onBlur = () => {
   const cents = repairOrReplacementCost * 100
@@ -141,20 +141,14 @@ function onDeleted(event) {
       {maximumPayout}
     </p>
 
-    {#if claimFiles.length}
-      <div class="flex column">
-        {#each claimFiles as file, i}
-          {#if showImg[i]}
-            <img class='receipt' src={file.file.url} alt='receipt' on:error={() => onImgError(i)}/>
-          {/if}
-        {/each}
-      </div>
+    {#if showImg}
+      <img class='receipt' src={previewFile.file?.url} alt='receipt' on:error={onImgError}/>
     {/if}
 
     <p>
       <Button on:click={editClaim} outlined>Edit claim</Button>
     </p>
-    {#if needsReceipt}
+    {#if needsReceipt || true}
       <Form>
         <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onBlur}/>
 
@@ -169,7 +163,7 @@ function onDeleted(event) {
         <div class="w-50">
           <FileDropArea raised {uploading} on:upload={onUpload} />
 
-          <FilePreview previews={claimFiles} on:deleted={onDeleted} />
+          <FilePreview previews={claimFiles} on:deleted={onDeleted} on:preview={onPreview} />
         </div>
 
         <br/>

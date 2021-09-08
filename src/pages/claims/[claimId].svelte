@@ -6,7 +6,9 @@ import { upload } from '../../data'
 import { loadClaims, claims, initialized, claimsFileAttach, updateClaimItem } from '../../data/claims'
 import { loadItems, itemsByPolicyId } from '../../data/items'
 import { goto } from '@roxi/routify'
-import { Button, Form, Page } from '@silintl/ui-components'
+import { Button, Form, Page, Progress } from '@silintl/ui-components'
+import { flip } from 'svelte/animate'
+import { fly } from 'svelte/transition'
 
 export let claimId
 
@@ -17,8 +19,6 @@ let repairOrReplacementCost
 let uploading = false
 let deductible = .05
 let maximumPayout = ''
-let files = []
-let showPreview = true
 
 $: $initialized || loadClaims()
 
@@ -65,17 +65,6 @@ const showImages = length => {
 
 const onImgError = id => showImg[id] = false
 
-const onSubmit = async () => {
-  for (let i = 0; i < files.length; i++) {
-    await claimsFileAttach(claimId, files[i].id)
-  }
-
-  files = []
-  showPreview = false
-
-  await loadClaims()
-}
-
 const onBlur = () => {
   const cents = repairOrReplacementCost * 100
 
@@ -91,20 +80,22 @@ const onBlur = () => {
 async function onUpload(event) {
   try {
     uploading = true
-    showPreview = true
 
-    const file = await upload(event.detail.formData)
-    file.previewId = event.detail.id
-    files = [...files, file]
-    
+    const file = await upload(event.detail)
+
+    await claimsFileAttach(claimId, file.id)
+
+    await loadClaims()
+
   } finally {
     uploading = false
   }
 }
 
 function onDeleted(event) {
-  const previewId = event.detail
-  files = files.filter(file => file.previewId !== previewId)
+  const id = event.detail
+
+  console.log('deleting file: ' + id) //TODO use endpoint when avialable
 }
 </script>
 
@@ -120,7 +111,13 @@ function onDeleted(event) {
 .receipt {
   max-width: 400px;
 }
-
+.preview {
+  background-color: hsla(213, 26%, 23%, 1);
+}
+.preview img {
+  max-width: 50px;
+  vertical-align: middle;
+}
 </style>
 
 <Page layout="grid">
@@ -167,7 +164,7 @@ function onDeleted(event) {
       <Button on:click={editClaim} outlined>Edit claim</Button>
     </p>
     {#if needsReceipt}
-      <Form on:submit={onSubmit}>
+      <Form>
         <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onBlur}/>
 
         <p class="label ml-1 mt-6px">
@@ -178,11 +175,28 @@ function onDeleted(event) {
 
         <br/>
 
-        <FileDropArea class="w-50" raised {uploading} {showPreview} on:upload={onUpload} on:deleted={onDeleted}/>
+        <div>
+          <FileDropArea class="w-50" raised previews={claimFiles} {uploading} on:upload={onUpload} on:deleted={onDeleted}/>
+
+          <div class="mt-10px py-10px">
+            {#each claimFiles as preview (preview.id)}
+              <div transition:fly={{ y: 200, duration: 1500 }} animate:flip={{duration: 500}} class="preview flex justify-between align-items-center br-8px p-10px mb-1">
+                <!-- <img class="br-8px mr-10px" src={preview.src} alt={'receipt'} /> -->
+                <div>
+                  <p class="white">{preview.file.name}</p>
+                  <p class="white">{preview.created_at}</p>
+                </div>
+                <Button class="delete-button" raised on:click={evt => onDelete(evt, preview.id)}>Delete</Button>
+              </div>
+            {/each}
+            {#if uploading}
+              <Progress.Circular />
+            {/if}
+          </div>
+        </div>
+
 
         <br/>
-
-        <Button raised>Upload Receipt</Button>
       </Form>
     {/if}
   </Row>

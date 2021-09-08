@@ -1,14 +1,12 @@
 <script>
 import user from '../../authn/user.js'
-import { Banner, ClaimBanner, ConvertCurrencyLink, FileDropArea, MoneyInput, Row } from '../../components'
+import { Banner, ClaimBanner, ConvertCurrencyLink, FileDropArea, FilePreview, MoneyInput, Row } from '../../components'
 import { formatDate } from '../../components/dates.js'
 import { upload } from '../../data'
 import { loadClaims, claims, initialized, claimsFileAttach, updateClaimItem } from '../../data/claims'
 import { loadItems, itemsByPolicyId } from '../../data/items'
 import { goto } from '@roxi/routify'
-import { Button, Form, Page, Progress } from '@silintl/ui-components'
-import { flip } from 'svelte/animate'
-import { fly } from 'svelte/transition'
+import { Button, Form, Page } from '@silintl/ui-components'
 
 export let claimId
 
@@ -111,13 +109,6 @@ function onDeleted(event) {
 .receipt {
   max-width: 400px;
 }
-.preview {
-  background-color: hsla(213, 26%, 23%, 1);
-}
-.preview img {
-  max-width: 50px;
-  vertical-align: middle;
-}
 </style>
 
 <Page layout="grid">
@@ -175,26 +166,11 @@ function onDeleted(event) {
 
         <br/>
 
-        <div>
+        <div class="w-50">
           <FileDropArea class="w-50" raised previews={claimFiles} {uploading} on:upload={onUpload} on:deleted={onDeleted}/>
 
-          <div class="mt-10px py-10px">
-            {#each claimFiles as preview (preview.id)}
-              <div transition:fly={{ y: 200, duration: 1500 }} animate:flip={{duration: 500}} class="preview flex justify-between align-items-center br-8px p-10px mb-1">
-                <!-- <img class="br-8px mr-10px" src={preview.src} alt={'receipt'} /> -->
-                <div>
-                  <p class="white">{preview.file.name}</p>
-                  <p class="white">{preview.created_at}</p>
-                </div>
-                <Button class="delete-button" raised on:click={evt => onDelete(evt, preview.id)}>Delete</Button>
-              </div>
-            {/each}
-            {#if uploading}
-              <Progress.Circular />
-            {/if}
-          </div>
+          <FilePreview previews={claimFiles} on:deleted={onDeleted} />
         </div>
-
 
         <br/>
       </Form>

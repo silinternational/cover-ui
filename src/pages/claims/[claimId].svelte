@@ -3,7 +3,7 @@ import user from '../../authn/user.js'
 import { Banner, ClaimBanner, ConvertCurrencyLink, FileDropArea, MoneyInput, Row } from '../../components'
 import { formatDate } from '../../components/dates.js'
 import { upload } from '../../data'
-import { loadClaims, claims, initialized, claimsFileAttach } from '../../data/claims'
+import { loadClaims, claims, initialized, claimsFileAttach, updateClaimItem } from '../../data/claims'
 import { loadItems, itemsByPolicyId } from '../../data/items'
 import { goto } from '@roxi/routify'
 import { Button, Form, Page } from '@silintl/ui-components'
@@ -66,15 +66,6 @@ const showImages = length => {
 const onImgError = id => showImg[id] = false
 
 const onSubmit = async () => {
-  const cents = repairOrReplacementCost * 100
-
-  //TODO update this when the claimItemUpdate endpoint is finished
-  if (needsRepairReceipt) {
-    updatedClaimItemData.repair_actual = cents
-  } else if (needsReplaceReceipt) {
-    updatedClaimItemData.replace_actual = cents
-  }
-
   for (let i = 0; i < files.length; i++) {
     await claimsFileAttach(claimId, files[i].id)
   }
@@ -83,8 +74,20 @@ const onSubmit = async () => {
   showPreview = false
 
   await loadClaims()
+}
 
-  console.log(updatedClaimItemData) //TODO update claimItem with repairOrReplacementCost
+const onBlur = () => {
+  const cents = repairOrReplacementCost * 100
+
+  if (needsRepairReceipt) {
+    updatedClaimItemData.repair_actual = cents
+  } else if (needsReplaceReceipt) {
+    updatedClaimItemData.replace_actual = cents
+  }
+
+  console.log(updatedClaimItemData)
+
+  claimItem.id && updateClaimItem(claimItem.id, updatedClaimItemData)
 }
 
 async function onUpload(event) {
@@ -161,9 +164,9 @@ async function onUpload(event) {
     <p>
       <Button on:click={editClaim} outlined>Edit claim</Button>
     </p>
-    {#if needsReceipt}
+    {#if needsReceipt || true}
       <Form on:submit={onSubmit}>
-        <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} />
+        <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onBlur}/>
 
         <p class="label ml-1 mt-6px">
           <ConvertCurrencyLink />

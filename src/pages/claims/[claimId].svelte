@@ -80,9 +80,9 @@ const onBlur = () => {
   const cents = repairOrReplacementCost * 100
 
   if (needsRepairReceipt) {
-    updatedClaimItemData.repair_actual = cents
+    updatedClaimItemData.repairActual = cents
   } else if (needsReplaceReceipt) {
-    updatedClaimItemData.replace_actual = cents
+    updatedClaimItemData.replaceActual = cents
   }
 
   console.log(updatedClaimItemData)

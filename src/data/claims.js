@@ -160,8 +160,8 @@ export async function claimsFileAttach(claimId, fileId) {
   start(claimItemId)
 
   const parsedData = {
-    repair_actual: claimItemData.repair_actual,
-    replace_actual: claimItemData.replace_actual,
+    repair_actual: claimItemData.repairActual,
+    replace_actual: claimItemData.replaceActual,
   }
 
   await UPDATE(`claimitems/${claimItemId}`, parsedData)

@@ -1,5 +1,6 @@
 <script>
 import { Button, Progress } from "@silintl/ui-components"
+import { generateRandomID } from "@silintl/ui-components/random"
 import { createEventDispatcher } from "svelte"
 
 export let raised = false
@@ -35,38 +36,42 @@ function handleDrop(e) {
 function handleFiles(files) {
   if(! uploading) {
     uploading = true
-    files = [...files]
-    files.forEach(uploadFile)
-    files.forEach(previewFile)
+    files = [...files]  //turns files into an array so forEach works
+    files.forEach(file => {
+      const id = generateRandomID()
+      uploadFile(file, id)
+      previewFile(file, id)
+    })
   }
 }
 
-function uploadFile(file) {
+function uploadFile(file, id) {
   const formData = new FormData()
 
   formData.append('file', file)
 
-  dispatch('upload', formData)
+  dispatch('upload', {formData, id})
 }
 
-function previewFile(file) {
+function previewFile(file, id) {
   const reader = new FileReader()
   reader.readAsDataURL(file)
   reader.onloadend = function() {
     const preview = {
       src: reader.result,
-      name: file.name
+      name: file.name,
+      id
     }
     previews = [...previews, preview]
   }
 }
 
-function onDelete(event, name) {
+function onDelete(event, id) {
   event.preventDefault()
 
-  previews = previews.filter(preview => preview.name != name)
+  previews = previews.filter(preview => preview.id != id)
 
-  dispatch('deleted', name)
+  dispatch('deleted', id)
 }
 
 </script>
@@ -125,7 +130,7 @@ form > * {
         <div class="preview flex justify-between align-items-center br-8px p-10px mb-1">
           <img class="br-8px mr-10px" src={preview.src} alt={'receipt'} />
           <p class="white">{preview.name}</p>
-          <Button class="delete-button" raised on:click={evt => onDelete(evt, preview.name)}>Delete</Button>
+          <Button class="delete-button" raised on:click={evt => onDelete(evt, preview.id)}>Delete</Button>
         </div>
       {/each}
     </div>

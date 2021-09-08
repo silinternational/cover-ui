@@ -90,11 +90,10 @@ const onSubmit = async () => {
 async function onUpload(event) {
   try {
     uploading = true
-
     showPreview = true
 
-    const file = await upload(event.detail)
-
+    const file = await upload(event.detail.formData)
+    file.previewId = event.detail.id
     files = [...files, file]
     
   } finally {
@@ -103,8 +102,8 @@ async function onUpload(event) {
 }
 
 function onDeleted(event) {
-  const fileName = event.detail
-  files = files.filter(file => file.filename !== fileName)
+  const previewId = event.detail
+  files = files.filter(file => file.previewId !== previewId)
 }
 </script>
 

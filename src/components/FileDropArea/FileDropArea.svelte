@@ -122,7 +122,7 @@ form > * {
       {/if}
       {#each previews as preview}
         <div class="preview flex justify-between align-items-center br-8px p-10px mb-1">
-          <img class="mr-10px" src={preview.src} alt={'receipt'} />
+          <img class="br-8px mr-10px" src={preview.src} alt={'receipt'} />
           <p class="white">{preview.name}</p>
           <Button class="delete-button" raised on:click={evt => onDelete(evt, preview.name)}>Delete</Button>
         </div>

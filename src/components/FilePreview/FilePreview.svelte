@@ -1,10 +1,13 @@
 <script>
 import { Button, Progress } from '@silintl/ui-components'
+import { createEventDispatcher } from "svelte"
 import { flip } from 'svelte/animate'
 import { fly } from 'svelte/transition'
 
 export let previews = []
 export let uploading = false
+
+const dispatch = createEventDispatcher()
 
 function onDelete(event, id) {
   event.preventDefault()

@@ -85,8 +85,6 @@ const onBlur = () => {
     updatedClaimItemData.replaceActual = cents
   }
 
-  console.log(updatedClaimItemData)
-
   claimItem.id && updateClaimItem(claimItem.id, updatedClaimItemData) //TODO, test when claimItems is no longer empty
 }
 

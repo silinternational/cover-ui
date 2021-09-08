@@ -6,6 +6,7 @@ export let raised = false
 export let outlined = false
 export let uploading = false
 export let showPreview = true
+export let mimeType = 'application/pdf,image/*'
 
 let fileInput = {}
 let previews = []
@@ -107,7 +108,7 @@ form > * {
     on:drop|preventDefault|stopPropagation={handleDrop}>
     <form class="flex justify-between align-items-center my-1 px-1">
       {#if ! uploading}
-        <input bind:this={fileInput} type="file" id="fileElem" multiple accept="application/pdf,image/*" disabled={uploading} on:change={() => handleFiles(fileInput.files)}>
+        <input bind:this={fileInput} type="file" id="fileElem" multiple accept={mimeType} disabled={uploading} on:change={() => handleFiles(fileInput.files)}>
       {/if}
       <label class="mdc-button mt-1" for="fileElem" class:custom-text-button={raised} class:mdc-button--outlined={outlined} class:disabled={uploading} class:mdc-button--raised={raised}>Choose files</label>
       <div>or drop files here</div>

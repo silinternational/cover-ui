@@ -27,8 +27,8 @@ function onDelete(event, id) {
     <div transition:fly={{ y: 200, duration: 1500 }} animate:flip={{duration: 500}} class="preview flex justify-between align-items-center br-8px p-10px mb-1">
       <!-- <img class="br-8px mr-10px" src={preview.src} alt={'receipt'} /> -->
       <div>
-        <p class="white">{preview.file.name}</p>
-        <p class="white">{preview.created_at}</p>
+        <p class="white my-0">{preview.file.name}</p>
+        <p class="white my-0">{preview.created_at}</p>
       </div>
       <Button class="delete-button" raised on:click={evt => onDelete(evt, preview.id)}>Delete</Button>
     </div>

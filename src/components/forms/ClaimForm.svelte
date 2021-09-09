@@ -123,8 +123,8 @@ const unSetRepairCost = () => {
 <div class="w-50">
   <Form on:submit={onSubmit}>
     <p>
-      <DateInput bind:value={lostDate} />
-      <Description>Date lost or damaged</Description>
+      <span class="ml-1">Date lost or damaged</span>
+      <DateInput class="mt-1" bind:value={lostDate} />
     </p>
     <p>
       Reason for loss or damage

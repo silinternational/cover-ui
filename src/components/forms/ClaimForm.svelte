@@ -126,12 +126,11 @@ const unSetRepairCost = () => {
       <DateInput bind:value={lostDate} />
       <Description>Date lost or damaged</Description>
     </p>
-    <p>Reason for loss or damage</p>
-    <!--TODO: make description text on next line and inline with the above, label text-->
-    <!--TODO: minimize spacing-->
-    <div>
+    <p>
+      Reason for loss or damage
+      <!--TODO: make description text on next line and inline with the above, label text-->
       <RadioOptions name="lossReason" options={lossReasonOptions} bind:value={lossReason} />
-    </div>
+    </p>
     <p>
       <TextArea label="Describe the situation" bind:value={situationDescription} rows="4" />
       <Description>What happened?</Description>

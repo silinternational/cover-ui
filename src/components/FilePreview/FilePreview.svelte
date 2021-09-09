@@ -48,7 +48,7 @@ function onDelete(event, id) {
 }
 </style>
 
-<div class="mt-10px py-10px">
+<div class="mt-10px py-10px {$$props.class}">
   {#each previews as preview (preview.id)}
     <div on:click|preventDefault={() => onClick(preview.id)} transition:fly={{ y: 200, duration: 1500 }} animate:flip={{duration: 500}} class:selected={isSelected[preview.id]} class="preview flex justify-between align-items-center br-8px p-10px mb-1">
       <div>

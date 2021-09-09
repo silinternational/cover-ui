@@ -132,8 +132,8 @@ const unSetRepairCost = () => {
       <RadioOptions name="lossReason" options={lossReasonOptions} bind:value={lossReason} />
     </p>
     <p>
-      <TextArea label="Describe the situation" bind:value={situationDescription} rows="4" />
-      <Description>What happened?</Description>
+      <span class="ml-1">What happened?</span>
+      <TextArea class="mt-1" label="Describe the situation" bind:value={situationDescription} rows="4" />
     </p>
     {#if isPotentiallyRepairable}
       <div>

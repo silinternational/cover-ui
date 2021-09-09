@@ -148,26 +148,20 @@ function onDeleted(event) {
     <p>
       <Button on:click={editClaim} outlined>Edit claim</Button>
     </p>
-    {#if needsReceipt || true}
-      <Form>
-        <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onBlur}/>
+    {#if needsReceipt}
+      <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onBlur}/>
 
-        <p class="label ml-1 mt-6px">
-          <ConvertCurrencyLink />
-        </p>
+      <p class="label ml-1 mt-6px">
+        <ConvertCurrencyLink />
+      </p>
 
-        <label for="receipt" class="ml-1">Attach replacement item receipt</label>
+      <label for="receipt" class="ml-1">Attach replacement item receipt</label>
 
-        <br/>
-
-        <div class="w-50">
-          <FileDropArea raised {uploading} on:upload={onUpload} />
-
-          <FilePreview previews={claimFiles} on:deleted={onDeleted} on:preview={onPreview} />
-        </div>
-
-        <br/>
-      </Form>
+      <FileDropArea class="w-50 mt-10px" raised {uploading} on:upload={onUpload} />
     {/if}
+      
+    <FilePreview class="w-50" previews={claimFiles} on:deleted={onDeleted} on:preview={onPreview} />
+
+    <br/>
   </Row>
 </Page>

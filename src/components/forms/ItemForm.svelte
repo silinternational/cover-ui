@@ -12,6 +12,7 @@ export let policyId = undefined
 const dispatch = createEventDispatcher()
 
 // Set default values.
+let accountablePersonId = ''
 let categoryId = ''
 let country = ''
 let marketValueUSD = ''
@@ -50,7 +51,7 @@ $: policyId && loadMembersOfPolicy(policyId)
 $: !$catItemsInitialized && init()
 
 const onAccountablePersonChange = event => {
-  country = event.detail?.location //TODO handle when Dependents is empty, redirect to settings?
+  accountablePersonId = event.detail?.id
 }
 
 const onSelectCategory = event => {
@@ -59,6 +60,7 @@ const onSelectCategory = event => {
 
 const getFormData = () => {
   return {
+    accountablePersonId,
     categoryId,
     country,
     marketValueUSD,

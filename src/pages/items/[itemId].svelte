@@ -97,7 +97,6 @@ const goToDelete = () => {
       <div>Description: {item.description || ''}</div>
       <br/>
       <Banner background="var(--mdc-theme-primary-header-bg)" color="var(--mdc-theme-primary)" class="max-content-width">{item.category?.name || ''}</Banner>
-
       <div class="my-1">
         <b>Starts</b>
         <div>{startDate}</div>

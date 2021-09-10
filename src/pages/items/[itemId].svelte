@@ -44,18 +44,8 @@ const goToEditItem = () => {
 const goToNewClaim = () => {
   $goto(`/items/${itemId}/new-claim`)
 }
-const goToDelete = () => {
-  $goto(`/items/${itemId}/delete`)
-}
 </script>
 
-<style>
-.delete-button {
-  color: var(--mdc-theme-status-error);
-  text-decoration: none;
-}
-
-</style>
 <Page layout={'grid'}>
   {#if !item.id } 
     {#if $loading}
@@ -69,8 +59,7 @@ const goToDelete = () => {
       <div class="flex justify-between align-items-center" >
         <Breadcrumb links={breadcrumbLinks} />
         <div>
-          <!-- svelte-ignore a11y-invalid-attribute -->
-          <a on:click={goToDelete} class="delete-button mx-5px" href="">Remove</a>
+          <Button raised class="error-button mx-5px" url={`/items/${itemId}/delete`}>Remove</Button>
           <Button on:click={goToEditItem} >Edit Item</Button>
         </div>
       </div>

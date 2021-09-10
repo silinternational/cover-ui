@@ -1,5 +1,6 @@
 // https://material.io/develop/web/docs/theming
 @use '@material/theme';
+@use "@material/button";
 @include theme.core-styles;
 
 :root {
@@ -36,4 +37,10 @@
 
 .mdc-theme--secondary-background {
   background-color: var(--mdc-theme-secondary) !important;
+}
+
+.error-button {
+  --mdc-theme-primary: var(--mdc-theme-status-error);
+  
+  @include button.ink-color(hsla(0, 0%, 100%, 1));
 }

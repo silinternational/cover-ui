@@ -6,15 +6,6 @@ export let background = 'var(--mdc-theme-primary)'
 
 </script>
 
-<style>
-.badge {
-  padding: 8px;
-  align-items: center;
-  display: flex;
-  border-radius: 4px;
-}
-</style>
-
-<div class="badge {$$props.class}" style="color: {color}; border: {border}; background-color: {background};">
+<div class="flex br-4px align-items-center p-8px {$$props.class}" style="color: {color}; border: {border}; background-color: {background};">
   <slot />
 </div>

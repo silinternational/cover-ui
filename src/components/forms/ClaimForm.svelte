@@ -172,7 +172,7 @@ const unSetReplaceEstimate = () => {
 <div class="w-50">
   <Form on:submit={onSubmit}>
     <p>
-      <span class="ml-1">Date lost or damaged</span>
+      <span class="ml-1">Date lost or damaged</span><br />
       <DateInput class="mt-1" bind:value={lostDate} />
     </p>
     <p>

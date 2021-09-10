@@ -1,6 +1,5 @@
 // https://material.io/develop/web/docs/theming
 @use '@material/theme';
-@use "@material/button";
 @include theme.core-styles;
 
 :root {

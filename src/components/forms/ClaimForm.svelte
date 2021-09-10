@@ -200,7 +200,6 @@ const unSetReplaceEstimate = () => {
         </Description>
       </p>
       <p>
-        1st
         <!-- If it's repairable, position this BEFORE the "Payout options" prompt. -->
         <MoneyInput label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
         <Description>
@@ -228,7 +227,6 @@ const unSetReplaceEstimate = () => {
 
     {#if (isRepairable === false) && (payoutOption === PAYOUT_OPTION_FMV) }
       <p>
-        2nd
         <!-- If we know it's not repairable, position this AFTER the "Payout options" prompt. -->
         <MoneyInput label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
         <Description>

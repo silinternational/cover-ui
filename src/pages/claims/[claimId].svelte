@@ -1,6 +1,6 @@
 <script>
 import user from '../../authn/user.js'
-import { Banner, ClaimBanner, ConvertCurrencyLink, FileDropArea, MoneyInput, Row } from '../../components'
+import { Banner, ClaimBanner, ConvertCurrencyLink, FileDropArea, FilePreview, MoneyInput, Row } from '../../components'
 import { formatDate } from '../../components/dates.js'
 import { upload } from '../../data'
 import { loadClaims, claims, initialized, claimsFileAttach, updateClaimItem } from '../../data/claims'
@@ -11,14 +11,13 @@ import { Button, Form, Page } from '@silintl/ui-components'
 export let claimId
 
 const updatedClaimItemData = {}
-const showImg = []
 
+let showImg = false
 let repairOrReplacementCost
 let uploading = false
 let deductible = .05
 let maximumPayout = ''
-let files = []
-let showPreview = true
+let previewFile = {}
 
 $: $initialized || loadClaims()
 
@@ -36,7 +35,6 @@ $: needsReceipt = (needsRepairReceipt || needsReplaceReceipt)
 $: moneyFormLabel = needsRepairReceipt ? "Actual cost of repair" : "Actual cost of replacement"
 $: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
 $: claimFiles = claim.claim_files || []
-$: showImages(claimFiles.length)
 $: if(payoutOption === 'repair') {
     maximumPayout = computeRepairMaxPayout()
   } else if(payoutOption === 'replacement') {
@@ -57,24 +55,13 @@ const computeCashMaxPayout = () => computePayout(claimItem.coverage_amount, clai
 
 const editClaim = () => $goto(`claims/${claimId}/edit)`)
 
-const showImages = length => {
-  for (let i = 0; i < length; i++) {
-    showImg[i] = true
-  }
+const onPreview = event => {
+  showImg = true
+  
+  previewFile = claimFiles.find(file => file.id === event.detail)
 }
 
-const onImgError = id => showImg[id] = false
-
-const onSubmit = async () => {
-  for (let i = 0; i < files.length; i++) {
-    await claimsFileAttach(claimId, files[i].id)
-  }
-
-  files = []
-  showPreview = false
-
-  await loadClaims()
-}
+const onImgError = () => showImg = false
 
 const onBlur = () => {
   const cents = repairOrReplacementCost * 100
@@ -91,20 +78,22 @@ const onBlur = () => {
 async function onUpload(event) {
   try {
     uploading = true
-    showPreview = true
 
-    const file = await upload(event.detail.formData)
-    file.previewId = event.detail.id
-    files = [...files, file]
-    
+    const file = await upload(event.detail)
+
+    await claimsFileAttach(claimId, file.id)
+
+    await loadClaims()
+
   } finally {
     uploading = false
   }
 }
 
 function onDeleted(event) {
-  const previewId = event.detail
-  files = files.filter(file => file.previewId !== previewId)
+  const id = event.detail
+
+  console.log('deleting file: ' + id) //TODO use endpoint when avialable
 }
 </script>
 
@@ -120,7 +109,6 @@ function onDeleted(event) {
 .receipt {
   max-width: 400px;
 }
-
 </style>
 
 <Page layout="grid">
@@ -153,37 +141,27 @@ function onDeleted(event) {
       {maximumPayout}
     </p>
 
-    {#if claimFiles.length}
-      <div class="flex column">
-        {#each claimFiles as file, i}
-          {#if showImg[i]}
-            <img class='receipt' src={file.file.url} alt='receipt' on:error={() => onImgError(i)}/>
-          {/if}
-        {/each}
-      </div>
+    {#if showImg}
+      <img class='receipt' src={previewFile.file?.url} alt='receipt' on:error={onImgError}/>
     {/if}
 
     <p>
       <Button on:click={editClaim} outlined>Edit claim</Button>
     </p>
     {#if needsReceipt}
-      <Form on:submit={onSubmit}>
-        <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onBlur}/>
+      <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onBlur}/>
 
-        <p class="label ml-1 mt-6px">
-          <ConvertCurrencyLink />
-        </p>
+      <p class="label ml-1 mt-6px">
+        <ConvertCurrencyLink />
+      </p>
 
-        <label for="receipt" class="ml-1">Attach replacement item receipt</label>
+      <label for="receipt" class="ml-1">Attach replacement item receipt</label>
 
-        <br/>
-
-        <FileDropArea class="w-50" raised {uploading} {showPreview} on:upload={onUpload} on:deleted={onDeleted}/>
-
-        <br/>
-
-        <Button raised>Upload Receipt</Button>
-      </Form>
+      <FileDropArea class="w-50 mt-10px" raised {uploading} on:upload={onUpload} />
     {/if}
+      
+    <FilePreview class="w-50" previews={claimFiles} on:deleted={onDeleted} on:preview={onPreview} />
+
+    <br/>
   </Row>
 </Page>

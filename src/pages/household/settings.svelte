@@ -2,16 +2,14 @@
 import user from '../../authn/user'
 import { Breadcrumb, SearchableSelect } from "../../components"
 import { dependentsByPolicyId, loadDependents } from '../../data/dependents'
-import { policies, updatePolicy, init } from '../../data/policies'
+import { policies, updatePolicy, init, affiliations } from '../../data/policies'
 import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
 import { goto } from "@roxi/routify"
 import { Button, TextField, IconButton, Page, Snackbar, setNotice } from "@silintl/ui-components"
 
 const policyData = {}
-const affiliations = {
-  'SIL': 'SIL International'
-}
 
+let affiliationChoice = ''
 let householdId = ''
 let costCenter = ''
 let placeholder = 'Your entity of affiliation'
@@ -30,7 +28,7 @@ $: policy.household_id && setPolicyHouseholdId()
 $: policy.cost_center && setPolicyCostCenter()
 $: policy.entity_code && setAffiliation()
 
-const setAffiliation = () => affiliationChoice = affiliations[policy.entity_code]
+const setAffiliation = () => affiliationChoice = $affiliations[policy.entity_code]
 const setPolicyHouseholdId = () => householdId = policy.household_id || ''
 const setPolicyCostCenter = () => costCenter = policy.cost_center || ''
 
@@ -122,7 +120,7 @@ const isYou = householdMember => householdMember.id === $user.id
   
   {#if policy.type === 'Corporate'}
     <h3 class="ml-1 mt-3" >Affiliation<span class="required">*</span></h3>
-    <SearchableSelect options={affiliations} {placeholder} padding={'16px'} on:chosen={updateAffiliation}/>
+    <SearchableSelect options={$affiliations} choice={affiliationChoice} {placeholder} padding={'16px'} on:chosen={updateAffiliation}/>
     
     <h3 class="ml-1 mt-3">Cost center<span class="required">*</span></h3>
     <p>

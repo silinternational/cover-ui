@@ -52,3 +52,7 @@ export async function loadPolicies() {
   stop('loadPolicies')
   initialized.set(true)
 }
+
+export const affiliations = writable({
+  'SIL': 'SIL International'
+})

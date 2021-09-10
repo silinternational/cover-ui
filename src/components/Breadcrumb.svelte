@@ -45,13 +45,9 @@ a {
   display: inherit;
   color: var(--mdc-theme-primary)
 }
-
-.bottom-margin {
-  margin-bottom: 1rem;
-}
 </style>
 
-<div class="bottom-margin flex text-align-center align-items-center">
+<div class="flex text-align-center align-items-center {$$props.class}">
   <!-- svelte-ignore a11y-invalid-attribute -->
   {#if hasHome }
   <a href="/home" class="capitalize"><i class="material-icons mdc-list-item__graphic money-icon breadcrumb-icon breadcrumb-home" aria-hidden="true">home</i></a><!--

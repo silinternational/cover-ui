@@ -1,23 +1,42 @@
 <script>
 import user from '../../authn/user.js'
-import { Banner, Breadcrumb } from '../../components'
+import { Banner, Breadcrumb, ClaimBanner, Row } from '../../components'
+import { day } from '../../components/const.js'
+import { formatDate } from '../../components/dates.js'
 import { loading } from '../../components/progress'
 import { itemsByPolicyId, loadItems } from '../../data/items.js'
+import { init, policies } from '../../data/policies'
 import { formatMoney } from '../../helpers/money'
 import { goto } from '@roxi/routify'
-import { Button } from '@silintl/ui-components'
+import { Button, Page } from '@silintl/ui-components'
 
 export let itemId
 
+const now = Date.now()
+
+let householdId = ''
+
 $: $user.policy_id && loadItems($user.policy_id)
+
+$: $policies.length || init()
+$: policyId = $user.policy_id
+$: policy = $policies.find(policy => policy.id === policyId) || {}
+$: policy.household_id && setPolicyHouseholdId()
+
 $: items = $itemsByPolicyId[$user.policy_id] || []
 $: item = items.find(itm => itm.id === itemId) || {}
 $: itemName = item.name || ''
+
+$: msAgo = now - Date.parse(item.updated_at)
+$: daysAgo = msAgo > 0 ? Math.floor(msAgo/day) : '-'
+$: startDate = formatDate(item.coverage_start_date)
 
 // Dynamic breadcrumbs data:
 const itemsBreadcrumb = { name: 'Items', url: '/items' }
 $: thisItemBreadcrumb = { name: itemName || 'This item', url: `/items/${itemId}` }
 $: breadcrumbLinks = [itemsBreadcrumb, thisItemBreadcrumb]
+
+const setPolicyHouseholdId = () => householdId = policy.household_id || ''
 
 const goToEditItem = () => {
   $goto(`/items/${itemId}/edit`)
@@ -25,52 +44,56 @@ const goToEditItem = () => {
 const goToNewClaim = () => {
   $goto(`/items/${itemId}/new-claim`)
 }
-const goToDelete = () => {
-  $goto(`/items/${itemId}/delete`)
-}
 </script>
 
-<style>
-.delete-button {
-  color: var(--mdc-theme-status-error);
-  text-decoration: none;
-  margin: 5px;
-}
-
-p {
-  font-weight: 600;
-}
-
-</style>
-
-{#if !item.id } 
-  {#if $loading}
-    Loading...
+<Page layout={'grid'}>
+  {#if !item.id } 
+    {#if $loading}
+      Loading...
+    {:else}
+      We could not find that item. Please <a href="/items">go back</a> and select
+      an item from the list.
+    {/if}
   {:else}
-    We could not find that item. Please <a href="/items">go back</a> and select
-    an item from the list.
+    <Row cols="12">
+      <div class="flex justify-between align-items-center" >
+        <Breadcrumb links={breadcrumbLinks} />
+        <div>
+          <Button class="remove-button mx-5px" url={`/items/${itemId}/delete`}>Remove</Button>
+          <Button on:click={goToEditItem} >Edit Item</Button>
+        </div>
+      </div>
+    </Row>
+    
+    <Row cols={'3'}>
+      <h2>{item.name || ''}</h2>
+      <b>Covered value</b>
+      <div>{formatMoney(item.coverage_amount)}</div>
+      <b>Annual premium</b>
+      <div>{formatMoney(item.annual_premium)}</div>
+      <br/>
+      <b>{item.accountable_person || ''}</b>
+      <div>Household ID</div>
+      <div>{householdId}</div>
+    </Row>
+    
+    <Row cols={'9'}>
+      <ClaimBanner claimStatus={item.coverage_status}>Submitted {daysAgo} days ago</ClaimBanner>
+      <h3>{item.make || ''} {item.model || ''}</h3>
+      <b class="mb-6px">Unique ID</b>
+      <div>{item.serial_number}</div>
+      <br/>
+      <div>Description: {item.description || ''}</div>
+      <br/>
+      <Banner background="var(--mdc-theme-primary-header-bg)" color="var(--mdc-theme-primary)" class="max-content-width">{item.category?.name || ''}</Banner>
+      <div class="my-1">
+        <b>Starts</b>
+        <div>{startDate}</div>
+      </div>
+      <br />
+      <div>
+        <Button class="mdc-theme--secondary-background" on:click={goToNewClaim} raised>File Claim</Button>
+      </div>
+    </Row>
   {/if}
-{:else}
-  <Breadcrumb links={breadcrumbLinks} />
-  <h1>{item.name}</h1>
-  <h3>{item.make} {item.model}</h3>
-  <Banner background="var(--mdc-theme-neutral" class="max-content-width">{item.category?.name}</Banner>
-  <p>Market value: {formatMoney(item.coverage_amount)}</p>
-  <!--TODO: get this from backend when available-->
-  <p>Annual premium: {formatMoney(1620)}</p>
-  <p>Description: {item.description}</p>
-  <!--TODO: get this from backend when available-->
-  <p>Accountable person: {"Jeff Smith"}</p>
-  <p>Unique identifier: {item.serial_number}</p>
-  <p>Coverage added: {new Date(item.coverage_start_date).toDateString()}</p>
-  <p>Coverage ends: {"13 December 2029"}</p>
-  <div>
-    <Button on:click={goToEditItem} raised>Edit Details</Button>
-    <!-- svelte-ignore a11y-invalid-attribute -->
-    <a on:click={goToDelete} class="delete-button" href="">Remove Coverage</a>
-  </div>
-  <br />
-  <div>
-    <Button class="mdc-theme--secondary-background" on:click={goToNewClaim} raised>File Claim</Button>
-  </div>
-{/if}
+</Page>

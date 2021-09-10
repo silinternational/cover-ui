@@ -56,11 +56,9 @@ p {
   <h3>{item.make} {item.model}</h3>
   <Banner background="var(--mdc-theme-neutral" class="max-content-width">{item.category?.name}</Banner>
   <p>Market value: {formatMoney(item.coverage_amount)}</p>
-  <!--TODO: get this from backend when available-->
-  <p>Annual premium: {formatMoney(1620)}</p>
+  <p>Annual premium: {formatMoney(item.annual_premium)}</p>
   <p>Description: {item.description}</p>
-  <!--TODO: get this from backend when available-->
-  <p>Accountable person: {"Jeff Smith"}</p>
+  <p>Accountable person: {item.accountable_person || ''}</p>
   <p>Unique identifier: {item.serial_number}</p>
   <p>Coverage added: {new Date(item.coverage_start_date).toDateString()}</p>
   <p>Coverage ends: {"13 December 2029"}</p>

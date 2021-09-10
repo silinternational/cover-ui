@@ -1,5 +1,16 @@
 <script>
 import {
+  isFairMarketValueNeeded,
+  isPotentiallyRepairable,
+  isRepairCostTooHigh,
+  isUnrepairableOrTooExpensive,
+  LOSS_REASON_EVACUATION,
+  PAYOUT_OPTION_FIXED_FRACTION,
+  PAYOUT_OPTION_FMV,
+  PAYOUT_OPTION_REPAIR,
+  PAYOUT_OPTION_REPLACE,
+} from '../../business-rules/claim-payout-amount'
+import {
   ConvertCurrencyLink,
   Description,
   RadioOptions,
@@ -7,7 +18,6 @@ import {
   MoneyInput,
 } from '../../components'
 import { claimEventTypes, loadClaimEventTypes } from '../../data/claim-event-types'
-import { formatMoney } from '../../helpers/money'
 import { Button, Form, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
@@ -30,56 +40,91 @@ const repairableOptions = [
     value: 'not_repairable'
   }
 ]
+const payoutOptions = [
+  {
+    label: 'Replace and get reimbursed later',
+    value: PAYOUT_OPTION_REPLACE,
+  },
+  {
+    label: 'Get fair market value (no replacement)',
+    value: PAYOUT_OPTION_FMV,
+  },
+]
 
+// Set default form values.
+let lostDate = todayDateString
+let lossReason = undefined
+let situationDescription = ''
+let isRepairable = undefined
+let payoutOption = undefined
+let repairEstimateUSD = undefined
+let replaceEstimateUSD = undefined
+let fairMarketValueUSD = undefined
+
+// Set default derived (or intermediate) values.
+let claimItem = {}
+let claimItems = []
+let isEvacuation = undefined
+let lossReasonOptions = []
+let potentiallyRepairable = true
+let repairableEventTypeNames = []
+let repairableSelection = undefined
+let repairCostIsTooHigh = undefined
+let shouldAskIfRepairable = false
+let shouldAskForFMV = false
+let shouldAskReplaceOrFMV = false
+let unrepairableOrTooExpensive = undefined
+
+// Set initial form values based on the provided data.
+$: setInitialValues(claim, claimItem)
+
+// Load the necessary data.
+$: $claimEventTypes.length || loadClaimEventTypes()
+
+// Find applicable data from component props.
 $: claimItems = claim.claim_items || []
 $: claimItem = claimItems.find(entry => entry.item_id === item.id) || {}
 
-$: $claimEventTypes.length || loadClaimEventTypes()
+// Define rules for reactive variables.
+$: isEvacuation = (lossReason === LOSS_REASON_EVACUATION)
+$: potentiallyRepairable = isPotentiallyRepairable($claimEventTypes, lossReason)
+$: isRepairable = calculateIsRepairable(potentiallyRepairable, repairableSelection)
+$: repairCostIsTooHigh = isRepairCostTooHigh(repairEstimateUSD, fairMarketValueUSD)
+$: unrepairableOrTooExpensive = isUnrepairableOrTooExpensive(isRepairable, repairCostIsTooHigh)
+$: shouldAskReplaceOrFMV = (!isEvacuation && (unrepairableOrTooExpensive === true))
+$: shouldAskIfRepairable = !!(potentiallyRepairable && lossReason)
+$: shouldAskForFMV = isFairMarketValueNeeded(isRepairable, payoutOption)
+$: (payoutOption !== PAYOUT_OPTION_REPLACE) && unSetReplaceEstimate()
+$: !shouldAskReplaceOrFMV && unSetPayoutOption()
+$: !shouldAskIfRepairable && unSetRepairableSelection()
+$: !shouldAskForFMV && unSetFairMarketValue()
+$: !isRepairable && unSetRepairEstimate()
+
+// Calculate dynamic options for radio-button prompts.
 $: lossReasonOptions = $claimEventTypes.map(({name}) => ({ label: name, value: name }))
-$: repairableEventTypeNames = $claimEventTypes.filter(entry => entry.is_repairable).map(entry => entry.name)
 
-// Set default values.
-let lostDate = todayDateString
-let lossReason = ''
-let situationDescription = ''
-let repairableSelection = null
-let fairMarketValueUSD = ''
-let repairCostUSD = ''
-let payoutOption = ''
-
-// Set initial values based on the provided claim and claim-item data.
-$: setInitialValues(claim, claimItem)
-
-// TODO: get accountable person from item 
+// TODO: get accountable person from item
 // TODO: add reimbursed value
-$: isNotRepairableOrMoneyInputsAreSet = (repairableSelection !== "repairable" || (repairCostUSD && fairMarketValueUSD))
-$: seventyPercentCheck = (!repairCostUSD || !fairMarketValueUSD || (repairCostUSD/fairMarketValueUSD) >= .7)
-$: payoutOptionCheck = lossReason && isNotRepairableOrMoneyInputsAreSet && seventyPercentCheck
-$: isPotentiallyRepairable = repairableEventTypeNames.includes(lossReason)
 
-$: !payoutOptionCheck && unSetPayoutOption()
-$: !(repairableSelection === "repairable" || payoutOption === "cash_now") && unSetFairMarketValue()
-$: repairableSelection !== "repairable" && unSetRepairCost()
-$: !isPotentiallyRepairable && unSetRepairableSelection()
-$: payoutOptionCheck && payoutOption == "evacuation" && unSetPayoutOption()
-
-$: moneyPayoutOptions = [
-  {
-    // TODO: make this the covered amount
-    label: `Replace and get reimbursed later`,
-    value: 'replace_and_reimburse',
-  },
-  // TODO: make this the min of either covered amount or FMV
-  {
-    label: `Cash now (${formatMoney((fairMarketValueUSD || 0) * 100 * regularFraction)})`,
-    value: 'cash_now'
+const calculateIsRepairable = (potentiallyRepairable, repairableSelection) => {
+  if (!potentiallyRepairable) {
+    return false
   }
-]
-
+  if (!repairableSelection) {
+    return undefined
+  }
+  return (repairableSelection === 'repairable')
+}
+const determinePayoutOption = (isEvacuation, repairCostIsTooHigh, selectedPayoutOption) => {
+  if (isEvacuation) {
+    return PAYOUT_OPTION_FIXED_FRACTION
+  }
+  if (repairCostIsTooHigh === false) { // ... not merely falsy, like `null` or `undefined`
+    return PAYOUT_OPTION_REPAIR
+  }
+  return selectedPayoutOption
+}
 const onSubmit = async () => {
-  if (repairableSelection === "repairable" && !payoutOption) {
-    payoutOption = "repair"
-  }
   dispatch('submit', {
     claimData: {
       lostDate,
@@ -87,11 +132,12 @@ const onSubmit = async () => {
       situationDescription,
     },
     claimItemData: {
-      fairMarketValueUSD,
-      repairableSelection,
       itemId: item.id,
-      repairCostUSD,
-      payoutOption,
+      isRepairable,
+      payoutOption: determinePayoutOption(isEvacuation, repairCostIsTooHigh, payoutOption),
+      repairEstimateUSD,
+      replaceEstimateUSD,
+      fairMarketValueUSD,
     },
   })
 }
@@ -101,22 +147,25 @@ const setInitialValues = (claim, claimItem) => {
   }
   lossReason = claim.event_type || lossReason
   situationDescription = claim.event_description || situationDescription
-  if (isPotentiallyRepairable) {
+  if (claimItem.is_repairable !== undefined) {
     repairableSelection = (claimItem.is_repairable ? 'repairable' : 'not_repairable')
   }
   payoutOption = claimItem.payout_option || payoutOption
 }
 const unSetPayoutOption = () => {
-  payoutOption = null
+  payoutOption = undefined
 }
 const unSetFairMarketValue = () => {
-  fairMarketValueUSD = null
+  fairMarketValueUSD = undefined
 }
 const unSetRepairableSelection = () => {
-  repairableSelection = null
+  repairableSelection = undefined
 }
-const unSetRepairCost = () => {
-  repairCostUSD = null
+const unSetRepairEstimate = () => {
+  repairEstimateUSD = undefined
+}
+const unSetReplaceEstimate = () => {
+  replaceEstimateUSD = undefined
 }
 </script>
 
@@ -135,45 +184,65 @@ const unSetRepairCost = () => {
       <span class="ml-1">What happened?</span>
       <TextArea class="mt-1" label="Describe the situation" bind:value={situationDescription} rows="4" />
     </p>
-    {#if isPotentiallyRepairable}
+    {#if shouldAskIfRepairable }
       <div>
         <RadioOptions name="repairableSelection" options={repairableOptions} bind:value={repairableSelection} />
       </div>
     {/if}
-    {#if repairableSelection === "repairable"}
+    
+    {#if isRepairable }
       <p>
-        <MoneyInput label="Cost of repair (USD)" bind:value={repairCostUSD} />
+        <MoneyInput label="Repair estimate (USD)" bind:value={repairEstimateUSD} />
         <Description>
-          How much will it cost to be repaired?
+          How much will it probably cost to be repaired?
           <br />
           <ConvertCurrencyLink />
         </Description>
       </p>
-    {/if}
-    {#if repairableSelection === "repairable" || payoutOption === "cash_now"}
       <p>
+        1st
+        <!-- If it's repairable, position this BEFORE the "Payout options" prompt. -->
         <MoneyInput label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
         <Description>
           <ConvertCurrencyLink />
         </Description>
       </p>
     {/if}
-    {#if payoutOptionCheck }
-      {#if lossReason !== "Evacuation"}
-        <div>
-          <p>Payout options</p>
-          <RadioOptions name="payoutOption" options={moneyPayoutOptions} bind:value={payoutOption} />
-        </div>
-      {:else}
-        <div>
-          <p>We are sorry you are experiencing this situation and will keep you in our prayers.</p>
-          <p>We will reach out to SIL HR to get more context about this situation.</p>
-          <p>If approved, you are eligible for 2/3 payout of covered lost assets.</p>
-        </div>
+    
+    {#if shouldAskReplaceOrFMV }
+      <div>
+        <p>Payout options</p>
+        <RadioOptions name="payoutOption" options={payoutOptions} bind:value={payoutOption} />
+      </div>
+      {#if payoutOption === PAYOUT_OPTION_REPLACE }
+        <p>
+          <MoneyInput label="Replacement estimate (USD)" bind:value={replaceEstimateUSD} />
+          <Description>
+            How much will it probably cost to replace?
+            <br />
+            <ConvertCurrencyLink />
+          </Description>
+        </p>
       {/if}
     {/if}
-    {#if repairableSelection === "repairable" && (isNotRepairableOrMoneyInputsAreSet && !seventyPercentCheck)}
-      <p>You will receive {formatMoney(repairCostUSD * 100 * regularFraction)} to repair your insured Item.</p>
+
+    {#if (isRepairable === false) && (payoutOption === PAYOUT_OPTION_FMV) }
+      <p>
+        2nd
+        <!-- If we know it's not repairable, position this AFTER the "Payout options" prompt. -->
+        <MoneyInput label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
+        <Description>
+          <ConvertCurrencyLink />
+        </Description>
+      </p>
+    {/if}
+
+    {#if isEvacuation }
+      <div>
+        <p>We are sorry you are experiencing this situation and will keep you in our prayers.</p>
+        <p>We will reach out to SIL HR to get more context about this situation.</p>
+        <p>If approved, you are eligible for 2/3 payout of covered lost assets.</p>
+      </div>
     {/if}
     <!--TODO: add evacuation amount when items is done (covered_value*(2/3))-->
     <p>

@@ -1,5 +1,6 @@
 import { CREATE, GET, UPDATE } from "."
 import { start, stop } from "../components/progress"
+import { convertToCents } from "../helpers/money"
 import { writable } from "svelte/store"
 
 export const claims = writable([])
@@ -109,14 +110,12 @@ export const createClaimItem = async (claimId, claimItemData) => {
   start(urlPath)
   try {
     const parsedClaimItem = {
-      fmv: claimItemData.fairMarketValueUSD * 100,
-      is_repairable: claimItemData.repairableSelection === 'repairable',
+      fmv: convertToCents(claimItemData.fairMarketValueUSD),
+      is_repairable: claimItemData.isRepairable,
       item_id: claimItemData.itemId,
       payout_option: claimItemData.payoutOption,
-      repair_actual: 0,
-      repair_estimate: claimItemData.repairCostUSD * 100,
-      replace_actual: 0,
-      replace_estimate: 0,
+      repair_estimate: convertToCents(claimItemData.repairEstimateUSD),
+      replace_estimate: convertToCents(claimItemData.replaceEstimateUSD),
     }
   
     const claimItem = await CREATE(urlPath, parsedClaimItem)

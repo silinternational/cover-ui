@@ -171,6 +171,25 @@ export async function claimsFileAttach(claimId, fileId) {
 
 /**
  *
+ * @description a function to update a claimItem
+ * @export
+ * @param {Number} itemId 
+ */
+ export async function updateClaimItem(claimItemId, claimItemData) {
+  start(claimItemId)
+
+  const parsedData = {
+    repair_actual: claimItemData.repairActual,
+    replace_actual: claimItemData.replaceActual,
+  }
+
+  await UPDATE(`claimitems/${claimItemId}`, parsedData)
+
+  stop(claimItemId)
+}
+
+/**
+ *
  * @description a function to delete a claim
  * @export
  * @param {Number} itemId 

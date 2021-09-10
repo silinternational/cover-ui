@@ -1,11 +1,10 @@
 <script>
-import { Progress } from "@silintl/ui-components"
 import { createEventDispatcher } from "svelte"
 
 export let raised = false
 export let outlined = false
 export let uploading = false
-export let showPreview = true
+export let mimeType = 'application/pdf,image/*'
 
 let fileInput = {}
 
@@ -33,9 +32,8 @@ function handleDrop(e) {
 function handleFiles(files) {
   if(! uploading) {
     uploading = true
-    files = [...files]
+    files = [...files]  //turns files into an array so forEach works
     files.forEach(uploadFile)
-    files.forEach(previewFile)
   }
 }
 
@@ -47,24 +45,14 @@ function uploadFile(file) {
   dispatch('upload', formData)
 }
 
-function previewFile(file) {
-  const reader = new FileReader()
-  reader.readAsDataURL(file)
-  reader.onloadend = function() {
-    let img = document.createElement('img')
-    img.style = "max-width: 200px; margin-bottom: 10px ;margin-right: 10px;vertical-align: middle;"
-    img.src = reader.result
-    document.getElementById('gallery').appendChild(img)
-  }
-}
-
 </script>
   
 <style>
+form > * {
+  margin-top: 0;
+}
 #drop-area {
   border: 2px dashed #ccc;
-  border-radius: 20px;
-  font-family: Source Sans Pro, Roboto, sans-serif;
 }
 #drop-area.highlighted {
   border-color: var(--mdc-theme-primary);
@@ -73,38 +61,25 @@ function previewFile(file) {
 #fileElem {
   display: none;
 }
-form {
-  gap: 10px;
-  align-items: center;
-  justify-items: center;
-}
 .disabled {
   cursor: progress;
 }
 .icon {
   color: hsla(213, 6%, 55%, 1);
 }
-
 </style>
 
-<div id="drop-area" class="p-20px {$$props.class}" class:highlighted
+<div id="drop-area" class="br-8px {$$props.class}" class:highlighted
   on:dragenter|preventDefault|stopPropagation={highlight}
   on:dragleave|preventDefault|stopPropagation={unhighlight}
   on:dragover|preventDefault|stopPropagation={highlight}
   on:drop|preventDefault|stopPropagation={handleDrop}>
-  <form class="flex mb-10px">
+  <form class="flex justify-between align-items-center my-1 px-1">
     {#if ! uploading}
-      <input bind:this={fileInput} type="file" id="fileElem" multiple accept="application/pdf,image/*" disabled={uploading} on:change={() => handleFiles(fileInput.files)}>
+      <input bind:this={fileInput} type="file" id="fileElem" multiple accept={mimeType} disabled={uploading} on:change={() => handleFiles(fileInput.files)}>
     {/if}
-    <label class="mdc-button" for="fileElem" class:custom-text-button={raised} class:mdc-button--outlined={outlined} class:disabled={uploading} class:mdc-button--raised={raised}>Choose files</label>
+    <label class="mdc-button mt-1" for="fileElem" class:custom-text-button={raised} class:mdc-button--outlined={outlined} class:disabled={uploading} class:mdc-button--raised={raised}>Choose files</label>
     <div>or drop files here</div>
     <i class="material-icons icon" id="upload-icon">cloud_upload</i>
   </form>
-  {#if showPreview}
-    <div id="gallery" class="mt-10px"></div>
-  {/if}
-  {#if uploading}
-    <Progress.Circular />
-    <span>{`Uploading file`}</span>
-  {/if}
 </div>

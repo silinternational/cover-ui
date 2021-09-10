@@ -107,12 +107,12 @@ const onEditClaim = event => {
                     <Checkbox on:checked={() => handleChecked(item.id)} on:unchecked={() => handleUnchecked(item.id)}/>
                   </div>
                 </Datatable.Data.Row.Item>
-                <Datatable.Data.Row.Item>{item.name}</Datatable.Data.Row.Item>
-                <Datatable.Data.Row.Item>{item.recent_activity}</Datatable.Data.Row.Item>
-                <Datatable.Data.Row.Item>{item.accountable_person}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>{item.coverage_status || ''}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>{item.accountable_person || ''}</Datatable.Data.Row.Item>
                 <Datatable.Data.Row.Item>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
-                <Datatable.Data.Row.Item>{formatMoney(item.premium)}</Datatable.Data.Row.Item>
-                <Datatable.Data.Row.Item>{item.type}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>{item.risk_category?.name || ''}</Datatable.Data.Row.Item>
                 <Datatable.Data.Row.Item>
                   <svg class="home-table-more-vert" viewBox="0 0 30 30" on:click={() => handleMoreVertClick(item.id)}>
                     <path fill="currentColor" d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z" />

@@ -37,6 +37,7 @@ export async function addItem(policyId, itemData) {
   start(urlPath)
 
   const parsedItemData = {
+    accountable_person_id: itemData.accountablePersonId,
     category_id: itemData.categoryId,
     country: itemData.country,
     coverage_amount: Number(itemData.marketValueUSD) * 100,
@@ -82,6 +83,7 @@ export async function updateItem(policyId, itemId, itemData) {
   start(urlPath)
 
   const parsedItemData = {
+    accountable_person_id: itemData.accountablePersonId,
     category_id: itemData.categoryId,
     country: itemData.country,
     coverage_amount: Number(itemData.marketValueUSD) * 100,

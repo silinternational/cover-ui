@@ -5,6 +5,7 @@ import { formatDate } from '../../components/dates.js'
 import { upload } from '../../data'
 import { loadClaims, claims, initialized, claimsFileAttach, updateClaimItem } from '../../data/claims'
 import { loadItems, itemsByPolicyId } from '../../data/items'
+import { formatMoney } from '../../helpers/money'
 import { goto } from '@roxi/routify'
 import { Button, Form, Page } from '@silintl/ui-components'
 
@@ -134,7 +135,7 @@ function onDeleted(event) {
     </p>
     <p>
       <b>Covered value</b><br />
-      {item.coverage_amount  || ''}
+      {formatMoney(item.coverage_amount)}
     </p>
     <p>
       <b>Maximum payout (if approved)</b><br />

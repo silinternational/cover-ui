@@ -59,7 +59,7 @@ const goToNewClaim = () => {
       <div class="flex justify-between align-items-center" >
         <Breadcrumb links={breadcrumbLinks} />
         <div>
-          <Button raised class="error-button mx-5px" url={`/items/${itemId}/delete`}>Remove</Button>
+          <Button class="remove-button mx-5px" url={`/items/${itemId}/delete`}>Remove</Button>
           <Button on:click={goToEditItem} >Edit Item</Button>
         </div>
       </div>

@@ -9,6 +9,7 @@ import { Button, TextField, IconButton, Page, Snackbar, setNotice } from "@silin
 
 const policyData = {}
 
+let affiliationChoice = ''
 let householdId = ''
 let costCenter = ''
 let placeholder = 'Your entity of affiliation'
@@ -119,7 +120,7 @@ const isYou = householdMember => householdMember.id === $user.id
   
   {#if policy.type === 'Corporate'}
     <h3 class="ml-1 mt-3" >Affiliation<span class="required">*</span></h3>
-    <SearchableSelect options={$affiliations} {placeholder} padding={'16px'} on:chosen={updateAffiliation}/>
+    <SearchableSelect options={$affiliations} choice={affiliationChoice} {placeholder} padding={'16px'} on:chosen={updateAffiliation}/>
     
     <h3 class="ml-1 mt-3">Cost center<span class="required">*</span></h3>
     <p>

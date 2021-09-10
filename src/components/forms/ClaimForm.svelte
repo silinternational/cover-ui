@@ -142,7 +142,7 @@ const unSetRepairCost = () => {
     {/if}
     {#if repairableSelection === "repairable"}
       <p>
-        <MoneyInput label="Cost of repair" bind:value={repairCostUSD} />
+        <MoneyInput label="Cost of repair (USD)" bind:value={repairCostUSD} />
         <Description>
           How much will it cost to be repaired?
           <br />
@@ -152,7 +152,7 @@ const unSetRepairCost = () => {
     {/if}
     {#if repairableSelection === "repairable" || payoutOption === "cash_now"}
       <p>
-        <MoneyInput label="Fair market value" bind:value={fairMarketValueUSD} />
+        <MoneyInput label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
         <Description>
           <ConvertCurrencyLink />
         </Description>

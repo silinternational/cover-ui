@@ -39,6 +39,12 @@ const isItemIdOnClaim = (itemId, claim) => {
 }
 const onSubmit = async event => {
   const { claimData, claimItemData } = event.detail
+  
+  // TODO - Handle situations where the claim is created, but the claim-item
+  // is rejected. We could potentially hold the claim here, and if passed in
+  // the form could send the Claim ID on submit. If we receive a Claim ID here,
+  // use it. Otherwise, create a new claim. */
+  
   const claim = await createClaim(item, claimData)
   await createClaimItem(claim.id, claimItemData)
   $goto(`/claims/${claim.id}`)

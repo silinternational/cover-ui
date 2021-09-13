@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { MDCTextField } from '@material/textfield'
 import { onMount } from 'svelte'
 

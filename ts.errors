@@ -1,0 +1,1592 @@
+
+====================================
+Loading svelte-check in workspace: /home/russell/code/cover-ui
+Getting Svelte diagnostics...
+
+/home/russell/code/cover-ui/src/components/App.svelte:6:34
+Hint: Could not find a declaration file for module 'qs'. '/home/russell/code/cover-ui/node_modules/qs/lib/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/qs` if it exists or add a new declaration (.d.ts) file containing `declare module 'qs';` (ts)
+import t from '../i18n'
+import { parse, stringify } from 'qs'
+import { Router } from "@roxi/routify"
+
+
+/home/russell/code/cover-ui/src/components/App.svelte:12:10
+Hint: Parameter 'params' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+const queryHandler = {
+  parse: params => parse(params, {ignoreQueryPrefix: true}),
+  stringify
+
+
+/home/russell/code/cover-ui/src/components/AppHeader.svelte:4:50
+Hint: Could not find a declaration file for module '@silintl/ui-components'. '/home/russell/code/cover-ui/node_modules/@silintl/ui-components/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/silintl__ui-components` if it exists or add a new declaration (.d.ts) file containing `declare module '@silintl/ui-components';` (ts)
+import Progress from './progress/Progress.svelte'
+import { Badge, IconButton, isAboveMobile } from '@silintl/ui-components'
+import { createEventDispatcher, onMount } from 'svelte'
+
+
+/home/russell/code/cover-ui/src/components/AppHeader.svelte:20:5
+Hint: Variable 'showDrawerButton' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+let alt = 'avatar'
+let showDrawerButton
+let menuOpen = false
+
+
+/home/russell/code/cover-ui/src/components/AppHeader.svelte:25:16
+Error: Property 'avatar_url' does not exist on type '{}'. (ts)
+
+$: src = $user.avatar_url
+$: ownerInitial = $user.first_name?.charAt(0) || ''
+
+
+/home/russell/code/cover-ui/src/components/AppHeader.svelte:26:25
+Error: Property 'first_name' does not exist on type '{}'. (ts)
+$: src = $user.avatar_url
+$: ownerInitial = $user.first_name?.charAt(0) || ''
+
+
+
+/home/russell/code/cover-ui/src/components/Breadcrumb.svelte:25:45
+Error: Argument of type 'Error' is not assignable to parameter of type 'string'. (ts)
+  links.forEach(val => {
+    if (!val.url || !val.name) { throwError(new Error("no url or name field for provided links array")) }
+
+
+
+/home/russell/code/cover-ui/src/components/ClaimCard.svelte:5:30
+Hint: Could not find a declaration file for module '@silintl/ui-components'. '/home/russell/code/cover-ui/node_modules/@silintl/ui-components/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/silintl__ui-components` if it exists or add a new declaration (.d.ts) file containing `declare module '@silintl/ui-components';` (ts)
+import { getState } from '../data/claims'
+import { Card, Button } from '@silintl/ui-components'
+import { createEventDispatcher } from 'svelte'
+
+
+/home/russell/code/cover-ui/src/components/ClaimCard.svelte:21:20
+Hint: Parameter 'event' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+const gotoClaim = () => dispatch('goto-claim', claim.id)
+const onKeyPress = event => {
+  if (event.code === 'Space' || event.code === 'Enter') {
+
+
+/home/russell/code/cover-ui/src/components/ClaimCard.svelte:15:39
+Error: Property 'updated_at' does not exist on type '{}'. (ts)
+
+$: msAgo = now - Date.parse(claimItem.updated_at)
+$: daysAgo = msAgo > 0 ? Math.floor(msAgo/day) : '-'
+
+
+/home/russell/code/cover-ui/src/components/ClaimCard.svelte:17:27
+Error: Property 'status' does not exist on type '{}'. (ts)
+$: daysAgo = msAgo > 0 ? Math.floor(msAgo/day) : '-'
+$: state = getState(claim.status) || {}
+
+
+
+/home/russell/code/cover-ui/src/components/ClaimCard.svelte:19:54
+Error: Property 'id' does not exist on type '{}'. (ts)
+
+const editClaim = () => dispatch('edit-claim', claim.id)
+const gotoClaim = () => dispatch('goto-claim', claim.id)
+
+
+/home/russell/code/cover-ui/src/components/ClaimCard.svelte:20:54
+Error: Property 'id' does not exist on type '{}'. (ts)
+const editClaim = () => dispatch('edit-claim', claim.id)
+const gotoClaim = () => dispatch('goto-claim', claim.id)
+const onKeyPress = event => {
+
+
+/home/russell/code/cover-ui/src/components/ClaimCard.svelte:56:11
+Error: Property 'name' does not exist on type '{}'. (ts)
+  <div class="mdc-typography--headline5 multi-line-truncate content ml-50px">
+    {item.name || ''}
+  </div>
+
+
+/home/russell/code/cover-ui/src/components/ClaimCard.svelte:60:11
+Error: Property 'accountable_person' does not exist on type '{}'. (ts)
+  <div class="content multi-line-truncate ml-50px">
+    {item.accountable_person || ''}
+  </div>
+
+
+/home/russell/code/cover-ui/src/components/ClaimCardBanner.svelte:5:20
+Error: Property 'bgColor' does not exist on type '{}'. (ts)
+
+$: bgColor = state.bgColor || ''
+$: color = state.color || ''
+
+
+/home/russell/code/cover-ui/src/components/ClaimCardBanner.svelte:6:18
+Error: Property 'color' does not exist on type '{}'. (ts)
+$: bgColor = state.bgColor || ''
+$: color = state.color || ''
+$: icon = state.icon || ''
+
+
+/home/russell/code/cover-ui/src/components/ClaimCardBanner.svelte:7:17
+Error: Property 'icon' does not exist on type '{}'. (ts)
+$: color = state.color || ''
+$: icon = state.icon || ''
+$: message = item.message || ''
+
+
+/home/russell/code/cover-ui/src/components/ClaimCardBanner.svelte:8:19
+Error: Property 'message' does not exist on type '{}'. (ts)
+$: icon = state.icon || ''
+$: message = item.message || ''
+$: title = state.title || ''
+
+
+/home/russell/code/cover-ui/src/components/ClaimCardBanner.svelte:9:18
+Error: Property 'title' does not exist on type '{}'. (ts)
+$: message = item.message || ''
+$: title = state.title || ''
+</script>
+
+
+/home/russell/code/cover-ui/src/components/ClaimCards.svelte:4:12
+Hint: Variable 'claims' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+export let claims
+export let items
+
+
+/home/russell/code/cover-ui/src/components/ClaimCards.svelte:5:12
+Hint: Variable 'items' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+export let claims
+export let items
+</script>
+
+
+/home/russell/code/cover-ui/src/components/ClaimCards.svelte:19:57
+Hint: Parameter 'item' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+      <div class="card">
+        <ClaimCard {claim} {claimItem} item={items.find(item => item.id === claimItem.item_id)}
+                   on:edit-claim on:goto-claim />
+
+
+/home/russell/code/cover-ui/src/components/ClaimCards.svelte:16:33
+Error: Property 'id' does not exist on type 'unknown'. (ts)
+<div class="flex justify-start flex-wrap {$$props.class}">
+  {#each claims as claim (claim.id) }
+    {#each (claim.claim_items || []) as claimItem (claimItem.id) }
+
+
+/home/russell/code/cover-ui/src/components/ClaimCards.svelte:17:19
+Error: Property 'claim_items' does not exist on type 'unknown'. (ts)
+  {#each claims as claim (claim.id) }
+    {#each (claim.claim_items || []) as claimItem (claimItem.id) }
+      <div class="card">
+
+
+/home/russell/code/cover-ui/src/components/ClaimCards.svelte:17:62
+Error: Property 'id' does not exist on type 'unknown'. (ts)
+  {#each claims as claim (claim.id) }
+    {#each (claim.claim_items || []) as claimItem (claimItem.id) }
+      <div class="card">
+
+
+/home/russell/code/cover-ui/src/components/ClaimCards.svelte:19:87
+Error: Property 'item_id' does not exist on type 'unknown'. (ts)
+      <div class="card">
+        <ClaimCard {claim} {claimItem} item={items.find(item => item.id === claimItem.item_id)}
+                   on:edit-claim on:goto-claim />
+
+
+/home/russell/code/cover-ui/src/components/DateInput.svelte:17:15
+Hint: Parameter 'node' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const focus = node => autofocus && node.focus()
+</script>
+
+
+/home/russell/code/cover-ui/src/components/DateInput.svelte:13:35
+Error: Argument of type '{}' is not assignable to parameter of type 'Element'.
+  Type '{}' is missing the following properties from type 'Element': attributes, classList, className, clientHeight, and 160 more. (ts)
+onMount(() => {
+  mdcTextField = new MDCTextField(element)
+  return () => mdcTextField.destroy()
+
+
+/home/russell/code/cover-ui/src/components/DateInput.svelte:14:29
+Error: Property 'destroy' does not exist on type '{}'. (ts)
+  mdcTextField = new MDCTextField(element)
+  return () => mdcTextField.destroy()
+})
+
+
+/home/russell/code/cover-ui/src/components/Error.svelte:10:24
+Hint: Parameter 'element' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const scrollIntoView = element => element.scrollIntoView({behavior: 'smooth'})
+</script>
+
+
+/home/russell/code/cover-ui/src/components/Error.svelte:8:30
+Error: Property 'message' does not exist on type '{}'. (ts)
+$: errContainer && scrollIntoView(errContainer)
+$: $isChangingPage && $error.message && dismiss()
+
+
+
+/home/russell/code/cover-ui/src/components/Error.svelte:28:13
+Error: Property 'message' does not exist on type '{}'. (ts)
+
+{#if $error.message}
+  <span bind:this={errContainer}>
+
+
+/home/russell/code/cover-ui/src/components/Error.svelte:30:13
+Error: Property 'message' does not exist on type '{}'. (ts)
+  <span bind:this={errContainer}>
+    {$error.message} <small on:click={dismiss}>⨉</small>
+  </span>
+
+
+/home/russell/code/cover-ui/src/components/MoneyInput.svelte:4:34
+Hint: Could not find a declaration file for module '@silintl/ui-components/random'. '/home/russell/code/cover-ui/node_modules/@silintl/ui-components/random/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/silintl__ui-components` if it exists or add a new declaration (.d.ts) file containing `declare module '@silintl/ui-components/random';` (ts)
+import { MDCTextField } from '@material/textfield'
+import { generateRandomID } from '@silintl/ui-components/random'
+import { onMount } from 'svelte'
+
+
+/home/russell/code/cover-ui/src/components/MoneyInput.svelte:26:15
+Hint: Parameter 'node' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const focus = node => autofocus && node.focus()
+</script>
+
+
+/home/russell/code/cover-ui/src/components/MoneyInput.svelte:19:27
+Error: Property 'value' does not exist on type '{}'. (ts)
+
+$: value && (mdcTextField.value = value)
+
+
+
+/home/russell/code/cover-ui/src/components/MoneyInput.svelte:22:35
+Error: Argument of type '{}' is not assignable to parameter of type 'Element'.
+  Type '{}' is missing the following properties from type 'Element': attributes, classList, className, clientHeight, and 160 more. (ts)
+onMount(() => {
+  mdcTextField = new MDCTextField(element)
+  return () => mdcTextField.destroy()
+
+
+/home/russell/code/cover-ui/src/components/MoneyInput.svelte:23:29
+Error: Property 'destroy' does not exist on type '{}'. (ts)
+  mdcTextField = new MDCTextField(element)
+  return () => mdcTextField.destroy()
+})
+
+
+/home/russell/code/cover-ui/src/components/RadioOptions.svelte:3:12
+Hint: JSDoc types may be moved to TypeScript types. (ts)
+/** @type {{label, value}[]} */
+export let options = []
+
+
+
+/home/russell/code/cover-ui/src/components/RadioOptions.svelte:5:12
+Hint: Variable 'name' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+export let name
+export let value
+
+
+/home/russell/code/cover-ui/src/components/RadioOptions.svelte:6:12
+Hint: Variable 'value' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+export let name
+export let value
+
+
+
+/home/russell/code/cover-ui/src/components/RadioOptions.svelte:8:21
+Hint: Parameter 'option' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const isSelected = (option) => {
+  return (option.value === value) ? 'checked' : undefined
+
+
+/home/russell/code/cover-ui/src/components/RadioOptions.svelte:11:17
+Hint: Parameter 'event' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+}
+const onInput = event => {
+  value = event.target.value
+
+
+/home/russell/code/cover-ui/src/components/RadioOptions.svelte:25:53
+Error: Type 'string' is not assignable to type 'boolean'. (ts)
+  <label>
+    <input type="radio" {name} value={option.value} checked={isSelected(option)} on:input={onInput} />
+    {option.label}
+
+
+/home/russell/code/cover-ui/src/components/SearchableSelect.svelte:2:34
+Hint: Could not find a declaration file for module '@silintl/ui-components/random'. '/home/russell/code/cover-ui/node_modules/@silintl/ui-components/random/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/silintl__ui-components` if it exists or add a new declaration (.d.ts) file containing `declare module '@silintl/ui-components/random';` (ts)
+<script lang="ts">
+import { generateRandomID } from "@silintl/ui-components/random"
+import { createEventDispatcher } from "svelte"
+
+
+/home/russell/code/cover-ui/src/pages/_layout.svelte:5:24
+Hint: Could not find a declaration file for module '@silintl/ui-components'. '/home/russell/code/cover-ui/node_modules/@silintl/ui-components/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/silintl__ui-components` if it exists or add a new declaration (.d.ts) file containing `declare module '@silintl/ui-components';` (ts)
+import { goto } from '@roxi/routify'
+import { Drawer } from '@silintl/ui-components'
+
+
+
+/home/russell/code/cover-ui/src/pages/claims.svelte:7:30
+Hint: Could not find a declaration file for module '@silintl/ui-components'. '/home/russell/code/cover-ui/node_modules/@silintl/ui-components/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/silintl__ui-components` if it exists or add a new declaration (.d.ts) file containing `declare module '@silintl/ui-components';` (ts)
+import { goto } from '@roxi/routify'
+import { Page, Button } from '@silintl/ui-components'
+
+
+
+/home/russell/code/cover-ui/src/pages/claims.svelte:15:21
+Hint: Parameter 'event' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const onEditClaim = event => {
+  const claimId = event.detail
+
+
+/home/russell/code/cover-ui/src/pages/claims.svelte:19:21
+Hint: Parameter 'event' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+}
+const onGotoClaim = event => {
+  const claimId = event.detail
+
+
+/home/russell/code/cover-ui/src/pages/claims.svelte:11:21
+Error: Property 'policy_id' does not exist on type '{}'. (ts)
+
+$: policyId = $user.policy_id
+$: policyId && loadItems(policyId)
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:10:43
+Hint: Could not find a declaration file for module '@silintl/ui-components'. '/home/russell/code/cover-ui/node_modules/@silintl/ui-components/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/silintl__ui-components` if it exists or add a new declaration (.d.ts) file containing `declare module '@silintl/ui-components';` (ts)
+import { goto } from '@roxi/routify'
+import { Checkbox, Page, Datatable } from '@silintl/ui-components'
+import { onMount } from 'svelte'
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:13:19
+Hint: Parameter 'id' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const menuItems = id => [
+  {
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:38:18
+Hint: Parameter 'url' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const redirect = url => {
+  if (goToItemDetails) {
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:45:23
+Hint: Parameter 'id' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+}
+const handleChecked = id => {
+  selected.push(id)
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:48:25
+Hint: Parameter 'id' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+}
+const handleUnchecked = id => {
+  selected = selected.filter(val => val != id)
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:51:29
+Hint: Parameter 'id' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+}
+const handleMoreVertClick = id => {
+  goToItemDetails = false
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:55:21
+Hint: Parameter 'event' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+}
+const onEditClaim = event => {
+  const claimId = event.detail
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:29:10
+Error: Property 'policy_id' does not exist on type '{}'. (ts)
+
+$: $user.policy_id && loadItems($user.policy_id)
+$: items = $itemsByPolicyId[$user.policy_id] || []
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:29:39
+Error: Property 'policy_id' does not exist on type '{}'. (ts)
+
+$: $user.policy_id && loadItems($user.policy_id)
+$: items = $itemsByPolicyId[$user.policy_id] || []
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:30:35
+Error: Property 'policy_id' does not exist on type '{}'. (ts)
+$: $user.policy_id && loadItems($user.policy_id)
+$: items = $itemsByPolicyId[$user.policy_id] || []
+
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:82:36
+Error: Property 'policy_id' does not exist on type '{}'. (ts)
+
+<Page loading={isLoadingById($user.policy_id)} layout="grid">   
+  <Row cols={'12'}>
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:88:30
+Error: Property 'policy_id' does not exist on type '{}'. (ts)
+  <Row cols={'12'}>
+    {#if isLoadingById($user.policy_id) }
+      Loading items...
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:103:38
+Error: Property 'id' does not exist on type 'unknown'. (ts)
+        <Datatable.Data>
+          {#each items as item (item.id)}
+              <Datatable.Data.Row on:click={() => redirect(`/items/${item.id}`)} clickable>
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:107:68
+Error: Property 'id' does not exist on type 'unknown'. (ts)
+                  <div on:click={() => goToItemDetails = false}>
+                    <Checkbox on:checked={() => handleChecked(item.id)} on:unchecked={() => handleUnchecked(item.id)}/>
+                  </div>
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:107:114
+Error: Property 'id' does not exist on type 'unknown'. (ts)
+                  <div on:click={() => goToItemDetails = false}>
+                    <Checkbox on:checked={() => handleChecked(item.id)} on:unchecked={() => handleUnchecked(item.id)}/>
+                  </div>
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:110:48
+Error: Property 'name' does not exist on type 'unknown'. (ts)
+                </Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>{item.coverage_status || ''}</Datatable.Data.Row.Item>
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:111:48
+Error: Property 'coverage_status' does not exist on type 'unknown'. (ts)
+                <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>{item.coverage_status || ''}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>{item.accountable_person || ''}</Datatable.Data.Row.Item>
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:112:48
+Error: Property 'accountable_person' does not exist on type 'unknown'. (ts)
+                <Datatable.Data.Row.Item>{item.coverage_status || ''}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>{item.accountable_person || ''}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:113:60
+Error: Property 'coverage_amount' does not exist on type 'unknown'. (ts)
+                <Datatable.Data.Row.Item>{item.accountable_person || ''}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:114:60
+Error: Property 'annual_premium' does not exist on type 'unknown'. (ts)
+                <Datatable.Data.Row.Item>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>{item.risk_category?.name || ''}</Datatable.Data.Row.Item>
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:115:48
+Error: Property 'risk_category' does not exist on type 'unknown'. (ts)
+                <Datatable.Data.Row.Item>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>{item.risk_category?.name || ''}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item>
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:117:114
+Error: Property 'id' does not exist on type 'unknown'. (ts)
+                <Datatable.Data.Row.Item>
+                  <svg class="home-table-more-vert" viewBox="0 0 30 30" on:click={() => handleMoreVertClick(item.id)}>
+                    <path fill="currentColor" d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z" />
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:121:79
+Error: Property 'id' does not exist on type 'unknown'. (ts)
+                  <!--TODO FUTURE: make this show above the more vert icon when it is in the lower half of the page-->
+                  <div class="item-menu"><Menu bind:menuOpen={shownMenus[item.id]} menuItems="{menuItems(item.id)}" on:syncToggler={() => shownMenus[item.id] = false}/></div>
+                </Datatable.Data.Row.Item>
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:121:111
+Error: Property 'id' does not exist on type 'unknown'. (ts)
+                  <!--TODO FUTURE: make this show above the more vert icon when it is in the lower half of the page-->
+                  <div class="item-menu"><Menu bind:menuOpen={shownMenus[item.id]} menuItems="{menuItems(item.id)}" on:syncToggler={() => shownMenus[item.id] = false}/></div>
+                </Datatable.Data.Row.Item>
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:121:155
+Error: Property 'id' does not exist on type 'unknown'. (ts)
+                  <!--TODO FUTURE: make this show above the more vert icon when it is in the lower half of the page-->
+                  <div class="item-menu"><Menu bind:menuOpen={shownMenus[item.id]} menuItems="{menuItems(item.id)}" on:syncToggler={() => shownMenus[item.id] = false}/></div>
+                </Datatable.Data.Row.Item>
+
+
+/home/russell/code/cover-ui/src/pages/home.svelte:104:75
+Error: Property 'id' does not exist on type 'unknown'. (ts)
+          {#each items as item (item.id)}
+              <Datatable.Data.Row on:click={() => redirect(`/items/${item.id}`)} clickable>
+                <Datatable.Data.Row.Item>
+
+
+/home/russell/code/cover-ui/src/pages/logged-out.svelte:4:22
+Hint: Could not find a declaration file for module '@silintl/ui-components'. '/home/russell/code/cover-ui/node_modules/@silintl/ui-components/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/silintl__ui-components` if it exists or add a new declaration (.d.ts) file containing `declare module '@silintl/ui-components';` (ts)
+import user from '../authn/user'
+import { Page } from '@silintl/ui-components'
+
+
+
+/home/russell/code/cover-ui/src/pages/logged-out.svelte:6:29
+Error: Property 'id' does not exist on type '{}'. (ts)
+
+$: stillLoggedIn = !! $user.id
+$: if (stillLoggedIn) {
+
+
+/home/russell/code/cover-ui/src/pages/logout.svelte:3:22
+Hint: Could not find a declaration file for module '@silintl/ui-components'. '/home/russell/code/cover-ui/node_modules/@silintl/ui-components/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/silintl__ui-components` if it exists or add a new declaration (.d.ts) file containing `declare module '@silintl/ui-components';` (ts)
+import { logout } from '../authn'
+import { Page } from '@silintl/ui-components'
+
+
+
+/home/russell/code/cover-ui/src/components/FilePreview/FilePreview.svelte:3:34
+Hint: Could not find a declaration file for module '@silintl/ui-components'. '/home/russell/code/cover-ui/node_modules/@silintl/ui-components/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/silintl__ui-components` if it exists or add a new declaration (.d.ts) file containing `declare module '@silintl/ui-components';` (ts)
+import { formatDate } from '../dates'
+import { Button, Progress } from '@silintl/ui-components'
+import { createEventDispatcher } from "svelte"
+
+
+/home/russell/code/cover-ui/src/components/FilePreview/FilePreview.svelte:20:24
+Hint: Parameter 'id' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const setOthersFalse = id => {
+  for(const key of Object.keys(isSelected)){
+
+
+/home/russell/code/cover-ui/src/components/FilePreview/FilePreview.svelte:28:17
+Hint: Parameter 'id' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const onClick = id => {
+  selectedId = id
+
+
+/home/russell/code/cover-ui/src/components/FilePreview/FilePreview.svelte:34:19
+Hint: Parameter 'event' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+function onDelete(event, id) {
+  event.preventDefault()
+
+
+/home/russell/code/cover-ui/src/components/FilePreview/FilePreview.svelte:34:26
+Hint: Parameter 'id' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+function onDelete(event, id) {
+  event.preventDefault()
+
+
+/home/russell/code/cover-ui/src/components/FilePreview/FilePreview.svelte:58:54
+Hint: Parameter 'evt' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+      </div>
+      <Button class="delete-button" raised on:click={evt => onDelete(evt, preview.id)}>Delete</Button>
+    </div>
+
+
+/home/russell/code/cover-ui/src/components/FileDropArea/FileDropArea.svelte:23:21
+Hint: Parameter 'e' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+function handleDrop(e) {
+  unhighlight()
+
+
+/home/russell/code/cover-ui/src/components/FileDropArea/FileDropArea.svelte:32:22
+Hint: Parameter 'files' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+function handleFiles(files) {
+  if(! uploading) {
+
+
+/home/russell/code/cover-ui/src/components/FileDropArea/FileDropArea.svelte:40:21
+Hint: Parameter 'file' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+function uploadFile(file) {
+  const formData = new FormData()
+
+
+/home/russell/code/cover-ui/src/components/FileDropArea/FileDropArea.svelte:79:149
+Error: Property 'files' does not exist on type '{}'. (ts)
+    {#if ! uploading}
+      <input bind:this={fileInput} type="file" id="fileElem" multiple accept={mimeType} disabled={uploading} on:change={() => handleFiles(fileInput.files)}>
+    {/if}
+
+
+/home/russell/code/cover-ui/src/components/filteredList/FilteredList.svelte:5:12
+Hint: Variable 'filters' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+export let filters
+export let items
+
+
+/home/russell/code/cover-ui/src/components/filteredList/FilteredList.svelte:6:12
+Hint: Variable 'items' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+export let filters
+export let items
+
+
+
+/home/russell/code/cover-ui/src/components/filteredList/FilteredList.svelte:16:23
+Hint: Parameter 'filters' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const applyFilters = (filters) => {
+  filters.forEach(filter => {
+
+
+/home/russell/code/cover-ui/src/components/filteredList/FilteredList.svelte:17:19
+Hint: Parameter 'filter' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+const applyFilters = (filters) => {
+  filters.forEach(filter => {
+    filteredItems.update(() => {
+
+
+/home/russell/code/cover-ui/src/components/filteredList/FilteredList.svelte:11:14
+Error: Argument of type 'Error' is not assignable to parameter of type 'string'. (ts)
+if (!filters || !items) {
+  throwError(new Error("`filters` and `items` parameter are required for this component"))
+}
+
+
+/home/russell/code/cover-ui/src/components/forms/ClaimForm.svelte:11:40
+Hint: Could not find a declaration file for module '@silintl/ui-components'. '/home/russell/code/cover-ui/node_modules/@silintl/ui-components/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/silintl__ui-components` if it exists or add a new declaration (.d.ts) file containing `declare module '@silintl/ui-components';` (ts)
+import { formatMoney } from '../../helpers/money'
+import { Button, Form, TextArea } from '@silintl/ui-components'
+import { createEventDispatcher } from 'svelte'
+
+
+/home/russell/code/cover-ui/src/components/forms/ClaimForm.svelte:22:7
+Hint: 'evacuationFraction' is declared but its value is never read. (ts)
+const regularFraction = (1 - deductible)
+const evacuationFraction = 2/3
+const repairableOptions = [
+
+
+/home/russell/code/cover-ui/src/components/forms/ClaimForm.svelte:35:32
+Hint: Parameter 'entry' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+$: claimItems = claim.claim_items || []
+$: claimItem = claimItems.find(entry => entry.item_id === item.id) || {}
+
+
+
+/home/russell/code/cover-ui/src/components/forms/ClaimForm.svelte:93:27
+Hint: Parameter 'claim' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+}
+const setInitialValues = (claim, claimItem) => {
+  if (claim.event_date) {
+
+
+/home/russell/code/cover-ui/src/components/forms/ClaimForm.svelte:93:34
+Hint: Parameter 'claimItem' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+}
+const setInitialValues = (claim, claimItem) => {
+  if (claim.event_date) {
+
+
+/home/russell/code/cover-ui/src/components/forms/ClaimForm.svelte:34:23
+Error: Property 'claim_items' does not exist on type '{}'. (ts)
+
+$: claimItems = claim.claim_items || []
+$: claimItem = claimItems.find(entry => entry.item_id === item.id) || {}
+
+
+/home/russell/code/cover-ui/src/components/forms/ClaimForm.svelte:35:64
+Error: Property 'id' does not exist on type '{}'. (ts)
+$: claimItems = claim.claim_items || []
+$: claimItem = claimItems.find(entry => entry.item_id === item.id) || {}
+
+
+
+/home/russell/code/cover-ui/src/components/forms/ClaimForm.svelte:56:63
+Error: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type. (ts)
+$: isNotRepairableOrMoneyInputsAreSet = (repairableSelection !== "repairable" || (repairCost && fairMarketValue))
+$: seventyPercentCheck = (!repairCost || !fairMarketValue || (repairCost/fairMarketValue) >= .7)
+$: payoutOptionCheck = lossReason && isNotRepairableOrMoneyInputsAreSet && seventyPercentCheck
+
+
+/home/russell/code/cover-ui/src/components/forms/ClaimForm.svelte:56:74
+Error: The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type. (ts)
+$: isNotRepairableOrMoneyInputsAreSet = (repairableSelection !== "repairable" || (repairCost && fairMarketValue))
+$: seventyPercentCheck = (!repairCost || !fairMarketValue || (repairCost/fairMarketValue) >= .7)
+$: payoutOptionCheck = lossReason && isNotRepairableOrMoneyInputsAreSet && seventyPercentCheck
+
+
+/home/russell/code/cover-ui/src/components/forms/ClaimForm.svelte:74:37
+Error: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type. (ts)
+  {
+    label: `Cash now (${formatMoney((fairMarketValue || 0) * regularFraction)})`,
+    value: 'cash_now'
+
+
+/home/russell/code/cover-ui/src/components/forms/ClaimForm.svelte:172:40
+Error: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type. (ts)
+    {#if repairableSelection === "repairable" && (isNotRepairableOrMoneyInputsAreSet && !seventyPercentCheck)}
+      <p>You will receive {formatMoney(repairCost * regularFraction)} to repair your insured Item.</p>
+    {/if}
+
+
+/home/russell/code/cover-ui/src/components/forms/DependentForm.svelte:3:41
+Hint: Could not find a declaration file for module '@silintl/ui-components'. '/home/russell/code/cover-ui/node_modules/@silintl/ui-components/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/silintl__ui-components` if it exists or add a new declaration (.d.ts) file containing `declare module '@silintl/ui-components';` (ts)
+import RadioOptions from '../RadioOptions.svelte'
+import { Button, Form, TextField } from '@silintl/ui-components'
+import { createEventDispatcher } from 'svelte'
+
+
+/home/russell/code/cover-ui/src/components/forms/DependentForm.svelte:28:18
+Hint: Parameter 'event' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const onCancel = event => {
+  event.preventDefault()
+
+
+/home/russell/code/cover-ui/src/components/forms/DependentForm.svelte:32:18
+Hint: Parameter 'event' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+}
+const onRemove = event => {
+  event.preventDefault()
+
+
+/home/russell/code/cover-ui/src/components/forms/DependentForm.svelte:21:17
+Error: Property 'id' does not exist on type '{}'. (ts)
+let formData = {
+  id: dependent.id,
+  name: dependent.name || '',
+
+
+/home/russell/code/cover-ui/src/components/forms/DependentForm.svelte:22:19
+Error: Property 'name' does not exist on type '{}'. (ts)
+  id: dependent.id,
+  name: dependent.name || '',
+  location: dependent.location || '',
+
+
+/home/russell/code/cover-ui/src/components/forms/DependentForm.svelte:23:23
+Error: Property 'location' does not exist on type '{}'. (ts)
+  name: dependent.name || '',
+  location: dependent.location || '',
+  relationship: dependent.relationship || '',
+
+
+/home/russell/code/cover-ui/src/components/forms/DependentForm.svelte:24:27
+Error: Property 'relationship' does not exist on type '{}'. (ts)
+  location: dependent.location || '',
+  relationship: dependent.relationship || '',
+  childBirthYear: dependent.child_birth_year || undefined,
+
+
+/home/russell/code/cover-ui/src/components/forms/DependentForm.svelte:25:29
+Error: Property 'child_birth_year' does not exist on type '{}'. (ts)
+  relationship: dependent.relationship || '',
+  childBirthYear: dependent.child_birth_year || undefined,
+}
+
+
+/home/russell/code/cover-ui/src/components/forms/ItemForm.svelte:6:59
+Hint: Could not find a declaration file for module '@silintl/ui-components'. '/home/russell/code/cover-ui/node_modules/@silintl/ui-components/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/silintl__ui-components` if it exists or add a new declaration (.d.ts) file containing `declare module '@silintl/ui-components';` (ts)
+import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
+import { Button, Form, Select, TextArea, TextField } from '@silintl/ui-components'
+import { createEventDispatcher } from 'svelte'
+
+
+/home/russell/code/cover-ui/src/components/forms/ItemForm.svelte:36:38
+Hint: Parameter 'dependent' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+$: dependents = $dependentsByPolicyId[policyId] || []
+$: dependentOptions = dependents.map(dependent => ({
+  id: dependent.id,
+
+
+/home/russell/code/cover-ui/src/components/forms/ItemForm.svelte:42:44
+Hint: Parameter 'policyMember' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+$: policyMembers = $membersByPolicyId[policyId] || []
+$: policyMemberOptions = policyMembers.map(policyMember => ({
+  id: policyMember.id,
+
+
+/home/russell/code/cover-ui/src/components/forms/ItemForm.svelte:53:35
+Hint: Parameter 'event' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const onAccountablePersonChange = event => {
+  accountablePersonId = event.detail?.id
+
+
+/home/russell/code/cover-ui/src/components/forms/ItemForm.svelte:57:26
+Hint: Parameter 'event' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const onSelectCategory = event => {
+  categoryId = event.detail?.id
+
+
+/home/russell/code/cover-ui/src/components/forms/ItemForm.svelte:89:27
+Hint: Parameter 'item' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+}
+const setInitialValues = (item) => {
+  categoryId = item.category?.id || categoryId
+
+
+/home/russell/code/cover-ui/src/components/forms/ItemForm.svelte:79:12
+Error: Property 'category' does not exist on type '{}'. (ts)
+const onCategorySelectPopulated = () => {
+  if (item.category?.id) {
+    initialCategoryId = item.category?.id
+
+
+/home/russell/code/cover-ui/src/components/forms/ItemForm.svelte:80:30
+Error: Property 'category' does not exist on type '{}'. (ts)
+  if (item.category?.id) {
+    initialCategoryId = item.category?.id
+  }
+
+
+/home/russell/code/cover-ui/src/components/forms/ItemForm.svelte:93:5
+Error: Type 'number' is not assignable to type 'string'. (ts)
+  if (Number.isInteger(item.coverage_amount)) {
+    marketValueUSD = item.coverage_amount / 100
+  }
+
+
+/home/russell/code/cover-ui/src/components/table/Table.svelte:2:12
+Hint: Variable 'headers' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+<script lang="ts">
+export let headers
+export let loading
+
+
+/home/russell/code/cover-ui/src/components/table/Table.svelte:3:12
+Hint: Variable 'loading' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+export let headers
+export let loading
+
+
+
+/home/russell/code/cover-ui/src/components/table/TableRow.svelte:2:16
+Hint: Variable 'values' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+<script lang="ts">
+    export let values
+    export let border = "none"
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId].svelte:9:18
+Hint: 'Form' is declared but its value is never read. (ts)
+import { goto } from '@roxi/routify'
+import { Button, Form, Page } from '@silintl/ui-components'
+
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId].svelte:9:36
+Hint: Could not find a declaration file for module '@silintl/ui-components'. '/home/russell/code/cover-ui/node_modules/@silintl/ui-components/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/silintl__ui-components` if it exists or add a new declaration (.d.ts) file containing `declare module '@silintl/ui-components';` (ts)
+import { goto } from '@roxi/routify'
+import { Button, Form, Page } from '@silintl/ui-components'
+
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId].svelte:11:12
+Hint: Variable 'claimId' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+export let claimId
+
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId].svelte:16:5
+Hint: Variable 'repairOrReplacementCost' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+let showImg = false
+let repairOrReplacementCost
+let uploading = false
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId].svelte:28:22
+Hint: Parameter 'itm' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+$: $user.policy_id && loadItems($user.policy_id)
+$: item = items.find(itm => itm.id === claimItem.item_id) || {}
+$: eventDate = formatDate(claim.event_date)
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId].svelte:48:24
+Hint: Rest parameter 'values' implicitly has an 'any[]' type, but a better type may be inferred from usage. (ts)
+
+const computePayout = (...values) => Math.min(...values) * (1 - deductible) || ''
+
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId].svelte:58:19
+Hint: Parameter 'event' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const onPreview = event => {
+  showImg = true
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId].svelte:61:33
+Hint: Parameter 'file' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+  
+  previewFile = claimFiles.find(file => file.id === event.detail)
+}
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId].svelte:78:25
+Hint: Parameter 'event' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+async function onUpload(event) {
+  try {
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId].svelte:93:20
+Hint: Parameter 'event' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+function onDeleted(event) {
+  const id = event.detail
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId].svelte:26:35
+Error: Property 'policy_id' does not exist on type '{}'. (ts)
+$: claimItem = claim.claim_items?.[0] || {} //For now there will only be one claim_item
+$: items = $itemsByPolicyId[$user.policy_id] || []
+$: $user.policy_id && loadItems($user.policy_id)
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId].svelte:27:10
+Error: Property 'policy_id' does not exist on type '{}'. (ts)
+$: items = $itemsByPolicyId[$user.policy_id] || []
+$: $user.policy_id && loadItems($user.policy_id)
+$: item = items.find(itm => itm.id === claimItem.item_id) || {}
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId].svelte:27:39
+Error: Property 'policy_id' does not exist on type '{}'. (ts)
+$: items = $itemsByPolicyId[$user.policy_id] || []
+$: $user.policy_id && loadItems($user.policy_id)
+$: item = items.find(itm => itm.id === claimItem.item_id) || {}
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId].svelte:39:5
+Error: Type 'number | ""' is not assignable to type 'string'.
+  Type 'number' is not assignable to type 'string'. (ts)
+$: if(payoutOption === 'repair') {
+    maximumPayout = computeRepairMaxPayout()
+  } else if(payoutOption === 'replacement') {
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId].svelte:41:5
+Error: Type 'number | ""' is not assignable to type 'string'.
+  Type 'number' is not assignable to type 'string'. (ts)
+  } else if(payoutOption === 'replacement') {
+    maximumPayout = computeReplaceMaxPayout()
+  } else if(payoutOption === 'fmv') {
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId].svelte:43:5
+Error: Type 'number | ""' is not assignable to type 'string'.
+  Type 'number' is not assignable to type 'string'. (ts)
+  } else if(payoutOption === 'fmv') {
+    maximumPayout = computeCashMaxPayout()
+  } else if(claim.event_type === 'Evacuation') {
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId].svelte:45:5
+Error: Type 'number | ""' is not assignable to type 'string'.
+  Type 'number' is not assignable to type 'string'. (ts)
+  } else if(claim.event_type === 'Evacuation') {
+    maximumPayout = claimItem.coverage_amount * 2/3 || ''
+  }
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId].svelte:70:26
+Error: Property 'repairActual' does not exist on type '{}'. (ts)
+  if (needsRepairReceipt) {
+    updatedClaimItemData.repairActual = cents
+  } else if (needsReplaceReceipt) {
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId].svelte:72:26
+Error: Property 'replaceActual' does not exist on type '{}'. (ts)
+  } else if (needsReplaceReceipt) {
+    updatedClaimItemData.replaceActual = cents
+  }
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId].svelte:145:45
+Error: Property 'file' does not exist on type '{}'. (ts)
+    {#if showImg}
+      <img class='receipt' src={previewFile.file?.url} alt='receipt' on:error={onImgError}/>
+    {/if}
+
+
+/home/russell/code/cover-ui/src/components/progress/Progress.svelte:2:26
+Hint: Could not find a declaration file for module '@silintl/ui-components'. '/home/russell/code/cover-ui/node_modules/@silintl/ui-components/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/silintl__ui-components` if it exists or add a new declaration (.d.ts) file containing `declare module '@silintl/ui-components';` (ts)
+<script lang="ts">
+import { Progress } from '@silintl/ui-components'
+
+
+
+/home/russell/code/cover-ui/src/pages/household/settings.svelte:8:74
+Hint: Could not find a declaration file for module '@silintl/ui-components'. '/home/russell/code/cover-ui/node_modules/@silintl/ui-components/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/silintl__ui-components` if it exists or add a new declaration (.d.ts) file containing `declare module '@silintl/ui-components';` (ts)
+import { goto } from "@roxi/routify"
+import { Button, TextField, IconButton, Page, Snackbar, setNotice } from "@silintl/ui-components"
+
+
+
+/home/russell/code/cover-ui/src/pages/household/settings.svelte:61:33
+Hint: Parameter 'e' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const updateAffiliation = async e => {
+  const choice = e.detail
+
+
+/home/russell/code/cover-ui/src/pages/household/settings.svelte:71:33
+Hint: Parameter 'id' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const callUpdatePolicy = async (id, costCenter, affiliation) => {
+  policyData.household_id = id
+
+
+/home/russell/code/cover-ui/src/pages/household/settings.svelte:71:37
+Hint: Parameter 'costCenter' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const callUpdatePolicy = async (id, costCenter, affiliation) => {
+  policyData.household_id = id
+
+
+/home/russell/code/cover-ui/src/pages/household/settings.svelte:71:49
+Hint: Parameter 'affiliation' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const callUpdatePolicy = async (id, costCenter, affiliation) => {
+  policyData.household_id = id
+
+
+/home/russell/code/cover-ui/src/pages/household/settings.svelte:79:19
+Hint: Parameter 'sanitizedId' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const isIdValid = sanitizedId => sanitizedId.length && sanitizedId.split('').every(digit => /[0-9]/.test(digit))
+const edit = id => $goto(`/household/settings/dependent/${id}`)
+
+
+/home/russell/code/cover-ui/src/pages/household/settings.svelte:79:84
+Hint: Parameter 'digit' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const isIdValid = sanitizedId => sanitizedId.length && sanitizedId.split('').every(digit => /[0-9]/.test(digit))
+const edit = id => $goto(`/household/settings/dependent/${id}`)
+
+
+/home/russell/code/cover-ui/src/pages/household/settings.svelte:80:14
+Hint: Parameter 'id' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+const isIdValid = sanitizedId => sanitizedId.length && sanitizedId.split('').every(digit => /[0-9]/.test(digit))
+const edit = id => $goto(`/household/settings/dependent/${id}`)
+const isYou = householdMember => householdMember.id === $user.id
+
+
+/home/russell/code/cover-ui/src/pages/household/settings.svelte:81:15
+Hint: Parameter 'householdMember' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+const edit = id => $goto(`/household/settings/dependent/${id}`)
+const isYou = householdMember => householdMember.id === $user.id
+</script>
+
+
+/home/russell/code/cover-ui/src/pages/household/settings.svelte:17:21
+Error: Property 'policy_id' does not exist on type '{}'. (ts)
+
+$: policyId = $user.policy_id
+$: if (policyId) {
+
+
+/home/russell/code/cover-ui/src/pages/household/settings.svelte:39:13
+Error: Expected 3 arguments, but got 1. (ts)
+    if(isIdValid(householdId)) {
+      await callUpdatePolicy(householdId)
+
+
+
+/home/russell/code/cover-ui/src/pages/household/settings.svelte:52:13
+Error: Expected 3 arguments, but got 2. (ts)
+    if(isIdValid(costCenter)) {
+      await callUpdatePolicy(householdId, costCenter)
+
+
+
+/home/russell/code/cover-ui/src/pages/household/settings.svelte:64:28
+Error: Property 'entity_code' does not exist on type '{}'. (ts)
+
+  if(choice !== policyData.entity_code) {
+    await callUpdatePolicy(householdId, costCenter, choice)
+
+
+/home/russell/code/cover-ui/src/pages/household/settings.svelte:72:14
+Error: Property 'household_id' does not exist on type '{}'. (ts)
+const callUpdatePolicy = async (id, costCenter, affiliation) => {
+  policyData.household_id = id
+  affiliation && (policyData.entity_code = affiliation)
+
+
+/home/russell/code/cover-ui/src/pages/household/settings.svelte:73:30
+Error: Property 'entity_code' does not exist on type '{}'. (ts)
+  policyData.household_id = id
+  affiliation && (policyData.entity_code = affiliation)
+  costCenter && (policyData.cost_center = costCenter)
+
+
+/home/russell/code/cover-ui/src/pages/household/settings.svelte:74:29
+Error: Property 'cost_center' does not exist on type '{}'. (ts)
+  affiliation && (policyData.entity_code = affiliation)
+  costCenter && (policyData.cost_center = costCenter)
+
+
+
+/home/russell/code/cover-ui/src/pages/household/settings.svelte:81:63
+Error: Property 'id' does not exist on type '{}'. (ts)
+const edit = id => $goto(`/household/settings/dependent/${id}`)
+const isYou = householdMember => householdMember.id === $user.id
+</script>
+
+
+/home/russell/code/cover-ui/src/pages/household/settings.svelte:136:26
+Error: Property 'first_name' does not exist on type 'unknown'. (ts)
+      <li class="accountable-people-list-item">
+        {householdMember.first_name} {householdMember.last_name}
+        {isYou(householdMember) ? "(you)" : ""}
+
+
+/home/russell/code/cover-ui/src/pages/household/settings.svelte:136:55
+Error: Property 'last_name' does not exist on type 'unknown'. (ts)
+      <li class="accountable-people-list-item">
+        {householdMember.first_name} {householdMember.last_name}
+        {isYou(householdMember) ? "(you)" : ""}
+
+
+/home/russell/code/cover-ui/src/pages/household/settings.svelte:139:33
+Error: Property 'email' does not exist on type 'unknown'. (ts)
+        <br />
+        <small>{householdMember.email}</small>
+      </li>
+
+
+/home/russell/code/cover-ui/src/pages/household/settings.svelte:144:20
+Error: Property 'name' does not exist on type 'unknown'. (ts)
+      <li class="accountable-people-list-item">
+        {dependent.name}
+        <br />
+
+
+/home/russell/code/cover-ui/src/pages/household/settings.svelte:148:83
+Error: Property 'id' does not exist on type 'unknown'. (ts)
+        <span class="edit-button" title="Edit">
+          <IconButton icon="edit" ariaLabel="Edit" on:click={() => edit(dependent.id)} />
+        </span>
+
+
+/home/russell/code/cover-ui/src/pages/items/[itemId].svelte:11:30
+Hint: Could not find a declaration file for module '@silintl/ui-components'. '/home/russell/code/cover-ui/node_modules/@silintl/ui-components/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/silintl__ui-components` if it exists or add a new declaration (.d.ts) file containing `declare module '@silintl/ui-components';` (ts)
+import { goto } from '@roxi/routify'
+import { Button, Page } from '@silintl/ui-components'
+
+
+
+/home/russell/code/cover-ui/src/pages/items/[itemId].svelte:13:12
+Hint: Variable 'itemId' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+export let itemId
+
+
+
+/home/russell/code/cover-ui/src/pages/items/[itemId].svelte:27:22
+Hint: Parameter 'itm' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+$: items = $itemsByPolicyId[$user.policy_id] || []
+$: item = items.find(itm => itm.id === itemId) || {}
+$: itemName = item.name || ''
+
+
+/home/russell/code/cover-ui/src/pages/items/[itemId].svelte:19:10
+Error: Property 'policy_id' does not exist on type '{}'. (ts)
+
+$: $user.policy_id && loadItems($user.policy_id)
+
+
+
+/home/russell/code/cover-ui/src/pages/items/[itemId].svelte:19:39
+Error: Property 'policy_id' does not exist on type '{}'. (ts)
+
+$: $user.policy_id && loadItems($user.policy_id)
+
+
+
+/home/russell/code/cover-ui/src/pages/items/[itemId].svelte:22:21
+Error: Property 'policy_id' does not exist on type '{}'. (ts)
+$: $policies.length || init()
+$: policyId = $user.policy_id
+$: policy = $policies.find(policy => policy.id === policyId) || {}
+
+
+/home/russell/code/cover-ui/src/pages/items/[itemId].svelte:26:35
+Error: Property 'policy_id' does not exist on type '{}'. (ts)
+
+$: items = $itemsByPolicyId[$user.policy_id] || []
+$: item = items.find(itm => itm.id === itemId) || {}
+
+
+/home/russell/code/cover-ui/src/pages/items/new.svelte:6:22
+Hint: Could not find a declaration file for module '@silintl/ui-components'. '/home/russell/code/cover-ui/node_modules/@silintl/ui-components/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/silintl__ui-components` if it exists or add a new declaration (.d.ts) file containing `declare module '@silintl/ui-components';` (ts)
+import { goto } from '@roxi/routify'
+import { Page } from '@silintl/ui-components'
+
+
+
+/home/russell/code/cover-ui/src/pages/items/new.svelte:10:24
+Hint: Parameter 'event' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const onSubmit = async event => {
+  await addItem(policyId, event.detail)
+
+
+/home/russell/code/cover-ui/src/pages/items/new.svelte:15:30
+Hint: Parameter 'event' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+}
+const onSaveForLater = async event => {
+  /* @todo Save this as an item draft. */
+
+
+/home/russell/code/cover-ui/src/pages/items/new.svelte:8:21
+Error: Property 'policy_id' does not exist on type '{}'. (ts)
+
+$: policyId = $user.policy_id
+
+
+
+/home/russell/code/cover-ui/src/components/mdc/Menu/Menu.svelte:31:27
+Hint: Parameter 'currentUrl' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const isMenuItemActive = (currentUrl, menuItemUrl) => currentUrl === menuItemUrl
+const handleItemClick = url => {
+
+
+/home/russell/code/cover-ui/src/components/mdc/Menu/Menu.svelte:31:39
+Hint: Parameter 'menuItemUrl' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const isMenuItemActive = (currentUrl, menuItemUrl) => currentUrl === menuItemUrl
+const handleItemClick = url => {
+
+
+/home/russell/code/cover-ui/src/components/mdc/Menu/Menu.svelte:32:25
+Hint: Parameter 'url' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+const isMenuItemActive = (currentUrl, menuItemUrl) => currentUrl === menuItemUrl
+const handleItemClick = url => {
+  if (url) {
+
+
+/home/russell/code/cover-ui/src/components/mdc/Menu/Menu.svelte:37:28
+Hint: Parameter 'e' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+}
+const handleItemKeydown = (e, url) => (e.code == 'Space' || e.code == 'Enter') && handleItemClick(url)
+const closeMenuHandler = () => {
+
+
+/home/russell/code/cover-ui/src/components/mdc/Menu/Menu.svelte:37:31
+Hint: Parameter 'url' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+}
+const handleItemKeydown = (e, url) => (e.code == 'Space' || e.code == 'Enter') && handleItemClick(url)
+const closeMenuHandler = () => {
+
+
+/home/russell/code/cover-ui/src/components/mdc/Menu/Menu.svelte:17:9
+Error: Property 'open' does not exist on type '{}'. (ts)
+$: currentUrl = window.location.pathname
+$: menu.open = menuOpen
+
+
+
+/home/russell/code/cover-ui/src/components/mdc/Menu/Menu.svelte:20:22
+Error: Argument of type '{}' is not assignable to parameter of type 'Element'.
+  Type '{}' is missing the following properties from type 'Element': attributes, classList, className, clientHeight, and 160 more. (ts)
+onMount(() => {
+  menu = new MDCMenu(element)
+
+
+
+/home/russell/code/cover-ui/src/components/mdc/Menu/Menu.svelte:22:8
+Error: Property 'setDefaultFocusState' does not exist on type '{}'. (ts)
+
+  menu.setDefaultFocusState() //TODO figure out how to use this method and set focus
+
+
+
+/home/russell/code/cover-ui/src/components/mdc/Menu/Menu.svelte:24:21
+Error: Property 'destroy' does not exist on type '{}'. (ts)
+
+  return () => menu.destroy()
+})
+
+
+/home/russell/code/cover-ui/src/components/mdc/Menu/Menu.svelte:39:13
+Error: Property 'open' does not exist on type '{}'. (ts)
+const closeMenuHandler = () => {
+  if (!menu.open) { //checks to make sure the click wasn't opening the menu or on the menu
+    menuOpen = false
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId]/edit.svelte:8:22
+Hint: Could not find a declaration file for module '@silintl/ui-components'. '/home/russell/code/cover-ui/node_modules/@silintl/ui-components/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/silintl__ui-components` if it exists or add a new declaration (.d.ts) file containing `declare module '@silintl/ui-components';` (ts)
+import { goto } from '@roxi/routify'
+import { Page } from '@silintl/ui-components'
+
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId]/edit.svelte:10:12
+Hint: Variable 'claimId' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+export let claimId
+
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId]/edit.svelte:38:22
+Hint: Parameter 'anItem' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+$: items = $itemsByPolicyId[$user.policy_id] || []
+$: item = items.find(anItem => anItem.id === itemId) || {}
+
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId]/edit.svelte:40:24
+Hint: Parameter 'event' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const onSubmit = async event => {
+  await updateClaim(claimId, event.detail)
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId]/edit.svelte:36:10
+Error: Property 'policy_id' does not exist on type '{}'. (ts)
+
+$: $user.policy_id && loadItems($user.policy_id)
+$: items = $itemsByPolicyId[$user.policy_id] || []
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId]/edit.svelte:36:39
+Error: Property 'policy_id' does not exist on type '{}'. (ts)
+
+$: $user.policy_id && loadItems($user.policy_id)
+$: items = $itemsByPolicyId[$user.policy_id] || []
+
+
+/home/russell/code/cover-ui/src/pages/claims/[claimId]/edit.svelte:37:35
+Error: Property 'policy_id' does not exist on type '{}'. (ts)
+$: $user.policy_id && loadItems($user.policy_id)
+$: items = $itemsByPolicyId[$user.policy_id] || []
+$: item = items.find(anItem => anItem.id === itemId) || {}
+
+
+/home/russell/code/cover-ui/src/pages/household/settings/dependent.svelte:6:22
+Hint: Could not find a declaration file for module '@silintl/ui-components'. '/home/russell/code/cover-ui/node_modules/@silintl/ui-components/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/silintl__ui-components` if it exists or add a new declaration (.d.ts) file containing `declare module '@silintl/ui-components';` (ts)
+import { goto } from '@roxi/routify'
+import { Page } from '@silintl/ui-components'
+
+
+
+/home/russell/code/cover-ui/src/pages/household/settings/dependent.svelte:11:24
+Hint: Parameter 'event' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+}
+const onSubmit = async event => {
+  const formData = event.detail
+
+
+/home/russell/code/cover-ui/src/pages/household/settings/dependent.svelte:13:28
+Error: Property 'policy_id' does not exist on type '{}'. (ts)
+  const formData = event.detail
+  await addDependent($user.policy_id, formData)
+  $goto('../settings')
+
+
+/home/russell/code/cover-ui/src/pages/items/[itemId]/edit.svelte:7:22
+Hint: Could not find a declaration file for module '@silintl/ui-components'. '/home/russell/code/cover-ui/node_modules/@silintl/ui-components/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/silintl__ui-components` if it exists or add a new declaration (.d.ts) file containing `declare module '@silintl/ui-components';` (ts)
+import { goto } from '@roxi/routify'
+import { Page } from '@silintl/ui-components'
+
+
+
+/home/russell/code/cover-ui/src/pages/items/[itemId]/edit.svelte:9:12
+Hint: Variable 'itemId' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+export let itemId
+
+
+
+/home/russell/code/cover-ui/src/pages/items/[itemId]/edit.svelte:30:22
+Hint: Parameter 'anItem' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+$: items = $itemsByPolicyId[policyId] || []
+$: item = items.find(anItem => anItem.id === itemId) || {}
+
+
+
+/home/russell/code/cover-ui/src/pages/items/[itemId]/edit.svelte:32:24
+Hint: Parameter 'event' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const onSubmit = async event => {
+  await updateItem(policyId, itemId, event.detail)
+
+
+/home/russell/code/cover-ui/src/pages/items/[itemId]/edit.svelte:36:30
+Hint: Parameter 'event' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+}
+const onSaveForLater = async event => {
+  /* @todo Save this as an item draft. */
+
+
+/home/russell/code/cover-ui/src/pages/items/[itemId]/edit.svelte:27:21
+Error: Property 'policy_id' does not exist on type '{}'. (ts)
+
+$: policyId = $user.policy_id
+$: policyId && loadItems(policyId)
+
+
+/home/russell/code/cover-ui/src/pages/items/[itemId]/new-claim.svelte:7:22
+Hint: Could not find a declaration file for module '@silintl/ui-components'. '/home/russell/code/cover-ui/node_modules/@silintl/ui-components/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/silintl__ui-components` if it exists or add a new declaration (.d.ts) file containing `declare module '@silintl/ui-components';` (ts)
+import { goto } from '@roxi/routify'
+import { Page } from '@silintl/ui-components'
+
+
+
+/home/russell/code/cover-ui/src/pages/items/[itemId]/new-claim.svelte:9:12
+Hint: Variable 'itemId' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+export let itemId
+
+
+
+/home/russell/code/cover-ui/src/pages/items/[itemId]/new-claim.svelte:29:22
+Hint: Parameter 'itm' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+$: items = $itemsByPolicyId[$user.policy_id] || []
+$: item = items.find(itm => itm.id === itemId) || {}
+
+
+
+/home/russell/code/cover-ui/src/pages/items/[itemId]/new-claim.svelte:34:26
+Hint: Parameter 'itemId' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const isItemIdOnClaim = (itemId, claim) => {
+  const claimItems = claim.claim_items || []
+
+
+/home/russell/code/cover-ui/src/pages/items/[itemId]/new-claim.svelte:34:34
+Hint: Parameter 'claim' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+const isItemIdOnClaim = (itemId, claim) => {
+  const claimItems = claim.claim_items || []
+
+
+/home/russell/code/cover-ui/src/pages/items/[itemId]/new-claim.svelte:36:26
+Hint: Parameter 'claimItem' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+  const claimItems = claim.claim_items || []
+  return claimItems.some(claimItem => claimItem.item_id === itemId)
+}
+
+
+/home/russell/code/cover-ui/src/pages/items/[itemId]/new-claim.svelte:38:24
+Hint: Parameter 'event' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+}
+const onSubmit = async event => {
+  const formData = event.detail
+
+
+/home/russell/code/cover-ui/src/pages/items/[itemId]/new-claim.svelte:27:10
+Error: Property 'policy_id' does not exist on type '{}'. (ts)
+
+$: $user.policy_id && loadItems($user.policy_id)
+$: items = $itemsByPolicyId[$user.policy_id] || []
+
+
+/home/russell/code/cover-ui/src/pages/items/[itemId]/new-claim.svelte:27:39
+Error: Property 'policy_id' does not exist on type '{}'. (ts)
+
+$: $user.policy_id && loadItems($user.policy_id)
+$: items = $itemsByPolicyId[$user.policy_id] || []
+
+
+/home/russell/code/cover-ui/src/pages/items/[itemId]/new-claim.svelte:28:35
+Error: Property 'policy_id' does not exist on type '{}'. (ts)
+$: $user.policy_id && loadItems($user.policy_id)
+$: items = $itemsByPolicyId[$user.policy_id] || []
+$: item = items.find(itm => itm.id === itemId) || {}
+
+
+/home/russell/code/cover-ui/src/pages/household/settings/dependent/[uuid].svelte:11:22
+Hint: Could not find a declaration file for module '@silintl/ui-components'. '/home/russell/code/cover-ui/node_modules/@silintl/ui-components/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/silintl__ui-components` if it exists or add a new declaration (.d.ts) file containing `declare module '@silintl/ui-components';` (ts)
+import { goto } from '@roxi/routify'
+import { Page } from '@silintl/ui-components'
+
+
+
+/home/russell/code/cover-ui/src/pages/household/settings/dependent/[uuid].svelte:13:12
+Hint: Variable 'uuid' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+
+export let uuid
+
+
+
+/home/russell/code/cover-ui/src/pages/household/settings/dependent/[uuid].svelte:21:32
+Hint: Parameter 'd' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+$: dependents = $dependentsByPolicyId[policyId] || []
+$: dependent = dependents.find(d => uuid && (d.id === uuid))
+
+
+
+/home/russell/code/cover-ui/src/pages/household/settings/dependent/[uuid].svelte:26:24
+Hint: Parameter 'event' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+}
+const onRemove = async event => {
+  const dependentId = event.detail
+
+
+/home/russell/code/cover-ui/src/pages/household/settings/dependent/[uuid].svelte:31:24
+Hint: Parameter 'event' implicitly has an 'any' type, but a better type may be inferred from usage. (ts)
+}
+const onSubmit = async event => {
+  const formData = event.detail
+
+
+/home/russell/code/cover-ui/src/pages/household/settings/dependent/[uuid].svelte:15:21
+Error: Property 'policy_id' does not exist on type '{}'. (ts)
+
+$: policyId = $user.policy_id
+$: if (policyId) {
+
+
+====================================
+svelte-check found 106 errors, 0 warnings, and 116 hints

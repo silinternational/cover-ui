@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { Banner } from '../../components'
 import { getState } from '../../data/claims'
 

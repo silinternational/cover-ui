@@ -105,7 +105,7 @@ export async function createClaim(item, claimData) {
 export async function getClaim(itemId) {
   start(itemId)
 
-  const claim = await GET(`claims/${id}`)
+  const claim = await GET(`claims/${itemId}`)
 
   stop(itemId)
   

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import AppFooter from '../components/AppFooter.svelte'
 import AppHeader from '../components/AppHeader.svelte'
 import { goto } from '@roxi/routify'

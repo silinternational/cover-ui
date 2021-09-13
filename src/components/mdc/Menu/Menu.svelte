@@ -1,5 +1,5 @@
 <!-- https://github.com/material-components/material-components-web/tree/master/packages/mdc-menu -->
-<script>
+<script lang="ts">
 import { onDestroy, onMount } from 'svelte'
 import { MDCMenu } from '@material/menu'
 import { createEventDispatcher } from 'svelte'

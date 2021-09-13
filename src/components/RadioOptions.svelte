@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 /** @type {{label, value}[]} */
 export let options = []
 

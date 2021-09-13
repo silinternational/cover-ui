@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     export let values
     export let border = "none"
 </script>

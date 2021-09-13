@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import ClaimCardBanner from './ClaimCardBanner.svelte'
 import { day } from './const'
 import { getState } from '../data/claims'

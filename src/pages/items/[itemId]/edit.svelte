@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import user from '../../../authn/user'
 import { Breadcrumb, ItemForm } from '../../../components'
 import { loading } from '../../../components/progress'

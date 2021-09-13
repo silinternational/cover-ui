@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import user from '../../../authn/user'
 import { Breadcrumb, ClaimForm } from '../../../components'
 import { claims, initialized, createClaim, loadClaims } from '../../../data/claims.js'

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import user from '../authn/user.js'
 import { Menu, ClaimCards, Row } from '../components/'
 import { isLoadingById } from '../components/progress/index'

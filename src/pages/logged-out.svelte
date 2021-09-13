@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { logout } from '../authn'
 import user from '../authn/user'
 import { Page } from '@silintl/ui-components'

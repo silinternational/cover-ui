@@ -9,11 +9,13 @@ import { terser } from 'rollup-plugin-terser'
 import { generateSW } from 'rollup-plugin-workbox'
 import routify from '@roxi/routify/plugins/rollup'
 import autoPreprocess from 'svelte-preprocess'
+import typescript from '@rollup/plugin-typescript'
+import nodePolyfills from 'rollup-plugin-polyfill-node'
 
 const production = !process.env.ROLLUP_WATCH
 
 export default {
-	input: 'src/main.js',
+	input: 'src/main.ts',
 	output: {
 		file: 'dist/bundle.js',
 		format: 'iife',
@@ -26,6 +28,9 @@ export default {
 			emitCss: true, // give component style to postcss() for processing
 			preprocess: autoPreprocess(),
 		}),
+		
+		typescript({ sourceMap: !production }),
+		nodePolyfills(),
 
 		// If you have external dependencies installed from
 		// npm, you'll most likely need these plugins. In

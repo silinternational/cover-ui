@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { login } from '../authn'
 import { loadUser } from '../authn/user'
 import './mdc/_index.scss'

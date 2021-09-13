@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 export let cols = '12' //number of colums can be up to 12
 </script>
 

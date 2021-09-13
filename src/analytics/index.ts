@@ -7,10 +7,12 @@ init()
 // https://developers.google.com/analytics/devguides/collection/gtagjs
 // https://developers.google.com/analytics/devguides/collection/upgrade/analyticsjs
 function init() {
-  loadLib()
+  loadLib();
 
-  window.dataLayer = window.dataLayer || []
-  window.gtag = () => window.dataLayer.push(arguments)
+  // TODO: get the dataLayer references to play nicer with ts
+  (window as any).dataLayer = (window as any).dataLayer || []
+  window.gtag = () => (window as any).dataLayer.push(arguments)
+
   gtag('js', new Date())
 
   //since we are sending manually we need to disable the default of sending each pageview

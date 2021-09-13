@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { generateRandomID } from "@silintl/ui-components/random"
 import { createEventDispatcher } from "svelte"
 

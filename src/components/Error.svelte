@@ -1,6 +1,7 @@
 <script>
 import { error, dismiss } from '../error'
 import { isChangingPage } from '@roxi/routify'
+import { afterUpdate } from 'svelte'
 
 let errContainer = null
 
@@ -8,6 +9,12 @@ $: errContainer && scrollIntoView(errContainer)
 $: $isChangingPage && $error.message && dismiss()
 
 const scrollIntoView = element => element.scrollIntoView({behavior: 'smooth'})
+
+afterUpdate(() => {
+  if (errContainer) {
+    scrollIntoView(errContainer)
+  }
+})
 </script>
 
 <style>

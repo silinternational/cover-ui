@@ -1,7 +1,8 @@
 <script>
 import user from '../../../authn/user'
 import { Breadcrumb, ClaimForm } from '../../../components'
-import { claims, initialized, createClaim, loadClaims } from '../../../data/claims.js'
+import { loading } from '../../../components/progress'
+import { claims, initialized, createClaim, createClaimItem, loadClaims } from '../../../data/claims.js'
 import { itemsByPolicyId, loadItems } from '../../../data/items.js'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
@@ -29,28 +30,46 @@ $: items = $itemsByPolicyId[$user.policy_id] || []
 $: item = items.find(itm => itm.id === itemId) || {}
 
 $: $initialized || loadClaims()
-$: claimExists = $claims.some(claim => isItemIdOnClaim(itemId, claim))
+$: existingClaim = $claims.find(claim => isItemIdOnClaim(itemId, claim)) || {}
+$: claimExists = !!existingClaim.id
 
 const isItemIdOnClaim = (itemId, claim) => {
   const claimItems = claim.claim_items || []
   return claimItems.some(claimItem => claimItem.item_id === itemId)
 }
 const onSubmit = async event => {
-  const formData = event.detail
-  await createClaim(item, formData)
-  // TODO: make this go back a url
-  $goto('/claims')
+  const { claimData, claimItemData } = event.detail
+  
+  // TODO - Handle situations where the claim is created, but the claim-item
+  // is rejected. We could potentially hold the claim here, and if passed in
+  // the form could send the Claim ID on submit. If we receive a Claim ID here,
+  // use it. Otherwise, create a new claim. */
+  
+  const claim = await createClaim(item, claimData)
+  await createClaimItem(claim.id, claimItemData)
+  $goto(`/claims/${claim.id}`)
 }
 </script>
 
-<!--TODO: add transitions but not after submit-->
-{#if items && $initialized && claimExists}
-  Claim already exists!
-{:else if items && !item.id}
-  Item does not exist!
-{:else if items && $initialized}
-  <Page>
-    <Breadcrumb links={breadcrumbLinks} />
-    <ClaimForm {item} on:submit={onSubmit} />
-  </Page>
-{/if}
+<Page>
+  <Breadcrumb links={breadcrumbLinks} />
+  
+  <!--TODO: add transitions but not after submit-->
+  {#if $loading }
+    <p>Loading...</p>
+  {:else}
+    {#if !item.id }
+      <p>
+        We could not find that item. Please <a href="/items">go back</a> and
+        select an item from the list.
+      </p>
+    {:else if claimExists }
+      <p>
+        It looks like there is already a claim for that item. Please
+        <a href="/claims/{existingClaim.id}">click here</a> to see its details.
+      </p>
+    {/if}
+  {/if}
+
+  <ClaimForm {item} on:submit={onSubmit} />
+</Page>

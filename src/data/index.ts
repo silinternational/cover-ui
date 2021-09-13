@@ -55,9 +55,12 @@ async function customFetch(method: FetchMethod, uri: string, body: any = undefin
   // reminder: fetch does not throw exceptions for non-200 responses (https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch)
   if (! response.ok) {
     const code = response.status
-    const message = code === 401 ? t(response.statusText) : response.statusText
-
-    throwError(message, code)
+    if (code === 400) {
+      throwError(results.message, code)
+    } else {
+      const message = code === 401 ? t(response.statusText) : response.statusText
+      throwError(message, code)
+    }
   }
 
   return results

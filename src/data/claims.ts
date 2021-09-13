@@ -1,5 +1,6 @@
 import { CREATE, GET, UPDATE } from "."
 import { start, stop } from "../components/progress"
+import { convertToCents } from "../helpers/money"
 import { writable } from "svelte/store"
 
 export const claims = writable([])
@@ -76,30 +77,58 @@ export function init() {
 }
 
 /**
+ * Create a new claim for an existing item
  *
- * @description a function to create a new claim for an existing item
  * @export
  * @param {Object} item
  * @param {Object} claimData
+ * @return {Object} -- The newly created Claim
  */
 export async function createClaim(item, claimData) {
-  start(item.id)
+  const urlPath = `policies/${item.policy_id}/claims`
+  start(urlPath)
 
-  // TODO: make an item field to store details about claim item
-  let parsedClaim = {
+  const parsedClaim = {
     event_date: new Date(claimData.lostDate),
     event_description: claimData.situationDescription,
     event_type: claimData.lossReason,
   }
 
-  const claim = await CREATE(`policies/${item.policy_id}/claims`, parsedClaim)
+  const claim = await CREATE(urlPath, parsedClaim)
 
   claims.update(currClaims => {
     currClaims.push(claim)
     return currClaims
   })
 
-  stop(item.id)
+  stop(urlPath)
+  return claim
+}
+
+export const createClaimItem = async (claimId, claimItemData) => {
+  const urlPath = `claims/${claimId}/items`
+  start(urlPath)
+  try {
+    const parsedClaimItem = {
+      fmv: convertToCents(claimItemData.fairMarketValueUSD),
+      is_repairable: claimItemData.isRepairable,
+      item_id: claimItemData.itemId,
+      payout_option: claimItemData.payoutOption,
+      repair_estimate: convertToCents(claimItemData.repairEstimateUSD),
+      replace_estimate: convertToCents(claimItemData.replaceEstimateUSD),
+    }
+  
+    const claimItem = await CREATE(urlPath, parsedClaimItem)
+  
+    claims.update(claims => {
+      const claim = claims.find(c => c.id === claimId) || {}
+      const claimItems = claim.claim_items || []
+      claimItems.push(claimItem)
+      return claims
+    })
+  } finally {
+    stop(urlPath)
+  }
 }
 
 /**

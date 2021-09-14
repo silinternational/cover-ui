@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { error, dismiss } from '../error'
 import { isChangingPage } from '@roxi/routify'
 import { afterUpdate } from 'svelte'

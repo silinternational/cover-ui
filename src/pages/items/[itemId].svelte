@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import user from '../../authn/user.js'
 import { Banner, Breadcrumb, ClaimBanner, Row } from '../../components'
 import { day } from '../../components/const.js'

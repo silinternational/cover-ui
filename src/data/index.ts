@@ -3,16 +3,18 @@ import { start, stop } from '../components/progress'
 import { throwError } from '../error'
 import t from '../i18n'
 
-export async function CREATE(uri, body) { return await customFetch('post'  , uri, body) }
-export async function GET   (uri      ) { return await customFetch('get'   , uri      ) }
-export async function UPDATE(uri, body) { return await customFetch('put'   , uri, body) }
-export async function DELETE(uri      ) { return await customFetch('delete', uri      ) }
+type FetchMethod = 'post' | 'get' | 'put' | 'delete';
+
+export async function CREATE(uri: string, body: any = undefined) { return await customFetch('post'  , uri, body) }
+export async function GET   (uri: string      ) { return await customFetch('get'   , uri      ) }
+export async function UPDATE(uri: string, body) { return await customFetch('put'   , uri, body) }
+export async function DELETE(uri: string      ) { return await customFetch('delete', uri      ) }
 
 // https://developer.mozilla.org/en-US/docs/Web/API/FormData/FormData
 export const upload = async formData => await CREATE('upload', formData)
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#Supplying_request_options
-async function customFetch(method, uri, body) {
+async function customFetch(method: FetchMethod, uri: string, body: any = undefined) {
   const headers = {
     Authorization: `Bearer ${getToken()}`,
     'Content-Type': 'application/json',
@@ -27,7 +29,7 @@ async function customFetch(method, uri, body) {
   }
   
   const url = includesHost(uri) ? uri : `${process.env.API_HOST}/${uri}`
-  let response = {}
+  let response: Response = {} as Response
   try {
     start(url)
 

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import user from '../authn/user'
 import { ClaimCards, Row } from '../components/'
 import { claims, initialized as claimsInitialized, loadClaims } from '../data/claims'

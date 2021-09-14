@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import RadioOptions from '../RadioOptions.svelte'
 import { Button, Form, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'

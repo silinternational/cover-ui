@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { notFound } from '../analytics'
 import { onMount } from 'svelte'
 

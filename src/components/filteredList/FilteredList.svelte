@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { throwError } from '../../error/index.js'
 import { writable } from 'svelte/store';
 

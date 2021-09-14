@@ -1,5 +1,5 @@
 import FilteredList from './FilteredList.svelte'
-import Filter from './filter.js'
+import Filter from './filter'
 
 FilteredList.Filter = Filter
 

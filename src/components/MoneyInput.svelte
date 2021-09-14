@@ -1,5 +1,5 @@
 <!-- https://github.com/material-components/material-components-web/tree/master/packages/mdc-textfield -->
-<script>
+<script lang="ts">
 import { MDCTextField } from '@material/textfield'
 import { generateRandomID } from '@silintl/ui-components/random'
 import { onMount } from 'svelte'

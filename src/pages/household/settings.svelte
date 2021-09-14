@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import user from '../../authn/user'
 import { Breadcrumb, SearchableSelect } from "../../components"
 import { dependentsByPolicyId, loadDependents } from '../../data/dependents'

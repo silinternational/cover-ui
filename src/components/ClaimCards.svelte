@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { ClaimCard } from './index'
 
 export let claims

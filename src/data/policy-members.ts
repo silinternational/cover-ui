@@ -1,4 +1,4 @@
-import { GET } from './index.js'
+import { GET } from './index'
 import { start, stop } from '../components/progress'
 import { writable } from 'svelte/store'
 

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import user from '../../../authn/user'
 import { addDependent } from '../../../data/dependents'
 import { DependentForm } from '../../../components'

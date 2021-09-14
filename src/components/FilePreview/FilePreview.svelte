@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { formatDate } from '../dates'
 import { Button, Progress } from '@silintl/ui-components'
 import { createEventDispatcher } from "svelte"

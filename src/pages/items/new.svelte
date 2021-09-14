@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import user from '../../authn/user.js'
 import { Breadcrumb, ItemForm } from '../../components'
 import { addItem } from '../../data/items.js'

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { throwError } from "../error"
 import { goto, url } from "@roxi/routify";
 

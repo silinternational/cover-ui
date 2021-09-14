@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { ConvertCurrencyLink, Description, MoneyInput } from '../../components'
 import { dependentsByPolicyId, loadDependents } from '../../data/dependents.js'
 import { categories, init, initialized as catItemsInitialized } from '../../data/itemCategories'

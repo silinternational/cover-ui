@@ -1,8 +1,11 @@
 <script lang="ts">
 import { ClaimCard } from './index'
+import { goto } from '@roxi/routify'
 
 export let claims
 export let items
+
+const onGotoClaim = event => $goto(`/claims/${event.detail}`)
 </script>
 
 <style>
@@ -17,7 +20,7 @@ export let items
     {#each (claim.claim_items || []) as claimItem (claimItem.id) }
       <div class="card">
         <ClaimCard {claim} {claimItem} item={items.find(item => item.id === claimItem.item_id)}
-                  on:goto-claim />
+                  on:goto-claim={onGotoClaim} />
       </div>
     {/each}
   {/each}

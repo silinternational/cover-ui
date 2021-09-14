@@ -16,13 +16,7 @@ $: msAgo = now - Date.parse(claimItem.updated_at)
 $: daysAgo = msAgo > 0 ? Math.floor(msAgo/day) : '-'
 $: state = getState(claim.status) || {}
 
-const editClaim = () => dispatch('edit-claim', claim.id)
 const gotoClaim = () => dispatch('goto-claim', claim.id)
-const onKeyPress = event => {
-  if (event.code === 'Space' || event.code === 'Enter') {
-    gotoClaim()
-  }
-}
 </script>
 
 <style>
@@ -49,7 +43,7 @@ const onKeyPress = event => {
 }
 </style>
 
-<Card isClickable noPadding on:click={gotoClaim} on:keypress={onKeyPress} class="height-fit-content py-0 {$$props.class}">
+<Card noPadding class="height-fit-content py-0 {$$props.class}">
   <ClaimCardBanner {item} {state} />
 
   <div class="mdc-typography--headline5 multi-line-truncate content ml-50px">
@@ -61,7 +55,7 @@ const onKeyPress = event => {
   </div>
 
   <div class="action pb-2 ml-50px" slot="actions">
-    <Button raised on:click={editClaim}>{state.actionLabel || 'Edit Claim'}</Button>
+    <Button raised on:click={gotoClaim}>{'View claim'}</Button>
 
     <div class="fs-12 gray mt-1">
       {#if daysAgo}

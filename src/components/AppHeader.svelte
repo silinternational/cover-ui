@@ -17,12 +17,12 @@ const menuItems = [
 
 let showImage = true
 let alt = 'avatar'
-let showDrawerButton
+let showDrawerButton: boolean
 let menuOpen = false
 
 const dispatch = createEventDispatcher()
 
-$: src = $user.avatar_url
+$: src = $user.photo_file?.url
 $: ownerInitial = $user.first_name?.charAt(0) || ''
 
 onMount(() => showOrHideDrawerButton())

@@ -1,6 +1,11 @@
 import { writable } from 'svelte/store'
 
-export const error = writable({})
+export type CustomError = {
+  code?: number;
+  message?: string;
+}
+
+export const error = writable<CustomError>({})
 export const throwError = (message = '', code = 0) => { throw set({code, message}) }
 export const dismiss = () => set({})
 
@@ -10,7 +15,7 @@ window.addEventListener('error', event => set(event.error))
 // https://developer.mozilla.org/en-US/docs/Web/API/PromiseRejectionEvent
 window.onunhandledrejection = event => set(event.reason)
 
-function set(someError) {
+function set(someError: CustomError) {
   const code = someError.code || 0
   
   let message = ''

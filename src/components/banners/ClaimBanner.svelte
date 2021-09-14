@@ -1,10 +1,10 @@
 <script lang="ts">
 import { Banner } from '../../components'
-import { getState } from '../../data/claims'
+import { getState, State } from '../../data/claims'
 
 export let claimStatus = ''
 
-$: state = claimStatus && getState(claimStatus) || {}
+$: state = claimStatus && getState(claimStatus) || {} as State
 
 $: bgColor = state.bgColor || ''
 $: color = state.color || ''

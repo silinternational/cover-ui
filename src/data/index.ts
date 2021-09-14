@@ -4,17 +4,24 @@ import { throwError } from '../error'
 import t from '../i18n'
 
 type FetchMethod = 'post' | 'get' | 'put' | 'delete';
+type UploadResponseBody = {
+  content_type: string;
+  filename: string;
+  id: string;
+  size: number;
+  url: string;
+}
 
-export async function CREATE(uri: string, body: any = undefined) { return await customFetch('post'  , uri, body) }
-export async function GET   (uri: string      ) { return await customFetch('get'   , uri      ) }
-export async function UPDATE(uri: string, body) { return await customFetch('put'   , uri, body) }
-export async function DELETE(uri: string      ) { return await customFetch('delete', uri      ) }
+export async function CREATE<T>(uri: string, body = undefined) { return await customFetch<T>('post'  , uri, body) }
+export async function GET<T>   (uri: string      ) { return await customFetch<T>('get'   , uri      ) }
+export async function UPDATE<T>(uri: string, body) { return await customFetch<T>('put'   , uri, body) }
+export async function DELETE<T>(uri: string      ) { return await customFetch<T>('delete', uri      ) }
 
 // https://developer.mozilla.org/en-US/docs/Web/API/FormData/FormData
-export const upload = async formData => await CREATE('upload', formData)
+export const upload = async formData => await CREATE<UploadResponseBody>('upload', formData)
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#Supplying_request_options
-async function customFetch(method: FetchMethod, uri: string, body: any = undefined) {
+async function customFetch<T>(method: FetchMethod, uri: string, body: any = undefined): Promise<T> {
   const headers = {
     Authorization: `Bearer ${getToken()}`,
     'Content-Type': 'application/json',

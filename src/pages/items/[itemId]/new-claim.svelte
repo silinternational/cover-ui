@@ -2,12 +2,12 @@
 import user from '../../../authn/user'
 import { Breadcrumb, ClaimForm } from '../../../components'
 import { loading } from '../../../components/progress'
-import { claims, initialized, createClaim, createClaimItem, loadClaims } from '../../../data/claims.js'
-import { itemsByPolicyId, loadItems } from '../../../data/items.js'
+import { claims, initialized, createClaim, createClaimItem, loadClaims, Claim } from '../../../data/claims.js'
+import { itemsByPolicyId, loadItems, PolicyItem } from '../../../data/items.js'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
-export let itemId
+export let itemId: string
 
 const breadcrumbLinks = [
   {
@@ -27,10 +27,10 @@ const breadcrumbLinks = [
 
 $: $user.policy_id && loadItems($user.policy_id)
 $: items = $itemsByPolicyId[$user.policy_id] || []
-$: item = items.find(itm => itm.id === itemId) || {}
+$: item = items.find(itm => itm.id === itemId) || {} as PolicyItem
 
 $: $initialized || loadClaims()
-$: existingClaim = $claims.find(claim => isItemIdOnClaim(itemId, claim)) || {}
+$: existingClaim = $claims.find(claim => isItemIdOnClaim(itemId, claim)) || {} as Claim
 $: claimExists = !!existingClaim.id
 
 const isItemIdOnClaim = (itemId, claim) => {

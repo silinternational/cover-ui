@@ -3,30 +3,30 @@ import user from '../../authn/user.js'
 import { Banner, ClaimBanner, ConvertCurrencyLink, FileDropArea, FilePreview, MoneyInput, Row } from '../../components'
 import { formatDate } from '../../components/dates.js'
 import { upload } from '../../data'
-import { loadClaims, claims, initialized, claimsFileAttach, updateClaimItem } from '../../data/claims'
-import { loadItems, itemsByPolicyId } from '../../data/items'
+import { loadClaims, claims, initialized, claimsFileAttach, updateClaimItem, Claim, ClaimItem, ClaimFile } from '../../data/claims'
+import { loadItems, itemsByPolicyId, PolicyItem } from '../../data/items'
 import { formatMoney } from '../../helpers/money'
 import { goto } from '@roxi/routify'
 import { Button, Form, Page } from '@silintl/ui-components'
 
-export let claimId
+export let claimId: string
 
-const updatedClaimItemData = {}
+const updatedClaimItemData = {} as any
 
 let showImg = false
-let repairOrReplacementCost
+let repairOrReplacementCost: number
 let uploading = false
 let deductible = .05
-let maximumPayout = ''
-let previewFile = {}
+let maximumPayout: number | '' = ''
+let previewFile = {} as ClaimFile
 
 $: $initialized || loadClaims()
 
-$: claim = $claims.find(clm => clm.id === claimId) || {}
-$: claimItem = claim.claim_items?.[0] || {} //For now there will only be one claim_item
+$: claim = $claims.find(clm => clm.id === claimId) || {} as Claim
+$: claimItem = claim.claim_items?.[0] || {} as ClaimItem //For now there will only be one claim_item
 $: items = $itemsByPolicyId[$user.policy_id] || []
 $: $user.policy_id && loadItems($user.policy_id)
-$: item = items.find(itm => itm.id === claimItem.item_id) || {}
+$: item = items.find(itm => itm.id === claimItem.item_id) || {} as PolicyItem
 $: eventDate = formatDate(claim.event_date)
 $: status = claim.status || ''
 $: payoutOption = claimItem.payout_option
@@ -36,14 +36,14 @@ $: needsReceipt = (needsRepairReceipt || needsReplaceReceipt)
 $: moneyFormLabel = needsRepairReceipt ? "Actual cost of repair" : "Actual cost of replacement"
 $: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
 $: claimFiles = claim.claim_files || []
-$: if(payoutOption === 'repair') {
+$: if(payoutOption === 'Repair') {
     maximumPayout = computeRepairMaxPayout()
-  } else if(payoutOption === 'replacement') {
+  } else if(payoutOption === 'Replacement') {
     maximumPayout = computeReplaceMaxPayout()
-  } else if(payoutOption === 'fmv') {
+  } else if(payoutOption === 'FMV') {
     maximumPayout = computeCashMaxPayout()
   } else if(claim.event_type === 'Evacuation') {
-    maximumPayout = claimItem.coverage_amount * 2/3 || ''
+    maximumPayout = claimItem.coverage_amount * 2/3 || '' // TODO: coverage_amount exists on policyItem not claimItem
   }
 
 const computePayout = (...values) => Math.min(...values) * (1 - deductible) || ''

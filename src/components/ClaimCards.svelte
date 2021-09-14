@@ -1,8 +1,11 @@
 <script lang="ts">
+import type { Claim } from '../data/claims';
+import type { PolicyItem } from '../data/items';
+
 import { ClaimCard } from './index'
 
-export let claims
-export let items
+export let claims: Claim[]
+export let items: PolicyItem[]
 </script>
 
 <style>

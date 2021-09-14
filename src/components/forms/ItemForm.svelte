@@ -5,9 +5,10 @@ import { categories, init, initialized as catItemsInitialized } from '../../data
 import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
 import { Button, Form, Select, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
+import type { PolicyItem } from '../../data/items';
 
-export let item = {}
-export let policyId = undefined
+export let item = {} as PolicyItem
+export let policyId: string = undefined
 
 const dispatch = createEventDispatcher()
 
@@ -90,7 +91,7 @@ const setInitialValues = (item) => {
   categoryId = item.category?.id || categoryId
   country = item.country || country
   if (Number.isInteger(item.coverage_amount)) {
-    marketValueUSD = item.coverage_amount / 100
+    marketValueUSD = item.coverage_amount / 100 as any
   }
   if (item.coverage_start_date) {
     coverageStartDate = item.coverage_start_date

@@ -12,14 +12,7 @@ $: policyId = $user.policy_id
 $: policyId && loadItems(policyId)
 $: items = $itemsByPolicyId[policyId] || []
 
-const onEditClaim = event => {
-  const claimId = event.detail
-  $goto(`/claims/${claimId}/edit`)
-}
-const onGotoClaim = event => {
-  const claimId = event.detail
-  $goto(`/claims/${claimId}`)
-}
+const onGotoClaim = event => $goto(`/claims/${event.detail}`)
 </script>
 
 <Page layout="grid">
@@ -29,7 +22,7 @@ const onGotoClaim = event => {
 
   <Row cols={'12'}>
     {#if $claims.length}
-      <ClaimCards claims={$claims} {items} on:edit-claim={onEditClaim} on:goto-claim={onGotoClaim} />
+      <ClaimCards claims={$claims} {items} on:goto-claim={onGotoClaim} />
     {:else}
       No claims at this time.
     {/if}

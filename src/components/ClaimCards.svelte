@@ -17,7 +17,7 @@ export let items
     {#each (claim.claim_items || []) as claimItem (claimItem.id) }
       <div class="card">
         <ClaimCard {claim} {claimItem} item={items.find(item => item.id === claimItem.item_id)}
-                   on:edit-claim on:goto-claim />
+                  on:goto-claim />
       </div>
     {/each}
   {/each}

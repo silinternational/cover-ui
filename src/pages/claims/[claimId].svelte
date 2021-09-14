@@ -7,7 +7,7 @@ import { loadClaims, claims, initialized, claimsFileAttach, updateClaimItem } fr
 import { loadItems, itemsByPolicyId } from '../../data/items'
 import { formatMoney } from '../../helpers/money'
 import { goto } from '@roxi/routify'
-import { Button, Form, Page } from '@silintl/ui-components'
+import { Button, Page } from '@silintl/ui-components'
 
 export let claimId
 

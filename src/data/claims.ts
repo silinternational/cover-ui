@@ -10,14 +10,12 @@ export const warning = {
   color: '--mdc-theme-status-warning',
   bgColor: '--mdc-theme-status-warning-bg',
   title: 'Needs changes',
-  actionLabel: 'Make changes',
 }
 export const success = {
   icon: 'done',
   color: '--mdc-theme-status-success',
   bgColor: '--mdc-theme-status-success-bg',
   title: 'Approved for repair',
-  actionLabel: 'View and upload receipt',
 }
 export const states = {
   Message: {
@@ -25,21 +23,18 @@ export const states = {
     color: '--mdc-theme-primary',
     bgColor: '--mdc-theme-primary-header-bg',
     title: 'From ',
-    actionLabel: 'View message',
   },
   Draft: {
     icon: 'edit',
     color: '--mdc-theme-primary',
     bgColor: '--mdc-theme-primary-header-bg',
     title: 'Draft',
-    actionLabel: 'Edit claim',
   },
   Pending: {
     icon: 'watch_later',
     color: '--mdc-theme-neutral-variant',
     bgColor: '--mdc-theme-neutral-bg',
     title: 'Awaiting review',
-    actionLabel: 'View claim',
   },
   Needs_repair_receipt: success,
   Needs_repair_receipt2: warning,
@@ -50,7 +45,6 @@ export const states = {
     color: '--mdc-theme-status-error',
     bgColor: '--mdc-theme-status-error-bg',
     title: 'Denied',
-    actionLabel: 'View denial',
   },
   Approved: success,
   Payout: {
@@ -58,14 +52,12 @@ export const states = {
     color: '--mdc-theme-status-success',
     bgColor: '--mdc-theme-status-success-bg',
     title: 'Approved for payout',
-    actionLabel: 'View claim',
   },
   Complete: {
     icon: 'paid',
     color: '--mdc-theme-status-success',
     bgColor: '--mdc-theme-status-success-bg',
     title: 'Complete',
-    actionLabel: 'View claim',
   }
 }
 

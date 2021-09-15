@@ -10,7 +10,7 @@ export type PolicyMember = {
   last_login_utc: string /*Date*/;
   last_name: string;
   location: string;
-};
+}
 
 export const membersByPolicyId = writable<{ [policyId: string]: PolicyMember[] }>({})
 

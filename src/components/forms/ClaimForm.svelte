@@ -18,10 +18,10 @@ import {
   MoneyInput,
 } from '../../components'
 import { claimEventTypes, loadClaimEventTypes } from '../../data/claim-event-types'
+import type { Claim, ClaimItem } from '../../data/claims'
+import type { PolicyItem } from '../../data/items'
 import { Button, Form, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
-import type { Claim, ClaimItem } from '../../data/claims';
-import type { PolicyItem } from '../../data/items';
 
 export let claim = {} as Claim
 export let item = {} as PolicyItem

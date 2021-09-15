@@ -1,7 +1,7 @@
 <script lang="ts">
 import { throwError } from '../../error/index.js'
-import { writable } from 'svelte/store';
-import type Filter from './filter';
+import type Filter from './filter'
+import { writable } from 'svelte/store'
 
 export let filters: Filter[]
 export let items: any[]

@@ -1,12 +1,12 @@
 import { CREATE, GET, UPDATE } from "."
 import { start, stop } from "../components/progress"
 import { convertToCents } from "../helpers/money"
+import type { PolicyItem } from "./items"
 import { writable } from "svelte/store"
-import type { PolicyItem } from "./items";
 
 export type PayoutOption = 'Repair' | 'Replacement' | 'FMV';
 export type ClaimItemStatus = 'Pending' | 'Approved' | 'Denied';
-export type ClaimEventType = 'Theft' | 'Impact' | 'Electrical Surge' | 'Water Damage' | 'Evacuation' | 'Other';
+export type ClaimEventType = string; // dynamically defined by the claim-event-types endpoint
 export type ClaimStatus = 'Draft' | 'Pending' | 'Approved' | 'Denied';
 export type ClaimFilePurpose = 'Receipt' | 'Evidence of FMV' | 'Repair Estimate'
 
@@ -26,7 +26,7 @@ export type ClaimFile = {
   id: string;
   purpose: ClaimFilePurpose;
   updated_at: string /*Date*/;
-};
+}
 
 export type ClaimItem = {
   claim_id: string;
@@ -74,9 +74,7 @@ export type CreateClaimItemRequestBody = {
   is_repairable: boolean;
   item_id: string;
   payout_option: PayoutOption;
-  repair_actual: number;
   repair_estimate: number;
-  replace_actual: number;
   replace_estimate: number;
 }
 
@@ -111,7 +109,6 @@ export type State = {
   color: string;
   bgColor: string;
   title: string;
-  actionLabel: string;
 }
 
 export const claims = writable<Claim[]>([])
@@ -226,9 +223,7 @@ export const createClaimItem = async (claimId: string, claimItemData) => {
       item_id: claimItemData.itemId,
       payout_option: claimItemData.payoutOption,
       repair_estimate: convertToCents(claimItemData.repairEstimateUSD),
-      repair_actual: undefined, //TODO: get this value
       replace_estimate: convertToCents(claimItemData.replaceEstimateUSD),
-      replace_actual: undefined //TODO: get this value 
     }
   
     const claimItem = await CREATE<ClaimItem>(urlPath, parsedClaimItem)

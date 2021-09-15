@@ -2,9 +2,9 @@
 import ClaimCardBanner from './ClaimCardBanner.svelte'
 import { day } from './const'
 import { getState, Claim, ClaimItem } from '../data/claims'
+import type { PolicyItem } from '../data/items'
 import { Card, Button } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
-import type { PolicyItem } from '../data/items';
 
 export let claim: Claim = {} as Claim
 export let claimItem: ClaimItem = {} as ClaimItem

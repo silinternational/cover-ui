@@ -21,7 +21,7 @@ export type User = {
   },
   photo_file_id: string;
   policy_id: string;
-};
+}
 
 const user = writable<User>({} as User)
 

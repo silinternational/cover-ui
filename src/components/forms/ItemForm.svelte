@@ -1,11 +1,11 @@
 <script lang="ts">
 import { ConvertCurrencyLink, Description, MoneyInput } from '../../components'
 import { dependentsByPolicyId, loadDependents } from '../../data/dependents.js'
+import type { PolicyItem } from '../../data/items'
 import { categories, init, initialized as catItemsInitialized } from '../../data/itemCategories'
 import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
 import { Button, Form, Select, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
-import type { PolicyItem } from '../../data/items';
 
 export let item = {} as PolicyItem
 export let policyId: string = undefined

@@ -19,6 +19,7 @@ let uploading = false
 let deductible = .05
 let maximumPayout: number | '' = ''
 let previewFile = {} as ClaimFile
+let uploadLabel: string = ''
 
 $: $initialized || loadClaims()
 
@@ -58,9 +59,18 @@ const computeReplaceMaxPayout = () => computePayout(claimItem.replace_estimate, 
 const computeCashMaxPayout = () => computePayout(item.coverage_amount, claimItem.fmv)
 
 const getFilePurpose = (claimItem: ClaimItem, needsReceipt: Boolean): ClaimFilePurpose => {
-  if(needsReceipt) return 'Receipt'
-  if(claimItem.repair_estimate) return 'Repair Estimate'
-  if(claimItem.fmv) return 'Evidence of FMV'
+  if(needsReceipt){
+    uploadLabel = 'Attach replacement item receipt'
+    return 'Receipt'
+  }
+  if(claimItem.repair_estimate){
+    uploadLabel = 'Attach repair estimate'
+    return 'Repair Estimate'
+  }
+  if(claimItem.fmv){
+    uploadLabel = 'Attach evidence of fair market value'
+    return 'Evidence of FMV'
+  }
 }
 
 const editClaim = () => $goto(`claims/${claimId}/edit)`)
@@ -164,15 +174,18 @@ function onDeleted(event) {
         <Button raised on:click={onSubmit}>Submit claim</Button>
       {/if}
     </p>
-    {#if needsFile}
-      <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onBlur}/>
 
+    {#if needsReceipt}
+      <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onBlur}/>
+      
       <p class="label ml-1 mt-6px">
         <ConvertCurrencyLink />
       </p>
+    {/if}
 
-      <label for="receipt" class="ml-1">Attach replacement item receipt</label>
-
+    {#if needsFile}
+      <label for="receipt" class="ml-1">{uploadLabel}</label>
+    
       <FileDropArea class="w-50 mt-10px" raised {uploading} on:upload={onUpload} />
     {/if}
       

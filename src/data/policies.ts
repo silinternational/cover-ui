@@ -14,9 +14,11 @@ export type Policy = {
   household_id: string;
   id: string;
   members: PolicyMember[];
-  type: string;
+  type: PolicyType;
   updated_at: string /*Date*/;
 }
+
+export type PolicyType = 'Household' | 'Corporate';
 
 export type UpdatePolicyRequestBody = {
   account: string;

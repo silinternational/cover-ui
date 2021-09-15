@@ -2,10 +2,8 @@ import { CREATE, DELETE, GET, UPDATE } from "."
 import { start, stop } from "../components/progress"
 import { throwError } from "../error"
 import { writable } from "svelte/store"
-import type { Claim } from "./claims"
 
 export type ItemCoverageStatus = 'Draft' | 'Pending' | 'Approved' | 'Denied';
-export type PolicyType = 'Household' | 'Corporate';
 
 export type RiskCategory = {
   created_at: string /*Date*/;
@@ -34,20 +32,6 @@ export type PolicyItem = {
   purchase_date: string /* yyyy-mm-dd Date */;
   risk_category: RiskCategory;
   serial_number: string;
-  updated_at: string /*Date*/;
-}
-
-export type Policy = {
-  account: string;
-  claims: Claim[];
-  cost_center: string;
-  created_at: string /*Date*/;
-  dependents: any[] /*PolicyDependents*/;
-  entity_code: any /*EntityCode*/;
-  household_id: string;
-  id: string;
-  members: any[] /*PolicyMembers*/;
-  type: PolicyType;
   updated_at: string /*Date*/;
 }
 

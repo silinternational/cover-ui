@@ -4,7 +4,7 @@ import { convertToCents } from "../helpers/money"
 import { writable } from "svelte/store"
 import type { PolicyItem } from "./items";
 
-export type PayoutOption = 'Repair' | 'Replacement' | 'FMV';
+export type PayoutOption = 'Repair' | 'Replacement' | 'FMV' | 'FixedFraction';
 export type ClaimItemStatus = 'Pending' | 'Approved' | 'Denied';
 export type ClaimEventType = 'Theft' | 'Impact' | 'Electrical Surge' | 'Water Damage' | 'Evacuation' | 'Other';
 export type ClaimStatus = 'Draft' | 'Pending' | 'Approved' | 'Denied';

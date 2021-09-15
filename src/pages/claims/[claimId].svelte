@@ -33,6 +33,8 @@ $: payoutOption = claimItem.payout_option
 $: needsRepairReceipt = (status === 'Needs_repair_receipt')
 $: needsReplaceReceipt = (status === 'Needs_replace_receipt')
 $: needsReceipt = (needsRepairReceipt || needsReplaceReceipt)
+$: needsEvidence = ((claimItem.fmv || claimItem.repair_estimate) && status === 'Draft') as Boolean
+$: needsFile = (needsReceipt || needsEvidence) as Boolean
 $: filePurpose = getFilePurpose(claimItem, needsReceipt)
 $: moneyFormLabel = needsRepairReceipt ? "Actual cost of repair" : "Actual cost of replacement"
 $: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
@@ -162,7 +164,7 @@ function onDeleted(event) {
         <Button raised on:click={onSubmit}>Submit claim</Button>
       {/if}
     </p>
-    {#if needsReceipt}
+    {#if needsFile}
       <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onBlur}/>
 
       <p class="label ml-1 mt-6px">

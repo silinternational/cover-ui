@@ -3,7 +3,6 @@ import { formatDate } from '../dates'
 import { Button, Progress } from '@silintl/ui-components'
 import { createEventDispatcher } from "svelte"
 import { flip } from 'svelte/animate'
-import { fly } from 'svelte/transition'
 
 export let previews = []
 export let uploading = false
@@ -48,10 +47,9 @@ function onDelete(event, id) {
 }
 </style>
 
-<!-- TODO: fix - transition has to finish before leaving page -->
 <div class="mt-10px py-10px {$$props.class}">
   {#each previews as preview (preview.id)}
-    <div on:click|preventDefault={() => onClick(preview.id)} transition:fly={{ y: 200, duration: 500 }} animate:flip={{duration: 500}} class:selected={isSelected[preview.id]} class="preview flex justify-between align-items-center br-8px p-10px mb-1">
+    <div on:click|preventDefault={() => onClick(preview.id)} animate:flip={{duration: 500}} class:selected={isSelected[preview.id]} class="preview flex justify-between align-items-center br-8px p-10px mb-1">
       <div>
         <p class="white my-0">{preview.file.name}</p>
         <p class="white my-0">{formatDate(preview.created_at)}</p>

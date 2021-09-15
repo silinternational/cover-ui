@@ -9,10 +9,7 @@ export type PolicyType = 'Household' | 'Corporate';
 
 export type RiskCategory = {
   created_at: string /*Date*/;
-  id: {
-    UUID: any;
-    Valid: boolean;
-  };
+  id: string;
   name: string;
   policy_max: number;
   updated_at: string /*Date*/;

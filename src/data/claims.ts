@@ -270,7 +270,7 @@ export async function claimsFileAttach(claimId: string, fileId: string, purpose:
 
   const data: ClaimsFileAttachRequestBody = {
     file_id: fileId,
-    purpose: undefined
+    purpose,
   }
   await CREATE<ClaimsFileAttachResponseBody>(`claims/${claimId}/files`, data)
 

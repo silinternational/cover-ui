@@ -269,10 +269,18 @@ export async function claimsFileAttach(claimId: string, fileId: string) {
   const data: ClaimsFileAttachRequestBody = {
     file_id: fileId,
     purpose: undefined // TODO: get this value
-  };
+  }
   await CREATE<ClaimsFileAttachResponseBody>(`claims/${claimId}/files`, data)
 
   stop(fileId)
+}
+
+export async function submitClaim(claimId: string) {
+  start(claimId)
+
+  await CREATE<string>(`claims/${claimId}/submit`)
+
+  stop(claimId)
 }
 
 /**

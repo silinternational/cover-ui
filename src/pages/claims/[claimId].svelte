@@ -150,7 +150,10 @@ function onDeleted(event) {
 
     <p>
       <Button on:click={editClaim} outlined>Edit claim</Button>
-      <Button raised on:click={onSubmit}>Submit claim</Button>
+      
+      {#if status === 'Draft' }
+        <Button raised on:click={onSubmit}>Submit claim</Button>
+      {/if}
     </p>
     {#if needsReceipt}
       <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onBlur}/>

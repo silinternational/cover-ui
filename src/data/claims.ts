@@ -125,6 +125,12 @@ export const success: State = {
   bgColor: '--mdc-theme-status-success-bg',
   title: 'Approved for repair',
 }
+export const pending: State = {
+  icon: 'watch_later',
+  color: '--mdc-theme-neutral-variant',
+  bgColor: '--mdc-theme-neutral-bg',
+  title: 'Awaiting review',
+}
 export const states: { [stateName: string]: State} = {
   Message: {
     icon: 'chat',
@@ -138,12 +144,8 @@ export const states: { [stateName: string]: State} = {
     bgColor: '--mdc-theme-primary-header-bg',
     title: 'Draft',
   },
-  Pending: {
-    icon: 'watch_later',
-    color: '--mdc-theme-neutral-variant',
-    bgColor: '--mdc-theme-neutral-bg',
-    title: 'Awaiting review',
-  },
+  Pending: pending,
+  Review1: pending,
   Needs_repair_receipt: success,
   Needs_repair_receipt2: warning,
   Needs_replace_receipt: success,

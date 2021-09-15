@@ -55,7 +55,7 @@ const computeReplaceMaxPayout = () => computePayout(claimItem.replace_estimate, 
 
 const computeCashMaxPayout = () => computePayout(item.coverage_amount, claimItem.fmv)
 
-const getFilePurpose = (claimItem, needsReceipt): ClaimFilePurpose => {
+const getFilePurpose = (claimItem: ClaimItem, needsReceipt: Boolean): ClaimFilePurpose => {
   if(needsReceipt) return 'Receipt'
   if(claimItem.repair_estimate) return 'Repair Estimate'
   if(claimItem.fmv) return 'Evidence of FMV'

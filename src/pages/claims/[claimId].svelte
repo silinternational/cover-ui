@@ -3,7 +3,7 @@ import user from '../../authn/user.js'
 import { Banner, ClaimBanner, ConvertCurrencyLink, FileDropArea, FilePreview, MoneyInput, Row } from '../../components'
 import { formatDate } from '../../components/dates.js'
 import { upload } from '../../data'
-import { loadClaims, claims, initialized, claimsFileAttach, updateClaimItem, Claim, ClaimItem, ClaimFile } from '../../data/claims'
+import { loadClaims, claims, initialized, claimsFileAttach, updateClaimItem, Claim, ClaimItem, ClaimFile, submitClaim } from '../../data/claims'
 import { loadItems, itemsByPolicyId, PolicyItem } from '../../data/items'
 import { formatMoney } from '../../helpers/money'
 import { goto } from '@roxi/routify'
@@ -43,18 +43,20 @@ $: if(payoutOption === 'Repair') {
   } else if(payoutOption === 'FMV') {
     maximumPayout = computeCashMaxPayout()
   } else if(claim.event_type === 'Evacuation') {
-    maximumPayout = claimItem.coverage_amount * 2/3 || '' // TODO: coverage_amount exists on policyItem not claimItem
+    maximumPayout = item.coverage_amount * 2/3 || ''
   }
 
 const computePayout = (...values) => Math.min(...values) * (1 - deductible) || ''
 
-const computeRepairMaxPayout = () => computePayout(claimItem.repair_estimate || claimItem.repair_actual, claimItem.coverage_amount, claimItem.fmv)
+const computeRepairMaxPayout = () => computePayout(claimItem.repair_estimate || claimItem.repair_actual, item.coverage_amount, claimItem.fmv)
 
-const computeReplaceMaxPayout = () => computePayout(claimItem.replace_estimate, claimItem.coverage_amount)
+const computeReplaceMaxPayout = () => computePayout(claimItem.replace_estimate, item.coverage_amount)
 
-const computeCashMaxPayout = () => computePayout(claimItem.coverage_amount, claimItem.fmv)
+const computeCashMaxPayout = () => computePayout(item.coverage_amount, claimItem.fmv)
 
 const editClaim = () => $goto(`claims/${claimId}/edit)`)
+
+const onSubmit = async () => await submitClaim(claimId)
 
 const onPreview = event => {
   showImg = true
@@ -148,6 +150,10 @@ function onDeleted(event) {
 
     <p>
       <Button on:click={editClaim} outlined>Edit claim</Button>
+      
+      {#if status === 'Draft' }
+        <Button raised on:click={onSubmit}>Submit claim</Button>
+      {/if}
     </p>
     {#if needsReceipt}
       <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onBlur}/>

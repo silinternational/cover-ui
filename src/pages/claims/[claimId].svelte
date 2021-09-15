@@ -19,7 +19,6 @@ let uploading = false
 let deductible = .05
 let maximumPayout: number | '' = ''
 let previewFile = {} as ClaimFile
-let uploadLabel: string = ''
 
 $: $initialized || loadClaims()
 
@@ -37,6 +36,7 @@ $: needsReceipt = (needsRepairReceipt || needsReplaceReceipt)
 $: needsEvidence = ((claimItem.fmv || claimItem.repair_estimate) && status === 'Draft') as Boolean
 $: needsFile = (needsReceipt || needsEvidence) as Boolean
 $: filePurpose = getFilePurpose(claimItem, needsReceipt)
+$: uploadLabel = getUploadLabel(claimItem, needsReceipt) as string
 $: moneyFormLabel = needsRepairReceipt ? "Actual cost of repair" : "Actual cost of replacement"
 $: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
 $: claimFiles = claim.claim_files || []
@@ -59,18 +59,15 @@ const computeReplaceMaxPayout = () => computePayout(claimItem.replace_estimate, 
 const computeCashMaxPayout = () => computePayout(item.coverage_amount, claimItem.fmv)
 
 const getFilePurpose = (claimItem: ClaimItem, needsReceipt: Boolean): ClaimFilePurpose => {
-  if(needsReceipt){
-    uploadLabel = 'Attach replacement item receipt'
-    return 'Receipt'
-  }
-  if(claimItem.repair_estimate){
-    uploadLabel = 'Attach repair estimate'
-    return 'Repair Estimate'
-  }
-  if(claimItem.fmv){
-    uploadLabel = 'Attach evidence of fair market value'
-    return 'Evidence of FMV'
-  }
+  if(needsReceipt) return 'Receipt'
+  if(claimItem.repair_estimate) return 'Repair Estimate'
+  if(claimItem.fmv) return 'Evidence of FMV'
+}
+
+const getUploadLabel = (claimItem: ClaimItem, needsReceipt: Boolean) => {
+  if(needsReceipt) return 'Attach replacement item receipt'
+  if(claimItem.repair_estimate) return 'Attach repair estimate'
+  if(claimItem.fmv) return 'Attach evidence of fair market value'
 }
 
 const editClaim = () => $goto(`claims/${claimId}/edit)`)

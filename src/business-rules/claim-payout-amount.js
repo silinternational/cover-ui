@@ -4,7 +4,7 @@ export const LOSS_REASON_EVACUATION = 'Evacuation'
 export const PAYOUT_OPTION_FIXED_FRACTION = 'FixedFraction'
 export const PAYOUT_OPTION_FMV = 'FMV'
 export const PAYOUT_OPTION_REPAIR = 'Repair'
-export const PAYOUT_OPTION_REPLACE = 'Replace'
+export const PAYOUT_OPTION_REPLACE = 'Replacement'
 
 export const isFairMarketValueNeeded = (isRepairable, payoutOption) => {
   return isRepairable || (payoutOption === PAYOUT_OPTION_FMV)

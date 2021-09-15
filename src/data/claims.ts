@@ -144,6 +144,7 @@ export const states: { [stateName: string]: State} = {
     bgColor: '--mdc-theme-primary-header-bg',
     title: 'Draft',
   },
+  Draft2: warning,
   Pending: pending,
   Review1: pending,
   Needs_repair_receipt: success,

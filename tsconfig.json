@@ -5,6 +5,10 @@
     "exclude": ["node_modules/*", "__sapper__/*", "public/*"],
     "compilerOptions": {
       "types": [ "node", "svelte", "@types/gtag.js" ],
+      "typeRoots": [
+        "src/customTypes",
+        "node_modules/@types"
+      ],
       "resolveJsonModule": true
     }
   }

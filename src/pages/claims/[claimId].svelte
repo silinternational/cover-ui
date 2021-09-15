@@ -17,7 +17,7 @@ let showImg = false
 let repairOrReplacementCost: number
 let uploading = false
 let deductible = .05
-let maximumPayout: number | '' = ''
+let maximumPayout: string
 let previewFile = {} as ClaimFile
 
 $: $initialized || loadClaims()
@@ -47,10 +47,10 @@ $: if(payoutOption === 'Repair') {
   } else if(payoutOption === 'FMV') {
     maximumPayout = computeCashMaxPayout()
   } else if(claim.event_type === 'Evacuation') {
-    maximumPayout = item.coverage_amount * 2/3 || ''
+    maximumPayout = formatMoney(item.coverage_amount * 2/3) || ''
   }
 
-const computePayout = (...values) => Math.min(...values) * (1 - deductible) || ''
+const computePayout = (...values) => formatMoney(Math.min(...values) * (1 - deductible)) || ''
 
 const computeRepairMaxPayout = () => computePayout(claimItem.repair_estimate || claimItem.repair_actual, item.coverage_amount, claimItem.fmv)
 

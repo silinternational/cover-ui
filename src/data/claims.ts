@@ -280,6 +280,8 @@ export async function submitClaim(claimId: string) {
 
   await CREATE<string>(`claims/${claimId}/submit`)
 
+  await loadClaims()
+
   stop(claimId)
 }
 

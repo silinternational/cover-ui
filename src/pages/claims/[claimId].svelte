@@ -3,7 +3,7 @@ import user from '../../authn/user.js'
 import { Banner, ClaimBanner, ConvertCurrencyLink, FileDropArea, FilePreview, MoneyInput, Row } from '../../components'
 import { formatDate } from '../../components/dates.js'
 import { upload } from '../../data'
-import { loadClaims, claims, initialized, claimsFileAttach, updateClaimItem, Claim, ClaimItem, ClaimFile } from '../../data/claims'
+import { loadClaims, claims, initialized, claimsFileAttach, updateClaimItem, Claim, ClaimItem, ClaimFile, ClaimFilePurpose } from '../../data/claims'
 import { loadItems, itemsByPolicyId, PolicyItem } from '../../data/items'
 import { formatMoney } from '../../helpers/money'
 import { goto } from '@roxi/routify'
@@ -33,6 +33,7 @@ $: payoutOption = claimItem.payout_option
 $: needsRepairReceipt = (status === 'Needs_repair_receipt')
 $: needsReplaceReceipt = (status === 'Needs_replace_receipt')
 $: needsReceipt = (needsRepairReceipt || needsReplaceReceipt)
+$: filePurpose = getFilePurpose(claimItem, needsReceipt)
 $: moneyFormLabel = needsRepairReceipt ? "Actual cost of repair" : "Actual cost of replacement"
 $: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
 $: claimFiles = claim.claim_files || []
@@ -53,6 +54,12 @@ const computeRepairMaxPayout = () => computePayout(claimItem.repair_estimate || 
 const computeReplaceMaxPayout = () => computePayout(claimItem.replace_estimate, claimItem.coverage_amount)
 
 const computeCashMaxPayout = () => computePayout(claimItem.coverage_amount, claimItem.fmv)
+
+const getFilePurpose = (claimItem, needsReceipt): ClaimFilePurpose => {
+  if(needsReceipt) return 'Receipt'
+  if(claimItem.repair_estimate) return 'Repair Estimate'
+  if(claimItem.fmv) return 'Evidence of FMV'
+}
 
 const editClaim = () => $goto(`claims/${claimId}/edit)`)
 
@@ -82,7 +89,7 @@ async function onUpload(event) {
 
     const file = await upload(event.detail)
 
-    await claimsFileAttach(claimId, file.id)
+    await claimsFileAttach(claimId, file.id, filePurpose)
 
     await loadClaims()
 

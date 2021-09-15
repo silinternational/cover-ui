@@ -3,9 +3,12 @@ import type { Claim } from '../data/claims';
 import type { PolicyItem } from '../data/items';
 
 import { ClaimCard } from './index'
+import { goto } from '@roxi/routify'
 
 export let claims: Claim[]
 export let items: PolicyItem[]
+
+const onGotoClaim = event => $goto(`/claims/${event.detail}`)
 </script>
 
 <style>
@@ -20,7 +23,7 @@ export let items: PolicyItem[]
     {#each (claim.claim_items || []) as claimItem (claimItem.id) }
       <div class="card">
         <ClaimCard {claim} {claimItem} item={items.find(item => item.id === claimItem.item_id)}
-                   on:edit-claim on:goto-claim />
+                  on:goto-claim={onGotoClaim} />
       </div>
     {/each}
   {/each}

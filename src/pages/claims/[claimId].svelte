@@ -65,9 +65,9 @@ const getFilePurpose = (claimItem: ClaimItem, needsReceipt: Boolean): ClaimFileP
 }
 
 const getUploadLabel = (claimItem: ClaimItem, needsReceipt: Boolean) => {
-  if(needsReceipt) return 'Attach replacement item receipt'
-  if(claimItem.repair_estimate) return 'Attach repair estimate'
-  if(claimItem.fmv) return 'Attach evidence of fair market value'
+  if(needsReceipt) return `a ${receiptType} item receipt`
+  if(claimItem.repair_estimate) return 'a repair estimate'
+  if(claimItem.fmv) return 'evidence of fair market value'
 }
 
 const editClaim = () => $goto(`claims/${claimId}/edit)`)
@@ -143,9 +143,9 @@ function onDeleted(event) {
   </Row>
   <Row cols="9">
     <ClaimBanner claimStatus={status} />
-    {#if needsReceipt}
+    {#if needsFile}
       <ClaimBanner claimStatus={`${status}2`} >
-        Upload a {receiptType} receipt to get reimbursed.
+        Upload {uploadLabel} to get reimbursed.
       </ClaimBanner>
     {/if}
     <p>
@@ -181,7 +181,7 @@ function onDeleted(event) {
     {/if}
 
     {#if needsFile}
-      <label for="receipt" class="ml-1">{uploadLabel}</label>
+      <label for="receipt" class="ml-1">Attach {uploadLabel}</label>
     
       <FileDropArea class="w-50 mt-10px" raised {uploading} on:upload={onUpload} />
     {/if}

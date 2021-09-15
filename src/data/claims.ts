@@ -263,12 +263,12 @@ export async function updateClaim(claimId: string, newClaimData) {
   return updatedClaim
 }
 
-export async function claimsFileAttach(claimId: string, fileId: string) {
+export async function claimsFileAttach(claimId: string, fileId: string, purpose: ClaimFilePurpose) {
   start(fileId)
 
   const data: ClaimsFileAttachRequestBody = {
     file_id: fileId,
-    purpose: undefined // TODO: get this value
+    purpose,
   };
   await CREATE<ClaimsFileAttachResponseBody>(`claims/${claimId}/files`, data)
 

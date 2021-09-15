@@ -1,6 +1,9 @@
 <script lang="ts">
-export let item = {}
-export let state = {}
+import type { State } from "../data/claims";
+
+
+export let item = {} as any
+export let state = {} as State
 
 $: bgColor = state.bgColor || ''
 $: color = state.color || ''

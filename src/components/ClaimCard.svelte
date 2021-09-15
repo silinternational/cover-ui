@@ -1,13 +1,14 @@
 <script lang="ts">
 import ClaimCardBanner from './ClaimCardBanner.svelte'
 import { day } from './const'
-import { getState } from '../data/claims'
+import { getState, Claim, ClaimItem } from '../data/claims'
+import type { PolicyItem } from '../data/items'
 import { Card, Button } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
-export let claim = {}
-export let claimItem = {}
-export let item = {}
+export let claim: Claim = {} as Claim
+export let claimItem: ClaimItem = {} as ClaimItem
+export let item: PolicyItem = {} as PolicyItem
 
 const dispatch = createEventDispatcher()
 const now = Date.now()

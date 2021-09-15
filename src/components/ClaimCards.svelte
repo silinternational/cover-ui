@@ -1,9 +1,12 @@
 <script lang="ts">
+import type { Claim } from '../data/claims';
+import type { PolicyItem } from '../data/items';
+
 import { ClaimCard } from './index'
 import { goto } from '@roxi/routify'
 
-export let claims
-export let items
+export let claims: Claim[]
+export let items: PolicyItem[]
 
 const onGotoClaim = event => $goto(`/claims/${event.detail}`)
 </script>

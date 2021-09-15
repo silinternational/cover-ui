@@ -22,7 +22,7 @@ if (links.length === 0) {
   }
 } else {
   links.forEach(val => {
-    if (!val.url || !val.name) { throwError(new Error("no url or name field for provided links array")) }
+    if (!val.url || !val.name) { throwError("Error: no url or name field for provided links array") }
 
     urls.push({ url: val.url, name: val.name })
   })

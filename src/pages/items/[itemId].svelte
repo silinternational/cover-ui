@@ -4,7 +4,7 @@ import { Banner, Breadcrumb, ClaimBanner, Row } from '../../components'
 import { day } from '../../components/const.js'
 import { formatDate } from '../../components/dates.js'
 import { loading } from '../../components/progress'
-import { itemsByPolicyId, loadItems } from '../../data/items.js'
+import { itemsByPolicyId, loadItems, Policy, PolicyItem } from '../../data/items.js'
 import { init, policies } from '../../data/policies'
 import { formatMoney } from '../../helpers/money'
 import { goto } from '@roxi/routify'
@@ -20,11 +20,11 @@ $: $user.policy_id && loadItems($user.policy_id)
 
 $: $policies.length || init()
 $: policyId = $user.policy_id
-$: policy = $policies.find(policy => policy.id === policyId) || {}
+$: policy = $policies.find(policy => policy.id === policyId) || {} as Policy
 $: policy.household_id && setPolicyHouseholdId()
 
 $: items = $itemsByPolicyId[$user.policy_id] || []
-$: item = items.find(itm => itm.id === itemId) || {}
+$: item = items.find(itm => itm.id === itemId) || {} as PolicyItem
 $: itemName = item.name || ''
 
 $: msAgo = now - Date.parse(item.updated_at)

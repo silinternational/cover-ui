@@ -2,11 +2,11 @@
 import user from '../../../authn/user'
 import { Breadcrumb, ItemForm } from '../../../components'
 import { loading } from '../../../components/progress'
-import { itemsByPolicyId, loadItems, updateItem } from '../../../data/items.js'
+import { itemsByPolicyId, loadItems, PolicyItem, updateItem } from '../../../data/items.js'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
-export let itemId
+export let itemId: string
 
 const breadcrumbLinks = [
   {
@@ -27,7 +27,7 @@ const breadcrumbLinks = [
 $: policyId = $user.policy_id
 $: policyId && loadItems(policyId)
 $: items = $itemsByPolicyId[policyId] || []
-$: item = items.find(anItem => anItem.id === itemId) || {}
+$: item = items.find(anItem => anItem.id === itemId) || {} as PolicyItem
 
 const onSubmit = async event => {
   await updateItem(policyId, itemId, event.detail)

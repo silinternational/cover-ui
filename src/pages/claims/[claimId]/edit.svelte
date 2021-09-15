@@ -2,12 +2,12 @@
 import user from '../../../authn/user'
 import { Breadcrumb, ClaimForm } from '../../../components'
 import { loading } from '../../../components/progress'
-import { claims, initialized, loadClaims, updateClaim } from '../../../data/claims.js'
-import { itemsByPolicyId, loadItems } from '../../../data/items.js'
+import { Claim, ClaimItem, claims, initialized, loadClaims, updateClaim } from '../../../data/claims.js'
+import { itemsByPolicyId, loadItems, PolicyItem } from '../../../data/items.js'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
-export let claimId
+export let claimId: string
 
 const breadcrumbLinks = [
   {
@@ -26,16 +26,16 @@ const breadcrumbLinks = [
 ]
 
 $: $initialized || loadClaims()
-$: claim = $claims.find(c => c.id === claimId) || {}
+$: claim = $claims.find(c => c.id === claimId) || {} as Claim
 $: claimItems = claim.claim_items || []
 
 /** @todo Update this when claims can have multiple items. */
-$: claimItem = claimItems[0] || {}
+$: claimItem = claimItems[0] || {} as ClaimItem
 $: itemId = claimItem.item_id
 
 $: $user.policy_id && loadItems($user.policy_id)
 $: items = $itemsByPolicyId[$user.policy_id] || []
-$: item = items.find(anItem => anItem.id === itemId) || {}
+$: item = items.find(anItem => anItem.id === itemId) || {} as PolicyItem
 
 const onSubmit = async event => {
   await updateClaim(claimId, event.detail)

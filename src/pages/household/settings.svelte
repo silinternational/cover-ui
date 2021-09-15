@@ -2,12 +2,12 @@
 import user from '../../authn/user'
 import { Breadcrumb, SearchableSelect } from "../../components"
 import { dependentsByPolicyId, loadDependents } from '../../data/dependents'
-import { policies, updatePolicy, init, affiliations } from '../../data/policies'
+import { policies, updatePolicy, init, affiliations, Policy } from '../../data/policies'
 import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
 import { goto } from "@roxi/routify"
 import { Button, TextField, IconButton, Page, Snackbar, setNotice } from "@silintl/ui-components"
 
-const policyData = {}
+const policyData = {} as Policy
 
 let affiliationChoice = ''
 let householdId = ''
@@ -23,7 +23,7 @@ $: if (policyId) {
 $: dependents = $dependentsByPolicyId[policyId] || []
 $: householdMembers = $membersByPolicyId[policyId] || []
 $: $policies.length || init()
-$: policy = $policies.find(policy => policy.id === policyId) || {}
+$: policy = $policies.find(policy => policy.id === policyId) || {} as Policy
 $: policy.household_id && setPolicyHouseholdId()
 $: policy.cost_center && setPolicyCostCenter()
 $: policy.entity_code && setAffiliation()
@@ -68,7 +68,7 @@ const updateAffiliation = async e => {
   }
 }
 
-const callUpdatePolicy = async (id, costCenter, affiliation) => {
+const callUpdatePolicy = async (id: string, costCenter: string = undefined, affiliation: string = undefined) => {
   policyData.household_id = id
   affiliation && (policyData.entity_code = affiliation)
   costCenter && (policyData.cost_center = costCenter)

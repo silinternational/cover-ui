@@ -1,9 +1,32 @@
 import { writable } from 'svelte/store'
 import { start, stop } from '../components/progress'
+import type { Claim } from './claims'
 import { GET, UPDATE } from './index'
+import type { PolicyMember } from './policy-members'
 
-export const policies = writable([])
-export const initialized = writable(false)
+export type Policy = {
+  account: string;
+  claims: Claim[];
+  cost_center: string;
+  created_at: string /*Date*/;
+  dependents: any[] /*PolicyDependent*/;
+  entity_code: any /*EntityCode*/;
+  household_id: string;
+  id: string;
+  members: PolicyMember[];
+  type: string;
+  updated_at: string /*Date*/;
+}
+
+export type UpdatePolicyRequestBody = {
+  account: string;
+  cost_center: string;
+  entity_code: string;
+  household_id: any; /* This seemed complicated */
+}
+
+export const policies = writable<Policy[]>([])
+export const initialized = writable<boolean>(false)
 
 export function init() {
   loadPolicies()
@@ -17,15 +40,15 @@ export function init() {
  * @param {Object} policyData
  * @return {Object} 
  */
-export async function updatePolicy(id, policyData) {
-  const parsedPolicyData = {
+export async function updatePolicy(id: string, policyData) {
+  const parsedPolicyData: UpdatePolicyRequestBody = {
     household_id: policyData.household_id,
     cost_center: policyData.cost_center,
     account: policyData.account,
     entity_code: policyData.entity_code
   }
 
-  const updatedPolicy = await UPDATE(`policies/${id}`, parsedPolicyData)
+  const updatedPolicy = await UPDATE<Policy>(`policies/${id}`, parsedPolicyData)
 
   policies.update(currPolicies => {
     let i = currPolicies.findIndex(pol => pol.id === id)
@@ -45,7 +68,7 @@ export function clear() {
 export async function loadPolicies() {
   start('loadPolicies')
 
-  const plcs = await GET('policies')
+  const plcs = await GET<Policy[]>('policies')
 
   policies.set(plcs)
 

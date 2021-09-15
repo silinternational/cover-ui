@@ -18,11 +18,13 @@ import {
   MoneyInput,
 } from '../../components'
 import { claimEventTypes, loadClaimEventTypes } from '../../data/claim-event-types'
+import type { Claim, ClaimItem } from '../../data/claims'
+import type { PolicyItem } from '../../data/items'
 import { Button, Form, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
-export let claim = {}
-export let item = {}
+export let claim = {} as Claim
+export let item = {} as PolicyItem
 
 const dispatch = createEventDispatcher()
 
@@ -62,8 +64,8 @@ let replaceEstimateUSD = undefined
 let fairMarketValueUSD = undefined
 
 // Set default derived (or intermediate) values.
-let claimItem = {}
-let claimItems = []
+let claimItem = {} as ClaimItem
+let claimItems: ClaimItem[] = []
 let isEvacuation = undefined
 let lossReasonOptions = []
 let potentiallyRepairable = true
@@ -83,7 +85,7 @@ $: $claimEventTypes.length || loadClaimEventTypes()
 
 // Find applicable data from component props.
 $: claimItems = claim.claim_items || []
-$: claimItem = claimItems.find(entry => entry.item_id === item.id) || {}
+$: claimItem = claimItems.find(entry => entry.item_id === item.id) || {} as ClaimItem
 
 // Define rules for reactive variables.
 $: isEvacuation = (lossReason === LOSS_REASON_EVACUATION)

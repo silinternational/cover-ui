@@ -27,7 +27,7 @@ $: claimItem = claim.claim_items?.[0] || {} as ClaimItem //For now there will on
 $: items = $itemsByPolicyId[$user.policy_id] || []
 $: $user.policy_id && loadItems($user.policy_id)
 $: item = items.find(itm => itm.id === claimItem.item_id) || {} as PolicyItem
-$: eventDate = formatDate(claim.incident_date)
+$: incidentDate = formatDate(claim.incident_date)
 $: status = claim.status || ''
 $: payoutOption = claimItem.payout_option
 $: needsRepairReceipt = (status === 'Needs_repair_receipt')
@@ -139,7 +139,7 @@ function onDeleted(event) {
       class="max-content-width">
       <b>{claim.incident_type || ''}</b>
     </Banner>
-    <div class="left-detail">{eventDate || ''}</div>
+    <div class="left-detail">{incidentDate || ''}</div>
   </Row>
   <Row cols="9">
     <ClaimBanner claimStatus={status} />

@@ -170,7 +170,7 @@ function onDeleted(event) {
         <Button on:click={editClaim} outlined>Edit claim</Button>
       {/if}
 
-      {#if status === 'Draft' }
+      {#if status === 'Draft' || status === 'Receipt'}
         <Button raised on:click={onSubmit}>Submit claim</Button>
       {/if}
     </p>

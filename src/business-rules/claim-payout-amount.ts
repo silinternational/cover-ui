@@ -18,8 +18,8 @@ export const isPotentiallyRepairable = (claimIncidentTypes, incidentTypeName) =>
   if (claimIncidentTypes.length < 1) {
     return true
   }
-  const repairableEventTypes = claimIncidentTypes.filter(type => type.is_repairable)
-  return repairableEventTypes.some(type => type.name === incidentTypeName)
+  const repairableIncidentTypes = claimIncidentTypes.filter(type => type.is_repairable)
+  return repairableIncidentTypes.some(type => type.name === incidentTypeName)
 }
 
 export const isRepairCostTooHigh = (repairEstimateUSD, fairMarketValueUSD) => {

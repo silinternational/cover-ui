@@ -4,6 +4,14 @@ import { goto } from '@roxi/routify'
 import { Datatable, Page } from '@silintl/ui-components'
 
 $: $initialized || loadPolicies()
+
+const getPolicyIcon = policyType => {
+  const icons = {
+    Corporate: '🏢',
+    Household: '🏠',
+  }
+  return icons[policyType] || ''
+}
 </script>
 
 <Page>
@@ -20,7 +28,10 @@ $: $initialized || loadPolicies()
     <Datatable.Data>
       {#each $policies as policy (policy.id) }
         <Datatable.Data.Row on:click={() => $goto(`/policies/${policy.id}`)} clickable>
-          <Datatable.Data.Row.Item>{policy.type || ''}</Datatable.Data.Row.Item>
+          <Datatable.Data.Row.Item>
+            {getPolicyIcon(policy.type)}
+            {policy.type || ''}
+          </Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{policy.household_id || ''}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{policy.account || ''}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{policy.cost_center || ''}</Datatable.Data.Row.Item>

@@ -3,7 +3,7 @@ import user from '../../authn/user.js'
 import { Banner, ClaimBanner, ConvertCurrencyLink, FileDropArea, FilePreview, MoneyInput, Row } from '../../components'
 import { formatDate } from '../../components/dates.js'
 import { upload } from '../../data'
-import { loadClaims, claims, initialized, claimsFileAttach, updateClaimItem, Claim, ClaimItem, ClaimFile, ClaimFilePurpose, submitClaim } from '../../data/claims'
+import { loadClaims, claims, initialized, claimsFileAttach, updateClaimItem, Claim, ClaimItem, ClaimFile, ClaimFilePurpose, PayoutOption, submitClaim } from '../../data/claims'
 import { loadItems, itemsByPolicyId, PolicyItem } from '../../data/items'
 import { formatMoney } from '../../helpers/money'
 import { goto } from '@roxi/routify'
@@ -29,14 +29,15 @@ $: $user.policy_id && loadItems($user.policy_id)
 $: item = items.find(itm => itm.id === claimItem.item_id) || {} as PolicyItem
 $: incidentDate = formatDate(claim.incident_date)
 $: status = claim.status || ''
-$: payoutOption = claimItem.payout_option
-$: needsRepairReceipt = (status === 'Needs_repair_receipt')
-$: needsReplaceReceipt = (status === 'Needs_replace_receipt')
-$: needsReceipt = (needsRepairReceipt || needsReplaceReceipt)
+$: payoutOption = claimItem.payout_option as PayoutOption
+$: isEditable = (status !== 'Approved') && (status !== 'Denied') && (status !== 'Paid')
+$: needsRepairReceipt = (needsReceipt && (payoutOption === 'Repair'))
+$: needsReplaceReceipt = (needsReceipt && (payoutOption === 'Replacement'))
+$: needsReceipt = (status === 'Receipt')
 $: needsEvidence = ((claimItem.fmv || claimItem.repair_estimate) && status === 'Draft') as Boolean
 $: needsFile = (needsReceipt || needsEvidence) as Boolean
 $: filePurpose = getFilePurpose(claimItem, needsReceipt)
-$: uploadLabel = getUploadLabel(claimItem, needsReceipt) as string
+$: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType) as string
 $: moneyFormLabel = needsRepairReceipt ? "Actual cost of repair" : "Actual cost of replacement"
 $: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
 $: claimFiles = claim.claim_files || []
@@ -64,7 +65,7 @@ const getFilePurpose = (claimItem: ClaimItem, needsReceipt: Boolean): ClaimFileP
   if(claimItem.fmv) return 'Evidence of FMV'
 }
 
-const getUploadLabel = (claimItem: ClaimItem, needsReceipt: Boolean) => {
+const getUploadLabel = (claimItem: ClaimItem, needsReceipt: Boolean, receiptType) => {
   if(needsReceipt) return `a ${receiptType} item receipt`
   if(claimItem.repair_estimate) return 'a repair estimate'
   if(claimItem.fmv) return 'evidence of fair market value'
@@ -142,7 +143,7 @@ function onDeleted(event) {
     <div class="left-detail">{incidentDate || ''}</div>
   </Row>
   <Row cols="9">
-    <ClaimBanner claimStatus={status} />
+    <ClaimBanner claimStatus={status} >{claim.status_reason || ''}</ClaimBanner>
     {#if needsFile}
       <ClaimBanner claimStatus={`${status}2`} >
         Upload {uploadLabel} to get reimbursed.
@@ -165,9 +166,11 @@ function onDeleted(event) {
     {/if}
 
     <p>
-      <Button on:click={editClaim} outlined>Edit claim</Button>
-      
-      {#if status === 'Draft' }
+      {#if isEditable}
+        <Button on:click={editClaim} outlined>Edit claim</Button>
+      {/if}
+
+      {#if status === 'Draft' || status === 'Receipt'}
         <Button raised on:click={onSubmit}>Submit claim</Button>
       {/if}
     </p>

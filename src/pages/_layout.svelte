@@ -14,6 +14,11 @@ $: menuItems = [
     label: 'Home',
   },
   {
+    url: '/policies',
+    icon: 'summarize',
+    label: 'Policies',
+  },
+  {
     url: '/claims',
     icon: 'label',
     label: 'Claims',

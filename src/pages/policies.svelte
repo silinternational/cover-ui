@@ -4,15 +4,14 @@ import { goto } from '@roxi/routify'
 import { Datatable, Page } from '@silintl/ui-components'
 
 $: $initialized || loadPolicies()
-
-const getPolicyIcon = policyType => {
-  const icons = {
-    Corporate: '🏢',
-    Household: '🏠',
-  }
-  return icons[policyType] || ''
-}
 </script>
+
+<style>
+.material-icons {
+  font-size: 125%;
+  vertical-align: text-bottom;
+}
+</style>
 
 <Page>
   <Datatable>
@@ -29,7 +28,11 @@ const getPolicyIcon = policyType => {
       {#each $policies as policy (policy.id) }
         <Datatable.Data.Row on:click={() => $goto(`/policies/${policy.id}`)} clickable>
           <Datatable.Data.Row.Item>
-            {getPolicyIcon(policy.type)}
+            {#if policy.type === 'Household' }
+              <span class="material-icons">family_restroom</span>
+            {:else if policy.type === 'Corporate' }
+              <span class="material-icons">business</span>
+            {/if}
             {policy.type || ''}
           </Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{policy.household_id || ''}</Datatable.Data.Row.Item>

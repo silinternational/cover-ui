@@ -302,7 +302,7 @@ export async function submitClaim(claimId: string) {
     replace_actual: claimItemData.replaceActual,
   }
 
-  await UPDATE<ClaimItem>(`claimitems/${claimItemId}`, parsedData)
+  await UPDATE<ClaimItem>(`claim-items/${claimItemId}`, parsedData)
 
   stop(claimItemId)
 }

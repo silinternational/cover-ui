@@ -42,7 +42,7 @@ $: $initialized || loadPolicies()
           <Datatable.Data.Row.Item>{policy.members?.length || 0}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{policy.claims?.length || 0}</Datatable.Data.Row.Item>
         </Datatable.Data.Row>
-        {/each}
+      {/each}
     </Datatable.Data>
   </Datatable>
 </Page>

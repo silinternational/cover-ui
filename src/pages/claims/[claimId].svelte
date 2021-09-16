@@ -3,7 +3,7 @@ import user from '../../authn/user.js'
 import { Banner, ClaimBanner, ConvertCurrencyLink, FileDropArea, FilePreview, MoneyInput, Row } from '../../components'
 import { formatDate } from '../../components/dates.js'
 import { upload } from '../../data'
-import { loadClaims, claims, initialized, claimsFileAttach, updateClaimItem, Claim, ClaimItem, ClaimFile, ClaimFilePurpose, submitClaim } from '../../data/claims'
+import { loadClaims, claims, initialized, claimsFileAttach, updateClaimItem, Claim, ClaimItem, ClaimFile, ClaimFilePurpose, PayoutOption, submitClaim } from '../../data/claims'
 import { loadItems, itemsByPolicyId, PolicyItem } from '../../data/items'
 import { formatMoney } from '../../helpers/money'
 import { goto } from '@roxi/routify'
@@ -29,10 +29,10 @@ $: $user.policy_id && loadItems($user.policy_id)
 $: item = items.find(itm => itm.id === claimItem.item_id) || {} as PolicyItem
 $: eventDate = formatDate(claim.event_date)
 $: status = claim.status || ''
-$: payoutOption = claimItem.payout_option
-$: needsRepairReceipt = (status === 'Needs_repair_receipt')
-$: needsReplaceReceipt = (status === 'Needs_replace_receipt')
-$: needsReceipt = (needsRepairReceipt || needsReplaceReceipt)
+$: payoutOption = claimItem.payout_option as PayoutOption
+$: needsRepairReceipt = (needsReceipt && (payoutOption === 'Repair'))
+$: needsReplaceReceipt = (needsReceipt && (payoutOption === 'Replacement'))
+$: needsReceipt = (status === 'Receipt')
 $: needsEvidence = ((claimItem.fmv || claimItem.repair_estimate) && status === 'Draft') as Boolean
 $: needsFile = (needsReceipt || needsEvidence) as Boolean
 $: filePurpose = getFilePurpose(claimItem, needsReceipt)

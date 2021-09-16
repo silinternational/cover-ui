@@ -1,13 +1,22 @@
 <script lang="ts">
 import user from '../../authn/user.js'
-import { Banner, ClaimBanner, ConvertCurrencyLink, FileDropArea, FilePreview, MoneyInput, Row } from '../../components'
+import {
+  Banner,
+  ClaimActionButtons,
+  ClaimBanner,
+  ConvertCurrencyLink,
+  FileDropArea,
+  FilePreview,
+  MoneyInput,
+  Row,
+} from '../../components'
 import { formatDate } from '../../components/dates.js'
 import { upload } from '../../data'
 import { loadClaims, claims, initialized, claimsFileAttach, updateClaimItem, Claim, ClaimItem, ClaimFile, ClaimFilePurpose, submitClaim } from '../../data/claims'
 import { loadItems, itemsByPolicyId, PolicyItem } from '../../data/items'
 import { formatMoney } from '../../helpers/money'
 import { goto } from '@roxi/routify'
-import { Button, Page } from '@silintl/ui-components'
+import { Page } from '@silintl/ui-components'
 
 export let claimId: string
 
@@ -165,11 +174,7 @@ function onDeleted(event) {
     {/if}
 
     <p>
-      <Button on:click={editClaim} outlined>Edit claim</Button>
-      
-      {#if status === 'Draft' }
-        <Button raised on:click={onSubmit}>Submit claim</Button>
-      {/if}
+      <ClaimActionButtons {claim} on:edit={editClaim} on:submit={onSubmit} />
     </p>
 
     {#if needsReceipt}

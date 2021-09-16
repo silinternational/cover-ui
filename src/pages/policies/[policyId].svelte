@@ -103,6 +103,12 @@ th {
             <Datatable.Data.Row.Item>{formatMoney(claimItem.fmv)}</Datatable.Data.Row.Item>
           </Datatable.Data.Row>
         {/each}
+      {:else}
+        <Datatable.Data.Row>
+          <Datatable.Data.Row.Item colspan="8">
+            <i>None</i>
+          </Datatable.Data.Row.Item>
+        </Datatable.Data.Row>
       {/each}
     </Datatable.Data>
   </Datatable>

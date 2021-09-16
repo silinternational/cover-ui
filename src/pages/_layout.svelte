@@ -16,7 +16,7 @@ $: menuItems = [
   },
   {
     url: '/policies',
-    icon: 'summarize',
+    icon: 'description',
     label: 'Policies',
     hide: !isSteward($user),
   },
@@ -27,7 +27,7 @@ $: menuItems = [
   },
   {
     url: '/faq',
-    icon: 'article',
+    icon: 'quiz',
     label: 'FAQ',
   },
   // {

@@ -69,7 +69,6 @@ let claimItems: ClaimItem[] = []
 let isEvacuation = undefined
 let lossReasonOptions = []
 let potentiallyRepairable = true
-let repairableEventTypeNames = []
 let repairableSelection = undefined
 let repairCostIsTooHigh = undefined
 let shouldAskIfRepairable = false

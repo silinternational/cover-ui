@@ -30,7 +30,7 @@ $: item = items.find(itm => itm.id === claimItem.item_id) || {} as PolicyItem
 $: eventDate = formatDate(claim.event_date)
 $: status = claim.status || ''
 $: payoutOption = claimItem.payout_option as PayoutOption
-$: isEditable = (status !== 'Approved') && (status !== 'Denied') && (status !== 'Paid') && (status !== 'Revision')
+$: isEditable = (status !== 'Approved') && (status !== 'Denied') && (status !== 'Paid')
 $: needsRepairReceipt = (needsReceipt && (payoutOption === 'Repair'))
 $: needsReplaceReceipt = (needsReceipt && (payoutOption === 'Replacement'))
 $: needsReceipt = (status === 'Receipt')

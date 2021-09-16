@@ -6,7 +6,7 @@ import { writable } from "svelte/store"
 
 export type PayoutOption = 'Repair' | 'Replacement' | 'FMV' | 'FixedFraction';
 export type ClaimItemStatus = 'Pending' | 'Approved' | 'Denied';
-export type ClaimEventType = string; // dynamically defined by the claim-event-types endpoint
+export type ClaimIncidentTypeName = string; // dynamically defined by the claim-event-types endpoint
 export type ClaimStatus = 'Draft' | 'Pending' | 'Approved' | 'Denied';
 export type ClaimFilePurpose = 'Receipt' | 'Evidence of FMV' | 'Repair Estimate'
 
@@ -52,7 +52,7 @@ export type Claim = {
   claim_items: ClaimItem[];
   event_date: string /*Date*/;
   event_description: string;
-  event_type: ClaimEventType;
+  event_type: ClaimIncidentTypeName;
   id: string;
   payment_date: string /*Date*/;
   policy_id: string;
@@ -66,7 +66,7 @@ export type Claim = {
 export type CreateClaimRequestBody = {
   event_date: Date;
   event_description: string;
-  event_type: ClaimEventType;
+  event_type: ClaimIncidentTypeName;
 }
 
 export type CreateClaimItemRequestBody = {
@@ -81,7 +81,7 @@ export type CreateClaimItemRequestBody = {
 export type UpdateClaimRequestBody = {
   event_date: string /*Date*/;
   event_description: string;
-  event_type: ClaimEventType;
+  event_type: ClaimIncidentTypeName;
 }
 
 export type ClaimsFileAttachRequestBody = {

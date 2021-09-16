@@ -60,6 +60,7 @@ export type Claim = {
   review_date: string /*Date*/;
   reviewer_id: string;
   status: ClaimStatus;
+  status_reason: string;
   total_payout: number;
 }
 
@@ -132,11 +133,11 @@ export const pending: State = {
   title: 'Awaiting review',
 }
 export const states: { [stateName: string]: State} = {
-  Message: {
+  Revision: {
     icon: 'chat',
     color: '--mdc-theme-primary',
     bgColor: '--mdc-theme-primary-header-bg',
-    title: 'From ',
+    title: '',
   },
   Draft: {
     icon: 'edit',

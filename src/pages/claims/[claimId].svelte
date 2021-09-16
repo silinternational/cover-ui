@@ -3,7 +3,7 @@ import user from '../../authn/user.js'
 import { Banner, ClaimBanner, ConvertCurrencyLink, FileDropArea, FilePreview, MoneyInput, Row } from '../../components'
 import { formatDate } from '../../components/dates.js'
 import { upload } from '../../data'
-import { loadClaims, claims, initialized, claimsFileAttach, updateClaimItem, Claim, ClaimItem, ClaimFile, submitClaim } from '../../data/claims'
+import { loadClaims, claims, initialized, claimsFileAttach, updateClaimItem, Claim, ClaimItem, ClaimFile, ClaimFilePurpose, submitClaim } from '../../data/claims'
 import { loadItems, itemsByPolicyId, PolicyItem } from '../../data/items'
 import { formatMoney } from '../../helpers/money'
 import { goto } from '@roxi/routify'
@@ -17,7 +17,7 @@ let showImg = false
 let repairOrReplacementCost: number
 let uploading = false
 let deductible = .05
-let maximumPayout: number | '' = ''
+let maximumPayout: string
 let previewFile = {} as ClaimFile
 
 $: $initialized || loadClaims()
@@ -33,6 +33,10 @@ $: payoutOption = claimItem.payout_option
 $: needsRepairReceipt = (status === 'Needs_repair_receipt')
 $: needsReplaceReceipt = (status === 'Needs_replace_receipt')
 $: needsReceipt = (needsRepairReceipt || needsReplaceReceipt)
+$: needsEvidence = ((claimItem.fmv || claimItem.repair_estimate) && status === 'Draft') as Boolean
+$: needsFile = (needsReceipt || needsEvidence) as Boolean
+$: filePurpose = getFilePurpose(claimItem, needsReceipt)
+$: uploadLabel = getUploadLabel(claimItem, needsReceipt) as string
 $: moneyFormLabel = needsRepairReceipt ? "Actual cost of repair" : "Actual cost of replacement"
 $: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
 $: claimFiles = claim.claim_files || []
@@ -43,16 +47,28 @@ $: if(payoutOption === 'Repair') {
   } else if(payoutOption === 'FMV') {
     maximumPayout = computeCashMaxPayout()
   } else if(claim.event_type === 'Evacuation') {
-    maximumPayout = item.coverage_amount * 2/3 || ''
+    maximumPayout = formatMoney(item.coverage_amount * 2/3) || ''
   }
 
-const computePayout = (...values) => Math.min(...values) * (1 - deductible) || ''
+const computePayout = (...values) => formatMoney(Math.min(...values) * (1 - deductible)) || ''
 
 const computeRepairMaxPayout = () => computePayout(claimItem.repair_estimate || claimItem.repair_actual, item.coverage_amount, claimItem.fmv)
 
 const computeReplaceMaxPayout = () => computePayout(claimItem.replace_estimate, item.coverage_amount)
 
 const computeCashMaxPayout = () => computePayout(item.coverage_amount, claimItem.fmv)
+
+const getFilePurpose = (claimItem: ClaimItem, needsReceipt: Boolean): ClaimFilePurpose => {
+  if(needsReceipt) return 'Receipt'
+  if(claimItem.repair_estimate) return 'Repair Estimate'
+  if(claimItem.fmv) return 'Evidence of FMV'
+}
+
+const getUploadLabel = (claimItem: ClaimItem, needsReceipt: Boolean) => {
+  if(needsReceipt) return `a ${receiptType} item receipt`
+  if(claimItem.repair_estimate) return 'a repair estimate'
+  if(claimItem.fmv) return 'evidence of fair market value'
+}
 
 const editClaim = () => $goto(`claims/${claimId}/edit)`)
 
@@ -84,7 +100,7 @@ async function onUpload(event) {
 
     const file = await upload(event.detail)
 
-    await claimsFileAttach(claimId, file.id)
+    await claimsFileAttach(claimId, file.id, filePurpose)
 
     await loadClaims()
 
@@ -127,9 +143,9 @@ function onDeleted(event) {
   </Row>
   <Row cols="9">
     <ClaimBanner claimStatus={status} />
-    {#if needsReceipt}
+    {#if needsFile}
       <ClaimBanner claimStatus={`${status}2`} >
-        Upload a {receiptType} receipt to get reimbursed.
+        Upload {uploadLabel} to get reimbursed.
       </ClaimBanner>
     {/if}
     <p>
@@ -155,15 +171,18 @@ function onDeleted(event) {
         <Button raised on:click={onSubmit}>Submit claim</Button>
       {/if}
     </p>
+
     {#if needsReceipt}
       <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onBlur}/>
-
+      
       <p class="label ml-1 mt-6px">
         <ConvertCurrencyLink />
       </p>
+    {/if}
 
-      <label for="receipt" class="ml-1">Attach replacement item receipt</label>
-
+    {#if needsFile}
+      <label for="receipt" class="ml-1">Attach {uploadLabel}</label>
+    
       <FileDropArea class="w-50 mt-10px" raised {uploading} on:upload={onUpload} />
     {/if}
       

@@ -79,7 +79,7 @@ const getUploadLabel = (claimItem: ClaimItem, needsReceipt: Boolean) => {
   if(claimItem.fmv) return 'evidence of fair market value'
 }
 
-const editClaim = () => $goto(`claims/${claimId}/edit)`)
+const editClaim = () => $goto(`/claims/${claimId}/edit)`)
 
 const onSubmit = async () => await submitClaim(claimId)
 

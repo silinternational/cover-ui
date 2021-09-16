@@ -27,7 +27,7 @@ $: claimItem = claim.claim_items?.[0] || {} as ClaimItem //For now there will on
 $: items = $itemsByPolicyId[$user.policy_id] || []
 $: $user.policy_id && loadItems($user.policy_id)
 $: item = items.find(itm => itm.id === claimItem.item_id) || {} as PolicyItem
-$: eventDate = formatDate(claim.event_date)
+$: eventDate = formatDate(claim.incident_date)
 $: status = claim.status || ''
 $: payoutOption = claimItem.payout_option
 $: needsRepairReceipt = (status === 'Needs_repair_receipt')
@@ -46,7 +46,7 @@ $: if(payoutOption === 'Repair') {
     maximumPayout = computeReplaceMaxPayout()
   } else if(payoutOption === 'FMV') {
     maximumPayout = computeCashMaxPayout()
-  } else if(claim.event_type === 'Evacuation') {
+  } else if(claim.incident_type === 'Evacuation') {
     maximumPayout = formatMoney(item.coverage_amount * 2/3) || ''
   }
 
@@ -137,7 +137,7 @@ function onDeleted(event) {
     <Banner background="var(--mdc-theme-status-info-bg)"
       color="var(--mdc-theme-status-info)"
       class="max-content-width">
-      <b>{claim.event_type || ''}</b>
+      <b>{claim.incident_type || ''}</b>
     </Banner>
     <div class="left-detail">{eventDate || ''}</div>
   </Row>
@@ -149,7 +149,7 @@ function onDeleted(event) {
       </ClaimBanner>
     {/if}
     <p>
-      {claim.event_description || ''}
+      {claim.incident_description || ''}
     </p>
     <p>
       <b>Covered value</b><br />

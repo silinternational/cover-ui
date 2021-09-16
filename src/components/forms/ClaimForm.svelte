@@ -144,11 +144,11 @@ const onSubmit = async () => {
   })
 }
 const setInitialValues = (claim, claimItem) => {
-  if (claim.event_date) {
-    lostDate = claim.event_date.split('T')[0]
+  if (claim.incident_date) {
+    lostDate = claim.incident_date.split('T')[0]
   }
-  lossReason = claim.event_type || lossReason
-  situationDescription = claim.event_description || situationDescription
+  lossReason = claim.incident_type || lossReason
+  situationDescription = claim.incident_description || situationDescription
   if (claimItem.is_repairable !== undefined) {
     repairableSelection = (claimItem.is_repairable ? 'repairable' : 'not_repairable')
   }

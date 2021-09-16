@@ -94,7 +94,7 @@ th {
               <a href="/claims/{claim.id}">{claim.reference_number || ''}</a>
               ({claim.status})
             </Datatable.Data.Row.Item>
-            <Datatable.Data.Row.Item>{formatFriendlyDate(claim.event_date)}</Datatable.Data.Row.Item>
+            <Datatable.Data.Row.Item>{formatFriendlyDate(claim.incident_date)}</Datatable.Data.Row.Item>
             <Datatable.Data.Row.Item>{claimItem.status || ''}</Datatable.Data.Row.Item>
             <Datatable.Data.Row.Item>{claimItem.is_repairable ? 'Yes' : 'No'}</Datatable.Data.Row.Item>
             <Datatable.Data.Row.Item>{claimItem.payout_option || ''}</Datatable.Data.Row.Item>

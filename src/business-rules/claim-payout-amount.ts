@@ -11,15 +11,15 @@ export const isFairMarketValueNeeded = (isRepairable, payoutOption) => {
   return isRepairable || (payoutOption === PAYOUT_OPTION_FMV)
 }
 
-export const isPotentiallyRepairable = (claimEventTypes, eventTypeName) => {
-  if (!eventTypeName) {
+export const isPotentiallyRepairable = (claimIncidentTypes, incidentTypeName) => {
+  if (!incidentTypeName) {
     return true
   }
-  if (claimEventTypes.length < 1) {
+  if (claimIncidentTypes.length < 1) {
     return true
   }
-  const repairableEventTypes = claimEventTypes.filter(type => type.is_repairable)
-  return repairableEventTypes.some(type => type.name === eventTypeName)
+  const repairableIncidentTypes = claimIncidentTypes.filter(type => type.is_repairable)
+  return repairableIncidentTypes.some(type => type.name === incidentTypeName)
 }
 
 export const isRepairCostTooHigh = (repairEstimateUSD, fairMarketValueUSD) => {

@@ -6,7 +6,7 @@ import { writable } from "svelte/store"
 
 export type PayoutOption = 'Repair' | 'Replacement' | 'FMV' | 'FixedFraction';
 export type ClaimItemStatus = 'Pending' | 'Approved' | 'Denied';
-export type ClaimEventType = string; // dynamically defined by the claim-event-types endpoint
+export type ClaimIncidentTypeName = string; // dynamically defined by the claim-incident-types endpoint
 export type ClaimStatus = 'Draft' | 'Pending' | 'Approved' | 'Denied';
 export type ClaimFilePurpose = 'Receipt' | 'Evidence of FMV' | 'Repair Estimate'
 
@@ -50,9 +50,9 @@ export type ClaimItem = {
 export type Claim = {
   claim_files: ClaimFile[];
   claim_items: ClaimItem[];
-  event_date: string /*Date*/;
-  event_description: string;
-  event_type: ClaimEventType;
+  incident_date: string /*Date*/;
+  incident_description: string;
+  incident_type: ClaimIncidentTypeName;
   id: string;
   payment_date: string /*Date*/;
   policy_id: string;
@@ -64,9 +64,9 @@ export type Claim = {
 }
 
 export type CreateClaimRequestBody = {
-  event_date: Date;
-  event_description: string;
-  event_type: ClaimEventType;
+  incident_date: Date;
+  incident_description: string;
+  incident_type: ClaimIncidentTypeName;
 }
 
 export type CreateClaimItemRequestBody = {
@@ -79,9 +79,9 @@ export type CreateClaimItemRequestBody = {
 }
 
 export type UpdateClaimRequestBody = {
-  event_date: string /*Date*/;
-  event_description: string;
-  event_type: ClaimEventType;
+  incident_date: string /*Date*/;
+  incident_description: string;
+  incident_type: ClaimIncidentTypeName;
 }
 
 export type ClaimsFileAttachRequestBody = {
@@ -192,9 +192,9 @@ export async function createClaim(item: PolicyItem, claimData) {
   start(urlPath)
 
   const parsedClaim: CreateClaimRequestBody = {
-    event_date: new Date(claimData.lostDate),
-    event_description: claimData.situationDescription,
-    event_type: claimData.lossReason,
+    incident_date: new Date(claimData.lostDate),
+    incident_description: claimData.situationDescription,
+    incident_type: claimData.lossReason,
   }
 
   const claim = await CREATE<Claim>(urlPath, parsedClaim)
@@ -248,9 +248,9 @@ export async function updateClaim(claimId: string, newClaimData) {
 
   //TODO make sure these properties are what is used in update claim form when it exists
   const parsedData: UpdateClaimRequestBody = {
-    event_date: newClaimData.event_date,
-    event_type: newClaimData.event_type, //TODO will get types from future GET /config endpoint
-    event_description: newClaimData.event_description,
+    incident_date: newClaimData.incident_date,
+    incident_type: newClaimData.incident_type,
+    incident_description: newClaimData.incident_description,
   }
 
   const updatedClaim = await UPDATE<Claim>(`claims/${claimId}`, parsedData)

@@ -17,7 +17,7 @@ import {
   DateInput,
   MoneyInput,
 } from '../../components'
-import { claimEventTypes, loadClaimEventTypes } from '../../data/claim-event-types'
+import { claimIncidentTypes, loadClaimIncidentTypes } from '../../data/claim-incident-types'
 import type { Claim, ClaimItem } from '../../data/claims'
 import type { PolicyItem } from '../../data/items'
 import { Button, Form, TextArea } from '@silintl/ui-components'
@@ -69,7 +69,6 @@ let claimItems: ClaimItem[] = []
 let isEvacuation = undefined
 let lossReasonOptions = []
 let potentiallyRepairable = true
-let repairableEventTypeNames = []
 let repairableSelection = undefined
 let repairCostIsTooHigh = undefined
 let shouldAskIfRepairable = false
@@ -81,7 +80,7 @@ let unrepairableOrTooExpensive = undefined
 $: setInitialValues(claim, claimItem)
 
 // Load the necessary data.
-$: $claimEventTypes.length || loadClaimEventTypes()
+$: $claimIncidentTypes.length || loadClaimIncidentTypes()
 
 // Find applicable data from component props.
 $: claimItems = claim.claim_items || []
@@ -89,7 +88,7 @@ $: claimItem = claimItems.find(entry => entry.item_id === item.id) || {} as Clai
 
 // Define rules for reactive variables.
 $: isEvacuation = (lossReason === LOSS_REASON_EVACUATION)
-$: potentiallyRepairable = isPotentiallyRepairable($claimEventTypes, lossReason)
+$: potentiallyRepairable = isPotentiallyRepairable($claimIncidentTypes, lossReason)
 $: isRepairable = calculateIsRepairable(potentiallyRepairable, repairableSelection)
 $: repairCostIsTooHigh = isRepairCostTooHigh(repairEstimateUSD, fairMarketValueUSD)
 $: unrepairableOrTooExpensive = isUnrepairableOrTooExpensive(isRepairable, repairCostIsTooHigh)
@@ -103,7 +102,7 @@ $: !shouldAskForFMV && unSetFairMarketValue()
 $: !isRepairable && unSetRepairEstimate()
 
 // Calculate dynamic options for radio-button prompts.
-$: lossReasonOptions = $claimEventTypes.map(({name}) => ({ label: name, value: name }))
+$: lossReasonOptions = $claimIncidentTypes.map(({name}) => ({ label: name, value: name }))
 
 // TODO: get accountable person from item
 // TODO: add reimbursed value
@@ -144,11 +143,11 @@ const onSubmit = async () => {
   })
 }
 const setInitialValues = (claim, claimItem) => {
-  if (claim.event_date) {
-    lostDate = claim.event_date.split('T')[0]
+  if (claim.incident_date) {
+    lostDate = claim.incident_date.split('T')[0]
   }
-  lossReason = claim.event_type || lossReason
-  situationDescription = claim.event_description || situationDescription
+  lossReason = claim.incident_type || lossReason
+  situationDescription = claim.incident_description || situationDescription
   if (claimItem.is_repairable !== undefined) {
     repairableSelection = (claimItem.is_repairable ? 'repairable' : 'not_repairable')
   }

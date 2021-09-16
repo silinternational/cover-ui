@@ -1,7 +1,10 @@
 import { writable } from 'svelte/store'
 import { GET } from '../data'
 
+type UserAppRole = 'User' | 'Steward' | 'Signator' | 'Admin'
+
 export type User = {
+  app_role: UserAppRole;
   email: string;
   email_override: string;
   first_name: string;
@@ -35,3 +38,5 @@ export async function loadUser() {
 export const clear = () => {
   user.set({} as User)
 }
+
+export const isSteward = (user: User): boolean => user.app_role === 'Steward'

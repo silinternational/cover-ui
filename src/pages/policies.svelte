@@ -6,6 +6,13 @@ import { Datatable, Page } from '@silintl/ui-components'
 $: $initialized || loadPolicies()
 </script>
 
+<style>
+.material-icons {
+  font-size: 125%;
+  vertical-align: text-bottom;
+}
+</style>
+
 <Page>
   <Datatable>
     <Datatable.Header>
@@ -20,7 +27,14 @@ $: $initialized || loadPolicies()
     <Datatable.Data>
       {#each $policies as policy (policy.id) }
         <Datatable.Data.Row on:click={() => $goto(`/policies/${policy.id}`)} clickable>
-          <Datatable.Data.Row.Item>{policy.type || ''}</Datatable.Data.Row.Item>
+          <Datatable.Data.Row.Item>
+            {#if policy.type === 'Household' }
+              <span class="material-icons">family_restroom</span>
+            {:else if policy.type === 'Corporate' }
+              <span class="material-icons">business</span>
+            {/if}
+            {policy.type || ''}
+          </Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{policy.household_id || ''}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{policy.account || ''}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{policy.cost_center || ''}</Datatable.Data.Row.Item>
@@ -28,7 +42,7 @@ $: $initialized || loadPolicies()
           <Datatable.Data.Row.Item>{policy.members?.length || 0}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{policy.claims?.length || 0}</Datatable.Data.Row.Item>
         </Datatable.Data.Row>
-        {/each}
+      {/each}
     </Datatable.Data>
   </Datatable>
 </Page>

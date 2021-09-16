@@ -1,4 +1,5 @@
 <script lang="ts">
+import user, { isSteward } from '../authn/user'
 import AppFooter from '../components/AppFooter.svelte'
 import AppHeader from '../components/AppHeader.svelte'
 import { goto } from '@roxi/routify'
@@ -10,8 +11,14 @@ $: menuItems = [
   {},
   {
     url: '/home',
-    icon: 'house',
+    icon: 'home',
     label: 'Home',
+  },
+  {
+    url: '/policies',
+    icon: 'description',
+    label: 'Policies',
+    hide: !isSteward($user),
   },
   {
     url: '/claims',
@@ -20,7 +27,7 @@ $: menuItems = [
   },
   {
     url: '/faq',
-    icon: 'article',
+    icon: 'quiz',
     label: 'FAQ',
   },
   // {

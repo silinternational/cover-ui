@@ -8,7 +8,7 @@ $: bgColor = state.bgColor || ''
 $: color = state.color || ''
 $: icon = state.icon || ''
 $: title = state.title || ''
-$: steward = statusReason ? 'From Darryl Johnson' : '' as string
+$: steward = statusReason ? 'From your claim handler' : '' as string //TODO get this from the api
 </script>
 
 <div class="flex justify-start align-items-center black mb-2 p-1 pl-50px" style="background: var({bgColor});">

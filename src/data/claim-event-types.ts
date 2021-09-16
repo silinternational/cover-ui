@@ -2,20 +2,20 @@ import { GET } from '.'
 import { start, stop } from '../components/progress'
 import { writable } from 'svelte/store'
 
-export type ClaimEventType = {
+export type ClaimIncidentType = {
   name: string;
   is_repairable: boolean;
 }
 
-export const claimEventTypes = writable<ClaimEventType[]>([])
+export const claimIncidentTypes = writable<ClaimIncidentType[]>([])
 
-export async function loadClaimEventTypes() {
+export async function loadClaimIncidentTypes() {
   const urlPath = 'config/claim-event-types'
   start(urlPath)
 
-  const results = await GET<ClaimEventType[]>(urlPath)
+  const results = await GET<ClaimIncidentType[]>(urlPath)
 
   stop(urlPath)
   
-  claimEventTypes.set(results)
+  claimIncidentTypes.set(results)
 }

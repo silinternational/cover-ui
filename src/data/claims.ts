@@ -146,25 +146,24 @@ export const states: { [stateName: string]: State} = {
   },
   Draft2: warning,
   Pending: pending,
+  Receipt: success,
+  Receipt2: warning,
   Review1: pending,
-  Needs_repair_receipt: success,
-  Needs_repair_receipt2: warning,
-  Needs_replace_receipt: success,
-  Needs_replace_receipt2: warning,
+  Review2: pending,
+  Review3: pending,
   Denied: {
     icon: 'remove_circle',
     color: '--mdc-theme-status-error',
     bgColor: '--mdc-theme-status-error-bg',
     title: 'Denied',
   },
-  Approved: success,
-  Payout: {
+  Approved: {
     icon: 'paid',
     color: '--mdc-theme-status-success',
     bgColor: '--mdc-theme-status-success-bg',
     title: 'Approved for payout',
   },
-  Complete: {
+  Paid: {
     icon: 'paid',
     color: '--mdc-theme-status-success',
     bgColor: '--mdc-theme-status-success-bg',

@@ -143,7 +143,7 @@ function onDeleted(event) {
     <div class="left-detail">{eventDate || ''}</div>
   </Row>
   <Row cols="9">
-    <ClaimBanner claimStatus={status} />
+    <ClaimBanner claimStatus={status} >{claim.status_reason || ''}</ClaimBanner>
     {#if needsFile}
       <ClaimBanner claimStatus={`${status}2`} >
         Upload {uploadLabel} to get reimbursed.

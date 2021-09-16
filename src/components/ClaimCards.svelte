@@ -22,7 +22,7 @@ const onGotoClaim = event => $goto(`/claims/${event.detail}`)
   {#each claims as claim (claim.id) }
     {#each (claim.claim_items || []) as claimItem (claimItem.id) }
       <div class="card">
-        <ClaimCard {claim} {claimItem} item={items.find(item => item.id === claimItem.item_id)}
+        <ClaimCard {claim} {claimItem} item={items.find(item => item.id === claimItem.item_id) || {}}
                   on:goto-claim={onGotoClaim} />
       </div>
     {/each}

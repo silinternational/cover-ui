@@ -30,6 +30,7 @@ $: item = items.find(itm => itm.id === claimItem.item_id) || {} as PolicyItem
 $: eventDate = formatDate(claim.event_date)
 $: status = claim.status || ''
 $: payoutOption = claimItem.payout_option as PayoutOption
+$: isEditable = (status !== 'Approved') && (status !== 'Denied') && (status !== 'Paid') && (status !== 'Revision')
 $: needsRepairReceipt = (needsReceipt && (payoutOption === 'Repair'))
 $: needsReplaceReceipt = (needsReceipt && (payoutOption === 'Replacement'))
 $: needsReceipt = (status === 'Receipt')
@@ -165,8 +166,10 @@ function onDeleted(event) {
     {/if}
 
     <p>
-      <Button on:click={editClaim} outlined>Edit claim</Button>
-      
+      {#if isEditable}
+        <Button on:click={editClaim} outlined>Edit claim</Button>
+      {/if}
+
       {#if status === 'Draft' }
         <Button raised on:click={onSubmit}>Submit claim</Button>
       {/if}

@@ -249,7 +249,7 @@ export async function updateClaim(claimId: string, newClaimData) {
   //TODO make sure these properties are what is used in update claim form when it exists
   const parsedData: UpdateClaimRequestBody = {
     incident_date: newClaimData.incident_date,
-    incident_type: newClaimData.incident_type, //TODO will get types from future GET /config endpoint
+    incident_type: newClaimData.incident_type,
     incident_description: newClaimData.incident_description,
   }
 

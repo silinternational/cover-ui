@@ -10,7 +10,7 @@ export type ClaimIncidentType = {
 export const claimIncidentTypes = writable<ClaimIncidentType[]>([])
 
 export async function loadClaimIncidentTypes() {
-  const urlPath = 'config/claim-event-types'
+  const urlPath = 'config/claim-incident-types'
   start(urlPath)
 
   const results = await GET<ClaimIncidentType[]>(urlPath)

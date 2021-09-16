@@ -6,7 +6,7 @@ import { writable } from "svelte/store"
 
 export type PayoutOption = 'Repair' | 'Replacement' | 'FMV' | 'FixedFraction';
 export type ClaimItemStatus = 'Pending' | 'Approved' | 'Denied';
-export type ClaimIncidentTypeName = string; // dynamically defined by the claim-event-types endpoint
+export type ClaimIncidentTypeName = string; // dynamically defined by the claim-incident-types endpoint
 export type ClaimStatus = 'Draft' | 'Pending' | 'Approved' | 'Denied';
 export type ClaimFilePurpose = 'Receipt' | 'Evidence of FMV' | 'Repair Estimate'
 

@@ -1,4 +1,5 @@
 <script lang="ts">
+import user, { isSteward } from '../authn/user'
 import AppFooter from '../components/AppFooter.svelte'
 import AppHeader from '../components/AppHeader.svelte'
 import { goto } from '@roxi/routify'
@@ -17,6 +18,7 @@ $: menuItems = [
     url: '/policies',
     icon: 'summarize',
     label: 'Policies',
+    hide: !isSteward($user),
   },
   {
     url: '/claims',

@@ -11,7 +11,7 @@ $: menuItems = [
   {},
   {
     url: '/home',
-    icon: 'house',
+    icon: 'home',
     label: 'Home',
   },
   {

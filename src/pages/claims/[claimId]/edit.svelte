@@ -41,12 +41,7 @@ const onSubmit = async event => {
   const {claimData, claimItemData} = event.detail
 
   const editedClaimItemData = {
-    fairMarketValueUSD: claimItemData.fairMarketValueUSD,
-    isRepairable: claimItemData.isRepairable,
-    itemId: claimItemData.itemId,
-    payoutOption: claimItemData.payoutOption,
-    repairEstimateUSD: claimItemData.repairEstimateUSD,
-    replaceEstimateUSD: claimItemData.replaceEstimateUSD,
+    ...claimItemData,
     repairActual: 0,
     replaceActual: 0,
   }

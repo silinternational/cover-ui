@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store'
-import { GET } from '../data'
+import { GET, UPDATE } from '../data'
 
 export type User = {
   email: string;
@@ -30,6 +30,14 @@ export default user
 export async function loadUser() {
   const userData = await GET<User>('users/me')
   user.set(userData)
+}
+
+export async function updateUser(data: User) {
+  // TODO Uncomment when update user enpoint is available
+  // const updatedUser = await UPDATE<User>(`users/${data.id}`, data)
+  // user.set(updatedUser);
+  
+  user.set(data)
 }
 
 export const clear = () => {

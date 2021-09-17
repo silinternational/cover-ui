@@ -77,7 +77,7 @@ const callUpdatePolicy = async (id: string, costCenter: string = undefined, affi
 }
 
 const isIdValid = sanitizedId => sanitizedId.length && sanitizedId.split('').every(digit => /[0-9]/.test(digit))
-const edit = id => $goto(`/household/settings/dependent/${id}`)
+const edit = id => $goto(`/settings/household/dependent/${id}`)
 const isYou = householdMember => householdMember.id === $user.id
 </script>
 
@@ -150,7 +150,7 @@ const isYou = householdMember => householdMember.id === $user.id
       </li>
     {/each}
   </ul>
-  <Button prependIcon="add" url="settings/dependent" outlined>Add dependent</Button>
+  <Button prependIcon="add" url="household/dependent" outlined>Add dependent</Button>
 
   <Snackbar/>
 </Page>

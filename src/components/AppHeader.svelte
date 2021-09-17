@@ -42,6 +42,11 @@ header {
 .clickable:hover {
   cursor: pointer;
 }
+
+img {
+  height: 36px;
+  width: 36px;
+}
 </style>
 <svelte:window on:resize={showOrHideDrawerButton}/>
 

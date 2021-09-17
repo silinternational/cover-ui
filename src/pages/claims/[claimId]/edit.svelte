@@ -21,7 +21,7 @@ const breadcrumbLinks = [
   },
   {
     name: "Edit",
-    url: `/items/${claimId}/edit`
+    url: `/claims/${claimId}/edit`
   }
 ]
 

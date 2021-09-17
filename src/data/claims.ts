@@ -305,9 +305,9 @@ export async function submitClaim(claimId: string) {
   start(claimItemId)
 
   const parsedData: UpdateClaimItemRequestBody = {
-    // fmv: claimItemData.fairMarketValueUSD,
+    // fmv: convertToCents(claimItemData.fairMarketValueUSD),
     // is_repairable: claimItemData.isRepairable,
-    // item_id: claimItemData.stringNumber,
+    // item_id: claimItemData.itemId,
     // payout_option: claimItemData.payoutOption,
     // repair_estimate: convertToCents(claimItemData.repairEstimateUSD),
     // replace_estimate: convertToCents(claimItemData.replaceEstimateUSD),

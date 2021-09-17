@@ -309,8 +309,8 @@ export async function submitClaim(claimId: string) {
     // is_repairable: claimItemData.isRepairable,
     // item_id: claimItemData.stringNumber,
     // payout_option: claimItemData.payoutOption,
-    // repair_estimate: claimItemData.repairEstimateUSD,
-    // replace_estimate: claimItemData.replaceEstimateUSD,
+    // repair_estimate: convertToCents(claimItemData.repairEstimateUSD),
+    // replace_estimate: convertToCents(claimItemData.replaceEstimateUSD),
     repair_actual: claimItemData.repairActual,
     replace_actual: claimItemData.replaceActual,
   }

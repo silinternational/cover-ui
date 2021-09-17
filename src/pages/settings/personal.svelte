@@ -51,11 +51,11 @@
     }
 
     const handleChecked = (policyId: string) => {
-      setNotice('Notification otpion has been saved')
+      setNotice('Notification option has been saved')
     }
 
     const handleUnchecked = (policyId: string) => {
-      setNotice('Notification otpion has been saved')
+      setNotice('Notification option has been saved')
     }
 
     async function onFileSelect(event: CustomEvent<FormData>) {
@@ -118,53 +118,52 @@
     const isLocationValid = (location: string) => !!location
 </script>
     
-    <style>
-    .required {
-      color: var(--mdc-theme-status-error);
-    }
+<style>
+.required {
+  color: var(--mdc-theme-status-error);
+}
 
-    .photo-preview {
-      width: 300px;
-      height: 300px;
-      padding-bottom: 40px;
-    }
-    </style>
+.photo-preview {
+  width: 300px;
+  height: 300px;
+  padding-bottom: 40px;
+}
+</style>
     
-    <Page>
-      <Breadcrumb />
-    
-      <h3 class="ml-1 mt-3">Notification email</h3>
-      <p>
-          {notification_email}
-          <RadioOptions name="notificationEmail" options={notificationOptions} bind:value={notification_email} ></RadioOptions>
-      </p>
-      {#if notification_email === NOTIFICATION_OPTION_CUSTOM }
-      <TextField placeholder={'Custom email'} bind:value={email_override} on:blur={updateCustomEmail} ></TextField>
-      {/if}
+<Page>
+  <Breadcrumb />
 
-      <h3 class="ml-1 mt-3">Location<span class="required">*</span></h3>
-      <p>
-        <TextField placeholder={'Enter country'} bind:value={location} on:blur={updateLocation} />
-      </p>
+  <h3 class="ml-1 mt-3">Notification email</h3>
+  <p>
+      <RadioOptions name="notificationEmail" options={notificationOptions} bind:value={notification_email} ></RadioOptions>
+  </p>
+  {#if notification_email === NOTIFICATION_OPTION_CUSTOM }
+  <TextField placeholder={'Custom email'} bind:value={email_override} on:blur={updateCustomEmail} ></TextField>
+  {/if}
 
-      <h3 class="ml-1 mt-3">Receive notification emails for</h3>
-      <p>
-          {#each $policies as policy (policy.id) }
-          <Checkbox label={policy.type} checked={true} on:checked={handleChecked(policy.id)} on:unchecked={handleUnchecked(policy.id)} ></Checkbox>
-          {/each}
-      </p>
+  <h3 class="ml-1 mt-3">Location<span class="required">*</span></h3>
+  <p>
+    <TextField placeholder={'Enter country'} bind:value={location} on:blur={updateLocation} />
+  </p>
 
-      <h3 class="ml-1 mt-3">Profile picture</h3>
-      <p>
-          <FileDropArea mimeType="image/*" class="w-50 mt-10px" raised {uploading} on:upload={onFileSelect} />
-      </p>
-      
-      <div class="photo-preview">
-        <div id="croppie-container"></div>
-      </div>
-      {#if croppie}
-      <Button raised on:click={onUpload}>Save</Button>
-      {/if}
-      <Snackbar/>
-    </Page>
+  <h3 class="ml-1 mt-3">Receive notification emails for</h3>
+  <p>
+      {#each $policies as policy (policy.id) }
+      <Checkbox label={policy.type} checked={true} on:checked={() => handleChecked(policy.id)} on:unchecked={() => handleUnchecked(policy.id)} ></Checkbox>
+      {/each}
+  </p>
+
+  <h3 class="ml-1 mt-3">Profile picture</h3>
+  <p>
+      <FileDropArea mimeType="image/*" class="w-50 mt-10px" raised {uploading} on:upload={onFileSelect} />
+  </p>
+  
+  <div class="photo-preview">
+    <div id="croppie-container"></div>
+  </div>
+  {#if croppie}
+  <Button raised on:click={onUpload}>Save</Button>
+  {/if}
+  <Snackbar/>
+</Page>
     

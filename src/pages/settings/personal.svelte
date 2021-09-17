@@ -113,57 +113,10 @@
         }
       }
     }
-
-    // const updateHouseholdId = async () => {
-    //   householdId = householdId.replaceAll(' ', '')
-    //   if(householdId !== policy.household_id) {
-    //     if(isIdValid(householdId)) {
-    //       await callUpdatePolicy(householdId)
-    
-    //       setNotice('Your household ID has been saved')
-    //     } else {
-    //       setNotice('Please enter a valid Household ID')
-    //     }
-    //   }
-    // }
-    
-    // const updateCostCenter = async () => {
-    //   costCenter = costCenter.replaceAll(' ', '')
-    //   if(costCenter !== policy.cost_center) {
-    //     if(isIdValid(costCenter)) {
-    //       await callUpdatePolicy(householdId, costCenter)
-    
-    //       setNotice('Your cost center has been saved')
-    //     } else {
-    //       setNotice('Please enter a valid cost center')
-    //     }
-    //   }
-    // }
-    
-    // const updateAffiliation = async e => {
-    //   const choice = e.detail
-    
-    //   if(choice !== policyData.entity_code) {
-    //     await callUpdatePolicy(householdId, costCenter, choice)
-        
-    //     setNotice('Your affiliation has been saved')
-    //   }
-    // }
-    
-    // const callUpdatePolicy = async (id: string, costCenter: string = undefined, affiliation: string = undefined) => {
-    //   policyData.household_id = id
-    //   affiliation && (policyData.entity_code = affiliation)
-    //   costCenter && (policyData.cost_center = costCenter)
-    
-    //   await updatePolicy(policyId, policyData)
-    // }
     
     const isEmailValid = (email: string) => email.includes('@') // bare basic validation
     const isLocationValid = (location: string) => !!location
-    // const isIdValid = sanitizedId => sanitizedId.length && sanitizedId.split('').every(digit => /[0-9]/.test(digit))
-    // const edit = id => $goto(`/settings/household/dependent/${id}`)
-    // const isYou = householdMember => householdMember.id === $user.id
-    </script>
+</script>
     
     <style>
     .required {

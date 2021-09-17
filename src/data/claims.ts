@@ -101,6 +101,13 @@ export type ClaimsFileAttachResponseBody = {
 }
 
 export type UpdateClaimItemRequestBody = {
+  // TODO uncomment when fields are available
+  // fmv: number;
+  // is_repairable: boolean;
+  // item_id: string;
+  // payout_option: PayoutOption;
+  // repair_estimate: number;
+  // replace_estimate: number;
   repair_actual: number;
   replace_actual: number;
 }
@@ -298,6 +305,12 @@ export async function submitClaim(claimId: string) {
   start(claimItemId)
 
   const parsedData: UpdateClaimItemRequestBody = {
+    // fmv: claimItemData.fairMarketValueUSD,
+    // is_repairable: claimItemData.isRepairable,
+    // item_id: claimItemData.stringNumber,
+    // payout_option: claimItemData.payoutOption,
+    // repair_estimate: claimItemData.repairEstimateUSD,
+    // replace_estimate: claimItemData.replaceEstimateUSD,
     repair_actual: claimItemData.repairActual,
     replace_actual: claimItemData.replaceActual,
   }

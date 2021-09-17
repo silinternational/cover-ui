@@ -2,7 +2,7 @@
 import user from '../../../authn/user'
 import { Breadcrumb, ClaimForm } from '../../../components'
 import { loading } from '../../../components/progress'
-import { Claim, ClaimItem, claims, initialized, loadClaims, updateClaim } from '../../../data/claims'
+import { Claim, ClaimItem, claims, initialized, loadClaims, updateClaim, updateClaimItem } from '../../../data/claims'
 import { itemsByPolicyId, loadItems, PolicyItem } from '../../../data/items'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
@@ -32,6 +32,7 @@ $: claimItems = claim.claim_items || []
 /** @todo Update this when claims can have multiple items. */
 $: claimItem = claimItems[0] || {} as ClaimItem
 $: itemId = claimItem.item_id
+$: ClaimItemId = claimItem.id
 
 $: $user.policy_id && loadItems($user.policy_id)
 $: items = $itemsByPolicyId[$user.policy_id] || []
@@ -47,9 +48,7 @@ const onSubmit = async event => {
   }
   
   await updateClaim(claimId, claimData)
-  // TODO uncomment when available on the api
-  console.log(editedClaimItemData)
-  // await updateClaimItem(itemId, editedClaimData)
+  await updateClaimItem(ClaimItemId, editedClaimItemData)
   $goto(`/claims/${claimId}`)
 }
 </script>

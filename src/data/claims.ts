@@ -255,9 +255,9 @@ export async function updateClaim(claimId: string, newClaimData) {
 
   //TODO make sure these properties are what is used in update claim form when it exists
   const parsedData: UpdateClaimRequestBody = {
-    incident_date: newClaimData.incident_date,
-    incident_type: newClaimData.incident_type,
-    incident_description: newClaimData.incident_description,
+    incident_date: newClaimData.incidentDate,
+    incident_type: newClaimData.incidentType,
+    incident_description: newClaimData.incidentDescription,
   }
 
   const updatedClaim = await UPDATE<Claim>(`claims/${claimId}`, parsedData)

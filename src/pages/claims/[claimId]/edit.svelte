@@ -40,12 +40,6 @@ $: item = items.find(anItem => anItem.id === itemId) || {} as PolicyItem
 const onSubmit = async event => {
   const {claimData, claimItemData} = event.detail
 
-  const editedClaimData = {
-    incidentDate: new Date(claimData.lostDate).toISOString(),
-    incidentType: claimData.lossReason,
-    incidentDescription: claimData.situationDescription
-  }
-
   const editedClaimItemData = {
     fairMarketValueUSD: claimItemData.fairMarketValueUSD,
     isRepairable: claimItemData.isRepairable,
@@ -57,7 +51,7 @@ const onSubmit = async event => {
     replaceActual: 0,
   }
   
-  await updateClaim(claimId, editedClaimData)
+  await updateClaim(claimId, claimData)
   // TODO uncomment when available on the api
   console.log(editedClaimItemData)
   // await updateClaimItem(itemId, editedClaimData)

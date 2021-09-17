@@ -2,7 +2,7 @@
 import user from '../../../authn/user'
 import { Breadcrumb, ClaimForm } from '../../../components'
 import { loading } from '../../../components/progress'
-import { Claim, ClaimItem, claims, initialized, loadClaims, updateClaim } from '../../../data/claims.js'
+import { Claim, ClaimItem, claims, initialized, loadClaims, updateClaim, updateClaimItem, UpdateClaimRequestBody } from '../../../data/claims'
 import { itemsByPolicyId, loadItems, PolicyItem } from '../../../data/items.js'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
@@ -38,7 +38,26 @@ $: items = $itemsByPolicyId[$user.policy_id] || []
 $: item = items.find(anItem => anItem.id === itemId) || {} as PolicyItem
 
 const onSubmit = async event => {
-  await updateClaim(claimId, event.detail)
+  const {claimData, claimItemData} = event.detail
+
+  const editedClaimData: UpdateClaimRequestBody = {
+    incident_date: new Date(claimData.lostDate).toISOString(),
+    incident_type: claimData.lossReason,
+    incident_description: claimData.situationDescription
+  }
+
+  // TODO uncomment when available on the api
+  const editedClaimItemData = {
+    // claimItemData.itemId,
+    // claimItemData.isRepairable,
+    // claimItemData.payoutOption,
+    // claimItemData.repairEstimateUSD,
+    // claimItemData.replaceEstimateUSD,
+    // claimItemData.fairMarketValueUSD,
+  }
+
+  await updateClaim(claimId, editedClaimData)
+  // await updateClaimItem(itemId, editedClaimData)
   $goto(`/claims/${claimId}`)
 }
 </script>

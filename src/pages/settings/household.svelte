@@ -1,11 +1,11 @@
 <script lang="ts">
 import user from '../../authn/user'
-import { Breadcrumb, SearchableSelect } from "../../components"
+import { Breadcrumb, SearchableSelect } from '../../components'
 import { dependentsByPolicyId, loadDependents } from '../../data/dependents'
 import { policies, updatePolicy, init, affiliations, Policy } from '../../data/policies'
 import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
-import { goto } from "@roxi/routify"
-import { Button, TextField, IconButton, Page, Snackbar, setNotice } from "@silintl/ui-components"
+import { goto } from '@roxi/routify'
+import { Button, TextField, IconButton, Page, Snackbar, setNotice } from '@silintl/ui-components'
 
 const policyData = {} as Policy
 

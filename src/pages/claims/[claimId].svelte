@@ -33,8 +33,8 @@ $: $initialized || loadClaims()
 
 $: claim = $claims.find(clm => clm.id === claimId) || {} as Claim
 $: claimItem = claim.claim_items?.[0] || {} as ClaimItem //For now there will only be one claim_item
-$: items = $itemsByPolicyId[$user.policy_id] || []
-$: $user.policy_id && loadItems($user.policy_id)
+$: items = $itemsByPolicyId[claim.policy_id] || []
+$: claim.policy_id && loadItems(claim.policy_id)
 $: item = items.find(itm => itm.id === claimItem.item_id) || {} as PolicyItem
 $: incidentDate = formatDate(claim.incident_date)
 $: status = claim.status || ''

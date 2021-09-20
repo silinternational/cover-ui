@@ -133,6 +133,26 @@ export async function addItem(policyId: string, itemData) {
 }
 
 /**
+ * Submit an item.
+ *
+ * @export
+ * @param {string} policyId -- The UUID for the applicable policy
+ * @param {string} itemId -- The UUID for the applicable policy item
+ * @return {Object} 
+ */
+export async function submitItem(policyId: string, itemId: string) {
+  const urlPath = `items/${itemId}/submit`
+  start(urlPath)
+
+  await CREATE<PolicyItem>(urlPath)
+
+  await loadItems(policyId)
+
+  stop(urlPath)
+}
+
+
+/**
  * Update an item.
  *
  * @export

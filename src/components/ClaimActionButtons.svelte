@@ -7,12 +7,20 @@ export let claim = {} as Claim
 
 const dispatch = createEventDispatcher()
 
+let status: string
+$: status = claim.status
+
+let isEditable: boolean = false
+$: isEditable = (status !== 'Approved') && (status !== 'Denied') && (status !== 'Paid')
+
 const onEditClaim = () => dispatch('edit')
 const onSubmitClaim = () => dispatch('submit')
 </script>
 
-<Button on:click={onEditClaim} outlined>Edit claim</Button>
+{#if isEditable}
+  <Button on:click={onEditClaim} outlined>Edit claim</Button>
+{/if}
 
-{#if claim.status === 'Draft' }
+{#if status === 'Draft' || status === 'Receipt'}
   <Button raised on:click={onSubmitClaim}>Submit claim</Button>
 {/if}

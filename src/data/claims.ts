@@ -7,7 +7,7 @@ import { writable } from "svelte/store"
 export type PayoutOption = 'Repair' | 'Replacement' | 'FMV' | 'FixedFraction';
 export type ClaimItemStatus = 'Pending' | 'Approved' | 'Denied';
 export type ClaimIncidentTypeName = string; // dynamically defined by the claim-incident-types endpoint
-export type ClaimStatus = 'Draft' | 'Pending' | 'Approved' | 'Denied';
+export type ClaimStatus = 'Draft' | 'Review1' | 'Review2' | 'Review3' | 'Revision' | 'Receipt' | 'Approved' | 'Paid' | 'Denied';
 export type ClaimFilePurpose = 'Receipt' | 'Evidence of FMV' | 'Repair Estimate'
 
 export type ClaimFile = {
@@ -60,6 +60,7 @@ export type Claim = {
   review_date: string /*Date*/;
   reviewer_id: string;
   status: ClaimStatus;
+  status_reason: string;
   total_payout: number;
 }
 
@@ -132,11 +133,11 @@ export const pending: State = {
   title: 'Awaiting review',
 }
 export const states: { [stateName: string]: State} = {
-  Message: {
+  Revision: {
     icon: 'chat',
     color: '--mdc-theme-primary',
     bgColor: '--mdc-theme-primary-header-bg',
-    title: 'From ',
+    title: '',
   },
   Draft: {
     icon: 'edit',
@@ -146,25 +147,24 @@ export const states: { [stateName: string]: State} = {
   },
   Draft2: warning,
   Pending: pending,
+  Receipt: success,
+  Receipt2: warning,
   Review1: pending,
-  Needs_repair_receipt: success,
-  Needs_repair_receipt2: warning,
-  Needs_replace_receipt: success,
-  Needs_replace_receipt2: warning,
+  Review2: pending,
+  Review3: pending,
   Denied: {
     icon: 'remove_circle',
     color: '--mdc-theme-status-error',
     bgColor: '--mdc-theme-status-error-bg',
     title: 'Denied',
   },
-  Approved: success,
-  Payout: {
+  Approved: {
     icon: 'paid',
     color: '--mdc-theme-status-success',
     bgColor: '--mdc-theme-status-success-bg',
     title: 'Approved for payout',
   },
-  Complete: {
+  Paid: {
     icon: 'paid',
     color: '--mdc-theme-status-success',
     bgColor: '--mdc-theme-status-success-bg',
@@ -302,7 +302,7 @@ export async function submitClaim(claimId: string) {
     replace_actual: claimItemData.replaceActual,
   }
 
-  await UPDATE<ClaimItem>(`claimitems/${claimItemId}`, parsedData)
+  await UPDATE<ClaimItem>(`claim-items/${claimItemId}`, parsedData)
 
   stop(claimItemId)
 }

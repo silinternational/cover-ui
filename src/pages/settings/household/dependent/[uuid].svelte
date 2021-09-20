@@ -21,20 +21,22 @@ $: dependents = $dependentsByPolicyId[policyId] || []
 $: dependent = dependents.find(d => uuid && (d.id === uuid))
 
 const onCancel = () => {
-  $goto('../../settings')
+  $goto('/settings/household')
 }
 const onRemove = async event => {
   const dependentId = event.detail
   await deleteDependent(policyId, dependentId)
-  $goto('../../settings')
+  $goto('/settings/household')
 }
 const onSubmit = async event => {
   const formData = event.detail
   await updateDependent(policyId, formData.id, formData)
-  $goto('../../settings')
+  $goto('/settings/household')
 }
 </script>
 
 <Page>
-  <DependentForm {dependent} on:cancel={onCancel} on:remove={onRemove} on:submit={onSubmit} />
+  {#if dependent}
+    <DependentForm {dependent} on:cancel={onCancel} on:remove={onRemove} on:submit={onSubmit} />
+  {/if}
 </Page>

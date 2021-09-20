@@ -6,12 +6,12 @@ import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
 const onCancel = () => {
-  $goto('../settings')
+  $goto('/settings/household')
 }
 const onSubmit = async event => {
   const formData = event.detail
   await addDependent($user.policy_id, formData)
-  $goto('../settings')
+  $goto('/settings/household')
 }
 </script>
 

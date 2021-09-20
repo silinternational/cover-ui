@@ -104,7 +104,6 @@ export type UpdateClaimItemRequestBody = {
   // TODO uncomment when fields are available
   // fmv: number;
   // is_repairable: boolean;
-  // item_id: string;
   // payout_option: PayoutOption;
   // repair_estimate: number;
   // replace_estimate: number;
@@ -307,7 +306,6 @@ export async function submitClaim(claimId: string) {
   const parsedData: UpdateClaimItemRequestBody = {
     // fmv: convertToCents(claimItemData.fairMarketValueUSD),
     // is_repairable: claimItemData.isRepairable,
-    // item_id: claimItemData.itemId,
     // payout_option: claimItemData.payoutOption,
     // repair_estimate: convertToCents(claimItemData.repairEstimateUSD),
     // replace_estimate: convertToCents(claimItemData.replaceEstimateUSD),

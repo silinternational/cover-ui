@@ -1,10 +1,10 @@
 <script lang="ts">
 import user from '../authn/user.js'
-import { Menu, ClaimCards, Row } from '../components/'
-import { isLoadingById } from '../components/progress/index'
+import { Menu, ClaimCards, Row, Breadcrumb } from '../components/'
+import { isLoadingById } from '../components/progress'
 import { claims, loadClaims } from '../data/claims.js'
-import { itemsByPolicyId, loadItems } from '../data/items.js'
-import { loadPolicies } from '../data/policies.js'
+import { itemsByPolicyId, loadItems } from '../data/items'
+import { loadPolicies } from '../data/policies'
 import { formatMoney } from '../helpers/money'
 import { goto } from '@roxi/routify'
 import { Checkbox, Page, Datatable } from '@silintl/ui-components'
@@ -79,7 +79,8 @@ const onEditClaim = event => {
 }
 </style>
 
-<Page loading={isLoadingById($user.policy_id)} layout="grid">   
+<Page loading={isLoadingById($user.policy_id)} layout="grid">
+  <Breadcrumb />
   <Row cols={'12'}>
     <ClaimCards claims={$claims} {items} on:edit-claim={onEditClaim} />
   </Row>

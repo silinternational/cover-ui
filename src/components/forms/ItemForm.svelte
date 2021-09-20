@@ -1,7 +1,7 @@
 <script lang="ts">
 import { ConvertCurrencyLink, Description, MoneyInput } from '../../components'
 import { dependentsByPolicyId, loadDependents } from '../../data/dependents.js'
-import type { PolicyItem } from '../../data/items'
+import type { ItemCoverageStatus, PolicyItem } from '../../data/items'
 import { categories, init, initialized as catItemsInitialized } from '../../data/itemCategories'
 import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
 import { Button, Form, Select, TextArea, TextField } from '@silintl/ui-components'
@@ -18,7 +18,7 @@ let categoryId = ''
 let country = ''
 let marketValueUSD = ''
 let coverageStartDate = ''
-let coverageStatus = 'Draft'
+let coverageStatus: ItemCoverageStatus = 'Pending'
 let itemDescription = ''
 let inStorage = false
 let make = ''
@@ -85,7 +85,8 @@ const onSubmit = () => {
   dispatch('submit', getFormData())
 }
 const saveForLater = () => {
-  dispatch('save-for-later', getFormData())
+  coverageStatus = 'Draft'
+  // then onSubmit is automatically called by the form
 }
 const setInitialValues = (item) => {
   categoryId = item.category?.id || categoryId

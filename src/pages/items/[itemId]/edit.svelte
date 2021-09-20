@@ -8,35 +8,20 @@ import { Page } from '@silintl/ui-components'
 
 export let itemId: string
 
-const breadcrumbLinks = [
-  {
-    name: "Items",
-    url: "/items",
-  },
-  // TODO: make this fetch the name of the item and have that as the name 
-  {
-    name: "This Item",
-    url: `/items/${itemId}`
-  },
-  {
-    name: "Edit",
-    url: `/items/${itemId}/edit`
-  }
-]
-
 $: policyId = $user.policy_id
 $: policyId && loadItems(policyId)
 $: items = $itemsByPolicyId[policyId] || []
 $: item = items.find(anItem => anItem.id === itemId) || {} as PolicyItem
+$: itemName = item.name || ''
+
+// Dynamic breadcrumbs data:
+const itemsBreadcrumb = { name: 'Items', url: '/items' }
+$: thisItemBreadcrumb = { name: itemName || 'This item', url: `/items/${itemId}` }
+const editBreadcrumb =   { name: "Edit", url: `/items/${itemId}/edit` }
+$: breadcrumbLinks = [itemsBreadcrumb, thisItemBreadcrumb, editBreadcrumb]
 
 const onSubmit = async event => {
   await updateItem(policyId, itemId, event.detail)
-  $goto(`/items/${itemId}`)
-}
-const onSaveForLater = async event => {
-  /* @todo Save this as an item draft. */
-  console.log('Save-for-later form data', event.detail)
-
   $goto(`/items/${itemId}`)
 }
 </script>
@@ -52,6 +37,6 @@ const onSaveForLater = async event => {
   <!-- @todo Handle situations where the user isn't allowed to edit this item (if any). -->
   <Page>
     <Breadcrumb links={breadcrumbLinks} />
-    <ItemForm {item} {policyId} on:submit={onSubmit} on:save-for-later={onSaveForLater} />
+    <ItemForm {item} {policyId} on:submit={onSubmit} />
   </Page>
 {/if}

@@ -12,15 +12,9 @@ const onSubmit = async event => {
 
   $goto('/home')
 }
-const onSaveForLater = async event => {
-  /* @todo Save this as an item draft. */
-  console.log('Save-for-later form data', event.detail)
-  
-  $goto('/home')
-}
 </script>
 
 <Page>
   <Breadcrumb />
-  <ItemForm {policyId} on:submit={onSubmit} on:save-for-later={onSaveForLater} />
+  <ItemForm {policyId} on:submit={onSubmit} />
 </Page>

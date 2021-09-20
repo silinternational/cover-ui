@@ -4,7 +4,7 @@ import App from './App.svelte'
 import AppFooter from './AppFooter.svelte'
 import Banner from './Banner.svelte'
 import Breadcrumb from './Breadcrumb.svelte'
-import ClaimActionButtons from './ClaimActionButtons.svelte'
+import ClaimActions from './ClaimActions.svelte'
 import ClaimCard from './ClaimCard.svelte'
 import ClaimCards from './ClaimCards.svelte'
 import ClaimForm from './forms/ClaimForm.svelte'
@@ -29,7 +29,7 @@ export {
   AppFooter,
   Banner,
   Breadcrumb,
-  ClaimActionButtons,
+  ClaimActions,
   ClaimForm,
   ConvertCurrencyLink,
   DateInput,

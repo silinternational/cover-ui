@@ -2,7 +2,7 @@
 import user from '../../authn/user.js'
 import {
   Banner,
-  ClaimActionButtons,
+  ClaimActions,
   ClaimBanner,
   ConvertCurrencyLink,
   FileDropArea,
@@ -174,7 +174,7 @@ function onDeleted(event) {
     {/if}
 
     <p>
-      <ClaimActionButtons {claim} on:edit={editClaim} on:submit={onSubmit} />
+      <ClaimActions {claim} on:edit={editClaim} on:submit={onSubmit} />
     </p>
 
     {#if needsReceipt}

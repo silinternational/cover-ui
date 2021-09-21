@@ -1,16 +1,16 @@
 <script lang="ts">
-import { createEventDispatcher } from "svelte"
+import { createEventDispatcher } from 'svelte'
 
 export let raised = false
 export let outlined = false
 export let uploading = false
 export let mimeType = 'application/pdf,image/*'
 
-let fileInput = {}
+let fileInput = {} as any
 
 let highlighted = false
 
-const dispatch = createEventDispatcher()
+const dispatch = createEventDispatcher<{upload: FormData}>()
 
 function highlight() {
   highlighted = true
@@ -29,7 +29,7 @@ function handleDrop(e) {
   handleFiles(files)
 }
 
-function handleFiles(files) {
+function handleFiles(files: File[]) {
   if(! uploading) {
     uploading = true
     files = [...files]  //turns files into an array so forEach works
@@ -37,7 +37,7 @@ function handleFiles(files) {
   }
 }
 
-function uploadFile(file) {
+function uploadFile(file: File) {
   const formData = new FormData()
 
   formData.append('file', file)

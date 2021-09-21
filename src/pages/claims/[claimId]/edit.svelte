@@ -9,22 +9,6 @@ import { Page } from '@silintl/ui-components'
 
 export let claimId: string
 
-const breadcrumbLinks = [
-  {
-    name: "Claims",
-    url: "/claims",
-  },
-  // TODO: make this fetch the name of the item and have that as the name 
-  {
-    name: "This Claim",
-    url: `/claims/${claimId}`
-  },
-  {
-    name: "Edit",
-    url: `/claims/${claimId}/edit`
-  }
-]
-
 $: $initialized || loadClaims()
 $: claim = $claims.find(c => c.id === claimId) || {} as Claim
 $: claimItems = claim.claim_items || []
@@ -37,6 +21,13 @@ $: claimItemId = claimItem.id
 $: $user.policy_id && loadItems($user.policy_id)
 $: items = $itemsByPolicyId[$user.policy_id] || []
 $: item = items.find(anItem => anItem.id === itemId) || {} as PolicyItem
+
+// Dynamic breadcrumbs data:
+$: claimName = `${item.name} (${claim.reference_number})`
+const claimsBreadcrumb = { name: 'Claims', url: '/claims' }
+$: thisClaimBreadcrumb = { name: claimName || 'This item', url: `/claims/${claimId}` }
+const editBreadcrumb =   { name: "Edit", url: `/claims/${claimId}/edit` }
+$: breadcrumbLinks = [claimsBreadcrumb, thisClaimBreadcrumb, editBreadcrumb]
 
 const onSubmit = async event => {
   const {claimData, claimItemData} = event.detail

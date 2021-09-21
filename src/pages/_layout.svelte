@@ -36,6 +36,11 @@ $: menuItems = [
   //   label: 'Chat',
   // },
   {
+    url: '/settings',
+    icon: 'settings',
+    label: 'Settings'
+  },
+  {
     url: '/items/new',
     icon: 'add_circle',
     label: 'Add Item',

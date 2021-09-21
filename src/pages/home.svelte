@@ -1,10 +1,10 @@
 <script lang="ts">
-import user from '../authn/user.js'
-import { Menu, ClaimCards, Row } from '../components/'
+import user from '../authn/user'
+import { Breadcrumb, Menu, ClaimCards, Row } from '../components/'
 import { isLoadingById } from '../components/progress/index'
-import { claims, loadClaims } from '../data/claims.js'
-import { itemsByPolicyId, loadItems } from '../data/items.js'
-import { loadPolicies } from '../data/policies.js'
+import { claims, loadClaims } from '../data/claims'
+import { itemsByPolicyId, loadItems } from '../data/items'
+import { loadPolicies } from '../data/policies'
 import { formatMoney } from '../helpers/money'
 import { goto } from '@roxi/routify'
 import { Checkbox, Page, Datatable } from '@silintl/ui-components'
@@ -79,7 +79,8 @@ const onEditClaim = event => {
 }
 </style>
 
-<Page loading={isLoadingById($user.policy_id)} layout="grid">   
+<Page loading={isLoadingById($user.policy_id)} layout="grid">
+  <Breadcrumb />
   <Row cols={'12'}>
     <ClaimCards claims={$claims} {items} on:edit-claim={onEditClaim} />
   </Row>
@@ -118,7 +119,7 @@ const onEditClaim = event => {
                     <path fill="currentColor" d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z" />
                   </svg>
                   <!--TODO FUTURE: make this show above the more vert icon when it is in the lower half of the page-->
-                  <div class="item-menu"><Menu bind:menuOpen={shownMenus[item.id]} menuItems="{menuItems(item.id)}" on:syncToggler={() => shownMenus[item.id] = false}/></div>
+                  <div class="item-menu"><Menu bind:menuOpen={shownMenus[item.id]} menuItems="{menuItems(item.id)}" /></div>
                 </Datatable.Data.Row.Item>
               </Datatable.Data.Row>
           {/each}

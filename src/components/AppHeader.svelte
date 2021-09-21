@@ -8,7 +8,7 @@ import user from '../authn/user'
 
 const menuItems = [
   {
-    icon: 'settings', label: 'User settings', url: '/household/settings'
+    icon: 'settings', label: 'User settings', url: '/settings/personal'
   },
   {
     icon: 'logout', label: 'Sign out', url: '/logout'
@@ -42,6 +42,11 @@ header {
 .clickable:hover {
   cursor: pointer;
 }
+
+img {
+  height: 36px;
+  width: 36px;
+}
 </style>
 <svelte:window on:resize={showOrHideDrawerButton}/>
 
@@ -61,7 +66,7 @@ header {
       {/if}
     </button>
 
-    <Menu bind:menuOpen {menuItems} on:syncToggler={() => menuOpen = false}/>
+    <Menu bind:menuOpen {menuItems} />
   </div>
 </header>
 

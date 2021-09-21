@@ -1,7 +1,7 @@
-import { CREATE, DELETE, GET, UPDATE } from "."
-import { start, stop } from "../components/progress"
-import { throwError } from "../error"
-import { writable } from "svelte/store"
+import { CREATE, DELETE, GET, UPDATE } from '.'
+import { start, stop } from '../components/progress'
+import { throwError } from '../error'
+import { writable } from 'svelte/store'
 
 export type ItemCoverageStatus = 'Draft' | 'Pending' | 'Approved' | 'Denied';
 
@@ -131,6 +131,26 @@ export async function addItem(policyId: string, itemData) {
 
   return addedItem
 }
+
+/**
+ * Submit an item.
+ *
+ * @export
+ * @param {string} policyId -- The UUID for the applicable policy
+ * @param {string} itemId -- The UUID for the applicable policy item
+ * @return {Object} 
+ */
+export async function submitItem(policyId: string, itemId: string) {
+  const urlPath = `items/${itemId}/submit`
+  start(urlPath)
+
+  await CREATE<PolicyItem>(urlPath)
+
+  await loadItems(policyId)
+
+  stop(urlPath)
+}
+
 
 /**
  * Update an item.

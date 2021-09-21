@@ -1,11 +1,11 @@
 <script lang="ts">
 import user from '../../authn/user'
-import { Breadcrumb, SearchableSelect } from "../../components"
+import { Breadcrumb, SearchableSelect } from '../../components'
 import { dependentsByPolicyId, loadDependents } from '../../data/dependents'
 import { policies, updatePolicy, init, affiliations, Policy } from '../../data/policies'
 import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
-import { goto } from "@roxi/routify"
-import { Button, TextField, IconButton, Page, Snackbar, setNotice } from "@silintl/ui-components"
+import { goto } from '@roxi/routify'
+import { Button, TextField, IconButton, Page, Snackbar, setNotice } from '@silintl/ui-components'
 
 const policyData = {} as Policy
 
@@ -77,7 +77,7 @@ const callUpdatePolicy = async (id: string, costCenter: string = undefined, affi
 }
 
 const isIdValid = sanitizedId => sanitizedId.length && sanitizedId.split('').every(digit => /[0-9]/.test(digit))
-const edit = id => $goto(`/household/settings/dependent/${id}`)
+const edit = id => $goto(`/settings/household/dependent/${id}`)
 const isYou = householdMember => householdMember.id === $user.id
 </script>
 
@@ -150,7 +150,7 @@ const isYou = householdMember => householdMember.id === $user.id
       </li>
     {/each}
   </ul>
-  <Button prependIcon="add" url="settings/dependent" outlined>Add dependent</Button>
+  <Button prependIcon="add" url="household/dependent" outlined>Add dependent</Button>
 
   <Snackbar/>
 </Page>

@@ -2,41 +2,34 @@
 import user from '../../../authn/user'
 import { Breadcrumb, ItemForm } from '../../../components'
 import { loading } from '../../../components/progress'
-import { itemsByPolicyId, loadItems, PolicyItem, updateItem } from '../../../data/items.js'
+import { itemsByPolicyId, loadItems, PolicyItem, submitItem, updateItem } from '../../../data/items'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
 export let itemId: string
 
-const breadcrumbLinks = [
-  {
-    name: "Items",
-    url: "/items",
-  },
-  // TODO: make this fetch the name of the item and have that as the name 
-  {
-    name: "This Item",
-    url: `/items/${itemId}`
-  },
-  {
-    name: "Edit",
-    url: `/items/${itemId}/edit`
-  }
-]
-
 $: policyId = $user.policy_id
 $: policyId && loadItems(policyId)
 $: items = $itemsByPolicyId[policyId] || []
 $: item = items.find(anItem => anItem.id === itemId) || {} as PolicyItem
+$: itemName = item.name || ''
+
+// Dynamic breadcrumbs data:
+const itemsBreadcrumb = { name: 'Items', url: '/items' }
+$: thisItemBreadcrumb = { name: itemName || 'This item', url: `/items/${itemId}` }
+const editBreadcrumb =   { name: "Edit", url: `/items/${itemId}/edit` }
+$: breadcrumbLinks = [itemsBreadcrumb, thisItemBreadcrumb, editBreadcrumb]
 
 const onSubmit = async event => {
   await updateItem(policyId, itemId, event.detail)
+  await submitItem(policyId, itemId)
+
   $goto(`/items/${itemId}`)
 }
-const onSaveForLater = async event => {
-  /* @todo Save this as an item draft. */
-  console.log('Save-for-later form data', event.detail)
 
+const onSaveForLater = async event => {
+  await updateItem(policyId, itemId, event.detail)
+  
   $goto(`/items/${itemId}`)
 }
 </script>

@@ -1,5 +1,4 @@
 import type { PayoutOption, ClaimItem } from '../data/claims'
-import { formatMoney } from '../helpers/money'
 
 export const deductible = .05
 export const LOSS_REASON_EVACUATION = 'Evacuation'
@@ -49,7 +48,7 @@ export const isUnrepairableOrTooExpensive = (isRepairable, repairCostIsTooHigh) 
 
 const computePayout = (...values) => {
   const filteredValues = [...values]?.filter(value => value !== undefined)
-  return formatMoney(Math.min(...filteredValues) * (1 - deductible))
+  return Math.min(...filteredValues) * (1 - deductible)
 }
 
 const computeRepairMaxPayout = (claimItem: ClaimItem, coverageAmount) => computePayout(claimItem.repair_actual || claimItem.repair_estimate, coverageAmount, claimItem.fmv)

@@ -158,7 +158,7 @@ function onDeleted(event) {
       </p>
       <p>
         <b>Maximum payout (if approved)</b><br />
-        {maximumPayout}
+        {formatMoney(maximumPayout)}
       </p>
 
       {#if showImg}

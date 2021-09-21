@@ -1,7 +1,7 @@
 <script lang="ts">
 import user from '../../authn/user'
 import { Breadcrumb, ItemForm } from '../../components'
-import { addItem } from '../../data/items'
+import { addItem, submitItem } from '../../data/items'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 

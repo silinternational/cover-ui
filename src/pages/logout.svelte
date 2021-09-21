@@ -6,7 +6,5 @@ logout()
 </script>
 
 <Page>
-  <p>
-    Logging you out...
-  </p>
+  <p>Logging you out...</p>
 </Page>

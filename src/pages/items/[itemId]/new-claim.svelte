@@ -11,40 +11,40 @@ export let itemId: string
 
 const breadcrumbLinks = [
   {
-    name: "Items",
-    url: "/items",
+    name: 'Items',
+    url: '/items',
   },
-  // TODO: make this fetch the name of the item and have that as the name 
+  // TODO: make this fetch the name of the item and have that as the name
   {
-    name: "This Item",
-    url: `/items/${itemId}`
+    name: 'This Item',
+    url: `/items/${itemId}`,
   },
   {
-    name: "New Claim",
-    url: `/items/${itemId}/new-claim`
-  }
+    name: 'New Claim',
+    url: `/items/${itemId}/new-claim`,
+  },
 ]
 
 $: $user.policy_id && loadItems($user.policy_id)
 $: items = $itemsByPolicyId[$user.policy_id] || []
-$: item = items.find(itm => itm.id === itemId) || {} as PolicyItem
+$: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
 
 $: $initialized || loadClaims()
-$: existingClaim = $claims.find(claim => isItemIdOnClaim(itemId, claim)) || {} as Claim
+$: existingClaim = $claims.find((claim) => isItemIdOnClaim(itemId, claim)) || ({} as Claim)
 $: claimExists = !!existingClaim.id
 
 const isItemIdOnClaim = (itemId, claim) => {
   const claimItems = claim.claim_items || []
-  return claimItems.some(claimItem => claimItem.item_id === itemId)
+  return claimItems.some((claimItem) => claimItem.item_id === itemId)
 }
-const onSubmit = async event => {
+const onSubmit = async (event) => {
   const { claimData, claimItemData } = event.detail
-  
+
   // TODO - Handle situations where the claim is created, but the claim-item
   // is rejected. We could potentially hold the claim here, and if passed in
   // the form could send the Claim ID on submit. If we receive a Claim ID here,
   // use it. Otherwise, create a new claim. */
-  
+
   const claim = await createClaim(item, claimData)
   await createClaimItem(claim.id, claimItemData)
   $goto(`/claims/${claim.id}`)
@@ -53,22 +53,19 @@ const onSubmit = async event => {
 
 <Page>
   <Breadcrumb links={breadcrumbLinks} />
-  
+
   <!--TODO: add transitions but not after submit-->
-  {#if $loading }
+  {#if $loading}
     <p>Loading...</p>
-  {:else}
-    {#if !item.id }
-      <p>
-        We could not find that item. Please <a href="/items">go back</a> and
-        select an item from the list.
-      </p>
-    {:else if claimExists }
-      <p>
-        It looks like there is already a claim for that item. Please
-        <a href="/claims/{existingClaim.id}">click here</a> to see its details.
-      </p>
-    {/if}
+  {:else if !item.id}
+    <p>
+      We could not find that item. Please <a href="/items">go back</a> and select an item from the list.
+    </p>
+  {:else if claimExists}
+    <p>
+      It looks like there is already a claim for that item. Please
+      <a href="/claims/{existingClaim.id}">click here</a> to see its details.
+    </p>
   {/if}
 
   <ClaimForm {item} on:submit={onSubmit} />

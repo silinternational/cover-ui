@@ -4,26 +4,26 @@ import { GET, UPDATE } from '../data'
 type UserAppRole = 'User' | 'Steward' | 'Signator' | 'Admin'
 
 export type User = {
-  app_role: UserAppRole;
-  email: string;
-  email_override: string;
-  first_name: string;
-  id: string;
-  last_login_utc: string /*Date*/;
-  last_name: string;
-  location: string;
-  name: string;
+  app_role: UserAppRole
+  email: string
+  email_override: string
+  first_name: string
+  id: string
+  last_login_utc: string /*Date*/
+  last_name: string
+  location: string
+  name: string
   photo_file: {
-    content_type: string;
-    created_by_id: string;
-    id: string;
-    name: string;
-    size: number;
-    url: string;
-    url_expiration: string /*Date*/;
-  },
-  photo_file_id: string;
-  policy_id: string;
+    content_type: string
+    created_by_id: string
+    id: string
+    name: string
+    size: number
+    url: string
+    url_expiration: string /*Date*/
+  }
+  photo_file_id: string
+  policy_id: string
 }
 
 const user = writable<User>({} as User)
@@ -39,7 +39,7 @@ export async function updateUser(data: User) {
   // TODO Uncomment when update user enpoint is available
   // const updatedUser = await UPDATE<User>(`users/${data.id}`, data)
   // user.set(updatedUser);
-  
+
   user.set(data)
 }
 

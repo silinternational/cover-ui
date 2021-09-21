@@ -10,13 +10,7 @@ import {
   PAYOUT_OPTION_REPAIR,
   PAYOUT_OPTION_REPLACE,
 } from '../../business-rules/claim-payout-amount'
-import {
-  ConvertCurrencyLink,
-  Description,
-  RadioOptions,
-  DateInput,
-  MoneyInput,
-} from '../../components'
+import { ConvertCurrencyLink, Description, RadioOptions, DateInput, MoneyInput } from '../../components'
 import { claimIncidentTypes, loadClaimIncidentTypes } from '../../data/claim-incident-types'
 import type { Claim, ClaimItem } from '../../data/claims'
 import type { PolicyItem } from '../../data/items'
@@ -30,8 +24,8 @@ const dispatch = createEventDispatcher()
 
 const todayDateString = new Date().toISOString().split('T')[0]
 const deductible = 0.05
-const regularFraction = (1 - deductible)
-const evacuationFraction = 2/3
+const regularFraction = 1 - deductible
+const evacuationFraction = 2 / 3
 const repairableOptions = [
   {
     label: 'Repairable',
@@ -39,8 +33,8 @@ const repairableOptions = [
   },
   {
     label: 'Not Repairable',
-    value: 'not_repairable'
-  }
+    value: 'not_repairable',
+  },
 ]
 const payoutOptions = [
   {
@@ -84,25 +78,25 @@ $: $claimIncidentTypes.length || loadClaimIncidentTypes()
 
 // Find applicable data from component props.
 $: claimItems = claim.claim_items || []
-$: claimItem = claimItems.find(entry => entry.item_id === item.id) || {} as ClaimItem
+$: claimItem = claimItems.find((entry) => entry.item_id === item.id) || ({} as ClaimItem)
 
 // Define rules for reactive variables.
-$: isEvacuation = (lossReason === LOSS_REASON_EVACUATION)
+$: isEvacuation = lossReason === LOSS_REASON_EVACUATION
 $: potentiallyRepairable = isPotentiallyRepairable($claimIncidentTypes, lossReason)
 $: isRepairable = calculateIsRepairable(potentiallyRepairable, repairableSelection)
 $: repairCostIsTooHigh = isRepairCostTooHigh(repairEstimateUSD, fairMarketValueUSD)
 $: unrepairableOrTooExpensive = isUnrepairableOrTooExpensive(isRepairable, repairCostIsTooHigh)
-$: shouldAskReplaceOrFMV = (!isEvacuation && (unrepairableOrTooExpensive === true))
+$: shouldAskReplaceOrFMV = !isEvacuation && unrepairableOrTooExpensive === true
 $: shouldAskIfRepairable = !!(potentiallyRepairable && lossReason)
 $: shouldAskForFMV = isFairMarketValueNeeded(isRepairable, payoutOption)
-$: (payoutOption !== PAYOUT_OPTION_REPLACE) && unSetReplaceEstimate()
+$: payoutOption !== PAYOUT_OPTION_REPLACE && unSetReplaceEstimate()
 $: !shouldAskReplaceOrFMV && unSetPayoutOption()
 $: !shouldAskIfRepairable && unSetRepairableSelection()
 $: !shouldAskForFMV && unSetFairMarketValue()
 $: !isRepairable && unSetRepairEstimate()
 
 // Calculate dynamic options for radio-button prompts.
-$: lossReasonOptions = $claimIncidentTypes.map(({name}) => ({ label: name, value: name }))
+$: lossReasonOptions = $claimIncidentTypes.map(({ name }) => ({ label: name, value: name }))
 
 // TODO: get accountable person from item
 // TODO: add reimbursed value
@@ -114,13 +108,14 @@ const calculateIsRepairable = (potentiallyRepairable, repairableSelection) => {
   if (!repairableSelection) {
     return undefined
   }
-  return (repairableSelection === 'repairable')
+  return repairableSelection === 'repairable'
 }
 const determinePayoutOption = (isEvacuation, repairCostIsTooHigh, selectedPayoutOption) => {
   if (isEvacuation) {
     return PAYOUT_OPTION_FIXED_FRACTION
   }
-  if (repairCostIsTooHigh === false) { // ... not merely falsy, like `null` or `undefined`
+  if (repairCostIsTooHigh === false) {
+    // ... not merely falsy, like `null` or `undefined`
     return PAYOUT_OPTION_REPAIR
   }
   return selectedPayoutOption
@@ -149,7 +144,7 @@ const setInitialValues = (claim, claimItem) => {
   lossReason = claim.incident_type || lossReason
   situationDescription = claim.incident_description || situationDescription
   if (claimItem.is_repairable !== undefined) {
-    repairableSelection = (claimItem.is_repairable ? 'repairable' : 'not_repairable')
+    repairableSelection = claimItem.is_repairable ? 'repairable' : 'not_repairable'
   }
   payoutOption = claimItem.payout_option || payoutOption
 }
@@ -185,13 +180,13 @@ const unSetReplaceEstimate = () => {
       <span class="ml-1">What happened?</span>
       <TextArea class="mt-1" label="Describe the situation" bind:value={situationDescription} rows="4" />
     </p>
-    {#if shouldAskIfRepairable }
+    {#if shouldAskIfRepairable}
       <div>
         <RadioOptions name="repairableSelection" options={repairableOptions} bind:value={repairableSelection} />
       </div>
     {/if}
-    
-    {#if isRepairable }
+
+    {#if isRepairable}
       <p>
         <MoneyInput label="Repair estimate (USD)" bind:value={repairEstimateUSD} />
         <Description>
@@ -208,13 +203,13 @@ const unSetReplaceEstimate = () => {
         </Description>
       </p>
     {/if}
-    
-    {#if shouldAskReplaceOrFMV }
+
+    {#if shouldAskReplaceOrFMV}
       <div>
         <p>Payout options</p>
         <RadioOptions name="payoutOption" options={payoutOptions} bind:value={payoutOption} />
       </div>
-      {#if payoutOption === PAYOUT_OPTION_REPLACE }
+      {#if payoutOption === PAYOUT_OPTION_REPLACE}
         <p>
           <MoneyInput label="Replacement estimate (USD)" bind:value={replaceEstimateUSD} />
           <Description>
@@ -226,7 +221,7 @@ const unSetReplaceEstimate = () => {
       {/if}
     {/if}
 
-    {#if (isRepairable === false) && (payoutOption === PAYOUT_OPTION_FMV) }
+    {#if isRepairable === false && payoutOption === PAYOUT_OPTION_FMV}
       <p>
         <!-- If we know it's not repairable, position this AFTER the "Payout options" prompt. -->
         <MoneyInput label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
@@ -236,7 +231,7 @@ const unSetReplaceEstimate = () => {
       </p>
     {/if}
 
-    {#if isEvacuation }
+    {#if isEvacuation}
       <div>
         <p>We are sorry you are experiencing this situation and will keep you in our prayers.</p>
         <p>We will reach out to SIL HR to get more context about this situation.</p>

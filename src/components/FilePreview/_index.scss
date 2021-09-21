@@ -1,8 +1,8 @@
-@use "@material/button";
+@use '@material/button';
 
 .delete-button {
   --mdc-theme-primary: hsla(213, 26%, 23%, 1);
-  
+
   @include button.ink-color(hsla(0, 0%, 100%, 1));
 
   border: 2px solid white;

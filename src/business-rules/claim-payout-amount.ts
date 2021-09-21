@@ -8,7 +8,7 @@ export const PAYOUT_OPTION_REPAIR: PayoutOption = 'Repair'
 export const PAYOUT_OPTION_REPLACE: PayoutOption = 'Replacement'
 
 export const isFairMarketValueNeeded = (isRepairable, payoutOption) => {
-  return isRepairable || (payoutOption === PAYOUT_OPTION_FMV)
+  return isRepairable || payoutOption === PAYOUT_OPTION_FMV
 }
 
 export const isPotentiallyRepairable = (claimIncidentTypes, incidentTypeName) => {
@@ -18,8 +18,8 @@ export const isPotentiallyRepairable = (claimIncidentTypes, incidentTypeName) =>
   if (claimIncidentTypes.length < 1) {
     return true
   }
-  const repairableIncidentTypes = claimIncidentTypes.filter(type => type.is_repairable)
-  return repairableIncidentTypes.some(type => type.name === incidentTypeName)
+  const repairableIncidentTypes = claimIncidentTypes.filter((type) => type.is_repairable)
+  return repairableIncidentTypes.some((type) => type.name === incidentTypeName)
 }
 
 export const isRepairCostTooHigh = (repairEstimateUSD, fairMarketValueUSD) => {
@@ -37,10 +37,10 @@ export const isUnrepairableOrTooExpensive = (isRepairable, repairCostIsTooHigh) 
   if (isRepairable === false) {
     return true
   }
-  
-  if ((isRepairable === undefined) || (repairCostIsTooHigh === undefined)) {
+
+  if (isRepairable === undefined || repairCostIsTooHigh === undefined) {
     return undefined
   }
-  
+
   return repairCostIsTooHigh
 }

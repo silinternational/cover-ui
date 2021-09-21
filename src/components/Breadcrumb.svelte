@@ -1,6 +1,6 @@
 <script lang="ts">
-import { throwError } from "../error"
-import { goto, url } from "@roxi/routify";
+import { throwError } from '../error'
+import { goto, url } from '@roxi/routify'
 
 export let links = []
 export let hasHome = true

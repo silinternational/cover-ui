@@ -2,8 +2,8 @@
 import user from '../../../authn/user'
 import { Breadcrumb, ClaimForm } from '../../../components'
 import { loading } from '../../../components/progress'
-import { Claim, ClaimItem, claims, initialized, loadClaims, updateClaim } from '../../../data/claims.js'
-import { itemsByPolicyId, loadItems, PolicyItem } from '../../../data/items.js'
+import { Claim, ClaimItem, claims, initialized, loadClaims, updateClaim } from '../../../data/claims'
+import { itemsByPolicyId, loadItems, PolicyItem } from '../../../data/items'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 

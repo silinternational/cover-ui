@@ -1,8 +1,8 @@
 <script lang="ts">
-import user from '../authn/user.js'
+import user from '../authn/user'
 import { Menu, ClaimCards, Row } from '../components/'
 import { isLoadingById } from '../components/progress/index'
-import { claims, loadClaims } from '../data/claims.js'
+import { claims, loadClaims } from '../data/claims'
 import { itemsByPolicyId, loadItems } from '../data/items.js'
 import { loadPolicies } from '../data/policies.js'
 import { formatMoney } from '../helpers/money'

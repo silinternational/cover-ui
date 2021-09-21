@@ -1,6 +1,6 @@
 <script lang="ts">
 import { ConvertCurrencyLink, Description, MoneyInput } from '../../components'
-import { dependentsByPolicyId, loadDependents } from '../../data/dependents.js'
+import { dependentsByPolicyId, loadDependents } from '../../data/dependents'
 import type { PolicyItem } from '../../data/items'
 import { categories, init, initialized as catItemsInitialized } from '../../data/itemCategories'
 import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'

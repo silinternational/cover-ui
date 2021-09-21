@@ -1,6 +1,6 @@
-import { CREATE, GET } from "."
-import { writable } from "svelte/store"
-import { start, stop } from "../components/progress"
+import { CREATE, GET } from '.'
+import { writable } from 'svelte/store'
+import { start, stop } from '../components/progress'
 
 export type PolicyDependent = {
   child_birth_year: number;

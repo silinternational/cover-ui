@@ -1,8 +1,8 @@
 <script lang="ts">
-import user from '../../authn/user.js'
+import user from '../../authn/user'
 import { Banner, Breadcrumb, ClaimBanner, Row } from '../../components'
-import { day } from '../../components/const.js'
-import { formatDate } from '../../components/dates.js'
+import { day } from '../../components/const'
+import { formatDate } from '../../components/dates'
 import { loading } from '../../components/progress'
 import { itemsByPolicyId, loadItems, Policy, PolicyItem } from '../../data/items.js'
 import { init, policies } from '../../data/policies'

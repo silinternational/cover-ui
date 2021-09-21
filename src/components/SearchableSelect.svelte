@@ -1,6 +1,6 @@
 <script lang="ts">
-import { generateRandomID } from "@silintl/ui-components/random"
-import { createEventDispatcher } from "svelte"
+import { generateRandomID } from '@silintl/ui-components/random'
+import { createEventDispatcher } from 'svelte'
 
 export let options = {}
 export let choice = ''

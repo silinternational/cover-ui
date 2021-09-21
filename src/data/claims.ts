@@ -101,7 +101,6 @@ export type ClaimsFileAttachResponseBody = {
 }
 
 export type UpdateClaimItemRequestBody = {
-  // TODO uncomment when fields are available
   fmv: number;
   is_repairable: boolean;
   payout_option: PayoutOption;

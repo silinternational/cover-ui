@@ -19,6 +19,11 @@ const onSaveForLater = async event => {
 
   $goto('/home') 
 }
+
+
+function submitItem(policyId: string,id: string) {
+throw new Error('Function not implemented.');
+}
 </script>
 
 <Page>

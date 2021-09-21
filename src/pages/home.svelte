@@ -1,6 +1,6 @@
 <script lang="ts">
 import user from '../authn/user'
-import { Menu, ClaimCards, Row } from '../components/'
+import { Breadcrumb, Menu, ClaimCards, Row } from '../components/'
 import { isLoadingById } from '../components/progress/index'
 import { claims, loadClaims } from '../data/claims'
 import { itemsByPolicyId, loadItems } from '../data/items'

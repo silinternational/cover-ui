@@ -32,7 +32,7 @@ $: claimItems = claim.claim_items || []
 /** @todo Update this when claims can have multiple items. */
 $: claimItem = claimItems[0] || {} as ClaimItem
 $: itemId = claimItem.item_id
-$: ClaimItemId = claimItem.id
+$: claimItemId = claimItem.id
 
 $: $user.policy_id && loadItems($user.policy_id)
 $: items = $itemsByPolicyId[$user.policy_id] || []
@@ -41,14 +41,8 @@ $: item = items.find(anItem => anItem.id === itemId) || {} as PolicyItem
 const onSubmit = async event => {
   const {claimData, claimItemData} = event.detail
 
-  const editedClaimItemData = {
-    ...claimItemData,
-    repairActual: 0,
-    replaceActual: 0,
-  }
-  
   await updateClaim(claimId, claimData)
-  await updateClaimItem(ClaimItemId, editedClaimItemData)
+  await updateClaimItem(claimItemId, claimItemData)
   $goto(`/claims/${claimId}`)
 }
 </script>

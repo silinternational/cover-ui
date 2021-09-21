@@ -59,13 +59,11 @@ const computeReplaceMaxPayout = (claimItem: ClaimItem, coverageAmount) => comput
 const computeCashMaxPayout = (claimItem: ClaimItem, coverageAmount) => computePayout(coverageAmount, claimItem.fmv)
 
 export const determineMaxPayout = (payoutOption, claimItem: ClaimItem, coverageAmount) => {
-  if(payoutOption === PAYOUT_OPTION_REPAIR) {
-    return computeRepairMaxPayout(claimItem, coverageAmount)
-  } else if(payoutOption === PAYOUT_OPTION_REPLACE) {
-    return computeReplaceMaxPayout(claimItem, coverageAmount)
-  } else if(payoutOption === PAYOUT_OPTION_FMV) {
-    return computeCashMaxPayout(claimItem, coverageAmount)
-  } else if(payoutOption === PAYOUT_OPTION_FIXED_FRACTION) {
-    return formatMoney(coverageAmount * 2/3) || ''
+  const calculationsByPayoutOption = {
+    PAYOUT_OPTION_REPAIR: () => computeRepairMaxPayout(claimItem, coverageAmount),
+    PAYOUT_OPTION_REPLACE: () => computeReplaceMaxPayout(claimItem, coverageAmount),
+    PAYOUT_OPTION_FMV: () => computeCashMaxPayout(claimItem, coverageAmount),
+    PAYOUT_OPTION_FIXED_FRACTION: () => formatMoney(coverageAmount * 2/3) || '',
   }
+  return calculationsByPayoutOption[payoutOption]()
 }

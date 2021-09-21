@@ -8,7 +8,7 @@ import user from '../authn/user'
 
 const menuItems = [
   {
-    icon: 'settings', label: 'User settings', url: '/household/settings'
+    icon: 'settings', label: 'User settings', url: '/settings/personal'
   },
   {
     icon: 'logout', label: 'Sign out', url: '/logout'

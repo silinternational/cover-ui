@@ -101,6 +101,11 @@ export type ClaimsFileAttachResponseBody = {
 }
 
 export type UpdateClaimItemRequestBody = {
+  fmv: number;
+  is_repairable: boolean;
+  payout_option: PayoutOption;
+  repair_estimate: number;
+  replace_estimate: number;
   repair_actual: number;
   replace_actual: number;
 }
@@ -246,11 +251,10 @@ export const createClaimItem = async (claimId: string, claimItemData) => {
 export async function updateClaim(claimId: string, newClaimData) {
   start(claimId)
 
-  //TODO make sure these properties are what is used in update claim form when it exists
   const parsedData: UpdateClaimRequestBody = {
-    incident_date: newClaimData.incident_date,
-    incident_type: newClaimData.incident_type,
-    incident_description: newClaimData.incident_description,
+    incident_date: new Date(newClaimData.lostDate).toISOString(),
+    incident_type: newClaimData.lossReason,
+    incident_description: newClaimData.situationDescription,
   }
 
   const updatedClaim = await UPDATE<Claim>(`claims/${claimId}`, parsedData)
@@ -298,8 +302,13 @@ export async function submitClaim(claimId: string) {
   start(claimItemId)
 
   const parsedData: UpdateClaimItemRequestBody = {
-    repair_actual: claimItemData.repairActual,
-    replace_actual: claimItemData.replaceActual,
+    fmv: convertToCents(claimItemData.fairMarketValueUSD),
+    is_repairable: claimItemData.isRepairable,
+    payout_option: claimItemData.payoutOption,
+    repair_estimate: convertToCents(claimItemData.repairEstimateUSD),
+    replace_estimate: convertToCents(claimItemData.replaceEstimateUSD),
+    repair_actual: convertToCents(claimItemData.repairActual),
+    replace_actual: convertToCents(claimItemData.replaceActual),
   }
 
   await UPDATE<ClaimItem>(`claim-items/${claimItemId}`, parsedData)

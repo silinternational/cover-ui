@@ -18,7 +18,7 @@ let categoryId = ''
 let country = ''
 let marketValueUSD = ''
 let coverageStartDate = ''
-let coverageStatus = ''
+let coverageStatus: ItemCoverageStatus
 let itemDescription = ''
 let inStorage = false
 let make = ''

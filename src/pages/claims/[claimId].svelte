@@ -84,15 +84,13 @@ const onPreview = event => {
 const onImgError = () => showImg = false
 
 const onBlur = () => {
-  const cents = repairOrReplacementCost * 100
-
   if (needsRepairReceipt) {
-    updatedClaimItemData.repairActual = cents
+    updatedClaimItemData.repairActual = repairOrReplacementCost
   } else if (needsReplaceReceipt) {
-    updatedClaimItemData.replaceActual = cents
+    updatedClaimItemData.replaceActual = repairOrReplacementCost
   }
 
-  claimItem.id && updateClaimItem(claimItem.id, updatedClaimItemData) //TODO, test when claimItems is no longer empty
+  claimItem.id && updateClaimItem(claimItem.id, updatedClaimItemData)
 }
 
 async function onUpload(event) {

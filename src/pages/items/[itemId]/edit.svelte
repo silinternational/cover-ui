@@ -2,7 +2,7 @@
 import user from '../../../authn/user'
 import { Breadcrumb, ItemForm } from '../../../components'
 import { loading } from '../../../components/progress'
-import { itemsByPolicyId, loadItems, PolicyItem, updateItem } from '../../../data/items.js'
+import { itemsByPolicyId, loadItems, PolicyItem, submitItem, updateItem } from '../../../data/items.js'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
@@ -22,6 +22,14 @@ $: breadcrumbLinks = [itemsBreadcrumb, thisItemBreadcrumb, editBreadcrumb]
 
 const onSubmit = async event => {
   await updateItem(policyId, itemId, event.detail)
+  await submitItem(policyId, itemId)
+
+  $goto(`/items/${itemId}`)
+}
+
+const onSaveForLater = async event => {
+  await updateItem(policyId, itemId, event.detail)
+  
   $goto(`/items/${itemId}`)
 }
 </script>
@@ -37,6 +45,6 @@ const onSubmit = async event => {
   <!-- @todo Handle situations where the user isn't allowed to edit this item (if any). -->
   <Page>
     <Breadcrumb links={breadcrumbLinks} />
-    <ItemForm {item} {policyId} on:submit={onSubmit} />
+    <ItemForm {item} {policyId} on:submit={onSubmit} on:save-for-later={onSaveForLater} />
   </Page>
 {/if}

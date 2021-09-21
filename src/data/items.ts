@@ -129,10 +129,6 @@ export async function addItem(policyId: string, itemData) {
   
   stop(urlPath)
 
-  if (itemData.shouldSubmit) {
-    await submitItem(policyId, addedItem.id)
-  }
-
   return addedItem
 }
 
@@ -199,10 +195,6 @@ export async function updateItem(policyId: string, itemId: string, itemData) {
     data[policyId] = items
     return data
   })
-
-  if (itemData.shouldSubmit) {
-    await submitItem(policyId, updatedItem.id)
-  }
 
   stop(urlPath)
   return updatedItem

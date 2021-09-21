@@ -10,7 +10,7 @@ import { createEventDispatcher } from 'svelte'
 export let item = {} as PolicyItem
 export let policyId: string = undefined
 
-const dispatch = createEventDispatcher<{ submit: any }>()
+const dispatch = createEventDispatcher<{ submit: any, 'save-for-later': any }>()
 
 // Set default values.
 let accountablePersonId = ''
@@ -26,7 +26,6 @@ let model = ''
 let shortName = ''
 let purchaseDate = ''
 let uniqueIdentifier = ''
-let shouldSubmit = false
 
 // Set initial values based on the provided item data.
 $: setInitialValues(item)
@@ -75,7 +74,6 @@ const getFormData = () => {
     shortName,
     purchaseDate,
     uniqueIdentifier,
-    shouldSubmit
   }
 }
 
@@ -86,12 +84,11 @@ const onCategorySelectPopulated = () => {
 }
 
 const onSubmit = (event: Event) => {
-  shouldSubmit = true
   dispatch('submit', getFormData())
 }
 
 const saveForLater = (event: Event) => {
-  dispatch('submit', getFormData())
+  dispatch('save-for-later', getFormData())
   event.preventDefault()
 }
 

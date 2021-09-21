@@ -8,15 +8,16 @@ import { Page } from '@silintl/ui-components'
 $: policyId = $user.policy_id
 
 const onSubmit = async event => {
-  await addItem(policyId, event.detail)
+  let item = await addItem(policyId, event.detail)
+  await submitItem(policyId, item.id)
 
   $goto('/home')
 }
+
 const onSaveForLater = async event => {
-  /* @todo Save this as an item draft. */
-  console.log('Save-for-later form data', event.detail)
-  
-  $goto('/home')
+  await addItem(policyId, event.detail)
+
+  $goto('/home') 
 }
 </script>
 

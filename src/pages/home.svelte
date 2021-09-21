@@ -79,7 +79,8 @@ const onEditClaim = event => {
 }
 </style>
 
-<Page loading={isLoadingById($user.policy_id)} layout="grid">   
+<Page loading={isLoadingById($user.policy_id)} layout="grid">
+  <Breadcrumb />
   <Row cols={'12'}>
     <ClaimCards claims={$claims} {items} on:edit-claim={onEditClaim} />
   </Row>

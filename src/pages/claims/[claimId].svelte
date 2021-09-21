@@ -1,7 +1,7 @@
 <script lang="ts">
-import user from '../../authn/user.js'
+import user from '../../authn/user'
 import { Banner, ClaimBanner, ConvertCurrencyLink, FileDropArea, FilePreview, MoneyInput, Row } from '../../components'
-import { formatDate } from '../../components/dates.js'
+import { formatDate } from '../../components/dates'
 import { upload } from '../../data'
 import { loadClaims, claims, initialized, claimsFileAttach, updateClaimItem, Claim, ClaimItem, ClaimFile, ClaimFilePurpose, PayoutOption, submitClaim } from '../../data/claims'
 import { loadItems, itemsByPolicyId, PolicyItem } from '../../data/items'

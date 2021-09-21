@@ -1,8 +1,8 @@
-import { CREATE, GET, UPDATE } from "."
-import { start, stop } from "../components/progress"
-import { convertToCents } from "../helpers/money"
-import type { PolicyItem } from "./items"
-import { writable } from "svelte/store"
+import { CREATE, GET, UPDATE } from '.'
+import { start, stop } from '../components/progress'
+import { convertToCents } from '../helpers/money'
+import type { PolicyItem } from './items'
+import { writable } from 'svelte/store'
 
 export type PayoutOption = 'Repair' | 'Replacement' | 'FMV' | 'FixedFraction';
 export type ClaimItemStatus = 'Pending' | 'Approved' | 'Denied';

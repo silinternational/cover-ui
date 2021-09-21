@@ -1,5 +1,5 @@
 <script lang="ts">
-import { createEventDispatcher } from "svelte"
+import { createEventDispatcher } from 'svelte'
 
 export let raised = false
 export let outlined = false

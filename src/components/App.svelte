@@ -4,7 +4,7 @@ import { loadUser } from '../authn/user'
 import './mdc/_index.scss'
 import t from '../i18n'
 import { parse, stringify } from 'qs'
-import { Router } from "@roxi/routify"
+import { Router } from '@roxi/routify'
 import { onMount } from 'svelte'
 import { routes } from '../../.routify/routes'
 

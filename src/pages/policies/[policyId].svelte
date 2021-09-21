@@ -1,10 +1,10 @@
 <script lang="ts">
-import type { Claim } from "../../data/claims"
+import type { Claim } from '../../data/claims'
 import { initialized, loadPolicies, policies, Policy } from '../../data/policies'
 import { formatFriendlyDate } from '../../helpers/date'
 import { formatMoney} from '../../helpers/money'
 import { Datatable, Page } from '@silintl/ui-components'
-import type { PolicyMember } from "../../data/policy-members"
+import type { PolicyMember } from '../../data/policy-members'
 
 export let policyId: string
 

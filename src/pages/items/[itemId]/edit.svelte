@@ -2,7 +2,7 @@
 import user from '../../../authn/user'
 import { Breadcrumb, ItemForm } from '../../../components'
 import { loading } from '../../../components/progress'
-import { itemsByPolicyId, loadItems, PolicyItem, updateItem } from '../../../data/items.js'
+import { itemsByPolicyId, loadItems, PolicyItem, updateItem } from '../../../data/items'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 

@@ -63,7 +63,7 @@ export const determineMaxPayout = (payoutOption, claimItem: ClaimItem, coverageA
     PAYOUT_OPTION_REPAIR: () => computeRepairMaxPayout(claimItem, coverageAmount),
     PAYOUT_OPTION_REPLACE: () => computeReplaceMaxPayout(claimItem, coverageAmount),
     PAYOUT_OPTION_FMV: () => computeCashMaxPayout(claimItem, coverageAmount),
-    PAYOUT_OPTION_FIXED_FRACTION: () => formatMoney(coverageAmount * 2/3) || '',
+    PAYOUT_OPTION_FIXED_FRACTION: () => formatMoney(coverageAmount * 2/3),
   }
   return calculationsByPayoutOption[payoutOption]()
 }

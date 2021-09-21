@@ -66,7 +66,7 @@ img {
       {/if}
     </button>
 
-    <Menu bind:menuOpen {menuItems} on:syncToggler={() => menuOpen = false}/>
+    <Menu bind:menuOpen {menuItems} />
   </div>
 </header>
 

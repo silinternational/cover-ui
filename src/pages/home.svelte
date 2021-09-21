@@ -119,7 +119,7 @@ const onEditClaim = event => {
                     <path fill="currentColor" d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z" />
                   </svg>
                   <!--TODO FUTURE: make this show above the more vert icon when it is in the lower half of the page-->
-                  <div class="item-menu"><Menu bind:menuOpen={shownMenus[item.id]} menuItems="{menuItems(item.id)}" on:syncToggler={() => shownMenus[item.id] = false}/></div>
+                  <div class="item-menu"><Menu bind:menuOpen={shownMenus[item.id]} menuItems="{menuItems(item.id)}" /></div>
                 </Datatable.Data.Row.Item>
               </Datatable.Data.Row>
           {/each}

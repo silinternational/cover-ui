@@ -1,6 +1,6 @@
 <script lang="ts">
 import user from '../authn/user'
-import { ClaimCards, Row } from '../components/'
+import { ClaimCards, Row, Breadcrumb } from '../components/'
 import { claims, initialized as claimsInitialized, loadClaims } from '../data/claims'
 import { itemsByPolicyId, loadItems } from '../data/items'
 import { Page, Button } from '@silintl/ui-components'
@@ -13,6 +13,7 @@ $: items = $itemsByPolicyId[policyId] || []
 </script>
 
 <Page layout="grid">
+  <Breadcrumb />
   <Row cols={'12'}>
     <Button raised url="/claims/newClaim">New claim</Button>
   </Row>

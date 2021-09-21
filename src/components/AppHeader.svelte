@@ -8,7 +8,7 @@ import user from '../authn/user'
 
 const menuItems = [
   {
-    icon: 'settings', label: 'User settings', url: '/household/settings'
+    icon: 'settings', label: 'User settings', url: '/settings/personal'
   },
   {
     icon: 'logout', label: 'Sign out', url: '/logout'
@@ -66,7 +66,7 @@ img {
       {/if}
     </button>
 
-    <Menu bind:menuOpen {menuItems} on:syncToggler={() => menuOpen = false}/>
+    <Menu bind:menuOpen {menuItems} />
   </div>
 </header>
 

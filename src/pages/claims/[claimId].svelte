@@ -2,6 +2,7 @@
 import user from '../../authn/user.js'
 import {
   Banner,
+  Breadcrumb,
   ClaimActions,
   ClaimBanner,
   ConvertCurrencyLink,
@@ -10,7 +11,8 @@ import {
   MoneyInput,
   Row,
 } from '../../components'
-import { formatDate } from '../../components/dates.js'
+import { formatDate } from '../../components/dates'
+import { loading } from '../../components/progress'
 import { upload } from '../../data'
 import { loadClaims, claims, initialized, claimsFileAttach, updateClaimItem, Claim, ClaimItem, ClaimFile, ClaimFilePurpose, PayoutOption, submitClaim } from '../../data/claims'
 import { loadItems, itemsByPolicyId, PolicyItem } from '../../data/items'
@@ -36,6 +38,7 @@ $: claimItem = claim.claim_items?.[0] || {} as ClaimItem //For now there will on
 $: items = $itemsByPolicyId[claim.policy_id] || []
 $: claim.policy_id && loadItems(claim.policy_id)
 $: item = items.find(itm => itm.id === claimItem.item_id) || {} as PolicyItem
+
 $: incidentDate = formatDate(claim.incident_date)
 $: status = claim.status || ''
 $: payoutOption = claimItem.payout_option as PayoutOption
@@ -58,6 +61,12 @@ $: if(payoutOption === 'Repair') {
   } else if(claim.incident_type === 'Evacuation') {
     maximumPayout = formatMoney(item.coverage_amount * 2/3) || ''
   }
+
+// Dynamic breadcrumbs data:
+$: claimName = `${item.name} (${claim.reference_number})`
+const claimsBreadcrumb = { name: 'Claims', url: '/claims' }
+$: thisClaimBreadcrumb = { name: claimName || 'This item', url: `/claims/${claimId}` }
+$: breadcrumbLinks = [claimsBreadcrumb, thisClaimBreadcrumb]
 
 const computePayout = (...values) => formatMoney(Math.min(...values) * (1 - deductible)) || ''
 
@@ -140,59 +149,71 @@ function onDeleted(event) {
 </style>
 
 <Page layout="grid">
-  <Row cols="3">
-    <h3 class="mdc-typography--headline5 my-0">{item.name || 'Name unavailable'}</h3>
-    <div class="left-detail">Claim {claim.reference_number || '########'}</div>
-    <Banner background="var(--mdc-theme-status-info-bg)"
-      color="var(--mdc-theme-status-info)"
-      class="max-content-width">
-      <b>{claim.incident_type || ''}</b>
-    </Banner>
-    <div class="left-detail">{incidentDate || ''}</div>
-  </Row>
-  <Row cols="9">
-    <ClaimBanner claimStatus={status} >{claim.status_reason || ''}</ClaimBanner>
-    {#if needsFile}
-      <ClaimBanner claimStatus={`${status}2`} >
-        Upload {uploadLabel} to get reimbursed.
-      </ClaimBanner>
+  {#if !item.id } 
+    {#if $loading}
+      Loading...
+    {:else}
+      We could not find that claim. Please <a href="/claims">go back</a> and select
+      a claim from the list.
     {/if}
-    <p>
-      {claim.incident_description || ''}
-    </p>
-    <p>
-      <b>Covered value</b><br />
-      {formatMoney(item.coverage_amount)}
-    </p>
-    <p>
-      <b>Maximum payout (if approved)</b><br />
-      {maximumPayout}
-    </p>
-
-    {#if showImg}
-      <img class='receipt' src={previewFile.file?.url} alt='receipt' on:error={onImgError}/>
-    {/if}
-
-    <p>
-      <ClaimActions {claim} on:edit={editClaim} on:submit={onSubmit} />
-    </p>
-
-    {#if needsReceipt}
-      <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onBlur}/>
-      
-      <p class="label ml-1 mt-6px">
-        <ConvertCurrencyLink />
+  {:else}
+    <Row>
+      <Breadcrumb links={breadcrumbLinks} />
+    </Row>
+    <Row cols="3">
+      <h3 class="mdc-typography--headline5 my-0">{item.name || 'Name unavailable'}</h3>
+      <div class="left-detail">Claim {claim.reference_number || '########'}</div>
+      <Banner background="var(--mdc-theme-status-info-bg)"
+        color="var(--mdc-theme-status-info)"
+        class="max-content-width">
+        <b>{claim.incident_type || ''}</b>
+      </Banner>
+      <div class="left-detail">{incidentDate || ''}</div>
+    </Row>
+    <Row cols="9">
+      <ClaimBanner claimStatus={status} >{claim.status_reason || ''}</ClaimBanner>
+      {#if needsFile}
+        <ClaimBanner claimStatus={`${status}2`} >
+          Upload {uploadLabel} to get reimbursed.
+        </ClaimBanner>
+      {/if}
+      <p>
+        {claim.incident_description || ''}
       </p>
-    {/if}
+      <p>
+        <b>Covered value</b><br />
+        {formatMoney(item.coverage_amount)}
+      </p>
+      <p>
+        <b>Maximum payout (if approved)</b><br />
+        {maximumPayout}
+      </p>
 
-    {#if needsFile}
-      <label for="receipt" class="ml-1">Attach {uploadLabel}</label>
-    
-      <FileDropArea class="w-50 mt-10px" raised {uploading} on:upload={onUpload} />
-    {/if}
+      {#if showImg}
+        <img class='receipt' src={previewFile.file?.url} alt='receipt' on:error={onImgError}/>
+      {/if}
+
+      <p>
+        <ClaimActions {claim} on:edit={editClaim} on:submit={onSubmit} />
+      </p>
+
+      {#if needsReceipt}
+        <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onBlur}/>
+        
+        <p class="label ml-1 mt-6px">
+          <ConvertCurrencyLink />
+        </p>
+      {/if}
+
+      {#if needsFile}
+        <label for="receipt" class="ml-1">Attach {uploadLabel}</label>
       
-    <FilePreview class="w-50" previews={claimFiles} on:deleted={onDeleted} on:preview={onPreview} />
+        <FileDropArea class="w-50 mt-10px" raised {uploading} on:upload={onUpload} />
+      {/if}
+        
+      <FilePreview class="w-50" previews={claimFiles} on:deleted={onDeleted} on:preview={onPreview} />
 
-    <br/>
-  </Row>
+      <br/>
+    </Row>
+  {/if}
 </Page>

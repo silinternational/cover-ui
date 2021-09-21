@@ -1,7 +1,7 @@
 <script lang="ts">
 import { formatDate } from '../dates'
 import { Button, Progress } from '@silintl/ui-components'
-import { createEventDispatcher } from "svelte"
+import { createEventDispatcher } from 'svelte'
 import { flip } from 'svelte/animate'
 
 export let previews = []

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { throwError } from '../../error/index.js'
+import { throwError } from '../../error/index'
 import type Filter from './filter'
 import { writable } from 'svelte/store'
 

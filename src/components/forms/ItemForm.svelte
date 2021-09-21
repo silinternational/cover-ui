@@ -1,7 +1,7 @@
 <script lang="ts">
 import { ConvertCurrencyLink, Description, MoneyInput } from '../../components'
-import { dependentsByPolicyId, loadDependents } from '../../data/dependents.js'
-import type { PolicyItem } from '../../data/items'
+import { dependentsByPolicyId, loadDependents } from '../../data/dependents'
+import type { ItemCoverageStatus, PolicyItem } from '../../data/items'
 import { categories, init, initialized as catItemsInitialized } from '../../data/itemCategories'
 import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
 import { Button, Form, Select, TextArea, TextField } from '@silintl/ui-components'
@@ -10,7 +10,7 @@ import { createEventDispatcher } from 'svelte'
 export let item = {} as PolicyItem
 export let policyId: string = undefined
 
-const dispatch = createEventDispatcher()
+const dispatch = createEventDispatcher<{ submit: any, 'save-for-later': any }>()
 
 // Set default values.
 let accountablePersonId = ''
@@ -18,7 +18,7 @@ let categoryId = ''
 let country = ''
 let marketValueUSD = ''
 let coverageStartDate = ''
-let coverageStatus = 'Draft'
+let coverageStatus: ItemCoverageStatus
 let itemDescription = ''
 let inStorage = false
 let make = ''
@@ -76,41 +76,34 @@ const getFormData = () => {
     uniqueIdentifier,
   }
 }
+
 const onCategorySelectPopulated = () => {
   if (item.category?.id) {
     initialCategoryId = item.category?.id
   }
 }
-const onSubmit = () => {
+
+const onSubmit = (event: Event) => {
   dispatch('submit', getFormData())
 }
-const saveForLater = () => {
+
+const saveForLater = (event: Event) => {
   dispatch('save-for-later', getFormData())
+  event.preventDefault()
 }
-const setInitialValues = (item) => {
+
+const setInitialValues = (item: PolicyItem) => {
   categoryId = item.category?.id || categoryId
   country = item.country || country
-  if (Number.isInteger(item.coverage_amount)) {
-    marketValueUSD = item.coverage_amount / 100 as any
-  }
-  if (item.coverage_start_date) {
-    coverageStartDate = item.coverage_start_date
-  } else {
-    coverageStartDate = today.toISOString().slice(0, 10) //api requires yyyy-mm-dd
-  }
+  marketValueUSD = Number.isInteger(item.coverage_amount) ? String(item.coverage_amount / 100) : ''
+  coverageStartDate = item.coverage_start_date || today.toISOString().slice(0, 10) //api requires yyyy-mm-dd
   coverageStatus = item.coverage_status || coverageStatus
   itemDescription = item.description || itemDescription
-  if (typeof item.in_storage === 'boolean') {
-    inStorage = item.in_storage
-  }
+  inStorage = typeof item.in_storage === 'boolean' ? item.in_storage : false
   make = item.make || make
   model = item.model || model
   shortName = item.name || shortName
-  if (item.purchase_date) {
-    purchaseDate = item.purchase_date
-  } else {
-    purchaseDate = coverageStartDate
-  }
+  purchaseDate = item.purchase_date || coverageStartDate
   uniqueIdentifier = item.serial_number || uniqueIdentifier
 }
 </script>

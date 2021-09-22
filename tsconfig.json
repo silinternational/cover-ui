@@ -9,6 +9,7 @@
         "src/customTypes",
         "node_modules/@types"
       ],
-      "resolveJsonModule": true
+      "resolveJsonModule": true,
+      "strict": true
     }
   }

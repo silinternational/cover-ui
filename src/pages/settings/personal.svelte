@@ -2,7 +2,6 @@
 import user, { updateUser } from '../../authn/user'
 import { Breadcrumb, FileDropArea, RadioOptions } from '../../components'
 import { upload } from '../../data'
-import { policies, init as loadPolicies } from '../../data/policies'
 import { Button, Checkbox, TextField, Page, Snackbar, setNotice } from '@silintl/ui-components'
 import Croppie from 'croppie'
 import 'croppie/croppie.css'
@@ -21,8 +20,6 @@ $: notificationOptions = [
   { label: 'Default email: ' + $user.email, value: NOTIFICATION_OPTION_DEFAULT },
   { label: 'Custom email', value: NOTIFICATION_OPTION_CUSTOM },
 ]
-
-$: $policies.length || loadPolicies()
 
 const updateNotificationSelection = () => {
   console.log('updated updateNotificationSelection')

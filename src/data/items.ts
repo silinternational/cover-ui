@@ -98,8 +98,8 @@ export async function loadItems(policyId: string) {
  * @param {Object} itemData
  * @return {Object}
  */
-export async function addItem(policyId: string, itemData) {
-  const urlPath = `policies/${policyId}/items`
+export async function addItem(policyId: string, itemData: any) {
+  const urlPath: string = `policies/${policyId}/items`
   start(urlPath)
 
   const parsedItemData: CreatePolicyItemRequestBody = {
@@ -160,7 +160,7 @@ export async function submitItem(policyId: string, itemId: string) {
  * @param {Object} itemData
  * @return {Object}
  */
-export async function updateItem(policyId: string, itemId: string, itemData) {
+export async function updateItem(policyId: string, itemId: string, itemData: any) {
   if (!itemId) {
     throwError('item id not set')
   }
@@ -206,7 +206,7 @@ export async function updateItem(policyId: string, itemId: string, itemData) {
  * @param {string} policyId -- The UUID for the applicable policy
  * @param {string} itemId -- The UUID for the item to delete
  */
-export async function deleteItem(policyId, itemId) {
+export async function deleteItem(policyId: string, itemId: string) {
   const urlPath = `items/${itemId}`
   start(urlPath)
 

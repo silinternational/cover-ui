@@ -20,6 +20,7 @@ import RadioOptions from './RadioOptions.svelte'
 import Menu from './mdc/Menu'
 import Row from './mdc/Row.svelte'
 import ClaimBanner from './banners/ClaimBanner.svelte'
+import FormattedBanner from './banners/FormattedBanner.svelte'
 import SearchableSelect from './SearchableSelect.svelte'
 
 export {
@@ -37,6 +38,7 @@ export {
   Description,
   FileDropArea,
   FilePreview,
+  FormattedBanner,
   ItemForm,
   MoneyInput,
   RadioOptions,

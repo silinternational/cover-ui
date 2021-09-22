@@ -7,7 +7,7 @@ export let statusReason = '' as string
 $: bgColor = state.bgColor || ''
 $: color = state.color || ''
 $: icon = state.icon || ''
-$: title = state.title.claim || ''
+$: title = state.title || ''
 $: steward = statusReason ? 'From your claim handler' : ('' as string) //TODO get this from the api
 </script>
 

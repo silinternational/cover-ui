@@ -13,8 +13,8 @@ let randomId = generateRandomID('dataList-')
 const dispatch = createEventDispatcher()
 
 const onChange = () => {
-  for (const [key, value] of Object.entries(options)) {
-    if (choice === value) {
+  for (const [key, value] of Object.entries(options)){
+    if(choice === value) {
       dispatch('chosen', key)
     }
   }
@@ -22,9 +22,7 @@ const onChange = () => {
 </script>
 
 <style>
-*,
-*::before,
-*::after {
+*, *::before, *::after {
   box-sizing: border-box;
 }
 
@@ -43,7 +41,7 @@ const onChange = () => {
 .custom-field .placeholder {
   position: absolute;
   bottom: -45px;
-  top: 22px;
+  top: 22px;  
   transform: translateY(-50%);
   color: #aaa;
   overflow: hidden;
@@ -51,7 +49,10 @@ const onChange = () => {
   text-overflow: ellipsis;
   left: var(--field-padding);
   width: calc(100% - (var(--field-padding) * 2));
-  transition: top 0.3s ease, color 0.3s ease, font-size 0.3s ease;
+  transition: 
+    top 0.3s ease,
+    color 0.3s ease,
+    font-size 0.3s ease;
 }
 
 .custom-field input:not(:placeholder-shown) + .placeholder,
@@ -63,18 +64,12 @@ const onChange = () => {
 </style>
 
 <label class="custom-field" style="--field-padding: {padding};">
-  <input
-    class="fs-14 {$$props.class}"
-    style="width: {width}"
-    list={randomId}
-    placeholder="&nbsp;"
-    bind:value={choice}
-    on:change={onChange}
-  />
+  <input class="fs-14 {$$props.class}" style="width: {width}" list={randomId} placeholder="&nbsp;" bind:value={choice} on:change={onChange}/>
   <span class="placeholder">{placeholder}</span>
 </label>
 
 <datalist id={randomId}>
   {#each Object.values(options) as option}
-    <option value={option} />{/each}
+    <option value={option}>  
+  {/each}
 </datalist>

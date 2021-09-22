@@ -1,19 +1,20 @@
 <script lang="ts">
 export let headers
 export let loading
+
 </script>
 
 <style>
-.filtered-table {
-  border: none;
-}
+  .filtered-table {
+    border: none;
+  }
 
-th {
-  text-align: left;
-}
+  th {
+    text-align: left;
+  }
 </style>
 
-{#if loading}
+{#if loading }
   Loading...
 {:else}
   <table class="filtered-table">

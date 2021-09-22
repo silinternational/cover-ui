@@ -25,11 +25,11 @@ let formData = {
   childBirthYear: dependent.child_birth_year || undefined,
 }
 
-const onCancel = (event) => {
+const onCancel = event => {
   event.preventDefault()
   dispatch('cancel')
 }
-const onRemove = (event) => {
+const onRemove = event => {
   event.preventDefault()
   dispatch('remove', formData.id)
 }
@@ -62,8 +62,9 @@ const onSubmit = () => {
       <TextField label="Dependent Name" bind:value={formData.name} class="w-100" autofocus />
     </p>
     <p>
-      Dependents include non-member spouses and children under 26 who haven't married or finished college. Coverage for
-      dependents is limited to $3,000 per person.
+      Dependents include non-member spouses and children under 26 who haven't
+      married or finished college. Coverage for dependents is limited to $3,000
+      per person.
     </p>
     <p>
       <TextField label="Location" bind:value={formData.location} class="w-100" />

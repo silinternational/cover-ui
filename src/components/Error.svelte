@@ -8,7 +8,7 @@ let errContainer = null
 $: errContainer && scrollIntoView(errContainer)
 $: $isChangingPage && $error.message && dismiss()
 
-const scrollIntoView = (element) => element.scrollIntoView({ behavior: 'smooth' })
+const scrollIntoView = element => element.scrollIntoView({behavior: 'smooth'})
 
 afterUpdate(() => {
   if (errContainer) {
@@ -27,7 +27,7 @@ span {
 span small {
   position: relative;
   top: -1rem;
-  right: -0.5rem;
+  right: -.5rem;
   cursor: pointer;
 }
 </style>

@@ -38,7 +38,7 @@ $: menuItems = [
   {
     url: '/settings',
     icon: 'settings',
-    label: 'Settings',
+    label: 'Settings'
   },
   {
     url: '/items/new',
@@ -51,14 +51,15 @@ $: menuItems = [
 const logoClickHandler = () => $goto('/')
 </script>
 
-<Drawer miniMenu modal hideForPhonesOnly {toggle} {menuItems} title="Covered" class="auto-width border-white">
+<Drawer miniMenu modal hideForPhonesOnly {toggle} {menuItems} title='Covered' class="auto-width border-white">
   <span class="pointer" on:click={logoClickHandler} slot="header">
-    <img class="w-100" src="/logo.svg" alt="Cover" />
+    <img class="w-100" src="/logo.svg" alt="Cover">
   </span>
 
-  <AppHeader on:toggleDrawer={() => (toggle = !toggle)} />
+  <AppHeader on:toggleDrawer={() => toggle = !toggle} />
 
   <slot />
 
   <AppFooter />
+  
 </Drawer>

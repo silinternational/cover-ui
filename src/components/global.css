@@ -1,16 +1,15 @@
-html,
-body {
-  height: 100%;
+html, body {
+	height: 100%;
 }
 
 body {
-  margin: 0;
-  box-sizing: border-box;
-  width: 100%;
+	margin: 0;
+	box-sizing: border-box;
+	width: 100%;
 }
 
 .auto-width {
-  width: auto;
+	width: auto;
 }
 
 .max-content-width {
@@ -18,13 +17,13 @@ body {
 }
 
 #main-drawer-content {
-  background: #fff;
+	background: #fff;
 }
 
 .height-fit-content {
-  height: fit-content;
+	height: fit-content;
 }
 
 .absolute {
-  position: absolute !important;
+	position: absolute !important;
 }

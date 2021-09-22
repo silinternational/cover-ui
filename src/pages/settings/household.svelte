@@ -23,19 +23,19 @@ $: if (policyId) {
 $: dependents = $dependentsByPolicyId[policyId] || []
 $: householdMembers = $membersByPolicyId[policyId] || []
 $: $policies.length || init()
-$: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
+$: policy = $policies.find(policy => policy.id === policyId) || {} as Policy
 $: policy.household_id && setPolicyHouseholdId()
 $: policy.cost_center && setPolicyCostCenter()
 $: policy.entity_code && setAffiliation()
 
-const setAffiliation = () => (affiliationChoice = $affiliations[policy.entity_code])
-const setPolicyHouseholdId = () => (householdId = policy.household_id || '')
-const setPolicyCostCenter = () => (costCenter = policy.cost_center || '')
+const setAffiliation = () => affiliationChoice = $affiliations[policy.entity_code]
+const setPolicyHouseholdId = () => householdId = policy.household_id || ''
+const setPolicyCostCenter = () => costCenter = policy.cost_center || ''
 
 const updateHouseholdId = async () => {
   householdId = householdId.replaceAll(' ', '')
-  if (householdId !== policy.household_id) {
-    if (isIdValid(householdId)) {
+  if(householdId !== policy.household_id) {
+    if(isIdValid(householdId)) {
       await callUpdatePolicy(householdId)
 
       setNotice('Your household ID has been saved')
@@ -47,8 +47,8 @@ const updateHouseholdId = async () => {
 
 const updateCostCenter = async () => {
   costCenter = costCenter.replaceAll(' ', '')
-  if (costCenter !== policy.cost_center) {
-    if (isIdValid(costCenter)) {
+  if(costCenter !== policy.cost_center) {
+    if(isIdValid(costCenter)) {
       await callUpdatePolicy(householdId, costCenter)
 
       setNotice('Your cost center has been saved')
@@ -58,12 +58,12 @@ const updateCostCenter = async () => {
   }
 }
 
-const updateAffiliation = async (e) => {
+const updateAffiliation = async e => {
   const choice = e.detail
 
-  if (choice !== policyData.entity_code) {
+  if(choice !== policyData.entity_code) {
     await callUpdatePolicy(householdId, costCenter, choice)
-
+    
     setNotice('Your affiliation has been saved')
   }
 }
@@ -76,9 +76,9 @@ const callUpdatePolicy = async (id: string, costCenter: string = undefined, affi
   await updatePolicy(policyId, policyData)
 }
 
-const isIdValid = (sanitizedId) => sanitizedId.length && sanitizedId.split('').every((digit) => /[0-9]/.test(digit))
-const edit = (id) => $goto(`/settings/household/dependent/${id}`)
-const isYou = (householdMember) => householdMember.id === $user.id
+const isIdValid = sanitizedId => sanitizedId.length && sanitizedId.split('').every(digit => /[0-9]/.test(digit))
+const edit = id => $goto(`/settings/household/dependent/${id}`)
+const isYou = householdMember => householdMember.id === $user.id
 </script>
 
 <style>
@@ -117,31 +117,24 @@ const isYou = (householdMember) => householdMember.id === $user.id
   <p>
     <TextField placeholder={'1234567'} autofocus bind:value={householdId} on:blur={updateHouseholdId} />
   </p>
-
+  
   {#if policy.type === 'Corporate'}
-    <h3 class="ml-1 mt-3">Affiliation<span class="required">*</span></h3>
-    <SearchableSelect
-      options={$affiliations}
-      choice={affiliationChoice}
-      {placeholder}
-      padding={'16px'}
-      on:chosen={updateAffiliation}
-    />
-
+    <h3 class="ml-1 mt-3" >Affiliation<span class="required">*</span></h3>
+    <SearchableSelect options={$affiliations} choice={affiliationChoice} {placeholder} padding={'16px'} on:chosen={updateAffiliation}/>
+    
     <h3 class="ml-1 mt-3">Cost center<span class="required">*</span></h3>
     <p>
       <TextField placeholder={'1234567'} bind:value={costCenter} on:blur={updateCostCenter} />
     </p>
   {/if}
-
+  
   <h3 class="mt-3">Accountable people</h3>
 
   <ul class="accountable-people-list">
     {#each householdMembers as householdMember}
       <li class="accountable-people-list-item">
-        {householdMember.first_name}
-        {householdMember.last_name}
-        {isYou(householdMember) ? '(you)' : ''}
+        {householdMember.first_name} {householdMember.last_name}
+        {isYou(householdMember) ? "(you)" : ""}
         <br />
         <small>{householdMember.email}</small>
       </li>
@@ -159,5 +152,5 @@ const isYou = (householdMember) => householdMember.id === $user.id
   </ul>
   <Button prependIcon="add" url="household/dependent" outlined>Add dependent</Button>
 
-  <Snackbar />
+  <Snackbar/>
 </Page>

@@ -11,7 +11,7 @@ import { loading } from './index'
 </style>
 
 {#if $loading}
-  <div class="progress w-100 relative">
-    <Progress.Linear indeterminate />
+  <div  class='progress w-100 relative'>
+    <Progress.Linear indeterminate/>
   </div>
 {/if}

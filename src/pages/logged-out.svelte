@@ -3,7 +3,7 @@ import { logout } from '../authn'
 import user from '../authn/user'
 import { Page } from '@silintl/ui-components'
 
-$: stillLoggedIn = !!$user.id
+$: stillLoggedIn = !! $user.id
 $: if (stillLoggedIn) {
   setTimeout(() => logout(), 3000)
 }

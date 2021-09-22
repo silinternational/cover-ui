@@ -8,7 +8,7 @@ import { Page } from '@silintl/ui-components'
 const onCancel = () => {
   $goto('/settings/household')
 }
-const onSubmit = async (event) => {
+const onSubmit = async event => {
   const formData = event.detail
   await addDependent($user.policy_id, formData)
   $goto('/settings/household')

@@ -20,15 +20,15 @@ $: $user.policy_id && loadItems($user.policy_id)
 
 $: $policies.length || init()
 $: policyId = $user.policy_id
-$: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
+$: policy = $policies.find(policy => policy.id === policyId) || {} as Policy
 $: policy.household_id && setPolicyHouseholdId()
 
 $: items = $itemsByPolicyId[$user.policy_id] || []
-$: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
+$: item = items.find(itm => itm.id === itemId) || {} as PolicyItem
 $: itemName = item.name || ''
 
 $: msAgo = now - Date.parse(item.updated_at)
-$: daysAgo = msAgo > 0 ? Math.floor(msAgo / day) : '-'
+$: daysAgo = msAgo > 0 ? Math.floor(msAgo/day) : '-'
 $: startDate = formatDate(item.coverage_start_date)
 
 // Dynamic breadcrumbs data:
@@ -36,7 +36,7 @@ const itemsBreadcrumb = { name: 'Items', url: '/items' }
 $: thisItemBreadcrumb = { name: itemName || 'This item', url: `/items/${itemId}` }
 $: breadcrumbLinks = [itemsBreadcrumb, thisItemBreadcrumb]
 
-const setPolicyHouseholdId = () => (householdId = policy.household_id || '')
+const setPolicyHouseholdId = () => householdId = policy.household_id || ''
 
 const goToEditItem = () => {
   $goto(`/items/${itemId}/edit`)
@@ -47,46 +47,45 @@ const goToNewClaim = () => {
 </script>
 
 <Page layout={'grid'}>
-  {#if !item.id}
+  {#if !item.id } 
     {#if $loading}
       Loading...
     {:else}
-      We could not find that item. Please <a href="/items">go back</a> and select an item from the list.
+      We could not find that item. Please <a href="/items">go back</a> and select
+      an item from the list.
     {/if}
   {:else}
     <Row cols="12">
-      <div class="flex justify-between align-items-center">
+      <div class="flex justify-between align-items-center" >
         <Breadcrumb links={breadcrumbLinks} />
         <div>
           <Button class="remove-button mx-5px" url={`/items/${itemId}/delete`}>Remove</Button>
-          <Button on:click={goToEditItem}>Edit Item</Button>
+          <Button on:click={goToEditItem} >Edit Item</Button>
         </div>
       </div>
     </Row>
-
+    
     <Row cols={'3'}>
       <h2>{item.name || ''}</h2>
       <b>Covered value</b>
       <div>{formatMoney(item.coverage_amount)}</div>
       <b>Annual premium</b>
       <div>{formatMoney(item.annual_premium)}</div>
-      <br />
+      <br/>
       <b>{item.accountable_person || ''}</b>
       <div>Household ID</div>
       <div>{householdId}</div>
     </Row>
-
+    
     <Row cols={'9'}>
       <ClaimBanner claimStatus={item.coverage_status}>Submitted {daysAgo} days ago</ClaimBanner>
       <h3>{item.make || ''} {item.model || ''}</h3>
       <b class="mb-6px">Unique ID</b>
       <div>{item.serial_number}</div>
-      <br />
+      <br/>
       <div>Description: {item.description || ''}</div>
-      <br />
-      <Banner background="var(--mdc-theme-primary-header-bg)" color="var(--mdc-theme-primary)" class="max-content-width"
-        >{item.category?.name || ''}</Banner
-      >
+      <br/>
+      <Banner background="var(--mdc-theme-primary-header-bg)" color="var(--mdc-theme-primary)" class="max-content-width">{item.category?.name || ''}</Banner>
       <div class="my-1">
         <b>Starts</b>
         <div>{startDate}</div>

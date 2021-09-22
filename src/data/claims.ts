@@ -4,121 +4,112 @@ import { convertToCents } from '../helpers/money'
 import type { PolicyItem } from './items'
 import { writable } from 'svelte/store'
 
-export type PayoutOption = 'Repair' | 'Replacement' | 'FMV' | 'FixedFraction'
-export type ClaimItemStatus = 'Pending' | 'Approved' | 'Denied'
-export type ClaimIncidentTypeName = string // dynamically defined by the claim-incident-types endpoint
-export type ClaimStatus =
-  | 'Draft'
-  | 'Review1'
-  | 'Review2'
-  | 'Review3'
-  | 'Revision'
-  | 'Receipt'
-  | 'Approved'
-  | 'Paid'
-  | 'Denied'
+export type PayoutOption = 'Repair' | 'Replacement' | 'FMV' | 'FixedFraction';
+export type ClaimItemStatus = 'Pending' | 'Approved' | 'Denied';
+export type ClaimIncidentTypeName = string; // dynamically defined by the claim-incident-types endpoint
+export type ClaimStatus = 'Draft' | 'Review1' | 'Review2' | 'Review3' | 'Revision' | 'Receipt' | 'Approved' | 'Paid' | 'Denied';
 export type ClaimFilePurpose = 'Receipt' | 'Evidence of FMV' | 'Repair Estimate'
 
 export type ClaimFile = {
-  claim_id: string
-  created_at: string /*Date*/
+  claim_id: string;
+  created_at: string /*Date*/;
   file: {
-    content_type: string
-    created_by_id: string
-    id: string
-    name: string
-    size: number
-    url: string
-    url_expiration: string /*Date*/
-  }
-  file_id: string
-  id: string
-  purpose: ClaimFilePurpose
-  updated_at: string /*Date*/
+    content_type: string;
+    created_by_id: string;
+    id: string;
+    name: string;
+    size: number;
+    url: string;
+    url_expiration: string /*Date*/;
+  };
+  file_id: string;
+  id: string;
+  purpose: ClaimFilePurpose;
+  updated_at: string /*Date*/;
 }
 
 export type ClaimItem = {
-  claim_id: string
-  created_at: string /*Date*/
-  fmv: number
-  id: string
-  is_repairable: boolean
-  item_id: string
-  payout_amount: number
-  payout_option: PayoutOption
-  repair_actual: number
-  repair_estimate: number
-  replace_actual: number
-  replace_estimate: number
-  review_date: string /*Date*/
-  reviewer_id: string
-  status: ClaimItemStatus
-  updated_at: string /*Date*/
+  claim_id: string;
+  created_at: string /*Date*/;
+  fmv: number;
+  id: string;
+  is_repairable: boolean;
+  item_id: string;
+  payout_amount: number;
+  payout_option: PayoutOption;
+  repair_actual: number;
+  repair_estimate: number;
+  replace_actual: number;
+  replace_estimate: number;
+  review_date: string /*Date*/;
+  reviewer_id: string;
+  status: ClaimItemStatus;
+  updated_at: string /*Date*/;
 }
 
 export type Claim = {
-  claim_files: ClaimFile[]
-  claim_items: ClaimItem[]
-  incident_date: string /*Date*/
-  incident_description: string
-  incident_type: ClaimIncidentTypeName
-  id: string
-  payment_date: string /*Date*/
-  policy_id: string
-  reference_number: string
-  review_date: string /*Date*/
-  reviewer_id: string
-  status: ClaimStatus
-  status_reason: string
-  total_payout: number
+  claim_files: ClaimFile[];
+  claim_items: ClaimItem[];
+  incident_date: string /*Date*/;
+  incident_description: string;
+  incident_type: ClaimIncidentTypeName;
+  id: string;
+  payment_date: string /*Date*/;
+  policy_id: string;
+  reference_number: string;
+  review_date: string /*Date*/;
+  reviewer_id: string;
+  status: ClaimStatus;
+  status_reason: string;
+  total_payout: number;
 }
 
 export type CreateClaimRequestBody = {
-  incident_date: Date
-  incident_description: string
-  incident_type: ClaimIncidentTypeName
+  incident_date: Date;
+  incident_description: string;
+  incident_type: ClaimIncidentTypeName;
 }
 
 export type CreateClaimItemRequestBody = {
-  fmv: number
-  is_repairable: boolean
-  item_id: string
-  payout_option: PayoutOption
-  repair_estimate: number
-  replace_estimate: number
+  fmv: number;
+  is_repairable: boolean;
+  item_id: string;
+  payout_option: PayoutOption;
+  repair_estimate: number;
+  replace_estimate: number;
 }
 
 export type UpdateClaimRequestBody = {
-  incident_date: string /*Date*/
-  incident_description: string
-  incident_type: ClaimIncidentTypeName
+  incident_date: string /*Date*/;
+  incident_description: string;
+  incident_type: ClaimIncidentTypeName;
 }
 
 export type ClaimsFileAttachRequestBody = {
-  file_id: string
-  purpose: ClaimFilePurpose
+  file_id: string;
+  purpose: ClaimFilePurpose;
 }
 
 export type ClaimsFileAttachResponseBody = {
-  claim_id: string
-  created_at: string /*Date*/
-  file: any
-  file_id: string
-  id: string
-  purpose: ClaimFilePurpose
-  updated_at: string /*Date*/
+  claim_id: string;
+  created_at: string /*Date*/;
+  file: any;
+  file_id: string;
+  id: string;
+  purpose: ClaimFilePurpose;
+  updated_at: string /*Date*/;
 }
 
 export type UpdateClaimItemRequestBody = {
-  repair_actual: number
-  replace_actual: number
+  repair_actual: number;
+  replace_actual: number;
 }
 
 export type State = {
-  icon: string
-  color: string
-  bgColor: string
-  title: string
+  icon: string;
+  color: string;
+  bgColor: string;
+  title: string;
 }
 
 export const claims = writable<Claim[]>([])
@@ -141,7 +132,7 @@ export const pending: State = {
   bgColor: '--mdc-theme-neutral-bg',
   title: 'Awaiting review',
 }
-export const states: { [stateName: string]: State } = {
+export const states: { [stateName: string]: State} = {
   Revision: {
     icon: 'chat',
     color: '--mdc-theme-primary',
@@ -178,7 +169,7 @@ export const states: { [stateName: string]: State } = {
     color: '--mdc-theme-status-success',
     bgColor: '--mdc-theme-status-success-bg',
     title: 'Complete',
-  },
+  }
 }
 
 // TODO: add backend endpoints when they get finished
@@ -208,7 +199,7 @@ export async function createClaim(item: PolicyItem, claimData) {
 
   const claim = await CREATE<Claim>(urlPath, parsedClaim)
 
-  claims.update((currClaims) => {
+  claims.update(currClaims => {
     currClaims.push(claim)
     return currClaims
   })
@@ -229,11 +220,11 @@ export const createClaimItem = async (claimId: string, claimItemData) => {
       repair_estimate: convertToCents(claimItemData.repairEstimateUSD),
       replace_estimate: convertToCents(claimItemData.replaceEstimateUSD),
     }
-
+  
     const claimItem = await CREATE<ClaimItem>(urlPath, parsedClaimItem)
-
-    claims.update((claims) => {
-      const claim = claims.find((c) => c.id === claimId)
+  
+    claims.update(claims => {
+      const claim = claims.find(c => c.id === claimId)
       if (claim) {
         const claimItems = claim.claim_items || []
         claimItems.push(claimItem)
@@ -264,8 +255,8 @@ export async function updateClaim(claimId: string, newClaimData) {
 
   const updatedClaim = await UPDATE<Claim>(`claims/${claimId}`, parsedData)
 
-  claims.update((currClaims) => {
-    let i = currClaims.findIndex((clm) => clm.id === claimId)
+  claims.update(currClaims => {
+    let i = currClaims.findIndex(clm => clm.id === claimId)
     currClaims[i] = updatedClaim
     return currClaims
   })
@@ -301,9 +292,9 @@ export async function submitClaim(claimId: string) {
  *
  * @description a function to update a claimItem
  * @export
- * @param {Number} itemId
+ * @param {Number} itemId 
  */
-export async function updateClaimItem(claimItemId: string, claimItemData) {
+ export async function updateClaimItem(claimItemId: string, claimItemData) {
   start(claimItemId)
 
   const parsedData: UpdateClaimItemRequestBody = {
@@ -320,12 +311,12 @@ export async function updateClaimItem(claimItemId: string, claimItemData) {
  *
  * @description a function to delete a claim
  * @export
- * @param {Number} itemId
+ * @param {Number} itemId 
  */
 export function deleteClaim(itemId: string) {
   start(itemId)
 
-  claims.update((currClaims) => currClaims.filter((clm) => clm.id !== itemId))
+  claims.update(currClaims => currClaims.filter(clm => clm.id !== itemId))
 
   stop(itemId)
 }

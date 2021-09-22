@@ -1,10 +1,11 @@
+
 import { clear as clearToken, getSeed, getToken } from './token'
 import { clear as clearUser } from './user'
 import { CREATE as POST } from '../data'
 import { throwError } from '../error'
 
 export type AuthLoginResponse = {
-  RedirectURL: string
+  RedirectURL: string;
 }
 
 export const login = async () => {

@@ -60,7 +60,9 @@ const goToNewClaim = () => {
         <Breadcrumb links={breadcrumbLinks} />
         <div>
           <Button class="remove-button mx-5px" url={`/items/${itemId}/delete`}>Remove</Button>
-          <Button on:click={goToEditItem}>Edit Item</Button>
+          {#if status === 'Draft' || status === 'Pending'}
+            <Button on:click={goToEditItem}>Edit Item</Button>
+          {/if}
         </div>
       </div>
     </Row>

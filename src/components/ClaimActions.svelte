@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { Claim } from '../data/claims'
+import { Claim, ClaimStatus, editableStatuses } from '../data/claims'
 import { Button } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
@@ -7,11 +7,11 @@ export let claim = {} as Claim
 
 const dispatch = createEventDispatcher()
 
-let status: string
+let status: ClaimStatus
 $: status = claim.status
 
 let isEditable = false
-$: isEditable = status !== 'Approved' && status !== 'Denied' && status !== 'Paid'
+$: isEditable = editableStatuses.includes(status)
 
 const onEditClaim = () => dispatch('edit')
 const onSubmitClaim = () => dispatch('submit')

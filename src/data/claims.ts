@@ -185,6 +185,7 @@ export const states: { [stateName: string]: State } = {
     title: 'Complete',
   },
 }
+export const editableStatuses: ClaimStatus[] = ['Draft', 'Review1', 'Review2', 'Review3', 'Revision', 'Receipt']
 
 // TODO: add backend endpoints when they get finished
 // TODO: uncomment when backend has claims endpoints

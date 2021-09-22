@@ -30,6 +30,12 @@ export const warning: State = {
 }
 
 export const commonStates: { [stateName: string]: State } = {
+  Denied: {
+    icon: 'remove_circle',
+    color: '--mdc-theme-status-error',
+    bgColor: '--mdc-theme-status-error-bg',
+    title: 'Denied',
+  },
   Draft: {
     icon: 'edit',
     color: '--mdc-theme-primary',
@@ -37,12 +43,6 @@ export const commonStates: { [stateName: string]: State } = {
     title: 'Draft',
   },
   Pending: pending,
-  Denied: {
-    icon: 'remove_circle',
-    color: '--mdc-theme-status-error',
-    bgColor: '--mdc-theme-status-error-bg',
-    title: 'Denied',
-  },
 }
 
 export const claimStates: { [stateName: string]: State } = {

@@ -29,7 +29,7 @@ export const pending: State = {
   icon: 'watch_later',
   color: '--mdc-theme-neutral-variant',
   bgColor: '--mdc-theme-neutral-bg',
-  title: { claim: 'Awaiting review', item: null },
+  title: { claim: 'Awaiting review', item: 'Awaiting item coverage review' },
 }
 export const states: { [stateName: string]: State } = {
   Revision: {

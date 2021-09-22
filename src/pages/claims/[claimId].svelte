@@ -22,13 +22,13 @@ import {
   updateClaimItem,
   Claim,
   ClaimItem,
+  ClaimStatus,
   ClaimFile,
   ClaimFilePurpose,
   PayoutOption,
   submitClaim,
 } from '../../data/claims'
 import { loadItems, itemsByPolicyId, PolicyItem } from '../../data/items'
-import type { Status } from '../../data/states'
 import { formatMoney } from '../../helpers/money'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
@@ -51,7 +51,7 @@ $: claim.policy_id && loadItems(claim.policy_id)
 $: item = items.find((itm) => itm.id === claimItem.item_id) || ({} as PolicyItem)
 
 $: incidentDate = formatDate(claim.incident_date)
-$: status = (claim.status || '') as Status
+$: status = (claim.status || '') as ClaimStatus
 $: payoutOption = claimItem.payout_option as PayoutOption
 $: needsRepairReceipt = needsReceipt && payoutOption === 'Repair'
 $: needsReplaceReceipt = needsReceipt && payoutOption === 'Replacement'
@@ -164,9 +164,9 @@ function onDeleted(event) {
       <div class="left-detail">{incidentDate || ''}</div>
     </Row>
     <Row cols="9">
-      <ClaimBanner isClaim claimStatus={status}>{claim.status_reason || ''}</ClaimBanner>
+      <ClaimBanner claimStatus={status}>{claim.status_reason || ''}</ClaimBanner>
       {#if needsFile}
-        <ClaimBanner isClaim claimStatus={`${status}2`}>
+        <ClaimBanner claimStatus={`${status}2`}>
           Upload {uploadLabel} to get reimbursed.
         </ClaimBanner>
       {/if}

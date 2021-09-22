@@ -26,7 +26,7 @@ export async function init() {
 export async function loadCategories() {
   start('itemCategories')
 
-  let catz = await GET<ItemCategory[]>('config/item-categories')
+  const catz = await GET<ItemCategory[]>('config/item-categories')
 
   stop('itemCategories')
 

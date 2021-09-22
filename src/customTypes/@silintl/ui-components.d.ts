@@ -41,9 +41,7 @@ declare module '@silintl/ui-components' {
   export class Datatable extends SvelteComponentTyped<DatatableProps> {}
 
   export namespace Datatable {
-    interface HeaderProps extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
-      // no exported members
-    }
+    type HeaderProps = svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']>
     export class Header extends SvelteComponentTyped<HeaderProps> {}
 
     export namespace Header {
@@ -55,9 +53,7 @@ declare module '@silintl/ui-components' {
       export class Item extends SvelteComponentTyped<ItemProps> {}
     }
 
-    interface DataProps extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
-      // no exported members
-    }
+    type DataProps = svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']>
     export class Data extends SvelteComponentTyped<DataProps> {}
 
     export namespace Data {
@@ -129,9 +125,7 @@ declare module '@silintl/ui-components' {
   export class List extends SvelteComponentTyped<ListProps> {}
 
   export namespace Progress {
-    interface CircularProps extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
-      // no exported members
-    }
+    type CircularProps = svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']>
     export class Circular extends SvelteComponentTyped<CircularProps> {}
 
     interface LinearProps extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {

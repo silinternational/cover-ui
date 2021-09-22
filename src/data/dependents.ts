@@ -95,7 +95,7 @@ export async function updateDependent(policyId: string, dependentId: string, dep
   const urlPath = `dependents/${dependentId}`
   start(urlPath)
 
-  let parsedDep: UpdatePolicyDependentRequestBody = {
+  const parsedDep: UpdatePolicyDependentRequestBody = {
     id: dependentId,
     name: depData.name,
     relationship: depData.relationship,

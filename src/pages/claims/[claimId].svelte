@@ -55,8 +55,8 @@ $: payoutOption = claimItem.payout_option as PayoutOption
 $: needsRepairReceipt = needsReceipt && payoutOption === 'Repair'
 $: needsReplaceReceipt = needsReceipt && payoutOption === 'Replacement'
 $: needsReceipt = status === 'Receipt'
-$: needsEvidence = ((claimItem.fmv || claimItem.repair_estimate) && status === 'Draft') as Boolean
-$: needsFile = (needsReceipt || needsEvidence) as Boolean
+$: needsEvidence = ((claimItem.fmv || claimItem.repair_estimate) && status === 'Draft') as boolean
+$: needsFile = (needsReceipt || needsEvidence) as boolean
 $: filePurpose = getFilePurpose(claimItem, needsReceipt)
 $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType) as string
 $: moneyFormLabel = needsRepairReceipt ? 'Actual cost of repair' : 'Actual cost of replacement'
@@ -70,13 +70,13 @@ const claimsBreadcrumb = { name: 'Claims', url: '/claims' }
 $: thisClaimBreadcrumb = { name: claimName || 'This item', url: `/claims/${claimId}` }
 $: breadcrumbLinks = [claimsBreadcrumb, thisClaimBreadcrumb]
 
-const getFilePurpose = (claimItem: ClaimItem, needsReceipt: Boolean): ClaimFilePurpose => {
+const getFilePurpose = (claimItem: ClaimItem, needsReceipt: boolean): ClaimFilePurpose => {
   if (needsReceipt) return 'Receipt'
   if (claimItem.repair_estimate) return 'Repair Estimate'
   if (claimItem.fmv) return 'Evidence of FMV'
 }
 
-const getUploadLabel = (claimItem: ClaimItem, needsReceipt: Boolean, receiptType) => {
+const getUploadLabel = (claimItem: ClaimItem, needsReceipt: boolean, receiptType) => {
   if (needsReceipt) return `a ${receiptType} item receipt`
   if (claimItem.repair_estimate) return 'a repair estimate'
   if (claimItem.fmv) return 'evidence of fair market value'

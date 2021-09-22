@@ -1,4 +1,5 @@
 <script lang="ts">
+import user from '../authn/user'
 import { Claim, ClaimStatus, editableStatuses } from '../data/claims'
 import { Button } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
@@ -17,10 +18,12 @@ const onEditClaim = () => dispatch('edit')
 const onSubmitClaim = () => dispatch('submit')
 </script>
 
-{#if isEditable}
-  <Button on:click={onEditClaim} outlined>Edit claim</Button>
-{/if}
+{#if $user.app_role === 'User'}
+  {#if isEditable}
+    <Button on:click={onEditClaim} outlined>Edit claim</Button>
+  {/if}
 
-{#if status === 'Draft' || status === 'Receipt'}
-  <Button raised on:click={onSubmitClaim}>Submit claim</Button>
+  {#if status === 'Draft' || status === 'Receipt'}
+    <Button raised on:click={onSubmitClaim}>Submit claim</Button>
+  {/if}
 {/if}

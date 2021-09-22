@@ -1,15 +1,16 @@
 <script lang="ts">
 import { Banner } from '../../components'
-import { getState, State, Status } from '../../data/states'
+import { getState, State } from '../../data/states'
 
-export let claimStatus = '' as Status
+export let claimStatus = ''
+export let isClaim: boolean = false
 
 $: state = (claimStatus && getState(claimStatus)) || ({} as State)
 
 $: bgColor = state.bgColor || ''
 $: color = state.color || ''
 $: icon = state.icon || ''
-$: title = state.title || ''
+$: title = isClaim ? state.title.claim : state.title.item || ''
 </script>
 
 <style>

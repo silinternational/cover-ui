@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { State } from '../data/claims'
+import type { State } from '../data/states'
 
 export let state = {} as State
 export let statusReason = '' as string
@@ -7,7 +7,7 @@ export let statusReason = '' as string
 $: bgColor = state.bgColor || ''
 $: color = state.color || ''
 $: icon = state.icon || ''
-$: title = state.title || ''
+$: title = state.title.claim || ''
 $: steward = statusReason ? 'From your claim handler' : ('' as string) //TODO get this from the api
 </script>
 

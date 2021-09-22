@@ -67,7 +67,7 @@ const goToNewClaim = () => {
       </div>
     </Row>
 
-    <Row cols={'3'}>
+    <Row cols="3">
       <h2>{item.name || ''}</h2>
       <b>Covered value</b>
       <div>{formatMoney(item.coverage_amount)}</div>
@@ -79,7 +79,7 @@ const goToNewClaim = () => {
       <div>{householdId}</div>
     </Row>
 
-    <Row cols={'9'}>
+    <Row cols="9">
       <ClaimBanner claimStatus={status}>Submitted {daysAgo} days ago</ClaimBanner>
       <h3>{item.make || ''} {item.model || ''}</h3>
       <b class="mb-6px">Unique ID</b>
@@ -87,9 +87,13 @@ const goToNewClaim = () => {
       <br />
       <div>Description: {item.description || ''}</div>
       <br />
-      <Banner background="var(--mdc-theme-primary-header-bg)" color="var(--mdc-theme-primary)" class="max-content-width"
-        >{item.category?.name || ''}</Banner
+      <Banner
+        background="var(--mdc-theme-primary-header-bg)"
+        color="var(--mdc-theme-primary)"
+        class="max-content-width"
       >
+        {item.category?.name || ''}
+      </Banner>
       <div class="my-1">
         <b>Starts</b>
         <div>{startDate}</div>

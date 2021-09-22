@@ -51,14 +51,6 @@ const updateLocation = async () => {
   }
 }
 
-const handleChecked = (policyId: string) => {
-  setNotice('Notification option has been saved')
-}
-
-const handleUnchecked = (policyId: string) => {
-  setNotice('Notification option has been saved')
-}
-
 async function onFileSelect(event: CustomEvent<FormData>) {
   croppie =
     croppie ||
@@ -147,18 +139,6 @@ const isLocationValid = (location: string) => !!location
   <h3 class="ml-1 mt-3">Location<span class="required">*</span></h3>
   <p>
     <TextField placeholder={'Enter country'} bind:value={location} on:blur={updateLocation} />
-  </p>
-
-  <h3 class="ml-1 mt-3">Receive notification emails for</h3>
-  <p>
-    {#each $policies as policy (policy.id)}
-      <Checkbox
-        label={policy.type}
-        checked
-        on:checked={() => handleChecked(policy.id)}
-        on:unchecked={() => handleUnchecked(policy.id)}
-      />
-    {/each}
   </p>
 
   <h3 class="ml-1 mt-3">Profile picture</h3>

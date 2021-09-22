@@ -7,7 +7,7 @@ export const convertToCents = dollars => {
 }
 
 export const formatMoney = cents => {
-  if (cents === undefined || Number.isNaN(cents)) {
+  if (!cents || !Number.isFinite(+cents)) {
     return ''
   }
   return '$' + Number(cents / 100).toFixed(2)

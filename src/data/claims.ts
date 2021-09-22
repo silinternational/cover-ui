@@ -269,7 +269,7 @@ export async function updateClaim(claimId: string, newClaimData) {
   const updatedClaim = await UPDATE<Claim>(`claims/${claimId}`, parsedData)
 
   claims.update((currClaims) => {
-    let i = currClaims.findIndex((clm) => clm.id === claimId)
+    const i = currClaims.findIndex((clm) => clm.id === claimId)
     currClaims[i] = updatedClaim
     return currClaims
   })
@@ -347,7 +347,7 @@ export function clear() {
 export async function loadClaims() {
   start('loadClaims')
 
-  let clms = await GET<Claim[]>('claims')
+  const clms = await GET<Claim[]>('claims')
 
   claims.set(clms)
 

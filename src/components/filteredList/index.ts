@@ -11,7 +11,7 @@ FilteredList.Filter = Filter
  * @returns {Array}
  */
 FilteredList.updateFilterValue = (filters, filter, newValue) => {
-  let i = filters.indexOf(filter)
+  const i = filters.indexOf(filter)
   filter.filterValue = newValue
   filters[i] = filter
   return filters

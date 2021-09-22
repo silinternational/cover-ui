@@ -53,7 +53,7 @@ export async function updatePolicy(id: string, policyData) {
   const updatedPolicy = await UPDATE<Policy>(`policies/${id}`, parsedPolicyData)
 
   policies.update((currPolicies) => {
-    let i = currPolicies.findIndex((pol) => pol.id === id)
+    const i = currPolicies.findIndex((pol) => pol.id === id)
     currPolicies[i] = updatedPolicy
     return currPolicies
   })

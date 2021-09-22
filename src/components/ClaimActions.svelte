@@ -10,7 +10,7 @@ const dispatch = createEventDispatcher()
 let status: string
 $: status = claim.status
 
-let isEditable: boolean = false
+let isEditable = false
 $: isEditable = status !== 'Approved' && status !== 'Denied' && status !== 'Paid'
 
 const onEditClaim = () => dispatch('edit')

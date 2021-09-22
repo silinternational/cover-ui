@@ -2,20 +2,21 @@
 import type { Claim } from '../../data/claims'
 import { initialized, loadPolicies, policies, Policy } from '../../data/policies'
 import { formatFriendlyDate } from '../../helpers/date'
-import { formatMoney} from '../../helpers/money'
+import { formatMoney } from '../../helpers/money'
 import { Datatable, Page } from '@silintl/ui-components'
 import type { PolicyMember } from '../../data/policy-members'
 
 export let policyId: string
 
 $: $initialized || loadPolicies()
-$: policy = $policies.find(policy => policy.id === policyId) || {} as Policy
-$: members = policy.members || [] as PolicyMember[]
-$: claims = policy.claims || [] as Claim[]
+$: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
+$: members = policy.members || ([] as PolicyMember[])
+$: claims = policy.claims || ([] as Claim[])
 </script>
 
 <style>
-td, th {
+td,
+th {
   padding: 0.25ex;
 }
 
@@ -31,7 +32,7 @@ th {
       <th>Type</th>
       <td>{policy.type}</td>
     </tr>
-    {#if policy.type === 'Corporate' }
+    {#if policy.type === 'Corporate'}
       <tr>
         <th>Account</th>
         <td>{policy.account}</td>
@@ -44,7 +45,7 @@ th {
         <th>Entity Code</th>
         <td>{policy.entity_code?.code}</td>
       </tr>
-    {:else if policy.type === 'Household' }
+    {:else if policy.type === 'Household'}
       <tr>
         <th>Household ID</th>
         <td>{policy.household_id}</td>
@@ -55,7 +56,7 @@ th {
       <td>{formatFriendlyDate(policy.updated_at)}</td>
     </tr>
   </table>
-  
+
   <h4>Members</h4>
   <Datatable>
     <Datatable.Header>
@@ -64,7 +65,7 @@ th {
       <Datatable.Header.Item>Last Login</Datatable.Header.Item>
     </Datatable.Header>
     <Datatable.Data>
-      {#each members as member (member.id) }
+      {#each members as member (member.id)}
         <Datatable.Data.Row>
           <Datatable.Data.Row.Item>{member.first_name || ''} {member.last_name || ''}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{member.email || ''}</Datatable.Data.Row.Item>
@@ -87,8 +88,8 @@ th {
       <Datatable.Header.Item>FMV</Datatable.Header.Item>
     </Datatable.Header>
     <Datatable.Data>
-      {#each claims as claim (claim.id) }
-        {#each claim.claim_items as claimItem (claimItem.id) }
+      {#each claims as claim (claim.id)}
+        {#each claim.claim_items as claimItem (claimItem.id)}
           <Datatable.Data.Row>
             <Datatable.Data.Row.Item>
               <a href="/claims/{claim.id}">{claim.reference_number || ''}</a>

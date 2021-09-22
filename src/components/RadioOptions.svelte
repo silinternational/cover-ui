@@ -6,9 +6,9 @@ export let name
 export let value
 
 const isSelected = (option) => {
-  return (option.value === value) ? 'checked' : undefined
+  return option.value === value ? 'checked' : undefined
 }
-const onInput = event => {
+const onInput = (event) => {
   value = event.target.value
 }
 </script>

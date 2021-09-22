@@ -23,7 +23,7 @@ onMount(() => {
   return () => mdcTextField.destroy()
 })
 
-const focus = node => autofocus && node.focus()
+const focus = (node) => autofocus && node.focus()
 </script>
 
 <style>
@@ -45,19 +45,33 @@ const focus = node => autofocus && node.focus()
 }
 </style>
 
-<label class="mdc-text-field mdc-text-field--outlined {$$props.class} textfield-radius label-width"
-        class:mdc-text-field--no-label={!label}
-        class:mdc-text-field--disabled={disabled}
-        bind:this={element}>
+<label
+  class="mdc-text-field mdc-text-field--outlined {$$props.class} textfield-radius label-width"
+  class:mdc-text-field--no-label={!label}
+  class:mdc-text-field--disabled={disabled}
+  bind:this={element}
+>
   <i class="material-icons mdc-list-item__graphic money-icon" aria-hidden="true">attach_money</i>
-  <input step="0.01" type="number" min="0" class="mdc-text-field__input NotoSans m-l-24px" aria-labelledby={labelID} bind:value use:focus on:blur {maxlength} {disabled} {placeholder}>
+  <input
+    step="0.01"
+    type="number"
+    min="0"
+    class="mdc-text-field__input NotoSans m-l-24px"
+    aria-labelledby={labelID}
+    bind:value
+    use:focus
+    on:blur
+    {maxlength}
+    {disabled}
+    {placeholder}
+  />
   <span class="mdc-notched-outline">
-    <span class="mdc-notched-outline__leading" style="width:35px;"></span>
+    <span class="mdc-notched-outline__leading" style="width:35px;" />
     {#if label}
       <span class="mdc-notched-outline__notch">
         <span class="mdc-floating-label" id={labelID}>{label}</span>
       </span>
     {/if}
-    <span class="mdc-notched-outline__trailing"></span>
+    <span class="mdc-notched-outline__trailing" />
   </span>
 </label>

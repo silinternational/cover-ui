@@ -11,7 +11,7 @@ let status: string
 $: status = claim.status
 
 let isEditable: boolean = false
-$: isEditable = (status !== 'Approved') && (status !== 'Denied') && (status !== 'Paid')
+$: isEditable = status !== 'Approved' && status !== 'Denied' && status !== 'Paid'
 
 const onEditClaim = () => dispatch('edit')
 const onSubmitClaim = () => dispatch('submit')

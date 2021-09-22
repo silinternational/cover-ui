@@ -7,8 +7,8 @@ import { Button, Checkbox, TextField, Page, Snackbar, setNotice } from '@silintl
 import Croppie from 'croppie'
 import 'croppie/croppie.css'
 
-const NOTIFICATION_OPTION_DEFAULT = "default_email"
-const NOTIFICATION_OPTION_CUSTOM = "custom_email"
+const NOTIFICATION_OPTION_DEFAULT = 'default_email'
+const NOTIFICATION_OPTION_CUSTOM = 'custom_email'
 
 let uploading = false
 let notification_email = $user.email_override ? NOTIFICATION_OPTION_CUSTOM : NOTIFICATION_OPTION_DEFAULT
@@ -18,20 +18,20 @@ let croppie: Croppie
 let croppieContainer: HTMLDivElement
 
 $: notificationOptions = [
-    { label: "Default email: " + $user.email, value: NOTIFICATION_OPTION_DEFAULT },
-    { label: "Custom email", value: NOTIFICATION_OPTION_CUSTOM }
+  { label: 'Default email: ' + $user.email, value: NOTIFICATION_OPTION_DEFAULT },
+  { label: 'Custom email', value: NOTIFICATION_OPTION_CUSTOM },
 ]
 
 $: $policies.length || loadPolicies()
 
 const updateNotificationSelection = () => {
-    console.log('updated updateNotificationSelection');
+  console.log('updated updateNotificationSelection')
 }
 const updateCustomEmail = async () => {
   if (isEmailValid(email_override)) {
     await updateUser({
       ...$user,
-      email_override
+      email_override,
     })
     setNotice('Your notification email has been saved')
   } else {
@@ -43,7 +43,7 @@ const updateLocation = async () => {
   if (isLocationValid(location)) {
     await updateUser({
       ...$user,
-      location
+      location,
     })
     setNotice('Your location has been saved')
   } else {
@@ -60,17 +60,19 @@ const handleUnchecked = (policyId: string) => {
 }
 
 async function onFileSelect(event: CustomEvent<FormData>) {
-  croppie = croppie || new Croppie(croppieContainer, {
-    viewport: { width: 128, height: 128, type: 'circle' }
-  })
+  croppie =
+    croppie ||
+    new Croppie(croppieContainer, {
+      viewport: { width: 128, height: 128, type: 'circle' },
+    })
 
   let file = event.detail.get('file') as File
 
   if (file) {
     let reader = new FileReader()
-    reader.onload = e => {
+    reader.onload = (e) => {
       croppie.bind({
-        url: e.target.result as string
+        url: e.target.result as string,
       })
     }
 
@@ -83,34 +85,34 @@ async function onUpload() {
     setNotice('Please select an image to upload')
   } else {
     try {
-        uploading = true
+      uploading = true
 
-        croppie.result({ type: 'blob', circle: true }).then(async result => {
-          let data = new FormData()
-          data.append('file', result)
+      croppie.result({ type: 'blob', circle: true }).then(async (result) => {
+        let data = new FormData()
+        data.append('file', result)
 
-          const file = await upload(data)
+        const file = await upload(data)
 
-          updateUser({
-            ...$user,
-            photo_file: {
-              content_type: file.content_type,
-              created_by_id: $user.id,
-              id: file.id,
-              name: file.filename,
-              size: file.size,
-              url: file.url,
-              url_expiration: undefined
-            },
-            photo_file_id: file.id
-          })
-
-          setNotice('Your profile photo has been updated')
+        updateUser({
+          ...$user,
+          photo_file: {
+            content_type: file.content_type,
+            created_by_id: $user.id,
+            id: file.id,
+            name: file.filename,
+            size: file.size,
+            url: file.url,
+            url_expiration: undefined,
+          },
+          photo_file_id: file.id,
         })
-      } catch {
-        setNotice('There was an error uploading your profile photo')
-      } finally {
-        uploading = false
+
+        setNotice('Your profile photo has been updated')
+      })
+    } catch {
+      setNotice('There was an error uploading your profile photo')
+    } finally {
+      uploading = false
     }
   }
 }
@@ -118,7 +120,7 @@ async function onUpload() {
 const isEmailValid = (email: string) => email.includes('@') // bare basic validation
 const isLocationValid = (location: string) => !!location
 </script>
-    
+
 <style>
 .required {
   color: var(--mdc-theme-status-error);
@@ -130,16 +132,16 @@ const isLocationValid = (location: string) => !!location
   padding-bottom: 40px;
 }
 </style>
-    
+
 <Page>
   <Breadcrumb />
 
   <h3 class="ml-1 mt-3">Notification email</h3>
   <p>
-    <RadioOptions name="notificationEmail" options={notificationOptions} bind:value={notification_email} ></RadioOptions>
+    <RadioOptions name="notificationEmail" options={notificationOptions} bind:value={notification_email} />
   </p>
-  {#if notification_email === NOTIFICATION_OPTION_CUSTOM }
-    <TextField placeholder={'Custom email'} bind:value={email_override} on:blur={updateCustomEmail} ></TextField>
+  {#if notification_email === NOTIFICATION_OPTION_CUSTOM}
+    <TextField placeholder={'Custom email'} bind:value={email_override} on:blur={updateCustomEmail} />
   {/if}
 
   <h3 class="ml-1 mt-3">Location<span class="required">*</span></h3>
@@ -149,8 +151,13 @@ const isLocationValid = (location: string) => !!location
 
   <h3 class="ml-1 mt-3">Receive notification emails for</h3>
   <p>
-    {#each $policies as policy (policy.id) }
-      <Checkbox label={policy.type} checked on:checked={() => handleChecked(policy.id)} on:unchecked={() => handleUnchecked(policy.id)} ></Checkbox>
+    {#each $policies as policy (policy.id)}
+      <Checkbox
+        label={policy.type}
+        checked
+        on:checked={() => handleChecked(policy.id)}
+        on:unchecked={() => handleUnchecked(policy.id)}
+      />
     {/each}
   </p>
 
@@ -158,12 +165,12 @@ const isLocationValid = (location: string) => !!location
   <p>
     <FileDropArea mimeType="image/*" class="w-50 mt-10px" raised {uploading} on:upload={onFileSelect} />
   </p>
-  
+
   <div class="photo-preview">
-    <div bind:this={croppieContainer}></div>
+    <div bind:this={croppieContainer} />
   </div>
   {#if croppie}
     <Button raised on:click={onUpload}>Save</Button>
   {/if}
-  <Snackbar/>
+  <Snackbar />
 </Page>

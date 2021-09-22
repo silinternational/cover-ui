@@ -3,9 +3,8 @@
 
 <style>
 footer {
-    height: 50px;
+  height: 50px;
 }
 </style>
 
-<footer>
-</footer>
+<footer />

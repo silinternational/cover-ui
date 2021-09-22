@@ -3,22 +3,30 @@ import { start, stop } from '../components/progress'
 import { throwError } from '../error'
 import t from '../i18n'
 
-type FetchMethod = 'post' | 'get' | 'put' | 'delete';
+type FetchMethod = 'post' | 'get' | 'put' | 'delete'
 type UploadResponseBody = {
-  content_type: string;
-  filename: string;
-  id: string;
-  size: number;
-  url: string;
+  content_type: string
+  filename: string
+  id: string
+  size: number
+  url: string
 }
 
-export async function CREATE<T>(uri: string, body = undefined) { return await customFetch<T>('post'  , uri, body) }
-export async function GET<T>   (uri: string      ) { return await customFetch<T>('get'   , uri      ) }
-export async function UPDATE<T>(uri: string, body) { return await customFetch<T>('put'   , uri, body) }
-export async function DELETE<T>(uri: string      ) { return await customFetch<T>('delete', uri      ) }
+export async function CREATE<T>(uri: string, body = undefined) {
+  return await customFetch<T>('post', uri, body)
+}
+export async function GET<T>(uri: string) {
+  return await customFetch<T>('get', uri)
+}
+export async function UPDATE<T>(uri: string, body) {
+  return await customFetch<T>('put', uri, body)
+}
+export async function DELETE<T>(uri: string) {
+  return await customFetch<T>('delete', uri)
+}
 
 // https://developer.mozilla.org/en-US/docs/Web/API/FormData/FormData
-export const upload = async formData => await CREATE<UploadResponseBody>('upload', formData)
+export const upload = async (formData) => await CREATE<UploadResponseBody>('upload', formData)
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#Supplying_request_options
 async function customFetch<T>(method: FetchMethod, uri: string, body: any = undefined): Promise<T> {
@@ -34,7 +42,7 @@ async function customFetch<T>(method: FetchMethod, uri: string, body: any = unde
   } else {
     body = JSON.stringify(body)
   }
-  
+
   const url = includesHost(uri) ? uri : `${process.env.API_HOST}/${uri}`
   let response: Response = {} as Response
   try {
@@ -56,11 +64,11 @@ async function customFetch<T>(method: FetchMethod, uri: string, body: any = unde
   } finally {
     stop(url)
   }
-  
+
   const results = await response.json()
 
   // reminder: fetch does not throw exceptions for non-200 responses (https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch)
-  if (! response.ok) {
+  if (!response.ok) {
     const code = response.status
     if (code === 400) {
       throwError(results.message, code)
@@ -80,4 +88,4 @@ async function customFetch<T>(method: FetchMethod, uri: string, body: any = unde
 // not these:
 //    redirect-to?url=//example.org/home?abc=123
 //    redirect-to?url=https://example.org/home?abc=123
-const includesHost = uri => uri.match(/^(?:https?:)?\/\//)
+const includesHost = (uri) => uri.match(/^(?:https?:)?\/\//)

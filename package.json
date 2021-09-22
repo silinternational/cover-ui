@@ -9,7 +9,7 @@
     "clean": "run-p -l clean:build clean:deps",
     "clean:build": "rimraf dist/bundle* dist/service-worker* dist/workbox*",
     "clean:deps": "npm prune",
-    "format-all": "npx prettier --write src",
+    "format": "prettier --write ./src/**/*.{js,ts,svelte}",
     "local:dev": "run-p -l build:dev serve:http",
     "local:prod": "run-p -l build:prod serve:http",
     "serve:http": "sirv dist --dev --host 0.0.0.0 --port 8081 --single",

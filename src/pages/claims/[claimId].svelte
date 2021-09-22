@@ -42,7 +42,7 @@ $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType) as string
 $: moneyFormLabel = needsRepairReceipt ? "Actual cost of repair" : "Actual cost of replacement"
 $: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
 $: claimFiles = claim.claim_files || []
-$: maximumPayout = determineMaxPayout(payoutOption, claimItem, item.coverage_amount) as string
+$: maximumPayout = determineMaxPayout(payoutOption, claimItem, item.coverage_amount)
 
 // Dynamic breadcrumbs data:
 $: claimName = `${item.name} (${claim.reference_number})`

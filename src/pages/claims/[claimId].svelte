@@ -1,5 +1,5 @@
 <script lang="ts">
-import user from '../../authn/user.js'
+import user from '../../authn/user'
 import {
   Banner,
   Breadcrumb,

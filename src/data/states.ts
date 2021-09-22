@@ -78,13 +78,16 @@ export const itemStates: { [stateName: string]: State } = {
   Approved: { ...approved, title: 'Approved' },
 }
 
-export const getClaimState = <ClaimStatus>(status: string) => getAppropriateState(claimStates, status)
-
-export const getItemState = <ItemCoverageStatus>(status: string) => getAppropriateState(itemStates, status)
-
-const getAppropriateState = <State>(states: Status, status: Status) => {
-  if (states[status] === undefined) {
-    console.error('No such state (for claim/item status):', status, Object.keys(states))
+export const getClaimState = <ClaimStatus>(status: ClaimStatus) => {
+  if (claimStates[status] === undefined) {
+    console.error('No such state (for claim status):', status, Object.keys(claimStates))
   }
-  return states[status] || ({} as State)
+  return (claimStates[status] || {}) as State
+}
+
+export const getItemState = <ItemCoverageStatus>(status: ItemCoverageStatus) => {
+  if (itemStates[status] === undefined) {
+    console.error('No such state (for claim/item status):', status, Object.keys(itemStates))
+  }
+  return (itemStates[status] || {}) as State
 }

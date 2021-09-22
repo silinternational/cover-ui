@@ -1,5 +1,6 @@
-import type { PayoutOption } from '../data/claims'
+import type { PayoutOption, ClaimItem } from '../data/claims'
 
+export const DEDUCTIBLE = .05
 export const LOSS_REASON_EVACUATION = 'Evacuation'
 
 export const PAYOUT_OPTION_FIXED_FRACTION: PayoutOption = 'FixedFraction'
@@ -43,4 +44,34 @@ export const isUnrepairableOrTooExpensive = (isRepairable, repairCostIsTooHigh) 
   }
   
   return repairCostIsTooHigh
+}
+
+const computePayout = (...values) => {
+  const filteredValues = [...values]?.filter(value => value !== undefined)
+  return Math.min(...filteredValues) * (1 - DEDUCTIBLE)
+}
+
+const computeRepairMaxPayout = (claimItem: ClaimItem, coverageAmount) => computePayout(claimItem.repair_actual || claimItem.repair_estimate, coverageAmount, claimItem.fmv)
+
+const computeReplaceMaxPayout = (claimItem: ClaimItem, coverageAmount) => computePayout(claimItem.replace_estimate, coverageAmount)
+
+const computeCashMaxPayout = (claimItem: ClaimItem, coverageAmount) => computePayout(coverageAmount, claimItem.fmv)
+
+export const determineMaxPayout = (payoutOption: PayoutOption, claimItem: ClaimItem, coverageAmount) => {
+  switch (payoutOption) {
+    case PAYOUT_OPTION_REPAIR:
+      return computeRepairMaxPayout(claimItem, coverageAmount)
+      break
+    case PAYOUT_OPTION_REPLACE:
+      return computeReplaceMaxPayout(claimItem, coverageAmount)
+      break
+    case PAYOUT_OPTION_FMV:
+      return computeCashMaxPayout(claimItem, coverageAmount)
+      break
+    case PAYOUT_OPTION_FIXED_FRACTION:
+      return coverageAmount * 2/3
+      break
+    default:
+      return undefined
+  }
 }

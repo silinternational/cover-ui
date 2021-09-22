@@ -1,17 +1,14 @@
 <!-- https://github.com/material-components/material-components-web/tree/master/packages/mdc-menu -->
 <script lang="ts">
-import { onDestroy, onMount } from 'svelte'
 import { MDCMenu } from '@material/menu'
-import { createEventDispatcher } from 'svelte'
-import { goto } from '@roxi/routify';
+import { goto } from '@roxi/routify'
+import { onMount } from 'svelte'
 
 export let menuItems = []
 export let menuOpen = false
 
 let menu = {}
 let element = {}
-
-const dispatch = createEventDispatcher()
 
 $: currentUrl = window.location.pathname
 $: menu.open = menuOpen
@@ -22,10 +19,6 @@ onMount(() => {
   menu.setDefaultFocusState() //TODO figure out how to use this method and set focus
 
   return () => menu.destroy()
-})
-
-onDestroy(() => {
-  dispatch('syncToggler')
 })
 
 const isMenuItemActive = (currentUrl, menuItemUrl) => currentUrl === menuItemUrl

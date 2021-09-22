@@ -1,6 +1,16 @@
 <script lang="ts">
-import user from '../../authn/user'
-import { Banner, Breadcrumb, ClaimBanner, ConvertCurrencyLink, FileDropArea, FilePreview, MoneyInput, Row } from '../../components'
+import { determineMaxPayout } from '../../business-rules/claim-payout-amount'
+import {
+  Banner,
+  Breadcrumb,
+  ClaimActions,
+  ClaimBanner,
+  ConvertCurrencyLink,
+  FileDropArea,
+  FilePreview,
+  MoneyInput,
+  Row,
+} from '../../components'
 import { formatDate } from '../../components/dates'
 import { loading } from '../../components/progress'
 import { upload } from '../../data'
@@ -8,7 +18,7 @@ import { loadClaims, claims, initialized, claimsFileAttach, updateClaimItem, Cla
 import { loadItems, itemsByPolicyId, PolicyItem } from '../../data/items'
 import { formatMoney } from '../../helpers/money'
 import { goto } from '@roxi/routify'
-import { Button, Page, } from '@silintl/ui-components'
+import { Page } from '@silintl/ui-components'
 
 export let claimId: string
 
@@ -17,22 +27,19 @@ const updatedClaimItemData = {} as any
 let showImg = false
 let repairOrReplacementCost: number
 let uploading = false
-let deductible = .05
-let maximumPayout: string
 let previewFile = {} as ClaimFile
 
 $: $initialized || loadClaims()
 
 $: claim = $claims.find(clm => clm.id === claimId) || {} as Claim
 $: claimItem = claim.claim_items?.[0] || {} as ClaimItem //For now there will only be one claim_item
-$: items = $itemsByPolicyId[$user.policy_id] || []
-$: $user.policy_id && loadItems($user.policy_id)
+$: items = $itemsByPolicyId[claim.policy_id] || []
+$: claim.policy_id && loadItems(claim.policy_id)
 $: item = items.find(itm => itm.id === claimItem.item_id) || {} as PolicyItem
 
 $: incidentDate = formatDate(claim.incident_date)
 $: status = claim.status || ''
 $: payoutOption = claimItem.payout_option as PayoutOption
-$: isEditable = (status !== 'Approved') && (status !== 'Denied') && (status !== 'Paid')
 $: needsRepairReceipt = (needsReceipt && (payoutOption === 'Repair'))
 $: needsReplaceReceipt = (needsReceipt && (payoutOption === 'Replacement'))
 $: needsReceipt = (status === 'Receipt')
@@ -43,29 +50,13 @@ $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType) as string
 $: moneyFormLabel = needsRepairReceipt ? "Actual cost of repair" : "Actual cost of replacement"
 $: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
 $: claimFiles = claim.claim_files || []
-$: if(payoutOption === 'Repair') {
-    maximumPayout = computeRepairMaxPayout()
-  } else if(payoutOption === 'Replacement') {
-    maximumPayout = computeReplaceMaxPayout()
-  } else if(payoutOption === 'FMV') {
-    maximumPayout = computeCashMaxPayout()
-  } else if(claim.incident_type === 'Evacuation') {
-    maximumPayout = formatMoney(item.coverage_amount * 2/3) || ''
-  }
+$: maximumPayout = determineMaxPayout(payoutOption, claimItem, item.coverage_amount)
 
 // Dynamic breadcrumbs data:
 $: claimName = `${item.name} (${claim.reference_number})`
 const claimsBreadcrumb = { name: 'Claims', url: '/claims' }
 $: thisClaimBreadcrumb = { name: claimName || 'This item', url: `/claims/${claimId}` }
 $: breadcrumbLinks = [claimsBreadcrumb, thisClaimBreadcrumb]
-
-const computePayout = (...values) => formatMoney(Math.min(...values) * (1 - deductible)) || ''
-
-const computeRepairMaxPayout = () => computePayout(claimItem.repair_estimate || claimItem.repair_actual, item.coverage_amount, claimItem.fmv)
-
-const computeReplaceMaxPayout = () => computePayout(claimItem.replace_estimate, item.coverage_amount)
-
-const computeCashMaxPayout = () => computePayout(item.coverage_amount, claimItem.fmv)
 
 const getFilePurpose = (claimItem: ClaimItem, needsReceipt: Boolean): ClaimFilePurpose => {
   if(needsReceipt) return 'Receipt'
@@ -92,15 +83,13 @@ const onPreview = event => {
 const onImgError = () => showImg = false
 
 const onBlur = () => {
-  const cents = repairOrReplacementCost * 100
-
   if (needsRepairReceipt) {
-    updatedClaimItemData.repairActual = cents
+    updatedClaimItemData.repairActual = repairOrReplacementCost
   } else if (needsReplaceReceipt) {
-    updatedClaimItemData.replaceActual = cents
+    updatedClaimItemData.replaceActual = repairOrReplacementCost
   }
 
-  claimItem.id && updateClaimItem(claimItem.id, updatedClaimItemData) //TODO, test when claimItems is no longer empty
+  claimItem.id && updateClaimItem(claimItem.id, updatedClaimItemData)
 }
 
 async function onUpload(event) {
@@ -177,7 +166,7 @@ function onDeleted(event) {
       </p>
       <p>
         <b>Maximum payout (if approved)</b><br />
-        {maximumPayout}
+        {formatMoney(maximumPayout)}
       </p>
 
       {#if showImg}
@@ -185,13 +174,7 @@ function onDeleted(event) {
       {/if}
 
       <p>
-        {#if isEditable}
-          <Button on:click={editClaim} outlined>Edit claim</Button>
-        {/if}
-
-        {#if status === 'Draft' || status === 'Receipt'}
-          <Button raised on:click={onSubmit}>Submit claim</Button>
-        {/if}
+        <ClaimActions {claim} on:edit={editClaim} on:submit={onSubmit} />
       </p>
 
       {#if needsReceipt}

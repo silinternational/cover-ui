@@ -3,7 +3,7 @@ import ClaimCardBanner from './ClaimCardBanner.svelte'
 import { day } from './const'
 import type { Claim, ClaimItem } from '../data/claims'
 import type { PolicyItem } from '../data/items'
-import { getState, State } from '../data/states'
+import { getClaimState, State } from '../data/states'
 import { Card, Button } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
@@ -16,7 +16,7 @@ const now = Date.now()
 
 $: msAgo = now - Date.parse(claimItem.updated_at)
 $: daysAgo = msAgo > 0 ? Math.floor(msAgo / day) : '-'
-$: state = getState(claim.status) || ({} as State)
+$: state = getClaimState(claim.status) || ({} as State)
 $: statusReason = claim.status_reason || ('' as string)
 
 const gotoClaim = () => dispatch('goto-claim', claim.id)

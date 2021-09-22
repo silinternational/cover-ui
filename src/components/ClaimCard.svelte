@@ -14,21 +14,21 @@ const dispatch = createEventDispatcher()
 const now = Date.now()
 
 $: msAgo = now - Date.parse(claimItem.updated_at)
-$: daysAgo = msAgo > 0 ? Math.floor(msAgo/day) : '-'
-$: state = getState(claim.status) || {} as State
-$: statusReason = claim.status_reason || '' as string
+$: daysAgo = msAgo > 0 ? Math.floor(msAgo / day) : '-'
+$: state = getState(claim.status) || ({} as State)
+$: statusReason = claim.status_reason || ('' as string)
 
 const gotoClaim = () => dispatch('goto-claim', claim.id)
 </script>
 
 <style>
 .action {
-    margin: 16px;
+  margin: 16px;
 }
 
 .content {
   overflow-wrap: anywhere;
-  padding-bottom: .5rem;
+  padding-bottom: 0.5rem;
 }
 
 .multi-line-truncate {

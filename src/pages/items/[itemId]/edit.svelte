@@ -11,35 +11,34 @@ export let itemId: string
 $: policyId = $user.policy_id
 $: policyId && loadItems(policyId)
 $: items = $itemsByPolicyId[policyId] || []
-$: item = items.find(anItem => anItem.id === itemId) || {} as PolicyItem
+$: item = items.find((anItem) => anItem.id === itemId) || ({} as PolicyItem)
 $: itemName = item.name || ''
 
 // Dynamic breadcrumbs data:
 const itemsBreadcrumb = { name: 'Items', url: '/items' }
 $: thisItemBreadcrumb = { name: itemName || 'This item', url: `/items/${itemId}` }
-const editBreadcrumb =   { name: "Edit", url: `/items/${itemId}/edit` }
+const editBreadcrumb = { name: 'Edit', url: `/items/${itemId}/edit` }
 $: breadcrumbLinks = [itemsBreadcrumb, thisItemBreadcrumb, editBreadcrumb]
 
-const onSubmit = async event => {
+const onSubmit = async (event) => {
   await updateItem(policyId, itemId, event.detail)
   await submitItem(policyId, itemId)
 
   $goto(`/items/${itemId}`)
 }
 
-const onSaveForLater = async event => {
+const onSaveForLater = async (event) => {
   await updateItem(policyId, itemId, event.detail)
-  
+
   $goto(`/items/${itemId}`)
 }
 </script>
 
-{#if !item.id }
+{#if !item.id}
   {#if $loading}
     Loading...
   {:else}
-    We could not find that item. Please <a href="/items">go back</a> and select
-    an item from the list.
+    We could not find that item. Please <a href="/items">go back</a> and select an item from the list.
   {/if}
 {:else}
   <!-- @todo Handle situations where the user isn't allowed to edit this item (if any). -->

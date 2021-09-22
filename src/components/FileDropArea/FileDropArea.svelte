@@ -10,7 +10,7 @@ let fileInput = {} as any
 
 let highlighted = false
 
-const dispatch = createEventDispatcher<{upload: FormData}>()
+const dispatch = createEventDispatcher<{ upload: FormData }>()
 
 function highlight() {
   highlighted = true
@@ -30,9 +30,9 @@ function handleDrop(e) {
 }
 
 function handleFiles(files: File[]) {
-  if(! uploading) {
+  if (!uploading) {
     uploading = true
-    files = [...files]  //turns files into an array so forEach works
+    files = [...files] //turns files into an array so forEach works
     files.forEach(uploadFile)
   }
 }
@@ -44,9 +44,8 @@ function uploadFile(file: File) {
 
   dispatch('upload', formData)
 }
-
 </script>
-  
+
 <style>
 form > * {
   margin-top: 0;
@@ -69,16 +68,35 @@ form > * {
 }
 </style>
 
-<div id="drop-area" class="br-8px {$$props.class}" class:highlighted
+<div
+  id="drop-area"
+  class="br-8px {$$props.class}"
+  class:highlighted
   on:dragenter|preventDefault|stopPropagation={highlight}
   on:dragleave|preventDefault|stopPropagation={unhighlight}
   on:dragover|preventDefault|stopPropagation={highlight}
-  on:drop|preventDefault|stopPropagation={handleDrop}>
+  on:drop|preventDefault|stopPropagation={handleDrop}
+>
   <form class="flex justify-between align-items-center my-1 px-1">
-    {#if ! uploading}
-      <input bind:this={fileInput} type="file" id="fileElem" multiple accept={mimeType} disabled={uploading} on:change={() => handleFiles(fileInput.files)}>
+    {#if !uploading}
+      <input
+        bind:this={fileInput}
+        type="file"
+        id="fileElem"
+        multiple
+        accept={mimeType}
+        disabled={uploading}
+        on:change={() => handleFiles(fileInput.files)}
+      />
     {/if}
-    <label class="mdc-button mt-1" for="fileElem" class:custom-text-button={raised} class:mdc-button--outlined={outlined} class:disabled={uploading} class:mdc-button--raised={raised}>Choose files</label>
+    <label
+      class="mdc-button mt-1"
+      for="fileElem"
+      class:custom-text-button={raised}
+      class:mdc-button--outlined={outlined}
+      class:disabled={uploading}
+      class:mdc-button--raised={raised}>Choose files</label
+    >
     <div>or drop files here</div>
     <i class="material-icons icon" id="upload-icon">cloud_upload</i>
   </form>

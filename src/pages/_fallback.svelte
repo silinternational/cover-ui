@@ -11,6 +11,4 @@ p {
 }
 </style>
 
-<p>
-  These aren't the droids you're looking for... 🤖
-</p>
+<p>These aren't the droids you're looking for... 🤖</p>

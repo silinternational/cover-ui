@@ -9,13 +9,13 @@ export let items: any[]
 let filteredItems = writable(items)
 
 if (!filters || !items) {
-  throwError("Error: `filters` and `items` parameter are required for this component")
+  throwError('Error: `filters` and `items` parameter are required for this component')
 }
 
 $: applyFilters(filters)
 
 const applyFilters = (filters: Filter[]) => {
-  filters.forEach(filter => {
+  filters.forEach((filter) => {
     filteredItems.update(() => {
       return filter.filter(items)
     })

@@ -25,12 +25,12 @@ $: $initialized || loadPolicies()
       <Datatable.Header.Item>Claims</Datatable.Header.Item>
     </Datatable.Header>
     <Datatable.Data>
-      {#each $policies as policy (policy.id) }
+      {#each $policies as policy (policy.id)}
         <Datatable.Data.Row on:click={() => $goto(`/policies/${policy.id}`)} clickable>
           <Datatable.Data.Row.Item>
-            {#if policy.type === 'Household' }
+            {#if policy.type === 'Household'}
               <span class="material-icons">family_restroom</span>
-            {:else if policy.type === 'Corporate' }
+            {:else if policy.type === 'Corporate'}
               <span class="material-icons">business</span>
             {/if}
             {policy.type || ''}

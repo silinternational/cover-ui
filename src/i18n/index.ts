@@ -7,7 +7,7 @@ export default function t(key) {
     return '⤂ translation key not found! ⤃'
   }
 
-  const langOnlyNoVariant = navigator.language.substring(0,2)
+  const langOnlyNoVariant = navigator.language.substring(0, 2)
 
   return phrase[langOnlyNoVariant] || phrase['en']
 }

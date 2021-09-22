@@ -118,7 +118,7 @@ export async function addItem(policyId: string, itemData: any) {
     serial_number: itemData.uniqueIdentifier,
   }
 
-  const addedItem = await CREATE<PolicyItem>(urlPath, parsedItemData)
+  const addedItem = await CREATE<PolicyItem>(urlPath, parsedItemData as any)
 
   itemsByPolicyId.update((data) => {
     const items = data[policyId] || []

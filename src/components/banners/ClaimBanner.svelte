@@ -1,8 +1,8 @@
 <script lang="ts">
 import { Banner } from '../../components'
-import { getState, State } from '../../data/claims'
+import { getState, State, Status } from '../../data/states'
 
-export let claimStatus = ''
+export let claimStatus = '' as Status
 
 $: state = (claimStatus && getState(claimStatus)) || ({} as State)
 

@@ -1,7 +1,8 @@
 <script lang="ts">
 import ClaimCardBanner from './ClaimCardBanner.svelte'
 import { day } from './const'
-import { getState, Claim, ClaimItem, State } from '../data/claims'
+import type { Claim, ClaimItem } from '../data/claims'
+import { getState, State } from '../data/states'
 import type { PolicyItem } from '../data/items'
 import { Card, Button } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'

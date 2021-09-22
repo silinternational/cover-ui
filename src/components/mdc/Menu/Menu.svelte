@@ -22,28 +22,38 @@ onMount(() => {
 })
 
 const isMenuItemActive = (currentUrl, menuItemUrl) => currentUrl === menuItemUrl
-const handleItemClick = url => {
+const handleItemClick = (url) => {
   if (url) {
     $goto(url)
   }
 }
 const handleItemKeydown = (e, url) => (e.code == 'Space' || e.code == 'Enter') && handleItemClick(url)
 const closeMenuHandler = () => {
-  if (!menu.open) { //checks to make sure the click wasn't opening the menu or on the menu
+  if (!menu.open) {
+    //checks to make sure the click wasn't opening the menu or on the menu
     menuOpen = false
   }
 }
 </script>
+
 <!-- mdc-menu doesn't have a method to let us know when it closes so this listens for clicks -->
 <svelte:body on:click={closeMenuHandler} />
 
 <div class="mdc-menu mdc-menu-surface" bind:this={element}>
   <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical" tabindex="-1">
-    {#each menuItems as {icon, label, url}, i}
+    {#each menuItems as { icon, label, url }, i}
       <!-- svelte-ignore a11y-invalid-attribute -->
-      <li on:click|preventDefault={() => handleItemClick(url)} on:keydown|preventDefault={ e => handleItemKeydown(e, url)} role="menuitem" class="mdc-list-item" class:mdc-list-item--activated={isMenuItemActive(currentUrl, url)}
-        aria-current={isMenuItemActive(currentUrl, url) ? "page" : null} tabindex={i === 0 ? 0 : undefined} on:blur={closeMenuHandler}>
-        <span class="mdc-list-item__ripple"></span>
+      <li
+        on:click|preventDefault={() => handleItemClick(url)}
+        on:keydown|preventDefault={(e) => handleItemKeydown(e, url)}
+        role="menuitem"
+        class="mdc-list-item"
+        class:mdc-list-item--activated={isMenuItemActive(currentUrl, url)}
+        aria-current={isMenuItemActive(currentUrl, url) ? 'page' : null}
+        tabindex={i === 0 ? 0 : undefined}
+        on:blur={closeMenuHandler}
+      >
+        <span class="mdc-list-item__ripple" />
         {#if icon}
           <i class="material-icons mdc-list-item__graphic" aria-hidden="true">{icon}</i>
         {/if}

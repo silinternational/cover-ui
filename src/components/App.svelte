@@ -10,11 +10,11 @@ import { routes } from '../../.routify/routes'
 
 // added because of this:  https://github.com/sveltech/routify/issues/201
 const queryHandler = {
-  parse: (params: string) => parse(params, {ignoreQueryPrefix: true}),
-  stringify
+  parse: (params: string) => parse(params, { ignoreQueryPrefix: true }),
+  stringify,
 }
 onMount(() => {
-  loadUser().catch(error => {
+  loadUser().catch((error) => {
     if (error.code === 401) {
       login()
     }
@@ -26,4 +26,4 @@ onMount(() => {
   <title>{t('appname')}</title>
 </svelte:head>
 
-<Router {routes} config={{queryHandler}} />
+<Router {routes} config={{ queryHandler }} />

@@ -112,7 +112,3 @@ typings/
 
 # TernJS port file
 .tern-port
-
-# Prettier
-.prettierrc
-.prettierrc.*

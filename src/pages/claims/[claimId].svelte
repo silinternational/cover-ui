@@ -1,6 +1,16 @@
 <script lang="ts">
 import user from '../../authn/user'
-import { Banner, Breadcrumb, ClaimBanner, ConvertCurrencyLink, FileDropArea, FilePreview, MoneyInput, Row } from '../../components'
+import {
+  Banner,
+  Breadcrumb,
+  ClaimActions,
+  ClaimBanner,
+  ConvertCurrencyLink,
+  FileDropArea,
+  FilePreview,
+  MoneyInput,
+  Row,
+} from '../../components'
 import { formatDate } from '../../components/dates'
 import { loading } from '../../components/progress'
 import { upload } from '../../data'
@@ -8,7 +18,7 @@ import { loadClaims, claims, initialized, claimsFileAttach, updateClaimItem, Cla
 import { loadItems, itemsByPolicyId, PolicyItem } from '../../data/items'
 import { formatMoney } from '../../helpers/money'
 import { goto } from '@roxi/routify'
-import { Button, Page, } from '@silintl/ui-components'
+import { Page } from '@silintl/ui-components'
 
 export let claimId: string
 
@@ -25,14 +35,13 @@ $: $initialized || loadClaims()
 
 $: claim = $claims.find(clm => clm.id === claimId) || {} as Claim
 $: claimItem = claim.claim_items?.[0] || {} as ClaimItem //For now there will only be one claim_item
-$: items = $itemsByPolicyId[$user.policy_id] || []
-$: $user.policy_id && loadItems($user.policy_id)
+$: items = $itemsByPolicyId[claim.policy_id] || []
+$: claim.policy_id && loadItems(claim.policy_id)
 $: item = items.find(itm => itm.id === claimItem.item_id) || {} as PolicyItem
 
 $: incidentDate = formatDate(claim.incident_date)
 $: status = claim.status || ''
 $: payoutOption = claimItem.payout_option as PayoutOption
-$: isEditable = (status !== 'Approved') && (status !== 'Denied') && (status !== 'Paid')
 $: needsRepairReceipt = (needsReceipt && (payoutOption === 'Repair'))
 $: needsReplaceReceipt = (needsReceipt && (payoutOption === 'Replacement'))
 $: needsReceipt = (status === 'Receipt')
@@ -183,13 +192,7 @@ function onDeleted(event) {
       {/if}
 
       <p>
-        {#if isEditable}
-          <Button on:click={editClaim} outlined>Edit claim</Button>
-        {/if}
-
-        {#if status === 'Draft' || status === 'Receipt'}
-          <Button raised on:click={onSubmit}>Submit claim</Button>
-        {/if}
+        <ClaimActions {claim} on:edit={editClaim} on:submit={onSubmit} />
       </p>
 
       {#if needsReceipt}

@@ -2,8 +2,8 @@
 import ClaimCardBanner from './ClaimCardBanner.svelte'
 import { day } from './const'
 import type { Claim, ClaimItem } from '../data/claims'
-import { getState, State } from '../data/states'
 import type { PolicyItem } from '../data/items'
+import { getState, State } from '../data/states'
 import { Card, Button } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 

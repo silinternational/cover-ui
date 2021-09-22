@@ -1,6 +1,6 @@
 <script lang="ts">
 import user from '../../authn/user'
-import { Banner, Breadcrumb, ClaimBanner, Row } from '../../components'
+import { Banner, Breadcrumb, ItemBanner, Row } from '../../components'
 import { day } from '../../components/const'
 import { formatDate } from '../../components/dates'
 import { loading } from '../../components/progress'
@@ -80,7 +80,7 @@ const goToNewClaim = () => {
     </Row>
 
     <Row cols="9">
-      <ClaimBanner claimStatus={status}>Submitted {daysAgo} days ago</ClaimBanner>
+      <ItemBanner itemStatus={status}>Submitted {daysAgo} days ago</ItemBanner>
       <h3>{item.make || ''} {item.model || ''}</h3>
       <b class="mb-6px">Unique ID</b>
       <div>{item.serial_number}</div>

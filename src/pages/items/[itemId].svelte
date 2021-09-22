@@ -4,7 +4,7 @@ import { Banner, Breadcrumb, ClaimBanner, Row } from '../../components'
 import { day } from '../../components/const'
 import { formatDate } from '../../components/dates'
 import { loading } from '../../components/progress'
-import { itemsByPolicyId, loadItems, PolicyItem } from '../../data/items'
+import { itemsByPolicyId, loadItems, PolicyItem, ItemCoverageStatus } from '../../data/items'
 import { init, policies, Policy } from '../../data/policies'
 import { formatMoney } from '../../helpers/money'
 import { goto } from '@roxi/routify'
@@ -26,6 +26,7 @@ $: policy.household_id && setPolicyHouseholdId()
 $: items = $itemsByPolicyId[$user.policy_id] || []
 $: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
 $: itemName = item.name || ''
+$: status = (item.coverage_status || '') as ItemCoverageStatus
 
 $: msAgo = now - Date.parse(item.updated_at)
 $: daysAgo = msAgo > 0 ? Math.floor(msAgo / day) : '-'
@@ -77,7 +78,7 @@ const goToNewClaim = () => {
     </Row>
 
     <Row cols={'9'}>
-      <ClaimBanner claimStatus={item.coverage_status}>Submitted {daysAgo} days ago</ClaimBanner>
+      <ClaimBanner claimStatus={status}>Submitted {daysAgo} days ago</ClaimBanner>
       <h3>{item.make || ''} {item.model || ''}</h3>
       <b class="mb-6px">Unique ID</b>
       <div>{item.serial_number}</div>
@@ -93,7 +94,9 @@ const goToNewClaim = () => {
       </div>
       <br />
       <div>
-        <Button class="mdc-theme--secondary-background" on:click={goToNewClaim} raised>File Claim</Button>
+        {#if status === 'Approved'}
+          <Button class="mdc-theme--secondary-background" on:click={goToNewClaim} raised>File Claim</Button>
+        {/if}
       </div>
     </Row>
   {/if}

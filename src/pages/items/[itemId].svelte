@@ -4,17 +4,18 @@ import { Banner, Breadcrumb, ItemBanner, Row } from '../../components'
 import { day } from '../../components/const'
 import { formatDate } from '../../components/dates'
 import { loading } from '../../components/progress'
-import { itemsByPolicyId, loadItems, PolicyItem, ItemCoverageStatus } from '../../data/items'
+import { ItemCoverageStatus, itemsByPolicyId, loadItems, PolicyItem } from '../../data/items'
 import { init, policies, Policy } from '../../data/policies'
 import { formatMoney } from '../../helpers/money'
 import { goto } from '@roxi/routify'
-import { Button, Page } from '@silintl/ui-components'
+import { Button, Page, Dialog } from '@silintl/ui-components'
 
-export let itemId
+export let itemId: string
 
 const now = Date.now()
 
 let householdId = ''
+let open: boolean = false
 
 $: $user.policy_id && loadItems($user.policy_id)
 
@@ -59,7 +60,13 @@ const goToNewClaim = () => {
       <div class="flex justify-between align-items-center">
         <Breadcrumb links={breadcrumbLinks} />
         <div>
-          <Button class="remove-button mx-5px" url={`/items/${itemId}/delete`}>Remove</Button>
+          <Button class="remove-button mx-5px" on:click={() => (open = true)}>Remove</Button>
+          <Dialog.Alert
+            {open}
+            title="Remove Coverage"
+            on:chosen={() => (open = false)}
+            on:closed={() => (open = false)}
+          />
           {#if status === 'Draft' || status === 'Pending'}
             <Button on:click={goToEditItem}>Edit Item</Button>
           {/if}

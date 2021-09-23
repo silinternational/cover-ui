@@ -2,6 +2,7 @@
 import user, { updateUser } from '../../authn/user'
 import { Breadcrumb, FileDropArea, RadioOptions } from '../../components'
 import { upload } from '../../data'
+import { policies, init as loadPolicies } from '../../data/policies'
 import { Button, Checkbox, TextField, Page, Snackbar, setNotice } from '@silintl/ui-components'
 import Croppie from 'croppie'
 import 'croppie/croppie.css'
@@ -20,6 +21,8 @@ $: notificationOptions = [
   { label: 'Default email: ' + $user.email, value: NOTIFICATION_OPTION_DEFAULT },
   { label: 'Custom email', value: NOTIFICATION_OPTION_CUSTOM },
 ]
+
+$: 0 && ($policies.length || loadPolicies())
 
 const updateNotificationSelection = () => {
   console.log('updated updateNotificationSelection')
@@ -46,6 +49,14 @@ const updateLocation = async () => {
   } else {
     setNotice('Please enter a location')
   }
+}
+
+const handleChecked = (policyId: string) => {
+  setNotice('Notification option has been saved')
+}
+
+const handleUnchecked = (policyId: string) => {
+  setNotice('Notification option has been saved')
 }
 
 async function onFileSelect(event: CustomEvent<FormData>) {
@@ -137,6 +148,20 @@ const isLocationValid = (location: string) => !!location
   <p>
     <TextField placeholder={'Enter country'} bind:value={location} on:blur={updateLocation} />
   </p>
+
+  {#if 0}
+    <h3 class="ml-1 mt-3">Receive notification emails for</h3>
+    <p>
+      {#each $policies as policy (policy.id)}
+        <Checkbox
+          label={policy.type}
+          checked
+          on:checked={() => handleChecked(policy.id)}
+          on:unchecked={() => handleUnchecked(policy.id)}
+        />
+      {/each}
+    </p>
+  {/if}
 
   <h3 class="ml-1 mt-3">Profile picture</h3>
   <p>

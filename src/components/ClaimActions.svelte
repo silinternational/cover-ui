@@ -63,7 +63,7 @@ const onDeny = () => dispatch('deny', message)
     <Button on:click={on('edit')} outlined>Edit claim</Button>
   {/if}
 
-  {#if status === 'Draft' || status === 'Receipt'}
+  {#if status === 'Draft' || status === 'Receipt' || status === 'Revision'}
     <Button raised on:click={on('submit')}>Submit claim</Button>
   {/if}
 {/if}

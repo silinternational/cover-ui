@@ -15,6 +15,7 @@ import { formatDate } from '../../components/dates'
 import { loading } from '../../components/progress'
 import { upload } from '../../data'
 import {
+  approveClaim,
   loadClaims,
   claims,
   initialized,
@@ -83,6 +84,8 @@ const getUploadLabel = (claimItem: ClaimItem, needsReceipt: boolean, receiptType
 }
 
 const editClaim = () => $goto(`/claims/${claimId}/edit`)
+
+const onApprove = async () => await approveClaim(claimId)
 
 const onSubmit = async () => await submitClaim(claimId)
 
@@ -186,7 +189,7 @@ function onDeleted(event) {
       {/if}
 
       <p>
-        <ClaimActions {claim} on:edit={editClaim} on:submit={onSubmit} />
+        <ClaimActions {claim} on:approve={onApprove} on:edit={editClaim} on:submit={onSubmit} />
       </p>
 
       {#if needsReceipt}

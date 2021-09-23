@@ -1,8 +1,6 @@
 import type { ClaimStatus } from './claims'
 import type { ItemCoverageStatus } from './items'
 
-export type Status = ClaimStatus | ItemCoverageStatus
-
 export type State = {
   icon: string
   color: string
@@ -78,14 +76,14 @@ export const itemStates: { [stateName: string]: State } = {
   Approved: { ...approved, title: 'Approved' },
 }
 
-export const getClaimState = <ClaimStatus>(status: ClaimStatus) => {
+export const getClaimState = (status: ClaimStatus): State => {
   if (claimStates[status] === undefined) {
     console.error('No such state (for claim status):', status, Object.keys(claimStates))
   }
   return (claimStates[status] || {}) as State
 }
 
-export const getItemState = <ItemCoverageStatus>(status: ItemCoverageStatus) => {
+export const getItemState = (status: ItemCoverageStatus): State => {
   if (itemStates[status] === undefined) {
     console.error('No such state (for claim/item status):', status, Object.keys(itemStates))
   }

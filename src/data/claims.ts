@@ -80,12 +80,12 @@ export type CreateClaimRequestBody = {
 }
 
 export type CreateClaimItemRequestBody = {
-  fmv: number | null
+  fmv: number
   is_repairable: boolean
   item_id: string
   payout_option: PayoutOption
-  repair_estimate: number | null
-  replace_estimate: number | null
+  repair_estimate: number
+  replace_estimate: number
 }
 
 export type UpdateClaimRequestBody = {
@@ -110,13 +110,13 @@ export type ClaimsFileAttachResponseBody = {
 }
 
 export type UpdateClaimItemRequestBody = {
-  fmv: number | null
+  fmv: number
   is_repairable: boolean
   payout_option: PayoutOption
-  repair_estimate: number | null
-  replace_estimate: number | null
-  repair_actual: number | null
-  replace_actual: number | null
+  repair_estimate: number
+  replace_estimate: number
+  repair_actual: number
+  replace_actual: number
 }
 
 export const claims = writable<Claim[]>([])

@@ -287,15 +287,15 @@ export async function updateClaim(claimId: string, newClaimData) {
  * @param {String} claimId
  */
 export const approveClaim = async (claimId: string): Promise<Claim> => {
-  const updatedClaim = await UPDATE<Claim>(`claims/${claimId}/approve`)
+  const approvedClaim = await CREATE<Claim>(`claims/${claimId}/approve`)
 
   claims.update((claims) => {
     const i = claims.findIndex((claim) => claim.id === claimId)
-    claims[i] = updatedClaim
+    claims[i] = approvedClaim
     return claims
   })
 
-  return updatedClaim
+  return approvedClaim
 }
 
 export async function claimsFileAttach(claimId: string, fileId: string, purpose: ClaimFilePurpose) {

@@ -18,7 +18,7 @@ export async function CREATE<T>(uri: string, body = undefined) {
 export async function GET<T>(uri: string) {
   return await customFetch<T>('get', uri)
 }
-export async function UPDATE<T>(uri: string, body = undefined) {
+export async function UPDATE<T>(uri: string, body) {
   return await customFetch<T>('put', uri, body)
 }
 export async function DELETE<T>(uri: string) {

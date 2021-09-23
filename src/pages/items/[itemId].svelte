@@ -14,7 +14,7 @@ export let itemId: string
 
 const now = Date.now()
 const buttons: AlertButton[] = [
-  { label: 'Remove Coverage', action: 'remove', class: 'mdc-dialog__button' },
+  { label: 'Remove Coverage', action: 'remove', class: 'error-button' },
   { label: 'cancel', action: 'cancel', class: 'mdc-dialog__button' },
 ]
 

@@ -42,3 +42,8 @@
 .remove-button {
   --mdc-theme-primary: var(--mdc-theme-neutral-action);
 }
+
+.error-button {
+  --mdc-theme-primary: var(--mdc-theme-status-error);
+  border: 2px solid !important;
+}

@@ -135,7 +135,7 @@ export function init(): void {
  * @param {Object} item
  * @param {Object} claimData
  */
-export async function createClaim(item: PolicyItem, claimData: any): Promise<void> {
+export async function createClaim(item: PolicyItem, claimData: any): Promise<Claim> {
   const urlPath = `policies/${item.policy_id}/claims`
 
   const parsedClaim: CreateClaimRequestBody = {
@@ -150,6 +150,8 @@ export async function createClaim(item: PolicyItem, claimData: any): Promise<voi
     currClaims.push(claim)
     return currClaims
   })
+
+  return claim
 }
 
 export const createClaimItem = async (claimId: string, claimItemData: any): Promise<void> => {

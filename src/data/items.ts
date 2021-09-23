@@ -76,7 +76,7 @@ export const itemsByPolicyId = writable<{ [policyId: string]: PolicyItem[] }>({}
  * @export
  * @param {string} policyId -- The UUID for the desired policy
  */
-export async function loadItems(policyId: string): Promise<PolicyItem[]> {
+export async function loadItems(policyId: string): Promise<void> {
   const urlPath = `policies/${policyId}/items`
 
   const items = await GET<PolicyItem[]>(urlPath)
@@ -84,8 +84,6 @@ export async function loadItems(policyId: string): Promise<PolicyItem[]> {
     data[policyId] = items
     return data
   })
-
-  return items
 }
 
 /**

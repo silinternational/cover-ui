@@ -22,7 +22,7 @@ $: notificationOptions = [
   { label: 'Custom email', value: NOTIFICATION_OPTION_CUSTOM },
 ]
 
-$: $policies.length || loadPolicies()
+$: 0 && ($policies.length || loadPolicies())
 
 const updateNotificationSelection = () => {
   console.log('updated updateNotificationSelection')
@@ -149,17 +149,19 @@ const isLocationValid = (location: string) => !!location
     <TextField placeholder={'Enter country'} bind:value={location} on:blur={updateLocation} />
   </p>
 
-  <h3 class="ml-1 mt-3">Receive notification emails for</h3>
-  <p>
-    {#each $policies as policy (policy.id)}
-      <Checkbox
-        label={policy.type}
-        checked
-        on:checked={() => handleChecked(policy.id)}
-        on:unchecked={() => handleUnchecked(policy.id)}
-      />
-    {/each}
-  </p>
+  {#if 0}
+    <h3 class="ml-1 mt-3">Receive notification emails for</h3>
+    <p>
+      {#each $policies as policy (policy.id)}
+        <Checkbox
+          label={policy.type}
+          checked
+          on:checked={() => handleChecked(policy.id)}
+          on:unchecked={() => handleUnchecked(policy.id)}
+        />
+      {/each}
+    </p>
+  {/if}
 
   <h3 class="ml-1 mt-3">Profile picture</h3>
   <p>

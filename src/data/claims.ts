@@ -118,72 +118,8 @@ export type UpdateClaimItemRequestBody = {
   replace_actual: number
 }
 
-export type State = {
-  icon: string
-  color: string
-  bgColor: string
-  title: string
-}
-
 export const claims = writable<Claim[]>([])
 export const initialized = writable<boolean>(false)
-export const warning: State = {
-  icon: 'error',
-  color: '--mdc-theme-status-warning',
-  bgColor: '--mdc-theme-status-warning-bg',
-  title: 'Needs changes',
-}
-export const success: State = {
-  icon: 'done',
-  color: '--mdc-theme-status-success',
-  bgColor: '--mdc-theme-status-success-bg',
-  title: 'Approved for repair',
-}
-export const pending: State = {
-  icon: 'watch_later',
-  color: '--mdc-theme-neutral-variant',
-  bgColor: '--mdc-theme-neutral-bg',
-  title: 'Awaiting review',
-}
-export const states: { [stateName: string]: State } = {
-  Revision: {
-    icon: 'chat',
-    color: '--mdc-theme-primary',
-    bgColor: '--mdc-theme-primary-header-bg',
-    title: '',
-  },
-  Draft: {
-    icon: 'edit',
-    color: '--mdc-theme-primary',
-    bgColor: '--mdc-theme-primary-header-bg',
-    title: 'Draft',
-  },
-  Draft2: warning,
-  Pending: pending,
-  Receipt: success,
-  Receipt2: warning,
-  Review1: pending,
-  Review2: pending,
-  Review3: pending,
-  Denied: {
-    icon: 'remove_circle',
-    color: '--mdc-theme-status-error',
-    bgColor: '--mdc-theme-status-error-bg',
-    title: 'Denied',
-  },
-  Approved: {
-    icon: 'paid',
-    color: '--mdc-theme-status-success',
-    bgColor: '--mdc-theme-status-success-bg',
-    title: 'Approved for payout',
-  },
-  Paid: {
-    icon: 'paid',
-    color: '--mdc-theme-status-success',
-    bgColor: '--mdc-theme-status-success-bg',
-    title: 'Complete',
-  },
-}
 
 // TODO: add backend endpoints when they get finished
 // TODO: uncomment when backend has claims endpoints
@@ -200,7 +136,7 @@ export function init(): void {
  * @param {Object} claimData
  * @return {Object} -- The newly created Claim
  */
-export async function createClaim(item: PolicyItem, claimData): Promise<Claim> {
+export async function createClaim(item: PolicyItem, claimData: any): Promise<Claim> {
   const urlPath = `policies/${item.policy_id}/claims`
 
   const parsedClaim: CreateClaimRequestBody = {
@@ -209,7 +145,7 @@ export async function createClaim(item: PolicyItem, claimData): Promise<Claim> {
     incident_type: claimData.lossReason,
   }
 
-  const claim = await CREATE<Claim>(urlPath, parsedClaim)
+  const claim = await CREATE<Claim>(urlPath, parsedClaim as any)
 
   claims.update((currClaims) => {
     currClaims.push(claim)
@@ -219,7 +155,7 @@ export async function createClaim(item: PolicyItem, claimData): Promise<Claim> {
   return claim
 }
 
-export const createClaimItem = async (claimId: string, claimItemData): Promise<ClaimItem> => {
+export const createClaimItem = async (claimId: string, claimItemData: any): Promise<ClaimItem> => {
   const urlPath = `claims/${claimId}/items`
 
   const parsedClaimItem: CreateClaimItemRequestBody = {
@@ -231,7 +167,7 @@ export const createClaimItem = async (claimId: string, claimItemData): Promise<C
     replace_estimate: convertToCents(claimItemData.replaceEstimateUSD),
   }
 
-  const claimItem = await CREATE<ClaimItem>(urlPath, parsedClaimItem)
+  const claimItem = await CREATE<ClaimItem>(urlPath, parsedClaimItem as any)
 
   claims.update((claims) => {
     const claim = claims.find((c) => c.id === claimId)
@@ -252,7 +188,7 @@ export const createClaimItem = async (claimId: string, claimItemData): Promise<C
  * @param {String} claimId
  * @param {Object} newClaimData
  */
-export async function updateClaim(claimId: string, newClaimData): Promise<Claim> {
+export async function updateClaim(claimId: string, newClaimData: any): Promise<Claim> {
   const parsedData: UpdateClaimRequestBody = {
     incident_date: new Date(newClaimData.lostDate).toISOString(),
     incident_type: newClaimData.lossReason,
@@ -280,7 +216,7 @@ export async function claimsFileAttach(
     purpose,
   }
 
-  const response = await CREATE<ClaimsFileAttachResponseBody>(`claims/${claimId}/files`, data)
+  const response = await CREATE<ClaimsFileAttachResponseBody>(`claims/${claimId}/files`, data as any)
 
   return response
 }
@@ -299,7 +235,7 @@ export async function submitClaim(claimId: string): Promise<string> {
  * @export
  * @param {Number} itemId
  */
-export async function updateClaimItem(claimItemId: string, claimItemData): Promise<ClaimItem> {
+export async function updateClaimItem(claimItemId: string, claimItemData: any): Promise<ClaimItem> {
   const parsedData: UpdateClaimItemRequestBody = {
     fmv: convertToCents(claimItemData.fairMarketValueUSD),
     is_repairable: claimItemData.isRepairable,
@@ -338,11 +274,4 @@ export async function loadClaims(): Promise<Claim[]> {
   initialized.set(true)
 
   return response
-}
-
-export const getState = (status: string): State => {
-  if (states[status] === undefined) {
-    console.error('No such state (for claim status):', status, Object.keys(states))
-  }
-  return states[status || 'Message']
 }

@@ -1,0 +1,11 @@
+<script lang="ts">
+import { getItemState, State } from '../../data/states'
+import type { ItemCoverageStatus } from '../../data/items'
+import { StatusBanner } from '../index'
+
+export let itemStatus = '' as ItemCoverageStatus
+
+$: state = (itemStatus && getItemState(itemStatus)) || ({} as State)
+</script>
+
+<StatusBanner {state}><slot /></StatusBanner>

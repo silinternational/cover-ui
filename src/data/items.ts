@@ -96,7 +96,7 @@ export async function loadItems(policyId: string): Promise<PolicyItem[]> {
  * @param {Object} itemData
  * @return {Object}
  */
-export async function addItem(policyId: string, itemData): Promise<PolicyItem> {
+export async function addItem(policyId: string, itemData: any): Promise<PolicyItem> {
   const urlPath = `policies/${policyId}/items`
 
   const parsedItemData: CreatePolicyItemRequestBody = {
@@ -115,7 +115,7 @@ export async function addItem(policyId: string, itemData): Promise<PolicyItem> {
     serial_number: itemData.uniqueIdentifier,
   }
 
-  const addedItem = await CREATE<PolicyItem>(urlPath, parsedItemData)
+  const addedItem = await CREATE<PolicyItem>(urlPath, parsedItemData as any)
 
   itemsByPolicyId.update((data) => {
     const items = data[policyId] || []
@@ -154,7 +154,7 @@ export async function submitItem(policyId: string, itemId: string): Promise<Poli
  * @param {Object} itemData
  * @return {Object}
  */
-export async function updateItem(policyId: string, itemId: string, itemData): Promise<PolicyItem> {
+export async function updateItem(policyId: string, itemId: string, itemData: any): Promise<PolicyItem> {
   if (!itemId) {
     throwError('item id not set')
   }

@@ -24,6 +24,7 @@ import {
   updateClaimItem,
   Claim,
   ClaimItem,
+  ClaimStatus,
   ClaimFile,
   ClaimFilePurpose,
   PayoutOption,
@@ -53,7 +54,7 @@ $: claim.policy_id && loadItems(claim.policy_id)
 $: item = items.find((itm) => itm.id === claimItem.item_id) || ({} as PolicyItem)
 
 $: incidentDate = formatDate(claim.incident_date)
-$: status = claim.status || ''
+$: status = (claim.status || '') as ClaimStatus
 $: payoutOption = claimItem.payout_option as PayoutOption
 $: needsRepairReceipt = needsReceipt && payoutOption === 'Repair'
 $: needsReplaceReceipt = needsReceipt && payoutOption === 'Replacement'

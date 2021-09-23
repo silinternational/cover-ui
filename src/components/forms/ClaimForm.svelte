@@ -53,9 +53,6 @@ let payoutOption = undefined
 let repairEstimateUSD = undefined
 let replaceEstimateUSD = undefined
 let fairMarketValueUSD = undefined
-// Resets these when claim is edited
-let repairActual = null
-let replaceActual = null
 
 // Set default derived (or intermediate) values.
 let claimItem = {} as ClaimItem
@@ -134,8 +131,6 @@ const onSubmit = async () => {
       repairEstimateUSD,
       replaceEstimateUSD,
       fairMarketValueUSD,
-      repairActual,
-      replaceActual,
     },
   })
 }

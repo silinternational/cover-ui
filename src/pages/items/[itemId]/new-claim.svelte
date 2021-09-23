@@ -33,11 +33,11 @@ $: $initialized || loadClaims()
 $: existingClaim = $claims.find((claim) => isItemIdOnClaim(itemId, claim)) || ({} as Claim)
 $: claimExists = !!existingClaim.id
 
-const isItemIdOnClaim = (itemId, claim) => {
+const isItemIdOnClaim = (itemId: string, claim: Claim) => {
   const claimItems = claim.claim_items || []
   return claimItems.some((claimItem) => claimItem.item_id === itemId)
 }
-const onSubmit = async (event) => {
+const onSubmit = async (event: CustomEvent) => {
   const { claimData, claimItemData } = event.detail
 
   // TODO - Handle situations where the claim is created, but the claim-item

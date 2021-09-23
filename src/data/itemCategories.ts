@@ -1,5 +1,4 @@
 import { GET } from '.'
-import { start, stop } from '../components/progress'
 import { writable } from 'svelte/store'
 
 export type ItemCategory = {
@@ -14,7 +13,7 @@ export type ItemCategory = {
 export const categories = writable<ItemCategory[]>([])
 export const initialized = writable<boolean>(false)
 
-export async function init() {
+export async function init(): Promise<void> {
   loadCategories()
 }
 
@@ -23,13 +22,9 @@ export async function init() {
  * @description loads categories from backend
  * @export
  */
-export async function loadCategories() {
-  start('itemCategories')
+export async function loadCategories(): Promise<void> {
+  const response = await GET<ItemCategory[]>('config/item-categories')
 
-  const catz = await GET<ItemCategory[]>('config/item-categories')
-
-  stop('itemCategories')
-
-  categories.set(catz)
+  categories.set(response)
   initialized.set(true)
 }

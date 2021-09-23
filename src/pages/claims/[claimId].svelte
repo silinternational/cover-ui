@@ -26,6 +26,7 @@ import {
   ClaimFile,
   ClaimFilePurpose,
   PayoutOption,
+  requestRevision,
   submitClaim,
 } from '../../data/claims'
 import { loadItems, itemsByPolicyId, PolicyItem } from '../../data/items'
@@ -86,6 +87,11 @@ const getUploadLabel = (claimItem: ClaimItem, needsReceipt: boolean, receiptType
 const editClaim = () => $goto(`/claims/${claimId}/edit`)
 
 const onApprove = async () => await approveClaim(claimId)
+
+const onAskForChanges = async (event) => {
+  const message = event.detail
+  await requestRevision(claimId, message)
+}
 
 const onSubmit = async () => await submitClaim(claimId)
 
@@ -189,7 +195,13 @@ function onDeleted(event) {
       {/if}
 
       <p>
-        <ClaimActions {claim} on:approve={onApprove} on:edit={editClaim} on:submit={onSubmit} />
+        <ClaimActions
+          {claim}
+          on:approve={onApprove}
+          on:ask-for-changes={onAskForChanges}
+          on:edit={editClaim}
+          on:submit={onSubmit}
+        />
       </p>
 
       {#if needsReceipt}

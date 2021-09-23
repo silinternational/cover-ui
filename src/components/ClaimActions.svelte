@@ -17,6 +17,7 @@ let isEditable: boolean
 $: isEditable = editableStatuses.includes(status)
 
 const on = (eventType) => () => dispatch(eventType)
+const onAskForChanges = () => dispatch('ask-for-changes', message)
 </script>
 
 <style>
@@ -51,7 +52,7 @@ const on = (eventType) => () => dispatch(eventType)
         <Button on:click={on('deny')} disabled={!message} outlined>Deny</Button>
       </div>
       <div class="right-buttons">
-        <Button class="mx-1" on:click={on('ask-for-changes')} disabled={!message} raised>Ask for Changes</Button>
+        <Button class="mx-1" on:click={onAskForChanges} disabled={!message} raised>Ask for Changes</Button>
         <Button on:click={on('approve')} raised>Approve</Button>
       </div>
     </div>

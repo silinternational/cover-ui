@@ -119,6 +119,10 @@ export type UpdateClaimItemRequestBody = {
   replace_actual: number
 }
 
+export type ClaimsRequestRevisionRequestBody = {
+  status_reason: string
+}
+
 export type State = {
   icon: string
   color: string
@@ -296,6 +300,28 @@ export const approveClaim = async (claimId: string): Promise<Claim> => {
   })
 
   return approvedClaim
+}
+
+/**
+ * Request revisions to a claim.
+ *
+ * @export
+ * @param {String} claimId
+ * @param {String} reason -- A message from a reviewer detailing the revisions needed.
+ */
+export const requestRevision = async (claimId: string, reason: string): Promise<Claim> => {
+  const requestBody: ClaimsRequestRevisionRequestBody = {
+    status_reason: reason,
+  }
+  const modifiedClaim = await CREATE<Claim>(`claims/${claimId}/revision`, requestBody)
+
+  claims.update((claims) => {
+    const i = claims.findIndex((claim) => claim.id === claimId)
+    claims[i] = modifiedClaim
+    return claims
+  })
+
+  return modifiedClaim
 }
 
 export async function claimsFileAttach(claimId: string, fileId: string, purpose: ClaimFilePurpose) {

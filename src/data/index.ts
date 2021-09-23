@@ -12,7 +12,7 @@ type UploadResponseBody = {
   url: string
 }
 
-export async function CREATE<T>(uri: string, body = undefined) {
+export async function CREATE<T>(uri: string, body: any = undefined) {
   return await customFetch<T>('post', uri, body)
 }
 export async function GET<T>(uri: string) {

@@ -123,6 +123,10 @@ export type ClaimsRequestRevisionRequestBody = {
   status_reason: string
 }
 
+export type DenyClaimRequestBody = {
+  status_reason: string
+}
+
 export type State = {
   icon: string
   color: string
@@ -322,6 +326,28 @@ export const requestRevision = async (claimId: string, reason: string): Promise<
   })
 
   return modifiedClaim
+}
+
+/**
+ * Deny a claim.
+ *
+ * @export
+ * @param {String} claimId
+ * @param {String} reason -- A message from a reviewer detailing the reason for the denial.
+ */
+export const denyClaim = async (claimId: string, reason: string): Promise<Claim> => {
+  const requestBody: DenyClaimRequestBody = {
+    status_reason: reason,
+  }
+  const deniedClaim = await CREATE<Claim>(`claims/${claimId}/deny`, requestBody)
+
+  claims.update((claims) => {
+    const i = claims.findIndex((claim) => claim.id === claimId)
+    claims[i] = deniedClaim
+    return claims
+  })
+
+  return deniedClaim
 }
 
 export async function claimsFileAttach(claimId: string, fileId: string, purpose: ClaimFilePurpose) {

@@ -16,6 +16,7 @@ import { loading } from '../../components/progress'
 import { upload } from '../../data'
 import {
   approveClaim,
+  denyClaim,
   loadClaims,
   claims,
   initialized,
@@ -91,6 +92,11 @@ const onApprove = async () => await approveClaim(claimId)
 const onAskForChanges = async (event) => {
   const message = event.detail
   await requestRevision(claimId, message)
+}
+
+const onDenyClaim = async (event) => {
+  const message = event.detail
+  await denyClaim(claimId, message)
 }
 
 const onSubmit = async () => await submitClaim(claimId)
@@ -199,6 +205,7 @@ function onDeleted(event) {
           {claim}
           on:approve={onApprove}
           on:ask-for-changes={onAskForChanges}
+          on:deny={onDenyClaim}
           on:edit={editClaim}
           on:submit={onSubmit}
         />

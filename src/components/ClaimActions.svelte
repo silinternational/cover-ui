@@ -18,6 +18,7 @@ $: isEditable = editableStatuses.includes(status)
 
 const on = (eventType) => () => dispatch(eventType)
 const onAskForChanges = () => dispatch('ask-for-changes', message)
+const onDeny = () => dispatch('deny', message)
 </script>
 
 <style>
@@ -49,7 +50,7 @@ const onAskForChanges = () => dispatch('ask-for-changes', message)
         <Description>A message is required to deny or ask for changes.</Description>
       </div>
       <div class="left-buttons">
-        <Button on:click={on('deny')} disabled={!message} outlined>Deny</Button>
+        <Button on:click={onDeny} disabled={!message} outlined>Deny</Button>
       </div>
       <div class="right-buttons">
         <Button class="mx-1" on:click={onAskForChanges} disabled={!message} raised>Ask for Changes</Button>

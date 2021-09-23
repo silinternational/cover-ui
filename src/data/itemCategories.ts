@@ -22,11 +22,9 @@ export async function init(): Promise<void> {
  * @description loads categories from backend
  * @export
  */
-export async function loadCategories(): Promise<ItemCategory[]> {
+export async function loadCategories(): Promise<void> {
   const response = await GET<ItemCategory[]>('config/item-categories')
 
   categories.set(response)
   initialized.set(true)
-
-  return response
 }

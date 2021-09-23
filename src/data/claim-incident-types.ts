@@ -8,12 +8,10 @@ export type ClaimIncidentType = {
 
 export const claimIncidentTypes = writable<ClaimIncidentType[]>([])
 
-export async function loadClaimIncidentTypes(): Promise<ClaimIncidentType[]> {
+export async function loadClaimIncidentTypes(): Promise<void> {
   const urlPath = 'config/claim-incident-types'
 
   const results = await GET<ClaimIncidentType[]>(urlPath)
 
   claimIncidentTypes.set(results)
-
-  return results
 }

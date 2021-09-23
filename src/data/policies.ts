@@ -39,9 +39,8 @@ export function init(): void {
  * @export
  * @param {Number} id
  * @param {Object} policyData
- * @return {Object}
  */
-export async function updatePolicy(id: string, policyData): Promise<Policy> {
+export async function updatePolicy(id: string, policyData: any): Promise<void> {
   const parsedPolicyData: UpdatePolicyRequestBody = {
     household_id: policyData.household_id,
     cost_center: policyData.cost_center,
@@ -56,8 +55,6 @@ export async function updatePolicy(id: string, policyData): Promise<Policy> {
     currPolicies[i] = updatedPolicy
     return currPolicies
   })
-
-  return updatedPolicy
 }
 
 export function clear(): void {
@@ -66,13 +63,11 @@ export function clear(): void {
   initialized.set(false)
 }
 
-export async function loadPolicies(): Promise<Policy[]> {
+export async function loadPolicies(): Promise<void> {
   const response = await GET<Policy[]>('policies')
 
   policies.set(response)
   initialized.set(true)
-
-  return response
 }
 
 export const affiliations = writable({

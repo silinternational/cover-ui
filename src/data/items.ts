@@ -135,14 +135,13 @@ export async function addItem(policyId: string, itemData: any): Promise<PolicyIt
  * @param {string} itemId -- The UUID for the applicable policy item
  * @return {Object}
  */
-export async function submitItem(policyId: string, itemId: string): Promise<PolicyItem> {
+export async function submitItem(policyId: string, itemId: string): Promise<void> {
   const urlPath = `items/${itemId}/submit`
 
+  // TODO: update a store with this response data instead of doing a full reload
   const response = await CREATE<PolicyItem>(urlPath)
 
   await loadItems(policyId)
-
-  return response
 }
 
 /**
@@ -154,7 +153,7 @@ export async function submitItem(policyId: string, itemId: string): Promise<Poli
  * @param {Object} itemData
  * @return {Object}
  */
-export async function updateItem(policyId: string, itemId: string, itemData: any): Promise<PolicyItem> {
+export async function updateItem(policyId: string, itemId: string, itemData: any): Promise<void> {
   if (!itemId) {
     throwError('item id not set')
   }
@@ -187,8 +186,6 @@ export async function updateItem(policyId: string, itemId: string, itemData: any
     data[policyId] = items
     return data
   })
-
-  return updatedItem
 }
 
 /**
@@ -201,6 +198,7 @@ export async function updateItem(policyId: string, itemId: string, itemData: any
 export async function deleteItem(policyId: string, itemId: string): Promise<any> {
   const urlPath = `items/${itemId}`
 
+  // TODO: Check the contenst of the delete response before removing the item from the store
   const response = await DELETE(urlPath)
 
   itemsByPolicyId.update((data) => {
@@ -208,6 +206,4 @@ export async function deleteItem(policyId: string, itemId: string): Promise<any>
     data[policyId] = items.filter((item) => item.id !== itemId)
     return data
   })
-
-  return response
 }

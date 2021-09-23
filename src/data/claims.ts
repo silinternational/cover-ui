@@ -134,9 +134,8 @@ export function init(): void {
  * @export
  * @param {Object} item
  * @param {Object} claimData
- * @return {Object} -- The newly created Claim
  */
-export async function createClaim(item: PolicyItem, claimData: any): Promise<Claim> {
+export async function createClaim(item: PolicyItem, claimData: any): Promise<void> {
   const urlPath = `policies/${item.policy_id}/claims`
 
   const parsedClaim: CreateClaimRequestBody = {
@@ -151,11 +150,9 @@ export async function createClaim(item: PolicyItem, claimData: any): Promise<Cla
     currClaims.push(claim)
     return currClaims
   })
-
-  return claim
 }
 
-export const createClaimItem = async (claimId: string, claimItemData: any): Promise<ClaimItem> => {
+export const createClaimItem = async (claimId: string, claimItemData: any): Promise<void> => {
   const urlPath = `claims/${claimId}/items`
 
   const parsedClaimItem: CreateClaimItemRequestBody = {
@@ -177,8 +174,6 @@ export const createClaimItem = async (claimId: string, claimItemData: any): Prom
     }
     return claims
   })
-
-  return claimItem
 }
 
 /**
@@ -188,7 +183,7 @@ export const createClaimItem = async (claimId: string, claimItemData: any): Prom
  * @param {String} claimId
  * @param {Object} newClaimData
  */
-export async function updateClaim(claimId: string, newClaimData: any): Promise<Claim> {
+export async function updateClaim(claimId: string, newClaimData: any): Promise<void> {
   const parsedData: UpdateClaimRequestBody = {
     incident_date: new Date(newClaimData.lostDate).toISOString(),
     incident_type: newClaimData.lossReason,
@@ -202,31 +197,23 @@ export async function updateClaim(claimId: string, newClaimData: any): Promise<C
     currClaims[i] = updatedClaim
     return currClaims
   })
-
-  return updatedClaim
 }
 
-export async function claimsFileAttach(
-  claimId: string,
-  fileId: string,
-  purpose: ClaimFilePurpose
-): Promise<ClaimsFileAttachResponseBody> {
+export async function claimsFileAttach(claimId: string, fileId: string, purpose: ClaimFilePurpose): Promise<void> {
   const data: ClaimsFileAttachRequestBody = {
     file_id: fileId,
     purpose,
   }
 
+  // TODO: update a store with this response data
   const response = await CREATE<ClaimsFileAttachResponseBody>(`claims/${claimId}/files`, data as any)
-
-  return response
 }
 
-export async function submitClaim(claimId: string): Promise<string> {
-  const response = await CREATE<string>(`claims/${claimId}/submit`)
+export async function submitClaim(claimId: string): Promise<void> {
+  // TODO: Update a store with this response data
+  const response = await CREATE<Claim>(`claims/${claimId}/submit`)
 
   await loadClaims()
-
-  return response
 }
 
 /**
@@ -235,7 +222,7 @@ export async function submitClaim(claimId: string): Promise<string> {
  * @export
  * @param {Number} itemId
  */
-export async function updateClaimItem(claimItemId: string, claimItemData: any): Promise<ClaimItem> {
+export async function updateClaimItem(claimItemId: string, claimItemData: any): Promise<void> {
   const parsedData: UpdateClaimItemRequestBody = {
     fmv: convertToCents(claimItemData.fairMarketValueUSD),
     is_repairable: claimItemData.isRepairable,
@@ -246,9 +233,8 @@ export async function updateClaimItem(claimItemId: string, claimItemData: any): 
     replace_actual: convertToCents(claimItemData.replaceActual),
   }
 
+  // TODO: update a store with this response data
   const response = await UPDATE<ClaimItem>(`claim-items/${claimItemId}`, parsedData)
-
-  return response
 }
 
 /**
@@ -267,11 +253,9 @@ export function clear(): void {
   initialized.set(false)
 }
 
-export async function loadClaims(): Promise<Claim[]> {
+export async function loadClaims(): Promise<void> {
   const response = await GET<Claim[]>('claims')
 
   claims.set(response)
   initialized.set(true)
-
-  return response
 }

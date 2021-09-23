@@ -13,7 +13,7 @@ let message = ''
 let status: ClaimStatus
 $: status = claim.status
 
-let isEditable = false
+let isEditable: boolean
 $: isEditable = editableStatuses.includes(status)
 
 const on = (eventType) => () => dispatch(eventType)

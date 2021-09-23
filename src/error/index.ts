@@ -1,15 +1,17 @@
 import { writable } from 'svelte/store'
 
 export type CustomError = {
-  code?: number
   message?: string
+  status?: number
+  statusText?: string
 }
 
 export const error = writable<CustomError>({})
-export const throwError = (message = '', code = 0) => {
-  throw set({ code, message })
+export const throwError = (message = '', status = 0, statusText = ''): void => {
+  throw set({ status, statusText, message })
 }
-export const dismiss = () => set({})
+
+export const dismiss = (): CustomError => set({})
 
 // https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/onerror#window.addEventListenererror
 window.addEventListener('error', (event) => set(event.error))
@@ -17,15 +19,12 @@ window.addEventListener('error', (event) => set(event.error))
 // https://developer.mozilla.org/en-US/docs/Web/API/PromiseRejectionEvent
 window.onunhandledrejection = (event) => set(event.reason)
 
-function set(someError: CustomError) {
-  const code = someError.code || 0
+function set(someError: CustomError): CustomError {
+  const status = someError?.status || 0
+  const statusText = someError?.statusText || ''
+  const message = someError?.message || ''
 
-  let message = ''
-  if (typeof someError === 'object') {
-    message = someError.message === undefined ? '' : someError.message
-  }
+  error.set({ status, statusText, message })
 
-  error.set({ code, message })
-
-  return { code, message }
+  return { status, statusText, message }
 }

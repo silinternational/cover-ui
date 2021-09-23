@@ -1,5 +1,4 @@
 import { CREATE, GET, UPDATE } from '.'
-import { start, stop } from '../components/progress'
 import { convertToCents } from '../helpers/money'
 import type { PolicyItem } from './items'
 import { writable } from 'svelte/store'
@@ -189,7 +188,7 @@ export const states: { [stateName: string]: State } = {
 // TODO: add backend endpoints when they get finished
 // TODO: uncomment when backend has claims endpoints
 
-export function init() {
+export function init(): void {
   loadClaims()
 }
 
@@ -201,9 +200,8 @@ export function init() {
  * @param {Object} claimData
  * @return {Object} -- The newly created Claim
  */
-export async function createClaim(item: PolicyItem, claimData) {
+export async function createClaim(item: PolicyItem, claimData): Promise<Claim> {
   const urlPath = `policies/${item.policy_id}/claims`
-  start(urlPath)
 
   const parsedClaim: CreateClaimRequestBody = {
     incident_date: new Date(claimData.lostDate),
@@ -218,36 +216,33 @@ export async function createClaim(item: PolicyItem, claimData) {
     return currClaims
   })
 
-  stop(urlPath)
   return claim
 }
 
-export const createClaimItem = async (claimId: string, claimItemData) => {
+export const createClaimItem = async (claimId: string, claimItemData): Promise<ClaimItem> => {
   const urlPath = `claims/${claimId}/items`
-  start(urlPath)
-  try {
-    const parsedClaimItem: CreateClaimItemRequestBody = {
-      fmv: convertToCents(claimItemData.fairMarketValueUSD),
-      is_repairable: claimItemData.isRepairable,
-      item_id: claimItemData.itemId,
-      payout_option: claimItemData.payoutOption,
-      repair_estimate: convertToCents(claimItemData.repairEstimateUSD),
-      replace_estimate: convertToCents(claimItemData.replaceEstimateUSD),
-    }
 
-    const claimItem = await CREATE<ClaimItem>(urlPath, parsedClaimItem)
-
-    claims.update((claims) => {
-      const claim = claims.find((c) => c.id === claimId)
-      if (claim) {
-        const claimItems = claim.claim_items || []
-        claimItems.push(claimItem)
-      }
-      return claims
-    })
-  } finally {
-    stop(urlPath)
+  const parsedClaimItem: CreateClaimItemRequestBody = {
+    fmv: convertToCents(claimItemData.fairMarketValueUSD),
+    is_repairable: claimItemData.isRepairable,
+    item_id: claimItemData.itemId,
+    payout_option: claimItemData.payoutOption,
+    repair_estimate: convertToCents(claimItemData.repairEstimateUSD),
+    replace_estimate: convertToCents(claimItemData.replaceEstimateUSD),
   }
+
+  const claimItem = await CREATE<ClaimItem>(urlPath, parsedClaimItem)
+
+  claims.update((claims) => {
+    const claim = claims.find((c) => c.id === claimId)
+    if (claim) {
+      const claimItems = claim.claim_items || []
+      claimItems.push(claimItem)
+    }
+    return claims
+  })
+
+  return claimItem
 }
 
 /**
@@ -257,9 +252,7 @@ export const createClaimItem = async (claimId: string, claimItemData) => {
  * @param {String} claimId
  * @param {Object} newClaimData
  */
-export async function updateClaim(claimId: string, newClaimData) {
-  start(claimId)
-
+export async function updateClaim(claimId: string, newClaimData): Promise<Claim> {
   const parsedData: UpdateClaimRequestBody = {
     incident_date: new Date(newClaimData.lostDate).toISOString(),
     incident_type: newClaimData.lossReason,
@@ -274,31 +267,30 @@ export async function updateClaim(claimId: string, newClaimData) {
     return currClaims
   })
 
-  stop(claimId)
-
   return updatedClaim
 }
 
-export async function claimsFileAttach(claimId: string, fileId: string, purpose: ClaimFilePurpose) {
-  start(fileId)
-
+export async function claimsFileAttach(
+  claimId: string,
+  fileId: string,
+  purpose: ClaimFilePurpose
+): Promise<ClaimsFileAttachResponseBody> {
   const data: ClaimsFileAttachRequestBody = {
     file_id: fileId,
     purpose,
   }
-  await CREATE<ClaimsFileAttachResponseBody>(`claims/${claimId}/files`, data)
 
-  stop(fileId)
+  const response = await CREATE<ClaimsFileAttachResponseBody>(`claims/${claimId}/files`, data)
+
+  return response
 }
 
-export async function submitClaim(claimId: string) {
-  start(claimId)
-
-  await CREATE<string>(`claims/${claimId}/submit`)
+export async function submitClaim(claimId: string): Promise<string> {
+  const response = await CREATE<string>(`claims/${claimId}/submit`)
 
   await loadClaims()
 
-  stop(claimId)
+  return response
 }
 
 /**
@@ -307,9 +299,7 @@ export async function submitClaim(claimId: string) {
  * @export
  * @param {Number} itemId
  */
-export async function updateClaimItem(claimItemId: string, claimItemData) {
-  start(claimItemId)
-
+export async function updateClaimItem(claimItemId: string, claimItemData): Promise<ClaimItem> {
   const parsedData: UpdateClaimItemRequestBody = {
     fmv: convertToCents(claimItemData.fairMarketValueUSD),
     is_repairable: claimItemData.isRepairable,
@@ -320,9 +310,9 @@ export async function updateClaimItem(claimItemId: string, claimItemData) {
     replace_actual: convertToCents(claimItemData.replaceActual),
   }
 
-  await UPDATE<ClaimItem>(`claim-items/${claimItemId}`, parsedData)
+  const response = await UPDATE<ClaimItem>(`claim-items/${claimItemId}`, parsedData)
 
-  stop(claimItemId)
+  return response
 }
 
 /**
@@ -331,31 +321,26 @@ export async function updateClaimItem(claimItemId: string, claimItemData) {
  * @export
  * @param {Number} itemId
  */
-export function deleteClaim(itemId: string) {
-  start(itemId)
-
+export function deleteClaim(itemId: string): void {
+  // TODO: Implement when deleteClaim API is added
   claims.update((currClaims) => currClaims.filter((clm) => clm.id !== itemId))
-
-  stop(itemId)
 }
 
-export function clear() {
+export function clear(): void {
   claims.set([])
   initialized.set(false)
 }
 
-export async function loadClaims() {
-  start('loadClaims')
+export async function loadClaims(): Promise<Claim[]> {
+  const response = await GET<Claim[]>('claims')
 
-  const clms = await GET<Claim[]>('claims')
-
-  claims.set(clms)
-
-  stop('loadClaims')
+  claims.set(response)
   initialized.set(true)
+
+  return response
 }
 
-export const getState = (status: string) => {
+export const getState = (status: string): State => {
   if (states[status] === undefined) {
     console.error('No such state (for claim status):', status, Object.keys(states))
   }

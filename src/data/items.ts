@@ -1,5 +1,4 @@
 import { CREATE, DELETE, GET, UPDATE } from '.'
-import { start, stop } from '../components/progress'
 import { throwError } from '../error'
 import { writable } from 'svelte/store'
 
@@ -77,9 +76,8 @@ export const itemsByPolicyId = writable<{ [policyId: string]: PolicyItem[] }>({}
  * @export
  * @param {string} policyId -- The UUID for the desired policy
  */
-export async function loadItems(policyId: string) {
+export async function loadItems(policyId: string): Promise<PolicyItem[]> {
   const urlPath = `policies/${policyId}/items`
-  start(urlPath)
 
   const items = await GET<PolicyItem[]>(urlPath)
   itemsByPolicyId.update((data) => {
@@ -87,7 +85,7 @@ export async function loadItems(policyId: string) {
     return data
   })
 
-  stop(urlPath)
+  return items
 }
 
 /**
@@ -98,9 +96,8 @@ export async function loadItems(policyId: string) {
  * @param {Object} itemData
  * @return {Object}
  */
-export async function addItem(policyId: string, itemData) {
+export async function addItem(policyId: string, itemData): Promise<PolicyItem> {
   const urlPath = `policies/${policyId}/items`
-  start(urlPath)
 
   const parsedItemData: CreatePolicyItemRequestBody = {
     accountable_person_id: itemData.accountablePersonId,
@@ -127,8 +124,6 @@ export async function addItem(policyId: string, itemData) {
     return data
   })
 
-  stop(urlPath)
-
   return addedItem
 }
 
@@ -140,15 +135,14 @@ export async function addItem(policyId: string, itemData) {
  * @param {string} itemId -- The UUID for the applicable policy item
  * @return {Object}
  */
-export async function submitItem(policyId: string, itemId: string) {
+export async function submitItem(policyId: string, itemId: string): Promise<PolicyItem> {
   const urlPath = `items/${itemId}/submit`
-  start(urlPath)
 
-  await CREATE<PolicyItem>(urlPath)
+  const response = await CREATE<PolicyItem>(urlPath)
 
   await loadItems(policyId)
 
-  stop(urlPath)
+  return response
 }
 
 /**
@@ -160,12 +154,11 @@ export async function submitItem(policyId: string, itemId: string) {
  * @param {Object} itemData
  * @return {Object}
  */
-export async function updateItem(policyId: string, itemId: string, itemData) {
+export async function updateItem(policyId: string, itemId: string, itemData): Promise<PolicyItem> {
   if (!itemId) {
     throwError('item id not set')
   }
   const urlPath = `items/${itemId}`
-  start(urlPath)
 
   const parsedItemData: UpdatePolicyItemRequestBody = {
     accountable_person_id: itemData.accountablePersonId,
@@ -195,7 +188,6 @@ export async function updateItem(policyId: string, itemId: string, itemData) {
     return data
   })
 
-  stop(urlPath)
   return updatedItem
 }
 
@@ -206,11 +198,10 @@ export async function updateItem(policyId: string, itemId: string, itemData) {
  * @param {string} policyId -- The UUID for the applicable policy
  * @param {string} itemId -- The UUID for the item to delete
  */
-export async function deleteItem(policyId, itemId) {
+export async function deleteItem(policyId: string, itemId: string): Promise<any> {
   const urlPath = `items/${itemId}`
-  start(urlPath)
 
-  await DELETE(urlPath)
+  const response = await DELETE(urlPath)
 
   itemsByPolicyId.update((data) => {
     const items = data[policyId] || []
@@ -218,5 +209,5 @@ export async function deleteItem(policyId, itemId) {
     return data
   })
 
-  stop(urlPath)
+  return response
 }

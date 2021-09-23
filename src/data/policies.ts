@@ -1,5 +1,4 @@
 import { writable } from 'svelte/store'
-import { start, stop } from '../components/progress'
 import type { Claim } from './claims'
 import { GET, UPDATE } from './index'
 import type { PolicyMember } from './policy-members'
@@ -30,7 +29,7 @@ export type UpdatePolicyRequestBody = {
 export const policies = writable<Policy[]>([])
 export const initialized = writable<boolean>(false)
 
-export function init() {
+export function init(): void {
   loadPolicies()
 }
 
@@ -42,7 +41,7 @@ export function init() {
  * @param {Object} policyData
  * @return {Object}
  */
-export async function updatePolicy(id: string, policyData) {
+export async function updatePolicy(id: string, policyData): Promise<Policy> {
   const parsedPolicyData: UpdatePolicyRequestBody = {
     household_id: policyData.household_id,
     cost_center: policyData.cost_center,
@@ -61,21 +60,19 @@ export async function updatePolicy(id: string, policyData) {
   return updatedPolicy
 }
 
-export function clear() {
+export function clear(): void {
   policies.set([])
 
   initialized.set(false)
 }
 
-export async function loadPolicies() {
-  start('loadPolicies')
+export async function loadPolicies(): Promise<Policy[]> {
+  const response = await GET<Policy[]>('policies')
 
-  const plcs = await GET<Policy[]>('policies')
-
-  policies.set(plcs)
-
-  stop('loadPolicies')
+  policies.set(response)
   initialized.set(true)
+
+  return response
 }
 
 export const affiliations = writable({

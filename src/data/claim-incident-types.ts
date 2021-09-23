@@ -1,5 +1,4 @@
 import { GET } from '.'
-import { start, stop } from '../components/progress'
 import { writable } from 'svelte/store'
 
 export type ClaimIncidentType = {
@@ -9,13 +8,12 @@ export type ClaimIncidentType = {
 
 export const claimIncidentTypes = writable<ClaimIncidentType[]>([])
 
-export async function loadClaimIncidentTypes() {
+export async function loadClaimIncidentTypes(): Promise<ClaimIncidentType[]> {
   const urlPath = 'config/claim-incident-types'
-  start(urlPath)
 
   const results = await GET<ClaimIncidentType[]>(urlPath)
 
-  stop(urlPath)
-
   claimIncidentTypes.set(results)
+
+  return results
 }

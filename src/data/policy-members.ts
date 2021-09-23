@@ -1,5 +1,4 @@
 import { GET } from './index'
-import { start, stop } from '../components/progress'
 import { writable } from 'svelte/store'
 
 export type PolicyMember = {
@@ -19,17 +18,13 @@ export const membersByPolicyId = writable<{ [policyId: string]: PolicyMember[] }
  *
  * @export
  * @param {string} policyId -- The UUID for the desired policy
- * @return {void}
  */
-export async function loadMembersOfPolicy(policyId: string) {
+export async function loadMembersOfPolicy(policyId: string): Promise<void> {
   const urlPath = `policies/${policyId}/members`
-  start(urlPath)
 
   const policyMembers = await GET<PolicyMember[]>(urlPath)
   membersByPolicyId.update((data) => {
     data[policyId] = policyMembers
     return data
   })
-
-  stop(urlPath)
 }

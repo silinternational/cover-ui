@@ -3,12 +3,13 @@ import { error, dismiss } from '../error'
 import { isChangingPage } from '@roxi/routify'
 import { afterUpdate } from 'svelte'
 
-let errContainer = null
+let errContainer: HTMLSpanElement
 
 $: errContainer && scrollIntoView(errContainer)
 $: $isChangingPage && $error.message && dismiss()
+$: errorMessage = $error.message || $error.statusText
 
-const scrollIntoView = (element) => element.scrollIntoView({ behavior: 'smooth' })
+const scrollIntoView = (element: HTMLElement) => element.scrollIntoView({ behavior: 'smooth' })
 
 afterUpdate(() => {
   if (errContainer) {
@@ -32,8 +33,8 @@ span small {
 }
 </style>
 
-{#if $error.message}
+{#if errorMessage}
   <span bind:this={errContainer}>
-    {$error.message} <small on:click={dismiss}>⨉</small>
+    {errorMessage} <small on:click={dismiss}>⨉</small>
   </span>
 {/if}

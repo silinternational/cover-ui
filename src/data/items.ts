@@ -1,5 +1,4 @@
 import { CREATE, DELETE, GET, UPDATE } from '.'
-import { start, stop } from '../components/progress'
 import { throwError } from '../error'
 import { writable } from 'svelte/store'
 
@@ -77,17 +76,14 @@ export const itemsByPolicyId = writable<{ [policyId: string]: PolicyItem[] }>({}
  * @export
  * @param {string} policyId -- The UUID for the desired policy
  */
-export async function loadItems(policyId: string) {
+export async function loadItems(policyId: string): Promise<void> {
   const urlPath = `policies/${policyId}/items`
-  start(urlPath)
 
   const items = await GET<PolicyItem[]>(urlPath)
   itemsByPolicyId.update((data) => {
     data[policyId] = items
     return data
   })
-
-  stop(urlPath)
 }
 
 /**
@@ -98,9 +94,8 @@ export async function loadItems(policyId: string) {
  * @param {Object} itemData
  * @return {Object}
  */
-export async function addItem(policyId: string, itemData: any) {
-  const urlPath: string = `policies/${policyId}/items`
-  start(urlPath)
+export async function addItem(policyId: string, itemData: any): Promise<PolicyItem> {
+  const urlPath = `policies/${policyId}/items`
 
   const parsedItemData: CreatePolicyItemRequestBody = {
     accountable_person_id: itemData.accountablePersonId,
@@ -127,8 +122,6 @@ export async function addItem(policyId: string, itemData: any) {
     return data
   })
 
-  stop(urlPath)
-
   return addedItem
 }
 
@@ -140,15 +133,13 @@ export async function addItem(policyId: string, itemData: any) {
  * @param {string} itemId -- The UUID for the applicable policy item
  * @return {Object}
  */
-export async function submitItem(policyId: string, itemId: string) {
+export async function submitItem(policyId: string, itemId: string): Promise<void> {
   const urlPath = `items/${itemId}/submit`
-  start(urlPath)
 
-  await CREATE<PolicyItem>(urlPath)
+  // TODO: update a store with this response data instead of doing a full reload
+  const response = await CREATE<PolicyItem>(urlPath)
 
   await loadItems(policyId)
-
-  stop(urlPath)
 }
 
 /**
@@ -160,12 +151,11 @@ export async function submitItem(policyId: string, itemId: string) {
  * @param {Object} itemData
  * @return {Object}
  */
-export async function updateItem(policyId: string, itemId: string, itemData: any) {
+export async function updateItem(policyId: string, itemId: string, itemData: any): Promise<void> {
   if (!itemId) {
     throwError('item id not set')
   }
   const urlPath = `items/${itemId}`
-  start(urlPath)
 
   const parsedItemData: UpdatePolicyItemRequestBody = {
     accountable_person_id: itemData.accountablePersonId,
@@ -194,9 +184,6 @@ export async function updateItem(policyId: string, itemId: string, itemData: any
     data[policyId] = items
     return data
   })
-
-  stop(urlPath)
-  return updatedItem
 }
 
 /**
@@ -206,17 +193,15 @@ export async function updateItem(policyId: string, itemId: string, itemData: any
  * @param {string} policyId -- The UUID for the applicable policy
  * @param {string} itemId -- The UUID for the item to delete
  */
-export async function deleteItem(policyId: string, itemId: string) {
+export async function deleteItem(policyId: string, itemId: string): Promise<any> {
   const urlPath = `items/${itemId}`
-  start(urlPath)
 
-  await DELETE(urlPath)
+  // TODO: Check the contenst of the delete response before removing the item from the store
+  const response = await DELETE(urlPath)
 
   itemsByPolicyId.update((data) => {
     const items = data[policyId] || []
     data[policyId] = items.filter((item) => item.id !== itemId)
     return data
   })
-
-  stop(urlPath)
 }

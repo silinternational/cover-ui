@@ -12,21 +12,21 @@ type UploadResponseBody = {
   url: string
 }
 
-export async function CREATE<T>(uri: string, body: any = undefined) {
+export async function CREATE<T>(uri: string, body: any = undefined): Promise<T> {
   return await customFetch<T>('post', uri, body)
 }
-export async function GET<T>(uri: string) {
+export async function GET<T>(uri: string): Promise<T> {
   return await customFetch<T>('get', uri)
 }
-export async function UPDATE<T>(uri: string, body) {
+export async function UPDATE<T>(uri: string, body): Promise<T> {
   return await customFetch<T>('put', uri, body)
 }
-export async function DELETE<T>(uri: string) {
+export async function DELETE<T>(uri: string): Promise<T> {
   return await customFetch<T>('delete', uri)
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/API/FormData/FormData
-export const upload = async (formData) => await CREATE<UploadResponseBody>('upload', formData)
+export const upload = async (formData: FormData): Promise<any> => await CREATE<UploadResponseBody>('upload', formData)
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#Supplying_request_options
 async function customFetch<T>(method: FetchMethod, uri: string, body: any = undefined): Promise<T> {
@@ -44,7 +44,7 @@ async function customFetch<T>(method: FetchMethod, uri: string, body: any = unde
   }
 
   const url = includesHost(uri) ? uri : `${process.env.API_HOST}/${uri}`
-  let response: Response = {} as Response
+  let response = {} as Response
   try {
     start(url)
 
@@ -69,12 +69,11 @@ async function customFetch<T>(method: FetchMethod, uri: string, body: any = unde
 
   // reminder: fetch does not throw exceptions for non-200 responses (https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch)
   if (!response.ok) {
-    const code = response.status
-    if (code === 400) {
-      throwError(results.message, code)
+    if (response.status === 400) {
+      throwError(results?.message, response.status, response.statusText)
     } else {
-      const message = code === 401 ? t(response.statusText) : response.statusText
-      throwError(message, code)
+      const statusText = response.status === 401 ? t(response.statusText) : response.statusText
+      throwError(results?.message, response.status, statusText)
     }
   }
 
@@ -88,4 +87,4 @@ async function customFetch<T>(method: FetchMethod, uri: string, body: any = unde
 // not these:
 //    redirect-to?url=//example.org/home?abc=123
 //    redirect-to?url=https://example.org/home?abc=123
-const includesHost = (uri) => uri.match(/^(?:https?:)?\/\//)
+const includesHost = (uri: string) => uri.match(/^(?:https?:)?\/\//)

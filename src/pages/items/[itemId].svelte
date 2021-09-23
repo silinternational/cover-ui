@@ -4,15 +4,19 @@ import { Banner, Breadcrumb, ItemBanner, Row } from '../../components'
 import { day } from '../../components/const'
 import { formatDate } from '../../components/dates'
 import { loading } from '../../components/progress'
-import { ItemCoverageStatus, itemsByPolicyId, loadItems, PolicyItem } from '../../data/items'
+import { deleteItem, ItemCoverageStatus, itemsByPolicyId, loadItems, PolicyItem } from '../../data/items'
 import { init, policies, Policy } from '../../data/policies'
 import { formatMoney } from '../../helpers/money'
 import { goto } from '@roxi/routify'
-import { Button, Page, Dialog } from '@silintl/ui-components'
+import { Button, Page, Dialog, AlertButton } from '@silintl/ui-components'
 
 export let itemId: string
 
 const now = Date.now()
+const buttons: AlertButton[] = [
+  { label: 'Remove Coverage', action: 'remove', class: 'mdc-dialog__button' },
+  { label: 'cancel', action: 'cancel', class: 'mdc-dialog__button' },
+]
 
 let householdId = ''
 let open: boolean = false
@@ -20,7 +24,7 @@ let open: boolean = false
 $: $user.policy_id && loadItems($user.policy_id)
 
 $: $policies.length || init()
-$: policyId = $user.policy_id
+$: policyId = $user.policy_id as string
 $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
 $: policy.household_id && setPolicyHouseholdId()
 
@@ -46,6 +50,16 @@ const goToEditItem = () => {
 const goToNewClaim = () => {
   $goto(`/items/${itemId}/new-claim`)
 }
+
+const handleDialog = async (choice: string) => {
+  open = false
+
+  if (choice === 'remove') {
+    await deleteItem(policyId, itemId)
+
+    $goto('/items')
+  }
+}
 </script>
 
 <Page layout={'grid'}>
@@ -63,9 +77,11 @@ const goToNewClaim = () => {
           <Button class="remove-button mx-5px" on:click={() => (open = true)}>Remove</Button>
           <Dialog.Alert
             {open}
+            {buttons}
+            defaultAction="cancel"
             title="Remove Coverage"
-            on:chosen={() => (open = false)}
-            on:closed={() => (open = false)}
+            on:chosen={(e) => handleDialog(e.detail)}
+            on:closed={handleDialog}
           />
           {#if status === 'Draft' || status === 'Pending'}
             <Button on:click={goToEditItem}>Edit Item</Button>

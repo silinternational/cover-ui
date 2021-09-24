@@ -4,13 +4,6 @@ declare module '@silintl/ui-components' {
 
   export type actions = writable<any[]>
 
-  //Dialog.Alert Buttons
-  export type AlertButton = {
-    label: string
-    action: strin
-    class: string
-  }
-
   interface ButtonProps extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
     disabled?: any
     outlined?: any

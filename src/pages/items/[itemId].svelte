@@ -8,12 +8,12 @@ import { deleteItem, ItemCoverageStatus, itemsByPolicyId, loadItems, PolicyItem 
 import { init, policies, Policy } from '../../data/policies'
 import { formatMoney } from '../../helpers/money'
 import { goto } from '@roxi/routify'
-import { Button, Page, Dialog, AlertButton } from '@silintl/ui-components'
+import { Button, Page, Dialog } from '@silintl/ui-components'
 
 export let itemId: string
 
 const now = Date.now()
-const buttons: AlertButton[] = [
+const buttons: Dialog.AlertButton[] = [
   { label: 'Yes, I’m Sure', action: 'remove', class: 'error-button' },
   { label: 'cancel', action: 'cancel', class: 'mdc-dialog__button' },
 ]

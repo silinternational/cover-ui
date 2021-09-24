@@ -64,8 +64,7 @@ async function customFetch<T>(method: FetchMethod, uri: string, body: any = unde
   } finally {
     stop(url)
   }
-
-  const results = await response.json()
+  const results = response.status === 204 /* No Content */ ? {} : await response.json()
 
   // reminder: fetch does not throw exceptions for non-200 responses (https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch)
   if (!response.ok) {

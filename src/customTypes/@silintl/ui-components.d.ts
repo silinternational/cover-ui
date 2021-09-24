@@ -73,10 +73,16 @@ declare module '@silintl/ui-components' {
   }
 
   export namespace Dialog {
+    export type AlertButton = {
+      label: string
+      action: string
+      class: string
+    }
     interface AlertProps extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
       open?: boolean
       title?: string
       defaultAction?: string
+      buttons?: AlertButton[]
     }
     export class Alert extends SvelteComponentTyped<AlertProps> {}
 

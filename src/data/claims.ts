@@ -129,15 +129,15 @@ export type DenyClaimRequestBody = {
 export const claims = writable<Claim[]>([])
 export const initialized = writable<boolean>(false)
 export const editableStatuses: ClaimStatus[] = ['Draft', 'Review1', 'Review2', 'Review3', 'Revision', 'Receipt']
+
 /**
- * Update claims store.
+ * Update a claim in our local list (store) of claims.
  *
  * @param {Claim} changedClaim
- * @param {String} claimId
  */
-const updateClaimsStore = (changedClaim: Claim, claimId: string) => {
+const updateClaimsStore = (changedClaim: Claim) => {
   claims.update((claims) => {
-    const i = claims.findIndex((claim) => claim.id === claimId)
+    const i = claims.findIndex((claim) => claim.id === changedClaim.id)
     claims[i] = changedClaim
     return claims
   })

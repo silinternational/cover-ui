@@ -29,11 +29,11 @@ $: thisClaimBreadcrumb = { name: claimName || 'This item', url: `/claims/${claim
 const editBreadcrumb = { name: 'Edit', url: `/claims/${claimId}/edit` }
 $: breadcrumbLinks = [claimsBreadcrumb, thisClaimBreadcrumb, editBreadcrumb]
 
-const onSubmit = async (event) => {
+const onSubmit = async (event: CustomEvent) => {
   const { claimData, claimItemData } = event.detail
 
   await updateClaim(claimId, claimData)
-  await updateClaimItem(claimItemId, claimItemData)
+  await updateClaimItem(claimId, claimItemId, claimItemData)
   $goto(`/claims/${claimId}`)
 }
 </script>

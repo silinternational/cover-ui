@@ -1,3 +1,4 @@
+import type { ClaimIncidentType } from '../data/claim-incident-types'
 import type { PayoutOption, ClaimItem } from '../data/claims'
 
 export const DEDUCTIBLE = 0.05
@@ -8,11 +9,11 @@ export const PAYOUT_OPTION_FMV: PayoutOption = 'FMV'
 export const PAYOUT_OPTION_REPAIR: PayoutOption = 'Repair'
 export const PAYOUT_OPTION_REPLACE: PayoutOption = 'Replacement'
 
-export const isFairMarketValueNeeded = (isRepairable, payoutOption) => {
+export const isFairMarketValueNeeded = (isRepairable?: boolean, payoutOption?: string): boolean => {
   return isRepairable || payoutOption === PAYOUT_OPTION_FMV
 }
 
-export const isPotentiallyRepairable = (claimIncidentTypes, incidentTypeName) => {
+export const isPotentiallyRepairable = (claimIncidentTypes: ClaimIncidentType[], incidentTypeName: string): boolean => {
   if (!incidentTypeName) {
     return true
   }
@@ -23,7 +24,7 @@ export const isPotentiallyRepairable = (claimIncidentTypes, incidentTypeName) =>
   return repairableIncidentTypes.some((type) => type.name === incidentTypeName)
 }
 
-export const isRepairCostTooHigh = (repairEstimateUSD, fairMarketValueUSD) => {
+export const isRepairCostTooHigh = (repairEstimateUSD?: number, fairMarketValueUSD?: number): boolean | undefined => {
   if (!repairEstimateUSD) {
     return undefined
   }
@@ -34,7 +35,10 @@ export const isRepairCostTooHigh = (repairEstimateUSD, fairMarketValueUSD) => {
   return repairEstimateUSD >= seventyPercentFMV
 }
 
-export const isUnrepairableOrTooExpensive = (isRepairable, repairCostIsTooHigh) => {
+export const isUnrepairableOrTooExpensive = (
+  isRepairable?: boolean,
+  repairCostIsTooHigh?: boolean
+): boolean | undefined => {
   if (isRepairable === false) {
     return true
   }
@@ -46,20 +50,25 @@ export const isUnrepairableOrTooExpensive = (isRepairable, repairCostIsTooHigh) 
   return repairCostIsTooHigh
 }
 
-const computePayout = (...values) => {
+const computePayout = (...values: number[]) => {
   const filteredValues = [...values]?.filter((value) => value !== undefined)
   return Math.min(...filteredValues) * (1 - DEDUCTIBLE)
 }
 
-const computeRepairMaxPayout = (claimItem: ClaimItem, coverageAmount) =>
+const computeRepairMaxPayout = (claimItem: ClaimItem, coverageAmount: number) =>
   computePayout(claimItem.repair_actual || claimItem.repair_estimate, coverageAmount, claimItem.fmv)
 
-const computeReplaceMaxPayout = (claimItem: ClaimItem, coverageAmount) =>
+const computeReplaceMaxPayout = (claimItem: ClaimItem, coverageAmount: number) =>
   computePayout(claimItem.replace_estimate, coverageAmount)
 
-const computeCashMaxPayout = (claimItem: ClaimItem, coverageAmount) => computePayout(coverageAmount, claimItem.fmv)
+const computeCashMaxPayout = (claimItem: ClaimItem, coverageAmount: number) =>
+  computePayout(coverageAmount, claimItem.fmv)
 
-export const determineMaxPayout = (payoutOption: PayoutOption, claimItem: ClaimItem, coverageAmount) => {
+export const determineMaxPayout = (
+  payoutOption: PayoutOption,
+  claimItem: ClaimItem,
+  coverageAmount: number
+): number | undefined => {
   switch (payoutOption) {
     case PAYOUT_OPTION_REPAIR:
       return computeRepairMaxPayout(claimItem, coverageAmount)

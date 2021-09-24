@@ -5,9 +5,9 @@ import { generateRandomID } from '@silintl/ui-components/random'
 import { onMount } from 'svelte'
 
 export let label = ''
-export let value = null
+export let value: number | undefined
 export let placeholder = ''
-export let maxlength = undefined
+export let maxlength: number = 524288 /* default */
 export let autofocus = false
 export let disabled = false
 

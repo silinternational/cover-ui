@@ -12,7 +12,7 @@ import {
 } from '../../business-rules/claim-payout-amount'
 import { ConvertCurrencyLink, Description, RadioOptions, DateInput, MoneyInput } from '../../components'
 import { claimIncidentTypes, loadClaimIncidentTypes } from '../../data/claim-incident-types'
-import type { Claim, ClaimItem } from '../../data/claims'
+import type { Claim, ClaimItem, PayoutOption } from '../../data/claims'
 import type { PolicyItem } from '../../data/items'
 import { Button, Form, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
@@ -46,26 +46,26 @@ const payoutOptions = [
 
 // Set default form values.
 let lostDate = todayDateString
-let lossReason = undefined
+let lossReason: string
 let situationDescription = ''
-let isRepairable = undefined
-let payoutOption = undefined
-let repairEstimateUSD = undefined
-let replaceEstimateUSD = undefined
-let fairMarketValueUSD = undefined
+let isRepairable: boolean | undefined
+let payoutOption: PayoutOption | undefined
 
 // Set default derived (or intermediate) values.
 let claimItem = {} as ClaimItem
 let claimItems: ClaimItem[] = []
-let isEvacuation = undefined
-let lossReasonOptions = []
+let isEvacuation: boolean
+let lossReasonOptions: { label: string; value: string }[] = []
 let potentiallyRepairable = true
-let repairableSelection = undefined
-let repairCostIsTooHigh = undefined
+let repairableSelection: string | undefined
+let repairCostIsTooHigh: boolean | undefined
 let shouldAskIfRepairable = false
 let shouldAskForFMV = false
 let shouldAskReplaceOrFMV = false
-let unrepairableOrTooExpensive = undefined
+let unrepairableOrTooExpensive: boolean | undefined
+let repairEstimateUSD: number | undefined
+let replaceEstimateUSD: number | undefined
+let fairMarketValueUSD: number | undefined
 
 // Set initial form values based on the provided data.
 $: setInitialValues(claim, claimItem)
@@ -98,7 +98,7 @@ $: lossReasonOptions = $claimIncidentTypes.map(({ name }) => ({ label: name, val
 // TODO: get accountable person from item
 // TODO: add reimbursed value
 
-const calculateIsRepairable = (potentiallyRepairable, repairableSelection) => {
+const calculateIsRepairable = (potentiallyRepairable: boolean, repairableSelection?: string) => {
   if (!potentiallyRepairable) {
     return false
   }
@@ -107,7 +107,12 @@ const calculateIsRepairable = (potentiallyRepairable, repairableSelection) => {
   }
   return repairableSelection === 'repairable'
 }
-const determinePayoutOption = (isEvacuation, repairCostIsTooHigh, selectedPayoutOption) => {
+
+const determinePayoutOption = (
+  isEvacuation: boolean,
+  repairCostIsTooHigh?: boolean,
+  selectedPayoutOption?: PayoutOption
+) => {
   if (isEvacuation) {
     return PAYOUT_OPTION_FIXED_FRACTION
   }
@@ -117,6 +122,7 @@ const determinePayoutOption = (isEvacuation, repairCostIsTooHigh, selectedPayout
   }
   return selectedPayoutOption
 }
+
 const onSubmit = async () => {
   dispatch('submit', {
     claimData: {
@@ -134,7 +140,8 @@ const onSubmit = async () => {
     },
   })
 }
-const setInitialValues = (claim, claimItem) => {
+
+const setInitialValues = (claim: Claim, claimItem: ClaimItem) => {
   if (claim.incident_date) {
     lostDate = claim.incident_date.split('T')[0]
   }
@@ -143,8 +150,14 @@ const setInitialValues = (claim, claimItem) => {
   if (claimItem.is_repairable !== undefined) {
     repairableSelection = claimItem.is_repairable ? 'repairable' : 'not_repairable'
   }
+
   payoutOption = claimItem.payout_option || payoutOption
+
+  repairEstimateUSD = claimItem.repair_estimate / 100
+  replaceEstimateUSD = claimItem.replace_estimate / 100
+  fairMarketValueUSD = claimItem.fmv / 100
 }
+
 const unSetPayoutOption = () => {
   payoutOption = undefined
 }

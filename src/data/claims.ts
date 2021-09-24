@@ -224,7 +224,7 @@ export async function submitClaim(claimId: string): Promise<void> {
  * @export
  * @param {Number} itemId
  */
-export async function updateClaimItem(claimItemId: string, claimItemData: any): Promise<void> {
+export async function updateClaimItem(claimId: string, claimItemId: string, claimItemData: any): Promise<void> {
   const parsedData: UpdateClaimItemRequestBody = {
     fmv: convertToCents(claimItemData.fairMarketValueUSD),
     is_repairable: claimItemData.isRepairable,
@@ -237,6 +237,17 @@ export async function updateClaimItem(claimItemId: string, claimItemData: any): 
 
   // TODO: update a store with this response data
   const response = await UPDATE<ClaimItem>(`claim-items/${claimItemId}`, parsedData)
+
+  claims.update((currClaims) => {
+    const claimsIdx = currClaims.findIndex((c) => c.id === claimId)
+    const claimItemIdx = currClaims[claimsIdx]?.claim_items.findIndex((ci) => ci.id === claimItemId)
+
+    if (claimsIdx > -1 && claimItemIdx > -1) {
+      currClaims[claimsIdx].claim_items[claimItemIdx] = response
+    }
+
+    return currClaims
+  })
 }
 
 /**

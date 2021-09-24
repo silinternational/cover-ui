@@ -14,7 +14,7 @@ export let itemId: string
 
 const now = Date.now()
 const buttons: AlertButton[] = [
-  { label: 'Remove Coverage', action: 'remove', class: 'error-button' },
+  { label: 'Yes, I’m Sure', action: 'remove', class: 'error-button' },
   { label: 'cancel', action: 'cancel', class: 'mdc-dialog__button' },
 ]
 
@@ -81,8 +81,8 @@ const handleDialog = async (choice: string) => {
             defaultAction="cancel"
             title="Remove Coverage"
             on:chosen={(e) => handleDialog(e.detail)}
-            on:closed={handleDialog}
-          />
+            on:closed={handleDialog}>Are you sure you would like to remove coverage for {itemName}?</Dialog.Alert
+          >
           {#if status === 'Draft' || status === 'Pending'}
             <Button on:click={goToEditItem}>Edit Item</Button>
           {/if}

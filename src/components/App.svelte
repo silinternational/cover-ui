@@ -1,6 +1,7 @@
 <script lang="ts">
 import { login } from '../authn'
 import { loadUser } from '../authn/user'
+import type { CustomError } from '../error'
 import './mdc/_index.scss'
 import t from '../i18n'
 import { parse, stringify } from 'qs'
@@ -14,8 +15,8 @@ const queryHandler = {
   stringify,
 }
 onMount(() => {
-  loadUser().catch((error) => {
-    if (error.code === 401) {
+  loadUser().catch((error: CustomError) => {
+    if (error.status === 401) {
       login()
     }
   })

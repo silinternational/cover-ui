@@ -229,12 +229,9 @@ export async function updateClaim(claimId: string, newClaimData: any): Promise<v
  * @export
  * @param {String} claimId
  */
-export const approveClaim = async (claimId: string): Promise<Claim> => {
+export const approveClaim = async (claimId: string): Promise<void> => {
   const approvedClaim = await CREATE<Claim>(`claims/${claimId}/approve`)
-
   updateClaimsStore(approvedClaim)
-
-  return approvedClaim
 }
 
 /**
@@ -244,15 +241,12 @@ export const approveClaim = async (claimId: string): Promise<Claim> => {
  * @param {String} claimId
  * @param {String} reason -- A message from a reviewer detailing the revisions needed.
  */
-export const requestRevision = async (claimId: string, reason: string): Promise<Claim> => {
+export const requestRevision = async (claimId: string, reason: string): Promise<void> => {
   const requestBody: ClaimsRequestRevisionRequestBody = {
     status_reason: reason,
   }
   const modifiedClaim = await CREATE<Claim>(`claims/${claimId}/revision`, requestBody)
-
   updateClaimsStore(modifiedClaim)
-
-  return modifiedClaim
 }
 
 /**
@@ -262,15 +256,12 @@ export const requestRevision = async (claimId: string, reason: string): Promise<
  * @param {String} claimId
  * @param {String} reason -- A message from a reviewer detailing the reason for the denial.
  */
-export const denyClaim = async (claimId: string, reason: string): Promise<Claim> => {
+export const denyClaim = async (claimId: string, reason: string): Promise<void> => {
   const requestBody: DenyClaimRequestBody = {
     status_reason: reason,
   }
   const deniedClaim = await CREATE<Claim>(`claims/${claimId}/deny`, requestBody)
-
   updateClaimsStore(deniedClaim)
-
-  return deniedClaim
 }
 
 export async function claimsFileAttach(claimId: string, fileId: string, purpose: ClaimFilePurpose): Promise<void> {

@@ -129,6 +129,19 @@ export type DenyClaimRequestBody = {
 export const claims = writable<Claim[]>([])
 export const initialized = writable<boolean>(false)
 export const editableStatuses: ClaimStatus[] = ['Draft', 'Review1', 'Review2', 'Review3', 'Revision', 'Receipt']
+/**
+ * Update claims store.
+ *
+ * @param {Claim} changedClaim
+ * @param {String} claimId
+ */
+const updateClaimsStore = (changedClaim: Claim, claimId: string) => {
+  claims.update((claims) => {
+    const i = claims.findIndex((claim) => claim.id === claimId)
+    claims[i] = changedClaim
+    return claims
+  })
+}
 
 // TODO: add backend endpoints when they get finished
 // TODO: uncomment when backend has claims endpoints

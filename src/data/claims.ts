@@ -232,11 +232,7 @@ export async function updateClaim(claimId: string, newClaimData: any): Promise<v
 export const approveClaim = async (claimId: string): Promise<Claim> => {
   const approvedClaim = await CREATE<Claim>(`claims/${claimId}/approve`)
 
-  claims.update((claims) => {
-    const i = claims.findIndex((claim) => claim.id === claimId)
-    claims[i] = approvedClaim
-    return claims
-  })
+  updateClaimsStore(approvedClaim)
 
   return approvedClaim
 }
@@ -254,11 +250,7 @@ export const requestRevision = async (claimId: string, reason: string): Promise<
   }
   const modifiedClaim = await CREATE<Claim>(`claims/${claimId}/revision`, requestBody)
 
-  claims.update((claims) => {
-    const i = claims.findIndex((claim) => claim.id === claimId)
-    claims[i] = modifiedClaim
-    return claims
-  })
+  updateClaimsStore(modifiedClaim)
 
   return modifiedClaim
 }
@@ -276,11 +268,7 @@ export const denyClaim = async (claimId: string, reason: string): Promise<Claim>
   }
   const deniedClaim = await CREATE<Claim>(`claims/${claimId}/deny`, requestBody)
 
-  claims.update((claims) => {
-    const i = claims.findIndex((claim) => claim.id === claimId)
-    claims[i] = deniedClaim
-    return claims
-  })
+  updateClaimsStore(deniedClaim)
 
   return deniedClaim
 }

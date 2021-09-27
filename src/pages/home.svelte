@@ -3,27 +3,37 @@ import user from '../authn/user'
 import { Breadcrumb, Menu, ClaimCards, Row } from '../components/'
 import { isLoadingById } from '../components/progress/index'
 import { claims, loadClaims } from '../data/claims'
+import { dependentsByPolicyId, loadDependents } from '../data/dependents'
 import { itemsByPolicyId, loadItems } from '../data/items'
-import { loadPolicies } from '../data/policies'
+import { loadMembersOfPolicy, membersByPolicyId } from '../data/policy-members'
 import { formatMoney } from '../helpers/money'
 import { goto } from '@roxi/routify'
 import { Checkbox, Page, Datatable } from '@silintl/ui-components'
-import { onMount } from 'svelte'
 
 let selected: string[] = []
 let goToItemDetails = true
 let shownMenus: { [name: string]: boolean } = {}
 
-$: $user.policy_id && loadItems($user.policy_id)
-$: items = $itemsByPolicyId[$user.policy_id] || []
+$: policyId = $user.policy_id
 
-onMount(() => {
-  loadClaims()
+$: policyId && loadItems(policyId)
+$: items = $itemsByPolicyId[policyId] || []
 
-  loadPolicies()
-})
+$: $claims.length || loadClaims()
 
-const menuItems = (id: string) => [
+$: policyId && loadDependents(policyId)
+$: dependents = $dependentsByPolicyId[policyId] || []
+
+$: policyId && loadMembersOfPolicy(policyId)
+$: policyMembers = $membersByPolicyId[policyId] || []
+$: policyMemberOptions = policyMembers.map((policyMember) => ({
+  id: policyMember.id,
+  name: policyMember.first_name + ' ' + policyMember.last_name,
+}))
+
+$: accountablePersons = [...policyMemberOptions, ...dependents]
+
+const getMenuItems = (id: string) => [
   {
     label: 'View Details',
     url: `/items/${id}`,
@@ -37,6 +47,12 @@ const menuItems = (id: string) => [
     url: `/items/${id}/remove-coverage`,
   },
 ]
+
+//accountablePersons is required otherwise name is not rendered
+const getAccountablePerson = (item: any, persons: any) => {
+  const id: string = item.accountable_user_id || item.accountable_dependent_id
+  return persons?.find((person: any) => person.id === id)?.name || ''
+}
 
 const redirect = (url: string) => {
   if (goToItemDetails) {
@@ -82,14 +98,14 @@ const onEditClaim = (event: any) => {
 }
 </style>
 
-<Page loading={isLoadingById($user.policy_id)} layout="grid">
+<Page loading={isLoadingById(policyId)} layout="grid">
   <Breadcrumb />
   <Row cols={'12'}>
     <ClaimCards claims={$claims} {items} on:edit-claim={onEditClaim} />
   </Row>
 
   <Row cols={'12'}>
-    {#if isLoadingById($user.policy_id)}
+    {#if isLoadingById(policyId)}
       Loading items...
     {:else}
       <Datatable>
@@ -113,7 +129,7 @@ const onEditClaim = (event: any) => {
               </Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{item.coverage_status || ''}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item>{item.accountable_person || ''}</Datatable.Data.Row.Item>
+              <Datatable.Data.Row.Item>{getAccountablePerson(item, accountablePersons)}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{item.risk_category?.name || ''}</Datatable.Data.Row.Item>
@@ -125,7 +141,9 @@ const onEditClaim = (event: any) => {
                   />
                 </svg>
                 <!--TODO FUTURE: make this show above the more vert icon when it is in the lower half of the page-->
-                <div class="item-menu"><Menu bind:menuOpen={shownMenus[item.id]} menuItems={menuItems(item.id)} /></div>
+                <div class="item-menu">
+                  <Menu bind:menuOpen={shownMenus[item.id]} menuItems={getMenuItems(item.id)} />
+                </div>
               </Datatable.Data.Row.Item>
             </Datatable.Data.Row>
           {/each}

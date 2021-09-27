@@ -102,7 +102,7 @@ const onBlur = () => {
     updatedClaimItemData.replaceActual = repairOrReplacementCost
   }
 
-  claimItem.id && updateClaimItem(claimItem.id, updatedClaimItemData)
+  claimItem.id && updateClaimItem(claim.id, claimItem.id, updatedClaimItemData)
 }
 
 async function onUpload(event) {

@@ -2,8 +2,8 @@
 /** @type {{label, value}[]} */
 export let options = []
 
-export let name
-export let value
+export let name: string
+export let value: string | undefined
 
 const isSelected = (option) => {
   return option.value === value ? 'checked' : undefined

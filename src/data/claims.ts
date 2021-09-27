@@ -220,14 +220,14 @@ export async function updateClaim(claimId: string, newClaimData: any): Promise<v
 }
 
 /**
- * Approve a claim.
+ * Pre-approve a claim.
  *
  * @export
  * @param {String} claimId
  */
-export const approveClaim = async (claimId: string): Promise<void> => {
-  const approvedClaim = await CREATE<Claim>(`claims/${claimId}/approve`)
-  updateClaimsStore(approvedClaim)
+export const preapproveClaim = async (claimId: string): Promise<void> => {
+  const preapprovedClaim = await CREATE<Claim>(`claims/${claimId}/preapprove`)
+  updateClaimsStore(preapprovedClaim)
 }
 
 /**

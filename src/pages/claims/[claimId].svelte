@@ -15,7 +15,6 @@ import { formatDate } from '../../components/dates'
 import { loading } from '../../components/progress'
 import { upload } from '../../data'
 import {
-  approveClaim,
   denyClaim,
   loadClaims,
   claims,
@@ -28,6 +27,7 @@ import {
   ClaimFile,
   ClaimFilePurpose,
   PayoutOption,
+  preapproveClaim,
   requestRevision,
   submitClaim,
 } from '../../data/claims'
@@ -88,7 +88,7 @@ const getUploadLabel = (claimItem: ClaimItem, needsReceipt: boolean, receiptType
 
 const editClaim = () => $goto(`/claims/${claimId}/edit`)
 
-const onApprove = async () => await approveClaim(claimId)
+const onPreapprove = async () => await preapproveClaim(claimId)
 
 const onAskForChanges = async (event) => {
   const message = event.detail
@@ -204,10 +204,10 @@ function onDeleted(event) {
       <p>
         <ClaimActions
           {claim}
-          on:approve={onApprove}
           on:ask-for-changes={onAskForChanges}
           on:deny={onDenyClaim}
           on:edit={editClaim}
+          on:preapprove={onPreapprove}
           on:submit={onSubmit}
         />
       </p>

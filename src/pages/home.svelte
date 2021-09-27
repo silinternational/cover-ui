@@ -3,7 +3,7 @@ import user from '../authn/user'
 import { Breadcrumb, Menu, ClaimCards, Row } from '../components/'
 import { isLoadingById } from '../components/progress/index'
 import { claims, loadClaims } from '../data/claims'
-import { getAccountablePerson } from '../data/accountablePersons'
+import { getAccountablePerson, getDependentOptions, getPolicyMemberOptions } from '../data/accountablePersons'
 import { dependentsByPolicyId, loadDependents } from '../data/dependents'
 import { itemsByPolicyId, loadItems } from '../data/items'
 import { loadMembersOfPolicy, membersByPolicyId } from '../data/policy-members'
@@ -24,15 +24,12 @@ $: policyId && loadClaims()
 
 $: policyId && loadDependents(policyId)
 $: dependents = $dependentsByPolicyId[policyId] || []
+$: dependentOptions = getDependentOptions(dependents)
 
 $: policyId && loadMembersOfPolicy(policyId)
 $: policyMembers = $membersByPolicyId[policyId] || []
-$: policyMemberOptions = policyMembers.map((policyMember) => ({
-  id: policyMember.id,
-  name: policyMember.first_name + ' ' + policyMember.last_name,
-}))
-
-$: accountablePersons = [...policyMemberOptions, ...dependents]
+$: policyMemberOptions = getPolicyMemberOptions(policyMembers)
+$: accountablePersons = [...policyMemberOptions, ...dependentOptions]
 
 const getMenuItems = (id: string) => [
   {

@@ -54,7 +54,7 @@ const onDeny = () => dispatch('deny', message)
       </div>
       <div class="right-buttons">
         <Button class="mx-1" on:click={onAskForChanges} disabled={!message} raised>Ask for Changes</Button>
-        <Button on:click={on('approve')} raised>Approve</Button>
+        <Button on:click={on('preapprove')} raised>Pre-approve</Button>
       </div>
     </div>
   {/if}

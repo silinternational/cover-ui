@@ -10,7 +10,20 @@ import { goto } from '@roxi/routify'
 import { Checkbox, Page, Datatable } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
-const menuItems = (id) => [
+let selected: string[] = []
+let goToItemDetails = true
+let shownMenus: { [name: string]: boolean } = {}
+
+$: $user.policy_id && loadItems($user.policy_id)
+$: items = $itemsByPolicyId[$user.policy_id] || []
+
+onMount(() => {
+  loadClaims()
+
+  loadPolicies()
+})
+
+const menuItems = (id: string) => [
   {
     label: 'View Details',
     url: `/items/${id}`,
@@ -25,38 +38,25 @@ const menuItems = (id) => [
   },
 ]
 
-let selected = []
-let goToItemDetails = true
-let shownMenus = {}
-
-$: $user.policy_id && loadItems($user.policy_id)
-$: items = $itemsByPolicyId[$user.policy_id] || []
-
-onMount(() => {
-  loadClaims()
-
-  loadPolicies()
-})
-
-const redirect = (url) => {
+const redirect = (url: string) => {
   if (goToItemDetails) {
     $goto(url)
   } else {
     goToItemDetails = true
   }
 }
-const handleChecked = (id) => {
+const handleChecked = (id: string) => {
   selected.push(id)
 }
-const handleUnchecked = (id) => {
+const handleUnchecked = (id: string) => {
   selected = selected.filter((val) => val != id)
 }
-const handleMoreVertClick = (id) => {
+const handleMoreVertClick = (id: string) => {
   goToItemDetails = false
   shownMenus[id] = shownMenus[id] !== true
 }
-const onEditClaim = (event) => {
-  const claimId = event.detail
+const onEditClaim = (event: any) => {
+  const claimId: string = event.detail
   $goto(`/claims/${claimId}/edit`)
 }
 </script>

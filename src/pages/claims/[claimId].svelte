@@ -181,7 +181,7 @@ function onDeleted(event) {
     <Row cols="9">
       <ClaimBanner claimStatus={status}>{claim.status_reason || ''}</ClaimBanner>
       {#if needsFile}
-        <ClaimBanner claimStatus={`${status}2`}>
+        <ClaimBanner claimStatus={`${status}Secondary`}>
           Upload {uploadLabel} to get reimbursed.
         </ClaimBanner>
       {/if}

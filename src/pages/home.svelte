@@ -3,6 +3,7 @@ import user from '../authn/user'
 import { Breadcrumb, Menu, ClaimCards, Row } from '../components/'
 import { isLoadingById } from '../components/progress/index'
 import { claims, loadClaims } from '../data/claims'
+import { getAccountablePerson } from '../data/accountablePersons'
 import { dependentsByPolicyId, loadDependents } from '../data/dependents'
 import { itemsByPolicyId, loadItems } from '../data/items'
 import { loadMembersOfPolicy, membersByPolicyId } from '../data/policy-members'
@@ -47,12 +48,6 @@ const getMenuItems = (id: string) => [
     url: `/items/${id}/remove-coverage`,
   },
 ]
-
-//accountablePersons is required otherwise name is not rendered
-const getAccountablePerson = (item: any, persons: any) => {
-  const id: string = item.accountable_user_id || item.accountable_dependent_id
-  return persons?.find((person: any) => person.id === id)?.name || ''
-}
 
 const redirect = (url: string) => {
   if (goToItemDetails) {

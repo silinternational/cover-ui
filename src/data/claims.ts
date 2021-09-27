@@ -118,8 +118,30 @@ export type UpdateClaimItemRequestBody = {
   replace_actual: number
 }
 
+export type ClaimsRequestRevisionRequestBody = {
+  status_reason: string
+}
+
+export type DenyClaimRequestBody = {
+  status_reason: string
+}
+
 export const claims = writable<Claim[]>([])
 export const initialized = writable<boolean>(false)
+export const editableStatuses: ClaimStatus[] = ['Draft', 'Review1', 'Review2', 'Review3', 'Revision', 'Receipt']
+
+/**
+ * Update a claim in our local list (store) of claims.
+ *
+ * @param {Claim} changedClaim
+ */
+const updateClaimsStore = (changedClaim: Claim) => {
+  claims.update((claims) => {
+    const i = claims.findIndex((claim) => claim.id === changedClaim.id)
+    claims[i] = changedClaim
+    return claims
+  })
+}
 
 // TODO: add backend endpoints when they get finished
 // TODO: uncomment when backend has claims endpoints
@@ -199,6 +221,47 @@ export async function updateClaim(claimId: string, newClaimData: any): Promise<v
     currClaims[i] = updatedClaim
     return currClaims
   })
+}
+
+/**
+ * Approve a claim.
+ *
+ * @export
+ * @param {String} claimId
+ */
+export const approveClaim = async (claimId: string): Promise<void> => {
+  const approvedClaim = await CREATE<Claim>(`claims/${claimId}/approve`)
+  updateClaimsStore(approvedClaim)
+}
+
+/**
+ * Request revisions to a claim.
+ *
+ * @export
+ * @param {String} claimId
+ * @param {String} reason -- A message from a reviewer detailing the revisions needed.
+ */
+export const requestRevision = async (claimId: string, reason: string): Promise<void> => {
+  const requestBody: ClaimsRequestRevisionRequestBody = {
+    status_reason: reason,
+  }
+  const modifiedClaim = await CREATE<Claim>(`claims/${claimId}/revision`, requestBody)
+  updateClaimsStore(modifiedClaim)
+}
+
+/**
+ * Deny a claim.
+ *
+ * @export
+ * @param {String} claimId
+ * @param {String} reason -- A message from a reviewer detailing the reason for the denial.
+ */
+export const denyClaim = async (claimId: string, reason: string): Promise<void> => {
+  const requestBody: DenyClaimRequestBody = {
+    status_reason: reason,
+  }
+  const deniedClaim = await CREATE<Claim>(`claims/${claimId}/deny`, requestBody)
+  updateClaimsStore(deniedClaim)
 }
 
 export async function claimsFileAttach(claimId: string, fileId: string, purpose: ClaimFilePurpose): Promise<void> {

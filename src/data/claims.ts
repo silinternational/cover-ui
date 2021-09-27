@@ -216,11 +216,7 @@ export async function updateClaim(claimId: string, newClaimData: any): Promise<v
 
   const updatedClaim = await UPDATE<Claim>(`claims/${claimId}`, parsedData)
 
-  claims.update((currClaims) => {
-    const i = currClaims.findIndex((clm) => clm.id === claimId)
-    currClaims[i] = updatedClaim
-    return currClaims
-  })
+  updateClaimsStore(updatedClaim)
 }
 
 /**

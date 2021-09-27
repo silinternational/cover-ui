@@ -1,5 +1,6 @@
 <script lang="ts">
 import { ConvertCurrencyLink, Description, MoneyInput } from '../../components'
+import { getAccountablePerson } from '../../data/accountablePersons'
 import { dependentsByPolicyId, loadDependents } from '../../data/dependents'
 import type { ItemCoverageStatus, PolicyItem } from '../../data/items'
 import { categories, init, initialized as catItemsInitialized } from '../../data/itemCategories'
@@ -8,29 +9,29 @@ import { Button, Form, Select, TextArea, TextField } from '@silintl/ui-component
 import { createEventDispatcher } from 'svelte'
 
 export let item = {} as PolicyItem
-export let policyId: string = undefined
+export let policyId: any = undefined
 
 const dispatch = createEventDispatcher<{ submit: any; 'save-for-later': any }>()
 
 // Set default values.
-let accountablePersonId = ''
-let categoryId = ''
-let country = ''
-let marketValueUSD = ''
-let coverageStartDate = ''
+let accountablePersonId: string = ''
+let categoryId: string = ''
+let country: string = ''
+let marketValueUSD: string = ''
+let coverageStartDate: string = ''
 let coverageStatus: ItemCoverageStatus
-let itemDescription = ''
+let itemDescription: string = ''
 let inStorage = false
-let make = ''
-let model = ''
-let shortName = ''
-let purchaseDate = ''
-let uniqueIdentifier = ''
+let make: string = ''
+let model: string = ''
+let shortName: string = ''
+let purchaseDate: string = ''
+let uniqueIdentifier: string = ''
 
 // Set initial values based on the provided item data.
 $: setInitialValues(item)
 
-let initialCategoryId = undefined
+let initialCategoryId: any = undefined
 let today = new Date()
 
 $: dependents = $dependentsByPolicyId[policyId] || []
@@ -47,15 +48,18 @@ $: policyMemberOptions = policyMembers.map((policyMember) => ({
 
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions]
 
+$: accountablePerson = getAccountablePerson(item, accountablePersons)
+$: accountablePersonId = accountablePerson.id
+
 $: policyId && loadDependents(policyId)
 $: policyId && loadMembersOfPolicy(policyId)
 $: !$catItemsInitialized && init()
 
-const onAccountablePersonChange = (event) => {
+const onAccountablePersonChange = (event: any) => {
   accountablePersonId = event.detail?.id
 }
 
-const onSelectCategory = (event) => {
+const onSelectCategory = (event: any) => {
   categoryId = event.detail?.id
 }
 

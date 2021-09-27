@@ -19,7 +19,7 @@ $: policyId = $user.policy_id
 $: policyId && loadItems(policyId)
 $: items = $itemsByPolicyId[policyId] || []
 
-$: $claims.length || loadClaims()
+$: policyId && loadClaims()
 
 $: policyId && loadDependents(policyId)
 $: dependents = $dependentsByPolicyId[policyId] || []

@@ -46,8 +46,9 @@ export const commonStates: { [stateName: string]: State } = {
 export const claimStates: { [stateName: string]: State } = {
   ...commonStates,
   Approved: { ...approved, title: 'Approved for payout' },
-  Draft2: warning,
+  DraftSecondary: warning,
   Review1: pending,
+  Review1Secondary: warning,
   Review2: pending,
   Review3: pending,
   Receipt2: warning,

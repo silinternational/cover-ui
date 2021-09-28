@@ -121,7 +121,7 @@ const onEditClaim = (event: any) => {
               </Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{item.coverage_status || ''}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item>{getAccountablePerson(item, accountablePersons)}</Datatable.Data.Row.Item>
+              <Datatable.Data.Row.Item>{getAccountablePerson(item, accountablePersons).name}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{item.risk_category?.name || ''}</Datatable.Data.Row.Item>

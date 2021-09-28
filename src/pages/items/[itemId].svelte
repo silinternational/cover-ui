@@ -32,7 +32,7 @@ $: policyId = $user.policy_id as string
 
 // Accountable persons
 $: policyId && loadAndSetAccountablePersons(policyId)
-$: accountablePerson = getAccountablePerson(item, persons)
+$: accountablePerson = getAccountablePerson(item, persons)?.name
 
 $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
 $: policy.household_id && setPolicyHouseholdId()

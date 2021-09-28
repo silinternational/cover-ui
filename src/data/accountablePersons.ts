@@ -26,8 +26,8 @@ export const getAccountablePersonsByPolicyId = async (id: string): Promise<Accou
   let dependents_value: any
   let members_value: any
 
-  const unsubscribe_dependents = dependentsByPolicyId.subscribe((value) => (dependents_value = value[id]))
-  const unsubscribe_members = membersByPolicyId.subscribe((value) => (members_value = value[id]))
+  const unsubscribe_dependents = dependentsByPolicyId.subscribe((value) => (dependents_value = value[id] || []))
+  const unsubscribe_members = membersByPolicyId.subscribe((value) => (members_value = value[id] || []))
 
   const dependentOptions = getDependentOptions(dependents_value)
   const policyMemberOptions = getPolicyMemberOptions(members_value)

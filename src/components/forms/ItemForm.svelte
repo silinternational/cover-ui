@@ -1,6 +1,6 @@
 <script lang="ts">
 import { ConvertCurrencyLink, Description, MoneyInput } from '../../components'
-import { getAccountablePerson, getDependentOptions, getPolicyMemberOptions } from '../../data/accountablePersons'
+import { getDependentOptions, getPolicyMemberOptions } from '../../data/accountablePersons'
 import { dependentsByPolicyId, loadDependents } from '../../data/dependents'
 import type { ItemCoverageStatus, PolicyItem } from '../../data/items'
 import { categories, init, initialized as catItemsInitialized } from '../../data/itemCategories'
@@ -31,6 +31,7 @@ let uniqueIdentifier: string = ''
 // Set initial values based on the provided item data.
 $: setInitialValues(item)
 
+let initialAccountablePersonId = undefined
 let initialCategoryId: any = undefined
 let today = new Date()
 
@@ -41,9 +42,6 @@ $: policyMembers = $membersByPolicyId[policyId] || []
 $: policyMemberOptions = getPolicyMemberOptions(policyMembers)
 
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions]
-
-$: accountablePerson = getAccountablePerson(item, accountablePersons)
-$: accountablePersonId = accountablePerson.id
 
 $: policyId && loadDependents(policyId)
 $: policyId && loadMembersOfPolicy(policyId)
@@ -72,6 +70,14 @@ const getFormData = () => {
     shortName,
     purchaseDate,
     uniqueIdentifier,
+  }
+}
+
+const onAccountablePersonSelectPopulated = () => {
+  if (item.accountable_user_id) {
+    initialAccountablePersonId = item.accountable_user_id
+  } else if (item.accountable_dependent_id) {
+    initialAccountablePersonId = item.accountable_dependent_id
   }
 }
 
@@ -138,7 +144,13 @@ const setInitialValues = (item: PolicyItem) => {
   </p>
   <p>
     <!-- TODO: Set the initial value here (like on Category) once the API is providing it. -->
-    <Select label="Accountable person" on:change={onAccountablePersonChange} options={accountablePersons} />
+    <Select
+      label="Accountable person"
+      on:change={onAccountablePersonChange}
+      on:populated={onAccountablePersonSelectPopulated}
+      options={accountablePersons}
+      selectedID={initialAccountablePersonId}
+    />
     <Description>
       Dependents are eligible. Dependents include spouses and children under 26 who haven't married or finished college.
       Coverage for children is limited to $3,000 per household.

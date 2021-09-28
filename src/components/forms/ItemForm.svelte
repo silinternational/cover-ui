@@ -1,6 +1,6 @@
 <script lang="ts">
 import { ConvertCurrencyLink, Description, MoneyInput } from '../../components'
-import { getAccountablePerson } from '../../data/accountablePersons'
+import { getAccountablePerson, getDependentOptions, getPolicyMemberOptions } from '../../data/accountablePersons'
 import { dependentsByPolicyId, loadDependents } from '../../data/dependents'
 import type { ItemCoverageStatus, PolicyItem } from '../../data/items'
 import { categories, init, initialized as catItemsInitialized } from '../../data/itemCategories'
@@ -35,16 +35,10 @@ let initialCategoryId: any = undefined
 let today = new Date()
 
 $: dependents = $dependentsByPolicyId[policyId] || []
-$: dependentOptions = dependents.map((dependent) => ({
-  id: dependent.id,
-  name: dependent.name,
-}))
+$: dependentOptions = getDependentOptions(dependents)
 
 $: policyMembers = $membersByPolicyId[policyId] || []
-$: policyMemberOptions = policyMembers.map((policyMember) => ({
-  id: policyMember.id,
-  name: policyMember.first_name + ' ' + policyMember.last_name,
-}))
+$: policyMemberOptions = getPolicyMemberOptions(policyMembers)
 
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions]
 

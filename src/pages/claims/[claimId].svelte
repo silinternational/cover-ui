@@ -157,11 +157,13 @@ function onDeleted(event) {
 
 <Page layout="grid">
   {#if !item.id}
-    {#if $loading}
-      Loading...
-    {:else}
-      We could not find that claim. Please <a href="/claims">go back</a> and select a claim from the list.
-    {/if}
+    <Row>
+      {#if $loading}
+        Loading...
+      {:else}
+        We could not find that claim. Please <a href="/claims">go back</a> and select a claim from the list.
+      {/if}
+    </Row>
   {:else}
     <Row>
       <Breadcrumb links={breadcrumbLinks} />

@@ -123,8 +123,18 @@ const determinePayoutOption = (
   return selectedPayoutOption
 }
 
-const onSubmit = async () => {
-  dispatch('submit', {
+const onSubmitClaim = (event: Event) => {
+  event.preventDefault()
+  dispatch('submit', getFormData())
+}
+
+const onSaveForLater = (event: Event) => {
+  event.preventDefault()
+  dispatch('save-for-later', getFormData())
+}
+
+const getFormData = () => {
+  return {
     claimData: {
       lostDate,
       lossReason,
@@ -138,7 +148,7 @@ const onSubmit = async () => {
       replaceEstimateUSD,
       fairMarketValueUSD,
     },
-  })
+  }
 }
 
 const setInitialValues = (claim: Claim, claimItem: ClaimItem) => {
@@ -176,7 +186,7 @@ const unSetReplaceEstimate = () => {
 </script>
 
 <div class="w-50">
-  <Form on:submit={onSubmit}>
+  <Form>
     <p>
       <span class="ml-1">Date lost or damaged</span><br />
       <DateInput class="mt-1" bind:value={lostDate} />
@@ -250,7 +260,8 @@ const unSetReplaceEstimate = () => {
     {/if}
     <!--TODO: add evacuation amount when items is done (covered_value*(2/3))-->
     <p>
-      <Button raised>Submit</Button>
+      <Button on:click={onSaveForLater} outlined>Save For Later</Button>
+      <Button on:click={onSubmitClaim} raised>Submit Claim</Button>
     </p>
   </Form>
 </div>

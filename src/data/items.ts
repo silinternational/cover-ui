@@ -13,7 +13,9 @@ export type RiskCategory = {
 }
 
 export type PolicyItem = {
-  accountable_person: string
+  accountable_person_id?: string
+  accountable_dependent_id?: string
+  accountable_user_id?: string
   annual_premium: number
   category: any /*ItemCategory*/
   country: string

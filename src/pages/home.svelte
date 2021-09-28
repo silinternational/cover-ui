@@ -3,6 +3,7 @@ import user from '../authn/user'
 import { Breadcrumb, Menu, ClaimCards, Row } from '../components/'
 import { isLoadingById } from '../components/progress/index'
 import { claims, loadClaims } from '../data/claims'
+import { getAccountablePerson, getDependentOptions, getPolicyMemberOptions } from '../data/accountablePersons'
 import { dependentsByPolicyId, loadDependents } from '../data/dependents'
 import { itemsByPolicyId, loadItems } from '../data/items'
 import { loadMembersOfPolicy, membersByPolicyId } from '../data/policy-members'
@@ -23,15 +24,12 @@ $: policyId && loadClaims()
 
 $: policyId && loadDependents(policyId)
 $: dependents = $dependentsByPolicyId[policyId] || []
+$: dependentOptions = getDependentOptions(dependents)
 
 $: policyId && loadMembersOfPolicy(policyId)
 $: policyMembers = $membersByPolicyId[policyId] || []
-$: policyMemberOptions = policyMembers.map((policyMember) => ({
-  id: policyMember.id,
-  name: policyMember.first_name + ' ' + policyMember.last_name,
-}))
-
-$: accountablePersons = [...policyMemberOptions, ...dependents]
+$: policyMemberOptions = getPolicyMemberOptions(policyMembers)
+$: accountablePersons = [...policyMemberOptions, ...dependentOptions]
 
 const getMenuItems = (id: string) => [
   {
@@ -47,12 +45,6 @@ const getMenuItems = (id: string) => [
     url: `/items/${id}/remove-coverage`,
   },
 ]
-
-//accountablePersons is required otherwise name is not rendered
-const getAccountablePerson = (item: any, persons: any) => {
-  const id: string = item.accountable_user_id || item.accountable_dependent_id
-  return persons?.find((person: any) => person.id === id)?.name || ''
-}
 
 const redirect = (url: string) => {
   if (goToItemDetails) {
@@ -129,7 +121,7 @@ const onEditClaim = (event: any) => {
               </Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{item.coverage_status || ''}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item>{getAccountablePerson(item, accountablePersons)}</Datatable.Data.Row.Item>
+              <Datatable.Data.Row.Item>{getAccountablePerson(item, accountablePersons).name}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{item.risk_category?.name || ''}</Datatable.Data.Row.Item>

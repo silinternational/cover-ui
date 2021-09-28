@@ -4,8 +4,16 @@ import { Banner, Breadcrumb, ItemBanner, Row } from '../../components'
 import { day } from '../../components/const'
 import { formatDate } from '../../components/dates'
 import { loading } from '../../components/progress'
+import {
+  AccountablePersonOptions,
+  getAccountablePerson,
+  getDependentOptions,
+  getPolicyMemberOptions,
+} from '../../data/accountablePersons'
+import { dependentsByPolicyId, loadDependents } from '../../data/dependents'
 import { deleteItem, ItemCoverageStatus, itemsByPolicyId, loadItems, PolicyItem } from '../../data/items'
 import { init, policies, Policy } from '../../data/policies'
+import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
 import { formatMoney } from '../../helpers/money'
 import { goto } from '@roxi/routify'
 import { Button, Page, Dialog } from '@silintl/ui-components'
@@ -20,14 +28,27 @@ const buttons: Dialog.AlertButton[] = [
 
 let householdId = ''
 let open: boolean = false
+let accountablePersons: AccountablePersonOptions[]
 
 $: $user.policy_id && loadItems($user.policy_id)
 
 $: $policies.length || init()
 $: policyId = $user.policy_id as string
+
+// Accountable persons
+$: policyId && loadDependents(policyId)
+$: dependents = $dependentsByPolicyId[policyId] || []
+$: dependentOptions = getDependentOptions(dependents)
+
+$: policyId && loadMembersOfPolicy(policyId)
+$: policyMembers = $membersByPolicyId[policyId] || []
+$: policyMemberOptions = getPolicyMemberOptions(policyMembers)
+
+$: accountablePersons = [...policyMemberOptions, ...dependentOptions]
+$: accountablePersonName = getAccountablePerson(item, accountablePersons)?.name
+
 $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
 $: policy.household_id && setPolicyHouseholdId()
-
 $: items = $itemsByPolicyId[$user.policy_id] || []
 $: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
 $: itemName = item.name || ''
@@ -97,7 +118,7 @@ const handleDialog = async (choice: string) => {
       <b>Annual premium</b>
       <div>{formatMoney(item.annual_premium)}</div>
       <br />
-      <b>{item.accountable_person || ''}</b>
+      <b>{accountablePersonName || ''}</b>
       <div>Household ID</div>
       <div>{householdId}</div>
     </Row>

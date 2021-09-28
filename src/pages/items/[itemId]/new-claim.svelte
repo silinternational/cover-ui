@@ -2,7 +2,7 @@
 import user from '../../../authn/user'
 import { Breadcrumb, ClaimForm } from '../../../components'
 import { loading } from '../../../components/progress'
-import { claims, initialized, createClaim, createClaimItem, loadClaims, Claim } from '../../../data/claims'
+import { claims, initialized, createClaim, createClaimItem, loadClaims, Claim, submitClaim } from '../../../data/claims'
 import { itemsByPolicyId, loadItems, PolicyItem } from '../../../data/items'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
@@ -37,7 +37,7 @@ const isItemIdOnClaim = (itemId: string, claim: Claim) => {
   const claimItems = claim.claim_items || []
   return claimItems.some((claimItem) => claimItem.item_id === itemId)
 }
-const onSubmit = async (event: CustomEvent) => {
+const createClaimAndItem = async (event: CustomEvent): Promise<string> => {
   const { claimData, claimItemData } = event.detail
 
   // TODO - Handle situations where the claim is created, but the claim-item
@@ -47,7 +47,16 @@ const onSubmit = async (event: CustomEvent) => {
 
   const claim = await createClaim(item, claimData)
   await createClaimItem(claim.id, claimItemData)
-  $goto(`/claims/${claim.id}`)
+  return claim.id
+}
+const onSaveForLater = async (event: CustomEvent) => {
+  const claimId = await createClaimAndItem(event)
+  $goto(`/claims/${claimId}`)
+}
+const onSubmit = async (event: CustomEvent) => {
+  const claimId = await createClaimAndItem(event)
+  await submitClaim(claimId)
+  $goto(`/claims/${claimId}`)
 }
 </script>
 
@@ -68,5 +77,5 @@ const onSubmit = async (event: CustomEvent) => {
     </p>
   {/if}
 
-  <ClaimForm {item} on:submit={onSubmit} />
+  <ClaimForm {item} on:save-for-later={onSaveForLater} on:submit={onSubmit} />
 </Page>

@@ -2,7 +2,16 @@
 import user from '../../../authn/user'
 import { Breadcrumb, ClaimForm } from '../../../components'
 import { loading } from '../../../components/progress'
-import { Claim, ClaimItem, claims, initialized, loadClaims, updateClaim, updateClaimItem } from '../../../data/claims'
+import {
+  Claim,
+  ClaimItem,
+  claims,
+  initialized,
+  loadClaims,
+  submitClaim,
+  updateClaim,
+  updateClaimItem,
+} from '../../../data/claims'
 import { itemsByPolicyId, loadItems, PolicyItem } from '../../../data/items'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
@@ -29,11 +38,19 @@ $: thisClaimBreadcrumb = { name: claimName || 'This item', url: `/claims/${claim
 const editBreadcrumb = { name: 'Edit', url: `/claims/${claimId}/edit` }
 $: breadcrumbLinks = [claimsBreadcrumb, thisClaimBreadcrumb, editBreadcrumb]
 
-const onSubmit = async (event: CustomEvent) => {
+const updateClaimAndItem = async (event: CustomEvent): Promise<void> => {
   const { claimData, claimItemData } = event.detail
 
   await updateClaim(claimId, claimData)
   await updateClaimItem(claimId, claimItemId, claimItemData)
+}
+const onSaveForLater = async (event: CustomEvent) => {
+  await updateClaimAndItem(event)
+  $goto(`/claims/${claimId}`)
+}
+const onSubmit = async (event: CustomEvent) => {
+  await updateClaimAndItem(event)
+  await submitClaim(claimId)
   $goto(`/claims/${claimId}`)
 }
 </script>
@@ -52,6 +69,6 @@ const onSubmit = async (event: CustomEvent) => {
   <!-- @todo Handle situations where the user isn't allowed to edit this claim. -->
   <Page>
     <Breadcrumb links={breadcrumbLinks} />
-    <ClaimForm {claim} {item} on:submit={onSubmit} />
+    <ClaimForm {claim} {item} on:save-for-later={onSaveForLater} on:submit={onSubmit} />
   </Page>
 {/if}

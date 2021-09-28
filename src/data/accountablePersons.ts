@@ -7,11 +7,12 @@ export type AccountablePerson = {
   name: string
 }
 
-export const getPolicyMemberOptions = (policyMembers: any[]): AccountablePerson[] =>
-  policyMembers?.map((policyMember) => ({
+export const getPolicyMemberOptions = (policyMembers: any[]): AccountablePerson[] => {
+  return policyMembers?.map((policyMember) => ({
     id: policyMember.id,
     name: policyMember.first_name + ' ' + policyMember.last_name,
   }))
+}
 
 export const getDependentOptions = (dependents: any[]): AccountablePerson[] =>
   dependents?.map((dependent) => ({

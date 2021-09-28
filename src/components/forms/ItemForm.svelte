@@ -1,10 +1,10 @@
 <script lang="ts">
 import { ConvertCurrencyLink, Description, MoneyInput } from '../../components'
 import { getDependentOptions, getPolicyMemberOptions } from '../../data/accountablePersons'
-import { dependentsByPolicyId, loadDependents } from '../../data/dependents'
+import { dependentsByPolicyId, loadDependents, PolicyDependent } from '../../data/dependents'
 import type { ItemCoverageStatus, PolicyItem } from '../../data/items'
 import { categories, init, initialized as catItemsInitialized } from '../../data/itemCategories'
-import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
+import { loadMembersOfPolicy, membersByPolicyId, PolicyMember } from '../../data/policy-members'
 import { Button, Form, Select, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
@@ -41,7 +41,7 @@ $: dependentOptions = getDependentOptions(dependents)
 $: policyMembers = $membersByPolicyId[policyId] || []
 $: policyMemberOptions = getPolicyMemberOptions(policyMembers)
 
-$: accountablePersons = [...policyMemberOptions, ...dependentOptions]
+$: accountablePersons = [...policyMemberOptions, ...dependentOptions] as (PolicyMember | PolicyDependent)[]
 
 $: policyId && loadDependents(policyId)
 $: policyId && loadMembersOfPolicy(policyId)

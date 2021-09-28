@@ -1,6 +1,6 @@
 import type { PolicyItem } from './items'
-import { dependentsByPolicyId } from './dependents'
-import { membersByPolicyId } from './policy-members'
+import { dependentsByPolicyId, loadDependents } from './dependents'
+import { loadMembersOfPolicy, membersByPolicyId } from './policy-members'
 
 type AccountablePersons = {
   id: string
@@ -8,25 +8,32 @@ type AccountablePersons = {
 }
 
 export const getPolicyMemberOptions = (policyMembers: any[]): AccountablePersons[] =>
-  policyMembers.map((policyMember) => ({
+  policyMembers?.map((policyMember) => ({
     id: policyMember.id,
     name: policyMember.first_name + ' ' + policyMember.last_name,
   }))
 
 export const getDependentOptions = (dependents: any[]): AccountablePersons[] =>
-  dependents.map((dependent) => ({
+  dependents?.map((dependent) => ({
     id: dependent.id,
     name: dependent.name,
   }))
 
-export const getAccountablePersonsByPolicyId = (id: string): AccountablePersons[] => {
-  let dependents: any
-  dependentsByPolicyId.subscribe((value) => (dependents = value[id]))
-  const dependentOptions = getDependentOptions(dependents)
+export const getAccountablePersonsByPolicyId = async (id: string): Promise<AccountablePersons[]> => {
+  await loadDependents(id)
+  await loadMembersOfPolicy(id)
 
-  let members: any
-  membersByPolicyId.subscribe((value) => (members = value[id]))
-  const policyMemberOptions = getPolicyMemberOptions(members)
+  let dependents_value: any
+  let members_value: any
+
+  const unsubscribe_dependents = dependentsByPolicyId.subscribe((value) => (dependents_value = value[id]))
+  const unsubscribe_members = membersByPolicyId.subscribe((value) => (members_value = value[id]))
+
+  const dependentOptions = getDependentOptions(dependents_value)
+  const policyMemberOptions = getPolicyMemberOptions(members_value)
+
+  unsubscribe_dependents()
+  unsubscribe_members()
 
   return [...policyMemberOptions, ...dependentOptions]
 }

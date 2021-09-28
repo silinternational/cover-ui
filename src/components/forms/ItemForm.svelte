@@ -31,6 +31,7 @@ let uniqueIdentifier: string = ''
 // Set initial values based on the provided item data.
 $: setInitialValues(item)
 
+let accountablePersons = [] as (PolicyMember | PolicyDependent)[]
 let initialAccountablePersonId = undefined
 let initialCategoryId: any = undefined
 let today = new Date()
@@ -41,7 +42,7 @@ $: dependentOptions = getDependentOptions(dependents)
 $: policyMembers = $membersByPolicyId[policyId] || []
 $: policyMemberOptions = getPolicyMemberOptions(policyMembers)
 
-$: accountablePersons = [...policyMemberOptions, ...dependentOptions] as (PolicyMember | PolicyDependent)[]
+$: accountablePersons = [...policyMemberOptions, ...dependentOptions]
 
 $: policyId && loadDependents(policyId)
 $: policyId && loadMembersOfPolicy(policyId)

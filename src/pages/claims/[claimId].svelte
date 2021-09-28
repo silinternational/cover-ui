@@ -1,5 +1,5 @@
 <script lang="ts">
-import { determineMaxPayout } from '../../business-rules/claim-payout-amount'
+import { determineMaxPayout, isEvidenceNeeded } from '../../business-rules/claim-payout-amount'
 import {
   Banner,
   Breadcrumb,
@@ -59,7 +59,7 @@ $: payoutOption = claimItem.payout_option as PayoutOption
 $: needsRepairReceipt = needsReceipt && payoutOption === 'Repair'
 $: needsReplaceReceipt = needsReceipt && payoutOption === 'Replacement'
 $: needsReceipt = claimStatus === 'Receipt'
-$: needsEvidence = ((claimItem.fmv || claimItem.repair_estimate) && status === 'Draft') as boolean
+$: needsEvidence = isEvidenceNeeded(claimItem, claimStatus)
 $: needsFile = (needsReceipt || needsEvidence) as boolean
 $: filePurpose = getFilePurpose(claimItem, needsReceipt)
 $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType) as string

@@ -54,11 +54,11 @@ $: claim.policy_id && loadItems(claim.policy_id)
 $: item = items.find((itm) => itm.id === claimItem.item_id) || ({} as PolicyItem)
 
 $: incidentDate = formatDate(claim.incident_date)
-$: status = (claim.status || '') as ClaimStatus
+$: claimStatus = (claim.status || '') as ClaimStatus
 $: payoutOption = claimItem.payout_option as PayoutOption
 $: needsRepairReceipt = needsReceipt && payoutOption === 'Repair'
 $: needsReplaceReceipt = needsReceipt && payoutOption === 'Replacement'
-$: needsReceipt = status === 'Receipt'
+$: needsReceipt = claimStatus === 'Receipt'
 $: needsEvidence = ((claimItem.fmv || claimItem.repair_estimate) && status === 'Draft') as boolean
 $: needsFile = (needsReceipt || needsEvidence) as boolean
 $: filePurpose = getFilePurpose(claimItem, needsReceipt)
@@ -181,9 +181,9 @@ function onDeleted(event) {
       <div class="left-detail">{incidentDate || ''}</div>
     </Row>
     <Row cols="9">
-      <ClaimBanner claimStatus={status}>{claim.status_reason || ''}</ClaimBanner>
+      <ClaimBanner {claimStatus}>{claim.status_reason || ''}</ClaimBanner>
       {#if needsFile}
-        <ClaimBanner claimStatus={`${status}Secondary`}>
+        <ClaimBanner claimStatus={`${claimStatus}Secondary`}>
           Upload {uploadLabel} to get reimbursed.
         </ClaimBanner>
       {/if}

@@ -1,10 +1,10 @@
 <script lang="ts">
 import { ConvertCurrencyLink, Description, MoneyInput } from '../../components'
-import { getDependentOptions, getPolicyMemberOptions } from '../../data/accountablePersons'
-import { dependentsByPolicyId, loadDependents, PolicyDependent } from '../../data/dependents'
+import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from '../../data/accountablePersons'
+import { dependentsByPolicyId, loadDependents } from '../../data/dependents'
 import type { ItemCoverageStatus, PolicyItem } from '../../data/items'
 import { categories, init, initialized as catItemsInitialized } from '../../data/itemCategories'
-import { loadMembersOfPolicy, membersByPolicyId, PolicyMember } from '../../data/policy-members'
+import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
 import { Button, Form, Select, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
@@ -31,7 +31,7 @@ let uniqueIdentifier: string = ''
 // Set initial values based on the provided item data.
 $: setInitialValues(item)
 
-let accountablePersons = [] as (PolicyMember | PolicyDependent)[]
+let accountablePersons = [] as AccountablePersonOptions[]
 let initialAccountablePersonId = undefined
 let initialCategoryId: any = undefined
 let today = new Date()

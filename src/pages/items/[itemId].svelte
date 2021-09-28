@@ -4,8 +4,11 @@ import { Banner, Breadcrumb, ItemBanner, Row } from '../../components'
 import { day } from '../../components/const'
 import { formatDate } from '../../components/dates'
 import { loading } from '../../components/progress'
+import { getAccountablePersonsByPolicyId, getAccountablePerson, AccountablePerson } from '../../data/accountablePersons'
+import { loadDependents } from '../../data/dependents'
 import { deleteItem, ItemCoverageStatus, itemsByPolicyId, loadItems, PolicyItem } from '../../data/items'
 import { init, policies, Policy } from '../../data/policies'
+import { loadMembersOfPolicy } from '../../data/policy-members'
 import { formatMoney } from '../../helpers/money'
 import { goto } from '@roxi/routify'
 import { Button, Page, Dialog } from '@silintl/ui-components'
@@ -20,14 +23,19 @@ const buttons: Dialog.AlertButton[] = [
 
 let householdId = ''
 let open: boolean = false
+let persons: AccountablePerson[]
 
 $: $user.policy_id && loadItems($user.policy_id)
 
 $: $policies.length || init()
 $: policyId = $user.policy_id as string
+
+// Accountable persons
+$: policyId && loadAndSetAccountablePersons(policyId)
+$: accountablePerson = getAccountablePerson(item, persons)
+
 $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
 $: policy.household_id && setPolicyHouseholdId()
-
 $: items = $itemsByPolicyId[$user.policy_id] || []
 $: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
 $: itemName = item.name || ''
@@ -41,6 +49,13 @@ $: startDate = formatDate(item.coverage_start_date)
 const itemsBreadcrumb = { name: 'Items', url: '/items' }
 $: thisItemBreadcrumb = { name: itemName || 'This item', url: `/items/${itemId}` }
 $: breadcrumbLinks = [itemsBreadcrumb, thisItemBreadcrumb]
+
+const loadAndSetAccountablePersons = async (policyId: string) => {
+  await loadDependents(policyId)
+  await loadMembersOfPolicy(policyId)
+
+  persons = getAccountablePersonsByPolicyId(policyId)
+}
 
 const setPolicyHouseholdId = () => (householdId = policy.household_id || '')
 
@@ -97,7 +112,7 @@ const handleDialog = async (choice: string) => {
       <b>Annual premium</b>
       <div>{formatMoney(item.annual_premium)}</div>
       <br />
-      <b>{item.accountable_person || ''}</b>
+      <b>{accountablePerson}</b>
       <div>Household ID</div>
       <div>{householdId}</div>
     </Row>

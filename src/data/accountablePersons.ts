@@ -8,17 +8,18 @@ export type AccountablePerson = {
 }
 
 export const getPolicyMemberOptions = (policyMembers: any[]): AccountablePerson[] => {
-  return policyMembers?.map((policyMember) => ({
+  return policyMembers.map((policyMember) => ({
     id: policyMember.id,
     name: policyMember.first_name + ' ' + policyMember.last_name,
   }))
 }
 
-export const getDependentOptions = (dependents: any[]): AccountablePerson[] =>
-  dependents.map((dependent) => ({
+export const getDependentOptions = (dependents: any[]): AccountablePerson[] => {
+  return dependents.map((dependent) => ({
     id: dependent.id,
     name: dependent.name,
   }))
+}
 
 export const getAccountablePersonsByPolicyId = (id: string): AccountablePerson[] => {
   let dependents_value: any

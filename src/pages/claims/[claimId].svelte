@@ -1,5 +1,5 @@
 <script lang="ts">
-import { determineMaxPayout } from '../../business-rules/claim-payout-amount'
+import { determineMaxPayout, isEvidenceNeeded } from '../../business-rules/claim-payout-amount'
 import {
   Banner,
   Breadcrumb,
@@ -54,12 +54,12 @@ $: claim.policy_id && loadItems(claim.policy_id)
 $: item = items.find((itm) => itm.id === claimItem.item_id) || ({} as PolicyItem)
 
 $: incidentDate = formatDate(claim.incident_date)
-$: status = (claim.status || '') as ClaimStatus
+$: claimStatus = (claim.status || '') as ClaimStatus
 $: payoutOption = claimItem.payout_option as PayoutOption
 $: needsRepairReceipt = needsReceipt && payoutOption === 'Repair'
 $: needsReplaceReceipt = needsReceipt && payoutOption === 'Replacement'
-$: needsReceipt = status === 'Receipt'
-$: needsEvidence = ((claimItem.fmv || claimItem.repair_estimate) && status === 'Draft') as boolean
+$: needsReceipt = claimStatus === 'Receipt'
+$: needsEvidence = isEvidenceNeeded(claimItem, claimStatus)
 $: needsFile = (needsReceipt || needsEvidence) as boolean
 $: filePurpose = getFilePurpose(claimItem, needsReceipt)
 $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType) as string
@@ -157,11 +157,13 @@ function onDeleted(event) {
 
 <Page layout="grid">
   {#if !item.id}
-    {#if $loading}
-      Loading...
-    {:else}
-      We could not find that claim. Please <a href="/claims">go back</a> and select a claim from the list.
-    {/if}
+    <Row>
+      {#if $loading}
+        Loading...
+      {:else}
+        We could not find that claim. Please <a href="/claims">go back</a> and select a claim from the list.
+      {/if}
+    </Row>
   {:else}
     <Row>
       <Breadcrumb links={breadcrumbLinks} />
@@ -179,9 +181,9 @@ function onDeleted(event) {
       <div class="left-detail">{incidentDate || ''}</div>
     </Row>
     <Row cols="9">
-      <ClaimBanner claimStatus={status}>{claim.status_reason || ''}</ClaimBanner>
+      <ClaimBanner {claimStatus}>{claim.status_reason || ''}</ClaimBanner>
       {#if needsFile}
-        <ClaimBanner claimStatus={`${status}Secondary`}>
+        <ClaimBanner claimStatus={`${claimStatus}Secondary`}>
           Upload {uploadLabel} to get reimbursed.
         </ClaimBanner>
       {/if}

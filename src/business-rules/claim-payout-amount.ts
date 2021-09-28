@@ -1,5 +1,5 @@
 import type { ClaimIncidentType } from '../data/claim-incident-types'
-import type { PayoutOption, ClaimItem } from '../data/claims'
+import type { PayoutOption, ClaimItem, ClaimStatus } from '../data/claims'
 
 export const DEDUCTIBLE = 0.05
 export const LOSS_REASON_EVACUATION = 'Evacuation'
@@ -85,4 +85,10 @@ export const determineMaxPayout = (
     default:
       return undefined
   }
+}
+
+export const isEvidenceNeeded = (claimItem: ClaimItem, claimStatus: ClaimStatus): boolean => {
+  const willNeedEvidence = claimItem.fmv > 0 || claimItem.repair_estimate > 0
+  const canProvideEvidenceNow = ['Draft', 'Review1'].includes(claimStatus)
+  return willNeedEvidence && canProvideEvidenceNow
 }

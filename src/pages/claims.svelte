@@ -1,15 +1,18 @@
 <script lang="ts">
 import user from '../authn/user'
 import { ClaimCards, Row, Breadcrumb } from '../components/'
-import { claims, initialized as claimsInitialized, loadClaims } from '../data/claims'
+import { claims, loadClaims } from '../data/claims'
 import { itemsByPolicyId, loadItems } from '../data/items'
 import { Page, Button } from '@silintl/ui-components'
-
-$: $claimsInitialized || loadClaims()
+import { onMount } from 'svelte'
 
 $: policyId = $user.policy_id
 $: policyId && loadItems(policyId)
 $: items = $itemsByPolicyId[policyId] || []
+
+onMount(() => {
+  loadClaims()
+})
 </script>
 
 <Page layout="grid">

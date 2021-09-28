@@ -2,7 +2,7 @@ import type { PolicyItem } from './items'
 import { dependentsByPolicyId } from './dependents'
 import { membersByPolicyId } from './policy-members'
 
-type AccountablePerson = {
+export type AccountablePerson = {
   id: string
   name: string
 }

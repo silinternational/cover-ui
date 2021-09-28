@@ -32,7 +32,7 @@ $: policyId = $user.policy_id as string
 
 // Accountable persons
 $: policyId && loadAndSetAccountablePersons(policyId)
-$: accountablePerson = getAccountablePerson(item, persons)?.name
+$: accountablePersonName = getAccountablePerson(item, persons)?.name
 
 $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
 $: policy.household_id && setPolicyHouseholdId()
@@ -112,7 +112,7 @@ const handleDialog = async (choice: string) => {
       <b>Annual premium</b>
       <div>{formatMoney(item.annual_premium)}</div>
       <br />
-      <b>{accountablePerson}</b>
+      <b>{accountablePersonName}</b>
       <div>Household ID</div>
       <div>{householdId}</div>
     </Row>

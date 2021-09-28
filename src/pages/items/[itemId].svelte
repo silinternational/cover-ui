@@ -112,7 +112,7 @@ const handleDialog = async (choice: string) => {
       <b>Annual premium</b>
       <div>{formatMoney(item.annual_premium)}</div>
       <br />
-      <b>{accountablePersonName}</b>
+      <b>{accountablePersonName || ''}</b>
       <div>Household ID</div>
       <div>{householdId}</div>
     </Row>

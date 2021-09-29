@@ -32,20 +32,20 @@ let uniqueIdentifier: string = ''
 $: setInitialValues(item)
 
 let accountablePersons = [] as AccountablePersonOptions[]
-let initialAccountablePersonId = undefined
+let initialAccountablePersonId: any = undefined
 let initialCategoryId: any = undefined
 let today = new Date()
 
+$: policyId && loadDependents(policyId)
 $: dependents = $dependentsByPolicyId[policyId] || []
 $: dependentOptions = getDependentOptions(dependents)
 
+$: policyId && loadMembersOfPolicy(policyId)
 $: policyMembers = $membersByPolicyId[policyId] || []
 $: policyMemberOptions = getPolicyMemberOptions(policyMembers)
 
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions]
 
-$: policyId && loadDependents(policyId)
-$: policyId && loadMembersOfPolicy(policyId)
 $: !$catItemsInitialized && init()
 
 const onAccountablePersonChange = (event: any) => {
@@ -148,7 +148,7 @@ const setInitialValues = (item: PolicyItem) => {
       label="Accountable person"
       on:change={onAccountablePersonChange}
       on:populated={onAccountablePersonSelectPopulated}
-      options={accountablePersons}
+      bind:options={accountablePersons}
       selectedID={initialAccountablePersonId}
     />
     <Description>

@@ -1,6 +1,6 @@
 <script lang="ts">
 import { login } from '../authn'
-import { loadUser } from '../authn/user'
+import user, { loadUser } from '../authn/user'
 import type { CustomError } from '../error'
 import './mdc/_index.scss'
 import t from '../i18n'
@@ -8,6 +8,11 @@ import { parse, stringify } from 'qs'
 import { Router } from '@roxi/routify'
 import { onMount } from 'svelte'
 import { routes } from '../../.routify/routes'
+
+// If we've loaded the user, but their policy wasn't quite ready, try again.
+$: if (!$user.policy_id) {
+  setTimeout(loadUser, 5000)
+}
 
 // added because of this:  https://github.com/sveltech/routify/issues/201
 const queryHandler = {

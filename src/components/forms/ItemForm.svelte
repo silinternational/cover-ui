@@ -146,7 +146,7 @@ const setInitialValues = (item: PolicyItem) => {
       label="Accountable person"
       on:change={onAccountablePersonChange}
       on:populated={onAccountablePersonSelectPopulated}
-      bind:options={accountablePersons}
+      options={accountablePersons}
       selectedID={initialAccountablePersonId}
     />
     <Description>

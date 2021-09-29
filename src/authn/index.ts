@@ -7,8 +7,12 @@ export type AuthLoginResponse = {
   RedirectURL: string
 }
 
-export const login = async () => {
-  const responseData = await POST<AuthLoginResponse>(`auth/login/?client-id=${getSeed()}`)
+export const login = async (inviteCode = '') => {
+  let url = `auth/login/?client-id=${getSeed()}`
+  if (inviteCode) {
+    url += `&invite=${inviteCode}`
+  }
+  const responseData = await POST<AuthLoginResponse>(url)
   if (responseData.RedirectURL) {
     location.replace(responseData.RedirectURL)
   } else {

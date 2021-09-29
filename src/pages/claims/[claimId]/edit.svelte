@@ -1,6 +1,6 @@
 <script lang="ts">
 import user from '../../../authn/user'
-import { Breadcrumb, ClaimForm } from '../../../components'
+import { Breadcrumb, ClaimBanner, ClaimForm } from '../../../components'
 import { loading } from '../../../components/progress'
 import {
   Claim,
@@ -46,7 +46,7 @@ const updateClaimAndItem = async (event: CustomEvent): Promise<void> => {
 }
 const onSaveForLater = async (event: CustomEvent) => {
   await updateClaimAndItem(event)
-  $goto(`/claims/${claimId}`)
+  $goto('/home')
 }
 const onSubmit = async (event: CustomEvent) => {
   await updateClaimAndItem(event)
@@ -69,6 +69,7 @@ const onSubmit = async (event: CustomEvent) => {
   <!-- @todo Handle situations where the user isn't allowed to edit this claim. -->
   <Page>
     <Breadcrumb links={breadcrumbLinks} />
+    <ClaimBanner claimStatus={'Draft'} class="my-2" />
     <ClaimForm {claim} {item} on:save-for-later={onSaveForLater} on:submit={onSubmit} />
   </Page>
 {/if}

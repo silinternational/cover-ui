@@ -55,6 +55,7 @@ $: item = items.find((itm) => itm.id === claimItem.item_id) || ({} as PolicyItem
 
 $: incidentDate = formatDate(claim.incident_date)
 $: claimStatus = (claim.status || '') as ClaimStatus
+$: claimStatus === 'Draft' && editClaim()
 $: payoutOption = claimItem.payout_option as PayoutOption
 $: needsRepairReceipt = needsReceipt && payoutOption === 'Repair'
 $: needsReplaceReceipt = needsReceipt && payoutOption === 'Replacement'

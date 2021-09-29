@@ -8,4 +8,4 @@ export let itemStatus = '' as ItemCoverageStatus
 $: state = (itemStatus && getItemState(itemStatus)) || ({} as State)
 </script>
 
-<StatusBanner {state}><slot /></StatusBanner>
+<StatusBanner class={$$props.class} {state}><slot /></StatusBanner>

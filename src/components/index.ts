@@ -23,6 +23,7 @@ import Row from './mdc/Row.svelte'
 import ClaimBanner from './banners/ClaimBanner.svelte'
 import StatusBanner from './banners/StatusBanner.svelte'
 import SearchableSelect from './SearchableSelect.svelte'
+import UserHomePage from './home/UserHomePage.svelte'
 
 export {
   filteredList as FilteredList,
@@ -50,4 +51,5 @@ export {
   ClaimBanner,
   SearchableSelect,
   StatusBanner,
+  UserHomePage,
 }

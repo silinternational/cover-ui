@@ -58,12 +58,6 @@ const handleMoreVertClick = (id: string) => {
   goToItemDetails = false
   shownMenus[id] = shownMenus[id] !== true
 }
-const onEditClaim = (event: any) => {
-  const claimId: string = event.detail
-
-  // TODO: Change this to dispatch events, leaving URL changes to the actual page.
-  $goto(`/claims/${claimId}/edit`)
-}
 </script>
 
 <style>
@@ -90,7 +84,7 @@ const onEditClaim = (event: any) => {
 <Page loading={isLoadingById(policyId)} layout="grid">
   <Breadcrumb />
   <Row cols={'12'}>
-    <ClaimCards claims={$claims} {items} on:edit-claim={onEditClaim} />
+    <ClaimCards claims={$claims} {items} />
   </Row>
 
   <Row cols={'12'}>

@@ -5,8 +5,7 @@ import type { CustomError } from '../error'
 import './mdc/_index.scss'
 import t from '../i18n'
 import { parse, stringify } from 'qs'
-import { Router } from '@roxi/routify'
-import { onMount } from 'svelte'
+import { afterPageLoad, Router } from '@roxi/routify'
 import { routes } from '../../.routify/routes'
 
 // If we've loaded the user, but their policy wasn't quite ready, try again.
@@ -19,12 +18,21 @@ const queryHandler = {
   parse: (params: string) => parse(params, { ignoreQueryPrefix: true }),
   stringify,
 }
-onMount(() => {
+
+const publicRoutes = ['/invite/:uuid']
+
+const authenticateUser = async () => {
   loadUser().catch((error: CustomError) => {
     if (error.status === 401) {
       login()
     }
   })
+}
+
+$afterPageLoad((page) => {
+  if (!publicRoutes.includes(page.path)) {
+    authenticateUser()
+  }
 })
 </script>
 

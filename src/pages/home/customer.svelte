@@ -1,6 +1,6 @@
 <script lang="ts">
 import user from '../../authn/user'
-import { Breadcrumb, Menu, ClaimCards, Row } from '../../components/'
+import { Menu, ClaimCards, Row } from '../../components/'
 import { isLoadingById } from '../../components/progress/index'
 import { claims, loadClaims } from '../../data/claims'
 import { getAccountablePerson, getDependentOptions, getPolicyMemberOptions } from '../../data/accountablePersons'
@@ -91,7 +91,6 @@ const onEditClaim = (event: any) => {
 </style>
 
 <Page loading={isLoadingById(policyId)} layout="grid">
-  <Breadcrumb />
   <Row cols={'12'}>
     <ClaimCards claims={$claims} {items} on:edit-claim={onEditClaim} />
   </Row>

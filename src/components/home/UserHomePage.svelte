@@ -40,6 +40,7 @@ const getMenuItems = (id: string) => [
   },
 ]
 
+// TODO: Change this to dispatch events, leaving URL changes to the actual page.
 const redirect = (url: string) => {
   if (goToItemDetails) {
     $goto(url)
@@ -59,6 +60,8 @@ const handleMoreVertClick = (id: string) => {
 }
 const onEditClaim = (event: any) => {
   const claimId: string = event.detail
+
+  // TODO: Change this to dispatch events, leaving URL changes to the actual page.
   $goto(`/claims/${claimId}/edit`)
 }
 </script>

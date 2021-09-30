@@ -1,6 +1,8 @@
 <script lang="ts">
 import user from '../../../authn/user'
 import { Breadcrumb, ItemForm } from '../../../components'
+import { loadDependents } from '../../../data/dependents'
+import { loadMembersOfPolicy } from '../../../data/policy-members'
 import { loading } from '../../../components/progress'
 import { itemsByPolicyId, loadItems, PolicyItem, submitItem, updateItem } from '../../../data/items'
 import { goto } from '@roxi/routify'
@@ -9,6 +11,10 @@ import { Page } from '@silintl/ui-components'
 export let itemId: string
 
 $: policyId = $user.policy_id
+
+$: policyId && loadDependents(policyId)
+$: policyId && loadMembersOfPolicy(policyId)
+
 $: policyId && loadItems(policyId)
 $: items = $itemsByPolicyId[policyId] || []
 $: item = items.find((anItem) => anItem.id === itemId) || ({} as PolicyItem)

@@ -1,11 +1,16 @@
 <script lang="ts">
 import user from '../../authn/user'
 import { Breadcrumb, ItemForm } from '../../components'
+import { loadDependents } from '../../data/dependents'
 import { addItem, submitItem } from '../../data/items'
+import { loadMembersOfPolicy } from '../../data/policy-members'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
 $: policyId = $user.policy_id
+
+$: policyId && loadDependents(policyId)
+$: policyId && loadMembersOfPolicy(policyId)
 
 const onSubmit = async (event) => {
   let item = await addItem(policyId, event.detail)

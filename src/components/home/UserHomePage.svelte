@@ -1,32 +1,26 @@
 <script lang="ts">
-import user from '../../authn/user'
 import { Breadcrumb, Menu, ClaimCards, Row } from '../../components/'
 import { isLoadingById } from '../../components/progress/index'
-import { claims, loadClaims } from '../../data/claims'
+import { claims } from '../../data/claims'
 import { getAccountablePerson, getDependentOptions, getPolicyMemberOptions } from '../../data/accountablePersons'
-import { dependentsByPolicyId, loadDependents } from '../../data/dependents'
-import { itemsByPolicyId, loadItems } from '../../data/items'
-import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
+import { dependentsByPolicyId } from '../../data/dependents'
+import { itemsByPolicyId } from '../../data/items'
+import { membersByPolicyId } from '../../data/policy-members'
 import { formatMoney } from '../../helpers/money'
 import { goto } from '@roxi/routify'
 import { Checkbox, Page, Datatable } from '@silintl/ui-components'
+
+export let policyId: string
 
 let selected: string[] = []
 let goToItemDetails = true
 let shownMenus: { [name: string]: boolean } = {}
 
-$: policyId = $user.policy_id
-
-$: policyId && loadItems(policyId)
 $: items = $itemsByPolicyId[policyId] || []
 
-$: policyId && loadClaims()
-
-$: policyId && loadDependents(policyId)
 $: dependents = $dependentsByPolicyId[policyId] || []
 $: dependentOptions = getDependentOptions(dependents)
 
-$: policyId && loadMembersOfPolicy(policyId)
 $: policyMembers = $membersByPolicyId[policyId] || []
 $: policyMemberOptions = getPolicyMemberOptions(policyMembers)
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions]

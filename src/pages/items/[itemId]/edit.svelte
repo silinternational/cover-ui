@@ -1,6 +1,6 @@
 <script lang="ts">
 import user from '../../../authn/user'
-import { Breadcrumb, ItemForm } from '../../../components'
+import { Breadcrumb, ItemBanner, ItemForm } from '../../../components'
 import { loadDependents } from '../../../data/dependents'
 import { loadMembersOfPolicy } from '../../../data/policy-members'
 import { loading } from '../../../components/progress'
@@ -36,7 +36,7 @@ const onSubmit = async (event) => {
 const onSaveForLater = async (event) => {
   await updateItem(policyId, itemId, event.detail)
 
-  $goto(`/items/${itemId}`)
+  $goto('/home')
 }
 </script>
 
@@ -50,6 +50,7 @@ const onSaveForLater = async (event) => {
   <!-- @todo Handle situations where the user isn't allowed to edit this item (if any). -->
   <Page>
     <Breadcrumb links={breadcrumbLinks} />
+    <ItemBanner itemStatus="Draft" class="my-2" />
     <ItemForm {item} {policyId} on:submit={onSubmit} on:save-for-later={onSaveForLater} />
   </Page>
 {/if}

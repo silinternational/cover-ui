@@ -53,6 +53,7 @@ $: items = $itemsByPolicyId[$user.policy_id] || []
 $: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
 $: itemName = item.name || ''
 $: status = (item.coverage_status || '') as ItemCoverageStatus
+$: status === 'Draft' && $user.app_role === 'User' && goToEditItem()
 
 $: msAgo = now - Date.parse(item.updated_at)
 $: daysAgo = msAgo > 0 ? Math.floor(msAgo / day) : '-'

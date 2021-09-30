@@ -8,4 +8,4 @@ export let claimStatus = '' as ClaimStatus
 $: state = (claimStatus && getClaimState(claimStatus)) || ({} as State)
 </script>
 
-<StatusBanner {state}><slot /></StatusBanner>
+<StatusBanner class={$$props.class} {state}><slot /></StatusBanner>

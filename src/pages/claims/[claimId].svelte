@@ -1,4 +1,5 @@
 <script lang="ts">
+import user from '../../authn/user'
 import { determineMaxPayout, isEvidenceNeeded } from '../../business-rules/claim-payout-amount'
 import {
   Banner,
@@ -55,6 +56,7 @@ $: item = items.find((itm) => itm.id === claimItem.item_id) || ({} as PolicyItem
 
 $: incidentDate = formatDate(claim.incident_date)
 $: claimStatus = (claim.status || '') as ClaimStatus
+$: claimStatus === 'Draft' && $user.app_role === 'User' && editClaim()
 $: payoutOption = claimItem.payout_option as PayoutOption
 $: needsRepairReceipt = needsReceipt && payoutOption === 'Repair'
 $: needsReplaceReceipt = needsReceipt && payoutOption === 'Replacement'

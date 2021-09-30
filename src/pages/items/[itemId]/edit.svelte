@@ -1,11 +1,10 @@
 <script lang="ts">
 import user from '../../../authn/user'
-import { Breadcrumb, ItemForm } from '../../../components'
+import { Breadcrumb, ItemBanner, ItemForm } from '../../../components'
 import { loading } from '../../../components/progress'
 import { itemsByPolicyId, loadItems, PolicyItem, submitItem, updateItem } from '../../../data/items'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
-import ItemBanner from '../../../components/banners/ItemBanner.svelte'
 
 export let itemId: string
 

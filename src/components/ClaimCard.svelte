@@ -20,7 +20,7 @@ $: msAgo = now - Date.parse(claimItem.updated_at)
 $: daysAgo = msAgo > 0 ? Math.floor(msAgo / day) : '-'
 $: state = getClaimState(claim.status) || ({} as State)
 $: statusReason = claim.status_reason || ('' as string)
-$: accountablePerson = accountablePersons.find(person => person.id = item.accountable_person_id)
+$: accountablePerson = accountablePersons.find(person => person.id === item.accountable_user_id)
 
 const gotoClaim = () => dispatch('goto-claim', claim.id)
 </script>
@@ -57,7 +57,7 @@ const gotoClaim = () => dispatch('goto-claim', claim.id)
   </div>
 
   <div class="content multi-line-truncate ml-50px">
-    {accountablePerson || ''}
+    {accountablePerson?.name || ''}
   </div>
 
   <div class="action pb-2 ml-50px" slot="actions">

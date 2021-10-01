@@ -22,6 +22,7 @@
   --mdc-theme-status-success: hsla(134, 52%, 32%, 1);
   --mdc-theme-status-success-bg: hsla(135, 50%, 95%, 1);
   --mdc-typography-button-font-weight: 700;
+  --mdc-typography-select-font-weight: 500;
 }
 
 .mdc-theme--primary {
@@ -49,6 +50,12 @@
   border: 2px solid !important;
 }
 
-.mdc-button {
+.mdc-button,
+.mdc-drawer .mdc-list .mdc-list-item,
+.mdc-menu .mdc-list .mdc-list-item {
   font-weight: var(--mdc-typography-button-font-weight);
+}
+
+.mdc-select__menu .mdc-list .mdc-list-item {
+  font-weight: var(--mdc-typography-select-font-weight);
 }

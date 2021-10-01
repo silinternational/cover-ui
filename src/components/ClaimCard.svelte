@@ -1,12 +1,14 @@
 <script lang="ts">
 import ClaimCardBanner from './ClaimCardBanner.svelte'
 import { day } from './const'
+import type { AccountablePersonOptions } from '../data/accountablePersons'
 import type { Claim, ClaimItem } from '../data/claims'
 import type { PolicyItem } from '../data/items'
 import { getClaimState, State } from '../data/states'
 import { Card, Button } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
+export let accountablePersons = [] as AccountablePersonOptions[]
 export let claim: Claim = {} as Claim
 export let claimItem: ClaimItem = {} as ClaimItem
 export let item: PolicyItem = {} as PolicyItem
@@ -18,6 +20,7 @@ $: msAgo = now - Date.parse(claimItem.updated_at)
 $: daysAgo = msAgo > 0 ? Math.floor(msAgo / day) : '-'
 $: state = getClaimState(claim.status) || ({} as State)
 $: statusReason = claim.status_reason || ('' as string)
+$: accountablePerson = accountablePersons.find(person => person.id = item.accountable_person_id)
 
 const gotoClaim = () => dispatch('goto-claim', claim.id)
 </script>
@@ -54,7 +57,7 @@ const gotoClaim = () => dispatch('goto-claim', claim.id)
   </div>
 
   <div class="content multi-line-truncate ml-50px">
-    {item.accountable_person || ''}
+    {accountablePerson || ''}
   </div>
 
   <div class="action pb-2 ml-50px" slot="actions">

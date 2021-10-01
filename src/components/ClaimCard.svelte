@@ -20,7 +20,7 @@ $: msAgo = now - Date.parse(claimItem.updated_at)
 $: daysAgo = msAgo > 0 ? Math.floor(msAgo / day) : '-'
 $: state = getClaimState(claim.status) || ({} as State)
 $: statusReason = claim.status_reason || ('' as string)
-$: accountablePerson = accountablePersons.find(person => person.id === item.accountable_user_id)
+$: accountablePerson = accountablePersons.find(person => person.id === (item.accountable_user_id || item.accountable_dependent_id))
 
 const gotoClaim = () => dispatch('goto-claim', claim.id)
 </script>

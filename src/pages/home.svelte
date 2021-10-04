@@ -1,16 +1,6 @@
 <script lang="ts">
-import user from '../authn/user'
-import { UserHomePage } from '../components'
-import { loadClaims } from '../data/claims'
-import { loadDependents } from '../data/dependents'
-import { loadItems } from '../data/items'
-import { loadMembersOfPolicy } from '../data/policy-members'
+import { goto } from '@roxi/routify'
 
-$: policyId = $user.policy_id
-$: policyId && loadItems(policyId)
-$: policyId && loadClaims()
-$: policyId && loadDependents(policyId)
-$: policyId && loadMembersOfPolicy(policyId)
+// TODO: Eventually redirect stewards and signators to their own home pages.
+$goto('/customer/home')
 </script>
-
-<UserHomePage {policyId} />

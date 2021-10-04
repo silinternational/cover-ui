@@ -33,9 +33,9 @@ $: item = items.find((anItem) => anItem.id === itemId) || ({} as PolicyItem)
 
 // Dynamic breadcrumbs data:
 $: claimName = `${item.name} (${claim.reference_number})`
-const claimsBreadcrumb = { name: 'Claims', url: '/claims' }
-$: thisClaimBreadcrumb = { name: claimName || 'This item', url: `/claims/${claimId}` }
-const editBreadcrumb = { name: 'Edit', url: `/claims/${claimId}/edit` }
+const claimsBreadcrumb = { name: 'Claims', url: '/customer/claims' }
+$: thisClaimBreadcrumb = { name: claimName || 'This item', url: `/customer/claims/${claimId}` }
+const editBreadcrumb = { name: 'Edit', url: `/customer/claims/${claimId}/edit` }
 $: breadcrumbLinks = [claimsBreadcrumb, thisClaimBreadcrumb, editBreadcrumb]
 
 const updateClaimAndItem = async (event: CustomEvent): Promise<void> => {
@@ -51,7 +51,7 @@ const onSaveForLater = async (event: CustomEvent) => {
 const onSubmit = async (event: CustomEvent) => {
   await updateClaimAndItem(event)
   await submitClaim(claimId)
-  $goto(`/claims/${claimId}`)
+  $goto(`/customer/claims/${claimId}`)
 }
 </script>
 

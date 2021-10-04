@@ -51,12 +51,12 @@ const createClaimAndItem = async (event: CustomEvent): Promise<string> => {
 }
 const onSaveForLater = async (event: CustomEvent) => {
   const claimId = await createClaimAndItem(event)
-  $goto(`/claims/${claimId}`)
+  $goto(`/customer/claims/${claimId}`)
 }
 const onSubmit = async (event: CustomEvent) => {
   const claimId = await createClaimAndItem(event)
   await submitClaim(claimId)
-  $goto(`/claims/${claimId}`)
+  $goto(`/customer/claims/${claimId}`)
 }
 </script>
 

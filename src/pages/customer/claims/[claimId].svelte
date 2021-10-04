@@ -72,8 +72,8 @@ $: maximumPayout = determineMaxPayout(payoutOption, claimItem, item.coverage_amo
 
 // Dynamic breadcrumbs data:
 $: claimName = `${item.name} (${claim.reference_number})`
-const claimsBreadcrumb = { name: 'Claims', url: '/claims' }
-$: thisClaimBreadcrumb = { name: claimName || 'This item', url: `/claims/${claimId}` }
+const claimsBreadcrumb = { name: 'Claims', url: '/customer/claims' }
+$: thisClaimBreadcrumb = { name: claimName || 'This item', url: `/customer/claims/${claimId}` }
 $: breadcrumbLinks = [claimsBreadcrumb, thisClaimBreadcrumb]
 
 const getFilePurpose = (claimItem: ClaimItem, needsReceipt: boolean): ClaimFilePurpose => {
@@ -88,7 +88,7 @@ const getUploadLabel = (claimItem: ClaimItem, needsReceipt: boolean, receiptType
   if (claimItem.fmv) return 'evidence of fair market value'
 }
 
-const editClaim = () => $goto(`/claims/${claimId}/edit`)
+const editClaim = () => $goto(`/customer/claims/${claimId}/edit`)
 
 const onPreapprove = async () => await preapproveClaim(claimId)
 

@@ -45,6 +45,7 @@ const getMenuItems = (id: string) => [
   },
 ]
 
+// TODO: Change this to dispatch events, leaving URL changes to the actual page.
 const redirect = (url: string) => {
   if (goToItemDetails) {
     $goto(url)
@@ -61,10 +62,6 @@ const handleUnchecked = (id: string) => {
 const handleMoreVertClick = (id: string) => {
   goToItemDetails = false
   shownMenus[id] = shownMenus[id] !== true
-}
-const onEditClaim = (event: any) => {
-  const claimId: string = event.detail
-  $goto(`/claims/${claimId}/edit`)
 }
 </script>
 
@@ -91,7 +88,7 @@ const onEditClaim = (event: any) => {
 
 <Page loading={isLoadingById(policyId)} layout="grid">
   <Row cols={'12'}>
-    <ClaimCards claims={$claims} {items} on:edit-claim={onEditClaim} />
+    <ClaimCards claims={$claims} {items} />
   </Row>
 
   <Row cols={'12'}>

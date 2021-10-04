@@ -15,6 +15,7 @@ import {
 import { formatDate } from '../../../components/dates'
 import { loading } from '../../../components/progress'
 import { upload } from '../../../data'
+import { getAccountablePerson, getDependentOptions, getPolicyMemberOptions } from '../../../data/accountablePersons'
 import {
   denyClaim,
   loadClaims,
@@ -32,7 +33,10 @@ import {
   requestRevision,
   submitClaim,
 } from '../../../data/claims'
+import { dependentsByPolicyId, loadDependents } from '../../../data/dependents'
 import { loadItems, itemsByPolicyId, PolicyItem } from '../../../data/items'
+import { loadPolicies, policies, Policy } from '../../../data/policies'
+import { loadMembersOfPolicy, membersByPolicyId } from '../../../data/policy-members'
 import { formatMoney } from '../../../helpers/money'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
@@ -41,10 +45,11 @@ export let claimId: string
 
 const updatedClaimItemData = {} as any
 
-let showImg = false
+let showImg: boolean = false
 let repairOrReplacementCost: number
-let uploading = false
+let uploading: boolean = false
 let previewFile = {} as ClaimFile
+let householdId: string = ''
 
 $: $initialized || loadClaims()
 
@@ -53,6 +58,25 @@ $: claimItem = claim.claim_items?.[0] || ({} as ClaimItem) //For now there will 
 $: items = $itemsByPolicyId[claim.policy_id] || []
 $: claim.policy_id && loadItems(claim.policy_id)
 $: item = items.find((itm) => itm.id === claimItem.item_id) || ({} as PolicyItem)
+
+// Accountable persons
+$: policyId = $user.policy_id as string
+
+$: policyId && loadDependents(policyId)
+$: dependents = $dependentsByPolicyId[policyId] || []
+$: dependentOptions = getDependentOptions(dependents)
+
+$: policyId && loadMembersOfPolicy(policyId)
+$: policyMembers = $membersByPolicyId[policyId] || []
+$: policyMemberOptions = getPolicyMemberOptions(policyMembers)
+
+$: accountablePersons = [...policyMemberOptions, ...dependentOptions]
+$: accountablePersonName = getAccountablePerson(item, accountablePersons)?.name
+
+// policies
+$: policyId && loadPolicies()
+$: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
+$: householdId = policy.household_id ? policy.household_id : ''
 
 $: incidentDate = formatDate(claim.incident_date)
 $: claimStatus = (claim.status || '') as ClaimStatus
@@ -171,16 +195,31 @@ function onDeleted(event) {
       <Breadcrumb links={breadcrumbLinks} />
     </Row>
     <Row cols="3">
-      <h3 class="mdc-typography--headline5 break-word my-0">{item.name || 'Name unavailable'}</h3>
-      <div class="left-detail">Claim {claim.reference_number || '########'}</div>
+      <h2 class="break-word my-1">{item.name || ''}</h2>
+      <b>Covered value</b>
+      <div>{formatMoney(item.coverage_amount)}</div>
+      <br />
+      <b>{accountablePersonName || ''}</b>
+      <br />
+      <div class="left-detail">
+        <b>Household ID</b>
+        <div>{householdId}</div>
+      </div>
       <Banner
         background="var(--mdc-theme-status-info-bg)"
         color="var(--mdc-theme-status-info)"
-        class="max-content-width"
+        class="max-content-width mt-1"
       >
         <b>{claim.incident_type || ''}</b>
       </Banner>
-      <div class="left-detail">{incidentDate || ''}</div>
+      <div class="left-detail">
+        <b>Claim ID</b>
+        <div>{claim.reference_number || '########'}</div>
+      </div>
+      <div class="left-detail">
+        <b>Incident</b>
+        <div>{incidentDate || ''}</div>
+      </div>
     </Row>
     <Row cols="9">
       <ClaimBanner {claimStatus}>{claim.status_reason || ''}</ClaimBanner>

@@ -21,7 +21,7 @@ $: menuItems = [
     hide: !isSteward($user),
   },
   {
-    url: '/claims',
+    url: '/customer/claims',
     icon: 'label',
     label: 'Claims',
   },

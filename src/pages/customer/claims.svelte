@@ -1,11 +1,11 @@
 <script lang="ts">
-import user from '../authn/user'
-import { ClaimCards, Row, Breadcrumb } from '../components/'
-import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from '../data/accountablePersons'
-import { claims, loadClaims } from '../data/claims'
-import { dependentsByPolicyId, loadDependents } from '../data/dependents'
-import { itemsByPolicyId, loadItems } from '../data/items'
-import { loadMembersOfPolicy, membersByPolicyId } from '../data/policy-members'
+import user from '../../authn/user'
+import { ClaimCards, Row, Breadcrumb } from '../../components/'
+import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from '../../data/accountablePersons'
+import { claims, loadClaims } from '../../data/claims'
+import { dependentsByPolicyId, loadDependents } from '../../data/dependents'
+import { itemsByPolicyId, loadItems } from '../../data/items'
+import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
 import { Page, Button } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 

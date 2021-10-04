@@ -1,6 +1,6 @@
 <script lang="ts">
-import user from '../../authn/user'
-import { determineMaxPayout, isEvidenceNeeded } from '../../business-rules/claim-payout-amount'
+import user from '../../../authn/user'
+import { determineMaxPayout, isEvidenceNeeded } from '../../../business-rules/claim-payout-amount'
 import {
   Banner,
   Breadcrumb,
@@ -11,10 +11,10 @@ import {
   FilePreview,
   MoneyInput,
   Row,
-} from '../../components'
-import { formatDate } from '../../components/dates'
-import { loading } from '../../components/progress'
-import { upload } from '../../data'
+} from '../../../components'
+import { formatDate } from '../../../components/dates'
+import { loading } from '../../../components/progress'
+import { upload } from '../../../data'
 import {
   denyClaim,
   loadClaims,
@@ -31,9 +31,9 @@ import {
   preapproveClaim,
   requestRevision,
   submitClaim,
-} from '../../data/claims'
-import { loadItems, itemsByPolicyId, PolicyItem } from '../../data/items'
-import { formatMoney } from '../../helpers/money'
+} from '../../../data/claims'
+import { loadItems, itemsByPolicyId, PolicyItem } from '../../../data/items'
+import { formatMoney } from '../../../helpers/money'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
@@ -72,8 +72,8 @@ $: maximumPayout = determineMaxPayout(payoutOption, claimItem, item.coverage_amo
 
 // Dynamic breadcrumbs data:
 $: claimName = `${item.name} (${claim.reference_number})`
-const claimsBreadcrumb = { name: 'Claims', url: '/claims' }
-$: thisClaimBreadcrumb = { name: claimName || 'This item', url: `/claims/${claimId}` }
+const claimsBreadcrumb = { name: 'Claims', url: '/customer/claims' }
+$: thisClaimBreadcrumb = { name: claimName || 'This item', url: `/customer/claims/${claimId}` }
 $: breadcrumbLinks = [claimsBreadcrumb, thisClaimBreadcrumb]
 
 const getFilePurpose = (claimItem: ClaimItem, needsReceipt: boolean): ClaimFilePurpose => {
@@ -88,7 +88,7 @@ const getUploadLabel = (claimItem: ClaimItem, needsReceipt: boolean, receiptType
   if (claimItem.fmv) return 'evidence of fair market value'
 }
 
-const editClaim = () => $goto(`/claims/${claimId}/edit`)
+const editClaim = () => $goto(`/customer/claims/${claimId}/edit`)
 
 const onPreapprove = async () => await preapproveClaim(claimId)
 

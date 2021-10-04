@@ -1,7 +1,7 @@
 <script lang="ts">
-import user from '../../../authn/user'
-import { Breadcrumb, ClaimBanner, ClaimForm } from '../../../components'
-import { loading } from '../../../components/progress'
+import user from '../../../../authn/user'
+import { Breadcrumb, ClaimBanner, ClaimForm } from '../../../../components'
+import { loading } from '../../../../components/progress'
 import {
   Claim,
   ClaimItem,
@@ -11,8 +11,8 @@ import {
   submitClaim,
   updateClaim,
   updateClaimItem,
-} from '../../../data/claims'
-import { itemsByPolicyId, loadItems, PolicyItem } from '../../../data/items'
+} from '../../../../data/claims'
+import { itemsByPolicyId, loadItems, PolicyItem } from '../../../../data/items'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 

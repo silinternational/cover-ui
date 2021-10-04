@@ -1,6 +1,6 @@
 <script lang="ts">
-import user from '../../authn/user'
-import { determineMaxPayout, isEvidenceNeeded } from '../../business-rules/claim-payout-amount'
+import user from '../../../authn/user'
+import { determineMaxPayout, isEvidenceNeeded } from '../../../business-rules/claim-payout-amount'
 import {
   Banner,
   Breadcrumb,
@@ -11,10 +11,10 @@ import {
   FilePreview,
   MoneyInput,
   Row,
-} from '../../components'
-import { formatDate } from '../../components/dates'
-import { loading } from '../../components/progress'
-import { upload } from '../../data'
+} from '../../../components'
+import { formatDate } from '../../../components/dates'
+import { loading } from '../../../components/progress'
+import { upload } from '../../../data'
 import {
   denyClaim,
   loadClaims,
@@ -31,9 +31,9 @@ import {
   preapproveClaim,
   requestRevision,
   submitClaim,
-} from '../../data/claims'
-import { loadItems, itemsByPolicyId, PolicyItem } from '../../data/items'
-import { formatMoney } from '../../helpers/money'
+} from '../../../data/claims'
+import { loadItems, itemsByPolicyId, PolicyItem } from '../../../data/items'
+import { formatMoney } from '../../../helpers/money'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 

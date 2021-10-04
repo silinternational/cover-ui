@@ -21,9 +21,7 @@ export const pending: State = {
 }
 
 export const pendingClaim: State = {
-  icon: 'watch_later',
-  color: '--mdc-theme-neutral-variant',
-  bgColor: '--mdc-theme-neutral-bg',
+  ...pending,
   title: 'Awaiting claim review',
 }
 

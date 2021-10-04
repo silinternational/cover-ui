@@ -106,7 +106,7 @@ const getFilePurpose = (claimItem: ClaimItem, needsReceipt: boolean): ClaimFileP
   if (claimItem.fmv) return 'Evidence of FMV'
 }
 
-const getUploadLabel = (claimItem: ClaimItem, needsReceipt: boolean, receiptType) => {
+const getUploadLabel = (claimItem: ClaimItem, needsReceipt: boolean, receiptType: string) => {
   if (needsReceipt) return `a ${receiptType} item receipt`
   if (claimItem.repair_estimate) return 'a repair estimate'
   if (claimItem.fmv) return 'evidence of fair market value'

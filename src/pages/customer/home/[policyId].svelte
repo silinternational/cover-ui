@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Menu, ClaimCards, Row } from '../../../components/'
+import { ClaimCards, Row } from '../../../components/'
 import { isLoadingById } from '../../../components/progress/index'
 import { claims, loadClaims } from '../../../data/claims'
 import {
@@ -13,7 +13,7 @@ import { itemsByPolicyId, loadItems } from '../../../data/items'
 import { loadMembersOfPolicy, membersByPolicyId } from '../../../data/policy-members'
 import { formatMoney } from '../../../helpers/money'
 import { goto } from '@roxi/routify'
-import { Checkbox, Page, Datatable } from '@silintl/ui-components'
+import { Checkbox, Page, Datatable, Menu } from '@silintl/ui-components'
 
 export let policyId: string
 

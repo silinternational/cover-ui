@@ -68,6 +68,7 @@ const handleMoreVertClick = (id: string) => {
   goToItemDetails = false
   shownMenus[id] = shownMenus[id] !== true
 }
+const onGotoClaim = (event) => $goto(`/customer/claims/${event.detail}`)
 </script>
 
 <style>
@@ -93,7 +94,7 @@ const handleMoreVertClick = (id: string) => {
 
 <Page loading={isLoadingById(policyId)} layout="grid">
   <Row cols={'12'}>
-    <ClaimCards claims={$claims} {items} {accountablePersons} />
+    <ClaimCards claims={$claims} {items} {accountablePersons} on:goto-claim={onGotoClaim} />
   </Row>
 
   <Row cols={'12'}>

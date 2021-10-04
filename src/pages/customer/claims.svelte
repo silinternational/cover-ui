@@ -6,6 +6,7 @@ import { claims, loadClaims } from '../../data/claims'
 import { dependentsByPolicyId, loadDependents } from '../../data/dependents'
 import { itemsByPolicyId, loadItems } from '../../data/items'
 import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
+import { goto } from '@roxi/routify'
 import { Page, Button } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
@@ -28,6 +29,8 @@ $: accountablePersons = [...policyMemberOptions, ...dependentOptions] as Account
 onMount(() => {
   loadClaims()
 })
+
+const onGotoClaim = (event) => $goto(`/customer/claims/${event.detail}`)
 </script>
 
 <Page layout="grid">
@@ -38,7 +41,7 @@ onMount(() => {
 
   <Row cols={'12'}>
     {#if $claims.length}
-      <ClaimCards {accountablePersons} claims={$claims} {items} />
+      <ClaimCards {accountablePersons} claims={$claims} {items} on:goto-claim={onGotoClaim} />
     {:else}
       No claims at this time.
     {/if}

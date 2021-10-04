@@ -2,6 +2,7 @@
 import { ClaimCards, Row } from '../../components/'
 import { Claim, claims, initialized as claimsInitialized, loadClaims, statusesAwaitingSteward } from '../../data/claims'
 import { itemsByPolicyId, loadItems } from '../../data/items'
+import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
 let claimsAwaitingSteward: Claim[]
@@ -21,6 +22,7 @@ const loadOnce = (policyId: string) => {
     loadItems(policyId)
   }
 }
+const onGotoClaim = (event) => $goto(`/steward/claims/${event.detail}`)
 </script>
 
 <style>
@@ -28,7 +30,7 @@ const loadOnce = (policyId: string) => {
 
 <Page layout="grid">
   <Row cols={'12'}>
-    <ClaimCards claims={claimsAwaitingSteward} {items} />
+    <ClaimCards claims={claimsAwaitingSteward} {items} on:goto-claim={onGotoClaim} />
   </Row>
 
   <Row cols={'12'}>(Recent activity)</Row>

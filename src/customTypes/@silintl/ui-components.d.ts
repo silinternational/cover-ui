@@ -130,11 +130,16 @@ declare module '@silintl/ui-components' {
   }
   export class List extends SvelteComponentTyped<ListProps> {}
 
+  type MenuItem = {
+    icon: string
+    label: string
+    url: string
+  }
   interface MenuProps extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
-    menuItems?: any
+    menuItems?: MenuItem[]
     menuOpen?: boolean
   }
-  export class Menu extends SvelteComponentTyped<ListProps> {}
+  export class Menu extends SvelteComponentTyped<MenuProps> {}
 
   export namespace Progress {
     type CircularProps = svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']>

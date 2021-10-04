@@ -1,11 +1,11 @@
 <script lang="ts">
 import Error from './Error.svelte'
 import Progress from './progress/Progress.svelte'
-import { Badge, IconButton, isAboveMobile, Menu } from '@silintl/ui-components'
+import { Badge, IconButton, isAboveMobile, Menu, MenuItem } from '@silintl/ui-components'
 import { createEventDispatcher, onMount } from 'svelte'
 import user from '../authn/user'
 
-const menuItems = [
+const menuItems: MenuItem[] = [
   {
     icon: 'settings',
     label: 'User settings',

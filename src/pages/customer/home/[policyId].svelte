@@ -2,7 +2,12 @@
 import { Menu, ClaimCards, Row } from '../../../components/'
 import { isLoadingById } from '../../../components/progress/index'
 import { claims, loadClaims } from '../../../data/claims'
-import { getAccountablePerson, getDependentOptions, getPolicyMemberOptions } from '../../../data/accountablePersons'
+import {
+  AccountablePersonOptions,
+  getAccountablePerson,
+  getDependentOptions,
+  getPolicyMemberOptions,
+} from '../../../data/accountablePersons'
 import { dependentsByPolicyId, loadDependents } from '../../../data/dependents'
 import { itemsByPolicyId, loadItems } from '../../../data/items'
 import { loadMembersOfPolicy, membersByPolicyId } from '../../../data/policy-members'
@@ -28,7 +33,7 @@ $: dependentOptions = getDependentOptions(dependents)
 $: policyId && loadMembersOfPolicy(policyId)
 $: policyMembers = $membersByPolicyId[policyId] || []
 $: policyMemberOptions = getPolicyMemberOptions(policyMembers)
-$: accountablePersons = [...policyMemberOptions, ...dependentOptions]
+$: accountablePersons = [...policyMemberOptions, ...dependentOptions] as AccountablePersonOptions[]
 
 const getMenuItems = (id: string) => [
   {
@@ -88,7 +93,7 @@ const handleMoreVertClick = (id: string) => {
 
 <Page loading={isLoadingById(policyId)} layout="grid">
   <Row cols={'12'}>
-    <ClaimCards claims={$claims} {items} />
+    <ClaimCards claims={$claims} {items} {accountablePersons} />
   </Row>
 
   <Row cols={'12'}>

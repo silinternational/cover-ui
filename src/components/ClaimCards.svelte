@@ -1,4 +1,5 @@
 <script lang="ts">
+import type { AccountablePersonOptions } from '../data/accountablePersons'
 import type { Claim } from '../data/claims'
 import type { PolicyItem } from '../data/items'
 
@@ -7,6 +8,7 @@ import { goto } from '@roxi/routify'
 
 export let claims: Claim[]
 export let items: PolicyItem[]
+export let accountablePersons = [] as AccountablePersonOptions[]
 
 const onGotoClaim = (event) => $goto(`/claims/${event.detail}`)
 </script>
@@ -25,6 +27,7 @@ const onGotoClaim = (event) => $goto(`/claims/${event.detail}`)
         <ClaimCard
           {claim}
           {claimItem}
+          {accountablePersons}
           item={items.find((item) => item.id === claimItem.item_id) || {}}
           on:goto-claim={onGotoClaim}
         />

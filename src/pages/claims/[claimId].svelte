@@ -171,7 +171,7 @@ function onDeleted(event) {
       <Breadcrumb links={breadcrumbLinks} />
     </Row>
     <Row cols="3">
-      <h3 class="mdc-typography--headline5 my-0">{item.name || 'Name unavailable'}</h3>
+      <h3 class="mdc-typography--headline5 break-word my-0">{item.name || 'Name unavailable'}</h3>
       <div class="left-detail">Claim {claim.reference_number || '########'}</div>
       <Banner
         background="var(--mdc-theme-status-info-bg)"
@@ -189,7 +189,7 @@ function onDeleted(event) {
           Upload {uploadLabel} to get reimbursed.
         </ClaimBanner>
       {/if}
-      <p>
+      <p class="break-word">
         {claim.incident_description || ''}
       </p>
       <p>

@@ -113,7 +113,7 @@ const handleDialog = async (choice: string) => {
     </Row>
 
     <Row cols="3">
-      <h2>{item.name || ''}</h2>
+      <h2 class="break-word">{item.name || ''}</h2>
       <b>Covered value</b>
       <div>{formatMoney(item.coverage_amount)}</div>
       <b>Annual premium</b>
@@ -126,11 +126,11 @@ const handleDialog = async (choice: string) => {
 
     <Row cols="9">
       <ItemBanner itemStatus={status}>Submitted {daysAgo} days ago</ItemBanner>
-      <h3>{item.make || ''} {item.model || ''}</h3>
+      <h3 class="break-word">{item.make || ''} {item.model || ''}</h3>
       <b class="mb-6px">Unique ID</b>
-      <div>{item.serial_number}</div>
+      <div class="break-word">{item.serial_number}</div>
       <br />
-      <div>Description: {item.description || ''}</div>
+      <div class="break-word">Description: {item.description || ''}</div>
       <br />
       <Banner
         background="var(--mdc-theme-primary-header-bg)"

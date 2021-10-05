@@ -48,7 +48,7 @@ $: accountablePersons = [...policyMemberOptions, ...dependentOptions]
 $: accountablePersonName = getAccountablePerson(item, accountablePersons)?.name
 
 $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
-$: policy.household_id && setPolicyHouseholdId()
+$: householdId = policy.household_id ? policy.household_id : ''
 $: items = $itemsByPolicyId[$user.policy_id] || []
 $: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
 $: itemName = item.name || ''
@@ -63,8 +63,6 @@ $: startDate = formatDate(item.coverage_start_date)
 const itemsBreadcrumb = { name: 'Items', url: '/items' }
 $: thisItemBreadcrumb = { name: itemName || 'This item', url: `/items/${itemId}` }
 $: breadcrumbLinks = [itemsBreadcrumb, thisItemBreadcrumb]
-
-const setPolicyHouseholdId = () => (householdId = policy.household_id || '')
 
 const goToEditItem = () => {
   $goto(`/items/${itemId}/edit`)
@@ -113,14 +111,14 @@ const handleDialog = async (choice: string) => {
     </Row>
 
     <Row cols="3">
-      <h2 class="break-word">{item.name || ''}</h2>
+      <h2 class="break-word my-1">{item.name || ''}</h2>
       <b>Covered value</b>
-      <div>{formatMoney(item.coverage_amount)}</div>
+      <div class="my-2px">{formatMoney(item.coverage_amount)}</div>
       <b>Annual premium</b>
-      <div>{formatMoney(item.annual_premium)}</div>
+      <div class="my-2px">{formatMoney(item.annual_premium)}</div>
       <br />
       <b>{accountablePersonName || ''}</b>
-      <div>Household ID</div>
+      <div class="mt-4px">Household ID</div>
       <div>{householdId}</div>
     </Row>
 

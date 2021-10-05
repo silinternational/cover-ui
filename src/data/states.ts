@@ -17,7 +17,12 @@ export const pending: State = {
   icon: 'watch_later',
   color: '--mdc-theme-neutral-variant',
   bgColor: '--mdc-theme-neutral-bg',
-  title: 'Awaiting',
+  title: '',
+}
+
+export const pendingClaim: State = {
+  ...pending,
+  title: 'Awaiting claim review',
 }
 
 export const warning: State = {
@@ -40,17 +45,16 @@ export const commonStates: { [stateName: string]: State } = {
     bgColor: '--mdc-theme-primary-header-bg',
     title: 'Draft',
   },
-  Pending: pending,
 }
 
 export const claimStates: { [stateName: string]: State } = {
   ...commonStates,
   Approved: { ...approved, title: 'Approved for payout' },
   DraftSecondary: warning,
-  Review1: pending,
+  Review1: pendingClaim,
   Review1Secondary: warning,
-  Review2: pending,
-  Review3: pending,
+  Review2: pendingClaim,
+  Review3: pendingClaim,
   Receipt2: warning,
   Receipt: {
     icon: 'done',
@@ -75,6 +79,7 @@ export const claimStates: { [stateName: string]: State } = {
 export const itemStates: { [stateName: string]: State } = {
   ...commonStates,
   Approved: { ...approved, title: 'Approved' },
+  Pending: { ...pending, title: 'Awaiting item coverage review' },
 }
 
 export const getClaimState = (status: ClaimStatus): State => {

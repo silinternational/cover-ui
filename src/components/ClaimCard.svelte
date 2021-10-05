@@ -1,12 +1,12 @@
 <script lang="ts">
 import ClaimCardBanner from './ClaimCardBanner.svelte'
-import { day } from './const'
 import type { AccountablePersonOptions } from '../data/accountablePersons'
 import type { Claim, ClaimItem } from '../data/claims'
 import type { PolicyItem } from '../data/items'
 import { getClaimState, State } from '../data/states'
 import { Card, Button } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
+import { differenceInSeconds, formatDistanceToNow } from 'date-fns'
 
 export let accountablePersons = [] as AccountablePersonOptions[]
 export let claim: Claim = {} as Claim
@@ -14,13 +14,14 @@ export let claimItem: ClaimItem = {} as ClaimItem
 export let item: PolicyItem = {} as PolicyItem
 
 const dispatch = createEventDispatcher()
-const now = Date.now()
 
-$: msAgo = now - Date.parse(claimItem.updated_at)
-$: daysAgo = msAgo > 0 ? Math.floor(msAgo / day) : '-'
+$: wasUpdated = differenceInSeconds(Date.parse(claimItem.updated_at), Date.parse(claimItem.created_at)) > 1
+$: changedText = formatDistanceToNow(Date.parse(claimItem.updated_at), { addSuffix: true })
 $: state = getClaimState(claim.status) || ({} as State)
 $: statusReason = claim.status_reason || ('' as string)
-$: accountablePerson = accountablePersons.find(person => person.id === (item.accountable_user_id || item.accountable_dependent_id))
+$: accountablePerson = accountablePersons.find(
+  (person) => person.id === (item.accountable_user_id || item.accountable_dependent_id)
+)
 
 const gotoClaim = () => dispatch('goto-claim', claim.id)
 </script>
@@ -64,8 +65,8 @@ const gotoClaim = () => dispatch('goto-claim', claim.id)
     <Button raised on:click={gotoClaim}>{'View claim'}</Button>
 
     <div class="fs-12 gray mt-1">
-      {#if daysAgo}
-        Last changed {daysAgo} days ago
+      {#if wasUpdated}
+        Last changed {changedText}
       {:else}
         No changes
       {/if}

@@ -33,6 +33,7 @@
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "croppie": "^2.6.5",
+    "date-fns": "^2.25.0",
     "eslint": "^7.32.0",
     "eslint-plugin-svelte3": "^3.2.1",
     "material-components-web": "^10.0.0",

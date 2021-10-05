@@ -1,7 +1,6 @@
 <script lang="ts">
 import user from '../../authn/user'
 import { Banner, Breadcrumb, ItemBanner, Row } from '../../components'
-import { day } from '../../components/const'
 import { formatDate } from '../../components/dates'
 import { loading } from '../../components/progress'
 import {
@@ -17,10 +16,10 @@ import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-member
 import { formatMoney } from '../../helpers/money'
 import { goto } from '@roxi/routify'
 import { Button, Page, Dialog } from '@silintl/ui-components'
+import { formatDistanceToNow } from 'date-fns'
 
 export let itemId: string
 
-const now = Date.now()
 const buttons: Dialog.AlertButton[] = [
   { label: 'Yes, I’m Sure', action: 'remove', class: 'error-button' },
   { label: 'cancel', action: 'cancel', class: 'mdc-dialog__button' },
@@ -55,8 +54,7 @@ $: itemName = item.name || ''
 $: status = (item.coverage_status || '') as ItemCoverageStatus
 $: status === 'Draft' && $user.app_role === 'User' && goToEditItem()
 
-$: msAgo = now - Date.parse(item.updated_at)
-$: daysAgo = msAgo > 0 ? Math.floor(msAgo / day) : '-'
+$: submittedText = item.updated_at ? formatDistanceToNow(Date.parse(item.updated_at), { addSuffix: true }) : ''
 $: startDate = formatDate(item.coverage_start_date)
 
 // Dynamic breadcrumbs data:
@@ -123,7 +121,7 @@ const handleDialog = async (choice: string) => {
     </Row>
 
     <Row cols="9">
-      <ItemBanner itemStatus={status}>Submitted {daysAgo} days ago</ItemBanner>
+      <ItemBanner itemStatus={status}>Submitted {submittedText}</ItemBanner>
       <h3 class="break-word">{item.make || ''} {item.model || ''}</h3>
       <b class="mb-6px">Unique ID</b>
       <div class="break-word">{item.serial_number}</div>

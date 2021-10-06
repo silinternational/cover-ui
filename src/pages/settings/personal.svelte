@@ -3,6 +3,7 @@ import user, { updateUser } from '../../authn/user'
 import { Breadcrumb, FileDropArea, RadioOptions } from '../../components'
 import { upload } from '../../data'
 import { policies, init as loadPolicies } from '../../data/policies'
+import { assertEmailAddress } from '../../validation/assertions'
 import { Button, Checkbox, TextField, Page, Snackbar, setNotice } from '@silintl/ui-components'
 import Croppie from 'croppie'
 import 'croppie/croppie.css'
@@ -28,15 +29,13 @@ const updateNotificationSelection = () => {
   console.log('updated updateNotificationSelection')
 }
 const updateCustomEmail = async () => {
-  if (isEmailValid(email_override)) {
-    await updateUser({
-      ...$user,
-      email_override,
-    })
-    setNotice('Your notification email has been saved')
-  } else {
-    setNotice('Please enter a valid email address')
-  }
+  assertEmailAddress(email_override, 'Please enter a valid email address')
+
+  await updateUser({
+    ...$user,
+    email_override,
+  })
+  setNotice('Your notification email has been saved')
 }
 
 const updateLocation = async () => {
@@ -117,7 +116,6 @@ async function onUpload() {
   }
 }
 
-const isEmailValid = (email: string) => email.includes('@') // bare basic validation
 const isLocationValid = (location: string) => !!location
 </script>
 

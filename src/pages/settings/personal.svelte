@@ -3,7 +3,7 @@ import user, { updateUser } from '../../authn/user'
 import { Breadcrumb, FileDropArea, RadioOptions } from '../../components'
 import { upload } from '../../data'
 import { policies, init as loadPolicies } from '../../data/policies'
-import { Button, Checkbox, TextField, Page, Snackbar, setNotice } from '@silintl/ui-components'
+import { Button, Checkbox, TextField, Page, setNotice } from '@silintl/ui-components'
 import Croppie from 'croppie'
 import 'croppie/croppie.css'
 
@@ -174,5 +174,4 @@ const isLocationValid = (location: string) => !!location
   {#if croppie}
     <Button raised on:click={onUpload}>Save</Button>
   {/if}
-  <Snackbar />
 </Page>

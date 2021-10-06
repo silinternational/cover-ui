@@ -5,6 +5,7 @@ import { dependentsByPolicyId } from '../../data/dependents'
 import type { ItemCoverageStatus, PolicyItem } from '../../data/items'
 import { categories, init, initialized as catItemsInitialized } from '../../data/itemCategories'
 import { membersByPolicyId } from '../../data/policy-members'
+import { assertHas } from '../../validation/assertions'
 import { Button, Form, Select, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
@@ -43,7 +44,9 @@ $: policyMembers = $membersByPolicyId[policyId] || []
 $: policyMemberOptions = getPolicyMemberOptions(policyMembers)
 
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions]
+$: accountablePerson = accountablePersons.find( person => person.id === (accountablePersonId || initialAccountablePersonId)) as AccountablePersonOptions
 
+$: country = accountablePerson?.location || country
 $: !$catItemsInitialized && init()
 
 const onAccountablePersonChange = (event: any) => {
@@ -86,8 +89,22 @@ const onCategorySelectPopulated = () => {
   }
 }
 
+
+const validate = (formData: any) => {
+  assertHas(formData.accountablePersonId, 'Please select an accountable person')
+  assertHas(formData.categoryId, 'Please select a category')
+  assertHas(formData.marketValueUSD, 'Please specify the market value')
+  assertHas(formData.itemDescription, 'Please add a description')
+  assertHas(formData.shortName, 'Please specify a short name')
+  assertHas(formData.uniqueIdentifier, 'Please specify a unique identifier')
+
+  return true
+}
+
 const onSubmit = (event: Event) => {
-  dispatch('submit', getFormData())
+  const formData = getFormData()
+  validate(formData)
+  dispatch('submit', formData)
 }
 
 const saveForLater = (event: Event) => {

@@ -103,7 +103,7 @@ const validate = (formData: any) => {
 
 const onSubmit = (event: Event) => {
   const formData = getFormData()
-  validate(formData)
+  validate(formData) //TODO open a scare dialog for make and model on certain categories
   dispatch('submit', formData)
 }
 

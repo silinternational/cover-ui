@@ -82,6 +82,10 @@ const isYou = (householdMember) => householdMember.id === $user.id
 </script>
 
 <style>
+p {
+  margin-top: 2rem;
+}
+
 .accountable-people-list {
   counter-reset: item;
   list-style-type: none;
@@ -113,29 +117,31 @@ const isYou = (householdMember) => householdMember.id === $user.id
 <Page>
   <Breadcrumb />
 
-  <h3 class="ml-1 mt-3">Household ID<span class="required">*</span></h3>
   <p>
+    <span class="header">Household ID<span class="required">*</span></span>
     <TextField placeholder={'1234567'} autofocus bind:value={householdId} on:blur={updateHouseholdId} />
   </p>
 
   {#if policy.type === 'Corporate'}
-    <h3 class="ml-1 mt-3">Affiliation<span class="required">*</span></h3>
-    <SearchableSelect
-      options={$affiliations}
-      choice={affiliationChoice}
-      {placeholder}
-      padding={'16px'}
-      on:chosen={updateAffiliation}
-    />
-
-    <h3 class="ml-1 mt-3">Cost center<span class="required">*</span></h3>
     <p>
+      <span class="header">Affiliation<span class="required">*</span></span>
+      <SearchableSelect
+        options={$affiliations}
+        choice={affiliationChoice}
+        {placeholder}
+        padding={'16px'}
+        on:chosen={updateAffiliation}
+      />
+    </p>
+    <p>
+      <span class="header">Cost center<span class="required">*</span></span>
       <TextField placeholder={'1234567'} bind:value={costCenter} on:blur={updateCostCenter} />
     </p>
   {/if}
 
-  <h3 class="mt-3">Accountable people</h3>
-
+  <p>
+    <span class="header">Accountable people</span>
+  </p>
   <ul class="accountable-people-list">
     {#each householdMembers as householdMember}
       <li class="accountable-people-list-item">

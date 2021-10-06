@@ -3,12 +3,14 @@ import type { PolicyItem } from './items'
 export type AccountablePersonOptions = {
   id: string
   name: string
+  location?: string
 }
 
 export const getPolicyMemberOptions = (policyMembers: any[]): AccountablePersonOptions[] => {
   return policyMembers.map((policyMember) => ({
     id: policyMember.id,
     name: policyMember.first_name + ' ' + policyMember.last_name,
+    location: policyMember.location,
   }))
 }
 
@@ -16,6 +18,7 @@ export const getDependentOptions = (dependents: any[]): AccountablePersonOptions
   return dependents.map((dependent) => ({
     id: dependent.id,
     name: dependent.name,
+    location: dependent.location,
   }))
 }
 

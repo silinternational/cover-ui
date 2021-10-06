@@ -75,5 +75,3 @@ img {
 </header>
 
 <Progress />
-
-<Error />

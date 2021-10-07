@@ -33,16 +33,11 @@ $: alreadyHasSpouse = !!dependents
 
 $: alreadyHasSpouse && (relationshipOptions[0].disabled = true)
 
-const validateAndSanitize = () => {
+const validate = (isChild: boolean): boolean | void => {
   assertHas(formData.name, 'Please specify a name')
   assertHas(formData.location, 'Please specify a location')
   assertHas(formData.relationship, 'Please select "Spouse" or "Child"')
-  if (formData.relationship === 'Child') {
-    assertHas(formData.childBirthYear, "Please specify your child's birthyear")
-  } else {
-    delete formData.childBirthYear
-  }
-
+  isChild && assertHas(formData.childBirthYear, "Please specify your child's birthyear")
   return true
 }
 const onCancel = (event) => {
@@ -54,7 +49,12 @@ const onRemove = (event) => {
   dispatch('remove', formData.id)
 }
 const onSubmit = () => {
-  validateAndSanitize() && dispatch('submit', formData)
+  const isChild: boolean = formData.relationship === 'Child'
+  validate(isChild)
+  if (!isChild) {
+    delete formData.childBirthYear
+  }
+  dispatch('submit', formData)
 }
 </script>
 

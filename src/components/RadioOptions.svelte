@@ -1,5 +1,5 @@
 <script lang="ts">
-/** @type {{label, value}[]} */
+/** @type {{label, value, disabled}[]} */
 export let options = []
 
 export let name: string

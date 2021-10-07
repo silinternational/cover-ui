@@ -44,7 +44,9 @@ $: policyMembers = $membersByPolicyId[policyId] || []
 $: policyMemberOptions = getPolicyMemberOptions(policyMembers)
 
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions]
-$: accountablePerson = accountablePersons.find( person => person.id === (accountablePersonId || initialAccountablePersonId)) as AccountablePersonOptions
+$: accountablePerson = accountablePersons.find(
+  (person) => person.id === (accountablePersonId || initialAccountablePersonId)
+)
 
 $: country = accountablePerson?.location || country
 $: !$catItemsInitialized && init()

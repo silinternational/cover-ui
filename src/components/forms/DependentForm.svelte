@@ -1,21 +1,24 @@
 <script lang="ts">
 import RadioOptions from '../RadioOptions.svelte'
 import { assertHas } from '../../validation/assertions'
+import type { PolicyDependent } from '../../data/dependents'
 import { Button, Form, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
-export let dependent = {}
-export let dependents = []
+export let dependent: PolicyDependent = {}
+export let dependents: PolicyDependent[] = []
 
 const dispatch = createEventDispatcher()
 const relationshipOptions = [
   {
     label: 'Spouse',
     value: 'Spouse',
+    disabled: false,
   },
   {
     label: 'Child',
     value: 'Child',
+    disabled: false,
   },
 ]
 
@@ -40,11 +43,11 @@ const validate = (isChild: boolean): boolean | void => {
   isChild && assertHas(formData.childBirthYear, "Please specify your child's birthyear")
   return true
 }
-const onCancel = (event) => {
+const onCancel = (event: Event) => {
   event.preventDefault()
   dispatch('cancel')
 }
-const onRemove = (event) => {
+const onRemove = (event: Event) => {
   event.preventDefault()
   dispatch('remove', formData.id)
 }

@@ -6,6 +6,7 @@ export function assertHas(value: any, errorMessage: string): void {
   }
 }
 
+//TODO find alternative to regex validation
 export function assertEmailAddress(email: string, errorMessage: string): void {
   const simpleEmailRegex = /\S+@\S+\.\S+/
 

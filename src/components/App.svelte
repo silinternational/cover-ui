@@ -7,6 +7,7 @@ import t from '../i18n'
 import { parse, stringify } from 'qs'
 import { afterPageLoad, Router } from '@roxi/routify'
 import { routes } from '../../.routify/routes'
+import { Snackbar } from '@silintl/ui-components'
 
 // If we've loaded the user, but their policy wasn't quite ready, try again.
 $: if (!$user.policy_id) {
@@ -41,3 +42,5 @@ $afterPageLoad((page) => {
 </svelte:head>
 
 <Router {routes} config={{ queryHandler }} />
+
+<Snackbar />

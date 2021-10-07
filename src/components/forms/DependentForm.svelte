@@ -1,9 +1,11 @@
 <script lang="ts">
 import RadioOptions from '../RadioOptions.svelte'
+import { assertHas } from '../../validation/assertions'
 import { Button, Form, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let dependent = {}
+export let dependents = []
 
 const dispatch = createEventDispatcher()
 const relationshipOptions = [
@@ -25,6 +27,24 @@ let formData = {
   childBirthYear: dependent.child_birth_year || undefined,
 }
 
+$: alreadyHasSpouse = !!dependents
+  .filter((dep) => dep.id !== dependent.id)
+  .find((dependent) => dependent.relationship === 'Spouse')
+
+$: alreadyHasSpouse && (relationshipOptions[0].disabled = true)
+
+const validateAndSanitize = () => {
+  assertHas(formData.name, 'Please specify a name')
+  assertHas(formData.location, 'Please specify a location')
+  assertHas(formData.relationship, 'Please select "Spouse" or "Child"')
+  if (formData.relationship === 'Child') {
+    assertHas(formData.childBirthYear, "Please specify your child's birthyear")
+  } else {
+    delete formData.childBirthYear
+  }
+
+  return true
+}
 const onCancel = (event) => {
   event.preventDefault()
   dispatch('cancel')
@@ -34,10 +54,7 @@ const onRemove = (event) => {
   dispatch('remove', formData.id)
 }
 const onSubmit = () => {
-  if (formData.relationship !== 'Child') {
-    delete formData.childBirthYear
-  }
-  dispatch('submit', formData)
+  validateAndSanitize() && dispatch('submit', formData)
 }
 </script>
 

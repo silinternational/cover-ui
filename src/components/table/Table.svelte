@@ -1,6 +1,6 @@
 <script lang="ts">
-export let headers
-export let loading
+export let headers: string[]
+export let loading: boolean
 </script>
 
 <style>

@@ -1,5 +1,5 @@
 <script lang="ts">
-export let values
+export let values: string[]
 export let border = 'none'
 </script>
 

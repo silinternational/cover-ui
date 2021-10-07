@@ -2,15 +2,15 @@ import { writable } from 'svelte/store'
 
 export const loading = writable<boolean>(false)
 
-const pending = []
+const pending: string[] = []
 
-export const start = (id) => {
+export const start = (id: string): void => {
   !pending.length && loading.set(true)
 
   pending.push(id)
 }
 
-export const stop = (id) => {
+export const stop = (id: string): void => {
   const i = pending.findIndex((anId) => anId === id)
   if (i >= 0) {
     pending.splice(i, 1)
@@ -19,4 +19,4 @@ export const stop = (id) => {
   }
 }
 
-export const isLoadingById = (id) => pending.includes((anId) => anId === id)
+export const isLoadingById = (id: string): boolean => pending.includes(id)

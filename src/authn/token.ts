@@ -20,7 +20,7 @@ function initializeToken() {
     cleanAddressBar()
   }
 
-  function init(name) {
+  function init(name: string) {
     const value = params.get(name)
 
     if (value !== null) {

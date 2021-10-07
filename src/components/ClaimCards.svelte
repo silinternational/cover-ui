@@ -11,7 +11,7 @@ export let items: PolicyItem[]
 export let accountablePersons = [] as AccountablePersonOptions[]
 
 // TODO: Change this to dispatch an event, and let the actual page call $goto().
-const onGotoClaim = (event) => $goto(`/customer/claims/${event.detail}`)
+const onGotoClaim = (event: CustomEvent<string>) => $goto(`/customer/claims/${event.detail}`)
 </script>
 
 <style>

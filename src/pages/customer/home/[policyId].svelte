@@ -49,9 +49,7 @@ const getMenuItems = (id: string) => [
   },
 ]
 
-const getStatusClass = (status: string) => {
-  status === 'Draft' ? 'mdc-theme--primary mdc-bold-font' : ''
-}
+const getStatusClass = (status: string) => (status === 'Draft' ? 'mdc-theme--primary mdc-bold-font' : '')
 
 // TODO: Change this to dispatch events, leaving URL changes to the actual page.
 const redirect = (url: string) => {

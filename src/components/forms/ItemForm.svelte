@@ -1,4 +1,5 @@
 <script lang="ts">
+import user from '../../authn/user'
 import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
 import Description from '../Description.svelte'
 import MoneyInput from '../MoneyInput.svelte'
@@ -84,6 +85,8 @@ const onAccountablePersonSelectPopulated = () => {
     initialAccountablePersonId = item.accountable_user_id
   } else if (item.accountable_dependent_id) {
     initialAccountablePersonId = item.accountable_dependent_id
+  } else {
+    initialAccountablePersonId = $user.id
   }
 }
 

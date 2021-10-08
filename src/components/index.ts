@@ -1,5 +1,4 @@
 import filteredList from './filteredList'
-import table from './table'
 import App from './App.svelte'
 import AppDrawer from './AppDrawer.svelte'
 import AppFooter from './AppFooter.svelte'
@@ -26,7 +25,6 @@ import SearchableSelect from './SearchableSelect.svelte'
 
 export {
   filteredList as FilteredList,
-  table as Table,
   App,
   AppDrawer,
   AppFooter,

@@ -131,7 +131,7 @@ declare module '@silintl/ui-components' {
   export class List extends SvelteComponentTyped<ListProps> {}
 
   type MenuItem = {
-    icon: string
+    icon?: string
     label: string
     url: string
   }

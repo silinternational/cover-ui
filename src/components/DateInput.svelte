@@ -32,7 +32,7 @@ const focus = (node) => autofocus && node.focus()
   class:mdc-text-field--disabled={disabled}
   bind:this={element}
 >
-  <input type="date" class="mdc-text-field__input NotoSans date-input" bind:value on:blur use:focus {disabled} />
+  <input type="date" class="mdc-text-field__input date-input" bind:value on:blur use:focus {disabled} />
   <span class="mdc-notched-outline">
     <span class="mdc-notched-outline__leading" />
     <span class="mdc-notched-outline__trailing" />

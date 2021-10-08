@@ -49,6 +49,10 @@ const getMenuItems = (id: string) => [
   },
 ]
 
+const getStatusClass = (status: string) => {
+  status === 'Draft' ? 'mdc-theme--primary mdc-bold-font' : ''
+}
+
 // TODO: Change this to dispatch events, leaving URL changes to the actual page.
 const redirect = (url: string) => {
   if (goToItemDetails) {
@@ -109,10 +113,10 @@ const handleMoreVertClick = (id: string) => {
             <Datatable.Data.Row on:click={() => redirect(`/items/${item.id}`)} clickable>
               <Datatable.Data.Row.Item />
               <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item>{item.coverage_status || ''}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item
-                >{getAccountablePerson(item, accountablePersons).name || ''}</Datatable.Data.Row.Item
+              <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}
+                >{item.coverage_status || ''}</Datatable.Data.Row.Item
               >
+              <Datatable.Data.Row.Item>{getAccountablePerson(item, accountablePersons).name}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>

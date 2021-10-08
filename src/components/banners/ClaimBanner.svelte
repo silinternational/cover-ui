@@ -1,7 +1,7 @@
 <script lang="ts">
 import { getClaimState, State } from '../../data/states'
 import type { ClaimStatus } from '../../data/claims'
-import { StatusBanner } from '../index'
+import StatusBanner from '../banners/StatusBanner.svelte'
 
 export let claimStatus = '' as ClaimStatus
 

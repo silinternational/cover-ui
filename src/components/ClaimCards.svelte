@@ -3,7 +3,7 @@ import type { AccountablePersonOptions } from '../data/accountablePersons'
 import type { Claim } from '../data/claims'
 import type { PolicyItem } from '../data/items'
 
-import { ClaimCard } from './index'
+import ClaimCard from './ClaimCard.svelte'
 import { goto } from '@roxi/routify'
 
 export let claims: Claim[]

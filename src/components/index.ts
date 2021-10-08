@@ -1,5 +1,4 @@
 import table from './table'
-import App from './App.svelte'
 import AppDrawer from './AppDrawer.svelte'
 import AppFooter from './AppFooter.svelte'
 import Banner from './Banner.svelte'
@@ -25,7 +24,6 @@ import SearchableSelect from './SearchableSelect.svelte'
 
 export {
   table as Table,
-  App,
   AppDrawer,
   AppFooter,
   Banner,

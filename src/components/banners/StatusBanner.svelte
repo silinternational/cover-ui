@@ -1,5 +1,5 @@
 <script>
-import { Banner } from '../../components'
+import Banner from '../Banner.svelte'
 
 export let state
 

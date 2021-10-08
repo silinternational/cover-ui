@@ -10,7 +10,11 @@ import {
   PAYOUT_OPTION_REPAIR,
   PAYOUT_OPTION_REPLACE,
 } from '../../business-rules/claim-payout-amount'
-import { ConvertCurrencyLink, Description, RadioOptions, DateInput, MoneyInput } from '../../components'
+import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
+import Description from '../Description.svelte'
+import RadioOptions from '../RadioOptions.svelte'
+import DateInput from '../DateInput.svelte'
+import MoneyInput from '../MoneyInput.svelte'
 import { claimIncidentTypes, loadClaimIncidentTypes } from '../../data/claim-incident-types'
 import type { Claim, ClaimItem, PayoutOption } from '../../data/claims'
 import type { PolicyItem } from '../../data/items'

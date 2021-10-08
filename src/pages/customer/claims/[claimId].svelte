@@ -86,7 +86,8 @@ $: needsRepairReceipt = needsReceipt && payoutOption === 'Repair'
 $: needsReplaceReceipt = needsReceipt && payoutOption === 'Replacement'
 $: needsReceipt = claimStatus === 'Receipt'
 $: needsEvidence = isEvidenceNeeded(claimItem, claimStatus)
-$: needsFile = (needsReceipt || needsEvidence) as boolean
+$: needsFile = needsReceipt || needsEvidence
+$: noFilesUploaded = !claim.claim_files?.length
 $: filePurpose = getFilePurpose(claimItem, needsReceipt)
 $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType) as string
 $: moneyFormLabel = needsRepairReceipt ? 'Actual cost of repair' : 'Actual cost of replacement'
@@ -223,7 +224,7 @@ function onDeleted(event) {
     </Row>
     <Row cols="9">
       <ClaimBanner {claimStatus}>{claim.status_reason || ''}</ClaimBanner>
-      {#if needsFile}
+      {#if needsFile && noFilesUploaded}
         <ClaimBanner claimStatus={`${claimStatus}Secondary`}>
           Upload {uploadLabel} to get reimbursed.
         </ClaimBanner>

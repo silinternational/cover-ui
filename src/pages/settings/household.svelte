@@ -5,7 +5,7 @@ import { dependentsByPolicyId, loadDependents } from '../../data/dependents'
 import { policies, updatePolicy, init, affiliations, Policy } from '../../data/policies'
 import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
 import { goto } from '@roxi/routify'
-import { Button, TextField, IconButton, Page, Snackbar, setNotice } from '@silintl/ui-components'
+import { Button, TextField, IconButton, Page, setNotice } from '@silintl/ui-components'
 
 const policyData = {} as Policy
 
@@ -165,5 +165,4 @@ p {
   </ul>
   <Button prependIcon="add" url="household/dependent" outlined>Add dependent</Button>
 
-  <Snackbar />
 </Page>

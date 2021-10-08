@@ -6,4 +6,20 @@
 :root {
   font-family: Source Sans Pro, Roboto, sans-serif;
   --mdc-typography-font-family: Source Sans Pro, Roboto, sans-serif;
+  --mdc-typography-bold-font-weight: 700;
+  --mdc-typography-button-font-weight: 700;
+  --mdc-typography-select-font-weight: 500;
+}
+
+.mdc-bold-font {
+  font-weight: var(--mdc-typography-bold-font-weight);
+}
+
+.mdc-drawer .mdc-list .mdc-list-item,
+.mdc-menu .mdc-list .mdc-list-item {
+  font-weight: var(--mdc-typography-button-font-weight);
+}
+
+.mdc-select__menu .mdc-list .mdc-list-item {
+  font-weight: var(--mdc-typography-select-font-weight);
 }

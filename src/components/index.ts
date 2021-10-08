@@ -1,4 +1,3 @@
-import table from './table'
 import AppDrawer from './AppDrawer.svelte'
 import AppFooter from './AppFooter.svelte'
 import Banner from './Banner.svelte'
@@ -23,7 +22,6 @@ import StatusBanner from './banners/StatusBanner.svelte'
 import SearchableSelect from './SearchableSelect.svelte'
 
 export {
-  table as Table,
   AppDrawer,
   AppFooter,
   Banner,

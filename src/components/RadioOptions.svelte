@@ -1,5 +1,5 @@
 <script lang="ts">
-/** @type {{label, value}[]} */
+/** @type {{label, value, disabled}[]} */
 export let options = []
 
 export let name: string
@@ -22,7 +22,14 @@ label {
 
 {#each options as option (option.value)}
   <label>
-    <input type="radio" {name} value={option.value} checked={isSelected(option)} on:input={onInput} />
+    <input
+      type="radio"
+      {name}
+      disabled={option.disabled}
+      value={option.value}
+      checked={isSelected(option)}
+      on:input={onInput}
+    />
     {option.label}
     {#if option.description}
       <small>{option.description}</small>

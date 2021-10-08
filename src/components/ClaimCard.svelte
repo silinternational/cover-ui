@@ -8,12 +8,12 @@ import { Card, Button } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 import { differenceInSeconds, formatDistanceToNow } from 'date-fns'
 
-export let accountablePersons = [] as AccountablePersonOptions[]
+export let accountablePersons: AccountablePersonOptions[] = []
 export let claim: Claim = {} as Claim
 export let claimItem: ClaimItem = {} as ClaimItem
 export let item: PolicyItem = {} as PolicyItem
 
-const dispatch = createEventDispatcher()
+const dispatch = createEventDispatcher<{ 'goto-claim': string }>()
 
 $: wasUpdated = differenceInSeconds(Date.parse(claimItem.updated_at), Date.parse(claimItem.created_at)) > 1
 $: changedText = formatDistanceToNow(Date.parse(claimItem.updated_at), { addSuffix: true })

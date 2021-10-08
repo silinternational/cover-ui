@@ -1,5 +1,3 @@
-import filteredList from './filteredList'
-import App from './App.svelte'
 import AppDrawer from './AppDrawer.svelte'
 import AppFooter from './AppFooter.svelte'
 import Banner from './Banner.svelte'
@@ -24,8 +22,6 @@ import StatusBanner from './banners/StatusBanner.svelte'
 import SearchableSelect from './SearchableSelect.svelte'
 
 export {
-  filteredList as FilteredList,
-  App,
   AppDrawer,
   AppFooter,
   Banner,

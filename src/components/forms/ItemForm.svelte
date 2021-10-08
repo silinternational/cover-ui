@@ -1,5 +1,7 @@
 <script lang="ts">
-import { ConvertCurrencyLink, Description, MoneyInput } from '../../components'
+import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
+import Description from '../Description.svelte'
+import MoneyInput from '../MoneyInput.svelte'
 import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from '../../data/accountablePersons'
 import { dependentsByPolicyId } from '../../data/dependents'
 import type { ItemCoverageStatus, PolicyItem } from '../../data/items'

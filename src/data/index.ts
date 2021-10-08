@@ -18,7 +18,7 @@ export async function CREATE<T>(uri: string, body: any = undefined): Promise<T> 
 export async function GET<T>(uri: string): Promise<T> {
   return await customFetch<T>('get', uri)
 }
-export async function UPDATE<T>(uri: string, body): Promise<T> {
+export async function UPDATE<T>(uri: string, body: unknown): Promise<T> {
   return await customFetch<T>('put', uri, body)
 }
 export async function DELETE<T>(uri: string): Promise<T> {
@@ -30,7 +30,7 @@ export const upload = async (formData: FormData): Promise<any> => await CREATE<U
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#Supplying_request_options
 async function customFetch<T>(method: FetchMethod, uri: string, body: any = undefined): Promise<T> {
-  const headers = {
+  const headers: HeadersInit = {
     Authorization: `Bearer ${getToken()}`,
     'Content-Type': 'application/json',
   }
@@ -54,7 +54,7 @@ async function customFetch<T>(method: FetchMethod, uri: string, body: any = unde
       headers,
       body,
     })
-  } catch (e) {
+  } catch (e: any) {
     // these only occur for network errors, like these:
     //     request made with a bad host, e.g., //httpbin
     //     the host is refusing connections

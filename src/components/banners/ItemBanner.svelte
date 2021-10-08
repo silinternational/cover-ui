@@ -1,7 +1,7 @@
 <script lang="ts">
 import { getItemState, State } from '../../data/states'
 import type { ItemCoverageStatus } from '../../data/items'
-import { StatusBanner } from '../index'
+import StatusBanner from './StatusBanner.svelte'
 
 export let itemStatus = '' as ItemCoverageStatus
 

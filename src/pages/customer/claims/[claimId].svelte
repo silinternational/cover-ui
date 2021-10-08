@@ -86,7 +86,7 @@ $: needsRepairReceipt = needsReceipt && payoutOption === 'Repair'
 $: needsReplaceReceipt = needsReceipt && payoutOption === 'Replacement'
 $: needsReceipt = claimStatus === 'Receipt'
 $: needsEvidence = isEvidenceNeeded(claimItem, claimStatus)
-$: needsFile = (needsReceipt || needsEvidence) as boolean
+$: needsFile = needsReceipt || needsEvidence
 $: noFilesUploaded = !claim.claim_files?.length
 $: filePurpose = getFilePurpose(claimItem, needsReceipt)
 $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType) as string

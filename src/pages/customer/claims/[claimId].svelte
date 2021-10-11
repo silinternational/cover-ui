@@ -11,11 +11,11 @@ import {
   FilePreview,
   MoneyInput,
   Row,
-} from '../../../components'
-import { formatDate } from '../../../components/dates'
-import { loading } from '../../../components/progress'
-import { upload } from '../../../data'
-import { getAccountablePerson, getDependentOptions, getPolicyMemberOptions } from '../../../data/accountablePersons'
+} from 'components'
+import { formatDate } from 'components/dates'
+import { loading } from 'components/progress'
+import { upload } from 'data'
+import { getAccountablePerson, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
 import {
   denyClaim,
   loadClaims,
@@ -32,12 +32,13 @@ import {
   preapproveClaim,
   requestRevision,
   submitClaim,
-} from '../../../data/claims'
-import { dependentsByPolicyId, loadDependents } from '../../../data/dependents'
-import { loadItems, itemsByPolicyId, PolicyItem } from '../../../data/items'
-import { loadPolicies, policies, Policy } from '../../../data/policies'
-import { loadMembersOfPolicy, membersByPolicyId } from '../../../data/policy-members'
-import { formatMoney } from '../../../helpers/money'
+} from 'data/claims'
+import { dependentsByPolicyId, loadDependents } from 'data/dependents'
+import { loadItems, itemsByPolicyId, PolicyItem } from 'data/items'
+import { loadPolicies, policies, Policy } from 'data/policies'
+import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
+import { formatMoney } from 'helpers/money'
+import { customerClaimEdit, CUSTOMER_CLAIMS, customerClaim } from 'helpers/routes'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
@@ -97,8 +98,8 @@ $: maximumPayout = determineMaxPayout(payoutOption, claimItem, item.coverage_amo
 
 // Dynamic breadcrumbs data:
 $: claimName = `${item.name} (${claim.reference_number})`
-const claimsBreadcrumb = { name: 'Claims', url: '/customer/claims' }
-$: thisClaimBreadcrumb = { name: claimName || 'This item', url: `/customer/claims/${claimId}` }
+const claimsBreadcrumb = { name: 'Claims', url: CUSTOMER_CLAIMS }
+$: thisClaimBreadcrumb = { name: claimName || 'This item', url: customerClaim(claimId) }
 $: breadcrumbLinks = [claimsBreadcrumb, thisClaimBreadcrumb]
 
 const getFilePurpose = (claimItem: ClaimItem, needsReceipt: boolean): ClaimFilePurpose => {
@@ -113,23 +114,23 @@ const getUploadLabel = (claimItem: ClaimItem, needsReceipt: boolean, receiptType
   if (claimItem.fmv) return 'evidence of fair market value'
 }
 
-const editClaim = () => $goto(`/customer/claims/${claimId}/edit`)
+const editClaim = () => $goto(customerClaimEdit(claimId))
 
 const onPreapprove = async () => await preapproveClaim(claimId)
 
-const onAskForChanges = async (event) => {
+const onAskForChanges = async (event: CustomEvent<string>) => {
   const message = event.detail
   await requestRevision(claimId, message)
 }
 
-const onDenyClaim = async (event) => {
+const onDenyClaim = async (event: CustomEvent<string>) => {
   const message = event.detail
   await denyClaim(claimId, message)
 }
 
 const onSubmit = async () => await submitClaim(claimId)
 
-const onPreview = (event) => {
+const onPreview = (event: CustomEvent<string>) => {
   showImg = true
 
   previewFile = claimFiles.find((file) => file.id === event.detail)
@@ -147,7 +148,7 @@ const onBlur = () => {
   claimItem.id && updateClaimItem(claim.id, claimItem.id, updatedClaimItemData)
 }
 
-async function onUpload(event) {
+async function onUpload(event: CustomEvent<FormData>) {
   try {
     uploading = true
 
@@ -161,7 +162,7 @@ async function onUpload(event) {
   }
 }
 
-function onDeleted(event) {
+function onDeleted(event: CustomEvent<string>) {
   const id = event.detail
 
   console.log('deleting file: ' + id) //TODO use endpoint when avialable
@@ -188,7 +189,7 @@ function onDeleted(event) {
       {#if $loading}
         Loading...
       {:else}
-        We could not find that claim. Please <a href="/claims">go back</a> and select a claim from the list.
+        We could not find that claim. Please <a href={CUSTOMER_CLAIMS}>go back</a> and select a claim from the list.
       {/if}
     </Row>
   {:else}

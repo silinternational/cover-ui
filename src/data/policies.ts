@@ -70,6 +70,6 @@ export async function loadPolicies(): Promise<void> {
   initialized.set(true)
 }
 
-export const affiliations = writable({
+export const affiliations = writable<{ [key: string]: string }>({
   SIL: 'SIL International',
 })

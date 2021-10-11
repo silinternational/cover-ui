@@ -1,4 +1,5 @@
 <script lang="ts">
+import * as routes from 'helpers/routes'
 import Progress from './progress/Progress.svelte'
 import { Badge, IconButton, isAboveMobile, Menu, MenuItem } from '@silintl/ui-components'
 import { createEventDispatcher, onMount } from 'svelte'
@@ -8,12 +9,12 @@ const menuItems: MenuItem[] = [
   {
     icon: 'settings',
     label: 'User settings',
-    url: '/settings/personal',
+    url: routes.SETTINGS_PERSONAL,
   },
   {
     icon: 'logout',
     label: 'Sign out',
-    url: '/logout',
+    url: routes.LOGOUT,
   },
 ]
 

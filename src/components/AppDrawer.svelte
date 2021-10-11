@@ -1,14 +1,15 @@
 <script lang="ts">
-import AppFooter from '../components/AppFooter.svelte'
-import AppHeader from '../components/AppHeader.svelte'
+import AppFooter from './AppFooter.svelte'
+import AppHeader from './AppHeader.svelte'
 import { goto } from '@roxi/routify'
 import { Drawer } from '@silintl/ui-components'
+import { ROOT } from 'helpers/routes'
 
-export let menuItems = []
+export let menuItems: any[] = []
 
 let toggle = false
 
-const logoClickHandler = () => $goto('/')
+const logoClickHandler = () => $goto(ROOT)
 </script>
 
 <Drawer miniMenu modal hideForPhonesOnly {toggle} {menuItems} title="Covered" class="auto-width border-white">

@@ -1,5 +1,5 @@
 import { getToken } from '../authn/token'
-import { start, stop } from '../components/progress'
+import { start, stop } from 'components/progress'
 import { throwError } from '../error'
 import t from '../i18n'
 

@@ -1,6 +1,7 @@
 <script lang="ts">
-import { goto } from '@roxi/routify'
+import { CUSTOMER_HOME } from 'helpers/routes'
+import { redirect } from '@roxi/routify'
 
 // TODO: Eventually redirect stewards and signators to their own home pages.
-$goto('/customer/home')
+$redirect(CUSTOMER_HOME)
 </script>

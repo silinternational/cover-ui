@@ -1,9 +1,9 @@
 <script lang="ts">
 import ClaimCardBanner from './ClaimCardBanner.svelte'
-import type { AccountablePersonOptions } from '../data/accountablePersons'
-import type { Claim, ClaimItem } from '../data/claims'
-import type { PolicyItem } from '../data/items'
-import { getClaimState, State } from '../data/states'
+import type { AccountablePersonOptions } from 'data/accountablePersons'
+import type { Claim, ClaimItem } from 'data/claims'
+import type { PolicyItem } from 'data/items'
+import { getClaimState, State } from 'data/states'
 import { Card, Button } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 import { differenceInSeconds, formatDistanceToNow } from 'date-fns'

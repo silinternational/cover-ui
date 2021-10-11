@@ -1,7 +1,7 @@
 <script lang="ts">
 import user from '../../../../authn/user'
-import { Breadcrumb, ClaimBanner, ClaimForm } from '../../../../components'
-import { isLoadingById } from '../../../../components/progress'
+import { Breadcrumb, ClaimBanner, ClaimForm } from 'components'
+import { isLoadingById } from 'components/progress'
 import {
   Claim,
   ClaimItem,
@@ -11,8 +11,9 @@ import {
   submitClaim,
   updateClaim,
   updateClaimItem,
-} from '../../../../data/claims'
-import { itemsByPolicyId, loadItems, PolicyItem } from '../../../../data/items'
+} from 'data/claims'
+import { itemsByPolicyId, loadItems, PolicyItem } from 'data/items'
+import { HOME, CUSTOMER_CLAIMS, customerClaim, customerClaimEdit } from 'helpers/routes'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
@@ -33,9 +34,9 @@ $: item = items.find((anItem) => anItem.id === itemId) || ({} as PolicyItem)
 
 // Dynamic breadcrumbs data:
 $: claimName = `${item.name} (${claim.reference_number})`
-const claimsBreadcrumb = { name: 'Claims', url: '/customer/claims' }
-$: thisClaimBreadcrumb = { name: claimName || 'This item', url: `/customer/claims/${claimId}` }
-const editBreadcrumb = { name: 'Edit', url: `/customer/claims/${claimId}/edit` }
+const claimsBreadcrumb = { name: 'Claims', url: CUSTOMER_CLAIMS }
+$: thisClaimBreadcrumb = { name: claimName || 'This item', url: customerClaim(claimId) }
+const editBreadcrumb = { name: 'Edit', url: customerClaimEdit(claimId) }
 $: breadcrumbLinks = [claimsBreadcrumb, thisClaimBreadcrumb, editBreadcrumb]
 
 const updateClaimAndItem = async (event: CustomEvent): Promise<void> => {
@@ -46,12 +47,12 @@ const updateClaimAndItem = async (event: CustomEvent): Promise<void> => {
 }
 const onSaveForLater = async (event: CustomEvent) => {
   await updateClaimAndItem(event)
-  $goto('/home')
+  $goto(HOME)
 }
 const onSubmit = async (event: CustomEvent) => {
   await updateClaimAndItem(event)
   await submitClaim(claimId)
-  $goto(`/customer/claims/${claimId}`)
+  $goto(customerClaim(claimId))
 }
 </script>
 
@@ -59,11 +60,11 @@ const onSubmit = async (event: CustomEvent) => {
   Loading...
 {:else if claims && !claim.id}
   We could not find that claim. Please
-  <a href="/claims">go back to the list of claims</a>
+  <a href={CUSTOMER_CLAIMS}>go back to the list of claims</a>
   and select one from there.
 {:else if items && !item.id}
   We could not find that item on this claim. Please
-  <a href="/claims">go back to the list of claims</a>
+  <a href={CUSTOMER_CLAIMS}>go back to the list of claims</a>
   and try again.
 {:else}
   <!-- @todo Handle situations where the user isn't allowed to edit this claim. -->

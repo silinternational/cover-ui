@@ -1,8 +1,8 @@
 <script lang="ts">
 import user, { updateUser } from '../../authn/user'
-import { Breadcrumb, FileDropArea, RadioOptions } from '../../components'
-import { upload } from '../../data'
-import { policies, init as loadPolicies } from '../../data/policies'
+import { Breadcrumb, FileDropArea, RadioOptions } from 'components'
+import { upload } from 'data'
+import { policies, init as loadPolicies } from 'data/policies'
 import { assertEmailAddress } from '../../validation/assertions'
 import { Button, Checkbox, TextField, Page, setNotice } from '@silintl/ui-components'
 import Croppie from 'croppie'

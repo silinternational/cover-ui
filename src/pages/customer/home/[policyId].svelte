@@ -1,17 +1,18 @@
 <script lang="ts">
-import { ClaimCards, Row } from '../../../components/'
-import { isLoadingById } from '../../../components/progress/index'
-import { claims, loadClaims } from '../../../data/claims'
+import { ClaimCards, Row } from 'components'
+import { isLoadingById } from 'components/progress'
+import { claims, loadClaims } from 'data/claims'
 import {
   AccountablePersonOptions,
   getAccountablePerson,
   getDependentOptions,
   getPolicyMemberOptions,
-} from '../../../data/accountablePersons'
-import { dependentsByPolicyId, loadDependents } from '../../../data/dependents'
-import { itemsByPolicyId, loadItems } from '../../../data/items'
-import { loadMembersOfPolicy, membersByPolicyId } from '../../../data/policy-members'
-import { formatMoney } from '../../../helpers/money'
+} from 'data/accountablePersons'
+import { dependentsByPolicyId, loadDependents } from 'data/dependents'
+import { itemsByPolicyId, loadItems } from 'data/items'
+import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
+import { formatMoney } from 'helpers/money'
+import * as routes from 'helpers/routes'
 import { goto } from '@roxi/routify'
 import { Page, Datatable, Menu } from '@silintl/ui-components'
 
@@ -37,15 +38,15 @@ $: accountablePersons = [...policyMemberOptions, ...dependentOptions] as Account
 const getMenuItems = (id: string) => [
   {
     label: 'View Details',
-    url: `/items/${id}`,
+    url: routes.item(id),
   },
   {
     label: 'Edit',
-    url: `/items/${id}/edit`,
+    url: routes.itemEdit(id),
   },
   {
     label: 'Remove Coverage',
-    url: `/items/${id}/remove-coverage`,
+    url: routes.itemRemoveCoverage(id),
   },
 ]
 
@@ -108,7 +109,7 @@ const handleMoreVertClick = (id: string) => {
         </Datatable.Header>
         <Datatable.Data>
           {#each items as item (item.id)}
-            <Datatable.Data.Row on:click={() => redirect(`/items/${item.id}`)} clickable>
+            <Datatable.Data.Row on:click={() => redirect(routes.item(item.id))} clickable>
               <Datatable.Data.Row.Item />
               <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}

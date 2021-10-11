@@ -1,6 +1,6 @@
 <script lang="ts">
 import user from '../authn/user'
-import { Claim, ClaimStatus, editableStatuses } from '../data/claims'
+import { Claim, ClaimStatus, editableStatuses } from 'data/claims'
 import { Button, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 import Description from './Description.svelte'

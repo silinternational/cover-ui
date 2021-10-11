@@ -1,9 +1,10 @@
 <script lang="ts">
 import user from '../../authn/user'
-import { Breadcrumb, SearchableSelect } from '../../components'
-import { dependentsByPolicyId, loadDependents } from '../../data/dependents'
-import { policies, updatePolicy, init, affiliations, Policy } from '../../data/policies'
-import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
+import { Breadcrumb, SearchableSelect } from 'components'
+import { dependentsByPolicyId, loadDependents } from 'data/dependents'
+import { policies, updatePolicy, init, affiliations, Policy } from 'data/policies'
+import { loadMembersOfPolicy, membersByPolicyId, PolicyMember } from 'data/policy-members'
+import { householdSettingsDependent } from 'helpers/routes'
 import { goto } from '@roxi/routify'
 import { Button, TextField, IconButton, Page, setNotice } from '@silintl/ui-components'
 
@@ -58,7 +59,7 @@ const updateCostCenter = async () => {
   }
 }
 
-const updateAffiliation = async (e) => {
+const updateAffiliation = async (e: CustomEvent<string>) => {
   const choice = e.detail
 
   if (choice !== policyData.entity_code) {
@@ -68,7 +69,7 @@ const updateAffiliation = async (e) => {
   }
 }
 
-const callUpdatePolicy = async (id: string, costCenter: string = undefined, affiliation: string = undefined) => {
+const callUpdatePolicy = async (id: string, costCenter?: string, affiliation?: string) => {
   policyData.household_id = id
   affiliation && (policyData.entity_code = affiliation)
   costCenter && (policyData.cost_center = costCenter)
@@ -76,9 +77,10 @@ const callUpdatePolicy = async (id: string, costCenter: string = undefined, affi
   await updatePolicy(policyId, policyData)
 }
 
-const isIdValid = (sanitizedId) => sanitizedId.length && sanitizedId.split('').every((digit) => /[0-9]/.test(digit))
-const edit = (id) => $goto(`/settings/household/dependent/${id}`)
-const isYou = (householdMember) => householdMember.id === $user.id
+const isIdValid = (sanitizedId: string) =>
+  sanitizedId.length && sanitizedId.split('').every((digit) => /[0-9]/.test(digit))
+const edit = (id: string) => $goto(householdSettingsDependent(id))
+const isYou = (householdMember: PolicyMember) => householdMember.id === $user.id
 </script>
 
 <style>
@@ -164,5 +166,4 @@ p {
     {/each}
   </ul>
   <Button prependIcon="add" url="household/dependent" outlined>Add dependent</Button>
-
 </Page>

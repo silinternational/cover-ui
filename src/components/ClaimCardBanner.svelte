@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { State } from '../data/states'
+import type { State } from 'data/states'
 
 export let state = {} as State
 export let statusReason = '' as string

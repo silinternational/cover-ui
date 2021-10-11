@@ -43,8 +43,6 @@ export async function loadUser(): Promise<void> {
 export async function updateUser(data: UpdatedUserBody): Promise<void> {
   const updatedUser = await UPDATE<User>(`users/me`, data)
   user.set(updatedUser)
-
-  user.set(data)
 }
 
 export const clear = (): void => {

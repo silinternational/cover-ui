@@ -26,6 +26,11 @@ export type User = {
   policy_id: string
 }
 
+export type UpdatedUserBody = {
+  email_override: string
+  location: string
+}
+
 const user = writable<User>({} as User)
 
 export default user
@@ -35,12 +40,9 @@ export async function loadUser(): Promise<void> {
   user.set(userData)
 }
 
-export async function updateUser(data: User): Promise<void> {
-  // TODO Uncomment when update user enpoint is available
-  // const updatedUser = await UPDATE<User>(`users/${data.id}`, data)
-  // user.set(updatedUser);
-
-  user.set(data)
+export async function updateUser(data: UpdatedUserBody): Promise<void> {
+  const updatedUser = await UPDATE<User>(`users/me`, data)
+  user.set(updatedUser)
 }
 
 export const clear = (): void => {

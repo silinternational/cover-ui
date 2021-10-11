@@ -89,19 +89,16 @@ async function onUpload() {
 
         const file = await upload(data)
 
-        // updateUser({
-        //   ...$user,
-        //   photo_file: {
-        //     content_type: file.content_type,
-        //     created_by_id: $user.id,
-        //     id: file.id,
-        //     name: file.filename,
-        //     size: file.size,
-        //     url: file.url,
-        //     url_expiration: undefined,
-        //   },
-        //   photo_file_id: file.id,
-        // })
+        // TODO call api when available
+        $user.photo_file = {
+          content_type: file.content_type,
+          created_by_id: $user.id,
+          id: file.id,
+          name: file.filename,
+          size: file.size,
+          url: file.url,
+          url_expiration: undefined,
+        }
 
         setNotice('Your profile photo has been updated')
       })

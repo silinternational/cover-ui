@@ -10,29 +10,20 @@ import { Page } from '@silintl/ui-components'
 
 export let itemId: string
 
-const breadcrumbLinks = [
-  {
-    name: 'Items',
-    url: routes.ITEMS,
-  },
-  // TODO: make this fetch the name of the item and have that as the name
-  {
-    name: 'This Item',
-    url: routes.item(itemId),
-  },
-  {
-    name: 'New Claim',
-    url: routes.itemNewClaim(itemId),
-  },
-]
-
 $: $user.policy_id && loadItems($user.policy_id)
 $: items = $itemsByPolicyId[$user.policy_id] || []
 $: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
+$: itemName = item.name || ''
 
 $: $initialized || loadClaims()
 $: existingClaim = $claims.find((claim) => isItemIdOnClaim(itemId, claim)) || ({} as Claim)
 $: claimExists = !!existingClaim.id
+
+// Dynamic breadcrumbs data:
+const itemsBreadcrumb = { name: 'Items', url: routes.ITEMS }
+$: thisItemBreadcrumb = { name: itemName || 'This item', url: routes.item(itemId) }
+const newClaimBreadcrumb = { name: 'New Claim', url: routes.itemNewClaim(itemId) }
+$: breadcrumbLinks = [itemsBreadcrumb, thisItemBreadcrumb, newClaimBreadcrumb]
 
 const isItemIdOnClaim = (itemId: string, claim: Claim) => {
   const claimItems = claim.claim_items || []
@@ -62,21 +53,24 @@ const onSubmit = async (event: CustomEvent) => {
 </script>
 
 <Page>
-  <Breadcrumb links={breadcrumbLinks} />
-
   <!--TODO: add transitions but not after submit-->
-  {#if $loading}
-    <p>Loading...</p>
-  {:else if !item.id}
-    <p>
-      We could not find that item. Please <a href={routes.ITEMS}>go back</a> and select an item from the list.
-    </p>
-  {:else if claimExists}
-    <p>
-      It looks like there is already a claim for that item. Please
-      <a href={routes.customerClaim(existingClaim.id)}>click here</a> to see its details.
-    </p>
-  {/if}
+  {#if !item.id}
+    {#if $loading}
+      <p>Loading...</p>
+    {:else}
+      <p>
+        We could not find that item. Please <a href={routes.ITEMS}>go back</a> and select an item from the list.
+      </p>
+    {/if}
+  {:else}
+    <Breadcrumb links={breadcrumbLinks} />
+    {#if claimExists}
+      <p>
+        It looks like there is already a claim for that item. Please
+        <a href={routes.customerClaim(existingClaim.id)}>click here</a> to see its details.
+      </p>
+    {/if}
 
-  <ClaimForm {item} on:save-for-later={onSaveForLater} on:submit={onSubmit} />
+    <ClaimForm {item} on:save-for-later={onSaveForLater} on:submit={onSubmit} />
+  {/if}
 </Page>

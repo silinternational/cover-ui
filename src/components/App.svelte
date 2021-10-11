@@ -3,11 +3,11 @@ import { login } from '../authn'
 import user, { loadUser } from '../authn/user'
 import type { CustomError } from '../error'
 import './mdc/_index.scss'
-import t from '../i18n'
 import { parse, stringify } from 'qs'
 import { afterPageLoad, Router } from '@roxi/routify'
 import { routes } from '../../.routify/routes'
 import { Snackbar } from '@silintl/ui-components'
+import { updatePageTitle, pageTitle } from 'helpers/pageTitle'
 
 // If we've loaded the user, but their policy wasn't quite ready, try again.
 $: if (!$user.policy_id) {
@@ -30,15 +30,16 @@ const authenticateUser = async () => {
   })
 }
 
-$afterPageLoad((page) => {
+$afterPageLoad((page: { path: string }) => {
   if (!publicRoutes.includes(page.path)) {
     authenticateUser()
   }
+  updatePageTitle(page.path)
 })
 </script>
 
 <svelte:head>
-  <title>{t('appname')}</title>
+  <title>{$pageTitle}</title>
 </svelte:head>
 
 <Router {routes} config={{ queryHandler }} />

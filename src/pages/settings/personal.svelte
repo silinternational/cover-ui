@@ -32,8 +32,8 @@ const updateCustomEmail = async () => {
   assertEmailAddress(email_override, 'Please enter a valid email address')
 
   await updateUser({
-    ...$user,
     email_override,
+    location,
   })
   setNotice('Your notification email has been saved')
 }
@@ -41,7 +41,7 @@ const updateCustomEmail = async () => {
 const updateLocation = async () => {
   if (isLocationValid(location)) {
     await updateUser({
-      ...$user,
+      email_override,
       location,
     })
     setNotice('Your location has been saved')
@@ -92,19 +92,19 @@ async function onUpload() {
 
         const file = await upload(data)
 
-        updateUser({
-          ...$user,
-          photo_file: {
-            content_type: file.content_type,
-            created_by_id: $user.id,
-            id: file.id,
-            name: file.filename,
-            size: file.size,
-            url: file.url,
-            url_expiration: undefined,
-          },
-          photo_file_id: file.id,
-        })
+        // updateUser({
+        //   ...$user,
+        //   photo_file: {
+        //     content_type: file.content_type,
+        //     created_by_id: $user.id,
+        //     id: file.id,
+        //     name: file.filename,
+        //     size: file.size,
+        //     url: file.url,
+        //     url_expiration: undefined,
+        //   },
+        //   photo_file_id: file.id,
+        // })
 
         setNotice('Your profile photo has been updated')
       })

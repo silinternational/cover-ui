@@ -1,7 +1,7 @@
 <script lang="ts">
 import RadioOptions from '../RadioOptions.svelte'
 import { assertHas } from '../../validation/assertions'
-import type { PolicyDependent } from '../../data/dependents'
+import type { PolicyDependent } from 'data/dependents'
 import { Button, Form, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 

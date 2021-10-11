@@ -1,11 +1,12 @@
 <script lang="ts">
 import user from '../../authn/user'
-import { ClaimCards, Row, Breadcrumb } from '../../components/'
-import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from '../../data/accountablePersons'
-import { claims, loadClaims } from '../../data/claims'
-import { dependentsByPolicyId, loadDependents } from '../../data/dependents'
-import { itemsByPolicyId, loadItems } from '../../data/items'
-import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
+import { ClaimCards, Row, Breadcrumb } from 'components'
+import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
+import { claims, loadClaims } from 'data/claims'
+import { dependentsByPolicyId, loadDependents } from 'data/dependents'
+import { itemsByPolicyId, loadItems } from 'data/items'
+import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
+import { CUSTOMER_CLAIMS_NEW } from 'helpers/routes'
 import { Page, Button } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
@@ -33,7 +34,7 @@ onMount(() => {
 <Page layout="grid">
   <Breadcrumb />
   <Row cols={'12'}>
-    <Button raised url="/claims/newClaim">New claim</Button>
+    <Button raised url={CUSTOMER_CLAIMS_NEW}>New claim</Button>
   </Row>
 
   <Row cols={'12'}>

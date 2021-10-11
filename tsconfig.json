@@ -1,6 +1,6 @@
 {
     "extends": "@tsconfig/svelte/tsconfig.json",
-  
+
     "include": ["src/**/*", "src/node_modules"],
     "exclude": ["node_modules/*", "__sapper__/*", "public/*"],
     "compilerOptions": {
@@ -9,6 +9,13 @@
         "src/customTypes",
         "node_modules/@types"
       ],
+      "paths": {
+        "components": ["./src/components/"],
+        "components/*": ["./src/components/*"],
+        "data": ["./src/data/"],
+        "data/*": ["./src/data/*"],
+        "helpers/*": ["./src/helpers/*"]
+      },
       "resolveJsonModule": true,
       "strict": true
     }

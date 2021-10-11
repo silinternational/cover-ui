@@ -1,5 +1,6 @@
 <script lang="ts">
-import { goto } from '@roxi/routify'
+import { HOME } from 'helpers/routes'
+import { redirect } from '@roxi/routify'
 
-$goto('/home')
+$redirect(HOME)
 </script>

@@ -1,10 +1,11 @@
 <script lang="ts">
-import type { Claim } from '../../data/claims'
-import { initialized, loadPolicies, policies, Policy } from '../../data/policies'
-import { formatFriendlyDate } from '../../helpers/date'
-import { formatMoney } from '../../helpers/money'
+import type { Claim } from 'data/claims'
+import { initialized, loadPolicies, policies, Policy } from 'data/policies'
+import type { PolicyMember } from 'data/policy-members'
+import { formatFriendlyDate } from 'helpers/date'
+import { formatMoney } from 'helpers/money'
+import { customerClaim } from 'helpers/routes'
 import { Datatable, Page } from '@silintl/ui-components'
-import type { PolicyMember } from '../../data/policy-members'
 
 export let policyId: string
 
@@ -92,7 +93,7 @@ th {
         {#each claim.claim_items as claimItem (claimItem.id)}
           <Datatable.Data.Row>
             <Datatable.Data.Row.Item>
-              <a href="/claims/{claim.id}">{claim.reference_number || ''}</a>
+              <a href={customerClaim(claim.id)}>{claim.reference_number || ''}</a>
               ({claim.status})
             </Datatable.Data.Row.Item>
             <Datatable.Data.Row.Item>{formatFriendlyDate(claim.incident_date)}</Datatable.Data.Row.Item>

@@ -1,19 +1,20 @@
 <script lang="ts">
 import user from '../../authn/user'
-import { Banner, Breadcrumb, ItemBanner, Row } from '../../components'
-import { formatDate } from '../../components/dates'
-import { loading } from '../../components/progress'
+import { Banner, Breadcrumb, ItemBanner, Row } from 'components'
+import { formatDate } from 'components/dates'
+import { loading } from 'components/progress'
 import {
   AccountablePersonOptions,
   getAccountablePerson,
   getDependentOptions,
   getPolicyMemberOptions,
-} from '../../data/accountablePersons'
-import { dependentsByPolicyId, loadDependents } from '../../data/dependents'
-import { deleteItem, ItemCoverageStatus, itemsByPolicyId, loadItems, PolicyItem } from '../../data/items'
-import { init, policies, Policy } from '../../data/policies'
-import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
-import { formatMoney } from '../../helpers/money'
+} from 'data/accountablePersons'
+import { dependentsByPolicyId, loadDependents } from 'data/dependents'
+import { deleteItem, ItemCoverageStatus, itemsByPolicyId, loadItems, PolicyItem } from 'data/items'
+import { init, policies, Policy } from 'data/policies'
+import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
+import { formatMoney } from 'helpers/money'
+import { ITEMS, item as itemRoute, itemEdit, itemNewClaim } from 'helpers/routes'
 import { goto } from '@roxi/routify'
 import { Button, Page, Dialog } from '@silintl/ui-components'
 import { formatDistanceToNow } from 'date-fns'
@@ -58,15 +59,15 @@ $: submittedText = item.updated_at ? formatDistanceToNow(Date.parse(item.updated
 $: startDate = formatDate(item.coverage_start_date)
 
 // Dynamic breadcrumbs data:
-const itemsBreadcrumb = { name: 'Items', url: '/items' }
-$: thisItemBreadcrumb = { name: itemName || 'This item', url: `/items/${itemId}` }
+const itemsBreadcrumb = { name: 'Items', url: ITEMS }
+$: thisItemBreadcrumb = { name: itemName || 'This item', url: itemRoute(itemId) }
 $: breadcrumbLinks = [itemsBreadcrumb, thisItemBreadcrumb]
 
 const goToEditItem = () => {
-  $goto(`/items/${itemId}/edit`)
+  $goto(itemEdit(itemId))
 }
 const goToNewClaim = () => {
-  $goto(`/items/${itemId}/new-claim`)
+  $goto(itemNewClaim(itemId))
 }
 
 const handleDialog = async (choice: string) => {
@@ -75,7 +76,7 @@ const handleDialog = async (choice: string) => {
   if (choice === 'remove') {
     await deleteItem(policyId, itemId)
 
-    $goto('/items')
+    $goto(ITEMS)
   }
 }
 </script>
@@ -85,7 +86,7 @@ const handleDialog = async (choice: string) => {
     {#if $loading}
       Loading...
     {:else}
-      We could not find that item. Please <a href="/items">go back</a> and select an item from the list.
+      We could not find that item. Please <a href={ITEMS}>go back</a> and select an item from the list.
     {/if}
   {:else}
     <Row cols="12">

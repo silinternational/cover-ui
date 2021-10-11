@@ -10,7 +10,9 @@ export type CustomError = {
 export const error = writable<CustomError>({})
 export const throwError = (message = '', status = 0, statusText = ''): void => {
   const error = set({ status, statusText, message })
-  setNotice(error.message)
+  if (error.message) {
+    setNotice(error.message)
+  }
   throw error
 }
 

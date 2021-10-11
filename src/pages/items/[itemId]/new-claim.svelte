@@ -1,9 +1,10 @@
 <script lang="ts">
 import user from '../../../authn/user'
-import { Breadcrumb, ClaimForm } from '../../../components'
-import { loading } from '../../../components/progress'
-import { claims, initialized, createClaim, createClaimItem, loadClaims, Claim, submitClaim } from '../../../data/claims'
-import { itemsByPolicyId, loadItems, PolicyItem } from '../../../data/items'
+import { Breadcrumb, ClaimForm } from 'components'
+import { loading } from 'components/progress'
+import { claims, initialized, createClaim, createClaimItem, loadClaims, Claim, submitClaim } from 'data/claims'
+import { itemsByPolicyId, loadItems, PolicyItem } from 'data/items'
+import * as routes from 'helpers/routes'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
@@ -12,16 +13,16 @@ export let itemId: string
 const breadcrumbLinks = [
   {
     name: 'Items',
-    url: '/items',
+    url: routes.ITEMS,
   },
   // TODO: make this fetch the name of the item and have that as the name
   {
     name: 'This Item',
-    url: `/items/${itemId}`,
+    url: routes.item(itemId),
   },
   {
     name: 'New Claim',
-    url: `/items/${itemId}/new-claim`,
+    url: routes.itemNewClaim(itemId),
   },
 ]
 
@@ -51,12 +52,12 @@ const createClaimAndItem = async (event: CustomEvent): Promise<string> => {
 }
 const onSaveForLater = async (event: CustomEvent) => {
   const claimId = await createClaimAndItem(event)
-  $goto(`/customer/claims/${claimId}`)
+  $goto(routes.customerClaim(claimId))
 }
 const onSubmit = async (event: CustomEvent) => {
   const claimId = await createClaimAndItem(event)
   await submitClaim(claimId)
-  $goto(`/customer/claims/${claimId}`)
+  $goto(routes.customerClaim(claimId))
 }
 </script>
 
@@ -68,12 +69,12 @@ const onSubmit = async (event: CustomEvent) => {
     <p>Loading...</p>
   {:else if !item.id}
     <p>
-      We could not find that item. Please <a href="/items">go back</a> and select an item from the list.
+      We could not find that item. Please <a href={routes.ITEMS}>go back</a> and select an item from the list.
     </p>
   {:else if claimExists}
     <p>
       It looks like there is already a claim for that item. Please
-      <a href="/claims/{existingClaim.id}">click here</a> to see its details.
+      <a href={routes.customerClaim(existingClaim.id)}>click here</a> to see its details.
     </p>
   {/if}
 

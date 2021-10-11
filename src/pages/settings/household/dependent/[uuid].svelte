@@ -1,11 +1,12 @@
 <script lang="ts">
 import user from '../../../../authn/user'
-import { DependentForm } from '../../../../components'
-import { deleteDependent, dependentsByPolicyId, loadDependents, updateDependent } from '../../../../data/dependents'
+import { DependentForm } from 'components'
+import { deleteDependent, dependentsByPolicyId, loadDependents, updateDependent } from 'data/dependents'
+import { SETTINGS_HOUSEHOLD } from 'helpers/routes'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
-export let uuid
+export let uuid: string
 
 $: policyId = $user.policy_id
 $: if (policyId) {
@@ -16,17 +17,17 @@ $: dependents = $dependentsByPolicyId[policyId] || []
 $: dependent = dependents.find((d) => uuid && d.id === uuid)
 
 const onCancel = () => {
-  $goto('/settings/household')
+  $goto(SETTINGS_HOUSEHOLD)
 }
-const onRemove = async (event) => {
+const onRemove = async (event: CustomEvent<string>) => {
   const dependentId = event.detail
   await deleteDependent(policyId, dependentId)
-  $goto('/settings/household')
+  $goto(SETTINGS_HOUSEHOLD)
 }
-const onSubmit = async (event) => {
+const onSubmit = async (event: CustomEvent<FormData>) => {
   const formData = event.detail
   await updateDependent(policyId, formData.id, formData)
-  $goto('/settings/household')
+  $goto(SETTINGS_HOUSEHOLD)
 }
 </script>
 

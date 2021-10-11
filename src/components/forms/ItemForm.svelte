@@ -81,13 +81,7 @@ const getFormData = () => {
 }
 
 const onAccountablePersonSelectPopulated = () => {
-  if (item.accountable_user_id) {
-    initialAccountablePersonId = item.accountable_user_id
-  } else if (item.accountable_dependent_id) {
-    initialAccountablePersonId = item.accountable_dependent_id
-  } else {
-    initialAccountablePersonId = $user.id
-  }
+  initialAccountablePersonId = item.accountable_user_id || item.accountable_dependent_id || $user.id
 }
 
 const onCategorySelectPopulated = () => {

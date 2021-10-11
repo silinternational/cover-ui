@@ -25,9 +25,6 @@ $: notificationOptions = [
 
 $: 0 && ($policies.length || loadPolicies())
 
-const updateNotificationSelection = () => {
-  console.log('updated updateNotificationSelection')
-}
 const updateCustomEmail = async () => {
   assertEmailAddress(email_override, 'Please enter a valid email address')
 

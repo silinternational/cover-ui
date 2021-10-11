@@ -1,12 +1,12 @@
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import resolve from '@rollup/plugin-node-resolve'
+import includePaths from 'rollup-plugin-includepaths'
 import dotenv from 'rollup-plugin-dotenv'
 import livereload from 'rollup-plugin-livereload'
 import postcss from 'rollup-plugin-postcss'
 import svelte from 'rollup-plugin-svelte'
 import { terser } from 'rollup-plugin-terser'
-import { generateSW } from 'rollup-plugin-workbox'
 import routify from '@roxi/routify/plugins/rollup'
 import autoPreprocess from 'svelte-preprocess'
 import typescript from '@rollup/plugin-typescript'
@@ -28,7 +28,7 @@ export default {
 			emitCss: true, // give component style to postcss() for processing
 			preprocess: autoPreprocess(),
 		}),
-		
+
 		typescript({ sourceMap: !production }),
 		nodePolyfills(),
 
@@ -40,6 +40,12 @@ export default {
 		resolve({
 			browser: true,
 			dedupe: ['svelte'],
+		}),
+		includePaths({
+			include: {},
+			paths: ['src/components', 'src/data', 'src/helpers'],
+			external: [],
+			extensions: ['.js', '.ts']
 		}),
 		commonjs(),
 

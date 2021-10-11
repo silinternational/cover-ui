@@ -32,3 +32,10 @@ body {
 .break-word {
   overflow-wrap: break-word;
 }
+
+.header {
+  font-weight: var(--mdc-typography-bold-font-weight);
+  font-size: 1.17em;
+  display: block;
+  margin-bottom: 1rem;
+}

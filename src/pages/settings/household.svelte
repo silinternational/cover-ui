@@ -1,11 +1,12 @@
 <script lang="ts">
 import user from '../../authn/user'
-import { Breadcrumb, SearchableSelect } from '../../components'
-import { dependentsByPolicyId, loadDependents } from '../../data/dependents'
-import { policies, updatePolicy, init, affiliations, Policy } from '../../data/policies'
-import { loadMembersOfPolicy, membersByPolicyId } from '../../data/policy-members'
+import { Breadcrumb, SearchableSelect } from 'components'
+import { dependentsByPolicyId, loadDependents } from 'data/dependents'
+import { policies, updatePolicy, init, affiliations, Policy } from 'data/policies'
+import { loadMembersOfPolicy, membersByPolicyId, PolicyMember } from 'data/policy-members'
+import { householdSettingsDependent } from 'helpers/routes'
 import { goto } from '@roxi/routify'
-import { Button, TextField, IconButton, Page, Snackbar, setNotice } from '@silintl/ui-components'
+import { Button, TextField, IconButton, Page, setNotice } from '@silintl/ui-components'
 
 const policyData = {} as Policy
 
@@ -58,7 +59,7 @@ const updateCostCenter = async () => {
   }
 }
 
-const updateAffiliation = async (e) => {
+const updateAffiliation = async (e: CustomEvent<string>) => {
   const choice = e.detail
 
   if (choice !== policyData.entity_code) {
@@ -68,7 +69,7 @@ const updateAffiliation = async (e) => {
   }
 }
 
-const callUpdatePolicy = async (id: string, costCenter: string = undefined, affiliation: string = undefined) => {
+const callUpdatePolicy = async (id: string, costCenter?: string, affiliation?: string) => {
   policyData.household_id = id
   affiliation && (policyData.entity_code = affiliation)
   costCenter && (policyData.cost_center = costCenter)
@@ -76,12 +77,17 @@ const callUpdatePolicy = async (id: string, costCenter: string = undefined, affi
   await updatePolicy(policyId, policyData)
 }
 
-const isIdValid = (sanitizedId) => sanitizedId.length && sanitizedId.split('').every((digit) => /[0-9]/.test(digit))
-const edit = (id) => $goto(`/settings/household/dependent/${id}`)
-const isYou = (householdMember) => householdMember.id === $user.id
+const isIdValid = (sanitizedId: string) =>
+  sanitizedId.length && sanitizedId.split('').every((digit) => /[0-9]/.test(digit))
+const edit = (id: string) => $goto(householdSettingsDependent(id))
+const isYou = (householdMember: PolicyMember) => householdMember.id === $user.id
 </script>
 
 <style>
+p {
+  margin-top: 2rem;
+}
+
 .accountable-people-list {
   counter-reset: item;
   list-style-type: none;
@@ -113,29 +119,31 @@ const isYou = (householdMember) => householdMember.id === $user.id
 <Page>
   <Breadcrumb />
 
-  <h3 class="ml-1 mt-3">Household ID<span class="required">*</span></h3>
   <p>
+    <span class="header">Household ID<span class="required">*</span></span>
     <TextField placeholder={'1234567'} autofocus bind:value={householdId} on:blur={updateHouseholdId} />
   </p>
 
   {#if policy.type === 'Corporate'}
-    <h3 class="ml-1 mt-3">Affiliation<span class="required">*</span></h3>
-    <SearchableSelect
-      options={$affiliations}
-      choice={affiliationChoice}
-      {placeholder}
-      padding={'16px'}
-      on:chosen={updateAffiliation}
-    />
-
-    <h3 class="ml-1 mt-3">Cost center<span class="required">*</span></h3>
     <p>
+      <span class="header">Affiliation<span class="required">*</span></span>
+      <SearchableSelect
+        options={$affiliations}
+        choice={affiliationChoice}
+        {placeholder}
+        padding={'16px'}
+        on:chosen={updateAffiliation}
+      />
+    </p>
+    <p>
+      <span class="header">Cost center<span class="required">*</span></span>
       <TextField placeholder={'1234567'} bind:value={costCenter} on:blur={updateCostCenter} />
     </p>
   {/if}
 
-  <h3 class="mt-3">Accountable people</h3>
-
+  <p>
+    <span class="header">Accountable people</span>
+  </p>
   <ul class="accountable-people-list">
     {#each householdMembers as householdMember}
       <li class="accountable-people-list-item">
@@ -158,6 +166,4 @@ const isYou = (householdMember) => householdMember.id === $user.id
     {/each}
   </ul>
   <Button prependIcon="add" url="household/dependent" outlined>Add dependent</Button>
-
-  <Snackbar />
 </Page>

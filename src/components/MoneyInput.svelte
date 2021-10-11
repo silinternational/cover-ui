@@ -56,7 +56,7 @@ const focus = (node) => autofocus && node.focus()
     step="0.01"
     type="number"
     min="0"
-    class="mdc-text-field__input NotoSans m-l-24px"
+    class="mdc-text-field__input m-l-24px"
     aria-labelledby={labelID}
     bind:value
     use:focus

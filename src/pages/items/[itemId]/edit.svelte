@@ -1,10 +1,11 @@
 <script lang="ts">
 import user from '../../../authn/user'
-import { Breadcrumb, ItemBanner, ItemForm } from '../../../components'
-import { loadDependents } from '../../../data/dependents'
-import { loadMembersOfPolicy } from '../../../data/policy-members'
-import { loading } from '../../../components/progress'
-import { itemsByPolicyId, loadItems, PolicyItem, submitItem, updateItem } from '../../../data/items'
+import { Breadcrumb, ItemBanner, ItemForm } from 'components'
+import { loadDependents } from 'data/dependents'
+import { loadMembersOfPolicy } from 'data/policy-members'
+import { loading } from 'components/progress'
+import { itemsByPolicyId, loadItems, PolicyItem, submitItem, updateItem } from 'data/items'
+import { HOME, ITEMS, item as itemRoute, itemEdit } from 'helpers/routes'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
@@ -21,22 +22,22 @@ $: item = items.find((anItem) => anItem.id === itemId) || ({} as PolicyItem)
 $: itemName = item.name || ''
 
 // Dynamic breadcrumbs data:
-const itemsBreadcrumb = { name: 'Items', url: '/items' }
-$: thisItemBreadcrumb = { name: itemName || 'This item', url: `/items/${itemId}` }
-const editBreadcrumb = { name: 'Edit', url: `/items/${itemId}/edit` }
+const itemsBreadcrumb = { name: 'Items', url: ITEMS }
+$: thisItemBreadcrumb = { name: itemName || 'This item', url: itemRoute(itemId) }
+const editBreadcrumb = { name: 'Edit', url: itemEdit(itemId) }
 $: breadcrumbLinks = [itemsBreadcrumb, thisItemBreadcrumb, editBreadcrumb]
 
-const onSubmit = async (event) => {
+const onSubmit = async (event: CustomEvent) => {
   await updateItem(policyId, itemId, event.detail)
   await submitItem(policyId, itemId)
 
-  $goto(`/items/${itemId}`)
+  $goto(itemRoute(itemId))
 }
 
-const onSaveForLater = async (event) => {
+const onSaveForLater = async (event: CustomEvent) => {
   await updateItem(policyId, itemId, event.detail)
 
-  $goto('/home')
+  $goto(HOME)
 }
 </script>
 
@@ -44,7 +45,7 @@ const onSaveForLater = async (event) => {
   {#if $loading}
     Loading...
   {:else}
-    We could not find that item. Please <a href="/items">go back</a> and select an item from the list.
+    We could not find that item. Please <a href={ITEMS}>go back</a> and select an item from the list.
   {/if}
 {:else}
   <!-- @todo Handle situations where the user isn't allowed to edit this item (if any). -->

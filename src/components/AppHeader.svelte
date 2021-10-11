@@ -1,21 +1,20 @@
 <script lang="ts">
-import Error from './Error.svelte'
+import * as routes from 'helpers/routes'
 import Progress from './progress/Progress.svelte'
-import { Badge, IconButton, isAboveMobile } from '@silintl/ui-components'
+import { Badge, IconButton, isAboveMobile, Menu, MenuItem } from '@silintl/ui-components'
 import { createEventDispatcher, onMount } from 'svelte'
-import { Menu } from './index'
 import user from '../authn/user'
 
-const menuItems = [
+const menuItems: MenuItem[] = [
   {
     icon: 'settings',
     label: 'User settings',
-    url: '/settings/personal',
+    url: routes.SETTINGS_PERSONAL,
   },
   {
     icon: 'logout',
     label: 'Sign out',
-    url: '/logout',
+    url: routes.LOGOUT,
   },
 ]
 
@@ -76,5 +75,3 @@ img {
 </header>
 
 <Progress />
-
-<Error />

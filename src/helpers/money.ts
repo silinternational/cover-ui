@@ -1,11 +1,11 @@
-export const convertToCents = (dollars) => {
+export const convertToCents = (dollars: number): number => {
   if (dollars === undefined || dollars === null) {
-    return null
+    return null // TODO: revisit this logic. it should probably return 0
   }
   return Math.round(dollars * 100) // Round to avoid #'s like 7001.000000000001
 }
 
-export const formatMoney = (cents) => {
+export const formatMoney = (cents: number): string => {
   if (!cents || !Number.isFinite(+cents)) {
     return ''
   }

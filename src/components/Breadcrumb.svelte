@@ -1,11 +1,12 @@
 <script lang="ts">
 import { throwError } from '../error'
+import { HOME } from 'helpers/routes'
 import { goto, url } from '@roxi/routify'
 
-export let links = []
+export let links: { url?: string; name?: string }[] = []
 export let hasHome = true
 
-let urls = []
+let urls: { url: string; name: string }[] = []
 if (links.length === 0) {
   let path = $url().split('/')
 
@@ -24,9 +25,9 @@ if (links.length === 0) {
   links.forEach((val) => {
     if (!val.url || !val.name) {
       throwError('Error: no url or name field for provided links array')
+    } else {
+      urls.push({ url: val.url, name: val.name })
     }
-
-    urls.push({ url: val.url, name: val.name })
   })
 }
 </script>
@@ -50,7 +51,7 @@ a {
 <div class="flex text-align-center align-items-center {$$props.class}">
   <!-- svelte-ignore a11y-invalid-attribute -->
   {#if hasHome}
-    <a href="/home" class="capitalize"
+    <a href={HOME} class="capitalize"
       ><i class="material-icons mdc-list-item__graphic money-icon breadcrumb-icon breadcrumb-home" aria-hidden="true"
         >home</i
       ></a

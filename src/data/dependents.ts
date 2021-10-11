@@ -2,7 +2,7 @@ import { CREATE, GET } from '.'
 import { writable } from 'svelte/store'
 
 export type PolicyDependent = {
-  child_birth_year: number
+  child_birth_year?: number
   id: string
   location: string
   name: string

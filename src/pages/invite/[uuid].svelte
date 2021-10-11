@@ -1,6 +1,6 @@
 <script lang="ts">
 import { login } from '../../authn'
-import { loading } from '../../components/progress'
+import { loading } from 'components/progress'
 import { Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 

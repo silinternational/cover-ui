@@ -1,6 +1,6 @@
 import { route } from '@roxi/routify'
 
-const GA_MEASUREMENT_ID = process.env.GA_MEASUREMENT_ID
+const GA_MEASUREMENT_ID = process.env.GA_MEASUREMENT_ID || ''
 
 init()
 
@@ -32,7 +32,7 @@ function loadLib() {
   document.head.appendChild(script)
 }
 
-function trackPageView(page) {
+function trackPageView(page: any) {
   if (page) {
     // https://developers.google.com/analytics/devguides/collection/gtagjs/pages#default_behavior
     gtag('event', 'page_view', {
@@ -42,8 +42,8 @@ function trackPageView(page) {
 }
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/events
-function trackEvent(eventName, eventParameters) {
+function trackEvent(eventName: string, eventParameters: any) {
   gtag('event', eventName, eventParameters)
 }
 
-export const notFound = () => trackEvent('Error', 'Page not found')
+export const notFound = (): void => trackEvent('Error', 'Page not found')

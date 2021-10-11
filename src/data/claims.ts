@@ -1,5 +1,5 @@
 import { CREATE, GET, UPDATE } from '.'
-import { convertToCents } from '../helpers/money'
+import { convertToCents } from 'helpers/money'
 import type { PolicyItem } from './items'
 import { writable } from 'svelte/store'
 

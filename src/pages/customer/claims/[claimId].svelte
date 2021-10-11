@@ -11,10 +11,11 @@ import {
   FilePreview,
   MoneyInput,
   Row,
-} from '../../../components'
-import { formatDate } from '../../../components/dates'
-import { loading } from '../../../components/progress'
-import { upload } from '../../../data'
+} from 'components'
+import { formatDate } from 'components/dates'
+import { loading } from 'components/progress'
+import { upload } from 'data'
+import { getAccountablePerson, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
 import {
   denyClaim,
   loadClaims,
@@ -31,9 +32,13 @@ import {
   preapproveClaim,
   requestRevision,
   submitClaim,
-} from '../../../data/claims'
-import { loadItems, itemsByPolicyId, PolicyItem } from '../../../data/items'
-import { formatMoney } from '../../../helpers/money'
+} from 'data/claims'
+import { dependentsByPolicyId, loadDependents } from 'data/dependents'
+import { loadItems, itemsByPolicyId, PolicyItem } from 'data/items'
+import { loadPolicies, policies, Policy } from 'data/policies'
+import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
+import { formatMoney } from 'helpers/money'
+import { customerClaimEdit, CUSTOMER_CLAIMS, customerClaim } from 'helpers/routes'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
@@ -41,10 +46,11 @@ export let claimId: string
 
 const updatedClaimItemData = {} as any
 
-let showImg = false
+let showImg: boolean = false
 let repairOrReplacementCost: number
-let uploading = false
+let uploading: boolean = false
 let previewFile = {} as ClaimFile
+let householdId: string = ''
 
 $: $initialized || loadClaims()
 
@@ -54,6 +60,25 @@ $: items = $itemsByPolicyId[claim.policy_id] || []
 $: claim.policy_id && loadItems(claim.policy_id)
 $: item = items.find((itm) => itm.id === claimItem.item_id) || ({} as PolicyItem)
 
+// Accountable persons
+$: policyId = $user.policy_id as string
+
+$: policyId && loadDependents(policyId)
+$: dependents = $dependentsByPolicyId[policyId] || []
+$: dependentOptions = getDependentOptions(dependents)
+
+$: policyId && loadMembersOfPolicy(policyId)
+$: policyMembers = $membersByPolicyId[policyId] || []
+$: policyMemberOptions = getPolicyMemberOptions(policyMembers)
+
+$: accountablePersons = [...policyMemberOptions, ...dependentOptions]
+$: accountablePersonName = getAccountablePerson(item, accountablePersons)?.name
+
+// policies
+$: policyId && loadPolicies()
+$: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
+$: householdId = policy.household_id ? policy.household_id : ''
+
 $: incidentDate = formatDate(claim.incident_date)
 $: claimStatus = (claim.status || '') as ClaimStatus
 $: claimStatus === 'Draft' && $user.app_role === 'User' && editClaim()
@@ -62,7 +87,8 @@ $: needsRepairReceipt = needsReceipt && payoutOption === 'Repair'
 $: needsReplaceReceipt = needsReceipt && payoutOption === 'Replacement'
 $: needsReceipt = claimStatus === 'Receipt'
 $: needsEvidence = isEvidenceNeeded(claimItem, claimStatus)
-$: needsFile = (needsReceipt || needsEvidence) as boolean
+$: needsFile = needsReceipt || needsEvidence
+$: noFilesUploaded = !claim.claim_files?.length
 $: filePurpose = getFilePurpose(claimItem, needsReceipt)
 $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType) as string
 $: moneyFormLabel = needsRepairReceipt ? 'Actual cost of repair' : 'Actual cost of replacement'
@@ -72,8 +98,8 @@ $: maximumPayout = determineMaxPayout(payoutOption, claimItem, item.coverage_amo
 
 // Dynamic breadcrumbs data:
 $: claimName = `${item.name} (${claim.reference_number})`
-const claimsBreadcrumb = { name: 'Claims', url: '/customer/claims' }
-$: thisClaimBreadcrumb = { name: claimName || 'This item', url: `/customer/claims/${claimId}` }
+const claimsBreadcrumb = { name: 'Claims', url: CUSTOMER_CLAIMS }
+$: thisClaimBreadcrumb = { name: claimName || 'This item', url: customerClaim(claimId) }
 $: breadcrumbLinks = [claimsBreadcrumb, thisClaimBreadcrumb]
 
 const getFilePurpose = (claimItem: ClaimItem, needsReceipt: boolean): ClaimFilePurpose => {
@@ -82,29 +108,29 @@ const getFilePurpose = (claimItem: ClaimItem, needsReceipt: boolean): ClaimFileP
   if (claimItem.fmv) return 'Evidence of FMV'
 }
 
-const getUploadLabel = (claimItem: ClaimItem, needsReceipt: boolean, receiptType) => {
+const getUploadLabel = (claimItem: ClaimItem, needsReceipt: boolean, receiptType: string) => {
   if (needsReceipt) return `a ${receiptType} item receipt`
   if (claimItem.repair_estimate) return 'a repair estimate'
   if (claimItem.fmv) return 'evidence of fair market value'
 }
 
-const editClaim = () => $goto(`/customer/claims/${claimId}/edit`)
+const editClaim = () => $goto(customerClaimEdit(claimId))
 
 const onPreapprove = async () => await preapproveClaim(claimId)
 
-const onAskForChanges = async (event) => {
+const onAskForChanges = async (event: CustomEvent<string>) => {
   const message = event.detail
   await requestRevision(claimId, message)
 }
 
-const onDenyClaim = async (event) => {
+const onDenyClaim = async (event: CustomEvent<string>) => {
   const message = event.detail
   await denyClaim(claimId, message)
 }
 
 const onSubmit = async () => await submitClaim(claimId)
 
-const onPreview = (event) => {
+const onPreview = (event: CustomEvent<string>) => {
   showImg = true
 
   previewFile = claimFiles.find((file) => file.id === event.detail)
@@ -122,7 +148,7 @@ const onBlur = () => {
   claimItem.id && updateClaimItem(claim.id, claimItem.id, updatedClaimItemData)
 }
 
-async function onUpload(event) {
+async function onUpload(event: CustomEvent<FormData>) {
   try {
     uploading = true
 
@@ -136,7 +162,7 @@ async function onUpload(event) {
   }
 }
 
-function onDeleted(event) {
+function onDeleted(event: CustomEvent<string>) {
   const id = event.detail
 
   console.log('deleting file: ' + id) //TODO use endpoint when avialable
@@ -163,7 +189,7 @@ function onDeleted(event) {
       {#if $loading}
         Loading...
       {:else}
-        We could not find that claim. Please <a href="/claims">go back</a> and select a claim from the list.
+        We could not find that claim. Please <a href={CUSTOMER_CLAIMS}>go back</a> and select a claim from the list.
       {/if}
     </Row>
   {:else}
@@ -171,20 +197,35 @@ function onDeleted(event) {
       <Breadcrumb links={breadcrumbLinks} />
     </Row>
     <Row cols="3">
-      <h3 class="mdc-typography--headline5 break-word my-0">{item.name || 'Name unavailable'}</h3>
-      <div class="left-detail">Claim {claim.reference_number || '########'}</div>
+      <h2 class="break-word my-1">{item.name || ''}</h2>
+      <b>Covered value</b>
+      <div>{formatMoney(item.coverage_amount)}</div>
+      <br />
+      <b>{accountablePersonName || ''}</b>
+      <br />
+      <div class="left-detail">
+        <b>Household ID</b>
+        <div>{householdId}</div>
+      </div>
       <Banner
         background="var(--mdc-theme-status-info-bg)"
         color="var(--mdc-theme-status-info)"
-        class="max-content-width"
+        class="max-content-width mt-1"
       >
         <b>{claim.incident_type || ''}</b>
       </Banner>
-      <div class="left-detail">{incidentDate || ''}</div>
+      <div class="left-detail">
+        <b>Claim ID</b>
+        <div>{claim.reference_number || '########'}</div>
+      </div>
+      <div class="left-detail">
+        <b>Incident</b>
+        <div>{incidentDate || ''}</div>
+      </div>
     </Row>
     <Row cols="9">
       <ClaimBanner {claimStatus}>{claim.status_reason || ''}</ClaimBanner>
-      {#if needsFile}
+      {#if needsFile && noFilesUploaded}
         <ClaimBanner claimStatus={`${claimStatus}Secondary`}>
           Upload {uploadLabel} to get reimbursed.
         </ClaimBanner>

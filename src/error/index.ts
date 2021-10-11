@@ -1,3 +1,4 @@
+import { setNotice } from '@silintl/ui-components'
 import { writable } from 'svelte/store'
 
 export type CustomError = {
@@ -8,7 +9,11 @@ export type CustomError = {
 
 export const error = writable<CustomError>({})
 export const throwError = (message = '', status = 0, statusText = ''): void => {
-  throw set({ status, statusText, message })
+  const error = set({ status, statusText, message })
+  if (error.message) {
+    setNotice(error.message)
+  }
+  throw error
 }
 
 export const dismiss = (): CustomError => set({})

@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store'
-import { GET, UPDATE } from '../data'
+import { GET, UPDATE } from 'data'
 
 type UserAppRole = 'User' | 'Steward' | 'Signator' | 'Admin'
 
@@ -30,12 +30,12 @@ const user = writable<User>({} as User)
 
 export default user
 
-export async function loadUser() {
+export async function loadUser(): Promise<void> {
   const userData = await GET<User>('users/me')
   user.set(userData)
 }
 
-export async function updateUser(data: User) {
+export async function updateUser(data: User): Promise<void> {
   // TODO Uncomment when update user enpoint is available
   // const updatedUser = await UPDATE<User>(`users/${data.id}`, data)
   // user.set(updatedUser);
@@ -43,7 +43,7 @@ export async function updateUser(data: User) {
   user.set(data)
 }
 
-export const clear = () => {
+export const clear = (): void => {
   user.set({} as User)
 }
 

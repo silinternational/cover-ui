@@ -1,9 +1,10 @@
 <script lang="ts">
 import user, { updateUser } from '../../authn/user'
-import { Breadcrumb, FileDropArea, RadioOptions } from '../../components'
-import { upload } from '../../data'
-import { policies, init as loadPolicies } from '../../data/policies'
-import { Button, Checkbox, TextField, Page, Snackbar, setNotice } from '@silintl/ui-components'
+import { Breadcrumb, FileDropArea, RadioOptions } from 'components'
+import { upload } from 'data'
+import { policies, init as loadPolicies } from 'data/policies'
+import { assertEmailAddress } from '../../validation/assertions'
+import { Button, Checkbox, TextField, Page, setNotice } from '@silintl/ui-components'
 import Croppie from 'croppie'
 import 'croppie/croppie.css'
 
@@ -28,15 +29,13 @@ const updateNotificationSelection = () => {
   console.log('updated updateNotificationSelection')
 }
 const updateCustomEmail = async () => {
-  if (isEmailValid(email_override)) {
-    await updateUser({
-      ...$user,
-      email_override,
-    })
-    setNotice('Your notification email has been saved')
-  } else {
-    setNotice('Please enter a valid email address')
-  }
+  assertEmailAddress(email_override, 'Please enter a valid email address')
+
+  await updateUser({
+    ...$user,
+    email_override,
+  })
+  setNotice('Your notification email has been saved')
 }
 
 const updateLocation = async () => {
@@ -117,11 +116,14 @@ async function onUpload() {
   }
 }
 
-const isEmailValid = (email: string) => email.includes('@') // bare basic validation
 const isLocationValid = (location: string) => !!location
 </script>
 
 <style>
+p {
+  margin-top: 2rem;
+}
+
 .required {
   color: var(--mdc-theme-status-error);
 }
@@ -136,22 +138,22 @@ const isLocationValid = (location: string) => !!location
 <Page>
   <Breadcrumb />
 
-  <h3 class="ml-1 mt-3">Notification email</h3>
   <p>
+    <span class="header">Notification email</span>
     <RadioOptions name="notificationEmail" options={notificationOptions} bind:value={notification_email} />
   </p>
   {#if notification_email === NOTIFICATION_OPTION_CUSTOM}
     <TextField placeholder={'Custom email'} bind:value={email_override} on:blur={updateCustomEmail} />
   {/if}
 
-  <h3 class="ml-1 mt-3">Location<span class="required">*</span></h3>
   <p>
+    <span class="header">Location<span class="required">*</span></span>
     <TextField placeholder={'Enter country'} bind:value={location} on:blur={updateLocation} />
   </p>
 
   {#if 0}
-    <h3 class="ml-1 mt-3">Receive notification emails for</h3>
     <p>
+      <span class="header">Receive notification emails for</span>
       {#each $policies as policy (policy.id)}
         <Checkbox
           label={policy.type}
@@ -163,8 +165,8 @@ const isLocationValid = (location: string) => !!location
     </p>
   {/if}
 
-  <h3 class="ml-1 mt-3">Profile picture</h3>
   <p>
+    <span class="header">Profile picture</span>
     <FileDropArea mimeType="image/*" class="w-50 mt-10px" raised {uploading} on:upload={onFileSelect} />
   </p>
 
@@ -174,5 +176,4 @@ const isLocationValid = (location: string) => !!location
   {#if croppie}
     <Button raised on:click={onUpload}>Save</Button>
   {/if}
-  <Snackbar />
 </Page>

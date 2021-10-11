@@ -1,5 +1,5 @@
-import type { ClaimIncidentType } from '../data/claim-incident-types'
-import type { PayoutOption, ClaimItem, ClaimStatus } from '../data/claims'
+import type { ClaimIncidentType } from 'data/claim-incident-types'
+import type { PayoutOption, ClaimItem, ClaimStatus } from 'data/claims'
 
 export const DEDUCTIBLE = 0.05
 export const LOSS_REASON_EVACUATION = 'Evacuation'

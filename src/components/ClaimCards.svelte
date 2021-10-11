@@ -2,8 +2,7 @@
 import type { AccountablePersonOptions } from '../data/accountablePersons'
 import type { Claim } from '../data/claims'
 import type { PolicyItem } from '../data/items'
-
-import { ClaimCard } from './index'
+import ClaimCard from './ClaimCard.svelte'
 
 export let claims: Claim[]
 export let items: PolicyItem[]

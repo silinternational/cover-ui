@@ -1,23 +1,23 @@
 <script lang="ts">
-import { Menu, ClaimCards, Row } from '../../../components/'
-import { isLoadingById } from '../../../components/progress/index'
-import { claims, loadClaims } from '../../../data/claims'
+import { ClaimCards, Row } from 'components'
+import { isLoadingById } from 'components/progress'
+import { claims, loadClaims } from 'data/claims'
 import {
   AccountablePersonOptions,
   getAccountablePerson,
   getDependentOptions,
   getPolicyMemberOptions,
-} from '../../../data/accountablePersons'
-import { dependentsByPolicyId, loadDependents } from '../../../data/dependents'
-import { itemsByPolicyId, loadItems } from '../../../data/items'
-import { loadMembersOfPolicy, membersByPolicyId } from '../../../data/policy-members'
-import { formatMoney } from '../../../helpers/money'
+} from 'data/accountablePersons'
+import { dependentsByPolicyId, loadDependents } from 'data/dependents'
+import { itemsByPolicyId, loadItems } from 'data/items'
+import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
+import { formatMoney } from 'helpers/money'
+import * as routes from 'helpers/routes'
 import { goto } from '@roxi/routify'
-import { Checkbox, Page, Datatable } from '@silintl/ui-components'
+import { Page, Datatable, Menu } from '@silintl/ui-components'
 
 export let policyId: string
 
-let selected: string[] = []
 let goToItemDetails = true
 let shownMenus: { [name: string]: boolean } = {}
 
@@ -38,17 +38,19 @@ $: accountablePersons = [...policyMemberOptions, ...dependentOptions] as Account
 const getMenuItems = (id: string) => [
   {
     label: 'View Details',
-    url: `/items/${id}`,
+    url: routes.item(id),
   },
   {
     label: 'Edit',
-    url: `/items/${id}/edit`,
+    url: routes.itemEdit(id),
   },
   {
     label: 'Remove Coverage',
-    url: `/items/${id}/remove-coverage`,
+    url: routes.itemRemoveCoverage(id),
   },
 ]
+
+const getStatusClass = (status: string) => (status === 'Draft' ? 'mdc-theme--primary mdc-bold-font' : '')
 
 // TODO: Change this to dispatch events, leaving URL changes to the actual page.
 const redirect = (url: string) => {
@@ -58,12 +60,7 @@ const redirect = (url: string) => {
     goToItemDetails = true
   }
 }
-const handleChecked = (id: string) => {
-  selected.push(id)
-}
-const handleUnchecked = (id: string) => {
-  selected = selected.filter((val) => val != id)
-}
+
 const handleMoreVertClick = (id: string) => {
   goToItemDetails = false
   shownMenus[id] = shownMenus[id] !== true
@@ -92,7 +89,7 @@ const onGotoClaim = (event) => $goto(`/customer/claims/${event.detail}`)
 }
 </style>
 
-<Page loading={isLoadingById(policyId)} layout="grid">
+<Page layout="grid">
   <Row cols={'12'}>
     <ClaimCards claims={$claims} {items} {accountablePersons} on:goto-claim={onGotoClaim} />
   </Row>
@@ -110,22 +107,20 @@ const onGotoClaim = (event) => $goto(`/customer/claims/${event.detail}`)
           <Datatable.Header.Item>Accountable Person</Datatable.Header.Item>
           <Datatable.Header.Item>Cost</Datatable.Header.Item>
           <Datatable.Header.Item>Premium</Datatable.Header.Item>
-          <Datatable.Header.Item>Type</Datatable.Header.Item>
         </Datatable.Header>
         <Datatable.Data>
           {#each items as item (item.id)}
-            <Datatable.Data.Row on:click={() => redirect(`/items/${item.id}`)} clickable>
-              <Datatable.Data.Row.Item>
-                <div on:click={() => (goToItemDetails = false)}>
-                  <Checkbox on:checked={() => handleChecked(item.id)} on:unchecked={() => handleUnchecked(item.id)} />
-                </div>
-              </Datatable.Data.Row.Item>
+            <Datatable.Data.Row on:click={() => redirect(routes.item(item.id))} clickable>
+              <Datatable.Data.Row.Item />
               <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item>{item.coverage_status || ''}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item>{getAccountablePerson(item, accountablePersons).name}</Datatable.Data.Row.Item>
+              <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}
+                >{item.coverage_status || ''}</Datatable.Data.Row.Item
+              >
+              <Datatable.Data.Row.Item
+                >{getAccountablePerson(item, accountablePersons).name || ''}</Datatable.Data.Row.Item
+              >
               <Datatable.Data.Row.Item>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item>{item.risk_category?.name || ''}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>
                 <svg class="home-table-more-vert" viewBox="0 0 30 30" on:click={() => handleMoreVertClick(item.id)}>
                   <path

@@ -1,19 +1,24 @@
 <script lang="ts">
 import RadioOptions from '../RadioOptions.svelte'
+import { assertHas } from '../../validation/assertions'
+import type { PolicyDependent } from 'data/dependents'
 import { Button, Form, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
-export let dependent = {}
+export let dependent: PolicyDependent = {}
+export let dependents: PolicyDependent[] = []
 
 const dispatch = createEventDispatcher()
 const relationshipOptions = [
   {
     label: 'Spouse',
     value: 'Spouse',
+    disabled: false,
   },
   {
     label: 'Child',
     value: 'Child',
+    disabled: false,
   },
 ]
 
@@ -25,16 +30,31 @@ let formData = {
   childBirthYear: dependent.child_birth_year || undefined,
 }
 
-const onCancel = (event) => {
+$: alreadyHasSpouse = !!dependents
+  .filter((dep) => dep.id !== dependent.id)
+  .find((dependent) => dependent.relationship === 'Spouse')
+
+$: alreadyHasSpouse && (relationshipOptions[0].disabled = true)
+
+const validate = (isChild: boolean): boolean | void => {
+  assertHas(formData.name, 'Please specify a name')
+  assertHas(formData.location, 'Please specify a location')
+  assertHas(formData.relationship, 'Please select "Spouse" or "Child"')
+  isChild && assertHas(formData.childBirthYear, "Please specify your child's birthyear")
+  return true
+}
+const onCancel = (event: Event) => {
   event.preventDefault()
   dispatch('cancel')
 }
-const onRemove = (event) => {
+const onRemove = (event: Event) => {
   event.preventDefault()
   dispatch('remove', formData.id)
 }
 const onSubmit = () => {
-  if (formData.relationship !== 'Child') {
+  const isChild: boolean = formData.relationship === 'Child'
+  validate(isChild)
+  if (!isChild) {
     delete formData.childBirthYear
   }
   dispatch('submit', formData)

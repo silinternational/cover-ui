@@ -1,5 +1,6 @@
 <script lang="ts">
-import { initialized, loadPolicies, policies } from '../data/policies'
+import { initialized, loadPolicies, policies } from 'data/policies'
+import { policy as policyRoute } from 'helpers/routes'
 import { goto } from '@roxi/routify'
 import { Datatable, Page } from '@silintl/ui-components'
 
@@ -26,7 +27,7 @@ $: $initialized || loadPolicies()
     </Datatable.Header>
     <Datatable.Data>
       {#each $policies as policy (policy.id)}
-        <Datatable.Data.Row on:click={() => $goto(`/policies/${policy.id}`)} clickable>
+        <Datatable.Data.Row on:click={() => $goto(policyRoute(policy.id))} clickable>
           <Datatable.Data.Row.Item>
             {#if policy.type === 'Household'}
               <span class="material-icons">family_restroom</span>

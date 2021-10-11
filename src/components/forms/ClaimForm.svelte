@@ -10,10 +10,14 @@ import {
   PAYOUT_OPTION_REPAIR,
   PAYOUT_OPTION_REPLACE,
 } from '../../business-rules/claim-payout-amount'
-import { ConvertCurrencyLink, Description, RadioOptions, DateInput, MoneyInput } from '../../components'
-import { claimIncidentTypes, loadClaimIncidentTypes } from '../../data/claim-incident-types'
-import type { Claim, ClaimItem, PayoutOption } from '../../data/claims'
-import type { PolicyItem } from '../../data/items'
+import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
+import Description from '../Description.svelte'
+import RadioOptions from '../RadioOptions.svelte'
+import DateInput from '../DateInput.svelte'
+import MoneyInput from '../MoneyInput.svelte'
+import { claimIncidentTypes, loadClaimIncidentTypes } from 'data/claim-incident-types'
+import type { Claim, ClaimItem, PayoutOption } from 'data/claims'
+import type { PolicyItem } from 'data/items'
 import { Button, Form, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
@@ -188,17 +192,17 @@ const unSetReplaceEstimate = () => {
 <div class="w-50">
   <Form>
     <p>
-      <span class="ml-1">Date lost or damaged</span><br />
-      <DateInput class="mt-1" bind:value={lostDate} />
+      <span class="header">Date lost or damaged</span>
+      <DateInput bind:value={lostDate} />
     </p>
     <p>
-      Reason for loss or damage
+      <span class="header">Reason for loss or damage</span>
       <!--TODO: make description text on next line and inline with the above, label text-->
       <RadioOptions name="lossReason" options={lossReasonOptions} bind:value={lossReason} />
     </p>
     <p>
-      <span class="ml-1">What happened?</span>
-      <TextArea class="mt-1" label="Describe the situation" bind:value={situationDescription} rows="4" />
+      <span class="header">What happened?</span>
+      <TextArea label="Describe the situation" bind:value={situationDescription} rows="4" />
     </p>
     {#if shouldAskIfRepairable}
       <div>
@@ -226,7 +230,7 @@ const unSetReplaceEstimate = () => {
 
     {#if shouldAskReplaceOrFMV}
       <div>
-        <p>Payout options</p>
+        <span class="header">Payout options</span>
         <RadioOptions name="payoutOption" options={payoutOptions} bind:value={payoutOption} />
       </div>
       {#if payoutOption === PAYOUT_OPTION_REPLACE}

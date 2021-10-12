@@ -43,7 +43,7 @@ const onGotoClaim = (event) => $goto(`/steward/claims/${event.detail}`)
 </style>
 
 <Page layout="grid">
-  <Row cols={'12'}>
+  <Row cols="12">
     <ClaimCards {accountablePersons} claims={claimsAwaitingSteward} {items} on:goto-claim={onGotoClaim} />
   </Row>
 

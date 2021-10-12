@@ -1,5 +1,5 @@
 <script lang="ts">
-import user, { updateUser } from '../../authn/user'
+import user, { attachUserPhoto, updateUser } from '../../authn/user'
 import { Breadcrumb, FileDropArea, RadioOptions } from 'components'
 import { upload } from 'data'
 import { policies, init as loadPolicies } from 'data/policies'
@@ -89,16 +89,7 @@ async function onUpload() {
 
         const file = await upload(data)
 
-        // TODO call api when available
-        $user.photo_file = {
-          content_type: file.content_type,
-          created_by_id: $user.id,
-          id: file.id,
-          name: file.filename,
-          size: file.size,
-          url: file.url,
-          url_expiration: undefined,
-        }
+        await attachUserPhoto(file.id)
 
         setNotice('Your profile photo has been updated')
       })

@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store'
-import { GET, UPDATE } from 'data'
+import { CREATE, GET, UPDATE } from 'data'
 
 type UserAppRole = 'User' | 'Steward' | 'Signator' | 'Admin'
 
@@ -42,6 +42,11 @@ export async function loadUser(): Promise<void> {
 
 export async function updateUser(data: UpdatedUserBody): Promise<void> {
   const updatedUser = await UPDATE<User>(`users/me`, data)
+  user.set(updatedUser)
+}
+
+export async function attachUserPhoto(fileId: string): Promise<void> {
+  const updatedUser = await CREATE<User>(`users/me/files`, { file_id: fileId })
   user.set(updatedUser)
 }
 

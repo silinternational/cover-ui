@@ -6,7 +6,7 @@ import { claims, loadClaims } from 'data/claims'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { itemsByPolicyId, loadItems } from 'data/items'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
-import { CUSTOMER_CLAIMS_NEW } from 'helpers/routes'
+import { customerClaim, CUSTOMER_CLAIMS_NEW } from 'helpers/routes'
 import { goto } from '@roxi/routify'
 import { Page, Button } from '@silintl/ui-components'
 import { onMount } from 'svelte'
@@ -31,7 +31,7 @@ onMount(() => {
   loadClaims()
 })
 
-const onGotoClaim = (event) => $goto(`/customer/claims/${event.detail}`)
+const onGotoClaim = (event) => $goto(customerClaim(event.detail))
 </script>
 
 <Page layout="grid">

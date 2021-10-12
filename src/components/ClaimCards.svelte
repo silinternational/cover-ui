@@ -2,17 +2,11 @@
 import type { AccountablePersonOptions } from 'data/accountablePersons'
 import type { Claim } from 'data/claims'
 import type { PolicyItem } from 'data/items'
-import { customerClaim } from 'helpers/routes'
-
 import ClaimCard from './ClaimCard.svelte'
-import { goto } from '@roxi/routify'
 
 export let claims: Claim[]
 export let items: PolicyItem[]
 export let accountablePersons = [] as AccountablePersonOptions[]
-
-// TODO: Change this to dispatch an event, and let the actual page call $goto().
-const onGotoClaim = (event: CustomEvent<string>) => $goto(customerClaim(event.detail))
 </script>
 
 <style>
@@ -31,7 +25,7 @@ const onGotoClaim = (event: CustomEvent<string>) => $goto(customerClaim(event.de
           {claimItem}
           {accountablePersons}
           item={items.find((item) => item.id === claimItem.item_id) || {}}
-          on:goto-claim={onGotoClaim}
+          on:goto-claim
         />
       </div>
     {/each}

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { ClaimCards, Row } from 'components/'
+import { ClaimCards, Row } from 'components'
 import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
 import { Claim, claims, initialized as claimsInitialized, loadClaims, statusesAwaitingSteward } from 'data/claims'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'

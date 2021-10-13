@@ -126,9 +126,11 @@ const handleDialog = async (choice: string) => {
     <Row cols="9">
       <ItemBanner itemStatus={status}>Submitted {submittedText}</ItemBanner>
       <h3 class="break-word">{item.make || ''} {item.model || ''}</h3>
-      <b class="mb-6px">Unique ID</b>
-      <div class="break-word">{item.serial_number}</div>
-      <br />
+      {#if item.serial_number}
+        <b class="mb-6px">Unique ID</b>
+        <div class="break-word">{item.serial_number}</div>
+        <br />
+      {/if}
       <div class="break-word">Description: {item.description || ''}</div>
       <br />
       <Banner

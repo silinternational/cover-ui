@@ -95,6 +95,10 @@ $: !shouldAskReplaceOrFMV && unSetPayoutOption()
 $: !shouldAskIfRepairable && unSetRepairableSelection()
 $: !shouldAskForFMV && unSetFairMarketValue()
 $: !isRepairable && unSetRepairEstimate()
+$: needsEvidence = !unrepairableOrTooExpensive || payoutOption === PAYOUT_OPTION_FMV
+$: canContinueToEvidence =
+  (repairEstimateUSD > 0 && fairMarketValueUSD > 0) ||
+  (fairMarketValueUSD > 0 && !(repairableSelection === 'repairable'))
 
 // Calculate dynamic options for radio-button prompts.
 $: lossReasonOptions = $claimIncidentTypes.map(({ name }) => ({ label: name, value: name }))
@@ -264,8 +268,16 @@ const unSetReplaceEstimate = () => {
     {/if}
     <!--TODO: add evacuation amount when items is done (covered_value*(2/3))-->
     <p>
-      <Button on:click={onSaveForLater} outlined>Save For Later</Button>
-      <Button on:click={onSubmitClaim} raised>Submit Claim</Button>
+      {#if needsEvidence}
+        {#if canContinueToEvidence}
+          <Button on:click={onSaveForLater} raised>Continue</Button>
+        {:else}
+          <Button on:click={onSaveForLater} outlined>Save For Later</Button>
+        {/if}
+      {:else}
+        <Button on:click={onSaveForLater} outlined>Save For Later</Button>
+        <Button on:click={onSubmitClaim} raised>Submit Claim</Button>
+      {/if}
     </p>
   </Form>
 </div>

@@ -10,7 +10,9 @@ export type ClaimStatus =
   | 'Draft'
   | 'Review1'
   | 'Review2'
-  | 'Review3'
+  | 'Review3' // TODO: Remove once API is updated to use Review3a / Review3b.
+  | 'Review3a'
+  | 'Review3b'
   | 'Revision'
   | 'Receipt'
   | 'Approved'
@@ -129,6 +131,7 @@ export type DenyClaimRequestBody = {
 export const claims = writable<Claim[]>([])
 export const initialized = writable<boolean>(false)
 export const editableStatuses: ClaimStatus[] = ['Draft', 'Review1', 'Review2', 'Review3', 'Revision', 'Receipt']
+export const statusesAwaitingSteward: ClaimStatus[] = ['Review1', 'Review2', 'Review3b']
 
 /**
  * Update a claim in our local list (store) of claims.

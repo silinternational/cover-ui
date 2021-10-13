@@ -18,6 +18,9 @@ $: status = claim.status
 let isEditable: boolean
 $: isEditable = editableStatuses.includes(status)
 
+let showSubmit: boolean
+$: showSubmit = ['Receipt', 'Revision'].includes(status) || (status === 'Draft' && needsFile)
+
 const on = (eventType) => () => dispatch(eventType)
 const onAskForChanges = () => dispatch('ask-for-changes', message)
 const onDeny = () => dispatch('deny', message)
@@ -65,7 +68,7 @@ const onDeny = () => dispatch('deny', message)
     <Button on:click={on('edit')} outlined>Edit claim</Button>
   {/if}
 
-  {#if ['Receipt', 'Revision'].includes(status) || (status === 'Draft' && needsFile)}
+  {#if showSubmit}
     <Button raised disabled={noFilesUploaded} on:click={on('submit')}>Submit claim</Button>
   {/if}
 {/if}

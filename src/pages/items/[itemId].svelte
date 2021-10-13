@@ -15,7 +15,8 @@ import { init, policies, Policy } from 'data/policies'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import { formatMoney } from 'helpers/money'
 import { ITEMS, item as itemRoute, itemEdit, itemNewClaim } from 'helpers/routes'
-import { goto } from '@roxi/routify'
+import { formatPageTitle } from 'helpers/pageTitle'
+import { goto, metatags } from '@roxi/routify'
 import { Button, Page, Dialog } from '@silintl/ui-components'
 import { formatDistanceToNow } from 'date-fns'
 
@@ -62,6 +63,7 @@ $: startDate = formatDate(item.coverage_start_date)
 const itemsBreadcrumb = { name: 'Items', url: ITEMS }
 $: thisItemBreadcrumb = { name: itemName || 'This item', url: itemRoute(itemId) }
 $: breadcrumbLinks = [itemsBreadcrumb, thisItemBreadcrumb]
+$: itemName && (metatags.title = formatPageTitle(`Items > ${itemName}`))
 
 const goToEditItem = () => {
   $goto(itemEdit(itemId))

@@ -4,6 +4,8 @@ import { Breadcrumb, FileDropArea, RadioOptions } from 'components'
 import { upload } from 'data'
 import { policies, init as loadPolicies } from 'data/policies'
 import { assertEmailAddress } from '../../validation/assertions'
+import { formatPageTitle } from 'helpers/pageTitle'
+import { metatags } from '@roxi/routify'
 import { Button, Checkbox, TextField, Page, setNotice } from '@silintl/ui-components'
 import Croppie from 'croppie'
 import 'croppie/croppie.css'
@@ -24,6 +26,7 @@ $: notificationOptions = [
 ]
 
 $: 0 && ($policies.length || loadPolicies())
+$: metatags.title = formatPageTitle('Settings > Personal')
 
 const updateCustomEmail = async () => {
   assertEmailAddress(email_override, 'Please enter a valid email address')

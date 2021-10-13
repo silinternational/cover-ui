@@ -7,7 +7,8 @@ import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { itemsByPolicyId, loadItems } from 'data/items'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import { customerClaim, CUSTOMER_CLAIMS_NEW } from 'helpers/routes'
-import { goto } from '@roxi/routify'
+import { formatPageTitle } from 'helpers/pageTitle'
+import { goto, metatags } from '@roxi/routify'
 import { Page, Button } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
@@ -26,6 +27,7 @@ $: dependentOptions = getDependentOptions(dependents)
 $: policyMembers = $membersByPolicyId[policyId] || []
 $: policyMemberOptions = getPolicyMemberOptions(policyMembers)
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions] as AccountablePersonOptions[]
+$: metatags.title = formatPageTitle('Claims')
 
 onMount(() => {
   loadClaims()

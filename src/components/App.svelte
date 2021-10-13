@@ -30,7 +30,7 @@ const authenticateUser = async () => {
   })
 }
 
-$afterPageLoad((page) => {
+$afterPageLoad((page: { path: string }) => {
   if (!publicRoutes.includes(page.path)) {
     authenticateUser()
   }

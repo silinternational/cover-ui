@@ -3,7 +3,8 @@ import user from '../../../../authn/user'
 import { DependentForm } from 'components'
 import { deleteDependent, dependentsByPolicyId, loadDependents, updateDependent } from 'data/dependents'
 import { SETTINGS_HOUSEHOLD } from 'helpers/routes'
-import { goto } from '@roxi/routify'
+import { formatPageTitle } from 'helpers/pageTitle'
+import { goto, metatags } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
 export let uuid: string
@@ -15,6 +16,7 @@ $: if (policyId) {
 
 $: dependents = $dependentsByPolicyId[policyId] || []
 $: dependent = dependents.find((d) => uuid && d.id === uuid)
+$: metatags.title = formatPageTitle(`Settings > Household > Edit Dependent`)
 
 const onCancel = () => {
   $goto(SETTINGS_HOUSEHOLD)

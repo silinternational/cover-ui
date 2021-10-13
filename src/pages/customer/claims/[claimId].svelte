@@ -39,7 +39,8 @@ import { loadPolicies, policies, Policy } from 'data/policies'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import { formatMoney } from 'helpers/money'
 import { customerClaimEdit, CUSTOMER_CLAIMS, customerClaim } from 'helpers/routes'
-import { goto } from '@roxi/routify'
+import { formatPageTitle } from 'helpers/pageTitle'
+import { goto, metatags } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
 export let claimId: string
@@ -51,6 +52,7 @@ let repairOrReplacementCost: number
 let uploading: boolean = false
 let previewFile = {} as ClaimFile
 let householdId: string = ''
+let claimName: string
 
 $: $initialized || loadClaims()
 
@@ -97,10 +99,11 @@ $: claimFiles = claim.claim_files || []
 $: maximumPayout = determineMaxPayout(payoutOption, claimItem, item.coverage_amount)
 
 // Dynamic breadcrumbs data:
-$: claimName = `${item.name} (${claim.reference_number})`
+$: item.name && claim.reference_number && (claimName = `${item.name} (${claim.reference_number})`)
 const claimsBreadcrumb = { name: 'Claims', url: CUSTOMER_CLAIMS }
 $: thisClaimBreadcrumb = { name: claimName || 'This item', url: customerClaim(claimId) }
 $: breadcrumbLinks = [claimsBreadcrumb, thisClaimBreadcrumb]
+$: claimName && (metatags.title = formatPageTitle(`Claims > ${claimName}`))
 
 const getFilePurpose = (claimItem: ClaimItem, needsReceipt: boolean): ClaimFilePurpose => {
   if (needsReceipt) return 'Receipt'

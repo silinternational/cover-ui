@@ -52,7 +52,6 @@ export const claimStates: { [stateName: string]: State } = {
   Approved: { ...approved, title: 'Approved for payout' },
   DraftSecondary: warning,
   Review1: pendingClaim,
-  Review1Secondary: warning,
   Review2: pendingClaim,
   Review3: pendingClaim,
   Receipt2: warning,

@@ -13,7 +13,7 @@ import {
   updateClaimItem,
 } from 'data/claims'
 import { itemsByPolicyId, loadItems, PolicyItem } from 'data/items'
-import { HOME, CUSTOMER_CLAIMS, customerClaim, customerClaimEdit } from 'helpers/routes'
+import { CUSTOMER_CLAIMS, customerClaim, customerClaimEdit } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
@@ -50,7 +50,7 @@ const updateClaimAndItem = async (event: CustomEvent): Promise<void> => {
 }
 const onSaveForLater = async (event: CustomEvent) => {
   await updateClaimAndItem(event)
-  $goto(HOME)
+  $goto(customerClaim(claimId))
 }
 const onSubmit = async (event: CustomEvent) => {
   await updateClaimAndItem(event)

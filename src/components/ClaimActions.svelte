@@ -6,6 +6,8 @@ import { createEventDispatcher } from 'svelte'
 import Description from './Description.svelte'
 
 export let claim = {} as Claim
+export let noFilesUploaded: boolean
+export let needsFile: boolean
 
 const dispatch = createEventDispatcher()
 
@@ -63,7 +65,7 @@ const onDeny = () => dispatch('deny', message)
     <Button on:click={on('edit')} outlined>Edit claim</Button>
   {/if}
 
-  {#if status === 'Draft' || status === 'Receipt' || status === 'Revision'}
-    <Button raised on:click={on('submit')}>Submit claim</Button>
+  {#if ['Receipt', 'Revision'].includes(status) || (status === 'Draft' && needsFile)}
+    <Button raised disabled={noFilesUploaded} on:click={on('submit')}>Submit claim</Button>
   {/if}
 {/if}

@@ -5,7 +5,8 @@ import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { policies, updatePolicy, init, affiliations, Policy } from 'data/policies'
 import { loadMembersOfPolicy, membersByPolicyId, PolicyMember } from 'data/policy-members'
 import { householdSettingsDependent } from 'helpers/routes'
-import { goto } from '@roxi/routify'
+import { formatPageTitle } from 'helpers/pageTitle'
+import { goto, metatags } from '@roxi/routify'
 import { Button, TextField, IconButton, Page, setNotice } from '@silintl/ui-components'
 
 const policyData = {} as Policy
@@ -28,6 +29,7 @@ $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
 $: policy.household_id && setPolicyHouseholdId()
 $: policy.cost_center && setPolicyCostCenter()
 $: policy.entity_code && setAffiliation()
+$: metatags.title = formatPageTitle('Settings > Household')
 
 const setAffiliation = () => (affiliationChoice = $affiliations[policy.entity_code])
 const setPolicyHouseholdId = () => (householdId = policy.household_id || '')

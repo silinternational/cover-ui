@@ -14,10 +14,12 @@ import {
 } from 'data/claims'
 import { itemsByPolicyId, loadItems, PolicyItem } from 'data/items'
 import { CUSTOMER_CLAIMS, customerClaim, customerClaimEdit } from 'helpers/routes'
-import { goto } from '@roxi/routify'
+import { formatPageTitle } from 'helpers/pageTitle'
+import { goto, metatags } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
 export let claimId: string
+let claimName: string
 
 $: $initialized || loadClaims()
 $: claim = $claims.find((c) => c.id === claimId) || ({} as Claim)
@@ -33,11 +35,12 @@ $: items = $itemsByPolicyId[$user.policy_id] || []
 $: item = items.find((anItem) => anItem.id === itemId) || ({} as PolicyItem)
 
 // Dynamic breadcrumbs data:
-$: claimName = `${item.name} (${claim.reference_number})`
+$: item.name && claim.reference_number && (claimName = `${item.name} (${claim.reference_number})`)
 const claimsBreadcrumb = { name: 'Claims', url: CUSTOMER_CLAIMS }
 $: thisClaimBreadcrumb = { name: claimName || 'This item', url: customerClaim(claimId) }
 const editBreadcrumb = { name: 'Edit', url: customerClaimEdit(claimId) }
 $: breadcrumbLinks = [claimsBreadcrumb, thisClaimBreadcrumb, editBreadcrumb]
+$: claimName && (metatags.title = formatPageTitle(`Claims > ${claimName} > Edit`))
 
 const updateClaimAndItem = async (event: CustomEvent): Promise<void> => {
   const { claimData, claimItemData } = event.detail

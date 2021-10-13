@@ -5,6 +5,8 @@ import type { PolicyMember } from 'data/policy-members'
 import { formatFriendlyDate } from 'helpers/date'
 import { formatMoney } from 'helpers/money'
 import { customerClaim } from 'helpers/routes'
+import { formatPageTitle } from 'helpers/pageTitle'
+import { metatags } from '@roxi/routify'
 import { Datatable, Page } from '@silintl/ui-components'
 
 export let policyId: string
@@ -13,6 +15,8 @@ $: $initialized || loadPolicies()
 $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
 $: members = policy.members || ([] as PolicyMember[])
 $: claims = policy.claims || ([] as Claim[])
+$: policyName = policy.type === 'Corporate' ? policy.account : policy.household_id
+$: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))
 </script>
 
 <style>

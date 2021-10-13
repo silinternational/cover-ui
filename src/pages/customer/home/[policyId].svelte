@@ -13,7 +13,8 @@ import { itemsByPolicyId, loadItems } from 'data/items'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import { formatMoney } from 'helpers/money'
 import * as routes from 'helpers/routes'
-import { goto } from '@roxi/routify'
+import { formatPageTitle } from 'helpers/pageTitle'
+import { goto, metatags } from '@roxi/routify'
 import { Page, Datatable, Menu } from '@silintl/ui-components'
 
 export let policyId: string
@@ -34,6 +35,7 @@ $: policyId && loadMembersOfPolicy(policyId)
 $: policyMembers = $membersByPolicyId[policyId] || []
 $: policyMemberOptions = getPolicyMemberOptions(policyMembers)
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions] as AccountablePersonOptions[]
+$: metatags.title = formatPageTitle('Home')
 
 const getMenuItems = (id: string) => [
   {

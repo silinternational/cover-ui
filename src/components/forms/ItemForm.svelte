@@ -102,7 +102,6 @@ const validate = (formData: any) => {
   validateOnSave(formData)
   assertHas(formData.marketValueUSD, 'Please specify the market value')
   assertHas(formData.itemDescription, 'Please add a description')
-  assertHas(formData.uniqueIdentifier, 'Please specify a unique identifier')
 
   return true
 }

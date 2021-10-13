@@ -1,10 +1,12 @@
 <script lang="ts">
 import { initialized, loadPolicies, policies } from 'data/policies'
 import { policy as policyRoute } from 'helpers/routes'
-import { goto } from '@roxi/routify'
+import { formatPageTitle } from 'helpers/pageTitle'
+import { goto, metatags } from '@roxi/routify'
 import { Datatable, Page } from '@silintl/ui-components'
 
 $: $initialized || loadPolicies()
+$: metatags.title = formatPageTitle('Policies')
 </script>
 
 <style>

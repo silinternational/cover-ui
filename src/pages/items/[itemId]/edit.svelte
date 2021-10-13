@@ -6,7 +6,8 @@ import { loadMembersOfPolicy } from 'data/policy-members'
 import { loading } from 'components/progress'
 import { itemsByPolicyId, loadItems, PolicyItem, submitItem, updateItem } from 'data/items'
 import { HOME, ITEMS, item as itemRoute, itemEdit } from 'helpers/routes'
-import { goto } from '@roxi/routify'
+import { formatPageTitle } from 'helpers/pageTitle'
+import { goto, metatags } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
 export let itemId: string
@@ -26,6 +27,7 @@ const itemsBreadcrumb = { name: 'Items', url: ITEMS }
 $: thisItemBreadcrumb = { name: itemName || 'This item', url: itemRoute(itemId) }
 const editBreadcrumb = { name: 'Edit', url: itemEdit(itemId) }
 $: breadcrumbLinks = [itemsBreadcrumb, thisItemBreadcrumb, editBreadcrumb]
+$: itemName && (metatags.title = formatPageTitle(`Items > ${itemName} > Edit`))
 
 const onSubmit = async (event: CustomEvent) => {
   await updateItem(policyId, itemId, event.detail)

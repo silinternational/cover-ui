@@ -5,7 +5,8 @@ import { loading } from 'components/progress'
 import { claims, initialized, createClaim, createClaimItem, loadClaims, Claim, submitClaim } from 'data/claims'
 import { itemsByPolicyId, loadItems, PolicyItem } from 'data/items'
 import * as routes from 'helpers/routes'
-import { goto } from '@roxi/routify'
+import { formatPageTitle } from 'helpers/pageTitle'
+import { goto, metatags } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
 export let itemId: string
@@ -24,6 +25,7 @@ const itemsBreadcrumb = { name: 'Items', url: routes.ITEMS }
 $: thisItemBreadcrumb = { name: itemName || 'This item', url: routes.item(itemId) }
 const newClaimBreadcrumb = { name: 'New Claim', url: routes.itemNewClaim(itemId) }
 $: breadcrumbLinks = [itemsBreadcrumb, thisItemBreadcrumb, newClaimBreadcrumb]
+$: itemName && (metatags.title = formatPageTitle(`Items > ${itemName} > New Claim`))
 
 const isItemIdOnClaim = (itemId: string, claim: Claim) => {
   const claimItems = claim.claim_items || []

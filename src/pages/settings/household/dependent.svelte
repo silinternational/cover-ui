@@ -3,13 +3,16 @@ import user from '../../../authn/user'
 import { addDependent, dependentsByPolicyId, loadDependents, PolicyDependent } from 'data/dependents'
 import { DependentForm } from 'components'
 import { SETTINGS_HOUSEHOLD } from 'helpers/routes'
-import { goto } from '@roxi/routify'
+import { formatPageTitle } from 'helpers/pageTitle'
+import { goto, metatags } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
 $: policyId = $user.policy_id as string
 
 $: policyId && loadDependents(policyId)
 $: dependents = $dependentsByPolicyId[policyId] || []
+$: metatags.title = formatPageTitle('Settings > Household > Add Dependent')
+
 const onCancel = () => {
   $goto(SETTINGS_HOUSEHOLD)
 }

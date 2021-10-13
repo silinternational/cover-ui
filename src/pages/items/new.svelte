@@ -5,13 +5,15 @@ import { loadDependents } from 'data/dependents'
 import { addItem, submitItem } from 'data/items'
 import { loadMembersOfPolicy } from 'data/policy-members'
 import { HOME } from 'helpers/routes'
-import { goto } from '@roxi/routify'
+import { formatPageTitle } from 'helpers/pageTitle'
+import { goto, metatags } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
 $: policyId = $user.policy_id
 
 $: policyId && loadDependents(policyId)
 $: policyId && loadMembersOfPolicy(policyId)
+$: metatags.title = formatPageTitle('Items > New')
 
 const onSubmit = async (event: CustomEvent) => {
   let item = await addItem(policyId, event.detail)

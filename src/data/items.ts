@@ -2,7 +2,7 @@ import { CREATE, DELETE, GET, UPDATE } from '.'
 import { throwError } from '../error'
 import { writable } from 'svelte/store'
 
-export type ItemCoverageStatus = 'Draft' | 'Pending' | 'Approved' | 'Denied'
+export type ItemCoverageStatus = 'Draft' | 'Pending' | 'Approved' | 'Denied' | 'Inactive'
 
 export type RiskCategory = {
   created_at: string /*Date*/

@@ -59,6 +59,8 @@ $: status === 'Draft' && $user.app_role === 'User' && goToEditItem()
 $: submittedText = item.updated_at ? formatDistanceToNow(Date.parse(item.updated_at), { addSuffix: true }) : ''
 $: startDate = formatDate(item.coverage_start_date)
 
+$: allowRemoveCovereage = !['Inactive', 'Denied'].includes(status) as boolean
+
 // Dynamic breadcrumbs data:
 const itemsBreadcrumb = { name: 'Items', url: ITEMS }
 $: thisItemBreadcrumb = { name: itemName || 'This item', url: itemRoute(itemId) }
@@ -95,7 +97,9 @@ const handleDialog = async (choice: string) => {
       <div class="flex justify-between align-items-center">
         <Breadcrumb links={breadcrumbLinks} />
         <div>
-          <Button class="remove-button mx-5px" on:click={() => (open = true)}>Remove</Button>
+          {#if allowRemoveCovereage}
+            <Button class="remove-button mx-5px" on:click={() => (open = true)}>Remove</Button>
+          {/if}
           <Dialog.Alert
             {open}
             {buttons}

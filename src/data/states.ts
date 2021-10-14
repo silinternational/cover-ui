@@ -54,7 +54,7 @@ export const claimStates: { [stateName: string]: State } = {
   Review1: pendingClaim,
   Review2: pendingClaim,
   Review3: pendingClaim,
-  Receipt2: warning,
+  ReceiptSecondary: warning,
   Receipt: {
     icon: 'done',
     color: '--mdc-theme-status-success',

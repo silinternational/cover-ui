@@ -16,6 +16,7 @@ import ItemBanner from './banners/ItemBanner.svelte'
 import ItemForm from './forms/ItemForm.svelte'
 import MoneyInput from './MoneyInput.svelte'
 import RadioOptions from './RadioOptions.svelte'
+import RecentActivityTable from './RecentActivityTable.svelte'
 import Row from './mdc/Row.svelte'
 import ClaimBanner from './banners/ClaimBanner.svelte'
 import StatusBanner from './banners/StatusBanner.svelte'
@@ -40,6 +41,7 @@ export {
   RadioOptions,
   ClaimCard,
   ClaimCards,
+  RecentActivityTable,
   Row,
   ClaimBanner,
   SearchableSelect,

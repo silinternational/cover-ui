@@ -1,5 +1,5 @@
 <script lang="ts">
-import { ClaimCards, Row } from 'components'
+import { ClaimCards, RecentActivityTable, Row } from 'components'
 import { loading } from 'components/progress'
 import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
 import { Claim, claims, initialized as claimsInitialized, loadClaims, statusesAwaitingSteward } from 'data/claims'
@@ -52,15 +52,6 @@ const onGotoClaim = (event) => $goto(`/steward/claims/${event.detail}`)
   </Row>
 
   <Row cols={'12'}>
-    {#each $recentChanges as recentChange}
-      <pre>{ JSON.stringify(recentChange.Claim, null, 2) }</pre>
-      <!-- TEMP -->
-    {:else}
-      {#if $loading}
-        Loading...
-      {:else}
-        No recent activity
-      {/if}
-    {/each}
+    <RecentActivityTable {dependents} loading={$loading} {policyMembers} recentChanges={$recentChanges} />
   </Row>
 </Page>

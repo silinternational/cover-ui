@@ -78,7 +78,7 @@ export const claimStates: { [stateName: string]: State } = {
 export const itemStates: { [stateName: string]: State } = {
   ...commonStates,
   Approved: { ...approved, title: 'Approved' },
-  Inactive: { ...pending, title: 'This item has no coverage', icon: 'cancel' },
+  Inactive: { ...pending, title: 'This item has no coverage', icon: 'umbrella' },
   Pending: { ...pending, title: 'Awaiting item coverage review' },
 }
 

@@ -95,7 +95,9 @@ const handleDialog = async (choice: string) => {
       <div class="flex justify-between align-items-center">
         <Breadcrumb links={breadcrumbLinks} />
         <div>
-          <Button class="remove-button mx-5px" on:click={() => (open = true)}>Remove</Button>
+          {#if ['Inactive', 'Denied'].includes(status)}
+            <Button class="remove-button mx-5px" on:click={() => (open = true)}>Remove</Button>
+          {/if}
           <Dialog.Alert
             {open}
             {buttons}

@@ -1,6 +1,11 @@
 <script lang="ts">
 import user from '../../../authn/user'
-import { determineMaxPayout, isEvidenceNeeded } from '../../../business-rules/claim-payout-amount'
+import {
+  determineMaxPayout,
+  getFilePurpose,
+  getUploadLabel,
+  isEvidenceNeeded,
+} from '../../../business-rules/claim-payout-amount'
 import {
   Banner,
   Breadcrumb,
@@ -27,7 +32,6 @@ import {
   ClaimItem,
   ClaimStatus,
   ClaimFile,
-  ClaimFilePurpose,
   PayoutOption,
   preapproveClaim,
   requestRevision,
@@ -103,18 +107,6 @@ const claimsBreadcrumb = { name: 'Claims', url: CUSTOMER_CLAIMS }
 $: thisClaimBreadcrumb = { name: claimName || 'This item', url: customerClaim(claimId) }
 $: breadcrumbLinks = [claimsBreadcrumb, thisClaimBreadcrumb]
 $: claimName && (metatags.title = formatPageTitle(`Claims > ${claimName}`))
-
-const getFilePurpose = (claimItem: ClaimItem, needsReceipt: boolean): ClaimFilePurpose => {
-  if (needsReceipt) return 'Receipt'
-  if (claimItem.repair_estimate) return 'Repair Estimate'
-  if (claimItem.fmv) return 'Evidence of FMV'
-}
-
-const getUploadLabel = (claimItem: ClaimItem, needsReceipt: boolean, receiptType: string) => {
-  if (needsReceipt) return `a ${receiptType} item receipt`
-  if (claimItem.repair_estimate) return 'a repair estimate'
-  if (claimItem.fmv) return 'evidence of fair market value'
-}
 
 const editClaim = () => $goto(customerClaimEdit(claimId))
 

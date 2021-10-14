@@ -25,6 +25,10 @@ body {
   height: fit-content;
 }
 
+.h-300 {
+  height: 300px;
+}
+
 .absolute {
   position: absolute !important;
 }

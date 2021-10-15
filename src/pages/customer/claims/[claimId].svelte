@@ -93,7 +93,7 @@ $: needsReplaceReceipt = needsReceipt && payoutOption === 'Replacement'
 $: needsReceipt = claimStatus === 'Receipt'
 $: needsEvidence = isEvidenceNeeded(claimItem, claimStatus)
 $: needsFile = needsReceipt || needsEvidence
-$: noFilesUploaded = !claim.claim_files?.length
+$: noFilesUploaded = !claim.claim_files?.length //TODO check for specific file purpose to show banner
 $: filePurpose = getFilePurpose(claimItem, needsReceipt)
 $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType) as string
 $: moneyFormLabel = needsRepairReceipt ? 'Actual cost of repair' : 'Actual cost of replacement'

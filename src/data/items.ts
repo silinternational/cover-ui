@@ -33,6 +33,7 @@ export type PolicyItem = {
   purchase_date: string /* yyyy-mm-dd Date */
   risk_category: RiskCategory
   serial_number: string
+  status_change: string
   updated_at: string /*Date*/
 }
 

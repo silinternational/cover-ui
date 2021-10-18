@@ -101,6 +101,10 @@ $: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
 $: claimFiles = claim.claim_files || []
 $: maximumPayout = determineMaxPayout(payoutOption, claimItem, item.coverage_amount)
 
+
+$: console.log(filePurpose)
+$: console.log(claim?.claim_files?.[0]?.purpose)
+
 // Dynamic breadcrumbs data:
 $: item.name && claim.reference_number && (claimName = `${item.name} (${claim.reference_number})`)
 const claimsBreadcrumb = { name: 'Claims', url: CUSTOMER_CLAIMS }

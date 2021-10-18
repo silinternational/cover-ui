@@ -34,8 +34,8 @@ export async function loadRecentActivityForSteward(): Promise<void> {
   const recentItems = recentActivity.Items
   const mergedRecentObjects = [...recentClaims, ...recentItems]
   mergedRecentObjects.sort((a: RecentChange, b: RecentChange) => {
-    const dateA = new Date(a)
-    const dateB = new Date(b)
+    const dateA = new Date(a.StatusUpdatedAt)
+    const dateB = new Date(b.StatusUpdatedAt)
     return dateB - dateA
   })
   recentChanges.set(mergedRecentObjects)

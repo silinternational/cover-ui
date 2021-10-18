@@ -52,7 +52,6 @@ export const claimStates: { [stateName: string]: State } = {
   Approved: { ...approved, title: 'Approved for payout' },
   DraftSecondary: warning,
   Review1: pendingClaim,
-  Review1Secondary: warning,
   Review2: pendingClaim,
   Review3: pendingClaim,
   Receipt2: warning,
@@ -79,6 +78,7 @@ export const claimStates: { [stateName: string]: State } = {
 export const itemStates: { [stateName: string]: State } = {
   ...commonStates,
   Approved: { ...approved, title: 'Approved' },
+  Inactive: { ...pending, title: 'This item has no coverage', icon: 'umbrella' },
   Pending: { ...pending, title: 'Awaiting item coverage review' },
 }
 

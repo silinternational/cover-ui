@@ -1,14 +1,18 @@
 <script lang="ts">
-import { ClaimCards, Row } from 'components'
+import { ClaimCards, RecentActivityTable, Row } from 'components'
+import { loading } from 'components/progress'
 import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
 import { Claim, claims, initialized as claimsInitialized, loadClaims, statusesAwaitingSteward } from 'data/claims'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { itemsByPolicyId, loadItems } from 'data/items'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
+import { loadRecentActivityForSteward, recentChanges } from 'data/steward-recent'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
 let claimsAwaitingSteward: Claim[]
+
+loadRecentActivityForSteward()
 
 $: $claimsInitialized || loadClaims()
 $: claimsAwaitingSteward = $claims.filter(isAwaitingSteward)
@@ -47,5 +51,7 @@ const onGotoClaim = (event) => $goto(`/steward/claims/${event.detail}`)
     <ClaimCards {accountablePersons} claims={claimsAwaitingSteward} {items} on:goto-claim={onGotoClaim} />
   </Row>
 
-  <Row cols={'12'}>(Recent activity)</Row>
+  <Row cols={'12'}>
+    <RecentActivityTable {dependents} loading={$loading} {policyMembers} recentChanges={$recentChanges} />
+  </Row>
 </Page>

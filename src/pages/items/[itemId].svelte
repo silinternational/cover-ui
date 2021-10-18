@@ -59,6 +59,8 @@ $: status === 'Draft' && $user.app_role === 'User' && goToEditItem()
 $: submittedText = item.updated_at ? formatDistanceToNow(Date.parse(item.updated_at), { addSuffix: true }) : ''
 $: startDate = formatDate(item.coverage_start_date)
 
+$: allowRemoveCovereage = !['Inactive', 'Denied'].includes(status) as boolean
+
 // Dynamic breadcrumbs data:
 const itemsBreadcrumb = { name: 'Items', url: ITEMS }
 $: thisItemBreadcrumb = { name: itemName || 'This item', url: itemRoute(itemId) }
@@ -93,7 +95,9 @@ const handleDialog = async (event: CustomEvent<string>) => {
       <div class="flex justify-between align-items-center">
         <Breadcrumb links={breadcrumbLinks} />
         <div>
-          <Button class="remove-button mx-5px" on:click={() => (open = true)}>Remove</Button>
+          {#if allowRemoveCovereage}
+            <Button class="remove-button mx-5px" on:click={() => (open = true)}>Remove</Button>
+          {/if}
           <ItemDeleteModal {open} {item} on:closed={handleDialog} />
           {#if status === 'Draft' || status === 'Pending'}
             <Button on:click={goToEditItem}>Edit Item</Button>
@@ -117,9 +121,11 @@ const handleDialog = async (event: CustomEvent<string>) => {
     <Row cols="9">
       <ItemBanner itemStatus={status}>Submitted {submittedText}</ItemBanner>
       <h3 class="break-word">{item.make || ''} {item.model || ''}</h3>
-      <b class="mb-6px">Unique ID</b>
-      <div class="break-word">{item.serial_number}</div>
-      <br />
+      {#if item.serial_number}
+        <b class="mb-6px">Unique ID</b>
+        <div class="break-word">{item.serial_number}</div>
+        <br />
+      {/if}
       <div class="break-word">Description: {item.description || ''}</div>
       <br />
       <Banner

@@ -83,7 +83,6 @@ $: householdId = policy.household_id ? policy.household_id : ''
 
 $: incidentDate = formatDate(claim.incident_date)
 $: claimStatus = (claim.status || '') as ClaimStatus
-$: claimStatus === 'Draft' && $user.app_role === 'User' && editClaim()
 $: payoutOption = claimItem.payout_option as PayoutOption
 $: needsRepairReceipt = needsReceipt && payoutOption === 'Repair'
 $: needsReplaceReceipt = needsReceipt && payoutOption === 'Replacement'
@@ -251,6 +250,8 @@ function onDeleted(event: CustomEvent<string>) {
 
       <p>
         <ClaimActions
+          {noFilesUploaded}
+          {needsFile}
           {claim}
           on:ask-for-changes={onAskForChanges}
           on:deny={onDenyClaim}

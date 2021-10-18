@@ -20,7 +20,7 @@ $: message =
     ? `Are you sure you would like to delete ${item.name}?`
     : `Are you sure you would like to remove coverage for ${item.name}?`
 
-const handleDialog = async (choice: string) => {
+const handleDialog = (choice: string) => {
   open = false
   dispatch('closed', choice)
 }

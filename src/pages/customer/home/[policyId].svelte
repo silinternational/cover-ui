@@ -65,7 +65,6 @@ const handleDeleteClick = () => {
 }
 
 const handleModalDialog = async (event: CustomEvent<string>) => {
-  // do some stuff
   modalOpen = false
   if (event.detail === 'remove') {
     await deleteItem(policyId, currentItem.id)

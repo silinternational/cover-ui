@@ -1,5 +1,5 @@
 <script lang="ts">
-import { ClaimCards, Row } from 'components'
+import { ClaimCards, Row, ItemDeleteModal } from 'components'
 import { isLoadingById } from 'components/progress'
 import { claims, loadClaims } from 'data/claims'
 import {
@@ -9,18 +9,20 @@ import {
   getPolicyMemberOptions,
 } from 'data/accountablePersons'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
-import { itemsByPolicyId, loadItems } from 'data/items'
+import { deleteItem, itemsByPolicyId, loadItems, PolicyItem } from 'data/items'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import { formatMoney } from 'helpers/money'
 import * as routes from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
-import { Page, Datatable, Menu } from '@silintl/ui-components'
+import { Page, Datatable, Menu, MenuItem } from '@silintl/ui-components'
 
 export let policyId: string
 
 let goToItemDetails = true
 let shownMenus: { [name: string]: boolean } = {}
+let modalOpen = false
+let currentItem = {} as PolicyItem
 
 $: policyId && loadItems(policyId)
 $: items = $itemsByPolicyId[policyId] || []
@@ -37,26 +39,50 @@ $: policyMemberOptions = getPolicyMemberOptions(policyMembers)
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions] as AccountablePersonOptions[]
 $: metatags.title = formatPageTitle('Home')
 
-const getMenuItems = (id: string) => [
-  {
-    label: 'View Details',
-    url: routes.item(id),
-  },
-  {
-    label: 'Edit',
-    url: routes.itemEdit(id),
-  },
-  {
-    label: 'Remove Coverage',
-    url: routes.itemRemoveCoverage(id),
-  },
-]
+const getMenuItems = (item: PolicyItem) => {
+  const menuItems: MenuItem[] = [
+    {
+      label: 'View Details',
+      url: routes.item(item.id),
+    },
+    {
+      label: 'Edit',
+      url: routes.itemEdit(item.id),
+    },
+  ]
+  if (item.coverage_status != 'Inactive') {
+    menuItems.push({
+      label: item.coverage_status === 'Draft' ? 'Delete' : 'Remove Coverage',
+      action: handleDeleteClick,
+    })
+  }
+  return menuItems
+}
+
+const handleDeleteClick = () => {
+  goToItemDetails = false
+  modalOpen = true
+}
+
+const handleModalDialog = async (event: CustomEvent<string>) => {
+  modalOpen = false
+  if (event.detail === 'remove') {
+    await deleteItem(policyId, currentItem.id)
+
+    // Depending on if the item was a draft or approved it will either be deleted or updated
+    // Just reload the list for now since the delete endpoint doesn't yet tell us what happened
+    await loadItems(policyId)
+  }
+}
 
 const getStatusClass = (status: string) => (status === 'Draft' ? 'mdc-theme--primary mdc-bold-font' : '')
 
 // TODO: Change this to dispatch events, leaving URL changes to the actual page.
-const redirect = (url: string) => {
+const redirect = (item: PolicyItem) => {
+  currentItem = item
+
   if (goToItemDetails) {
+    let url = routes.item(item.id)
     $goto(url)
   } else {
     goToItemDetails = true
@@ -67,7 +93,7 @@ const handleMoreVertClick = (id: string) => {
   goToItemDetails = false
   shownMenus[id] = shownMenus[id] !== true
 }
-const onGotoClaim = (event) => $goto(routes.customerClaim(event.detail))
+const onGotoClaim = (event: CustomEvent) => $goto(routes.customerClaim(event.detail))
 </script>
 
 <style>
@@ -112,7 +138,7 @@ const onGotoClaim = (event) => $goto(routes.customerClaim(event.detail))
         </Datatable.Header>
         <Datatable.Data>
           {#each items as item (item.id)}
-            <Datatable.Data.Row on:click={() => redirect(routes.item(item.id))} clickable>
+            <Datatable.Data.Row on:click={() => redirect(item)} clickable>
               <Datatable.Data.Row.Item />
               <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}
@@ -132,13 +158,14 @@ const onGotoClaim = (event) => $goto(routes.customerClaim(event.detail))
                 </svg>
                 <!--TODO FUTURE: make this show above the more vert icon when it is in the lower half of the page-->
                 <div class="item-menu">
-                  <Menu bind:menuOpen={shownMenus[item.id]} menuItems={getMenuItems(item.id)} />
+                  <Menu bind:menuOpen={shownMenus[item.id]} menuItems={getMenuItems(item)} />
                 </div>
               </Datatable.Data.Row.Item>
             </Datatable.Data.Row>
           {/each}
         </Datatable.Data>
       </Datatable>
+      <ItemDeleteModal open={modalOpen} item={currentItem} on:closed={handleModalDialog} />
     {/if}
   </Row>
 </Page>

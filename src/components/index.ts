@@ -13,6 +13,7 @@ import Description from './Description.svelte'
 import FileDropArea from './FileDropArea'
 import FilePreview from './FilePreview'
 import ItemBanner from './banners/ItemBanner.svelte'
+import ItemDeleteModal from './ItemDeleteModal.svelte'
 import ItemForm from './forms/ItemForm.svelte'
 import MoneyInput from './MoneyInput.svelte'
 import RadioOptions from './RadioOptions.svelte'
@@ -36,6 +37,7 @@ export {
   FileDropArea,
   FilePreview,
   ItemBanner,
+  ItemDeleteModal,
   ItemForm,
   MoneyInput,
   RadioOptions,

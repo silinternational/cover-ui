@@ -1,6 +1,6 @@
 <script lang="ts">
 import user from '../../authn/user'
-import { Banner, Breadcrumb, ItemBanner, Row } from 'components'
+import { Banner, Breadcrumb, ItemBanner, ItemDeleteModal, Row } from 'components'
 import { formatDate } from 'components/dates'
 import { loading } from 'components/progress'
 import {
@@ -74,10 +74,8 @@ const goToNewClaim = () => {
   $goto(itemNewClaim(itemId))
 }
 
-const handleDialog = async (choice: string) => {
-  open = false
-
-  if (choice === 'remove') {
+const handleDialog = async (event: CustomEvent<string>) => {
+  if (event.detail === 'remove') {
     await deleteItem(policyId, itemId)
 
     $goto(ITEMS)
@@ -100,14 +98,7 @@ const handleDialog = async (choice: string) => {
           {#if allowRemoveCovereage}
             <Button class="remove-button mx-5px" on:click={() => (open = true)}>Remove</Button>
           {/if}
-          <Dialog.Alert
-            {open}
-            {buttons}
-            defaultAction="cancel"
-            title="Remove Coverage"
-            on:chosen={(e) => handleDialog(e.detail)}
-            on:closed={handleDialog}>Are you sure you would like to remove coverage for {itemName}?</Dialog.Alert
-          >
+          <ItemDeleteModal {open} {item} on:closed={handleDialog} />
           {#if status === 'Draft' || status === 'Pending'}
             <Button on:click={goToEditItem}>Edit Item</Button>
           {/if}

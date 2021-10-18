@@ -4,7 +4,7 @@ import { Breadcrumb, ItemBanner, ItemForm } from 'components'
 import { loadDependents } from 'data/dependents'
 import { loadMembersOfPolicy } from 'data/policy-members'
 import { loading } from 'components/progress'
-import { itemsByPolicyId, loadItems, PolicyItem, submitItem, updateItem } from 'data/items'
+import { deleteItem, itemsByPolicyId, loadItems, PolicyItem, submitItem, updateItem } from 'data/items'
 import { HOME, ITEMS, item as itemRoute, itemEdit } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
@@ -41,6 +41,12 @@ const onSaveForLater = async (event: CustomEvent) => {
 
   $goto(HOME)
 }
+
+const onDelete = async (event: CustomEvent) => {
+  await deleteItem(policyId, itemId)
+
+  $goto(HOME)
+}
 </script>
 
 {#if !item.id}
@@ -54,6 +60,6 @@ const onSaveForLater = async (event: CustomEvent) => {
   <Page>
     <Breadcrumb links={breadcrumbLinks} />
     <ItemBanner itemStatus="Draft" class="my-2" />
-    <ItemForm {item} {policyId} on:submit={onSubmit} on:save-for-later={onSaveForLater} />
+    <ItemForm {item} {policyId} on:submit={onSubmit} on:save-for-later={onSaveForLater} on:delete={onDelete} />
   </Page>
 {/if}

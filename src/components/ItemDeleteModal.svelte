@@ -1,0 +1,36 @@
+<script lang="ts">
+import { Dialog } from '@silintl/ui-components'
+import type { PolicyItem } from 'data/items'
+import { createEventDispatcher } from 'svelte'
+
+export let open = true
+export let item: PolicyItem
+
+let dispatch = createEventDispatcher<{ closed: string }>()
+
+const buttons: Dialog.AlertButton[] = [
+  { label: 'Yes, I’m Sure', action: 'remove', class: 'error-button' },
+  { label: 'cancel', action: 'cancel', class: 'mdc-dialog__button' },
+]
+
+$: status = item.coverage_status
+$: title = status === 'Draft' ? 'Delete' : 'Remove Coverage'
+$: message =
+  status === 'Draft'
+    ? `Are you sure you would like to delete ${item.name}?`
+    : `Are you sure you would like to remove coverage for ${item.name}?`
+
+const handleDialog = (choice: string) => {
+  open = false
+  dispatch('closed', choice)
+}
+</script>
+
+<Dialog.Alert
+  {open}
+  {buttons}
+  defaultAction="cancel"
+  {title}
+  on:chosen={(e) => handleDialog(e.detail)}
+  on:closed={handleDialog}>{message}</Dialog.Alert
+>

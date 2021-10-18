@@ -133,7 +133,8 @@ declare module '@silintl/ui-components' {
   type MenuItem = {
     icon?: string
     label: string
-    url: string
+    url?: string
+    action?: () => void
   }
   interface MenuProps extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
     menuItems?: MenuItem[]

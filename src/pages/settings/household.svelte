@@ -4,7 +4,7 @@ import { Breadcrumb, SearchableSelect } from 'components'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { policies, updatePolicy, init, affiliations, Policy } from 'data/policies'
 import { loadMembersOfPolicy, membersByPolicyId, PolicyMember } from 'data/policy-members'
-import { householdSettingsDependent } from 'helpers/routes'
+import { SETTINGS_HOUSEHOLD, householdSettingsDependent } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
 import { Button, TextField, IconButton, Page, setNotice } from '@silintl/ui-components'
@@ -15,6 +15,8 @@ let affiliationChoice = ''
 let householdId = ''
 let costCenter = ''
 let placeholder = 'Your entity of affiliation'
+let breadcrumbLinks = [{ name: 'Group Settings', url: SETTINGS_HOUSEHOLD }]
+metatags.title = formatPageTitle('Group Settings')
 
 $: policyId = $user.policy_id
 $: if (policyId) {
@@ -29,7 +31,6 @@ $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
 $: policy.household_id && setPolicyHouseholdId()
 $: policy.cost_center && setPolicyCostCenter()
 $: policy.entity_code && setAffiliation()
-$: metatags.title = formatPageTitle('Settings > Household')
 
 const setAffiliation = () => (affiliationChoice = $affiliations[policy.entity_code])
 const setPolicyHouseholdId = () => (householdId = policy.household_id || '')
@@ -119,7 +120,7 @@ p {
 </style>
 
 <Page>
-  <Breadcrumb />
+  <Breadcrumb links={breadcrumbLinks} />
 
   <p>
     <span class="header">Household ID<span class="required">*</span></span>

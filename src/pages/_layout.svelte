@@ -35,6 +35,7 @@ $: menuItems = [
     url: routes.SETTINGS,
     icon: 'settings',
     label: 'Settings',
+    tooltip: 'Group Settings',
   },
   {
     url: routes.ITEMS_NEW,

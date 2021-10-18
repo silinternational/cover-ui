@@ -8,7 +8,7 @@ import user from '../authn/user'
 const menuItems: MenuItem[] = [
   {
     icon: 'settings',
-    label: 'User settings',
+    label: 'Personal settings',
     url: routes.SETTINGS_PERSONAL,
   },
   {

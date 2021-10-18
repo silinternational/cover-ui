@@ -5,6 +5,7 @@ import { upload } from 'data'
 import { policies, init as loadPolicies } from 'data/policies'
 import { assertEmailAddress } from '../../validation/assertions'
 import { formatPageTitle } from 'helpers/pageTitle'
+import { SETTINGS_PERSONAL } from 'helpers/routes'
 import { metatags } from '@roxi/routify'
 import { Button, Checkbox, TextField, Page, setNotice } from '@silintl/ui-components'
 import Croppie from 'croppie'
@@ -19,6 +20,8 @@ let email_override = $user.email_override || ''
 let location = $user.location || ''
 let croppie: Croppie
 let croppieContainer: HTMLDivElement
+let breadcrumbLinks = [{ name: 'Personal Settings', url: SETTINGS_PERSONAL }]
+metatags.title = formatPageTitle('Personal Settings')
 
 $: notificationOptions = [
   { label: 'Default email: ' + $user.email, value: NOTIFICATION_OPTION_DEFAULT },
@@ -26,7 +29,6 @@ $: notificationOptions = [
 ]
 
 $: 0 && ($policies.length || loadPolicies())
-$: metatags.title = formatPageTitle('Settings > Personal')
 
 const updateCustomEmail = async () => {
   assertEmailAddress(email_override, 'Please enter a valid email address')
@@ -124,7 +126,7 @@ p {
 </style>
 
 <Page>
-  <Breadcrumb />
+  <Breadcrumb links={breadcrumbLinks} />
 
   <p>
     <span class="header">Notification email</span>

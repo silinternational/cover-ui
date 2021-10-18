@@ -2,6 +2,7 @@
 import type { Claim } from 'data/claims'
 import { formatMoney } from 'helpers/money'
 import { Datatable } from '@silintl/ui-components'
+import type { PolicyItem } from '../data/items'
 
 export let dependents = []
 export let loading = false
@@ -69,6 +70,13 @@ const getFormattedClaimItemPremium = (claim: Claim): string => {
           <RowItem numeric>{getFormattedClaimItemValue(recentChange.Claim)}</RowItem>
           <RowItem numeric>{getFormattedClaimItemPremium(recentChange.Claim)}</RowItem>
           <RowItem>Claim</RowItem>
+        {:else if recentChange.Item}
+          <RowItem>{recentChange.Item.name}</RowItem>
+          <RowItem>{recentChange.Item.status_change}</RowItem>
+          <RowItem>{getItemPersonName(recentChange.Item, people)}</RowItem>
+          <RowItem numeric>{formatMoney(recentChange.Item.coverage_amount)}</RowItem>
+          <RowItem numeric>{formatMoney(recentChange.Item.annual_premium)}</RowItem>
+          <RowItem>Coverage</RowItem>
         {/if}
       </DataRow>
     {:else}

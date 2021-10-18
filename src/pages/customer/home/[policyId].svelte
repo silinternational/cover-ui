@@ -9,7 +9,7 @@ import {
   getPolicyMemberOptions,
 } from 'data/accountablePersons'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
-import { itemsByPolicyId, loadItems } from 'data/items'
+import { itemsByPolicyId, loadItems, PolicyItem } from 'data/items'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import { formatMoney } from 'helpers/money'
 import * as routes from 'helpers/routes'
@@ -37,20 +37,25 @@ $: policyMemberOptions = getPolicyMemberOptions(policyMembers)
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions] as AccountablePersonOptions[]
 $: metatags.title = formatPageTitle('Home')
 
-const getMenuItems = (id: string) => [
-  {
-    label: 'View Details',
-    url: routes.item(id),
-  },
-  {
-    label: 'Edit',
-    url: routes.itemEdit(id),
-  },
-  {
-    label: 'Remove Coverage',
-    url: routes.itemRemoveCoverage(id),
-  },
-]
+const getMenuItems = (item: PolicyItem) => {
+  const menuItems = [
+    {
+      label: 'View Details',
+      url: routes.item(item.id),
+    },
+    {
+      label: 'Edit',
+      url: routes.itemEdit(item.id),
+    },
+  ]
+  if (item.coverage_status != 'Inactive') {
+    menuItems.push({
+      label: item.coverage_status === 'Draft' ? 'Delete' : 'Remove Coverage',
+      url: 'javascript:console.log("yoyoyo");', // routes.itemRemoveCoverage(item.id),
+    })
+  }
+  return menuItems
+}
 
 const getStatusClass = (status: string) => (status === 'Draft' ? 'mdc-theme--primary mdc-bold-font' : '')
 
@@ -132,7 +137,7 @@ const onGotoClaim = (event) => $goto(routes.customerClaim(event.detail))
                 </svg>
                 <!--TODO FUTURE: make this show above the more vert icon when it is in the lower half of the page-->
                 <div class="item-menu">
-                  <Menu bind:menuOpen={shownMenus[item.id]} menuItems={getMenuItems(item.id)} />
+                  <Menu bind:menuOpen={shownMenus[item.id]} menuItems={getMenuItems(item)} />
                 </div>
               </Datatable.Data.Row.Item>
             </Datatable.Data.Row>

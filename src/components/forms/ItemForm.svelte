@@ -3,6 +3,7 @@ import user from '../../authn/user'
 import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
 import Description from '../Description.svelte'
 import MoneyInput from '../MoneyInput.svelte'
+import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
 import { dependentsByPolicyId } from 'data/dependents'
 import type { ItemCoverageStatus, PolicyItem } from 'data/items'
@@ -14,8 +15,9 @@ import { createEventDispatcher } from 'svelte'
 
 export let item = {} as PolicyItem
 export let policyId: any = undefined
+let open = false
 
-const dispatch = createEventDispatcher<{ submit: any; 'save-for-later': any }>()
+const dispatch = createEventDispatcher<{ submit: any; 'save-for-later': any; delete: any }>()
 
 // Set default values.
 let accountablePersonId: string = ''
@@ -120,6 +122,18 @@ const saveForLater = (event: Event) => {
   event.preventDefault()
 }
 
+const onDelete = (event: Event) => {
+  open = true
+  event.preventDefault()
+}
+
+const handleDialog = (event: CustomEvent<string>) => {
+  open = false
+  if (event.detail === 'remove') {
+    dispatch('delete')
+  }
+}
+
 const setInitialValues = (item: PolicyItem) => {
   categoryId = item.category?.id || categoryId
   country = item.country || country
@@ -187,6 +201,10 @@ const setInitialValues = (item: PolicyItem) => {
   </p>
   <p>
     <Button outlined on:click={saveForLater}>Save for later</Button>
+    {#if item.coverage_status === 'Draft'}
+      <Button outlined on:click={onDelete}>Delete</Button>
+      <ItemDeleteModal {open} {item} on:closed={handleDialog} />
+    {/if}
     <Button raised>Get approval</Button>
   </p>
 </Form>

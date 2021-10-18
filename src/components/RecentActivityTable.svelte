@@ -23,15 +23,18 @@ const getClaimItemName = (claim: Claim): string => {
 
 const getClaimItemPersonName = (claim: Claim, people): string => {
   const claimItem = claim.claim_items[0]
+  return getItemPersonName(claimItem?.item, people)
+}
 
-  const accountableUserId = claimItem?.item?.accountable_user_id
+const getItemPersonName = (item: PolicyItem | undefined, people): string => {
+  const accountableUserId = item?.accountable_user_id
   if (accountableUserId) {
     const accountableUser = people.policyMembers.find((policyMember) => policyMember.id === accountableUserId)
     const userDisplayName = accountableUser?.first_name + ' ' + accountableUser?.last_name
     return accountableUser ? userDisplayName : ''
   }
 
-  const accountableDependentId = claimItem?.item?.accountable_dependent_id
+  const accountableDependentId = item?.accountable_dependent_id
   const accountableDependent = people.dependents.find((dependent) => dependent.id === accountableDependentId)
   return accountableDependent?.name || ''
 }

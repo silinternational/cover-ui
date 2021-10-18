@@ -70,6 +70,7 @@ export type Claim = {
   review_date: string /*Date*/
   reviewer_id: string
   status: ClaimStatus
+  status_change: string
   status_reason: string
   total_payout: number
 }

@@ -50,7 +50,7 @@ const getFormattedClaimItemPremium = (claim: Claim): string => {
 <Datatable>
   <HeaderRow>
     <HeaderItem>Item</HeaderItem>
-    <HeaderItem>Recent Activity</HeaderItem>
+    <HeaderItem>Recent Change</HeaderItem>
     <HeaderItem>From</HeaderItem>
     <HeaderItem numeric>Value</HeaderItem>
     <HeaderItem numeric>Premium</HeaderItem>
@@ -61,7 +61,7 @@ const getFormattedClaimItemPremium = (claim: Claim): string => {
       <DataRow>
         {#if recentChange.Claim}
           <RowItem>{getClaimItemName(recentChange.Claim)}</RowItem>
-          <RowItem>???</RowItem>
+          <RowItem>{recentChange.Claim.status_change}</RowItem>
           <RowItem>{getClaimItemPersonName(recentChange.Claim, people)}</RowItem>
           <RowItem numeric>{getFormattedClaimItemValue(recentChange.Claim)}</RowItem>
           <RowItem numeric>{getFormattedClaimItemPremium(recentChange.Claim)}</RowItem>

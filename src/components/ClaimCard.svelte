@@ -1,4 +1,6 @@
 <script lang="ts">
+import { getUploadLabel } from '../business-rules/claim-payout-amount'
+import ClaimBanner from './banners/ClaimBanner.svelte'
 import ClaimCardBanner from './ClaimCardBanner.svelte'
 import type { AccountablePersonOptions } from 'data/accountablePersons'
 import type { Claim, ClaimItem } from 'data/claims'
@@ -22,6 +24,13 @@ $: statusReason = claim.status_reason || ('' as string)
 $: accountablePerson = accountablePersons.find(
   (person) => person.id === (item.accountable_user_id || item.accountable_dependent_id)
 )
+$: payoutOption = claimItem.payout_option
+$: needsRepairReceipt = needsReceipt && payoutOption === 'Repair'
+$: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
+$: needsReceipt = claim.status === 'Receipt'
+$: noFilesUploaded = !claim.claim_files?.length
+$: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType)
+$: showSecondBanner = needsReceipt && noFilesUploaded
 
 const gotoClaim = () => dispatch('goto-claim', claim.id)
 </script>
@@ -50,8 +59,13 @@ const gotoClaim = () => dispatch('goto-claim', claim.id)
 }
 </style>
 
-<Card noPadding class="height-fit-content py-0 {$$props.class}">
-  <ClaimCardBanner {statusReason} {state} />
+<Card noPadding class="h-300 py-0 {$$props.class}">
+  <ClaimCardBanner class={showSecondBanner ? 'mb-0 pb-4px pt-6px' : 'mb-2'} {statusReason} {state} />
+  {#if showSecondBanner}
+    <ClaimBanner class="mb-1" claimStatus={`${claim.status}Secondary`}>
+      Upload {uploadLabel} to get reimbursed.
+    </ClaimBanner>
+  {/if}
 
   <div class="mdc-typography--headline5 multi-line-truncate content ml-50px">
     {item.name || ''}

@@ -11,7 +11,17 @@ $: title = state.title || ''
 $: steward = statusReason ? 'From your claim handler' : ('' as string) //TODO get this from the api
 </script>
 
-<div class="flex justify-start align-items-center black mb-2 p-1 pl-50px" style="background: var({bgColor});">
+<style>
+.banner {
+  margin-bottom: 2rem;
+  padding: 1rem;
+}
+</style>
+
+<div
+  class="flex justify-start align-items-center black pl-50px banner {$$props.class}"
+  style="background: var({bgColor});"
+>
   <span class="material-icons" style="color: var({color});">{icon}</span>
 
   <div class="mdc-theme--primary pl-10px">

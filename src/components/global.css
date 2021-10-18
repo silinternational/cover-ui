@@ -21,8 +21,8 @@ body {
   background: #fff;
 }
 
-.height-fit-content {
-  height: fit-content;
+.h-300 {
+  height: 300px;
 }
 
 .absolute {

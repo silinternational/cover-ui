@@ -1,5 +1,5 @@
 import type { ClaimIncidentType } from 'data/claim-incident-types'
-import type { PayoutOption, ClaimItem, ClaimStatus } from 'data/claims'
+import type { PayoutOption, ClaimItem, ClaimStatus, ClaimFilePurpose } from 'data/claims'
 
 export const DEDUCTIBLE = 0.05
 export const LOSS_REASON_EVACUATION = 'Evacuation'
@@ -91,4 +91,16 @@ export const isEvidenceNeeded = (claimItem: ClaimItem, claimStatus: ClaimStatus)
   const willNeedEvidence = claimItem.fmv > 0 || claimItem.repair_estimate > 0
   const canProvideEvidenceNow = ['Draft'].includes(claimStatus)
   return willNeedEvidence && canProvideEvidenceNow
+}
+
+export const getFilePurpose = (claimItem: ClaimItem, needsReceipt: boolean): ClaimFilePurpose => {
+  if (needsReceipt) return 'Receipt'
+  if (claimItem.repair_estimate) return 'Repair Estimate'
+  if (claimItem.fmv) return 'Evidence of FMV'
+}
+
+export const getUploadLabel = (claimItem: ClaimItem, needsReceipt: boolean, receiptType: string) => {
+  if (needsReceipt) return `a ${receiptType} item receipt`
+  if (claimItem.repair_estimate) return 'a repair estimate'
+  if (claimItem.fmv) return 'evidence of fair market value'
 }

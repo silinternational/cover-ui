@@ -2,6 +2,7 @@
 import type { Claim } from 'data/claims'
 import { formatMoney } from 'helpers/money'
 import { Datatable } from '@silintl/ui-components'
+import type { PolicyItem } from '../data/items'
 
 export let dependents = []
 export let loading = false
@@ -23,15 +24,18 @@ const getClaimItemName = (claim: Claim): string => {
 
 const getClaimItemPersonName = (claim: Claim, people): string => {
   const claimItem = claim.claim_items[0]
+  return getItemPersonName(claimItem?.item, people)
+}
 
-  const accountableUserId = claimItem?.item?.accountable_user_id
+const getItemPersonName = (item: PolicyItem | undefined, people): string => {
+  const accountableUserId = item?.accountable_user_id
   if (accountableUserId) {
     const accountableUser = people.policyMembers.find((policyMember) => policyMember.id === accountableUserId)
     const userDisplayName = accountableUser?.first_name + ' ' + accountableUser?.last_name
     return accountableUser ? userDisplayName : ''
   }
 
-  const accountableDependentId = claimItem?.item?.accountable_dependent_id
+  const accountableDependentId = item?.accountable_dependent_id
   const accountableDependent = people.dependents.find((dependent) => dependent.id === accountableDependentId)
   return accountableDependent?.name || ''
 }
@@ -66,6 +70,13 @@ const getFormattedClaimItemPremium = (claim: Claim): string => {
           <RowItem numeric>{getFormattedClaimItemValue(recentChange.Claim)}</RowItem>
           <RowItem numeric>{getFormattedClaimItemPremium(recentChange.Claim)}</RowItem>
           <RowItem>Claim</RowItem>
+        {:else if recentChange.Item}
+          <RowItem>{recentChange.Item.name}</RowItem>
+          <RowItem>{recentChange.Item.status_change}</RowItem>
+          <RowItem>{getItemPersonName(recentChange.Item, people)}</RowItem>
+          <RowItem numeric>{formatMoney(recentChange.Item.coverage_amount)}</RowItem>
+          <RowItem numeric>{formatMoney(recentChange.Item.annual_premium)}</RowItem>
+          <RowItem>Coverage</RowItem>
         {/if}
       </DataRow>
     {:else}

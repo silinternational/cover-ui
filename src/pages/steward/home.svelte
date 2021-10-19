@@ -6,13 +6,13 @@ import { Claim, claims, initialized as claimsInitialized, loadClaims, statusesAw
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { itemsByPolicyId, loadItems } from 'data/items'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
-import { loadRecentActivityForSteward, recentChanges } from 'data/steward-recent'
+import { loadRecentActivity, recentChanges } from 'data/recent-activity'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
 let claimsAwaitingSteward: Claim[]
 
-loadRecentActivityForSteward()
+loadRecentActivity()
 
 $: $claimsInitialized || loadClaims()
 $: claimsAwaitingSteward = $claims.filter(isAwaitingSteward)

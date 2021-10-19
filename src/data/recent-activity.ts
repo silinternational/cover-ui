@@ -27,7 +27,7 @@ export const recentChanges = writable<RecentChange[]>([])
  *
  * @export
  */
-export async function loadRecentActivityForSteward(): Promise<void> {
+export async function loadRecentActivity(): Promise<void> {
   const urlPath = 'steward/recent'
   const recentActivity = await GET<RecentActivity>(urlPath)
   const recentClaims = recentActivity.Claims

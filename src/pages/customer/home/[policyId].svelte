@@ -1,6 +1,7 @@
 <script lang="ts">
 import { ClaimCards, Row, ItemDeleteModal } from 'components'
 import { isLoadingById } from 'components/progress'
+import { formatDate } from 'components/dates'
 import { claims, loadClaims } from 'data/claims'
 import {
   AccountablePersonOptions,
@@ -131,10 +132,11 @@ const onGotoClaim = (event: CustomEvent) => $goto(routes.customerClaim(event.det
           <!--TODO: make the amount of columns shown be dependent on the device size-->
           <Datatable.Header.Item />
           <Datatable.Header.Item>Item</Datatable.Header.Item>
-          <Datatable.Header.Item>Recent Activity</Datatable.Header.Item>
+          <Datatable.Header.Item>Status</Datatable.Header.Item>
           <Datatable.Header.Item>Accountable Person</Datatable.Header.Item>
           <Datatable.Header.Item>Cost</Datatable.Header.Item>
           <Datatable.Header.Item>Premium</Datatable.Header.Item>
+          <Datatable.Header.Item>Recent Activity</Datatable.Header.Item>
         </Datatable.Header>
         <Datatable.Data>
           {#each items as item (item.id)}
@@ -149,6 +151,7 @@ const onGotoClaim = (event: CustomEvent) => $goto(routes.customerClaim(event.det
               >
               <Datatable.Data.Row.Item>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
+              <Datatable.Data.Row.Item>{formatDate(item.updated_at)}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>
                 <svg class="home-table-more-vert" viewBox="0 0 30 30" on:click={() => handleMoreVertClick(item.id)}>
                   <path

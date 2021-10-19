@@ -6,11 +6,13 @@ import { claims, loadClaims } from 'data/claims'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { itemsByPolicyId, loadItems } from 'data/items'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
-import { customerClaim, CUSTOMER_CLAIMS_NEW } from 'helpers/routes'
+import { CUSTOMER_CLAIMS, customerClaim, CUSTOMER_CLAIMS_NEW } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
 import { Page, Button } from '@silintl/ui-components'
 import { onMount } from 'svelte'
+
+const breadcrumbLinks = [{ name: 'Claims', url: CUSTOMER_CLAIMS }]
 
 $: policyId = $user.policy_id
 
@@ -33,11 +35,11 @@ onMount(() => {
   loadClaims()
 })
 
-const onGotoClaim = (event) => $goto(customerClaim(event.detail))
+const onGotoClaim = (event: CustomEvent) => $goto(customerClaim(event.detail))
 </script>
 
 <Page layout="grid">
-  <Breadcrumb />
+  <Breadcrumb links={breadcrumbLinks} />
   <Row cols={'12'}>
     <Button raised url={CUSTOMER_CLAIMS_NEW}>New claim</Button>
   </Row>

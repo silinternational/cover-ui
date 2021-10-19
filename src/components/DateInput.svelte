@@ -25,7 +25,7 @@ const focus = (node) => autofocus && node.focus()
 .custom-field input {
   border-radius: 8px;
   border: 1px solid gray;
-  padding: var(--field-padding) var(--field-padding) var(--field-padding) var(--field-padding);
+  padding: var(--field-padding);
 }
 </style>
 

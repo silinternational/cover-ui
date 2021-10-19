@@ -145,7 +145,7 @@ const validateForm = () => {
 const onSubmitClaim = (event: Event) => {
   event.preventDefault()
   validateForm()
-  if (payoutOption === PAYOUT_OPTION_REPLACE) assertHas(replaceEstimateUSD, 'Please enter a repair estimate')
+  if (payoutOption === PAYOUT_OPTION_REPLACE) assertHas(replaceEstimateUSD, 'Please enter a replacement estimate')
   dispatch('submit', getFormData())
 }
 

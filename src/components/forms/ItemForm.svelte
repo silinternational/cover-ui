@@ -2,6 +2,7 @@
 import user from '../../authn/user'
 import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
 import Description from '../Description.svelte'
+import MakeAndModelModal from 'MakeAndModelModal.svelte'
 import MoneyInput from '../MoneyInput.svelte'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
@@ -15,7 +16,10 @@ import { createEventDispatcher } from 'svelte'
 
 export let item = {} as PolicyItem
 export let policyId: any = undefined
+
+let formData = {} as any
 let open = false
+let makeModelIsOpen = false
 
 const dispatch = createEventDispatcher<{ submit: any; 'save-for-later': any; delete: any }>()
 
@@ -109,9 +113,13 @@ const validate = (formData: any) => {
 }
 
 const onSubmit = (event: Event) => {
-  const formData = getFormData()
+  formData = getFormData()
   validate(formData) //TODO open a scare dialog for make and model on certain categories
-  dispatch('submit', formData)
+  if (!(make && model) && $categories.find((category) => category.id === categoryId)?.require_make_model) {
+    makeModelIsOpen = true
+  } else {
+    dispatch('submit', formData)
+  }
 }
 
 const saveForLater = (event: Event) => {
@@ -131,6 +139,11 @@ const handleDialog = (event: CustomEvent<string>) => {
   if (event.detail === 'remove') {
     dispatch('delete')
   }
+}
+
+const onMakeModelClosed = (event: CustomEvent<string>) => {
+  makeModelIsOpen = false
+  event.detail === 'submit' && dispatch('submit', formData)
 }
 
 const setInitialValues = (item: PolicyItem) => {
@@ -205,5 +218,6 @@ const setInitialValues = (item: PolicyItem) => {
       <ItemDeleteModal {open} {item} on:closed={handleDialog} />
     {/if}
     <Button raised>Get approval</Button>
+    <MakeAndModelModal open={makeModelIsOpen} on:closed={onMakeModelClosed} />
   </p>
 </Form>

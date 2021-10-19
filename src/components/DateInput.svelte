@@ -1,40 +1,34 @@
 <script lang="ts">
-import { MDCTextField } from '@material/textfield'
-import { onMount } from 'svelte'
 
 export let value = ''
 export let disabled = false
 export let autofocus = false
-
-let element = {}
-let mdcTextField = {}
-
-onMount(() => {
-  mdcTextField = new MDCTextField(element)
-  return () => mdcTextField.destroy()
-})
+export let padding = '12px'
+export let width = '200px'
 
 const focus = (node) => autofocus && node.focus()
 </script>
 
 <style>
-.input-label {
-  width: 228px;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-.date-input {
-  padding-right: 60px;
+.custom-field {
+  font-size: 14px;
+  position: relative;
+  border-top: 20px solid transparent;
+}
+
+.custom-field input {
+  border-radius: 8px;
+  border: 1px solid gray;
+  padding: var(--field-padding);
 }
 </style>
 
-<label
-  class="mdc-text-field mdc-text-field--outlined {$$props.class} textfield-radius input-label"
-  class:mdc-text-field--disabled={disabled}
-  bind:this={element}
->
-  <input type="date" class="mdc-text-field__input date-input" bind:value on:blur use:focus {disabled} />
-  <span class="mdc-notched-outline">
-    <span class="mdc-notched-outline__leading" />
-    <span class="mdc-notched-outline__trailing" />
-  </span>
+<label class="{$$props.class} custom-field" style="--field-padding: {padding};" {disabled}>
+  <input type="date" class="fs-14" style="width: {width}" bind:value on:blur use:focus {disabled} />
 </label>

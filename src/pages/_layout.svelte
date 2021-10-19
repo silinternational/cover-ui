@@ -1,7 +1,10 @@
 <script lang="ts">
 import user, { isSteward } from '../authn/user'
 import { AppDrawer } from 'components'
+import { initialized as policiesInitialized, loadPolicies, policies } from 'data/policies'
 import * as routes from 'helpers/routes'
+
+$: $policiesInitialized || loadPolicies()
 
 $: menuItems = [
   {},
@@ -46,6 +49,6 @@ $: menuItems = [
 ]
 </script>
 
-<AppDrawer {menuItems}>
+<AppDrawer {menuItems} policies={$policies}>
   <slot />
 </AppDrawer>

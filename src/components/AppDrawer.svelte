@@ -1,34 +1,23 @@
 <script lang="ts">
 import AppFooter from './AppFooter.svelte'
 import AppHeader from './AppHeader.svelte'
+import RoleAndPolicyMenu from './RoleAndPolicyMenu.svelte'
+import type { Policy } from 'data/policies'
 import { goto } from '@roxi/routify'
-import { Button, Drawer, Menu } from '@silintl/ui-components'
+import { Drawer } from '@silintl/ui-components'
 import { ROOT } from 'helpers/routes'
 
 export let menuItems: any[] = []
+export let policies: Policy[] = []
 
-const roleMenuItems = [
-  { icon: 'gavel', label: 'Steward', url: '/steward/home' },
-  { icon: 'work', label: 'Department Name', url: '/customer/home/[departmentPolicyId]' },
-  { icon: 'family_restroom', label: 'Household', url: '/customer/home/[householdPolicyId]' },
-]
-
-let roleMenuOpen = false
-let roleMenuSelection = 'Steward' // TEMP example
 let toggle = false
 
 const logoClickHandler = () => $goto(ROOT)
-const toggleRoleMenu = () => {
-  roleMenuOpen = !roleMenuOpen
-}
 </script>
 
 <style>
-.role-menu {
+.role-and-policy-menu {
   margin-left: 12px;
-}
-#role-menu-options-container {
-  position: absolute;
 }
 </style>
 
@@ -39,11 +28,8 @@ const toggleRoleMenu = () => {
 
   <AppHeader on:toggleDrawer={() => (toggle = !toggle)} />
 
-  <div class="role-menu pt-1" slot="drawer-content-top">
-    <Button appendIcon="arrow_drop_down" on:click={toggleRoleMenu}>{roleMenuSelection}</Button>
-    <div id="role-menu-options-container">
-      <Menu bind:menuOpen={roleMenuOpen} menuItems={roleMenuItems} />
-    </div>
+  <div class="role-and-policy-menu pt-1" slot="drawer-content-top">
+    <RoleAndPolicyMenu {policies} />
   </div>
 
   <slot />

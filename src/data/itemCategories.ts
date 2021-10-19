@@ -6,6 +6,7 @@ export type ItemCategory = {
   help_text: string
   id: string
   name: string
+  require_make_model: boolean
   risk_category: any /*RiskCategory*/
   updated_at: string /*Date*/
 }

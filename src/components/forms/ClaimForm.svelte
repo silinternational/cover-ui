@@ -97,6 +97,7 @@ $: !shouldAskIfRepairable && unSetRepairableSelection()
 $: !shouldAskForFMV && unSetFairMarketValue()
 $: !isRepairable && unSetRepairEstimate()
 $: needsEvidence = !unrepairableOrTooExpensive || payoutOption === PAYOUT_OPTION_FMV
+$: needsPayoutOption = !(isRepairable || isEvacuation) || repairCostIsTooHigh
 $: canContinueToEvidence =
   (repairEstimateUSD > 0 && fairMarketValueUSD > 0) || (fairMarketValueUSD > 0 && !isRepairable)
 
@@ -138,7 +139,7 @@ const validateForm = () => {
     assertHas(repairEstimateUSD, 'Please enter a repair estimate')
     assertHas(fairMarketValueUSD, 'Please enter a fair market value')
   }
-  !(isRepairable || isEvacuation) && assertHas(payoutOption, 'Please select a payout option')
+  needsPayoutOption && assertHas(payoutOption, 'Please select a payout option')
 }
 
 const onSubmitClaim = (event: Event) => {

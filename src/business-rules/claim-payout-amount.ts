@@ -89,8 +89,9 @@ export const determineMaxPayout = (
 
 export const isEvidenceNeeded = (claimItem: ClaimItem, claimStatus: ClaimStatus): boolean => {
   const willNeedEvidence = claimItem.fmv > 0 || claimItem.repair_estimate > 0
+  const repairCostIsNotTooHigh = !isRepairCostTooHigh(claimItem.repair_estimate, claimItem.fmv)
   const canProvideEvidenceNow = ['Draft'].includes(claimStatus)
-  return willNeedEvidence && canProvideEvidenceNow
+  return willNeedEvidence && repairCostIsNotTooHigh && canProvideEvidenceNow
 }
 
 export const getFilePurpose = (claimItem: ClaimItem, needsReceipt: boolean): ClaimFilePurpose => {

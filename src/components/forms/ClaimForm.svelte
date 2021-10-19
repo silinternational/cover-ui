@@ -10,14 +10,15 @@ import {
   PAYOUT_OPTION_REPAIR,
   PAYOUT_OPTION_REPLACE,
 } from '../../business-rules/claim-payout-amount'
-import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
-import Description from '../Description.svelte'
-import RadioOptions from '../RadioOptions.svelte'
-import DateInput from '../DateInput.svelte'
-import MoneyInput from '../MoneyInput.svelte'
 import { claimIncidentTypes, loadClaimIncidentTypes } from 'data/claim-incident-types'
 import type { Claim, ClaimItem, PayoutOption } from 'data/claims'
 import type { PolicyItem } from 'data/items'
+import DateInput from 'DateInput.svelte'
+import Description from 'Description.svelte'
+import ConvertCurrencyLink from 'ConvertCurrencyLink.svelte'
+import MoneyInput from 'MoneyInput.svelte'
+import RadioOptions from 'RadioOptions.svelte'
+import { assertHas } from '../../validation/assertions'
 import { Button, Form, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
@@ -96,9 +97,9 @@ $: !shouldAskIfRepairable && unSetRepairableSelection()
 $: !shouldAskForFMV && unSetFairMarketValue()
 $: !isRepairable && unSetRepairEstimate()
 $: needsEvidence = !unrepairableOrTooExpensive || payoutOption === PAYOUT_OPTION_FMV
+$: needsPayoutOption = !(isRepairable || isEvacuation) || repairCostIsTooHigh
 $: canContinueToEvidence =
-  (repairEstimateUSD > 0 && fairMarketValueUSD > 0) ||
-  (fairMarketValueUSD > 0 && !(repairableSelection === 'repairable'))
+  (repairEstimateUSD > 0 && fairMarketValueUSD > 0) || (fairMarketValueUSD > 0 && !isRepairable)
 
 // Calculate dynamic options for radio-button prompts.
 $: lossReasonOptions = $claimIncidentTypes.map(({ name }) => ({ label: name, value: name }))
@@ -130,14 +131,27 @@ const determinePayoutOption = (
   }
   return selectedPayoutOption
 }
+const validateForm = () => {
+  assertHas(lossReason, 'Please select a reason for loss or damage')
+  assertHas(situationDescription, 'Please describe the situation')
+  potentiallyRepairable && assertHas(repairableSelection, 'Please specify if the item is repairable')
+  if (isRepairable) {
+    assertHas(repairEstimateUSD, 'Please enter a repair estimate')
+    assertHas(fairMarketValueUSD, 'Please enter a fair market value')
+  }
+  needsPayoutOption && assertHas(payoutOption, 'Please select a payout option')
+}
 
 const onSubmitClaim = (event: Event) => {
   event.preventDefault()
+  validateForm()
+  if (payoutOption === PAYOUT_OPTION_REPLACE) assertHas(replaceEstimateUSD, 'Please enter a replacement estimate')
   dispatch('submit', getFormData())
 }
 
 const onSaveForLater = (event: Event) => {
   event.preventDefault()
+  validateForm()
   dispatch('save-for-later', getFormData())
 }
 

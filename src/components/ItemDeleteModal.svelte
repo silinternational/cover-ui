@@ -6,7 +6,7 @@ import { createEventDispatcher } from 'svelte'
 export let open = true
 export let item: PolicyItem
 
-let dispatch = createEventDispatcher<{ closed: string }>()
+const dispatch = createEventDispatcher<{ closed: string }>()
 
 const buttons: Dialog.AlertButton[] = [
   { label: 'Yes, I’m Sure', action: 'remove', class: 'error-button' },

@@ -112,10 +112,12 @@ const validate = (formData: any) => {
   return true
 }
 
+const areMakeAndModelRequired = () => $categories.find((category) => category.id === categoryId)?.require_make_model
+
 const onSubmit = (event: Event) => {
   formData = getFormData()
-  validate(formData) //TODO open a scare dialog for make and model on certain categories
-  if (!(make && model) && $categories.find((category) => category.id === categoryId)?.require_make_model) {
+  validate(formData)
+  if (!(make && model) && areMakeAndModelRequired()) {
     makeModelIsOpen = true
   } else {
     dispatch('submit', formData)

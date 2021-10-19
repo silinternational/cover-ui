@@ -32,7 +32,7 @@ $: menuItems = [
   //   label: 'Chat',
   // },
   {
-    url: routes.SETTINGS,
+    url: routes.SETTINGS_HOUSEHOLD,
     icon: 'settings',
     label: 'Settings',
     tooltip: 'Group Settings',

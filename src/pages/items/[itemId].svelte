@@ -75,6 +75,7 @@ const goToNewClaim = () => {
 }
 
 const handleDialog = async (event: CustomEvent<string>) => {
+  open = false
   if (event.detail === 'remove') {
     await deleteItem(policyId, itemId)
 

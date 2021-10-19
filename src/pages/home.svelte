@@ -13,9 +13,13 @@ const sendToRoleHome = (appRole: string) => {
     case 'Steward':
       $redirect('/steward/home')
       break
+    case 'Signator':
+      $redirect('/signator/home')
+      break
     default:
-      // TODO: Eventually redirect signators to their own home page, too.
       console.error('Unknown role:', appRole)
+      $redirect(CUSTOMER_HOME)
+      break
   }
 }
 </script>

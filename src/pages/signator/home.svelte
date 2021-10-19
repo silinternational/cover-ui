@@ -2,7 +2,7 @@
 import { ClaimCards, RecentActivityTable, Row } from 'components'
 import { loading } from 'components/progress'
 import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
-import { Claim, claims, initialized as claimsInitialized, loadClaims, statusesAwaitingSteward } from 'data/claims'
+import { Claim, claims, initialized as claimsInitialized, loadClaims, statusesAwaitingSignator } from 'data/claims'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { itemsByPolicyId, loadItems } from 'data/items'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
@@ -10,13 +10,13 @@ import { loadRecentActivity, recentChanges } from 'data/recent-activity'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
-let claimsAwaitingSteward: Claim[]
+let claimsAwaitingSignator: Claim[]
 
 loadRecentActivity()
 
 $: $claimsInitialized || loadClaims()
-$: claimsAwaitingSteward = $claims.filter(isAwaitingSteward)
-$: claimsAwaitingSteward.map((claim) => claim.policy_id).forEach(loadDataOnce)
+$: claimsAwaitingSignator = $claims.filter(isAwaitingSignator)
+$: claimsAwaitingSignator.map((claim) => claim.policy_id).forEach(loadDataOnce)
 
 $: items = [].concat(...Object.values($itemsByPolicyId))
 $: dependents = [].concat(...Object.values($dependentsByPolicyId))
@@ -26,8 +26,8 @@ $: dependentOptions = getDependentOptions(dependents)
 $: policyMemberOptions = getPolicyMemberOptions(policyMembers)
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions] as AccountablePersonOptions[]
 
-const isAwaitingSteward = (claim: Claim): boolean => {
-  return statusesAwaitingSteward.includes(claim.status)
+const isAwaitingSignator = (claim: Claim): boolean => {
+  return statusesAwaitingSignator.includes(claim.status)
 }
 const loadDataOnce = (policyId: string) => {
   if (!Array.isArray($itemsByPolicyId[policyId])) {
@@ -40,7 +40,7 @@ const loadDataOnce = (policyId: string) => {
     loadMembersOfPolicy(policyId)
   }
 }
-const onGotoClaim = (event) => $goto(`/steward/claims/${event.detail}`)
+const onGotoClaim = (event) => $goto(`/signator/claims/${event.detail}`)
 </script>
 
 <style>
@@ -48,7 +48,7 @@ const onGotoClaim = (event) => $goto(`/steward/claims/${event.detail}`)
 
 <Page layout="grid">
   <Row cols="12">
-    <ClaimCards {accountablePersons} claims={claimsAwaitingSteward} {items} on:goto-claim={onGotoClaim} />
+    <ClaimCards {accountablePersons} claims={claimsAwaitingSignator} {items} on:goto-claim={onGotoClaim} />
   </Row>
 
   <Row cols={'12'}>

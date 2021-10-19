@@ -36,7 +36,7 @@ export async function loadRecentActivity(): Promise<void> {
   mergedRecentObjects.sort((a: RecentChange, b: RecentChange) => {
     const dateA = new Date(a.StatusUpdatedAt)
     const dateB = new Date(b.StatusUpdatedAt)
-    return dateB - dateA
+    return Number(dateB) - Number(dateA)
   })
   recentChanges.set(mergedRecentObjects)
 }

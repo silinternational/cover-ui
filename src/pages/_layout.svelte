@@ -3,6 +3,7 @@ import user, { isSteward } from '../authn/user'
 import { AppDrawer } from 'components'
 import { initialized as policiesInitialized, loadPolicies, policies } from 'data/policies'
 import * as routes from 'helpers/routes'
+import { goto } from '@roxi/routify'
 
 $: $policiesInitialized || loadPolicies()
 
@@ -47,8 +48,11 @@ $: menuItems = [
     button: true,
   },
 ]
+
+const goToPolicyAsCustomer = (event: CustomEvent) => $goto(`/customer/home/${event.detail}`)
+const goToRoleHome = (event: CustomEvent) => $goto(`/${event.detail}/home`)
 </script>
 
-<AppDrawer {menuItems} policies={$policies}>
+<AppDrawer {menuItems} policies={$policies} on:policy={goToPolicyAsCustomer} on:role={goToRoleHome}>
   <slot />
 </AppDrawer>

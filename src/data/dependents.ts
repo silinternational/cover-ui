@@ -4,14 +4,14 @@ import { writable } from 'svelte/store'
 export type PolicyDependent = {
   child_birth_year?: number
   id: string
-  location: string
+  country: string
   name: string
   relationship: /*PolicyDependentRelationship*/ 'Spouse' | 'Child'
 }
 
 export type CreatePolicyDependentRequestBody = {
   child_birth_year: number
-  location: string
+  country: string
   name: string
   relationship: /*PolicyDependentRelationship*/ 'Spouse' | 'Child'
 }
@@ -19,7 +19,7 @@ export type CreatePolicyDependentRequestBody = {
 export type UpdatePolicyDependentRequestBody = {
   child_birth_year: number
   id: string
-  location: string
+  country: string
   name: string
   relationship: /*PolicyDependentRelationship*/ 'Spouse' | 'Child'
 }
@@ -39,7 +39,7 @@ export async function addDependent(policyId: string, depData: any): Promise<void
   const parsedDep: CreatePolicyDependentRequestBody = {
     name: depData.name,
     relationship: depData.relationship,
-    location: depData.location,
+    country: depData.country,
     child_birth_year: depData.childBirthYear && parseInt(depData.childBirthYear),
   }
 
@@ -88,7 +88,7 @@ export async function updateDependent(policyId: string, dependentId: string, dep
     id: dependentId,
     name: depData.name,
     relationship: depData.relationship,
-    location: depData.location,
+    country: depData.country,
     child_birth_year: depData.childBirthYear,
   }
 

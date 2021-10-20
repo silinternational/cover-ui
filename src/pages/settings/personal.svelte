@@ -17,7 +17,7 @@ const NOTIFICATION_OPTION_CUSTOM = 'custom_email'
 let uploading = false
 let notification_email = $user.email_override ? NOTIFICATION_OPTION_CUSTOM : NOTIFICATION_OPTION_DEFAULT
 let email_override = $user.email_override || ''
-let location = $user.location || ''
+let country = $user.country || ''
 let croppie: Croppie
 let croppieContainer: HTMLDivElement
 let breadcrumbLinks = [{ name: 'Personal Settings', url: SETTINGS_PERSONAL }]
@@ -35,20 +35,20 @@ const updateCustomEmail = async () => {
 
   await updateUser({
     email_override,
-    location,
+    country,
   })
   setNotice('Your notification email has been saved')
 }
 
-const updateLocation = async () => {
-  if (isLocationValid(location)) {
+const updateCountry = async () => {
+  if (isCountryValid(country)) {
     await updateUser({
       email_override,
-      location,
+      country,
     })
-    setNotice('Your location has been saved')
+    setNotice('Your country has been saved')
   } else {
-    setNotice('Please enter a location')
+    setNotice('Please enter a country')
   }
 }
 
@@ -106,7 +106,7 @@ async function onUpload() {
   }
 }
 
-const isLocationValid = (location: string) => !!location
+const isCountryValid = (country: string) => !!country
 </script>
 
 <style>
@@ -137,8 +137,8 @@ p {
   {/if}
 
   <p>
-    <span class="header">Location<span class="required">*</span></span>
-    <TextField placeholder={'Enter country'} bind:value={location} on:blur={updateLocation} />
+    <span class="header">Country<span class="required">*</span></span>
+    <TextField placeholder={'Enter country'} bind:value={country} on:blur={updateCountry} />
   </p>
 
   {#if 0}

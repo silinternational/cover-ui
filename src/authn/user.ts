@@ -11,7 +11,7 @@ export type User = {
   id: string
   last_login_utc: string /*Date*/
   last_name: string
-  location: string
+  country: string
   name: string
   photo_file: {
     content_type: string
@@ -28,7 +28,7 @@ export type User = {
 
 export type UpdatedUserBody = {
   email_override: string
-  location: string
+  country: string
 }
 
 const user = writable<User>({} as User)

@@ -10,7 +10,7 @@ import { routes } from '../../.routify/routes'
 import { Snackbar } from '@silintl/ui-components'
 
 // If we've loaded the user, but their policy wasn't quite ready, try again.
-$: if (!$user.policy_id) {
+$: if (!$user.policy_id && !$user.app_role) {
   setTimeout(loadUser, 5000)
 }
 

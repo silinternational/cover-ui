@@ -9,6 +9,7 @@ import {
 } from 'data/accountablePersons'
 import { dependentsByPolicyId } from 'data/dependents'
 import type { PolicyItem, ItemCoverageStatus } from 'data/items'
+import { getPolicyById } from 'data/policies'
 import { membersByPolicyId } from 'data/policy-members'
 import { formatDistanceToNow } from 'date-fns'
 import { formatDate } from './dates'
@@ -17,9 +18,11 @@ import { formatMoney } from 'helpers/money'
 export let item: PolicyItem
 export let isCheckingOut: boolean
 export let policyId: string
-export let householdId: string
 
 let accountablePersons: AccountablePersonOptions[]
+
+$: policy = getPolicyById(policyId)
+$: householdId = policy.household_id ? policy.household_id : ''
 
 $: submittedText = item.updated_at ? formatDistanceToNow(Date.parse(item.updated_at), { addSuffix: true }) : ''
 $: status = (item.coverage_status || '') as ItemCoverageStatus

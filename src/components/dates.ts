@@ -15,7 +15,7 @@ export const formatDate = (dateString: string): string => {
 export const getYear = (dateString: string): string => {
   if (dateString) {
     const date = new Date(dateString)
-    const yyyy = date.getFullYear().toString()
+    const yyyy = dateString.indexOf('T') === -1 ? date.getUTCFullYear().toString() : date.getFullYear().toString()
     return yyyy
   }
   return ''

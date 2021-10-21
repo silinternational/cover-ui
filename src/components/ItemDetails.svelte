@@ -56,7 +56,7 @@ $: accountablePersonName = getAccountablePerson(item, accountablePersons)?.name
   </div>
 
   <div class="w-75">
-    {#if isCheckingOut}
+    {#if !isCheckingOut}
       <ItemBanner itemStatus={status}>Submitted {submittedText}</ItemBanner>
     {/if}
     <h3 class="break-word">{item.make || ''} {item.model || ''}</h3>

@@ -189,7 +189,7 @@ const onPayment = () => {
     {#if !hasPaid}
       <div class="flex p-1 mt-2">
         <div>
-          Pay {formatMoney(item.annual_premium)} for the remainder of {year} from {org} account {householdId}.
+          Pay {formatMoney(item.prorated_annual_premium)} for the remainder of {year} from {org} account {householdId}.
           Auto-renew on 1 January {renewYear}.
         </div>
         <Button class="ml-1" raised on:click={onPayment}>Agree and Pay {formatMoney(item.annual_premium)}</Button>

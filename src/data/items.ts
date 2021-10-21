@@ -30,6 +30,7 @@ export type PolicyItem = {
   model: string
   name: string
   policy_id: string
+  prorated_annual_premium: number
   purchase_date: string /* yyyy-mm-dd Date */
   risk_category: RiskCategory
   serial_number: string

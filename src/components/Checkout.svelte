@@ -1,5 +1,6 @@
 <script lang="ts">
 import { formatDate, getYear } from 'components/dates'
+import { termsUrl } from './const'
 import type { PolicyItem } from 'data/items'
 import { getPolicyById } from 'data/policies'
 import { formatMoney } from 'helpers/money'
@@ -7,13 +8,14 @@ import { CUSTOMER_HOME } from 'helpers/routes'
 import ItemDeleteModal from 'ItemDeleteModal.svelte'
 import ItemDetails from 'ItemDetails.svelte'
 import { goto } from '@roxi/routify'
-import { Button } from '@silintl/ui-components'
+import { Button, Checkbox } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let item: PolicyItem
 export let policyId: string
 
 let open: boolean = false
+let checked: boolean = false
 
 $: itemId = item?.id
 
@@ -27,6 +29,12 @@ $: renewYear = Number(year) + 1
 $: renewDate = formatDate(`${renewYear}-01-01`)
 
 const dispatch = createEventDispatcher<{ agreeAndPay: string; delete: string; edit: string }>()
+
+function popup(link: string, windowname: string): boolean {
+  if (!window.focus) return true
+  window.open(link, windowname, 'width=600,height=400,scrollbars=yes')
+  return false
+}
 
 const onAgreeAndPay = () => {
   dispatch('agreeAndPay', itemId)
@@ -59,10 +67,19 @@ const handleDialog = (event: CustomEvent<string>) => {
   </div>
 </div>
 <ItemDetails {item} isCheckingOut {policyId} {householdId} />
-<div class="flex p-1 mt-2">
+
+<div class="my-2">
+  <Checkbox on:checked={() => (checked = true)} on:unchecked={() => (checked = false)} />
+
+  <Button raised on:click={() => popup(termsUrl, 'terms')}>Read covereage terms</Button>
+</div>
+
+<div class="flex p-1">
   <div>
     Pay {formatMoney(item.prorated_annual_premium)} for the remainder of {year} from {org} account {householdId}.
     Auto-renew on {renewDate}.
   </div>
-  <Button class="ml-1" raised on:click={onAgreeAndPay}>Agree and Pay {formatMoney(item.annual_premium)}</Button>
+  <Button class="ml-1" disabled={!checked} raised on:click={onAgreeAndPay}
+    >Agree and Pay {formatMoney(item.annual_premium)}</Button
+  >
 </div>

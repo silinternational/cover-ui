@@ -1,19 +1,31 @@
 <script lang="ts">
 import type { Claim } from 'data/claims'
 import { initialized, loadPolicies, policies, Policy } from 'data/policies'
+import { loadItems, itemsByPolicyId } from 'data/items'
 import type { PolicyMember } from 'data/policy-members'
 import { formatFriendlyDate } from 'helpers/date'
 import { formatMoney } from 'helpers/money'
-import { customerClaim } from 'helpers/routes'
+import { customerClaim, item as policyItem } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { metatags } from '@roxi/routify'
 import { Datatable, Page } from '@silintl/ui-components'
+import { getAccountablePerson, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
+import { dependentsByPolicyId } from 'data/dependents'
+import { formatDate } from 'components/dates'
+import { isLoadingById } from 'components/progress'
 
 export let policyId: string
 
 $: $initialized || loadPolicies()
 $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
 $: members = policy.members || ([] as PolicyMember[])
+$: policyMemberOptions = getPolicyMemberOptions(members)
+$: dependents = $dependentsByPolicyId[policyId] || []
+$: dependentOptions = getDependentOptions(dependents)
+$: accountablePersons = [...policyMemberOptions, ...dependentOptions]
+
+$: policyId && loadItems(policyId)
+$: items = $itemsByPolicyId[policyId] || []
 $: claims = policy.claims || ([] as Claim[])
 $: policyName = policy.type === 'Corporate' ? policy.account : policy.household_id
 $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))
@@ -79,6 +91,37 @@ th {
       {/each}
     </Datatable.Data>
   </Datatable>
+
+  <h4>Items</h4>
+  {#if isLoadingById(policyId)}
+    Loading items...
+  {:else}
+    <Datatable>
+      <Datatable.Header>
+        <Datatable.Header.Item>Item</Datatable.Header.Item>
+        <Datatable.Header.Item>Accountable Person</Datatable.Header.Item>
+        <Datatable.Header.Item>Cost</Datatable.Header.Item>
+        <Datatable.Header.Item>Premium</Datatable.Header.Item>
+        <Datatable.Header.Item>Recent Activity</Datatable.Header.Item>
+      </Datatable.Header>
+      <Datatable.Data>
+        {#each items as item (item.id)}
+          <Datatable.Data.Row>
+            <Datatable.Data.Row.Item
+              ><a href={policyItem(item.id)}>{item.name || ''}</a> ({item.coverage_status ||
+                ''})</Datatable.Data.Row.Item
+            >
+            <Datatable.Data.Row.Item
+              >{getAccountablePerson(item, accountablePersons).name || ''}</Datatable.Data.Row.Item
+            >
+            <Datatable.Data.Row.Item>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
+            <Datatable.Data.Row.Item>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
+            <Datatable.Data.Row.Item>{formatDate(item.updated_at)}</Datatable.Data.Row.Item>
+          </Datatable.Data.Row>
+        {/each}
+      </Datatable.Data>
+    </Datatable>
+  {/if}
 
   <h4>Claims</h4>
   <Datatable>

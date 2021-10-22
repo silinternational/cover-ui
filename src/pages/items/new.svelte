@@ -61,6 +61,14 @@ const handleDialog = async (event: CustomEvent<string>) => {
 }
 </script>
 
+<style>
+.payment-header {
+  background-color: var(--mdc-theme-neutral-bg);
+  padding: 4px;
+  border-radius: 8px 8px 0 0;
+}
+</style>
+
 <Page>
   {#if !isCheckingOut}
     <Breadcrumb />

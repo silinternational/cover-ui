@@ -8,7 +8,7 @@ $: bgColor = state.bgColor || ''
 $: color = state.color || ''
 $: icon = state.icon || ''
 $: title = state.title || ''
-$: steward = statusReason ? 'From your claim handler' : ('' as string) //TODO get this from the api
+$: steward = statusReason ? 'From claim handler' : ('' as string) //TODO get this from the api
 </script>
 
 <style>
@@ -26,7 +26,10 @@ $: steward = statusReason ? 'From your claim handler' : ('' as string) //TODO ge
 
   <div class="mdc-theme--primary pl-10px">
     <div class="mdc-typography--headline6 multi-line-truncate content" style="color: var({color});">
-      {title}{steward}
+      {title}
+      <div>
+        {steward}
+      </div>
     </div>
     <div class="multi-line-truncate fs-14" style="color: var({color});">{statusReason}</div>
   </div>

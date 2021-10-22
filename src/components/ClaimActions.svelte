@@ -15,13 +15,26 @@ let message = ''
 let status: ClaimStatus
 $: status = claim.status
 
+let action: string
+$: switch (status) {
+  case 'Review1':
+    action = 'preapprove'
+    break
+  case 'Review2':
+  case 'Review3':
+    action = 'approve'
+    break
+  default:
+    action = 'Unknown'
+}
+
 let isEditable: boolean
 $: isEditable = editableStatuses.includes(status)
 
 let showSubmit: boolean
 $: showSubmit = ['Receipt', 'Revision'].includes(status) || (status === 'Draft' && needsFile)
 
-const on = (eventType) => () => dispatch(eventType)
+const on = (eventType: string) => () => dispatch(eventType)
 const onAskForChanges = () => dispatch('ask-for-changes', message)
 const onDeny = () => dispatch('deny', message)
 </script>
@@ -48,7 +61,7 @@ const onDeny = () => dispatch('deny', message)
 </style>
 
 {#if $user.app_role === 'Steward'}
-  {#if claim.status === 'Review1'}
+  {#if ['Review1', 'Review2', 'Review3'].includes(status)}
     <div class="container">
       <div class="text-input">
         <TextField class="w-100" label="Send a message" bind:value={message} />
@@ -59,7 +72,7 @@ const onDeny = () => dispatch('deny', message)
       </div>
       <div class="right-buttons">
         <Button class="mx-1" on:click={onAskForChanges} disabled={!message} raised>Ask for Changes</Button>
-        <Button on:click={on('preapprove')} raised>Pre-approve</Button>
+        <Button on:click={on(action)} raised>{action}</Button>
       </div>
     </div>
   {/if}

@@ -36,6 +36,7 @@ import {
   preapproveClaim,
   requestRevision,
   submitClaim,
+  approveClaim,
 } from 'data/claims'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { loadItems, itemsByPolicyId, PolicyItem } from 'data/items'
@@ -65,6 +66,8 @@ $: claimItem = claim.claim_items?.[0] || ({} as ClaimItem) //For now there will 
 $: items = $itemsByPolicyId[claim.policy_id] || []
 $: claim.policy_id && loadItems(claim.policy_id)
 $: item = items.find((itm) => itm.id === claimItem.item_id) || ({} as PolicyItem)
+
+$: isUser = $user.app_role === 'User'
 
 // Accountable persons
 $: policyId = $user.policy_id as string
@@ -111,6 +114,8 @@ $: claimName && (metatags.title = formatPageTitle(`Claims > ${claimName}`))
 const editClaim = () => $goto(customerClaimEdit(claimId))
 
 const onPreapprove = async () => await preapproveClaim(claimId)
+
+const onApprove = async () => await approveClaim(claimId)
 
 const onAskForChanges = async (event: CustomEvent<string>) => {
   const message = event.detail
@@ -249,22 +254,25 @@ function onDeleted(event: CustomEvent<string>) {
           on:deny={onDenyClaim}
           on:edit={editClaim}
           on:preapprove={onPreapprove}
+          on:approve={onApprove}
           on:submit={onSubmit}
         />
       </p>
 
-      {#if needsReceipt}
-        <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onBlur} />
+      {#if isUser}
+        {#if needsReceipt}
+          <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onBlur} />
 
-        <p class="label ml-1 mt-6px">
-          <ConvertCurrencyLink />
-        </p>
-      {/if}
+          <p class="label ml-1 mt-6px">
+            <ConvertCurrencyLink />
+          </p>
+        {/if}
 
-      {#if needsFile}
-        <label for="receipt" class="ml-1">Attach {uploadLabel}</label>
+        {#if needsFile}
+          <label for="receipt" class="ml-1">Attach {uploadLabel}</label>
 
-        <FileDropArea class="w-50 mt-10px" raised {uploading} on:upload={onUpload} />
+          <FileDropArea class="w-50 mt-10px" raised {uploading} on:upload={onUpload} />
+        {/if}
       {/if}
 
       <FilePreview class="w-50" previews={claimFiles} on:deleted={onDeleted} on:preview={onPreview} />

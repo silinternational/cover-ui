@@ -24,6 +24,7 @@ $: org = policy?.entity_code?.name
 $: startDate = formatDate(item?.coverage_start_date)
 $: year = getYear(startDate)
 $: renewYear = Number(year) + 1
+$: renewDate = formatDate(`${renewYear}-01-01`)
 
 const dispatch = createEventDispatcher<{ agreeAndPay: string; delete: string; edit: string }>()
 
@@ -61,7 +62,7 @@ const handleDialog = (event: CustomEvent<string>) => {
 <div class="flex p-1 mt-2">
   <div>
     Pay {formatMoney(item.prorated_annual_premium)} for the remainder of {year} from {org} account {householdId}.
-    Auto-renew on 1 January {renewYear}.
+    Auto-renew on {renewDate}.
   </div>
   <Button class="ml-1" raised on:click={onAgreeAndPay}>Agree and Pay {formatMoney(item.annual_premium)}</Button>
 </div>

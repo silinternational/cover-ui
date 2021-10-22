@@ -131,6 +131,22 @@ export async function addItem(policyId: string, itemData: any): Promise<PolicyIt
   return addedItem
 }
 
+export async function approveItem(itemId: string): Promise<PolicyItem> {
+  const urlPath = `items/${itemId}/approve`
+
+  const updatedItem = await CREATE<PolicyItem>(urlPath)
+
+  itemsByPolicyId.update((data) => {
+    const items = data[updatedItem.policy_id] || []
+    const itemIndex = items.findIndex((item) => item.id === updatedItem.id)
+    items[itemIndex] = updatedItem
+    data[updatedItem.policy_id] = items
+    return data
+  })
+
+  return updatedItem
+}
+
 /**
  * Submit an item.
  *

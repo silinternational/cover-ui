@@ -21,7 +21,7 @@ $: $user.policy_id && loadItems($user.policy_id)
 $: $policies.length || init()
 $: policyId = $user.policy_id as string
 
-$: isUser = $user.app_role === 'User'
+$: isAdmin = $user.app_role === 'Steward' || $user.app_role === 'Signator'
 
 // Accountable persons
 $: policyId && loadDependents(policyId)

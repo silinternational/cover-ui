@@ -61,10 +61,10 @@ const handleDialog = (event: CustomEvent<string>) => {
 </div>
 <ItemDetails {item} isCheckingOut {policyId} {householdId} />
 
-<div class="my-2">
+<div class="flex align-items-center my-2">
   <Checkbox on:checked={() => (checked = true)} on:unchecked={() => (checked = false)} />
 
-  I have read and agree to <a target="_blank" href={TERMS}>Terms of Service</a>
+  <span class="mr-3px">I have read and agree to</span><a target="_blank" href={TERMS}> Terms of Service</a>
 </div>
 
 <div class="flex p-1">

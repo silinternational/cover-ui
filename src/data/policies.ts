@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store'
+import { get, writable } from 'svelte/store'
 import type { Claim } from './claims'
 import { GET, UPDATE } from './index'
 import type { PolicyMember } from './policy-members'
@@ -73,3 +73,8 @@ export async function loadPolicies(): Promise<void> {
 export const affiliations = writable<{ [key: string]: string }>({
   SIL: 'SIL International',
 })
+
+export const getPolicyById = (policyId: string): Policy => {
+  const policy = get(policies).find((policy) => policy.id === policyId) || ({} as Policy)
+  return policy
+}

@@ -1,10 +1,9 @@
 <script lang="ts">
 import { formatDate, getYear } from 'components/dates'
-import { termsUrl } from './const'
 import type { PolicyItem } from 'data/items'
 import { getPolicyById } from 'data/policies'
 import { formatMoney } from 'helpers/money'
-import { CUSTOMER_HOME } from 'helpers/routes'
+import { CUSTOMER_HOME, TERMS } from 'helpers/routes'
 import ItemDeleteModal from 'ItemDeleteModal.svelte'
 import ItemDetails from 'ItemDetails.svelte'
 import { goto } from '@roxi/routify'
@@ -29,12 +28,6 @@ $: renewYear = Number(year) + 1
 $: renewDate = formatDate(`${renewYear}-01-01`)
 
 const dispatch = createEventDispatcher<{ agreeAndPay: string; delete: string; edit: string }>()
-
-function popup(link: string, windowname: string): boolean {
-  if (!window.focus) return true
-  window.open(link, windowname, 'width=600,height=400,scrollbars=yes')
-  return false
-}
 
 const onAgreeAndPay = () => {
   dispatch('agreeAndPay', itemId)
@@ -71,7 +64,7 @@ const handleDialog = (event: CustomEvent<string>) => {
 <div class="my-2">
   <Checkbox on:checked={() => (checked = true)} on:unchecked={() => (checked = false)} />
 
-  <Button raised on:click={() => popup(termsUrl, 'terms')}>Read covereage terms</Button>
+  I have read and agree to <a target="_blank" href={TERMS}>Terms of Service</a>
 </div>
 
 <div class="flex p-1">

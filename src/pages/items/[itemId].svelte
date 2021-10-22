@@ -90,7 +90,7 @@ const onApproveItem = async () => {
       <div class="m-1">
         <Button class="mdc-theme--secondary-background" on:click={goToNewClaim} raised>File Claim</Button>
       </div>
-    {:else if status === 'Pending' && !isUser}
+    {:else if status === 'Pending' && isAdmin}
       <div class="m-1">
         <Button class="mdc-theme--secondary-background" on:click={onApproveItem} raised>Approve Item Coverage</Button>
       </div>

@@ -42,6 +42,10 @@ const onDelete = async (event: CustomEvent<string>) => {
   await deleteItem(policyId, event.detail)
   $goto(ITEMS)
 }
+
+const onEdit = () => {
+  isCheckingOut = false
+}
 </script>
 
 <Page>
@@ -49,6 +53,6 @@ const onDelete = async (event: CustomEvent<string>) => {
     <Breadcrumb />
     <ItemForm {item} {policyId} on:submit={onApply} on:save-for-later={onSaveForLater} />
   {:else}
-    <Checkout {item} {policyId} bind:isCheckingOut on:agreeAndPay={onAgreeAndPay} on:delete={onDelete} />
+    <Checkout {item} {policyId} on:agreeAndPay={onAgreeAndPay} on:delete={onDelete} on:edit={onEdit} />
   {/if}
 </Page>

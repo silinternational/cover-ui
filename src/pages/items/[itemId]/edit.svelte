@@ -54,6 +54,10 @@ const onAgreeAndPay = async (event: CustomEvent<string>) => {
   await submitItem(policyId, itemId)
   $goto(itemRoute(itemId))
 }
+
+const onEdit = () => {
+  isCheckingOut = false
+}
 </script>
 
 {#if !item.id}
@@ -63,7 +67,7 @@ const onAgreeAndPay = async (event: CustomEvent<string>) => {
     We could not find that item. Please <a href={ITEMS}>go back</a> and select an item from the list.
   {/if}
 {:else if isCheckingOut}
-  <Checkout {item} {policyId} bind:isCheckingOut on:agreeAndPay={onAgreeAndPay} on:delete={onDelete} />
+  <Checkout {item} {policyId} on:agreeAndPay={onAgreeAndPay} on:delete={onDelete} on:edit={onEdit} />
 {:else}
   <!-- @todo Handle situations where the user isn't allowed to edit this item (if any). -->
   <Page>

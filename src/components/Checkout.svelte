@@ -12,7 +12,6 @@ import { createEventDispatcher } from 'svelte'
 
 export let item: PolicyItem
 export let policyId: string
-export let isCheckingOut: boolean = false
 
 let open: boolean = false
 
@@ -26,7 +25,7 @@ $: startDate = formatDate(item?.coverage_start_date)
 $: year = getYear(startDate)
 $: renewYear = Number(year) + 1
 
-const dispatch = createEventDispatcher<{ agreeAndPay: string; delete: string }>()
+const dispatch = createEventDispatcher<{ agreeAndPay: string; delete: string; edit: string }>()
 
 const onAgreeAndPay = () => {
   dispatch('agreeAndPay', itemId)
@@ -55,10 +54,10 @@ const handleDialog = (event: CustomEvent<string>) => {
 
   <div>
     <Button outlined on:click={$goto(CUSTOMER_HOME)}>Save for later</Button>
-    <Button raised on:click={() => (isCheckingOut = false)}>Edit Item</Button>
+    <Button raised on:click={() => dispatch('edit')}>Edit Item</Button>
   </div>
 </div>
-<ItemDetails {item} {isCheckingOut} {policyId} {householdId} />
+<ItemDetails {item} isCheckingOut {policyId} {householdId} />
 <div class="flex p-1 mt-2">
   <div>
     Pay {formatMoney(item.prorated_annual_premium)} for the remainder of {year} from {org} account {householdId}.

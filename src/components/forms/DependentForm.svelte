@@ -25,7 +25,7 @@ const relationshipOptions = [
 let formData = {
   id: dependent.id,
   name: dependent.name || '',
-  location: dependent.location || '',
+  country: dependent.country || '',
   relationship: dependent.relationship || '',
   childBirthYear: dependent.child_birth_year || undefined,
 }
@@ -38,7 +38,7 @@ $: alreadyHasSpouse && (relationshipOptions[0].disabled = true)
 
 const validate = (isChild: boolean): boolean | void => {
   assertHas(formData.name, 'Please specify a name')
-  assertHas(formData.location, 'Please specify a location')
+  assertHas(formData.country, 'Please specify a country')
   assertHas(formData.relationship, 'Please select "Spouse" or "Child"')
   isChild && assertHas(formData.childBirthYear, "Please specify your child's birthyear")
   return true
@@ -86,7 +86,7 @@ const onSubmit = () => {
       dependents is limited to $3,000 per person.
     </p>
     <p>
-      <TextField label="Location" bind:value={formData.location} class="w-100" />
+      <TextField label="Country" bind:value={formData.country} class="w-100" />
     </p>
     <p>
       <RadioOptions name="relationship" options={relationshipOptions} bind:value={formData.relationship} />

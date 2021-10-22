@@ -50,7 +50,7 @@ const handleDialog = (event: CustomEvent<string>) => {
 </style>
 
 <h2>Review Coverage and Checkout</h2>
-<div class="payment-header flex justify-between align-items-center">
+<div class="payment-header flex justify-between align-items-center pr-1">
   <Button class="mx-5px" on:click={() => (open = true)}>Discard</Button>
   <ItemDeleteModal {open} {item} on:closed={handleDialog} />
 
@@ -67,7 +67,7 @@ const handleDialog = (event: CustomEvent<string>) => {
   <span class="mr-3px">I have read and agree to</span><a target="_blank" href={TERMS}> Terms of Service</a>
 </div>
 
-<div class="flex p-1">
+<div class="flex align-items-center p-1">
   <div>
     Pay {formatMoney(item.prorated_annual_premium)} for the remainder of {year} from {org} account {householdId}.
     Auto-renew on {renewDate}.

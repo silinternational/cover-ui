@@ -4,7 +4,7 @@ import { Breadcrumb, ItemDeleteModal } from 'components'
 import { loading } from 'components/progress'
 import { formatDate } from 'components/dates'
 import { loadDependents } from 'data/dependents'
-import { deleteItem, ItemCoverageStatus, itemsByPolicyId, loadItems, PolicyItem } from 'data/items'
+import { approveItem, deleteItem, ItemCoverageStatus, itemsByPolicyId, loadItems, PolicyItem } from 'data/items'
 import { init, policies } from 'data/policies'
 import { loadMembersOfPolicy } from 'data/policy-members'
 import { loadPolicyItemHistory, policyHistoryByItemId } from 'data/policy-history'
@@ -23,6 +23,8 @@ $: $user.policy_id && loadItems($user.policy_id)
 
 $: $policies.length || init()
 $: policyId = $user.policy_id as string
+
+$: isAdmin = $user.app_role === 'Steward' || $user.app_role === 'Signator'
 
 // Accountable persons
 $: policyId && loadDependents(policyId)
@@ -65,6 +67,10 @@ const handleDialog = async (event: CustomEvent<string>) => {
     $goto(ITEMS)
   }
 }
+
+const onApproveItem = async () => {
+  await approveItem(itemId)
+}
 </script>
 
 <Page>
@@ -94,6 +100,10 @@ const handleDialog = async (event: CustomEvent<string>) => {
     {#if status === 'Approved'}
       <div class="m-1">
         <Button class="mdc-theme--secondary-background" on:click={goToNewClaim} raised>File Claim</Button>
+      </div>
+    {:else if status === 'Pending' && isAdmin}
+      <div class="m-1">
+        <Button class="mdc-theme--secondary-background" on:click={onApproveItem} raised>Approve Item Coverage</Button>
       </div>
     {/if}
 

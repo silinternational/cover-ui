@@ -40,12 +40,11 @@ $: items = $itemsByPolicyId[$user.policy_id] || []
 $: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
 $: itemName = item.name || ''
 $: status = (item.coverage_status || '') as ItemCoverageStatus
-$: status === 'Draft' && itemBelongsToPolicy(policyId, item) && goToEditItem()
+$: isMemberOfPolicy = itemBelongsToPolicy(policyId, item)
+$: status === 'Draft' && isMemberOfPolicy && goToEditItem()
 
-$: userOwnsItem = itemBelongsToPolicy(policyId, item)
-
-$: allowRemoveCovereage = (!['Inactive', 'Denied'].includes(status) && userOwnsItem) as boolean
-$: canEdit = ['Draft', 'Pending'].includes(status) && userOwnsItem
+$: allowRemoveCovereage = (!['Inactive', 'Denied'].includes(status) && isMemberOfPolicy) as boolean
+$: canEdit = ['Draft', 'Pending'].includes(status) && isMemberOfPolicy
 
 // Dynamic breadcrumbs data:
 const itemsBreadcrumb = { name: 'Items', url: ITEMS }
@@ -97,7 +96,7 @@ const onApproveItem = async () => {
     <ItemDeleteModal {open} {item} on:closed={handleDialog} />
     <ItemDetails {item} {policyId} />
     <br />
-    {#if status === 'Approved' && userOwnsItem}
+    {#if status === 'Approved' && isMemberOfPolicy}
       <div class="m-1">
         <Button class="mdc-theme--secondary-background" on:click={goToNewClaim} raised>File Claim</Button>
       </div>

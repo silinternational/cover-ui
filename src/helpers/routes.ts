@@ -28,3 +28,5 @@ export const SETTINGS = '/settings'
 export const SETTINGS_PERSONAL = '/settings/personal'
 export const SETTINGS_HOUSEHOLD = '/settings/household'
 export const householdSettingsDependent = (dependentId: string) => `/settings/household/dependent/${dependentId}`
+
+export const TERMS = '/terms-of-service'

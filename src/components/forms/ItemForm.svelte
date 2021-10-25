@@ -57,7 +57,7 @@ $: accountablePerson = accountablePersons.find(
   (person) => person.id === (accountablePersonId || initialAccountablePersonId)
 )
 
-$: country = accountablePerson?.location || country
+$: country = accountablePerson?.country || country
 $: !$catItemsInitialized && init()
 
 const onAccountablePersonChange = (event: any) => {

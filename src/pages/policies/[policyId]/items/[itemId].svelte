@@ -42,8 +42,6 @@ $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
 $: policyItemHistory = $policyHistoryByItemId[item.id]
 $: hasHistory = policyItemHistory && policyItemHistory.length > 0
 
-$: submittedText = item.updated_at ? formatDistanceToNow(Date.parse(item.updated_at), { addSuffix: true }) : ''
-$: startDate = formatDate(item.coverage_start_date)
 $: allowRemoveCovereage = !['Inactive', 'Denied'].includes(status) as boolean
 
 // Dynamic breadcrumbs data:

@@ -70,7 +70,7 @@ $: item = items.find((itm) => itm.id === claimItem.item_id) || ({} as PolicyItem
 // Accountable persons
 $: policyId = $user.policy_id as string
 
-$: belongsToUser = itemBelongsToPolicy(policyId, item)
+$: isMemberOfPolicy = itemBelongsToPolicy(policyId, item)
 
 $: policyId && loadDependents(policyId)
 $: dependents = $dependentsByPolicyId[policyId] || []
@@ -250,7 +250,7 @@ function onDeleted(event: CustomEvent<string>) {
           {noFilesUploaded}
           {needsFile}
           {claim}
-          {belongsToUser}
+          {isMemberOfPolicy}
           on:ask-for-changes={onAskForChanges}
           on:deny={onDenyClaim}
           on:edit={editClaim}
@@ -260,7 +260,7 @@ function onDeleted(event: CustomEvent<string>) {
         />
       </p>
 
-      {#if belongsToUser}
+      {#if isMemberOfPolicy}
         {#if needsReceipt}
           <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onBlur} />
 

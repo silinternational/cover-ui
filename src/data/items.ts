@@ -20,10 +20,7 @@ export type PolicyItem = {
   category: any /*ItemCategory*/
   country: string
   coverage_amount: number
-  coverage_end_date: {
-    String: string /*Date*/
-    Valid: boolean
-  }
+  coverage_end_date: string /*Date*/
   coverage_start_date: string /* yyyy-mm-dd Date */
   coverage_status: ItemCoverageStatus
   created_at: string /*Date*/

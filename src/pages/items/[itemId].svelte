@@ -42,7 +42,10 @@ $: itemName = item.name || ''
 $: status = (item.coverage_status || '') as ItemCoverageStatus
 $: status === 'Draft' && itemBelongsToPolicy(policyId, item) && goToEditItem()
 
-$: allowRemoveCovereage = !['Inactive', 'Denied'].includes(status) as boolean
+$: userOwnsItem = itemBelongsToPolicy(policyId, item)
+
+$: allowRemoveCovereage = (!['Inactive', 'Denied'].includes(status) && userOwnsItem) as boolean
+$: canEdit = ['Draft', 'Pending'].includes(status) && userOwnsItem
 
 // Dynamic breadcrumbs data:
 const itemsBreadcrumb = { name: 'Items', url: ITEMS }
@@ -86,7 +89,7 @@ const onApproveItem = async () => {
         {#if allowRemoveCovereage}
           <Button class="remove-button mx-5px" on:click={() => (open = true)}>Remove</Button>
         {/if}
-        {#if status === 'Draft' || status === 'Pending'}
+        {#if canEdit}
           <Button on:click={goToEditItem}>Edit Item</Button>
         {/if}
       </div>
@@ -94,7 +97,7 @@ const onApproveItem = async () => {
     <ItemDeleteModal {open} {item} on:closed={handleDialog} />
     <ItemDetails {item} {policyId} />
     <br />
-    {#if status === 'Approved'}
+    {#if status === 'Approved' && userOwnsItem}
       <div class="m-1">
         <Button class="mdc-theme--secondary-background" on:click={goToNewClaim} raised>File Claim</Button>
       </div>

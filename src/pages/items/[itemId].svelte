@@ -17,8 +17,9 @@ import { formatMoney } from 'helpers/money'
 import { ITEMS, item as itemRoute, itemEdit, itemNewClaim } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
-import { Button, Page, Dialog } from '@silintl/ui-components'
+import { Button, Page, Dialog, Datatable } from '@silintl/ui-components'
 import { formatDistanceToNow } from 'date-fns'
+import { loadPolicyItemHistory, policyHistoryByItemId } from 'data/policy-history'
 
 export let itemId: string
 
@@ -55,6 +56,10 @@ $: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
 $: itemName = item.name || ''
 $: status = (item.coverage_status || '') as ItemCoverageStatus
 $: status === 'Draft' && $user.app_role === 'User' && goToEditItem()
+
+$: policyId && item.id && loadPolicyItemHistory(policyId, item.id)
+$: policyItemHistory = $policyHistoryByItemId[item.id]
+$: hasHistory = policyItemHistory && policyItemHistory.length > 0
 
 $: submittedText = item.updated_at ? formatDistanceToNow(Date.parse(item.updated_at), { addSuffix: true }) : ''
 $: startDate = formatDate(item.coverage_start_date)
@@ -147,5 +152,29 @@ const handleDialog = async (event: CustomEvent<string>) => {
         {/if}
       </div>
     </Row>
+    {#if 0 && hasHistory}
+      <Row>
+        <h3>History</h3>
+        <Datatable>
+          <Datatable.Header>
+            <Datatable.Header.Item>Person</Datatable.Header.Item>
+            <Datatable.Header.Item>Action</Datatable.Header.Item>
+            <Datatable.Header.Item>Date</Datatable.Header.Item>
+          </Datatable.Header>
+          <Datatable.Data>
+            {#each policyItemHistory as itemHistory}
+              <Datatable.Data.Row>
+                <Datatable.Data.Row.Item>{itemHistory.user_id}</Datatable.Data.Row.Item>
+                <Datatable.Data.Row.Item
+                  >{itemHistory.action}
+                  {itemHistory.field_name} from '{itemHistory.old_value}' to '{itemHistory.new_value}'</Datatable.Data.Row.Item
+                >
+                <Datatable.Data.Row.Item>{formatDate(itemHistory.updated_at)}</Datatable.Data.Row.Item>
+              </Datatable.Data.Row>
+            {/each}
+          </Datatable.Data>
+        </Datatable>
+      </Row>
+    {/if}
   {/if}
 </Page>

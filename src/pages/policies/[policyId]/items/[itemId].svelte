@@ -1,5 +1,5 @@
 <script lang="ts">
-import user from '../../authn/user'
+import user from '../../../../authn/user'
 import { Breadcrumb, ItemDeleteModal } from 'components'
 import { loading } from 'components/progress'
 import { formatDate } from 'components/dates'
@@ -9,20 +9,20 @@ import { init, policies } from 'data/policies'
 import { loadMembersOfPolicy } from 'data/policy-members'
 import { loadPolicyItemHistory, policyHistoryByItemId } from 'data/policy-history'
 import ItemDetails from 'ItemDetails.svelte'
-import { ITEMS, item as itemRoute, itemEdit, itemNewClaim } from 'helpers/routes'
+import { items as itemsRoute, itemDetails, itemEdit, itemNewClaim, POLICIES, policyDetails } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
-import { goto, metatags } from '@roxi/routify'
+import { goto, metatags, params } from '@roxi/routify'
 import { formatDistanceToNow } from 'date-fns'
-import { Button, Page, Dialog, Datatable } from '@silintl/ui-components'
+import { Button, Page, Datatable } from '@silintl/ui-components'
 
 export let itemId: string
+export let policyId: string = $params.policyId
 
 let open: boolean = false
 
-$: $user.policy_id && loadItems($user.policy_id)
+$: policyId && loadItems(policyId)
 
 $: $policies.length || init()
-$: policyId = $user.policy_id as string
 
 $: isAdmin = $user.app_role === 'Steward' || $user.app_role === 'Signator'
 
@@ -31,13 +31,14 @@ $: policyId && loadDependents(policyId)
 
 $: policyId && loadMembersOfPolicy(policyId)
 
-$: items = $itemsByPolicyId[$user.policy_id] || []
+$: items = $itemsByPolicyId[policyId] || []
 $: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
 $: itemName = item.name || ''
 $: status = (item.coverage_status || '') as ItemCoverageStatus
 $: status === 'Draft' && $user.app_role === 'User' && goToEditItem()
 
 $: policyId && item.id && loadPolicyItemHistory(policyId, item.id)
+$: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
 $: policyItemHistory = $policyHistoryByItemId[item.id]
 $: hasHistory = policyItemHistory && policyItemHistory.length > 0
 
@@ -46,17 +47,24 @@ $: startDate = formatDate(item.coverage_start_date)
 $: allowRemoveCovereage = !['Inactive', 'Denied'].includes(status) as boolean
 
 // Dynamic breadcrumbs data:
-const itemsBreadcrumb = { name: 'Items', url: ITEMS }
-$: thisItemBreadcrumb = { name: itemName || 'This item', url: itemRoute(itemId) }
-$: breadcrumbLinks = [itemsBreadcrumb, thisItemBreadcrumb]
+$: policyName = policy.type === 'Corporate' ? policy.account : policy.household_id
+$: adminBreadcrumbs = isAdmin
+  ? [
+      { name: 'Policies', url: POLICIES },
+      { name: policyName, url: policyDetails(policyId) },
+    ]
+  : []
+const itemsBreadcrumb = { name: 'Items', url: itemsRoute(policyId) }
+$: thisItemBreadcrumb = { name: itemName || 'This item', url: itemDetails(policyId, itemId) }
+$: breadcrumbLinks = [...adminBreadcrumbs, itemsBreadcrumb, thisItemBreadcrumb]
 $: itemName && (metatags.title = formatPageTitle(`Items > ${itemName}`))
 
 const goToEditItem = () => {
-  $goto(itemEdit(itemId))
+  $goto(itemEdit(policyId, itemId))
 }
 
 const goToNewClaim = () => {
-  $goto(itemNewClaim(itemId))
+  $goto(itemNewClaim(policyId, itemId))
 }
 
 const handleDialog = async (event: CustomEvent<string>) => {
@@ -64,7 +72,7 @@ const handleDialog = async (event: CustomEvent<string>) => {
   if (event.detail === 'remove') {
     await deleteItem(policyId, itemId)
 
-    $goto(ITEMS)
+    $goto(itemsRoute(policyId))
   }
 }
 
@@ -78,7 +86,7 @@ const onApproveItem = async () => {
     {#if $loading}
       Loading...
     {:else}
-      We could not find that item. Please <a href={ITEMS}>go back</a> and select an item from the list.
+      We could not find that item. Please <a href={itemsRoute(policyId)}>go back</a> and select an item from the list.
     {/if}
   {:else}
     <div class="flex justify-between align-items-center">

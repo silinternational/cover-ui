@@ -9,7 +9,7 @@ import { formatDate } from 'components/dates'
 import { isLoadingById } from 'components/progress'
 import { formatFriendlyDate } from 'helpers/date'
 import { formatMoney } from 'helpers/money'
-import { customerClaim, item as policyItem } from 'helpers/routes'
+import { customerClaimDetails, itemDetails } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { metatags } from '@roxi/routify'
 import { Datatable, Page } from '@silintl/ui-components'
@@ -26,7 +26,7 @@ $: accountablePersons = [...policyMemberOptions, ...dependentOptions]
 
 $: policyId && loadItems(policyId)
 $: items = $itemsByPolicyId[policyId] || []
-$: claims = policy.claims || ([] as Claim[])
+$: claims = policy.claims || []
 $: policyName = policy.type === 'Corporate' ? policy.account : policy.household_id
 $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))
 </script>
@@ -108,7 +108,7 @@ th {
         {#each items as item (item.id)}
           <Datatable.Data.Row>
             <Datatable.Data.Row.Item
-              ><a href={policyItem(item.id)}>{item.name || ''}</a> ({item.coverage_status ||
+              ><a href={itemDetails(policyId, item.id)}>{item.name || ''}</a> ({item.coverage_status ||
                 ''})</Datatable.Data.Row.Item
             >
             <Datatable.Data.Row.Item
@@ -124,41 +124,53 @@ th {
   {/if}
 
   <h4>Claims</h4>
-  <Datatable>
-    <Datatable.Header>
-      <Datatable.Header.Item>Reference #</Datatable.Header.Item>
-      <Datatable.Header.Item>Incident Date</Datatable.Header.Item>
-      <Datatable.Header.Item>Status</Datatable.Header.Item>
-      <Datatable.Header.Item>Repairable</Datatable.Header.Item>
-      <Datatable.Header.Item>Payout Option</Datatable.Header.Item>
-      <Datatable.Header.Item>Repair</Datatable.Header.Item>
-      <Datatable.Header.Item>Replacement</Datatable.Header.Item>
-      <Datatable.Header.Item>FMV</Datatable.Header.Item>
-    </Datatable.Header>
-    <Datatable.Data>
-      {#each claims as claim (claim.id)}
-        {#each claim.claim_items as claimItem (claimItem.id)}
+  {#if isLoadingById(policyId)}
+    Loading claims...
+  {:else}
+    <Datatable>
+      <Datatable.Header>
+        <Datatable.Header.Item>Reference #</Datatable.Header.Item>
+        <Datatable.Header.Item>Incident Date</Datatable.Header.Item>
+        <Datatable.Header.Item>Status</Datatable.Header.Item>
+        <Datatable.Header.Item>Repairable</Datatable.Header.Item>
+        <Datatable.Header.Item>Payout Option</Datatable.Header.Item>
+        <Datatable.Header.Item>Repair</Datatable.Header.Item>
+        <Datatable.Header.Item>Replacement</Datatable.Header.Item>
+        <Datatable.Header.Item>FMV</Datatable.Header.Item>
+      </Datatable.Header>
+      <Datatable.Data>
+        {#each claims as claim (claim.id)}
+          {#each claim.claim_items as claimItem (claimItem.id)}
+            <Datatable.Data.Row>
+              <Datatable.Data.Row.Item>
+                <a href={customerClaimDetails(policyId, claim.id)}>{claim.reference_number || ''}</a>
+                ({claim.status})
+              </Datatable.Data.Row.Item>
+              <Datatable.Data.Row.Item>{formatFriendlyDate(claim.incident_date)}</Datatable.Data.Row.Item>
+              <Datatable.Data.Row.Item>{claimItem.status || ''}</Datatable.Data.Row.Item>
+              <Datatable.Data.Row.Item>{claimItem.is_repairable ? 'Yes' : 'No'}</Datatable.Data.Row.Item>
+              <Datatable.Data.Row.Item>{claimItem.payout_option || ''}</Datatable.Data.Row.Item>
+              <Datatable.Data.Row.Item>{formatMoney(claimItem.repair_estimate)}</Datatable.Data.Row.Item>
+              <Datatable.Data.Row.Item>{formatMoney(claimItem.replace_estimate)}</Datatable.Data.Row.Item>
+              <Datatable.Data.Row.Item>{formatMoney(claimItem.fmv)}</Datatable.Data.Row.Item>
+            </Datatable.Data.Row>
+          {:else}
+            <Datatable.Data.Row>
+              <Datatable.Data.Row.Item>
+                <a href={customerClaimDetails(policyId, claim.id)}>{claim.reference_number || ''}</a>
+                ({claim.status})
+              </Datatable.Data.Row.Item>
+              <Datatable.Data.Row.Item>{formatFriendlyDate(claim.incident_date)}</Datatable.Data.Row.Item>
+            </Datatable.Data.Row>
+          {/each}
+        {:else}
           <Datatable.Data.Row>
-            <Datatable.Data.Row.Item>
-              <a href={customerClaim(claim.id)}>{claim.reference_number || ''}</a>
-              ({claim.status})
+            <Datatable.Data.Row.Item colspan="8">
+              <i>None</i>
             </Datatable.Data.Row.Item>
-            <Datatable.Data.Row.Item>{formatFriendlyDate(claim.incident_date)}</Datatable.Data.Row.Item>
-            <Datatable.Data.Row.Item>{claimItem.status || ''}</Datatable.Data.Row.Item>
-            <Datatable.Data.Row.Item>{claimItem.is_repairable ? 'Yes' : 'No'}</Datatable.Data.Row.Item>
-            <Datatable.Data.Row.Item>{claimItem.payout_option || ''}</Datatable.Data.Row.Item>
-            <Datatable.Data.Row.Item>{formatMoney(claimItem.repair_estimate)}</Datatable.Data.Row.Item>
-            <Datatable.Data.Row.Item>{formatMoney(claimItem.replace_estimate)}</Datatable.Data.Row.Item>
-            <Datatable.Data.Row.Item>{formatMoney(claimItem.fmv)}</Datatable.Data.Row.Item>
           </Datatable.Data.Row>
         {/each}
-      {:else}
-        <Datatable.Data.Row>
-          <Datatable.Data.Row.Item colspan="8">
-            <i>None</i>
-          </Datatable.Data.Row.Item>
-        </Datatable.Data.Row>
-      {/each}
-    </Datatable.Data>
-  </Datatable>
+      </Datatable.Data>
+    </Datatable>
+  {/if}
 </Page>

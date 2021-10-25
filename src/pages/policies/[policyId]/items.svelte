@@ -44,11 +44,11 @@ const getMenuItems = (item: PolicyItem) => {
   const menuItems: MenuItem[] = [
     {
       label: 'View Details',
-      url: routes.item(item.id),
+      url: routes.itemDetails(policyId, item.id),
     },
     {
       label: 'Edit',
-      url: routes.itemEdit(item.id),
+      url: routes.itemEdit(policyId, item.id),
     },
   ]
   if (item.coverage_status != 'Inactive') {
@@ -83,7 +83,7 @@ const redirect = (item: PolicyItem) => {
   currentItem = item
 
   if (goToItemDetails) {
-    let url = routes.item(item.id)
+    let url = routes.itemDetails(policyId, item.id)
     $goto(url)
   } else {
     goToItemDetails = true
@@ -94,7 +94,7 @@ const handleMoreVertClick = (id: string) => {
   goToItemDetails = false
   shownMenus[id] = shownMenus[id] !== true
 }
-const onGotoClaim = (event: CustomEvent) => $goto(routes.customerClaim(event.detail))
+const onGotoClaim = (event: CustomEvent) => $goto(routes.customerClaimDetails(policyId, event.detail))
 </script>
 
 <style>

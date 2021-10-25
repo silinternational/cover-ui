@@ -1,12 +1,13 @@
 <script lang="ts">
 import { ClaimCards, RecentActivityTable, Row } from 'components'
 import { loading } from 'components/progress'
-import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
+import { getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
 import { Claim, claims, initialized as claimsInitialized, loadClaims, statusesAwaitingSteward } from 'data/claims'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { itemsByPolicyId, loadItems } from 'data/items'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import { loadRecentActivity, recentChanges } from 'data/recent-activity'
+import { customerClaimDetails } from 'helpers/routes'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
@@ -24,7 +25,7 @@ $: policyMembers = [].concat(...Object.values($membersByPolicyId))
 
 $: dependentOptions = getDependentOptions(dependents)
 $: policyMemberOptions = getPolicyMemberOptions(policyMembers)
-$: accountablePersons = [...policyMemberOptions, ...dependentOptions] as AccountablePersonOptions[]
+$: accountablePersons = [...policyMemberOptions, ...dependentOptions]
 
 const isAwaitingSteward = (claim: Claim): boolean => {
   return statusesAwaitingSteward.includes(claim.status)
@@ -40,7 +41,7 @@ const loadDataOnce = (policyId: string) => {
     loadMembersOfPolicy(policyId)
   }
 }
-const onGotoClaim = (event) => $goto(`/steward/claims/${event.detail}`)
+const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(event.detail.policy_id, event.detail.id))
 </script>
 
 <style>

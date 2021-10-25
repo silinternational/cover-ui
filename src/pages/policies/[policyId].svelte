@@ -100,7 +100,7 @@ th {
       <Datatable.Header>
         <Datatable.Header.Item>Item</Datatable.Header.Item>
         <Datatable.Header.Item>Accountable Person</Datatable.Header.Item>
-        <Datatable.Header.Item>Cost</Datatable.Header.Item>
+        <Datatable.Header.Item>Covered Value</Datatable.Header.Item>
         <Datatable.Header.Item>Premium</Datatable.Header.Item>
         <Datatable.Header.Item>Recent Activity</Datatable.Header.Item>
       </Datatable.Header>

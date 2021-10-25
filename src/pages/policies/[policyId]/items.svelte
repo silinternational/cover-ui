@@ -134,12 +134,12 @@ const onGotoClaim = (event: CustomEvent) => $goto(routes.customerClaimDetails(po
           <Datatable.Header.Item>Item</Datatable.Header.Item>
           <Datatable.Header.Item>Status</Datatable.Header.Item>
           <Datatable.Header.Item>Accountable Person</Datatable.Header.Item>
-          <Datatable.Header.Item>Cost</Datatable.Header.Item>
+          <Datatable.Header.Item>Covered Value</Datatable.Header.Item>
           <Datatable.Header.Item>Premium</Datatable.Header.Item>
           <Datatable.Header.Item>Recent Activity</Datatable.Header.Item>
         </Datatable.Header>
         <Datatable.Data>
-          {#each items as item (item.id)}
+          {#each items.filter((item) => item.coverage_status !== 'Inactive') as item (item.id)}
             <Datatable.Data.Row on:click={() => redirect(item)} clickable>
               <Datatable.Data.Row.Item />
               <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>

@@ -28,6 +28,7 @@ let accountablePersonId: string = ''
 let categoryId: string = ''
 let country: string = ''
 let marketValueUSD: string = ''
+let coverageEndDate = {}
 let coverageStartDate: string = ''
 let coverageStatus: ItemCoverageStatus
 let itemDescription: string = ''
@@ -35,7 +36,6 @@ let inStorage = false
 let make: string = ''
 let model: string = ''
 let shortName: string = ''
-let purchaseDate: string = ''
 let uniqueIdentifier: string = ''
 
 // Set initial values based on the provided item data.
@@ -74,6 +74,7 @@ const getFormData = () => {
     categoryId,
     country,
     marketValueUSD,
+    coverageEndDate,
     coverageStartDate,
     coverageStatus,
     itemDescription,
@@ -81,7 +82,6 @@ const getFormData = () => {
     make,
     model,
     shortName,
-    purchaseDate,
     uniqueIdentifier,
   }
 }
@@ -152,6 +152,7 @@ const setInitialValues = (item: PolicyItem) => {
   categoryId = item.category?.id || categoryId
   country = item.country || country
   marketValueUSD = Number.isInteger(item.coverage_amount) ? String(item.coverage_amount / 100) : ''
+  coverageEndDate = item.coverage_end_date || coverageEndDate
   coverageStartDate = item.coverage_start_date || today.toISOString().slice(0, 10) //api requires yyyy-mm-dd
   coverageStatus = item.coverage_status || coverageStatus
   itemDescription = item.description || itemDescription
@@ -159,7 +160,6 @@ const setInitialValues = (item: PolicyItem) => {
   make = item.make || make
   model = item.model || model
   shortName = item.name || shortName
-  purchaseDate = item.purchase_date || coverageStartDate
   uniqueIdentifier = item.serial_number || uniqueIdentifier
 }
 </script>

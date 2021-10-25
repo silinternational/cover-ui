@@ -55,3 +55,9 @@ export const clear = (): void => {
 }
 
 export const isSteward = (user: User): boolean => user.app_role === 'Steward'
+
+export const isSignator = (user: User): boolean => user.app_role === 'Signator'
+
+export const isAdmin = (user: User): boolean => isSteward(user) || isSignator(user)
+
+export const isCustomer = (user: User): boolean => !isSteward(user) && !isSignator(user) && !!user.app_role

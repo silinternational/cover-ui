@@ -39,7 +39,7 @@ import {
   approveClaim,
 } from 'data/claims'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
-import { loadItems, itemsByPolicyId, PolicyItem } from 'data/items'
+import { loadItems, itemsByPolicyId, PolicyItem, itemBelongsToPolicy } from 'data/items'
 import { loadPolicies, policies, Policy } from 'data/policies'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import { formatMoney } from 'helpers/money'
@@ -67,10 +67,10 @@ $: items = $itemsByPolicyId[claim.policy_id] || []
 $: claim.policy_id && loadItems(claim.policy_id)
 $: item = items.find((itm) => itm.id === claimItem.item_id) || ({} as PolicyItem)
 
-$: isUser = $user.app_role === 'User'
-
 // Accountable persons
 $: policyId = $user.policy_id as string
+
+$: belongsToUser = itemBelongsToPolicy(policy_id, item)
 
 $: policyId && loadDependents(policyId)
 $: dependents = $dependentsByPolicyId[policyId] || []
@@ -250,6 +250,7 @@ function onDeleted(event: CustomEvent<string>) {
           {noFilesUploaded}
           {needsFile}
           {claim}
+          {belongsToUser}
           on:ask-for-changes={onAskForChanges}
           on:deny={onDenyClaim}
           on:edit={editClaim}
@@ -259,7 +260,7 @@ function onDeleted(event: CustomEvent<string>) {
         />
       </p>
 
-      {#if isUser}
+      {#if belongsToUser}
         {#if needsReceipt}
           <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onBlur} />
 

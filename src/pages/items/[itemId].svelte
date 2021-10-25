@@ -1,9 +1,17 @@
 <script lang="ts">
-import user from '../../authn/user'
+import user, { isAdmin as checkIsAdmin } from '../../authn/user'
 import { Breadcrumb, ItemDeleteModal } from 'components'
 import { loading } from 'components/progress'
 import { loadDependents } from 'data/dependents'
-import { approveItem, deleteItem, ItemCoverageStatus, itemsByPolicyId, loadItems, PolicyItem } from 'data/items'
+import {
+  approveItem,
+  deleteItem,
+  itemBelongsToPolicy,
+  ItemCoverageStatus,
+  itemsByPolicyId,
+  loadItems,
+  PolicyItem,
+} from 'data/items'
 import { init, policies } from 'data/policies'
 import { loadMembersOfPolicy } from 'data/policy-members'
 import ItemDetails from 'ItemDetails.svelte'
@@ -21,7 +29,7 @@ $: $user.policy_id && loadItems($user.policy_id)
 $: $policies.length || init()
 $: policyId = $user.policy_id as string
 
-$: isAdmin = $user.app_role === 'Steward' || $user.app_role === 'Signator'
+$: isAdmin = checkIsAdmin($user)
 
 // Accountable persons
 $: policyId && loadDependents(policyId)
@@ -32,7 +40,7 @@ $: items = $itemsByPolicyId[$user.policy_id] || []
 $: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
 $: itemName = item.name || ''
 $: status = (item.coverage_status || '') as ItemCoverageStatus
-$: status === 'Draft' && $user.app_role === 'User' && goToEditItem()
+$: status === 'Draft' && itemBelongsToPolicy(policyId, item) && goToEditItem()
 
 $: allowRemoveCovereage = !['Inactive', 'Denied'].includes(status) as boolean
 

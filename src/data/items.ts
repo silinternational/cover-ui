@@ -20,6 +20,10 @@ export type PolicyItem = {
   category: any /*ItemCategory*/
   country: string
   coverage_amount: number
+  coverage_end_date: {
+    String: string /*Date*/
+    Valid: boolean
+  }
   coverage_start_date: string /* yyyy-mm-dd Date */
   coverage_status: ItemCoverageStatus
   created_at: string /*Date*/
@@ -31,7 +35,6 @@ export type PolicyItem = {
   name: string
   policy_id: string
   prorated_annual_premium: number
-  purchase_date: string /* yyyy-mm-dd Date */
   risk_category: RiskCategory
   serial_number: string
   status_change: string
@@ -50,7 +53,6 @@ export type CreatePolicyItemRequestBody = {
   make: string
   model: string
   name: string
-  purchase_date: string /*yyyy-mm-dd Date*/
   risk_category_id?: string
   serial_number: string
 }
@@ -60,6 +62,10 @@ export type UpdatePolicyItemRequestBody = {
   category_id: string
   country: string
   coverage_amount: number
+  coverage_end_date: {
+    String: string /*Date*/
+    Valid: boolean
+  }
   coverage_start_date: string /*Date*/
   coverage_status: ItemCoverageStatus
   description: string
@@ -67,7 +73,6 @@ export type UpdatePolicyItemRequestBody = {
   make: string
   model: string
   name: string
-  purchase_date: string /*yyyy-mm-dd Date*/
   risk_category_id?: string
   serial_number: string
 }
@@ -115,7 +120,6 @@ export async function addItem(policyId: string, itemData: any): Promise<PolicyIt
     make: itemData.make,
     model: itemData.model,
     name: itemData.shortName,
-    purchase_date: itemData.purchaseDate,
     serial_number: itemData.uniqueIdentifier,
   }
 
@@ -184,6 +188,7 @@ export async function updateItem(policyId: string, itemId: string, itemData: any
     category_id: itemData.categoryId,
     country: itemData.country,
     coverage_amount: Number(itemData.marketValueUSD) * 100,
+    coverage_end_date: itemData.coverageEndDate,
     coverage_start_date: itemData.coverageStartDate,
     coverage_status: itemData.coverageStatus,
     description: itemData.itemDescription,
@@ -191,7 +196,6 @@ export async function updateItem(policyId: string, itemId: string, itemData: any
     make: itemData.make,
     model: itemData.model,
     name: itemData.shortName,
-    purchase_date: itemData.purchaseDate,
     serial_number: itemData.uniqueIdentifier,
   }
   const updatedItem = await UPDATE<PolicyItem>(urlPath, parsedItemData)
@@ -227,3 +231,5 @@ export async function deleteItem(policyId: string, itemId: string): Promise<any>
     return data
   })
 }
+
+export const itemBelongsToPolicy = (policyId: string, item: PolicyItem): boolean => item.policy_id === policyId

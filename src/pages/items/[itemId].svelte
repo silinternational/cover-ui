@@ -85,38 +85,39 @@ const handleDialog = async (event: CustomEvent<string>) => {
           <Button on:click={goToEditItem}>Edit Item</Button>
         {/if}
       </div>
-
-      {#if 0 && hasHistory}
-        <h3>History</h3>
-        <Datatable>
-          <Datatable.Header>
-            <Datatable.Header.Item>Person</Datatable.Header.Item>
-            <Datatable.Header.Item>Action</Datatable.Header.Item>
-            <Datatable.Header.Item>Date</Datatable.Header.Item>
-          </Datatable.Header>
-          <Datatable.Data>
-            {#each policyItemHistory as itemHistory}
-              <Datatable.Data.Row>
-                <Datatable.Data.Row.Item>{itemHistory.user_id}</Datatable.Data.Row.Item>
-                <Datatable.Data.Row.Item
-                  >{itemHistory.action}
-                  {itemHistory.field_name} from '{itemHistory.old_value}' to '{itemHistory.new_value}'</Datatable.Data.Row.Item
-                >
-                <Datatable.Data.Row.Item>{formatDate(itemHistory.updated_at)}</Datatable.Data.Row.Item>
-              </Datatable.Data.Row>
-            {/each}
-          </Datatable.Data>
-        </Datatable>
-      {/if}
     </div>
 
     <ItemDeleteModal {open} {item} on:closed={handleDialog} />
     <ItemDetails {item} {policyId} />
+
     <br />
     {#if status === 'Approved'}
       <div class="m-1">
         <Button class="mdc-theme--secondary-background" on:click={goToNewClaim} raised>File Claim</Button>
       </div>
+    {/if}
+
+    {#if 0 && hasHistory}
+      <h3>History</h3>
+      <Datatable>
+        <Datatable.Header>
+          <Datatable.Header.Item>Person</Datatable.Header.Item>
+          <Datatable.Header.Item>Action</Datatable.Header.Item>
+          <Datatable.Header.Item>Date</Datatable.Header.Item>
+        </Datatable.Header>
+        <Datatable.Data>
+          {#each policyItemHistory as itemHistory}
+            <Datatable.Data.Row>
+              <Datatable.Data.Row.Item>{itemHistory.user_id}</Datatable.Data.Row.Item>
+              <Datatable.Data.Row.Item
+                >{itemHistory.action}
+                {itemHistory.field_name} from '{itemHistory.old_value}' to '{itemHistory.new_value}'</Datatable.Data.Row.Item
+              >
+              <Datatable.Data.Row.Item>{formatDate(itemHistory.updated_at)}</Datatable.Data.Row.Item>
+            </Datatable.Data.Row>
+          {/each}
+        </Datatable.Data>
+      </Datatable>
     {/if}
   {/if}
 </Page>

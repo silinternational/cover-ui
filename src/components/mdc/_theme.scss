@@ -10,7 +10,8 @@
   --mdc-theme-error: #c30000;
   --mdc-theme-neutral: #6d7580;
   --mdc-theme-neutral-variant: #394452;
-  --mdc-theme-neutral-bg: #ebeef2;
+  --mdc-theme-neutral-bg: hsla(213, 22%, 94%, 1);
+  --mdc-theme-neutral-9: hsla(213, 29%, 97%, 1);
   --mdc-theme-neutral-action: hsla(214, 11%, 37%, 1);
   --progress-bar-color: #005cb9;
   --mdc-theme-status-warning: #b95000;
@@ -37,6 +38,10 @@
 
 .mdc-theme--secondary-background {
   background-color: var(--mdc-theme-secondary) !important;
+}
+
+.mdc-theme--neutral-background {
+  background-color: var(--mdc-theme-neutral-bg) !important;
 }
 
 .remove-button {

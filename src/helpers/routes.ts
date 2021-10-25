@@ -18,7 +18,7 @@ export const items = (policyId: string) => `/policies/${policyId}/items`
 export const itemsNew = (policyId: string) => `/policies/${policyId}/items/new`
 export const itemDetails = (policyId: string, itemId: string) => `/policies/${policyId}/items/${itemId}`
 export const itemEdit = (policyId: string, itemId: string) => `/policies/${policyId}/items/${itemId}/edit`
-export const itemNewClaim = (policyId: string, itemId: string) => `policies/${policyId}/items/${itemId}/new-claim`
+export const itemNewClaim = (policyId: string, itemId: string) => `/policies/${policyId}/items/${itemId}/new-claim`
 export const itemRemoveCoverage = (policyId: string, itemId: string) =>
   `/policies/${policyId}/items/${itemId}/remove-coverage`
 

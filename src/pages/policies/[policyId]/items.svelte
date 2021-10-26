@@ -94,7 +94,9 @@ const handleMoreVertClick = (id: string) => {
   goToItemDetails = false
   shownMenus[id] = shownMenus[id] !== true
 }
-const onGotoClaim = (event: CustomEvent) => $goto(routes.customerClaimDetails(policyId, event.detail))
+
+const onGotoClaim = (event: CustomEvent<Claim>) =>
+  $goto(routes.customerClaimDetails(event.detail.policy_id, event.detail.id))
 </script>
 
 <style>

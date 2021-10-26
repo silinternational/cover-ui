@@ -63,6 +63,6 @@ const hasMeAsMember = (policy: Policy) => policy.members.some(isPolicyMemberMe)
 const isPolicyMemberMe = (member: PolicyMember) => $user.id === member.id
 </script>
 
-<AppDrawer {menuItems} {myPolicies} on:policy={goToPolicyAsCustomer} on:role={goToRoleHome}>
+<AppDrawer {menuItems} {myPolicies} role={$user.app_role} on:policy={goToPolicyAsCustomer} on:role={goToRoleHome}>
   <slot />
 </AppDrawer>

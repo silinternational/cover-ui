@@ -76,7 +76,7 @@ const gotoClaim = () => dispatch('goto-claim', claim)
   </div>
 
   <div class="action pb-2 ml-50px" slot="actions">
-    <Button raised on:click={gotoClaim}>{'View claim'}</Button>
+    <Button raised on:click={gotoClaim}>View claim</Button>
 
     <div class="fs-12 gray mt-1">
       {#if wasUpdated}

@@ -42,7 +42,7 @@ $: items = $itemsByPolicyId[policyId] || []
 $: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
 $: itemName = item.name || ''
 $: status = (item.coverage_status || '') as ItemCoverageStatus
-$: isMemberOfPolicy = itemBelongsToPolicy(policyId, item)
+$: isMemberOfPolicy = itemBelongsToPolicy($user.policy_id, item)
 $: status === 'Draft' && isMemberOfPolicy && goToEditItem()
 
 $: policyId && item.id && loadPolicyItemHistory(policyId, item.id)

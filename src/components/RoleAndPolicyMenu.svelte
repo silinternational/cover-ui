@@ -21,7 +21,7 @@ $: householdPolicyEntries = getHouseholdEntries(myHouseholdPolicies)
 $: menuItems = [...roleEntries, ...corporatePolicyEntries, ...householdPolicyEntries]
 
 let menuIsOpen = false
-let buttonText = 'Steward' // TEMP example
+let buttonText = 'Household'
 
 const selectCorporatePolicy = (policy: Policy) => {
   buttonText = 'Corporate policy' // TODO: Replace with name, when available

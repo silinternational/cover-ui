@@ -1,11 +1,11 @@
 <script lang="ts">
-import user, { User } from '../authn/user'
+import type { UserAppRole } from '../authn/user'
 import type { Policy } from 'data/policies.ts'
-import type { PolicyMember } from 'data/policy-members'
 import { Button, Menu, MenuItem } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let myPolicies: Policy[] = []
+export let role: UserAppRole | undefined
 
 const dispatch = createEventDispatcher()
 
@@ -13,7 +13,7 @@ $: myCorporatePolicies = myPolicies.filter(isCorporatePolicy)
 $: myHouseholdPolicies = myPolicies.filter(isHouseholdPolicy)
 
 let roleEntries: MenuItem[] = []
-$: roleEntries = getEntriesForRole($user)
+$: roleEntries = getEntriesForRole(role)
 $: corporatePolicyEntries = getCorporatePolicyEntries(myCorporatePolicies)
 $: householdPolicyEntries = getHouseholdEntries(myHouseholdPolicies)
 
@@ -62,12 +62,12 @@ const selectSteward = () => {
   dispatch('role', 'steward')
 }
 
-const getEntriesForRole = (user: User): MenuItem[] => {
+const getEntriesForRole = (role: UserAppRole | undefined): MenuItem[] => {
   const specialEntriesByRole = {
     Signator: [{ icon: 'gavel', label: 'Signator', action: selectSignator }],
     Steward: [{ icon: 'gavel', label: 'Steward', action: selectSteward }],
   }
-  return specialEntriesByRole[user.app_role] || []
+  return specialEntriesByRole[role] || []
 }
 
 const isCorporatePolicy = (policy: Policy): boolean => policy.type === 'Corporate'

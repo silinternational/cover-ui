@@ -29,7 +29,7 @@ const logoClickHandler = () => $goto(ROOT)
   <AppHeader on:toggleDrawer={() => (toggle = !toggle)} />
 
   <div class="role-and-policy-menu pt-1" slot="drawer-content-top">
-    <RoleAndPolicyMenu {myPolicies} on:policy on:role />
+    <RoleAndPolicyMenu {myPolicies} role={$user.app_role} on:policy on:role />
   </div>
 
   <slot />

@@ -2,7 +2,7 @@ import { writable } from 'svelte/store'
 import { CREATE, GET, UPDATE } from 'data'
 
 export type AdminAppRole = 'Steward' | 'Signator'
-type UserAppRole = 'User' | AdminAppRole
+export type UserAppRole = 'User' | AdminAppRole
 
 export type User = {
   app_role: UserAppRole

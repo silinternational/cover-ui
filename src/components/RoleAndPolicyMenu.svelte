@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { UserAppRole } from '../authn/user'
+import type { UserAppRole } from 'authn/user'
 import type { Policy } from 'data/policies.ts'
 import { Button, Menu, MenuItem } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
@@ -73,6 +73,24 @@ const getEntriesForRole = (role: UserAppRole | undefined): MenuItem[] => {
   return specialEntriesByRole[role] || []
 }
 
+const isAdminRole = (role: UserAppRole) => ['Signator', 'Steward'].includes(role)
+
+const getDefaultButtonTextForRole = (role: UserAppRole, corporatePolicies: Policy[], householdPolicies: Policy[]) => {
+  if (!role) {
+    return ''
+  }
+
+  if (isAdminRole(role)) {
+    return role
+  }
+
+  if (corporatePolicies.length > 0) {
+    return 'Corporate' // TODO: Replace with default corporate policy's name, when available
+  }
+
+  return 'Household' // TODO: Replace with name, when available
+}
+
 const tryToUpdateButtonText = (
   role: UserAppRole,
   selectedPolicyId: string | undefined,
@@ -80,9 +98,7 @@ const tryToUpdateButtonText = (
   householdPolicies: Policy[]
 ) => {
   if (!selectedPolicyId) {
-    if (!buttonText) {
-      buttonText = role || ''
-    }
+    buttonText = getDefaultButtonTextForRole(role, corporatePolicies, householdPolicies)
     return
   }
 

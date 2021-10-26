@@ -18,9 +18,9 @@ $: roleEntries = getEntriesForRole($user)
 $: corporatePolicyEntries = getCorporatePolicyEntries(myCorporatePolicies)
 $: householdPolicyEntries = getHouseholdEntries(myHouseholdPolicies)
 
-$: roleAndPolicyMenuItems = [...roleEntries, ...corporatePolicyEntries, ...householdPolicyEntries]
+$: menuItems = [...roleEntries, ...corporatePolicyEntries, ...householdPolicyEntries]
 
-let roleAndPolicyMenuOpen = false
+let menuIsOpen = false
 let buttonText = 'Steward' // TEMP example
 
 const selectCorporatePolicy = (policy: Policy) => {
@@ -78,9 +78,7 @@ const hasMeAsMember = (policy: Policy): boolean => {
 const isCorporatePolicy = (policy: Policy): boolean => policy.type === 'Corporate'
 const isHouseholdPolicy = (policy: Policy): boolean => policy.type === 'Household'
 
-const toggleRoleAndPolicyMenu = () => {
-  roleAndPolicyMenuOpen = !roleAndPolicyMenuOpen
-}
+const toggleRoleAndPolicyMenu = () => (menuIsOpen = !menuIsOpen)
 </script>
 
 <style>
@@ -91,5 +89,5 @@ const toggleRoleAndPolicyMenu = () => {
 
 <Button appendIcon="arrow_drop_down" on:click={toggleRoleAndPolicyMenu}>{buttonText}</Button>
 <div id="role-and-policy-menu-options-container">
-  <Menu bind:menuOpen={roleAndPolicyMenuOpen} menuItems={roleAndPolicyMenuItems} />
+  <Menu bind:menuOpen={menuIsOpen} {menuItems} />
 </div>

@@ -24,12 +24,12 @@ let menuIsOpen = false
 let buttonText = 'Household'
 
 const selectCorporatePolicy = (policy: Policy) => {
-  buttonText = 'Corporate policy' // TODO: Replace with name, when available
+  buttonText = 'Corporate' // TODO: Replace with name, when available
   dispatch('policy', policy.id)
 }
 
 const selectHouseholdPolicy = (policy: Policy) => {
-  buttonText = 'Household policy' // TODO: Replace with name, when available
+  buttonText = 'Household' // TODO: Replace with name, when available
   dispatch('policy', policy.id)
 }
 
@@ -37,7 +37,7 @@ const getCorporatePolicyEntries = (policies: Policy[]): MenuItem[] => {
   return policies.map((policy: Policy): MenuItem => {
     return {
       icon: 'work',
-      label: 'Corporate policy', // TODO: Replace with name, when available
+      label: 'Corporate', // TODO: Replace with name, when available
       action: () => selectCorporatePolicy(policy),
     }
   })
@@ -47,7 +47,7 @@ const getHouseholdEntries = (policies: Policy[]): MenuItem[] => {
   return policies.map((policy: Policy): MenuItem => {
     return {
       icon: 'family_restroom',
-      label: 'Household policy', // TODO: Replace with name, when available
+      label: 'Household', // TODO: Replace with name, when available
       action: () => selectHouseholdPolicy(policy),
     }
   })

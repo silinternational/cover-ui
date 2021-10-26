@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+import type { AdminAppRole } from '../authn/user'
+
 export const ROOT = '/'
 export const HOME = '/home'
 export const LOGOUT = '/logout'
+
+export const adminRoleHome = (role: AdminAppRole) => `/${role}/home`
 
 export const CHAT = '/chat'
 

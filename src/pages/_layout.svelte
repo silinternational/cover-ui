@@ -51,8 +51,8 @@ $: menuItems = [
   },
 ]
 
-const goToPolicyAsCustomer = (event: CustomEvent) => $goto(`/customer/home/${event.detail}`)
-const goToRoleHome = (event: CustomEvent) => $goto(`/${event.detail}/home`)
+const goToPolicyAsCustomer = (event: CustomEvent) => $goto(routes.policyHome(event.detail))
+const goToRoleHome = (event: CustomEvent) => $goto(routes.adminRoleHome(event.detail))
 </script>
 
 <AppDrawer {menuItems} policies={$policies} on:policy={goToPolicyAsCustomer} on:role={goToRoleHome}>

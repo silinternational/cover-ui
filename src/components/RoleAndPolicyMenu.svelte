@@ -71,13 +71,10 @@ const getEntriesForRole = (user: User): MenuItem[] => {
   return specialEntriesByRole[user.app_role] || []
 }
 
-const hasMeAsMember = (policy: Policy): boolean => {
-  return policy.members.some((member: PolicyMember) => $user.id === member.id)
-}
-
+const isPolicyMemberMe = (member: PolicyMember) => $user.id === member.id
+const hasMeAsMember = (policy: Policy) => policy.members.some(isPolicyMemberMe)
 const isCorporatePolicy = (policy: Policy): boolean => policy.type === 'Corporate'
 const isHouseholdPolicy = (policy: Policy): boolean => policy.type === 'Household'
-
 const toggleRoleAndPolicyMenu = () => (menuIsOpen = !menuIsOpen)
 </script>
 

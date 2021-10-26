@@ -5,11 +5,10 @@ import type { PolicyMember } from 'data/policy-members'
 import { Button, Menu, MenuItem } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
-export let policies: Policy[] = []
+export let myPolicies: Policy[] = []
 
 const dispatch = createEventDispatcher()
 
-$: myPolicies = policies.filter(hasMeAsMember)
 $: myCorporatePolicies = myPolicies.filter(isCorporatePolicy)
 $: myHouseholdPolicies = myPolicies.filter(isHouseholdPolicy)
 
@@ -71,8 +70,6 @@ const getEntriesForRole = (user: User): MenuItem[] => {
   return specialEntriesByRole[user.app_role] || []
 }
 
-const isPolicyMemberMe = (member: PolicyMember) => $user.id === member.id
-const hasMeAsMember = (policy: Policy) => policy.members.some(isPolicyMemberMe)
 const isCorporatePolicy = (policy: Policy): boolean => policy.type === 'Corporate'
 const isHouseholdPolicy = (policy: Policy): boolean => policy.type === 'Household'
 const toggleRoleAndPolicyMenu = () => (menuIsOpen = !menuIsOpen)

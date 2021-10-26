@@ -8,7 +8,7 @@ import { Drawer } from '@silintl/ui-components'
 import { ROOT } from 'helpers/routes'
 
 export let menuItems: any[] = []
-export let policies: Policy[] = []
+export let myPolicies: Policy[] = []
 
 let toggle = false
 
@@ -29,7 +29,7 @@ const logoClickHandler = () => $goto(ROOT)
   <AppHeader on:toggleDrawer={() => (toggle = !toggle)} />
 
   <div class="role-and-policy-menu pt-1" slot="drawer-content-top">
-    <RoleAndPolicyMenu {policies} on:policy on:role />
+    <RoleAndPolicyMenu {myPolicies} on:policy on:role />
   </div>
 
   <slot />

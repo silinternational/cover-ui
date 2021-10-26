@@ -1,13 +1,19 @@
 <script lang="ts">
 import user, { isUserSteward } from '../authn/user'
 import { AppDrawer } from 'components'
-import { initialized as policiesInitialized, loadPolicies, policies } from 'data/policies'
+import { initialized as policiesInitialized, loadPolicies, policies, Policy } from 'data/policies'
+import { PolicyMember } from 'data/policy-members'
 import * as routes from 'helpers/routes'
 import { goto } from '@roxi/routify'
 
 $: $policiesInitialized || loadPolicies()
 
+let myPolicies: Policy[] = []
+
 $: policyId = $user.policy_id
+$: if ($user.id) {
+  myPolicies = $policies.filter(hasMeAsMember)
+}
 
 $: menuItems = [
   {},
@@ -53,8 +59,10 @@ $: menuItems = [
 
 const goToPolicyAsCustomer = (event: CustomEvent) => $goto(routes.policyHome(event.detail))
 const goToRoleHome = (event: CustomEvent) => $goto(routes.adminRoleHome(event.detail))
+const hasMeAsMember = (policy: Policy) => policy.members.some(isPolicyMemberMe)
+const isPolicyMemberMe = (member: PolicyMember) => $user.id === member.id
 </script>
 
-<AppDrawer {menuItems} policies={$policies} on:policy={goToPolicyAsCustomer} on:role={goToRoleHome}>
+<AppDrawer {menuItems} {myPolicies} on:policy={goToPolicyAsCustomer} on:role={goToRoleHome}>
   <slot />
 </AppDrawer>

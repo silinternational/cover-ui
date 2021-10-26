@@ -10,7 +10,7 @@ $: $policiesInitialized || loadPolicies()
 
 let myPolicies: Policy[] = []
 
-$: policyId = $user.policy_id
+$: myHouseholdPolicyId = $user.policy_id
 $: if ($user.id) {
   myPolicies = $policies.filter(hasMeAsMember)
 }
@@ -31,7 +31,7 @@ $: menuItems = [
     hide: !isUserSteward($user),
   },
   {
-    url: routes.customerClaims(policyId),
+    url: routes.customerClaims(myHouseholdPolicyId),
     icon: 'label',
     label: 'Claims',
   },
@@ -52,7 +52,7 @@ $: menuItems = [
     tooltip: 'Group Settings',
   },
   {
-    url: routes.itemsNew(policyId),
+    url: routes.itemsNew(myHouseholdPolicyId),
     icon: 'add_circle',
     label: 'Add Item',
     button: true,

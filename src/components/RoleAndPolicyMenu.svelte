@@ -6,11 +6,14 @@ import { createEventDispatcher } from 'svelte'
 
 export let myPolicies: Policy[]
 export let role: UserAppRole | undefined
+export let selectedPolicyId: string | undefined
 
 const dispatch = createEventDispatcher()
 
 $: myCorporatePolicies = myPolicies.filter(isCorporatePolicy)
 $: myHouseholdPolicies = myPolicies.filter(isHouseholdPolicy)
+
+$: buttonText = getTextForButton(role, selectedPolicyId, myCorporatePolicies, myHouseholdPolicies)
 
 let roleEntries: MenuItem[] = []
 $: roleEntries = getEntriesForRole(role)
@@ -68,6 +71,29 @@ const getEntriesForRole = (role: UserAppRole | undefined): MenuItem[] => {
     Steward: [{ icon: 'gavel', label: 'Steward', action: selectSteward }],
   }
   return specialEntriesByRole[role] || []
+}
+
+const getTextForButton = (
+  role: UserAppRole,
+  selectedPolicyId: string | undefined,
+  corporatePolicies: Policy[],
+  householdPolicies: Policy[]
+) => {
+  if (!selectedPolicyId) {
+    return role || ''
+  }
+
+  const corporatePolicy = corporatePolicies.find((policy) => policy.id === selectedPolicyId)
+  if (corporatePolicy) {
+    return 'Corporate' // TODO: Replace with name, when available
+  }
+
+  const householdPolicy = householdPolicies.find((policy) => policy.id === selectedPolicyId)
+  if (householdPolicy) {
+    return 'Household' // TODO: Replace with name, when available
+  }
+
+  return ''
 }
 
 const isCorporatePolicy = (policy: Policy): boolean => policy.type === 'Corporate'

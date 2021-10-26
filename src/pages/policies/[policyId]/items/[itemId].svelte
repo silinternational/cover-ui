@@ -1,10 +1,18 @@
 <script lang="ts">
-import user from '../../../../authn/user'
+import user, { isAdmin as checkIsAdmin } from '../../../../authn/user'
 import { Breadcrumb, ItemDeleteModal } from 'components'
 import { loading } from 'components/progress'
 import { formatDate } from 'components/dates'
 import { loadDependents } from 'data/dependents'
-import { approveItem, deleteItem, ItemCoverageStatus, itemsByPolicyId, loadItems, PolicyItem } from 'data/items'
+import {
+  approveItem,
+  deleteItem,
+  itemBelongsToPolicy,
+  ItemCoverageStatus,
+  itemsByPolicyId,
+  loadItems,
+  PolicyItem,
+} from 'data/items'
 import { init, policies } from 'data/policies'
 import { loadMembersOfPolicy } from 'data/policy-members'
 import { loadPolicyItemHistory, policyHistoryByItemId } from 'data/policy-history'
@@ -12,7 +20,6 @@ import ItemDetails from 'ItemDetails.svelte'
 import { items as itemsRoute, itemDetails, itemEdit, itemNewClaim, POLICIES, policyDetails } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags, params } from '@roxi/routify'
-import { formatDistanceToNow } from 'date-fns'
 import { Button, Page, Datatable } from '@silintl/ui-components'
 
 export let itemId: string
@@ -24,7 +31,7 @@ $: policyId && loadItems(policyId)
 
 $: $policies.length || init()
 
-$: isAdmin = $user.app_role === 'Steward' || $user.app_role === 'Signator'
+$: isAdmin = checkIsAdmin($user)
 
 // Accountable persons
 $: policyId && loadDependents(policyId)
@@ -35,14 +42,16 @@ $: items = $itemsByPolicyId[policyId] || []
 $: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
 $: itemName = item.name || ''
 $: status = (item.coverage_status || '') as ItemCoverageStatus
-$: status === 'Draft' && $user.app_role === 'User' && goToEditItem()
+$: isMemberOfPolicy = itemBelongsToPolicy($user.policy_id, item)
+$: status === 'Draft' && isMemberOfPolicy && goToEditItem()
 
 $: policyId && item.id && loadPolicyItemHistory(policyId, item.id)
 $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
 $: policyItemHistory = $policyHistoryByItemId[item.id]
 $: hasHistory = policyItemHistory && policyItemHistory.length > 0
 
-$: allowRemoveCovereage = !['Inactive', 'Denied'].includes(status) as boolean
+$: allowRemoveCovereage = (!['Inactive', 'Denied'].includes(status) && isMemberOfPolicy) as boolean
+$: canEdit = ['Draft', 'Pending'].includes(status) && isMemberOfPolicy
 
 // Dynamic breadcrumbs data:
 $: policyName = policy.type === 'Corporate' ? policy.account : policy.household_id
@@ -93,7 +102,7 @@ const onApproveItem = async () => {
         {#if allowRemoveCovereage}
           <Button class="remove-button mx-5px" on:click={() => (open = true)}>Remove</Button>
         {/if}
-        {#if status === 'Draft' || status === 'Pending'}
+        {#if canEdit}
           <Button on:click={goToEditItem}>Edit Item</Button>
         {/if}
       </div>
@@ -103,7 +112,7 @@ const onApproveItem = async () => {
     <ItemDetails {item} {policyId} />
 
     <br />
-    {#if status === 'Approved'}
+    {#if status === 'Approved' && isMemberOfPolicy}
       <div class="m-1">
         <Button class="mdc-theme--secondary-background" on:click={goToNewClaim} raised>File Claim</Button>
       </div>

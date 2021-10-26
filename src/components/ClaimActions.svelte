@@ -1,5 +1,5 @@
 <script lang="ts">
-import user from '../authn/user'
+import user, { isUserSteward } from '../authn/user'
 import { Claim, ClaimStatus, editableStatuses } from 'data/claims'
 import { Button, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
@@ -8,6 +8,7 @@ import Description from './Description.svelte'
 export let claim = {} as Claim
 export let noFilesUploaded: boolean
 export let needsFile: boolean
+export let isMemberOfPolicy: boolean
 
 const dispatch = createEventDispatcher()
 
@@ -27,6 +28,9 @@ $: switch (status) {
   default:
     action = 'Unknown'
 }
+
+let userIsSteward: boolean
+$: userIsSteward = isUserSteward($user)
 
 let isEditable: boolean
 $: isEditable = editableStatuses.includes(status)
@@ -60,7 +64,7 @@ const onDeny = () => dispatch('deny', message)
 }
 </style>
 
-{#if $user.app_role === 'Steward'}
+{#if userIsSteward}
   {#if ['Review1', 'Review2', 'Review3'].includes(status)}
     <div class="container">
       <div class="text-input">
@@ -76,7 +80,7 @@ const onDeny = () => dispatch('deny', message)
       </div>
     </div>
   {/if}
-{:else if $user.app_role === 'User'}
+{:else if isMemberOfPolicy}
   {#if isEditable}
     <Button on:click={on('edit')} outlined>Edit claim</Button>
   {/if}

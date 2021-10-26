@@ -4,7 +4,7 @@ import type { Policy } from 'data/policies.ts'
 import { Button, Menu, MenuItem } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
-export let myPolicies: Policy[] = []
+export let myPolicies: Policy[]
 export let role: UserAppRole | undefined
 
 const dispatch = createEventDispatcher()

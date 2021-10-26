@@ -8,8 +8,8 @@ import { goto } from '@roxi/routify'
 import { Drawer } from '@silintl/ui-components'
 import { ROOT } from 'helpers/routes'
 
-export let menuItems: any[] = []
-export let myPolicies: Policy[] = []
+export let menuItems: any[]
+export let myPolicies: Policy[]
 export let role: UserAppRole | undefined
 
 let toggle = false

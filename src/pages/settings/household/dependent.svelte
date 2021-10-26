@@ -7,7 +7,7 @@ import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
-$: policyId = $user.policy_id as string
+$: policyId = $user.policy_id
 
 $: policyId && loadDependents(policyId)
 $: dependents = $dependentsByPolicyId[policyId] || []

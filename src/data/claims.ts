@@ -342,6 +342,8 @@ export function clear(): void {
 }
 
 export async function loadClaims(): Promise<void> {
+  // TODO: API needs to allow looking up claims by policyId
+  // Right now it just returns the claims of the current user
   const response = await GET<Claim[]>('claims')
 
   claims.set(response)

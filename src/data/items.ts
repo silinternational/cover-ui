@@ -85,7 +85,7 @@ export async function loadItems(policyId: string): Promise<void> {
   const items = await GET<PolicyItem[]>(urlPath)
   itemsByPolicyId.update((data) => {
     // TODO: Sorting and filtering should really be done on the BE but that's not supported yet
-    items.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
+    items.sort((a, b) => Number(new Date(b.updated_at)) - Number(new Date(a.updated_at)))
     data[policyId] = items
     return data
   })

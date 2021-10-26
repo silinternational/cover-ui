@@ -1,11 +1,11 @@
 <script lang="ts">
-import user from '../../../authn/user'
+import user from '../../../../authn/user'
 import {
   determineMaxPayout,
   getFilePurpose,
   getUploadLabel,
   isEvidenceNeeded,
-} from '../../../business-rules/claim-payout-amount'
+} from '../../../../business-rules/claim-payout-amount'
 import {
   Banner,
   Breadcrumb,
@@ -43,12 +43,13 @@ import { loadItems, itemsByPolicyId, PolicyItem, itemBelongsToPolicy } from 'dat
 import { loadPolicies, policies, Policy } from 'data/policies'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import { formatMoney } from 'helpers/money'
-import { customerClaimEdit, CUSTOMER_CLAIMS, customerClaim } from 'helpers/routes'
+import { customerClaimEdit, customerClaims, customerClaimDetails } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
-import { goto, metatags } from '@roxi/routify'
+import { goto, metatags, params } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
 export let claimId: string
+export let policyId: string = $params.policyId
 
 const updatedClaimItemData = {} as any
 
@@ -68,7 +69,6 @@ $: claim.policy_id && loadItems(claim.policy_id)
 $: item = items.find((itm) => itm.id === claimItem.item_id) || ({} as PolicyItem)
 
 // Accountable persons
-$: policyId = $user.policy_id as string
 
 $: isMemberOfPolicy = itemBelongsToPolicy(policyId, item)
 
@@ -106,12 +106,12 @@ $: maximumPayout = determineMaxPayout(payoutOption, claimItem, item.coverage_amo
 
 // Dynamic breadcrumbs data:
 $: item.name && claim.reference_number && (claimName = `${item.name} (${claim.reference_number})`)
-const claimsBreadcrumb = { name: 'Claims', url: CUSTOMER_CLAIMS }
-$: thisClaimBreadcrumb = { name: claimName || 'This item', url: customerClaim(claimId) }
+const claimsBreadcrumb = { name: 'Claims', url: customerClaims(policyId) }
+$: thisClaimBreadcrumb = { name: claimName || 'This item', url: customerClaimDetails(policyId, claimId) }
 $: breadcrumbLinks = [claimsBreadcrumb, thisClaimBreadcrumb]
 $: claimName && (metatags.title = formatPageTitle(`Claims > ${claimName}`))
 
-const editClaim = () => $goto(customerClaimEdit(claimId))
+const editClaim = () => $goto(customerClaimEdit(policyId, claimId))
 
 const onPreapprove = async () => await preapproveClaim(claimId)
 
@@ -188,7 +188,7 @@ function onDeleted(event: CustomEvent<string>) {
       {#if $loading}
         Loading...
       {:else}
-        We could not find that claim. Please <a href={CUSTOMER_CLAIMS}>go back</a> and select a claim from the list.
+        We could not find that claim. Please <a href={customerClaims(policyId)}>go back</a> and select a claim from the list.
       {/if}
     </Row>
   {:else}

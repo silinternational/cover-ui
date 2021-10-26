@@ -1,7 +1,8 @@
 <script lang="ts">
-import user, { isAdmin as checkIsAdmin } from '../../authn/user'
+import user, { isAdmin as checkIsAdmin } from '../../../../authn/user'
 import { Breadcrumb, ItemDeleteModal } from 'components'
 import { loading } from 'components/progress'
+import { formatDate } from 'components/dates'
 import { loadDependents } from 'data/dependents'
 import {
   approveItem,
@@ -14,20 +15,21 @@ import {
 } from 'data/items'
 import { init, policies } from 'data/policies'
 import { loadMembersOfPolicy } from 'data/policy-members'
+import { loadPolicyItemHistory, policyHistoryByItemId } from 'data/policy-history'
 import ItemDetails from 'ItemDetails.svelte'
-import { ITEMS, item as itemRoute, itemEdit, itemNewClaim } from 'helpers/routes'
+import { items as itemsRoute, itemDetails, itemEdit, itemNewClaim, POLICIES, policyDetails } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
-import { goto, metatags } from '@roxi/routify'
-import { Button, Page } from '@silintl/ui-components'
+import { goto, metatags, params } from '@roxi/routify'
+import { Button, Page, Datatable } from '@silintl/ui-components'
 
 export let itemId: string
+export let policyId: string = $params.policyId
 
 let open: boolean = false
 
-$: $user.policy_id && loadItems($user.policy_id)
+$: policyId && loadItems(policyId)
 
 $: $policies.length || init()
-$: policyId = $user.policy_id as string
 
 $: isAdmin = checkIsAdmin($user)
 
@@ -36,28 +38,40 @@ $: policyId && loadDependents(policyId)
 
 $: policyId && loadMembersOfPolicy(policyId)
 
-$: items = $itemsByPolicyId[$user.policy_id] || []
+$: items = $itemsByPolicyId[policyId] || []
 $: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
 $: itemName = item.name || ''
 $: status = (item.coverage_status || '') as ItemCoverageStatus
 $: isMemberOfPolicy = itemBelongsToPolicy(policyId, item)
 $: status === 'Draft' && isMemberOfPolicy && goToEditItem()
 
+$: policyId && item.id && loadPolicyItemHistory(policyId, item.id)
+$: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
+$: policyItemHistory = $policyHistoryByItemId[item.id]
+$: hasHistory = policyItemHistory && policyItemHistory.length > 0
+
 $: allowRemoveCovereage = (!['Inactive', 'Denied'].includes(status) && isMemberOfPolicy) as boolean
 $: canEdit = ['Draft', 'Pending'].includes(status) && isMemberOfPolicy
 
 // Dynamic breadcrumbs data:
-const itemsBreadcrumb = { name: 'Items', url: ITEMS }
-$: thisItemBreadcrumb = { name: itemName || 'This item', url: itemRoute(itemId) }
-$: breadcrumbLinks = [itemsBreadcrumb, thisItemBreadcrumb]
+$: policyName = policy.type === 'Corporate' ? policy.account : policy.household_id
+$: adminBreadcrumbs = isAdmin
+  ? [
+      { name: 'Policies', url: POLICIES },
+      { name: policyName, url: policyDetails(policyId) },
+    ]
+  : []
+const itemsBreadcrumb = { name: 'Items', url: itemsRoute(policyId) }
+$: thisItemBreadcrumb = { name: itemName || 'This item', url: itemDetails(policyId, itemId) }
+$: breadcrumbLinks = [...adminBreadcrumbs, itemsBreadcrumb, thisItemBreadcrumb]
 $: itemName && (metatags.title = formatPageTitle(`Items > ${itemName}`))
 
 const goToEditItem = () => {
-  $goto(itemEdit(itemId))
+  $goto(itemEdit(policyId, itemId))
 }
 
 const goToNewClaim = () => {
-  $goto(itemNewClaim(itemId))
+  $goto(itemNewClaim(policyId, itemId))
 }
 
 const handleDialog = async (event: CustomEvent<string>) => {
@@ -65,7 +79,7 @@ const handleDialog = async (event: CustomEvent<string>) => {
   if (event.detail === 'remove') {
     await deleteItem(policyId, itemId)
 
-    $goto(ITEMS)
+    $goto(itemsRoute(policyId))
   }
 }
 
@@ -79,7 +93,7 @@ const onApproveItem = async () => {
     {#if $loading}
       Loading...
     {:else}
-      We could not find that item. Please <a href={ITEMS}>go back</a> and select an item from the list.
+      We could not find that item. Please <a href={itemsRoute(policyId)}>go back</a> and select an item from the list.
     {/if}
   {:else}
     <div class="flex justify-between align-items-center">
@@ -93,8 +107,10 @@ const onApproveItem = async () => {
         {/if}
       </div>
     </div>
+
     <ItemDeleteModal {open} {item} on:closed={handleDialog} />
     <ItemDetails {item} {policyId} />
+
     <br />
     {#if status === 'Approved' && isMemberOfPolicy}
       <div class="m-1">
@@ -104,6 +120,29 @@ const onApproveItem = async () => {
       <div class="m-1">
         <Button class="mdc-theme--secondary-background" on:click={onApproveItem} raised>Approve Item Coverage</Button>
       </div>
+    {/if}
+
+    {#if 0 && hasHistory}
+      <h3>History</h3>
+      <Datatable>
+        <Datatable.Header>
+          <Datatable.Header.Item>Person</Datatable.Header.Item>
+          <Datatable.Header.Item>Action</Datatable.Header.Item>
+          <Datatable.Header.Item>Date</Datatable.Header.Item>
+        </Datatable.Header>
+        <Datatable.Data>
+          {#each policyItemHistory as itemHistory}
+            <Datatable.Data.Row>
+              <Datatable.Data.Row.Item>{itemHistory.user_id}</Datatable.Data.Row.Item>
+              <Datatable.Data.Row.Item
+                >{itemHistory.action}
+                {itemHistory.field_name} from '{itemHistory.old_value}' to '{itemHistory.new_value}'</Datatable.Data.Row.Item
+              >
+              <Datatable.Data.Row.Item>{formatDate(itemHistory.updated_at)}</Datatable.Data.Row.Item>
+            </Datatable.Data.Row>
+          {/each}
+        </Datatable.Data>
+      </Datatable>
     {/if}
   {/if}
 </Page>

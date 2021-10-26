@@ -17,6 +17,7 @@ $: if ($user.id) {
 
 $: selectedPolicyId = $params.policyId
 
+// TODO: Update this based on the user's role and/or the RoleAndPolicyMenu selection.
 $: menuItems = [
   {},
   {

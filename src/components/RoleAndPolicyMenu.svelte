@@ -13,7 +13,7 @@ const dispatch = createEventDispatcher()
 $: myCorporatePolicies = myPolicies.filter(isCorporatePolicy)
 $: myHouseholdPolicies = myPolicies.filter(isHouseholdPolicy)
 
-$: buttonText = getTextForButton(role, selectedPolicyId, myCorporatePolicies, myHouseholdPolicies)
+$: tryToUpdateButtonText(role, selectedPolicyId, myCorporatePolicies, myHouseholdPolicies)
 
 let roleEntries: MenuItem[] = []
 $: roleEntries = getEntriesForRole(role)
@@ -23,7 +23,7 @@ $: householdPolicyEntries = getHouseholdEntries(myHouseholdPolicies)
 $: menuItems = [...roleEntries, ...corporatePolicyEntries, ...householdPolicyEntries]
 
 let menuIsOpen = false
-let buttonText = 'Household'
+let buttonText = ''
 
 const selectCorporatePolicy = (policy: Policy) => {
   buttonText = 'Corporate' // TODO: Replace with name, when available
@@ -73,27 +73,30 @@ const getEntriesForRole = (role: UserAppRole | undefined): MenuItem[] => {
   return specialEntriesByRole[role] || []
 }
 
-const getTextForButton = (
+const tryToUpdateButtonText = (
   role: UserAppRole,
   selectedPolicyId: string | undefined,
   corporatePolicies: Policy[],
   householdPolicies: Policy[]
 ) => {
   if (!selectedPolicyId) {
-    return role || ''
+    if (!buttonText) {
+      buttonText = role || ''
+    }
+    return
   }
 
   const corporatePolicy = corporatePolicies.find((policy) => policy.id === selectedPolicyId)
   if (corporatePolicy) {
-    return 'Corporate' // TODO: Replace with name, when available
+    buttonText = 'Corporate' // TODO: Replace with name, when available
+    return
   }
 
   const householdPolicy = householdPolicies.find((policy) => policy.id === selectedPolicyId)
   if (householdPolicy) {
-    return 'Household' // TODO: Replace with name, when available
+    buttonText = 'Household' // TODO: Replace with name, when available
+    return
   }
-
-  return ''
 }
 
 const isCorporatePolicy = (policy: Policy): boolean => policy.type === 'Corporate'

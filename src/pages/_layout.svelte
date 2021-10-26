@@ -1,11 +1,13 @@
 <script lang="ts">
-import user, { isSteward } from '../authn/user'
+import user, { isUserSteward } from '../authn/user'
 import { AppDrawer } from 'components'
 import { initialized as policiesInitialized, loadPolicies, policies } from 'data/policies'
 import * as routes from 'helpers/routes'
 import { goto } from '@roxi/routify'
 
 $: $policiesInitialized || loadPolicies()
+
+$: policyId = $user.policy_id
 
 $: menuItems = [
   {},
@@ -18,10 +20,10 @@ $: menuItems = [
     url: routes.POLICIES,
     icon: 'description',
     label: 'Policies',
-    hide: !isSteward($user),
+    hide: !isUserSteward($user),
   },
   {
-    url: routes.CUSTOMER_CLAIMS,
+    url: routes.customerClaims(policyId),
     icon: 'label',
     label: 'Claims',
   },
@@ -42,7 +44,7 @@ $: menuItems = [
     tooltip: 'Group Settings',
   },
   {
-    url: routes.ITEMS_NEW,
+    url: routes.itemsNew(policyId),
     icon: 'add_circle',
     label: 'Add Item',
     button: true,

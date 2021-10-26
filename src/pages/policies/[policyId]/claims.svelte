@@ -1,20 +1,19 @@
 <script lang="ts">
-import user from '../../authn/user'
 import { ClaimCards, Row, Breadcrumb } from 'components'
 import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
-import { claims, loadClaims } from 'data/claims'
+import { Claim, claims, loadClaims } from 'data/claims'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { itemsByPolicyId, loadItems } from 'data/items'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
-import { CUSTOMER_CLAIMS, customerClaim, CUSTOMER_CLAIMS_NEW } from 'helpers/routes'
+import { customerClaims, customerClaimDetails, customerClaimsNew } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
 import { Page, Button } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
-const breadcrumbLinks = [{ name: 'Claims', url: CUSTOMER_CLAIMS }]
+export let policyId: string
 
-$: policyId = $user.policy_id
+const breadcrumbLinks = [{ name: 'Claims', url: customerClaims(policyId) }]
 
 $: policyId && loadItems(policyId)
 $: policyId && loadClaims()
@@ -35,14 +34,14 @@ onMount(() => {
   loadClaims()
 })
 
-const onGotoClaim = (event: CustomEvent) => $goto(customerClaim(event.detail))
+const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(event.detail.policy_id, event.detail.id))
 </script>
 
 <Page layout="grid">
   <Breadcrumb links={breadcrumbLinks} />
-  <Row cols={'12'}>
-    <Button raised url={CUSTOMER_CLAIMS_NEW}>New claim</Button>
-  </Row>
+  <!-- <Row cols={'12'}>
+    <Button raised url={customerClaimsNew(policyId)}>New claim</Button>
+  </Row> -->
 
   <Row cols={'12'}>
     {#if $claims.length}

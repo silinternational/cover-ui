@@ -1,6 +1,6 @@
 <script lang="ts">
 import { login } from '../authn'
-import user, { loadUser } from '../authn/user'
+import user, { isCustomer, loadUser } from '../authn/user'
 import type { CustomError } from '../error'
 import './mdc/_index.scss'
 import t from '../i18n'
@@ -10,7 +10,7 @@ import { routes } from '../../.routify/routes'
 import { Snackbar } from '@silintl/ui-components'
 
 // If we've loaded the user, but their policy wasn't quite ready, try again.
-$: if (!$user.policy_id && $user.app_role === 'User') {
+$: if (!$user.policy_id && isCustomer($user)) {
   //TODO remove this when fixed on the backend
   setTimeout(loadUser, 5000)
 }

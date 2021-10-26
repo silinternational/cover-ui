@@ -1,5 +1,4 @@
 <script lang="ts">
-import user from '../../../authn/user'
 import Checkout from 'Checkout.svelte'
 import { Breadcrumb, ItemBanner, ItemForm } from 'components'
 import { loading } from 'components/progress'
@@ -7,15 +6,14 @@ import { loadDependents } from 'data/dependents'
 import { loadMembersOfPolicy } from 'data/policy-members'
 import { deleteItem, itemsByPolicyId, loadItems, PolicyItem, submitItem, updateItem } from 'data/items'
 import { formatPageTitle } from 'helpers/pageTitle'
-import { HOME, ITEMS, item as itemRoute, itemEdit } from 'helpers/routes'
-import { goto, metatags } from '@roxi/routify'
+import { HOME, items as itemsRoute, itemDetails, itemEdit } from 'helpers/routes'
+import { goto, metatags, params } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
 export let itemId: string
+export let policyId: string = $params.policyId
 
 let isCheckingOut: boolean = false
-
-$: policyId = $user.policy_id
 
 $: policyId && loadDependents(policyId)
 $: policyId && loadMembersOfPolicy(policyId)
@@ -26,9 +24,9 @@ $: item = items.find((anItem) => anItem.id === itemId) || ({} as PolicyItem)
 $: itemName = item.name || ''
 
 // Dynamic breadcrumbs data:
-const itemsBreadcrumb = { name: 'Items', url: ITEMS }
-$: thisItemBreadcrumb = { name: itemName || 'This item', url: itemRoute(itemId) }
-const editBreadcrumb = { name: 'Edit', url: itemEdit(itemId) }
+const itemsBreadcrumb = { name: 'Items', url: itemsRoute(policyId) }
+$: thisItemBreadcrumb = { name: itemName || 'This item', url: itemDetails(policyId, itemId) }
+const editBreadcrumb = { name: 'Edit', url: itemEdit(policyId, itemId) }
 $: breadcrumbLinks = [itemsBreadcrumb, thisItemBreadcrumb, editBreadcrumb]
 $: itemName && (metatags.title = formatPageTitle(`Items > ${itemName} > Edit`))
 
@@ -52,7 +50,7 @@ const onDelete = async () => {
 const onAgreeAndPay = async (event: CustomEvent<string>) => {
   const itemId = event.detail
   await submitItem(policyId, itemId)
-  $goto(itemRoute(itemId))
+  $goto(itemDetails(policyId, itemId))
 }
 
 const onEdit = () => {
@@ -64,7 +62,7 @@ const onEdit = () => {
   {#if $loading}
     Loading...
   {:else}
-    We could not find that item. Please <a href={ITEMS}>go back</a> and select an item from the list.
+    We could not find that item. Please <a href={itemsRoute(policyId)}>go back</a> and select an item from the list.
   {/if}
 {:else if isCheckingOut}
   <Checkout {item} {policyId} on:agreeAndPay={onAgreeAndPay} on:delete={onDelete} on:edit={onEdit} />

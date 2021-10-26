@@ -1,18 +1,18 @@
 <script lang="ts">
-import user from '../../../authn/user'
 import { Breadcrumb, ClaimForm } from 'components'
 import { loading } from 'components/progress'
 import { claims, initialized, createClaim, createClaimItem, loadClaims, Claim, submitClaim } from 'data/claims'
 import { itemsByPolicyId, loadItems, PolicyItem } from 'data/items'
 import * as routes from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
-import { goto, metatags } from '@roxi/routify'
+import { goto, metatags, params } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
 export let itemId: string
+export let policyId: string = $params.policyId
 
-$: $user.policy_id && loadItems($user.policy_id)
-$: items = $itemsByPolicyId[$user.policy_id] || []
+$: policyId && loadItems(policyId)
+$: items = $itemsByPolicyId[policyId] || []
 $: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
 $: itemName = item.name || ''
 
@@ -21,9 +21,9 @@ $: existingClaim = $claims.find((claim) => isItemIdOnClaim(itemId, claim)) || ({
 $: claimExists = !!existingClaim.id
 
 // Dynamic breadcrumbs data:
-const itemsBreadcrumb = { name: 'Items', url: routes.ITEMS }
-$: thisItemBreadcrumb = { name: itemName || 'This item', url: routes.item(itemId) }
-const newClaimBreadcrumb = { name: 'New Claim', url: routes.itemNewClaim(itemId) }
+const itemsBreadcrumb = { name: 'Items', url: routes.items(policyId) }
+$: thisItemBreadcrumb = { name: itemName || 'This item', url: routes.itemDetails(policyId, itemId) }
+const newClaimBreadcrumb = { name: 'New Claim', url: routes.itemNewClaim(policyId, itemId) }
 $: breadcrumbLinks = [itemsBreadcrumb, thisItemBreadcrumb, newClaimBreadcrumb]
 $: itemName && (metatags.title = formatPageTitle(`Items > ${itemName} > New Claim`))
 
@@ -45,12 +45,12 @@ const createClaimAndItem = async (event: CustomEvent): Promise<string> => {
 }
 const onSaveForLater = async (event: CustomEvent) => {
   const claimId = await createClaimAndItem(event)
-  $goto(routes.customerClaim(claimId))
+  $goto(routes.customerClaimDetails(policyId, claimId))
 }
 const onSubmit = async (event: CustomEvent) => {
   const claimId = await createClaimAndItem(event)
   await submitClaim(claimId)
-  $goto(routes.customerClaim(claimId))
+  $goto(routes.customerClaimDetails(policyId, claimId))
 }
 </script>
 
@@ -61,7 +61,7 @@ const onSubmit = async (event: CustomEvent) => {
       <p>Loading...</p>
     {:else}
       <p>
-        We could not find that item. Please <a href={routes.ITEMS}>go back</a> and select an item from the list.
+        We could not find that item. Please <a href={routes.items(policyId)}>go back</a> and select an item from the list.
       </p>
     {/if}
   {:else}
@@ -69,7 +69,7 @@ const onSubmit = async (event: CustomEvent) => {
     {#if claimExists}
       <p>
         It looks like there is already a claim for that item. Please
-        <a href={routes.customerClaim(existingClaim.id)}>click here</a> to see its details.
+        <a href={routes.customerClaimDetails(policyId, existingClaim.id)}>click here</a> to see its details.
       </p>
     {/if}
 

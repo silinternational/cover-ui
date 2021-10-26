@@ -1,5 +1,4 @@
 <script lang="ts">
-import user from '../../../../authn/user'
 import { Breadcrumb, ClaimBanner, ClaimForm } from 'components'
 import { isLoadingById } from 'components/progress'
 import {
@@ -13,12 +12,14 @@ import {
   updateClaimItem,
 } from 'data/claims'
 import { itemsByPolicyId, loadItems, PolicyItem } from 'data/items'
-import { CUSTOMER_CLAIMS, customerClaim, customerClaimEdit } from 'helpers/routes'
+import { customerClaims, customerClaimDetails, customerClaimEdit } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
-import { goto, metatags } from '@roxi/routify'
+import { goto, metatags, params } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
 export let claimId: string
+export let policyId: string = $params.policyId
+
 let claimName: string
 
 $: $initialized || loadClaims()
@@ -30,15 +31,15 @@ $: claimItem = claimItems[0] || ({} as ClaimItem)
 $: itemId = claimItem.item_id
 $: claimItemId = claimItem.id
 
-$: $user.policy_id && loadItems($user.policy_id)
-$: items = $itemsByPolicyId[$user.policy_id] || []
+$: policyId && loadItems(policyId)
+$: items = $itemsByPolicyId[policyId] || []
 $: item = items.find((anItem) => anItem.id === itemId) || ({} as PolicyItem)
 
 // Dynamic breadcrumbs data:
 $: item.name && claim.reference_number && (claimName = `${item.name} (${claim.reference_number})`)
-const claimsBreadcrumb = { name: 'Claims', url: CUSTOMER_CLAIMS }
-$: thisClaimBreadcrumb = { name: claimName || 'This item', url: customerClaim(claimId) }
-const editBreadcrumb = { name: 'Edit', url: customerClaimEdit(claimId) }
+const claimsBreadcrumb = { name: 'Claims', url: customerClaims(policyId) }
+$: thisClaimBreadcrumb = { name: claimName || 'This item', url: customerClaimDetails(policyId, claimId) }
+const editBreadcrumb = { name: 'Edit', url: customerClaimEdit(policyId, claimId) }
 $: breadcrumbLinks = [claimsBreadcrumb, thisClaimBreadcrumb, editBreadcrumb]
 $: claimName && (metatags.title = formatPageTitle(`Claims > ${claimName} > Edit`))
 
@@ -50,12 +51,12 @@ const updateClaimAndItem = async (event: CustomEvent): Promise<void> => {
 }
 const onSaveForLater = async (event: CustomEvent) => {
   await updateClaimAndItem(event)
-  $goto(customerClaim(claimId))
+  $goto(customerClaimDetails(policyId, claimId))
 }
 const onSubmit = async (event: CustomEvent) => {
   await updateClaimAndItem(event)
   await submitClaim(claimId)
-  $goto(customerClaim(claimId))
+  $goto(customerClaimDetails(policyId, claimId))
 }
 </script>
 
@@ -63,11 +64,11 @@ const onSubmit = async (event: CustomEvent) => {
   Loading...
 {:else if claims && !claim.id}
   We could not find that claim. Please
-  <a href={CUSTOMER_CLAIMS}>go back to the list of claims</a>
+  <a href={customerClaims(policyId)}>go back to the list of claims</a>
   and select one from there.
 {:else if items && !item.id}
   We could not find that item on this claim. Please
-  <a href={CUSTOMER_CLAIMS}>go back to the list of claims</a>
+  <a href={customerClaims(policyId)}>go back to the list of claims</a>
   and try again.
 {:else}
   <!-- @todo Handle situations where the user isn't allowed to edit this claim. -->

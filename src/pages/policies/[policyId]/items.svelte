@@ -44,11 +44,11 @@ const getMenuItems = (item: PolicyItem) => {
   const menuItems: MenuItem[] = [
     {
       label: 'View Details',
-      url: routes.item(item.id),
+      url: routes.itemDetails(policyId, item.id),
     },
     {
       label: 'Edit',
-      url: routes.itemEdit(item.id),
+      url: routes.itemEdit(policyId, item.id),
     },
   ]
   if (item.coverage_status != 'Inactive') {
@@ -83,7 +83,7 @@ const redirect = (item: PolicyItem) => {
   currentItem = item
 
   if (goToItemDetails) {
-    let url = routes.item(item.id)
+    let url = routes.itemDetails(policyId, item.id)
     $goto(url)
   } else {
     goToItemDetails = true
@@ -94,7 +94,7 @@ const handleMoreVertClick = (id: string) => {
   goToItemDetails = false
   shownMenus[id] = shownMenus[id] !== true
 }
-const onGotoClaim = (event: CustomEvent) => $goto(routes.customerClaim(event.detail))
+const onGotoClaim = (event: CustomEvent) => $goto(routes.customerClaimDetails(policyId, event.detail))
 </script>
 
 <style>
@@ -134,12 +134,12 @@ const onGotoClaim = (event: CustomEvent) => $goto(routes.customerClaim(event.det
           <Datatable.Header.Item>Item</Datatable.Header.Item>
           <Datatable.Header.Item>Status</Datatable.Header.Item>
           <Datatable.Header.Item>Accountable Person</Datatable.Header.Item>
-          <Datatable.Header.Item>Cost</Datatable.Header.Item>
+          <Datatable.Header.Item>Covered Value</Datatable.Header.Item>
           <Datatable.Header.Item>Premium</Datatable.Header.Item>
           <Datatable.Header.Item>Recent Activity</Datatable.Header.Item>
         </Datatable.Header>
         <Datatable.Data>
-          {#each items as item (item.id)}
+          {#each items.filter((item) => item.coverage_status !== 'Inactive') as item (item.id)}
             <Datatable.Data.Row on:click={() => redirect(item)} clickable>
               <Datatable.Data.Row.Item />
               <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>

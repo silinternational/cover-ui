@@ -3,6 +3,8 @@ import user, { isSteward } from '../authn/user'
 import { AppDrawer } from 'components'
 import * as routes from 'helpers/routes'
 
+$: policyId = $user.policy_id
+
 $: menuItems = [
   {},
   {
@@ -17,7 +19,7 @@ $: menuItems = [
     hide: !isSteward($user),
   },
   {
-    url: routes.CUSTOMER_CLAIMS,
+    url: routes.customerClaims(policyId),
     icon: 'label',
     label: 'Claims',
   },
@@ -38,7 +40,7 @@ $: menuItems = [
     tooltip: 'Group Settings',
   },
   {
-    url: routes.ITEMS_NEW,
+    url: routes.itemsNew(policyId),
     icon: 'add_circle',
     label: 'Add Item',
     button: true,

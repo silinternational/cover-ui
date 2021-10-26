@@ -1,25 +1,29 @@
 <script lang="ts">
-import user from '../../authn/user'
 import Checkout from 'Checkout.svelte'
 import { Breadcrumb, ItemForm } from 'components'
 import { loadDependents } from 'data/dependents'
 import { addItem, deleteItem, loadItems, PolicyItem, submitItem } from 'data/items'
 import { loadMembersOfPolicy } from 'data/policy-members'
 import { formatPageTitle } from 'helpers/pageTitle'
-import { HOME, ITEMS, item as itemRoute } from 'helpers/routes'
+import { HOME, items as itemsRoute, itemDetails, itemsNew } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
+export let policyId: string
+
 let isCheckingOut: boolean = false
 let item: PolicyItem
-
-$: policyId = $user.policy_id
 
 $: policyId && loadDependents(policyId)
 $: policyId && loadMembersOfPolicy(policyId)
 $: metatags.title = formatPageTitle('Items > New')
 
 $: policyId && loadItems(policyId)
+
+$: breadcrumbLinks = [
+  { name: 'Items', url: itemsRoute(policyId) },
+  { name: 'New', url: itemsNew(policyId) },
+]
 
 const onApply = async (event: CustomEvent) => {
   item = await addItem(policyId, event.detail)
@@ -35,12 +39,12 @@ const onSaveForLater = async (event: CustomEvent) => {
 const onAgreeAndPay = async (event: CustomEvent<string>) => {
   const itemId = event.detail
   await submitItem(policyId, itemId)
-  $goto(itemRoute(itemId))
+  $goto(itemDetails(policyId, itemId))
 }
 
 const onDelete = async (event: CustomEvent<string>) => {
   await deleteItem(policyId, event.detail)
-  $goto(ITEMS)
+  $goto(itemsRoute(policyId))
 }
 
 const onEdit = () => {
@@ -50,7 +54,7 @@ const onEdit = () => {
 
 <Page>
   {#if !isCheckingOut}
-    <Breadcrumb />
+    <Breadcrumb links={breadcrumbLinks} />
     <ItemForm {item} {policyId} on:submit={onApply} on:save-for-later={onSaveForLater} />
   {:else}
     <Checkout {item} {policyId} on:agreeAndPay={onAgreeAndPay} on:delete={onDelete} on:edit={onEdit} />

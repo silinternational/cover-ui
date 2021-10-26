@@ -15,7 +15,7 @@ export let claim: Claim = {} as Claim
 export let claimItem: ClaimItem = {} as ClaimItem
 export let item: PolicyItem = {} as PolicyItem
 
-const dispatch = createEventDispatcher<{ 'goto-claim': string }>()
+const dispatch = createEventDispatcher<{ 'goto-claim': Claim }>()
 
 $: wasUpdated = differenceInSeconds(Date.parse(claimItem.updated_at), Date.parse(claimItem.created_at)) > 1
 $: changedText = formatDistanceToNow(Date.parse(claimItem.updated_at), { addSuffix: true })
@@ -32,7 +32,7 @@ $: noFilesUploaded = !claim.claim_files?.length
 $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType)
 $: showSecondBanner = needsReceipt && noFilesUploaded
 
-const gotoClaim = () => dispatch('goto-claim', claim.id)
+const gotoClaim = () => dispatch('goto-claim', claim)
 </script>
 
 <style>

@@ -59,19 +59,22 @@ let uploading: boolean = false
 let previewFile = {} as ClaimFile
 let householdId: string = ''
 let claimName: string
+let policy = {} as Policy
 
 $: $initialized || loadClaims()
 
-$: claim = $claims.find((clm) => clm.id === claimId) || ({} as Claim)
+$: claim =
+  $claims.find((clm: Claim) => clm.id === claimId) ||
+  policy.claims?.find((clm: Claim) => clm.id === claimId) ||
+  ({} as Claim)
 $: claimItem = claim.claim_items?.[0] || ({} as ClaimItem) //For now there will only be one claim_item
-$: items = $itemsByPolicyId[claim.policy_id] || []
-$: claim.policy_id && loadItems(claim.policy_id)
+$: items = $itemsByPolicyId[policyId] || []
+$: policyId && loadItems(policyId)
 $: item = items.find((itm) => itm.id === claimItem.item_id) || ({} as PolicyItem)
-
-// Accountable persons
 
 $: isMemberOfPolicy = itemBelongsToPolicy($user.policy_id, item)
 
+// Accountable persons
 $: policyId && loadDependents(policyId)
 $: dependents = $dependentsByPolicyId[policyId] || []
 $: dependentOptions = getDependentOptions(dependents)

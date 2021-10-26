@@ -4,7 +4,7 @@ import { AppDrawer } from 'components'
 import { initialized as policiesInitialized, loadPolicies, policies, Policy } from 'data/policies'
 import { PolicyMember } from 'data/policy-members'
 import * as routes from 'helpers/routes'
-import { goto } from '@roxi/routify'
+import { goto, params } from '@roxi/routify'
 
 $: $policiesInitialized || loadPolicies()
 
@@ -14,6 +14,8 @@ $: policyId = $user.policy_id
 $: if ($user.id) {
   myPolicies = $policies.filter(hasMeAsMember)
 }
+
+$: selectedPolicyId = $params.policyId
 
 $: menuItems = [
   {},
@@ -66,7 +68,7 @@ const isPolicyMemberMe = (member: PolicyMember) => $user.id === member.id
 <AppDrawer
   {menuItems}
   {myPolicies}
-  selectedPolicyId={undefined}
+  {selectedPolicyId}
   role={$user.app_role}
   on:policy={goToPolicyAsCustomer}
   on:role={goToRoleHome}

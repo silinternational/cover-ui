@@ -37,6 +37,7 @@ import {
   requestRevision,
   submitClaim,
   approveClaim,
+  getClaimById,
 } from 'data/claims'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { loadItems, itemsByPolicyId, PolicyItem, itemBelongsToPolicy } from 'data/items'
@@ -47,6 +48,7 @@ import { customerClaimEdit, customerClaims, customerClaimDetails } from 'helpers
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags, params } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
+import { onMount } from 'svelte'
 
 export let claimId: string
 export let policyId: string = $params.policyId
@@ -60,13 +62,11 @@ let previewFile = {} as ClaimFile
 let householdId: string = ''
 let claimName: string
 let policy = {} as Policy
+let claim = {} as Claim
 
-$: $initialized || loadClaims()
+onMount(async () => (claim = await getClaimById(claimId)))
 
-$: claim =
-  $claims.find((clm: Claim) => clm.id === claimId) ||
-  policy.claims?.find((clm: Claim) => clm.id === claimId) ||
-  ({} as Claim)
+$: claim = $claims.find((clm: Claim) => clm.id === claimId) || claim || ({} as Claim)
 $: claimItem = claim.claim_items?.[0] || ({} as ClaimItem) //For now there will only be one claim_item
 $: items = $itemsByPolicyId[policyId] || []
 $: policyId && loadItems(policyId)
@@ -88,7 +88,7 @@ $: accountablePersonName = getAccountablePerson(item, accountablePersons)?.name
 
 // policies
 $: policyId && loadPolicies()
-$: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
+$: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy) //TODO get from policyById endpoint
 $: householdId = policy.household_id ? policy.household_id : ''
 
 $: incidentDate = formatDate(claim.incident_date)

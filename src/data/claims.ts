@@ -143,7 +143,11 @@ export const statusesAwaitingSignator: ClaimStatus[] = ['Review2', 'Review3a']
 const updateClaimsStore = (changedClaim: Claim) => {
   claims.update((claims) => {
     const i = claims.findIndex((claim) => claim.id === changedClaim.id)
-    claims[i] = changedClaim
+    if (i === -1) {
+      claims.push(changedClaim)
+    } else {
+      claims[i] = changedClaim
+    }
     return claims
   })
 }
@@ -287,10 +291,9 @@ export async function claimsFileAttach(claimId: string, fileId: string, purpose:
 }
 
 export async function submitClaim(claimId: string): Promise<void> {
-  // TODO: Update a store with this response data
   const response = await CREATE<Claim>(`claims/${claimId}/submit`)
 
-  await loadClaims()
+  updateClaimsStore(response)
 }
 
 /**
@@ -348,4 +351,13 @@ export async function loadClaims(): Promise<void> {
 
   claims.set(response)
   initialized.set(true)
+}
+
+export const getClaimById = async (claimId: string): Promise<Claim> => {
+  const url = `claims/${claimId}`
+  const response = await GET<Claim>(url)
+
+  updateClaimsStore(response)
+
+  return response
 }

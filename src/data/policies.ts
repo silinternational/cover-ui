@@ -60,9 +60,9 @@ export function clear(): void {
 }
 
 export async function loadPolicies(): Promise<void> {
-  const response = await GET<Policy[]>('policies')
-
-  policies.set(response)
+  const response = await GET<{ data: Policy[]; meta: any }>('policies')
+  const data = response.data
+  policies.set(data)
   initialized.set(true)
 }
 

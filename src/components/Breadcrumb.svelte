@@ -34,7 +34,19 @@ $: if (links.length === 0) {
 }
 </script>
 
-<style></style>
+<style>
+a {
+  text-decoration: none;
+  color: var(--mdc-theme-primary);
+}
+.breadcrumb-icon {
+  margin: 0 3px;
+}
+.breadcrumb-home {
+  display: inherit;
+  color: var(--mdc-theme-primary);
+}
+</style>
 
 <div class="flex text-align-center align-items-center {$$props.class}">
   <!-- svelte-ignore a11y-invalid-attribute -->

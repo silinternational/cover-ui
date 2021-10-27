@@ -30,9 +30,7 @@ $: policyMemberOptions = getPolicyMemberOptions(policyMembers)
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions] as AccountablePersonOptions[]
 $: metatags.title = formatPageTitle('Claims')
 
-onMount(() => {
-  loadClaimsByPolicyId(policyId)
-})
+onMount(() => loadClaimsByPolicyId(policyId))
 
 const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(event.detail.policy_id, event.detail.id))
 </script>

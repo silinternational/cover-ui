@@ -1,6 +1,8 @@
 <script lang="ts">
 import { Breadcrumb, Description, SearchableSelect } from 'components'
 import { affiliations } from 'data/policies'
+import { formatPageTitle } from 'helpers/pageTitle'
+import { metatags } from '@roxi/routify'
 import { Button, TextField, Page, setNotice } from '@silintl/ui-components'
 
 let account = ''
@@ -8,6 +10,8 @@ let affiliation = ''
 let costCenter = ''
 let groupName = ''
 let entityCode = ''
+
+$: metatags.title = formatPageTitle('New Corporate Policy')
 
 const onCreatePolicy = (event: CustomEvent) => {
   // TEMP

@@ -358,7 +358,8 @@ export async function loadClaimsByPolicyId(policyId: string): Promise<void> {
   // TODO: rename this if needed for properties other than claims
   const response = await GET<Policy>(`policies/${policyId}`)
 
-  claims.set(response.claims)
+  const claimsForPolicy = (response.claims || []) as Claim[]
+  claimsForPolicy.forEach(updateClaimsStore)
   initialized.set(true)
 }
 

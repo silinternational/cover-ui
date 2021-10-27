@@ -2,6 +2,7 @@ import { CREATE, GET, UPDATE } from '.'
 import { convertToCents } from 'helpers/money'
 import type { PolicyItem } from './items'
 import { writable } from 'svelte/store'
+import type { Policy } from './policies'
 
 export type PayoutOption = 'Repair' | 'Replacement' | 'FMV' | 'FixedFraction'
 export type ClaimItemStatus = 'Pending' | 'Approved' | 'Denied'
@@ -154,10 +155,6 @@ const updateClaimsStore = (changedClaim: Claim) => {
 
 // TODO: add backend endpoints when they get finished
 // TODO: uncomment when backend has claims endpoints
-
-export function init(): void {
-  loadClaims()
-}
 
 /**
  * Create a new claim for an existing item
@@ -344,12 +341,24 @@ export function clear(): void {
   initialized.set(false)
 }
 
+/* Returns a filtered list of claims
+ * For a normal user, return ALL that user's claims
+ * For a steward or signator, only return claims with a status of 'Review'
+ */
 export async function loadClaims(): Promise<void> {
-  // TODO: API needs to allow looking up claims by policyId
-  // Right now it just returns the claims of the current user
   const response = await GET<Claim[]>('claims')
 
   claims.set(response)
+  initialized.set(true)
+}
+
+export async function loadClaimsByPolicyId(policyId: string): Promise<void> {
+  // TODO: API needs to allow looking up claims by policyId
+  // Right now it just returns the policy
+  // TODO: rename this if needed for properties other than claims
+  const response = await GET<Policy>(`policies/${policyId}`)
+
+  claims.set(response.claims)
   initialized.set(true)
 }
 

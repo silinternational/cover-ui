@@ -2,7 +2,7 @@
 import user from '../../authn/user'
 import { Breadcrumb, SearchableSelect } from 'components'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
-import { policies, updatePolicy, init, affiliations, Policy } from 'data/policies'
+import { policies, updatePolicy, affiliations, Policy, loadPolicy } from 'data/policies'
 import { loadMembersOfPolicy, membersByPolicyId, PolicyMember } from 'data/policy-members'
 import { SETTINGS_HOUSEHOLD, householdSettingsDependent } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -20,13 +20,13 @@ metatags.title = formatPageTitle('Group Settings')
 
 $: policyId = $user.policy_id
 $: if (policyId) {
+  loadPolicy(policyId)
   loadDependents(policyId)
   loadMembersOfPolicy(policyId)
 }
 
 $: dependents = $dependentsByPolicyId[policyId] || []
 $: householdMembers = $membersByPolicyId[policyId] || []
-$: $policies.length || init()
 $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
 $: policy.household_id && setPolicyHouseholdId()
 $: policy.cost_center && setPolicyCostCenter()

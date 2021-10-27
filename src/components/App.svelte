@@ -12,7 +12,7 @@ import { Snackbar } from '@silintl/ui-components'
 // If we've loaded the user, but their policy wasn't quite ready, try again.
 $: if (!$user.policy_id && isCustomer($user)) {
   //TODO remove this when fixed on the backend
-  setTimeout(loadUser, 5000)
+  setTimeout(() => loadUser(true), 5000)
 }
 
 // added because of this:  https://github.com/sveltech/routify/issues/201

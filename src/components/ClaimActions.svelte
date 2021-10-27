@@ -29,13 +29,8 @@ $: switch (status) {
     action = 'Unknown'
 }
 
-let userIsSteward: boolean
 $: userIsSteward = isUserSteward($user)
-
-let isEditable: boolean
 $: isEditable = editableStatuses.includes(status)
-
-let showSubmit: boolean
 $: showSubmit = ['Receipt', 'Revision'].includes(status) || (status === 'Draft' && needsFile)
 
 const on = (eventType: string) => () => dispatch(eventType)
@@ -80,7 +75,8 @@ const onDeny = () => dispatch('deny', message)
       </div>
     </div>
   {/if}
-{:else if isMemberOfPolicy}
+{/if}
+{#if isMemberOfPolicy}
   {#if isEditable}
     <Button on:click={on('edit')} outlined>Edit claim</Button>
   {/if}

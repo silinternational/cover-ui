@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store'
+import { get, writable } from 'svelte/store'
 import { CREATE, GET, UPDATE } from 'data'
 
 export type AdminAppRole = 'Steward' | 'Signator'
@@ -36,9 +36,13 @@ const user = writable<User>({} as User)
 
 export default user
 
-export async function loadUser(): Promise<void> {
-  const userData = await GET<User>('users/me')
-  user.set(userData)
+export async function loadUser(forceReload?: boolean): Promise<void> {
+  const alreadyLoadedUser = get(user).policy_id
+
+  if (!alreadyLoadedUser || forceReload) {
+    const userData = await GET<User>('users/me')
+    user.set(userData)
+  }
 }
 
 export async function updateUser(data: UpdatedUserBody): Promise<void> {

@@ -1,7 +1,15 @@
 <script lang="ts">
 import { Breadcrumb, ClaimForm } from 'components'
 import { loading } from 'components/progress'
-import { claims, initialized, createClaim, createClaimItem, loadClaims, Claim, submitClaim } from 'data/claims'
+import {
+  claims,
+  initialized,
+  createClaim,
+  createClaimItem,
+  Claim,
+  submitClaim,
+  loadClaimsByPolicyId,
+} from 'data/claims'
 import { itemsByPolicyId, loadItems, PolicyItem } from 'data/items'
 import * as routes from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -16,7 +24,7 @@ $: items = $itemsByPolicyId[policyId] || []
 $: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
 $: itemName = item.name || ''
 
-$: $initialized || loadClaims()
+$: $initialized || loadClaimsByPolicyId(policyId)
 $: existingClaim = $claims.find((claim) => isItemIdOnClaim(itemId, claim)) || ({} as Claim)
 $: claimExists = !!existingClaim.id
 

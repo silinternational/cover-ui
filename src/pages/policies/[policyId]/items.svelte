@@ -2,7 +2,7 @@
 import { ClaimCards, Row, ItemDeleteModal } from 'components'
 import { isLoadingById } from 'components/progress'
 import { formatDate } from 'components/dates'
-import { claims, loadClaims } from 'data/claims'
+import { claims, loadClaimsByPolicyId } from 'data/claims'
 import {
   AccountablePersonOptions,
   getAccountablePerson,
@@ -28,7 +28,7 @@ let currentItem = {} as PolicyItem
 $: policyId && loadItems(policyId)
 $: items = $itemsByPolicyId[policyId] || []
 
-$: policyId && loadClaims()
+$: policyId && loadClaimsByPolicyId(policyId)
 
 $: policyId && loadDependents(policyId)
 $: dependents = $dependentsByPolicyId[policyId] || []

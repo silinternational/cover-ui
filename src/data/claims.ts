@@ -131,7 +131,6 @@ export type DenyClaimRequestBody = {
 }
 
 export const claims = writable<Claim[]>([])
-export const currentClaim = writable<Claim>({})
 export const initialized = writable<boolean>(false)
 export const editableStatuses: ClaimStatus[] = ['Draft', 'Review1', 'Review2', 'Review3', 'Revision', 'Receipt']
 export const statusesAwaitingSteward: ClaimStatus[] = ['Review1', 'Review2', 'Review3b']

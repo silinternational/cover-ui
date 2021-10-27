@@ -1,10 +1,11 @@
 <script lang="ts">
 import { Breadcrumb, Description } from 'components'
 import { createPolicy } from 'data/policies'
+import { throwError } from '../../error'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { policyDetails } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
-import { Button, TextField, Page, setNotice } from '@silintl/ui-components'
+import { Button, TextField, Page } from '@silintl/ui-components'
 
 let account = ''
 let costCenter = ''
@@ -14,13 +15,21 @@ let entityCode = ''
 $: metatags.title = formatPageTitle('New Corporate Policy')
 
 const onCreatePolicy = async () => {
-  const newPolicy = await createPolicy({
+  const formData = {
     account,
     costCenter,
     entityCode,
     groupName,
-  })
+  }
+  validateForm(formData)
+  const newPolicy = await createPolicy(formData)
   $goto(policyDetails(newPolicy.id))
+}
+const validateForm = (formData) => {
+  formData.groupName || throwError('Please provide a group name')
+  formData.entityCode || throwError('Please provide an entity code')
+  formData.costCenter || throwError('Please provide a cost center')
+  formData.account || throwError('Please provide an account number')
 }
 </script>
 

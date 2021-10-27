@@ -24,11 +24,9 @@ import { getAccountablePerson, getDependentOptions, getPolicyMemberOptions } fro
 import {
   denyClaim,
   loadClaims,
-  claims,
   initialized,
   claimsFileAttach,
   updateClaimItem,
-  Claim,
   ClaimItem,
   ClaimStatus,
   ClaimFile,
@@ -37,6 +35,8 @@ import {
   requestRevision,
   submitClaim,
   approveClaim,
+  loadClaim,
+  currentClaim,
 } from 'data/claims'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { loadItems, itemsByPolicyId, PolicyItem } from 'data/items'
@@ -45,6 +45,7 @@ import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import { formatMoney } from 'helpers/money'
 import { customerClaimEdit, customerClaims, customerClaimDetails } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
+import { onMount } from 'svelte'
 import { goto, metatags, params } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
@@ -60,15 +61,17 @@ let previewFile = {} as ClaimFile
 let householdId: string = ''
 let claimName: string
 
-$: $initialized || loadClaims()
+onMount(async () => {
+  loadClaim(claimId)
+})
 
-$: claim = $claims.find((clm) => clm.id === claimId) || ({} as Claim)
+$: claim = $currentClaim
 $: claimItem = claim.claim_items?.[0] || ({} as ClaimItem) //For now there will only be one claim_item
 $: items = $itemsByPolicyId[claim.policy_id] || []
 $: claim.policy_id && loadItems(claim.policy_id)
 $: item = items.find((itm) => itm.id === claimItem.item_id) || ({} as PolicyItem)
 
-$: isUser = $user.app_role === 'User'
+$: currentUser = $user.policy_id === claim.policy_id
 
 // Accountable persons
 
@@ -91,11 +94,13 @@ $: householdId = policy.household_id ? policy.household_id : ''
 $: incidentDate = formatDate(claim.incident_date)
 $: claimStatus = (claim.status || '') as ClaimStatus
 $: payoutOption = claimItem.payout_option as PayoutOption
+
+$: needsReceipt = claimStatus === 'Receipt'
+$: needsFile = needsReceipt || isEvidenceNeeded(claimItem, claimStatus)
+
 $: needsRepairReceipt = needsReceipt && payoutOption === 'Repair'
 $: needsReplaceReceipt = needsReceipt && payoutOption === 'Replacement'
-$: needsReceipt = claimStatus === 'Receipt'
-$: needsEvidence = isEvidenceNeeded(claimItem, claimStatus)
-$: needsFile = needsReceipt || needsEvidence
+
 $: noFilesUploaded = !claim.claim_files?.length //TODO check for specific file purpose to show banner
 $: filePurpose = getFilePurpose(claimItem, needsReceipt)
 $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType) as string
@@ -183,7 +188,7 @@ function onDeleted(event: CustomEvent<string>) {
 </style>
 
 <Page layout="grid">
-  {#if !item.id}
+  {#if !claim || !item.id}
     <Row>
       {#if $loading}
         Loading...
@@ -259,7 +264,7 @@ function onDeleted(event: CustomEvent<string>) {
         />
       </p>
 
-      {#if isUser}
+      {#if currentUser}
         {#if needsReceipt}
           <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onBlur} />
 

@@ -94,14 +94,16 @@ export const isEvidenceNeeded = (claimItem: ClaimItem, claimStatus: ClaimStatus)
   return willNeedEvidence && repairCostIsNotTooHigh && canProvideEvidenceNow
 }
 
-export const getFilePurpose = (claimItem: ClaimItem, needsReceipt: boolean): ClaimFilePurpose => {
+export const getFilePurpose = (claimItem: ClaimItem, needsReceipt: boolean): ClaimFilePurpose | '' => {
   if (needsReceipt) return 'Receipt'
-  if (claimItem.repair_estimate) return 'Repair Estimate'
-  if (claimItem.fmv) return 'Evidence of FMV'
+  else if (claimItem.repair_estimate) return 'Repair Estimate'
+  else if (claimItem.fmv) return 'Evidence of FMV'
+  else return ''
 }
 
-export const getUploadLabel = (claimItem: ClaimItem, needsReceipt: boolean, receiptType: string) => {
+export const getUploadLabel = (claimItem: ClaimItem, needsReceipt: boolean, receiptType: string): string => {
   if (needsReceipt) return `a ${receiptType} item receipt`
-  if (claimItem.repair_estimate) return 'a repair estimate'
-  if (claimItem.fmv) return 'evidence of fair market value'
+  else if (claimItem.repair_estimate) return 'a repair estimate'
+  else if (claimItem.fmv) return 'evidence of fair market value'
+  else return ''
 }

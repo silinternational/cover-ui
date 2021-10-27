@@ -2,6 +2,7 @@ import { CREATE, GET, UPDATE } from '.'
 import { convertToCents } from 'helpers/money'
 import type { PolicyItem } from './items'
 import { writable } from 'svelte/store'
+import type { Policy } from './policies'
 
 export type PayoutOption = 'Repair' | 'Replacement' | 'FMV' | 'FixedFraction'
 export type ClaimItemStatus = 'Pending' | 'Approved' | 'Denied'
@@ -130,6 +131,7 @@ export type DenyClaimRequestBody = {
 }
 
 export const claims = writable<Claim[]>([])
+export const currentClaim = writable<Claim>({})
 export const initialized = writable<boolean>(false)
 export const editableStatuses: ClaimStatus[] = ['Draft', 'Review1', 'Review2', 'Review3', 'Revision', 'Receipt']
 export const statusesAwaitingSteward: ClaimStatus[] = ['Review1', 'Review2', 'Review3b']
@@ -150,10 +152,6 @@ const updateClaimsStore = (changedClaim: Claim) => {
 
 // TODO: add backend endpoints when they get finished
 // TODO: uncomment when backend has claims endpoints
-
-export function init(): void {
-  loadClaims()
-}
 
 /**
  * Create a new claim for an existing item
@@ -341,11 +339,29 @@ export function clear(): void {
   initialized.set(false)
 }
 
+/* Returns a filtered list of claims
+ * For a normal user, return ALL that user's claims
+ * For a steward or signator, only return claims with a status of 'Review'
+ */
 export async function loadClaims(): Promise<void> {
-  // TODO: API needs to allow looking up claims by policyId
-  // Right now it just returns the claims of the current user
   const response = await GET<Claim[]>('claims')
 
   claims.set(response)
+  initialized.set(true)
+}
+
+export async function loadClaim(claimId: string): Promise<void> {
+  const response = await GET<Claim>(`claims/${claimId}`)
+
+  currentClaim.set(response)
+}
+
+export async function loadClaimsByPolicyId(policyId: string): Promise<void> {
+  // TODO: API needs to allow looking up claims by policyId
+  // Right now it just returns the claims of the current user
+  const response = await GET<Policy>(`policies/${policyId}`)
+
+  console.log('called loadClaimsByPolicyId and set claims to', response.claims)
+  claims.set(response.claims)
   initialized.set(true)
 }

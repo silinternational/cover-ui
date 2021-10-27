@@ -1,6 +1,6 @@
-export const convertToCents = (dollars: number): number | undefined => {
+export const convertToCents = (dollars: number): number => {
   if (dollars === undefined || dollars === null) {
-    return undefined // TODO: revisit this logic. it should probably return 0
+    return 0
   }
   return Math.round(dollars * 100) // Round to avoid #'s like 7001.000000000001
 }

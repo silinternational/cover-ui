@@ -2,11 +2,11 @@
 import { Breadcrumb, ClaimBanner, ClaimForm } from 'components'
 import { isLoadingById } from 'components/progress'
 import {
-  Claim,
   ClaimItem,
   claims,
+  currentClaim,
   initialized,
-  loadClaims,
+  loadClaim,
   submitClaim,
   updateClaim,
   updateClaimItem,
@@ -22,8 +22,8 @@ export let policyId: string = $params.policyId
 
 let claimName: string
 
-$: $initialized || loadClaims()
-$: claim = $claims.find((c) => c.id === claimId) || ({} as Claim)
+$: $initialized || loadClaim(claimId)
+$: claim = $currentClaim
 $: claimItems = claim.claim_items || []
 
 /** @todo Update this when claims can have multiple items. */

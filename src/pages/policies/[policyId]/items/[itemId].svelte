@@ -5,14 +5,13 @@ import { loading } from 'components/progress'
 import { formatDate } from 'components/dates'
 import { loadDependents } from 'data/dependents'
 import { approveItem, deleteItem, ItemCoverageStatus, itemsByPolicyId, loadItems, PolicyItem } from 'data/items'
-import { init, policies } from 'data/policies'
+import { loadPolicies, policies, Policy } from 'data/policies'
 import { loadMembersOfPolicy } from 'data/policy-members'
 import { loadPolicyItemHistory, policyHistoryByItemId } from 'data/policy-history'
 import ItemDetails from 'ItemDetails.svelte'
 import { items as itemsRoute, itemDetails, itemEdit, itemNewClaim, POLICIES, policyDetails } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags, params } from '@roxi/routify'
-import { formatDistanceToNow } from 'date-fns'
 import { Button, Page, Datatable } from '@silintl/ui-components'
 
 export let itemId: string
@@ -22,7 +21,7 @@ let open: boolean = false
 
 $: policyId && loadItems(policyId)
 
-$: $policies.length || init()
+$: $policies.length || loadPolicies()
 
 $: isAdmin = $user.app_role === 'Steward' || $user.app_role === 'Signator'
 

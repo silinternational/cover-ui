@@ -40,7 +40,7 @@ const loadDataOnce = (policyId: string) => {
     loadMembersOfPolicy(policyId)
   }
 }
-const onGotoClaim = (event) => $goto(`/signator/claims/${event.detail}`)
+const onGotoClaim = (event: CustomEvent<Claim>) => $goto(`/signator/claims/${event.detail.id}`)
 </script>
 
 <style>

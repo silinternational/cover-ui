@@ -28,6 +28,7 @@ $: switch (status) {
     action = 'Unknown'
 }
 
+$: showActions = $user.policy_id === claim.policy_id
 let isEditable: boolean
 $: isEditable = editableStatuses.includes(status)
 
@@ -76,7 +77,8 @@ const onDeny = () => dispatch('deny', message)
       </div>
     </div>
   {/if}
-{:else if $user.app_role === 'User'}
+{/if}
+{#if showActions}
   {#if isEditable}
     <Button on:click={on('edit')} outlined>Edit claim</Button>
   {/if}

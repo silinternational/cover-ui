@@ -1,7 +1,7 @@
 <script lang="ts">
 import { ClaimCards, Row, Breadcrumb } from 'components'
 import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
-import { Claim, claims, loadClaims } from 'data/claims'
+import { Claim, claims, loadClaimsByPolicyId } from 'data/claims'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { itemsByPolicyId, loadItems } from 'data/items'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
@@ -16,7 +16,7 @@ export let policyId: string
 const breadcrumbLinks = [{ name: 'Claims', url: customerClaims(policyId) }]
 
 $: policyId && loadItems(policyId)
-$: policyId && loadClaims()
+$: policyId && loadClaimsByPolicyId(policyId)
 $: policyId && loadDependents(policyId)
 $: policyId && loadMembersOfPolicy(policyId)
 
@@ -31,7 +31,7 @@ $: accountablePersons = [...policyMemberOptions, ...dependentOptions] as Account
 $: metatags.title = formatPageTitle('Claims')
 
 onMount(() => {
-  loadClaims()
+  loadClaimsByPolicyId(policyId)
 })
 
 const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(event.detail.policy_id, event.detail.id))

@@ -29,10 +29,6 @@ export type UpdatePolicyRequestBody = {
 export const policies = writable<Policy[]>([])
 export const initialized = writable<boolean>(false)
 
-export function init(): void {
-  loadPolicies()
-}
-
 /**
  *
  * @description updates a current policy with the given 'policyData'

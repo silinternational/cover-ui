@@ -2,7 +2,7 @@
 import user from '../../authn/user'
 import { Breadcrumb, SearchableSelect } from 'components'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
-import { policies, updatePolicy, init, affiliations, Policy } from 'data/policies'
+import { policies, updatePolicy, loadPolicies, affiliations, Policy } from 'data/policies'
 import { loadMembersOfPolicy, membersByPolicyId, PolicyMember } from 'data/policy-members'
 import { SETTINGS_HOUSEHOLD, householdSettingsDependent } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -26,7 +26,7 @@ $: if (policyId) {
 
 $: dependents = $dependentsByPolicyId[policyId] || []
 $: householdMembers = $membersByPolicyId[policyId] || []
-$: $policies.length || init()
+$: $policies.length || loadPolicies()
 $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
 $: policy.household_id && setPolicyHouseholdId()
 $: policy.cost_center && setPolicyCostCenter()

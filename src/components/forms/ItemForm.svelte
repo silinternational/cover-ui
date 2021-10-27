@@ -8,7 +8,7 @@ import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
 import { dependentsByPolicyId } from 'data/dependents'
 import type { ItemCoverageStatus, PolicyItem } from 'data/items'
-import { categories, init, initialized as catItemsInitialized } from 'data/itemCategories'
+import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
 import { membersByPolicyId } from 'data/policy-members'
 import { assertHas } from '../../validation/assertions'
 import { Button, Form, Select, TextArea, TextField } from '@silintl/ui-components'
@@ -58,7 +58,7 @@ $: accountablePerson = accountablePersons.find(
 )
 
 $: country = accountablePerson?.country || country
-$: !$catItemsInitialized && init()
+$: !$catItemsInitialized && loadCategories()
 
 const onAccountablePersonChange = (event: any) => {
   accountablePersonId = event.detail?.id

@@ -2,7 +2,7 @@
 import user, { attachUserPhoto, updateUser } from '../../authn/user'
 import { Breadcrumb, FileDropArea, RadioOptions } from 'components'
 import { upload } from 'data'
-import { policies, init as loadPolicies } from 'data/policies'
+import { policies, loadPolicies } from 'data/policies'
 import { assertEmailAddress } from '../../validation/assertions'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { SETTINGS_PERSONAL } from 'helpers/routes'

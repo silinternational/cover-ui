@@ -14,10 +14,6 @@ export type ItemCategory = {
 export const categories = writable<ItemCategory[]>([])
 export const initialized = writable<boolean>(false)
 
-export async function init(): Promise<void> {
-  loadCategories()
-}
-
 /**
  *
  * @description loads categories from backend

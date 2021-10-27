@@ -24,7 +24,6 @@ import { getAccountablePerson, getDependentOptions, getPolicyMemberOptions } fro
 import {
   denyClaim,
   loadClaims,
-  initialized,
   claimsFileAttach,
   updateClaimItem,
   ClaimItem,
@@ -35,11 +34,12 @@ import {
   requestRevision,
   submitClaim,
   approveClaim,
-  loadClaim,
-  currentClaim,
+  getClaimById,
+  Claim,
+  claims,
 } from 'data/claims'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
-import { loadItems, itemsByPolicyId, PolicyItem } from 'data/items'
+import { loadItems, itemsByPolicyId, PolicyItem, itemBelongsToPolicy } from 'data/items'
 import { loadPolicies, policies, Policy } from 'data/policies'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import { formatMoney } from 'helpers/money'
@@ -60,21 +60,20 @@ let uploading: boolean = false
 let previewFile = {} as ClaimFile
 let householdId: string = ''
 let claimName: string
+let policy = {} as Policy
+let claim = {} as Claim
 
-onMount(async () => {
-  loadClaim(claimId)
-})
+onMount(() => getClaimById(claimId))
 
-$: claim = $currentClaim
+$: claim = ($claims.find((clm: Claim) => clm.id === claimId) || {}) as Claim
 $: claimItem = claim.claim_items?.[0] || ({} as ClaimItem) //For now there will only be one claim_item
-$: items = $itemsByPolicyId[claim.policy_id] || []
-$: claim.policy_id && loadItems(claim.policy_id)
+$: items = $itemsByPolicyId[policyId] || []
+$: policyId && loadItems(policyId)
 $: item = items.find((itm) => itm.id === claimItem.item_id) || ({} as PolicyItem)
 
-$: currentUser = $user.policy_id === claim.policy_id
+$: isMemberOfPolicy = itemBelongsToPolicy($user.policy_id, item)
 
 // Accountable persons
-
 $: policyId && loadDependents(policyId)
 $: dependents = $dependentsByPolicyId[policyId] || []
 $: dependentOptions = getDependentOptions(dependents)
@@ -88,7 +87,7 @@ $: accountablePersonName = getAccountablePerson(item, accountablePersons)?.name
 
 // policies
 $: policyId && loadPolicies()
-$: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
+$: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy) //TODO get from policyById endpoint
 $: householdId = policy.household_id ? policy.household_id : ''
 
 $: incidentDate = formatDate(claim.incident_date)
@@ -255,6 +254,7 @@ function onDeleted(event: CustomEvent<string>) {
           {noFilesUploaded}
           {needsFile}
           {claim}
+          {isMemberOfPolicy}
           on:ask-for-changes={onAskForChanges}
           on:deny={onDenyClaim}
           on:edit={editClaim}
@@ -264,7 +264,7 @@ function onDeleted(event: CustomEvent<string>) {
         />
       </p>
 
-      {#if currentUser}
+      {#if isMemberOfPolicy}
         {#if needsReceipt}
           <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onBlur} />
 

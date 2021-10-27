@@ -1,5 +1,5 @@
 <script lang="ts">
-import user from '../authn/user'
+import user, { isUserSteward } from '../authn/user'
 import { Claim, ClaimStatus, editableStatuses } from 'data/claims'
 import { Button, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
@@ -8,6 +8,7 @@ import Description from './Description.svelte'
 export let claim = {} as Claim
 export let noFilesUploaded: boolean
 export let needsFile: boolean
+export let isMemberOfPolicy: boolean
 
 const dispatch = createEventDispatcher()
 
@@ -28,11 +29,8 @@ $: switch (status) {
     action = 'Unknown'
 }
 
-$: showActions = $user.policy_id === claim.policy_id
-let isEditable: boolean
+$: userIsSteward = isUserSteward($user)
 $: isEditable = editableStatuses.includes(status)
-
-let showSubmit: boolean
 $: showSubmit = ['Receipt', 'Revision'].includes(status) || (status === 'Draft' && needsFile)
 
 const on = (eventType: string) => () => dispatch(eventType)
@@ -61,7 +59,7 @@ const onDeny = () => dispatch('deny', message)
 }
 </style>
 
-{#if $user.app_role === 'Steward'}
+{#if userIsSteward}
   {#if ['Review1', 'Review2', 'Review3'].includes(status)}
     <div class="container">
       <div class="text-input">
@@ -78,7 +76,7 @@ const onDeny = () => dispatch('deny', message)
     </div>
   {/if}
 {/if}
-{#if showActions}
+{#if isMemberOfPolicy}
   {#if isEditable}
     <Button on:click={on('edit')} outlined>Edit claim</Button>
   {/if}

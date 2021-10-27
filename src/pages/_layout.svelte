@@ -1,5 +1,5 @@
 <script lang="ts">
-import user, { isSteward } from '../authn/user'
+import user, { isUserSteward } from '../authn/user'
 import { AppDrawer } from 'components'
 import * as routes from 'helpers/routes'
 
@@ -16,7 +16,7 @@ $: menuItems = [
     url: routes.POLICIES,
     icon: 'description',
     label: 'Policies',
-    hide: !isSteward($user),
+    hide: !isUserSteward($user),
   },
   {
     url: routes.customerClaims(policyId),

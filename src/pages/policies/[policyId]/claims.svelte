@@ -39,9 +39,9 @@ const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(ev
 
 <Page layout="grid">
   <Breadcrumb links={breadcrumbLinks} />
-  <Row cols={'12'}>
+  <!-- <Row cols={'12'}>
     <Button raised url={customerClaimsNew(policyId)}>New claim</Button>
-  </Row>
+  </Row> -->
 
   <Row cols={'12'}>
     {#if $claims.length}

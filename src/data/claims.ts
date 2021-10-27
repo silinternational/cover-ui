@@ -145,7 +145,11 @@ export const statusesAwaitingSignator: ClaimStatus[] = ['Review2', 'Review3a']
 const updateClaimsStore = (changedClaim: Claim) => {
   claims.update((claims) => {
     const i = claims.findIndex((claim) => claim.id === changedClaim.id)
-    claims[i] = changedClaim
+    if (i === -1) {
+      claims.push(changedClaim)
+    } else {
+      claims[i] = changedClaim
+    }
     return claims
   })
 }
@@ -285,10 +289,9 @@ export async function claimsFileAttach(claimId: string, fileId: string, purpose:
 }
 
 export async function submitClaim(claimId: string): Promise<void> {
-  // TODO: Update a store with this response data
   const response = await CREATE<Claim>(`claims/${claimId}/submit`)
 
-  await loadClaims()
+  updateClaimsStore(response)
 }
 
 /**
@@ -350,18 +353,20 @@ export async function loadClaims(): Promise<void> {
   initialized.set(true)
 }
 
-export async function loadClaim(claimId: string): Promise<void> {
-  const response = await GET<Claim>(`claims/${claimId}`)
-
-  currentClaim.set(response)
-}
-
 export async function loadClaimsByPolicyId(policyId: string): Promise<void> {
   // TODO: API needs to allow looking up claims by policyId
   // Right now it just returns the claims of the current user
   const response = await GET<Policy>(`policies/${policyId}`)
 
-  console.log('called loadClaimsByPolicyId and set claims to', response.claims)
   claims.set(response.claims)
   initialized.set(true)
+}
+
+export const getClaimById = async (claimId: string): Promise<Claim> => {
+  const url = `claims/${claimId}`
+  const response = await GET<Claim>(url)
+
+  updateClaimsStore(response)
+
+  return response
 }

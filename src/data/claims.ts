@@ -354,7 +354,8 @@ export async function loadClaims(): Promise<void> {
 
 export async function loadClaimsByPolicyId(policyId: string): Promise<void> {
   // TODO: API needs to allow looking up claims by policyId
-  // Right now it just returns the claims of the current user
+  // Right now it just returns the policy
+  // TODO: rename this if needed for properties other than claims
   const response = await GET<Policy>(`policies/${policyId}`)
 
   claims.set(response.claims)

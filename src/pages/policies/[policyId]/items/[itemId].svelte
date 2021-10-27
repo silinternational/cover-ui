@@ -26,8 +26,10 @@ import { onMount } from 'svelte'
 export let itemId: string
 export let policyId: string = $params.policyId
 
-onMount(() => loadItems(policyId))
-onMount(() => loadPolicy(policyId))
+onMount(() => {
+  loadItems(policyId)
+  loadPolicy(policyId)
+})
 
 let open: boolean = false
 

@@ -63,8 +63,10 @@ let claimName: string
 let policy = {} as Policy
 let claim = {} as Claim
 
-onMount(() => getClaimById(claimId))
-onMount(() => loadPolicy(policyId))
+onMount(() => {
+  getClaimById(claimId)
+  loadPolicy(policyId)
+})
 
 $: claim = ($claims.find((clm: Claim) => clm.id === claimId) || {}) as Claim
 $: claimItem = claim.claim_items?.[0] || ({} as ClaimItem) //For now there will only be one claim_item

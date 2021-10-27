@@ -1,5 +1,5 @@
 <script lang="ts">
-import user from '../../../../authn/user'
+import user, { isAdmin as checkIsAdmin } from '../../../../authn/user'
 import {
   determineMaxPayout,
   getFilePurpose,
@@ -40,10 +40,10 @@ import {
 } from 'data/claims'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { loadItems, itemsByPolicyId, PolicyItem, itemBelongsToPolicy } from 'data/items'
-import { loadPolicies, policies, Policy } from 'data/policies'
+import { getPolicyById, loadPolicy, policies, Policy } from 'data/policies'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import { formatMoney } from 'helpers/money'
-import { customerClaimEdit, customerClaims, customerClaimDetails } from 'helpers/routes'
+import { customerClaimEdit, customerClaims, customerClaimDetails, POLICIES, policyDetails } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { onMount } from 'svelte'
 import { goto, metatags, params } from '@roxi/routify'
@@ -64,6 +64,7 @@ let policy = {} as Policy
 let claim = {} as Claim
 
 onMount(() => getClaimById(claimId))
+onMount(() => loadPolicy(policyId))
 
 $: claim = ($claims.find((clm: Claim) => clm.id === claimId) || {}) as Claim
 $: claimItem = claim.claim_items?.[0] || ({} as ClaimItem) //For now there will only be one claim_item
@@ -86,8 +87,7 @@ $: accountablePersons = [...policyMemberOptions, ...dependentOptions]
 $: accountablePersonName = getAccountablePerson(item, accountablePersons)?.name
 
 // policies
-$: policyId && loadPolicies()
-$: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy) //TODO get from policyById endpoint
+$: $policies && (policy = getPolicyById(policyId))
 $: householdId = policy.household_id ? policy.household_id : ''
 
 $: incidentDate = formatDate(claim.incident_date)
@@ -110,9 +110,16 @@ $: maximumPayout = determineMaxPayout(payoutOption, claimItem, item.coverage_amo
 
 // Dynamic breadcrumbs data:
 $: item.name && claim.reference_number && (claimName = `${item.name} (${claim.reference_number})`)
+$: policyName = policy.type === 'Corporate' ? policy.account : policy.household_id
+$: adminBreadcrumbs = checkIsAdmin($user)
+  ? [
+      { name: 'Policies', url: POLICIES },
+      { name: policyName, url: policyDetails(policyId) },
+    ]
+  : []
 const claimsBreadcrumb = { name: 'Claims', url: customerClaims(policyId) }
 $: thisClaimBreadcrumb = { name: claimName || 'This item', url: customerClaimDetails(policyId, claimId) }
-$: breadcrumbLinks = [claimsBreadcrumb, thisClaimBreadcrumb]
+$: breadcrumbLinks = [...adminBreadcrumbs, claimsBreadcrumb, thisClaimBreadcrumb]
 $: claimName && (metatags.title = formatPageTitle(`Claims > ${claimName}`))
 
 const editClaim = () => $goto(customerClaimEdit(policyId, claimId))

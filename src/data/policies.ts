@@ -30,6 +30,23 @@ export const policies = writable<Policy[]>([])
 export const initialized = writable<boolean>(false)
 
 /**
+ * Update a policy in our local list (store) of policies.
+ *
+ * @param {Policy} changedPolicy
+ */
+const updatePoliciesStore = (changedPolicy: Policy) => {
+  policies.update((policies) => {
+    const i = policies.findIndex((policy) => policy.id === changedPolicy.id)
+    if (i === -1) {
+      policies.push(changedPolicy)
+    } else {
+      policies[i] = changedPolicy
+    }
+    return policies
+  })
+}
+
+/**
  *
  * @description updates a current policy with the given 'policyData'
  * @export
@@ -64,6 +81,15 @@ export async function loadPolicies(): Promise<void> {
   const data = response.data
   policies.set(data)
   initialized.set(true)
+}
+
+export async function loadPolicy(policyId: string, forceReload?: boolean): Promise<void> {
+  const alreadyLoadedPolicy = get(policies).find((policy) => policy.id === policyId)
+  if (!alreadyLoadedPolicy || forceReload) {
+    const response = await GET<Policy>(`policies/${policyId}`)
+
+    updatePoliciesStore(response)
+  }
 }
 
 export const affiliations = writable<{ [key: string]: string }>({

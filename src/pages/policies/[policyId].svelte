@@ -1,6 +1,5 @@
 <script lang="ts">
-import type { Claim } from 'data/claims'
-import { initialized, loadPolicies, policies, Policy } from 'data/policies'
+import { loadPolicy, policies, Policy } from 'data/policies'
 import { loadItems, itemsByPolicyId } from 'data/items'
 import type { PolicyMember } from 'data/policy-members'
 import { getAccountablePerson, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
@@ -13,10 +12,12 @@ import { customerClaimDetails, itemDetails } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { metatags } from '@roxi/routify'
 import { Datatable, Page } from '@silintl/ui-components'
+import { onMount } from 'svelte'
 
 export let policyId: string
 
-$: $initialized || loadPolicies()
+onMount(() => loadPolicy(policyId))
+
 $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
 $: members = policy.members || ([] as PolicyMember[])
 $: policyMemberOptions = getPolicyMemberOptions(members)

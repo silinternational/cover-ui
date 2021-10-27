@@ -9,19 +9,23 @@ import {
 } from 'data/accountablePersons'
 import { dependentsByPolicyId } from 'data/dependents'
 import type { PolicyItem, ItemCoverageStatus } from 'data/items'
-import { getPolicyById } from 'data/policies'
+import { getPolicyById, loadPolicy, policies, Policy } from 'data/policies'
 import { membersByPolicyId } from 'data/policy-members'
 import { formatDistanceToNow } from 'date-fns'
 import { formatDate } from './dates'
 import { formatMoney } from 'helpers/money'
+import { onMount } from 'svelte'
 
 export let item: PolicyItem
 export let isCheckingOut: boolean
 export let policyId: string
 
+let policy: Policy
 let accountablePersons: AccountablePersonOptions[]
 
-$: policy = getPolicyById(policyId)
+onMount(() => loadPolicy(policyId))
+
+$: $policies && (policy = getPolicyById(policyId))
 $: householdId = policy.household_id ? policy.household_id : ''
 
 $: submittedText = item.updated_at ? formatDistanceToNow(Date.parse(item.updated_at), { addSuffix: true }) : ''

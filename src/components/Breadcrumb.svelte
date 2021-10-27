@@ -7,7 +7,8 @@ export let links: { url?: string; name?: string }[] = []
 export let hasHome = true
 
 let urls: { url: string; name: string }[] = []
-if (links.length === 0) {
+
+$: if (links.length === 0) {
   let path = $url().split('/')
 
   while (path.length > 0) {
@@ -22,31 +23,18 @@ if (links.length === 0) {
     path.pop()
   }
 } else {
+  urls = []
   links.forEach((val) => {
     if (!val.url || !val.name) {
       throwError('Error: no url or name field for provided links array')
     } else {
-      urls.push({ url: val.url, name: val.name })
+      urls = [...urls, { url: val.url, name: val.name }]
     }
   })
 }
 </script>
 
-<style>
-a {
-  text-decoration: none;
-  color: var(--mdc-theme-primary);
-}
-
-.breadcrumb-icon {
-  margin: 0 3px;
-}
-
-.breadcrumb-home {
-  display: inherit;
-  color: var(--mdc-theme-primary);
-}
-</style>
+<style></style>
 
 <div class="flex text-align-center align-items-center {$$props.class}">
   <!-- svelte-ignore a11y-invalid-attribute -->

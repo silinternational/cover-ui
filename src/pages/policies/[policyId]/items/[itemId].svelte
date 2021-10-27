@@ -13,7 +13,7 @@ import {
   loadItems,
   PolicyItem,
 } from 'data/items'
-import { loadPolicies, policies, Policy } from 'data/policies'
+import { loadPolicy, policies, Policy } from 'data/policies'
 import { loadMembersOfPolicy } from 'data/policy-members'
 import { loadPolicyItemHistory, policyHistoryByItemId } from 'data/policy-history'
 import ItemDetails from 'ItemDetails.svelte'
@@ -21,15 +21,15 @@ import { items as itemsRoute, itemDetails, itemEdit, itemNewClaim, POLICIES, pol
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags, params } from '@roxi/routify'
 import { Button, Page, Datatable } from '@silintl/ui-components'
+import { onMount } from 'svelte'
 
 export let itemId: string
 export let policyId: string = $params.policyId
 
+onMount(() => loadItems(policyId))
+onMount(() => loadPolicy(policyId))
+
 let open: boolean = false
-
-$: policyId && loadItems(policyId)
-
-$: $policies.length || loadPolicies()
 
 $: isAdmin = checkIsAdmin($user)
 

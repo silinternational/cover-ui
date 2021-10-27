@@ -1,6 +1,7 @@
 <script lang="ts">
 import type { UserAppRole } from 'authn/user'
 import type { Policy } from 'data/policies.ts'
+import { POLICY_NEW_CORPORATE } from 'helpers/routes'
 import { Button, Menu, MenuItem } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
@@ -19,8 +20,13 @@ let roleEntries: MenuItem[] = []
 $: roleEntries = getEntriesForRole(role)
 $: corporatePolicyEntries = getCorporatePolicyEntries(myCorporatePolicies)
 $: householdPolicyEntries = getHouseholdEntries(myHouseholdPolicies)
+const newCreateCorporatePolicyEntry: MenuItem = {
+  icon: 'add',
+  label: 'Add corporate policy',
+  url: POLICY_NEW_CORPORATE,
+}
 
-$: menuItems = [...roleEntries, ...corporatePolicyEntries, ...householdPolicyEntries]
+$: menuItems = [...roleEntries, ...corporatePolicyEntries, newCreateCorporatePolicyEntry, ...householdPolicyEntries]
 
 let menuIsOpen = false
 let buttonText = ''

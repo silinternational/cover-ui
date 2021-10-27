@@ -61,11 +61,11 @@ $: menuItems = [
   },
 ]
 
-const haveLoadedMembersForPolicyId = (policyId: string) => Array.isArray($membersByPolicyId[policyId])
+const haveLoadedMembersForPolicyId = (policyId: string, membersByPolicyId) => Array.isArray(membersByPolicyId[policyId])
 const getMyPolicies = (policies: Policy[], membersByPolicyId, loading) => {
   if (!loading) {
     policies.forEach((policy) => {
-      if (!haveLoadedMembersForPolicyId(policy.id)) {
+      if (!haveLoadedMembersForPolicyId(policy.id, membersByPolicyId)) {
         loadMembersOfPolicy(policy.id)
       }
     })

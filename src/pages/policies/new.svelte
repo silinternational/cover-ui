@@ -1,27 +1,26 @@
 <script lang="ts">
-import { Breadcrumb, Description, SearchableSelect } from 'components'
-import { affiliations } from 'data/policies'
+import { Breadcrumb, Description } from 'components'
+import { createPolicy } from 'data/policies'
 import { formatPageTitle } from 'helpers/pageTitle'
-import { metatags } from '@roxi/routify'
+import { policyDetails } from 'helpers/routes'
+import { goto, metatags } from '@roxi/routify'
 import { Button, TextField, Page, setNotice } from '@silintl/ui-components'
 
 let account = ''
-let affiliation = ''
 let costCenter = ''
 let groupName = ''
 let entityCode = ''
 
 $: metatags.title = formatPageTitle('New Corporate Policy')
 
-const onCreatePolicy = (event: CustomEvent) => {
-  // TEMP
-  console.log({
+const onCreatePolicy = async () => {
+  const newPolicy = await createPolicy({
     account,
-    affiliation,
     costCenter,
     entityCode,
     groupName,
   })
+  $goto(policyDetails(newPolicy.id))
 }
 </script>
 
@@ -38,11 +37,6 @@ const onCreatePolicy = (event: CustomEvent) => {
     <span class="header">Group name<span class="required">*</span></span>
     <TextField autofocus bind:value={groupName} />
     <Description>Appears in your statements</Description>
-  </p>
-
-  <p>
-    <span class="header">Affiliation<span class="required">*</span></span>
-    <SearchableSelect options={$affiliations} bind:choice={affiliation} padding="16px" />
   </p>
 
   <p>

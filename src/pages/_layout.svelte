@@ -1,10 +1,23 @@
 <script lang="ts">
 import user, { isUserSteward } from '../authn/user'
 import { AppDrawer } from 'components'
+import { initialized as policiesInitialized, loadPolicies, policies, Policy } from 'data/policies'
+import { PolicyMember } from 'data/policy-members'
 import * as routes from 'helpers/routes'
+import { goto, params } from '@roxi/routify'
 
-$: policyId = $user.policy_id
+$: $policiesInitialized || loadPolicies()
 
+let myPolicies: Policy[] = []
+
+$: myHouseholdPolicyId = $user.policy_id
+$: if ($user.id) {
+  myPolicies = $policies.filter(hasMeAsMember)
+}
+
+$: selectedPolicyId = $params.policyId
+
+// TODO: Update this based on the user's role and/or the RoleAndPolicyMenu selection.
 $: menuItems = [
   {},
   {
@@ -19,7 +32,7 @@ $: menuItems = [
     hide: !isUserSteward($user),
   },
   {
-    url: routes.customerClaims(policyId),
+    url: routes.customerClaims(myHouseholdPolicyId),
     icon: 'label',
     label: 'Claims',
   },
@@ -40,14 +53,26 @@ $: menuItems = [
     tooltip: 'Group Settings',
   },
   {
-    url: routes.itemsNew(policyId),
+    url: routes.itemsNew(myHouseholdPolicyId),
     icon: 'add_circle',
     label: 'Add Item',
     button: true,
   },
 ]
+
+const goToPolicyAsCustomer = (event: CustomEvent) => $goto(routes.policyHome(event.detail))
+const goToRoleHome = (event: CustomEvent) => $goto(routes.adminRoleHome(event.detail))
+const hasMeAsMember = (policy: Policy) => policy.members.some(isPolicyMemberMe)
+const isPolicyMemberMe = (member: PolicyMember) => $user.id === member.id
 </script>
 
-<AppDrawer {menuItems}>
+<AppDrawer
+  {menuItems}
+  {myPolicies}
+  {selectedPolicyId}
+  role={$user.app_role}
+  on:policy={goToPolicyAsCustomer}
+  on:role={goToRoleHome}
+>
   <slot />
 </AppDrawer>

@@ -2,11 +2,11 @@
 import { ItemDeleteModal } from 'components'
 import { formatDate } from 'components/dates'
 import { AccountablePersonOptions, getAccountablePerson } from 'data/accountablePersons'
-import { formatMoney } from 'helpers/money'
-import { Datatable, Menu, MenuItem } from '@silintl/ui-components'
-import { createEventDispatcher } from 'svelte'
 import type { PolicyItem } from 'data/items'
+import { formatMoney } from 'helpers/money'
 import { itemDetails, itemEdit } from 'helpers/routes'
+import { createEventDispatcher } from 'svelte'
+import { Datatable, Menu, MenuItem } from '@silintl/ui-components'
 
 export let items = [] as PolicyItem[]
 export let accountablePersons = [] as AccountablePersonOptions[]

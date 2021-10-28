@@ -2,7 +2,7 @@
 import Banner from '../Banner.svelte'
 
 export let state
-export let receiptType
+export let receiptType = ''
 
 $: bgColor = state.bgColor || ''
 $: color = state.color || ''

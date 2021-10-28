@@ -1,9 +1,9 @@
 <script lang="ts">
 import { Breadcrumb, Description } from 'components'
 import { createPolicy } from 'data/policies'
-import { throwError } from '../../error'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { policyDetails } from 'helpers/routes'
+import { assertHas } from '../../validation/assertions'
 import { goto, metatags } from '@roxi/routify'
 import { Button, TextField, Page } from '@silintl/ui-components'
 
@@ -26,10 +26,10 @@ const onCreatePolicy = async () => {
   $goto(policyDetails(newPolicy.id))
 }
 const validateForm = (formData) => {
-  formData.groupName || throwError('Please provide a group name')
-  formData.entityCode || throwError('Please provide an entity code')
-  formData.costCenter || throwError('Please provide a cost center')
-  formData.account || throwError('Please provide an account number')
+  assertHas(formData.groupName, 'Please provide a group name')
+  assertHas(formData.entityCode, 'Please provide an entity code')
+  assertHas(formData.costCenter, 'Please provide a cost center')
+  assertHas(formData.account, 'Please provide an account number')
 }
 </script>
 

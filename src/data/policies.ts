@@ -5,14 +5,14 @@ import type { PolicyMember } from './policy-members'
 
 export type Policy = {
   account: string
-  claims: Claim[]
+  claims?: Claim[]
   cost_center: string
   created_at: string /*Date*/
-  dependents: any[] /*PolicyDependent*/
+  dependents?: any[] /*PolicyDependent*/
   entity_code: any /*EntityCode*/
   household_id: string
   id: string
-  members: PolicyMember[]
+  members?: PolicyMember[]
   type: PolicyType
   updated_at: string /*Date*/
 }
@@ -101,6 +101,7 @@ export function clear(): void {
   initialized.set(false)
 }
 
+//claims or members/dependents fields from this endpoint are deprecated
 export async function loadPolicies(): Promise<void> {
   const response = await GET<{ data: Policy[]; meta: any }>('policies')
   const data = response.data

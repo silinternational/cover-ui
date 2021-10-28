@@ -3,6 +3,8 @@ import type { Claim } from 'data/claims'
 import { formatMoney } from 'helpers/money'
 import { Datatable } from '@silintl/ui-components'
 import type { PolicyItem } from '../data/items'
+import { goto } from '@roxi/routify'
+import { customerClaimDetails, itemDetails } from 'helpers/routes'
 
 export let dependents = []
 export let loading = false
@@ -62,23 +64,25 @@ const getFormattedClaimItemPremium = (claim: Claim): string => {
   </HeaderRow>
   <TableBody>
     {#each recentChanges as recentChange}
-      <DataRow>
-        {#if recentChange.Claim}
+      {#if recentChange.Claim}
+        <DataRow clickable on:click={$goto(customerClaimDetails(recentChange.Claim.policy_id, recentChange.Claim.id))}>
           <RowItem>{getClaimItemName(recentChange.Claim)}</RowItem>
           <RowItem>{recentChange.Claim.status_change}</RowItem>
           <RowItem>{getClaimItemPersonName(recentChange.Claim, people)}</RowItem>
           <RowItem numeric>{getFormattedClaimItemValue(recentChange.Claim)}</RowItem>
           <RowItem numeric>{getFormattedClaimItemPremium(recentChange.Claim)}</RowItem>
           <RowItem>Claim</RowItem>
-        {:else if recentChange.Item}
+        </DataRow>
+      {:else if recentChange.Item}
+        <DataRow clickable on:click={$goto(itemDetails(recentChange.Item.policy_id, recentChange.Item.id))}>
           <RowItem>{recentChange.Item.name}</RowItem>
           <RowItem>{recentChange.Item.status_change}</RowItem>
           <RowItem>{getItemPersonName(recentChange.Item, people)}</RowItem>
           <RowItem numeric>{formatMoney(recentChange.Item.coverage_amount)}</RowItem>
           <RowItem numeric>{formatMoney(recentChange.Item.annual_premium)}</RowItem>
           <RowItem>Coverage</RowItem>
-        {/if}
-      </DataRow>
+        </DataRow>
+      {/if}
     {:else}
       <DataRow>
         <RowItem colspan="7">

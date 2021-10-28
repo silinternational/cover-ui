@@ -94,17 +94,17 @@ const tryToSetInitialRolePolicySelection = (
   }
 
   if (isAdminRole(actualRole)) {
-    selectRole(actualRole)
+    recordRoleSelection(actualRole)
     return
   }
 
   if (corporatePolicies.length > 0) {
-    selectPolicy(corporatePolicies[0].id)
+    recordPolicySelection(corporatePolicies[0].id)
     return
   }
 
   if (householdPolicies.length > 0) {
-    selectPolicy(householdPolicies[0].id)
+    recordPolicySelection(householdPolicies[0].id)
     return
   }
 }

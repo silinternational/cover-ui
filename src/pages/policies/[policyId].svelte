@@ -16,7 +16,7 @@ import { onMount } from 'svelte'
 
 export let policyId: string
 
-onMount(() => loadPolicy(policyId))
+onMount(() => loadPolicy(policyId, true)) // The policies from loadPolicies may not contain claims or members
 
 $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
 $: members = policy.members || ([] as PolicyMember[])

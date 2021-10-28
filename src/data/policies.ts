@@ -1,6 +1,6 @@
 import { get, writable } from 'svelte/store'
 import type { Claim } from './claims'
-import { GET, UPDATE } from './index'
+import { CREATE, GET, UPDATE } from './index'
 import type { PolicyMember } from './policy-members'
 
 export type Policy = {
@@ -18,6 +18,13 @@ export type Policy = {
 }
 
 export type PolicyType = 'Household' | 'Corporate'
+
+export type CreatePolicyRequestBody = {
+  account: string
+  account_detail: string
+  cost_center: string
+  entity_code: string
+}
 
 export type UpdatePolicyRequestBody = {
   account: string
@@ -68,6 +75,24 @@ export async function updatePolicy(id: string, policyData: any): Promise<void> {
     currPolicies[i] = updatedPolicy
     return currPolicies
   })
+}
+
+/**
+ * Create a new policy
+ *
+ * @export
+ * @param {Object} policyFormData
+ */
+export async function createPolicy(policyFormData: any): Promise<Policy> {
+  const parsedPolicyData: CreatePolicyRequestBody = {
+    account: policyFormData.account,
+    account_detail: policyFormData.groupName,
+    cost_center: policyFormData.costCenter,
+    entity_code: policyFormData.entityCode,
+  }
+  const createdPolicy = await CREATE<Policy>('policies', parsedPolicyData)
+  updatePoliciesStore(createdPolicy)
+  return createdPolicy
 }
 
 export function clear(): void {

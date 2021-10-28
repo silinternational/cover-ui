@@ -8,7 +8,6 @@ import { createEventDispatcher } from 'svelte'
 
 export let myPolicies: Policy[]
 export let role: UserAppRole | undefined
-export let selectedPolicyId: string | undefined
 
 const addCorporatePolicyEntry: MenuItem = {
   icon: 'add',

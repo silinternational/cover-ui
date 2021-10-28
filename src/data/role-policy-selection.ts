@@ -12,25 +12,25 @@ export const rolePolicySelection = writable<RolePolicySelection>({
   selectedPolicyId: undefined,
 })
 
-export const haveSetRolePolicy = writable<boolean>(false)
+export const haveSetRolePolicySelection = writable<boolean>(false)
 
-const recordThatWeHaveSetRolePolicy = () => {
-  const haveAlreadySet = get(haveSetRolePolicy)
+const recordThatWeHaveSetRolePolicySelection = () => {
+  const haveAlreadySet = get(haveSetRolePolicySelection)
   if (!haveAlreadySet) {
-    haveSetRolePolicy.update(() => true)
+    haveSetRolePolicySelection.update(() => true)
   }
 }
 
-export const selectRole = (role: UserAppRole) => {
-  recordThatWeHaveSetRolePolicy()
+export const recordRoleSelection = (role: UserAppRole) => {
+  recordThatWeHaveSetRolePolicySelection()
   rolePolicySelection.update(() => ({
     selectedRole: role,
     selectedPolicyId: undefined,
   }))
 }
 
-export const selectPolicy = (policyId: string) => {
-  recordThatWeHaveSetRolePolicy()
+export const recordPolicySelection = (policyId: string) => {
+  recordThatWeHaveSetRolePolicySelection()
   rolePolicySelection.update(() => ({
     selectedRole: 'User',
     selectedPolicyId: policyId,

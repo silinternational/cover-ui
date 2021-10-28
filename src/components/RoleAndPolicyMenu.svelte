@@ -2,11 +2,11 @@
 import type { User, UserAppRole } from 'authn/user'
 import type { Policy } from 'data/policies.ts'
 import {
-  haveSetRolePolicy,
+  haveSetRolePolicySelection,
   RolePolicySelection,
   rolePolicySelection,
-  selectPolicy,
-  selectRole,
+  recordPolicySelection,
+  recordRoleSelection,
 } from 'data/role-policy-selection'
 import { POLICY_NEW_CORPORATE } from 'helpers/routes'
 import { Button, Menu, MenuItem } from '@silintl/ui-components'
@@ -34,7 +34,7 @@ let roleEntries: MenuItem[]
 $: myCorporatePolicies = myPolicies.filter(isCorporatePolicy)
 $: myHouseholdPolicies = myPolicies.filter(isHouseholdPolicy)
 
-$: $haveSetRolePolicy || tryToSetInitialRolePolicySelection(role, myCorporatePolicies, myHouseholdPolicies)
+$: $haveSetRolePolicySelection || tryToSetInitialRolePolicySelection(role, myCorporatePolicies, myHouseholdPolicies)
 
 $: buttonText = getButtonText($rolePolicySelection, myCorporatePolicies, myHouseholdPolicies)
 
@@ -44,9 +44,9 @@ $: householdPolicyEntries = getHouseholdEntries(myHouseholdPolicies)
 
 $: menuItems = [...roleEntries, ...corporatePolicyEntries, addCorporatePolicyEntry, ...householdPolicyEntries]
 
-const onPolicySelected = (policy: Policy) => {
-  selectPolicy(policy.id)
-  dispatch('policy', policy.id)
+const selectPolicy = (policyId: string) => {
+  recordPolicySelection(policyId)
+  dispatch('policy', policyId)
 }
 
 const getCorporatePolicyEntries = (policies: Policy[]): MenuItem[] => {
@@ -54,7 +54,7 @@ const getCorporatePolicyEntries = (policies: Policy[]): MenuItem[] => {
     return {
       icon: 'work',
       label: policy.account_detail,
-      action: () => onPolicySelected(policy),
+      action: () => selectPolicy(policy.id),
     }
   })
 }
@@ -64,25 +64,20 @@ const getHouseholdEntries = (policies: Policy[]): MenuItem[] => {
     return {
       icon: 'family_restroom',
       label: 'Household', // TODO: Replace with name, when available
-      action: () => onPolicySelected(policy),
+      action: () => selectPolicy(policy.id),
     }
   })
 }
 
-const selectSignator = () => {
-  selectRole('Signator')
-  dispatch('role', 'signator')
-}
-
-const selectSteward = () => {
-  selectRole('Steward')
-  dispatch('role', 'steward')
+const selectRole = (role: UserAppRole) => {
+  recordRoleSelection(role)
+  dispatch('role', role)
 }
 
 const getEntriesForRole = (role: UserAppRole | undefined): MenuItem[] => {
   const specialEntriesByRole = {
-    Signator: [{ icon: 'gavel', label: 'Signator', action: selectSignator }],
-    Steward: [{ icon: 'gavel', label: 'Steward', action: selectSteward }],
+    Signator: [{ icon: 'gavel', label: 'Signator', action: () => selectRole('Signator') }],
+    Steward: [{ icon: 'gavel', label: 'Steward', action: () => selectRole('Steward') }],
   }
   return specialEntriesByRole[role] || []
 }

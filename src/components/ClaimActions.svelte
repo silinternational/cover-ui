@@ -75,7 +75,7 @@ const onDeny = () => dispatch('deny', message)
           <Button class="mx-1" on:click={onAskForChanges} disabled={!message} raised>Ask for Changes</Button>
         {/if}
         {#if ['Review2', 'Review3'].includes(status)}
-          <Button class="mx-1" on:click={onFixReceipt} raised>Ask for Changes</Button>
+          <Button class="mx-1" on:click={onFixReceipt} disabled={!message} raised>Ask for Changes</Button>
         {/if}
         <Button on:click={on(action)} raised>{action}</Button>
       </div>

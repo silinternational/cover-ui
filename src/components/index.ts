@@ -15,6 +15,7 @@ import FilePreview from './FilePreview'
 import ItemBanner from './banners/ItemBanner.svelte'
 import ItemDeleteModal from './ItemDeleteModal.svelte'
 import ItemForm from './forms/ItemForm.svelte'
+import ItemsTable from './ItemsTable.svelte'
 import MoneyInput from './MoneyInput.svelte'
 import RadioOptions from './RadioOptions.svelte'
 import RecentActivityTable from './RecentActivityTable.svelte'
@@ -39,6 +40,7 @@ export {
   ItemBanner,
   ItemDeleteModal,
   ItemForm,
+  ItemsTable,
   MoneyInput,
   RadioOptions,
   ClaimCard,

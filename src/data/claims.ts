@@ -277,6 +277,21 @@ export const denyClaim = async (claimId: string, reason: string): Promise<void> 
   updateClaimsStore(deniedClaim)
 }
 
+/**
+ * Admin reverts a claim to request a new/better receipt. Can be used at state "Review2" or "Review3".
+ *
+ * @export
+ * @param {String} claimId
+ * @param {String} reason -- A message from a reviewer detailing the reason for the denial.
+ */
+export const fixReceipt = async (claimId: string, reason: string): Promise<void> => {
+  const requestBody: ClaimsRequestRevisionRequestBody = {
+    status_reason: reason,
+  }
+  const changedClaim = await CREATE<Claim>(`claims/${claimId}/receipt`, requestBody)
+  updateClaimsStore(changedClaim)
+}
+
 export async function claimsFileAttach(claimId: string, fileId: string, purpose: ClaimFilePurpose): Promise<void> {
   const data: ClaimsFileAttachRequestBody = {
     file_id: fileId,

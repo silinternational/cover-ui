@@ -35,6 +35,7 @@ $: showSubmit = ['Receipt', 'Revision'].includes(status) || (status === 'Draft' 
 
 const on = (eventType: string) => () => dispatch(eventType)
 const onAskForChanges = () => dispatch('ask-for-changes', message)
+const onFixReceipt = () => dispatch('fix-receipt', message)
 const onDeny = () => dispatch('deny', message)
 </script>
 
@@ -70,7 +71,12 @@ const onDeny = () => dispatch('deny', message)
         <Button on:click={onDeny} disabled={!message} outlined>Deny</Button>
       </div>
       <div class="right-buttons">
-        <Button class="mx-1" on:click={onAskForChanges} disabled={!message} raised>Ask for Changes</Button>
+        {#if ['Review1', 'Review3'].includes(status)}
+          <Button class="mx-1" on:click={onAskForChanges} disabled={!message} raised>Ask for Changes</Button>
+        {/if}
+        {#if ['Review2', 'Review3'].includes(status)}
+          <Button class="mx-1" on:click={onFixReceipt} raised>Ask for Changes</Button>
+        {/if}
         <Button on:click={on(action)} raised>{action}</Button>
       </div>
     </div>

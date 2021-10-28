@@ -37,6 +37,7 @@ import {
   getClaimById,
   Claim,
   claims,
+  fixReceipt,
 } from 'data/claims'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { loadItems, itemsByPolicyId, PolicyItem, itemBelongsToPolicy } from 'data/items'
@@ -133,6 +134,11 @@ const onApprove = async () => await approveClaim(claimId)
 const onAskForChanges = async (event: CustomEvent<string>) => {
   const message = event.detail
   await requestRevision(claimId, message)
+}
+
+const onFixReceipt = async (event: CustomEvent<string>) => {
+  const message = event.detail
+  await fixReceipt(claimId, message)
 }
 
 const onDenyClaim = async (event: CustomEvent<string>) => {
@@ -237,7 +243,7 @@ function onDeleted(event: CustomEvent<string>) {
     </Row>
     <Row cols="9">
       <ClaimBanner {claimStatus} {receiptType}>{claim.status_reason || ''}</ClaimBanner>
-      {#if needsFile && noFilesUploaded}
+      {#if needsFile}
         <ClaimBanner claimStatus={`${claimStatus}Secondary`}>
           Upload {uploadLabel} to get reimbursed.
         </ClaimBanner>
@@ -267,6 +273,7 @@ function onDeleted(event: CustomEvent<string>) {
           on:ask-for-changes={onAskForChanges}
           on:deny={onDenyClaim}
           on:edit={editClaim}
+          on:fix-receipt={onFixReceipt}
           on:preapprove={onPreapprove}
           on:approve={onApprove}
           on:submit={onSubmit}

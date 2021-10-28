@@ -3,11 +3,12 @@ import type { State } from 'data/states'
 
 export let state = {} as State
 export let statusReason = '' as string
+export let receiptType = '' as string
 
 $: bgColor = state.bgColor || ''
 $: color = state.color || ''
 $: icon = state.icon || ''
-$: title = state.title || ''
+$: title = state.title === 'Approved' ? `${state.title} for ${receiptType}` : state.title
 $: steward = statusReason ? 'From claim handler' : ('' as string) //TODO get this from the api
 </script>
 

@@ -1,3 +1,4 @@
+import { loadUser } from '../authn/user'
 import { get, writable } from 'svelte/store'
 import type { Claim } from './claims'
 import { CREATE, GET, UPDATE } from './index'
@@ -92,6 +93,7 @@ export async function createPolicy(policyFormData: any): Promise<Policy> {
   }
   const createdPolicy = await CREATE<Policy>('policies', parsedPolicyData)
   updatePoliciesStore(createdPolicy)
+  loadUser(true) // Don't wait, just refresh user's policies in the background.
   return createdPolicy
 }
 

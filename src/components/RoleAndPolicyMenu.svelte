@@ -31,8 +31,6 @@ let myCorporatePolicies: Policy[]
 let myHouseholdPolicies: Policy[]
 let roleEntries: MenuItem[]
 
-$: console.log($rolePolicySelection) // TEMP
-
 $: myCorporatePolicies = myPolicies.filter(isCorporatePolicy)
 $: myHouseholdPolicies = myPolicies.filter(isHouseholdPolicy)
 
@@ -96,8 +94,6 @@ const tryToSetInitialRolePolicySelection = (
   corporatePolicies: Policy[],
   householdPolicies: Policy[]
 ) => {
-  console.log('tryToSetInitialRolePolicySelection', actualRole, corporatePolicies, householdPolicies) // TEMP
-
   if (!actualRole) {
     return
   }

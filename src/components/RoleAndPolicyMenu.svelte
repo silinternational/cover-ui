@@ -88,7 +88,7 @@ const getButtonText = (
 ) => {
   const selectedPolicyId = rolePolicySelection.selectedPolicyId
   if (!selectedPolicyId) {
-    return rolePolicySelection.selectedRole
+    return rolePolicySelection.selectedRole || ''
   }
 
   const corporatePolicy = corporatePolicies.find((policy) => policy.id === selectedPolicyId)

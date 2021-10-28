@@ -2,13 +2,13 @@ import type { UserAppRole } from '../authn/user'
 import { writable } from 'svelte/store'
 
 export type RolePolicySelection = {
-  selectedRole: UserAppRole
+  selectedRole: UserAppRole | undefined
   selectedPolicyId: string | undefined
 }
 
 // TODO: Change this to a `readable` to avoid changes by any means other than our provided methods.
 export const rolePolicySelection = writable<RolePolicySelection>({
-  selectedRole: 'User', // TODO: Switch to 'Customer' when that change is made app-wide
+  selectedRole: undefined,
   selectedPolicyId: undefined,
 })
 

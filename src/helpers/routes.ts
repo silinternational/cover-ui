@@ -5,7 +5,7 @@ export const ROOT = '/'
 export const HOME = '/home'
 export const LOGOUT = '/logout'
 
-export const adminRoleHome = (role: AdminAppRole) => `/${role}/home`
+export const adminRoleHome = (role: AdminAppRole) => `/${role.toLowerCase()}/home`
 
 export const CHAT = '/chat'
 

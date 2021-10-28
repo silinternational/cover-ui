@@ -18,7 +18,6 @@ const DataRow = Datatable.Data.Row
 const RowItem = Datatable.Data.Row.Item
 
 $: people = { policyMembers, dependents }
-$: console.log(recentChanges)
 
 const getClaimItemName = (claim: Claim): string => {
   const claimItem = claim.claim_items[0]

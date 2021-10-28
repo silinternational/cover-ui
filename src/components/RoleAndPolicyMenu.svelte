@@ -1,7 +1,13 @@
 <script lang="ts">
-import type { UserAppRole } from 'authn/user'
+import type { User, UserAppRole } from 'authn/user'
 import type { Policy } from 'data/policies.ts'
-import { RolePolicySelection, rolePolicySelection, selectPolicy, selectRole } from 'data/role-policy-selection'
+import {
+  haveSetRolePolicy,
+  RolePolicySelection,
+  rolePolicySelection,
+  selectPolicy,
+  selectRole,
+} from 'data/role-policy-selection'
 import { POLICY_NEW_CORPORATE } from 'helpers/routes'
 import { Button, Menu, MenuItem } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
@@ -29,6 +35,8 @@ $: console.log($rolePolicySelection) // TEMP
 
 $: myCorporatePolicies = myPolicies.filter(isCorporatePolicy)
 $: myHouseholdPolicies = myPolicies.filter(isHouseholdPolicy)
+
+$: $haveSetRolePolicy || tryToSetInitialRolePolicySelection(role, myCorporatePolicies, myHouseholdPolicies)
 
 $: buttonText = getButtonText($rolePolicySelection, myCorporatePolicies, myHouseholdPolicies)
 
@@ -79,6 +87,35 @@ const getEntriesForRole = (role: UserAppRole | undefined): MenuItem[] => {
     Steward: [{ icon: 'gavel', label: 'Steward', action: selectSteward }],
   }
   return specialEntriesByRole[role] || []
+}
+
+const isAdminRole = (role: UserAppRole) => ['Signator', 'Steward'].includes(role)
+
+const tryToSetInitialRolePolicySelection = (
+  actualRole: UserAppRole,
+  corporatePolicies: Policy[],
+  householdPolicies: Policy[]
+) => {
+  console.log('tryToSetInitialRolePolicySelection', actualRole, corporatePolicies, householdPolicies) // TEMP
+
+  if (!actualRole) {
+    return
+  }
+
+  if (isAdminRole(actualRole)) {
+    selectRole(actualRole)
+    return
+  }
+
+  if (corporatePolicies.length > 0) {
+    selectPolicy(corporatePolicies[0].id)
+    return
+  }
+
+  if (householdPolicies.length > 0) {
+    selectPolicy(householdPolicies[0].id)
+    return
+  }
 }
 
 const getButtonText = (

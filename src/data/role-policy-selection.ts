@@ -1,5 +1,5 @@
 import type { UserAppRole } from '../authn/user'
-import { writable } from 'svelte/store'
+import { get, writable } from 'svelte/store'
 
 export type RolePolicySelection = {
   selectedRole: UserAppRole | undefined
@@ -12,7 +12,17 @@ export const rolePolicySelection = writable<RolePolicySelection>({
   selectedPolicyId: undefined,
 })
 
+export const haveSetRolePolicy = writable<boolean>(false)
+
+const recordThatWeHaveSetRolePolicy = () => {
+  const haveAlreadySet = get(haveSetRolePolicy)
+  if (!haveAlreadySet) {
+    haveSetRolePolicy.update(() => true)
+  }
+}
+
 export const selectRole = (role: UserAppRole) => {
+  recordThatWeHaveSetRolePolicy()
   rolePolicySelection.update(() => ({
     selectedRole: role,
     selectedPolicyId: undefined,
@@ -20,6 +30,7 @@ export const selectRole = (role: UserAppRole) => {
 }
 
 export const selectPolicy = (policyId: string) => {
+  recordThatWeHaveSetRolePolicy()
   rolePolicySelection.update(() => ({
     selectedRole: 'User',
     selectedPolicyId: policyId,

@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { User, UserAppRole } from 'authn/user'
+import type { UserAppRole } from 'authn/user'
 import type { Policy } from 'data/policies.ts'
 import {
   haveSetRolePolicySelection,

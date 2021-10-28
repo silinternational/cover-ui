@@ -32,7 +32,7 @@ let menuIsOpen = false
 let buttonText = ''
 
 const selectCorporatePolicy = (policy: Policy) => {
-  buttonText = 'Corporate' // TODO: Replace with name, when available
+  buttonText = policy.account_detail
   dispatch('policy', policy.id)
 }
 
@@ -45,7 +45,7 @@ const getCorporatePolicyEntries = (policies: Policy[]): MenuItem[] => {
   return policies.map((policy: Policy): MenuItem => {
     return {
       icon: 'work',
-      label: 'Corporate', // TODO: Replace with name, when available
+      label: policy.account_detail,
       action: () => selectCorporatePolicy(policy),
     }
   })
@@ -91,7 +91,7 @@ const getDefaultButtonTextForRole = (role: UserAppRole, corporatePolicies: Polic
   }
 
   if (corporatePolicies.length > 0) {
-    return 'Corporate' // TODO: Replace with default corporate policy's name, when available
+    return corporatePolicies[0].account_detail
   }
 
   return 'Household' // TODO: Replace with name, when available
@@ -110,7 +110,7 @@ const tryToUpdateButtonText = (
 
   const corporatePolicy = corporatePolicies.find((policy) => policy.id === selectedPolicyId)
   if (corporatePolicy) {
-    buttonText = 'Corporate' // TODO: Replace with name, when available
+    buttonText = corporatePolicy.account_detail
     return
   }
 

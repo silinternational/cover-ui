@@ -5,6 +5,7 @@ import type { PolicyMember } from './policy-members'
 
 export type Policy = {
   account: string
+  account_detail: string
   claims?: Claim[]
   cost_center: string
   created_at: string /*Date*/

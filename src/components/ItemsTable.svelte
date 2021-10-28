@@ -25,15 +25,17 @@ const getMenuItems = (item: PolicyItem) => {
       label: 'View Details',
       url: itemDetails(policyId, item.id),
     },
-    {
-      label: 'Edit',
-      url: itemEdit(policyId, item.id),
-    },
   ]
-  if (item.coverage_status != 'Inactive') {
+  if (item.coverage_status !== 'Inactive') {
     menuItems.push({
       label: item.coverage_status === 'Draft' ? 'Delete' : 'Remove Coverage',
       action: handleDeleteClick,
+    })
+  }
+  if (['Draft', 'Pending'].includes(item.coverage_status)) {
+    menuItems.push({
+      label: 'Edit',
+      url: itemEdit(policyId, item.id),
     })
   }
   return menuItems

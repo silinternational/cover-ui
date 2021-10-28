@@ -236,7 +236,7 @@ function onDeleted(event: CustomEvent<string>) {
       </div>
     </Row>
     <Row cols="9">
-      <ClaimBanner {claimStatus}>{claim.status_reason || ''}</ClaimBanner>
+      <ClaimBanner {claimStatus} {receiptType}>{claim.status_reason || ''}</ClaimBanner>
       {#if needsFile && noFilesUploaded}
         <ClaimBanner claimStatus={`${claimStatus}Secondary`}>
           Upload {uploadLabel} to get reimbursed.

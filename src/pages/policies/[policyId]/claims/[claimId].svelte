@@ -100,7 +100,7 @@ $: householdId = policy.household_id ? policy.household_id : ''
 $: incidentDate = formatDate(claim.incident_date)
 $: claimStatus = (claim.status || '') as ClaimStatus
 $: payoutOption = claimItem.payout_option as PayoutOption
-$: showRevisionMessage = claim.status_reason && claimStatus === 'Revision'
+$: showRevisionMessage = claim.status_reason && ['Revision', 'Receipt'].includes(claimStatus)
 
 $: needsReceipt = claimStatus === 'Receipt'
 $: needsFile = needsReceipt || isEvidenceNeeded(claimItem, claimStatus)

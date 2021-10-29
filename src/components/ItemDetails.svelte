@@ -27,7 +27,7 @@ onMount(() => loadPolicy(policyId))
 $: $policies && (policy = getPolicyById(policyId))
 $: householdId = policy.household_id ? policy.household_id : ''
 
-$: submittedText = item.updated_at ? formatDistanceToNow(Date.parse(item.updated_at), { addSuffix: true }) : ''
+$: statusText = getItemStatusText(item)
 $: status = (item.coverage_status || '') as ItemCoverageStatus
 $: showRevisionMessage = item.status_reason && status === 'Revision'
 $: startDate = formatDate(item.coverage_start_date)
@@ -40,6 +40,13 @@ $: policyMemberOptions = getPolicyMemberOptions(policyMembers)
 
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions]
 $: accountablePersonName = getAccountablePerson(item, accountablePersons)?.name
+
+const getItemStatusText = (item: PolicyItem) => {
+  const updatedAtStr = item.updated_at ? formatDistanceToNow(Date.parse(item.updated_at), { addSuffix: true }) : ''
+  const statusChangeStr = item.status_change ? `${item.status_change} ` : updatedAtStr ? 'Submitted ' : ''
+
+  return statusChangeStr + updatedAtStr
+}
 </script>
 
 <style>
@@ -64,7 +71,7 @@ $: accountablePersonName = getAccountablePerson(item, accountablePersons)?.name
 
   <div class="w-75">
     {#if !isCheckingOut}
-      <ItemBanner itemStatus={status}>Submitted {submittedText}</ItemBanner>
+      <ItemBanner itemStatus={status}>{statusText}</ItemBanner>
       {#if showRevisionMessage}
         <MessageBanner>{item.status_reason}</MessageBanner>
       {/if}

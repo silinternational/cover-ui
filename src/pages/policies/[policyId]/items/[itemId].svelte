@@ -21,7 +21,7 @@ import { loadPolicyItemHistory, policyHistoryByItemId } from 'data/policy-histor
 import ItemDetails from 'ItemDetails.svelte'
 import { items as itemsRoute, itemDetails, itemEdit, itemNewClaim, POLICIES, policyDetails } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
-import { goto, metatags, params } from '@roxi/routify'
+import { goto, metatags, params, redirect } from '@roxi/routify'
 import { Button, Page, Datatable, Dialog, TextArea, Form, setNotice } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
@@ -50,7 +50,7 @@ $: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
 $: itemName = item.name || ''
 $: status = (item.coverage_status || '') as ItemCoverageStatus
 $: isMemberOfPolicy = itemBelongsToPolicy($user.policy_id, item)
-$: status === 'Draft' && isMemberOfPolicy && goToEditItem()
+$: status === 'Draft' && isMemberOfPolicy && editItemRedirect()
 
 $: policyId && item.id && loadPolicyItemHistory(policyId, item.id)
 $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
@@ -72,6 +72,10 @@ const itemsBreadcrumb = { name: 'Items', url: itemsRoute(policyId) }
 $: thisItemBreadcrumb = { name: itemName || 'This item', url: itemDetails(policyId, itemId) }
 $: breadcrumbLinks = [...adminBreadcrumbs, itemsBreadcrumb, thisItemBreadcrumb]
 $: itemName && (metatags.title = formatPageTitle(`Items > ${itemName}`))
+
+const editItemRedirect = () => {
+  $redirect(itemEdit(policyId, itemId))
+}
 
 const goToEditItem = () => {
   $goto(itemEdit(policyId, itemId))

@@ -72,9 +72,7 @@ onMount(() => {
 
 $: claim = ($claims.find((clm: Claim) => clm.id === claimId) || {}) as Claim
 $: claimItem = claim.claim_items?.[0] || ({} as ClaimItem) //For now there will only be one claim_item
-$: submittedText = claimItem.updated_at
-  ? formatDistanceToNow(Date.parse(claimItem.updated_at), { addSuffix: true })
-  : ''
+$: statusText = getClaimStatusText(claim, claimItem)
 
 $: items = $itemsByPolicyId[policyId] || []
 $: policyId && loadItems(policyId)
@@ -186,6 +184,13 @@ function onDeleted(event: CustomEvent<string>) {
 
   console.log('deleting file: ' + id) //TODO use endpoint when avialable
 }
+
+const getClaimStatusText = (claim: Claim, item: ClaimItem) => {
+  const updatedAtStr = item.updated_at ? formatDistanceToNow(Date.parse(item.updated_at), { addSuffix: true }) : ''
+  const statusChangeStr = claim.status_change ? `${claim.status_change} ` : updatedAtStr ? 'Submitted ' : ''
+
+  return statusChangeStr + updatedAtStr
+}
 </script>
 
 <style>
@@ -243,7 +248,7 @@ function onDeleted(event: CustomEvent<string>) {
       </div>
     </Row>
     <Row cols="9">
-      <ClaimBanner {claimStatus} {receiptType}>Submitted {submittedText}</ClaimBanner>
+      <ClaimBanner {claimStatus} {receiptType}>{statusText}</ClaimBanner>
       {#if needsFile && noFilesUploaded}
         <ClaimBanner claimStatus={`${claimStatus}Secondary`}>
           Upload {uploadLabel} to get reimbursed.

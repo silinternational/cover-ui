@@ -1,7 +1,7 @@
 <script lang="ts">
 import StatusBanner from '../banners/StatusBanner.svelte'
 
-$: state = {
+const state = {
   icon: 'chat',
   color: '--mdc-theme-primary',
   bgColor: '--mdc-theme-primary-header-bg',

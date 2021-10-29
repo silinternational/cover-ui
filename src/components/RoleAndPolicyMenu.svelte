@@ -3,10 +3,10 @@ import type { UserAppRole } from 'authn/user'
 import type { Policy } from 'data/policies.ts'
 import {
   haveSetRolePolicySelection,
-  RolePolicySelection,
-  rolePolicySelection,
   recordPolicySelection,
   recordRoleSelection,
+  RolePolicySelection,
+  rolePolicySelection,
 } from 'data/role-policy-selection'
 import { POLICY_NEW_CORPORATE } from 'helpers/routes'
 import { Button, Menu, MenuItem } from '@silintl/ui-components'

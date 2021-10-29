@@ -36,3 +36,12 @@ export const recordPolicySelection = (policyId: string) => {
     selectedPolicyId: policyId,
   })
 }
+
+const isAdminRole = (role: UserAppRole | undefined) => role && ['Signator', 'Steward'].includes(role)
+
+export const reactToUrlChanges = (urlPolicyId: string | undefined) => {
+  if (urlPolicyId) {
+    const { selectedRole } = get(rolePolicySelection)
+    isAdminRole(selectedRole) || recordPolicySelection(urlPolicyId)
+  }
+}

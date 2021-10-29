@@ -3,12 +3,14 @@ import type { UserAppRole } from 'authn/user'
 import type { Policy } from 'data/policies.ts'
 import {
   haveSetRolePolicySelection,
+  reactToUrlChanges,
   recordPolicySelection,
   recordRoleSelection,
   RolePolicySelection,
   rolePolicySelection,
 } from 'data/role-policy-selection'
 import { POLICY_NEW_CORPORATE } from 'helpers/routes'
+import { params } from '@roxi/routify'
 import { Button, Menu, MenuItem } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
@@ -30,6 +32,8 @@ let menuItems: MenuItem[]
 let myCorporatePolicies: Policy[]
 let myHouseholdPolicies: Policy[]
 let roleEntries: MenuItem[]
+
+$: reactToUrlChanges($params.policyId) // TEMP
 
 $: myCorporatePolicies = myPolicies.filter(isCorporatePolicy)
 $: myHouseholdPolicies = myPolicies.filter(isHouseholdPolicy)

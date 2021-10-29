@@ -16,9 +16,12 @@ import { onMount } from 'svelte'
 
 export let policyId: string
 
-onMount(() => loadPolicy(policyId))
+let policy = {} as Policy
 
-$: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
+onMount(async () => {
+  policy = await loadPolicy(policyId)
+})
+
 $: members = policy.members || ([] as PolicyMember[])
 $: policyMemberOptions = getPolicyMemberOptions(members)
 $: dependents = $dependentsByPolicyId[policyId] || []
@@ -166,7 +169,7 @@ th {
           {/each}
         {:else}
           <Datatable.Data.Row>
-            <Datatable.Data.Row.Item colspan="8">
+            <Datatable.Data.Row.Item colspan={8}>
               <i>None</i>
             </Datatable.Data.Row.Item>
           </Datatable.Data.Row>

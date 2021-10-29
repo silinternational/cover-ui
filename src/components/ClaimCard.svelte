@@ -60,7 +60,7 @@ const gotoClaim = () => dispatch('goto-claim', claim)
 </style>
 
 <Card noPadding class="h-300 py-0 {$$props.class}">
-  <ClaimCardBanner class={showSecondBanner ? 'mb-0 pb-4px pt-6px' : 'mb-2'} {statusReason} {state} />
+  <ClaimCardBanner class={showSecondBanner ? 'mb-0 pb-4px pt-6px' : 'mb-2'} {statusReason} {state} {receiptType} />
   {#if showSecondBanner}
     <ClaimBanner class="mb-1" claimStatus={`${claim.status}Secondary`}>
       Upload {uploadLabel} to get reimbursed.

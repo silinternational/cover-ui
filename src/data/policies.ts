@@ -1,3 +1,4 @@
+import { loadUser } from '../authn/user'
 import { get, writable } from 'svelte/store'
 import type { Claim } from './claims'
 import { CREATE, GET, UPDATE } from './index'
@@ -5,14 +6,15 @@ import type { PolicyMember } from './policy-members'
 
 export type Policy = {
   account: string
-  claims: Claim[]
+  account_detail: string
+  claims?: Claim[]
   cost_center: string
   created_at: string /*Date*/
-  dependents: any[] /*PolicyDependent*/
+  dependents?: any[] /*PolicyDependent*/
   entity_code: any /*EntityCode*/
   household_id: string
   id: string
-  members: PolicyMember[]
+  members?: PolicyMember[]
   type: PolicyType
   updated_at: string /*Date*/
 }
@@ -92,6 +94,7 @@ export async function createPolicy(policyFormData: any): Promise<Policy> {
   }
   const createdPolicy = await CREATE<Policy>('policies', parsedPolicyData)
   updatePoliciesStore(createdPolicy)
+  loadUser(true) // Don't wait, just refresh user's policies in the background.
   return createdPolicy
 }
 
@@ -101,6 +104,7 @@ export function clear(): void {
   initialized.set(false)
 }
 
+//claims or members/dependents fields from this endpoint are deprecated
 export async function loadPolicies(): Promise<void> {
   const response = await GET<{ data: Policy[]; meta: any }>('policies')
   const data = response.data
@@ -108,13 +112,12 @@ export async function loadPolicies(): Promise<void> {
   initialized.set(true)
 }
 
-export async function loadPolicy(policyId: string, forceReload?: boolean): Promise<void> {
-  const alreadyLoadedPolicy = get(policies).find((policy) => policy.id === policyId)
-  if (!alreadyLoadedPolicy || forceReload) {
-    const response = await GET<Policy>(`policies/${policyId}`)
+export async function loadPolicy(policyId: string): Promise<Policy> {
+  const response = await GET<Policy>(`policies/${policyId}`)
 
-    updatePoliciesStore(response)
-  }
+  updatePoliciesStore(response)
+
+  return response
 }
 
 export const affiliations = writable<{ [key: string]: string }>({

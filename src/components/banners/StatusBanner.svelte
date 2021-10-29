@@ -7,7 +7,7 @@ export let receiptType = ''
 $: bgColor = state.bgColor || ''
 $: color = state.color || ''
 $: icon = state.icon || ''
-$: title = state.title === 'Approved' ? `${state.title} for ${receiptType}` : state.title
+$: title = state.title === 'Approved' && receiptType ? `${state.title} for ${receiptType}` : state.title
 </script>
 
 <style>

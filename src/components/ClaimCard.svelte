@@ -21,6 +21,7 @@ $: wasUpdated = differenceInSeconds(Date.parse(claimItem.updated_at), Date.parse
 $: changedText = formatDistanceToNow(Date.parse(claimItem.updated_at), { addSuffix: true })
 $: state = getClaimState(claim.status) || ({} as State)
 $: statusReason = claim.status_reason || ('' as string)
+$: showRevisionMessage = (statusReason && ['Revision', 'Receipt'].includes(claim.status)) as boolean
 $: accountablePerson = accountablePersons.find(
   (person) => person.id === (item.accountable_user_id || item.accountable_dependent_id)
 )
@@ -28,9 +29,8 @@ $: payoutOption = claimItem.payout_option
 $: needsRepairReceipt = needsReceipt && payoutOption === 'Repair'
 $: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
 $: needsReceipt = claim.status === 'Receipt'
-$: noFilesUploaded = !claim.claim_files?.length
 $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType)
-$: showSecondBanner = needsReceipt && noFilesUploaded
+$: showSecondBanner = needsReceipt
 
 const gotoClaim = () => dispatch('goto-claim', claim)
 </script>
@@ -60,7 +60,13 @@ const gotoClaim = () => dispatch('goto-claim', claim)
 </style>
 
 <Card noPadding class="h-300 py-0 {$$props.class}">
-  <ClaimCardBanner class={showSecondBanner ? 'mb-0 pb-4px pt-6px' : 'mb-2'} {statusReason} {state} {receiptType} />
+  <ClaimCardBanner
+    class={showSecondBanner ? 'mb-0 pb-4px pt-6px' : 'mb-2'}
+    {statusReason}
+    {state}
+    {receiptType}
+    {showRevisionMessage}
+  />
   {#if showSecondBanner}
     <ClaimBanner class="mb-1" claimStatus={`${claim.status}Secondary`}>
       Upload {uploadLabel} to get reimbursed.

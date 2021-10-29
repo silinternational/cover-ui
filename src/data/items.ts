@@ -2,7 +2,7 @@ import { CREATE, DELETE, GET, UPDATE } from '.'
 import { throwError } from '../error'
 import { writable } from 'svelte/store'
 
-export type ItemCoverageStatus = 'Draft' | 'Pending' | 'Approved' | 'Denied' | 'Inactive'
+export type ItemCoverageStatus = 'Draft' | 'Pending' | 'Approved' | 'Denied' | 'Revision' | 'Inactive'
 
 export type RiskCategory = {
   created_at: string /*Date*/
@@ -35,6 +35,7 @@ export type PolicyItem = {
   risk_category: RiskCategory
   serial_number: string
   status_change: string
+  status_reason: string
   updated_at: string /*Date*/
 }
 
@@ -134,13 +135,29 @@ export async function approveItem(itemId: string): Promise<PolicyItem> {
 
   const updatedItem = await CREATE<PolicyItem>(urlPath)
 
-  itemsByPolicyId.update((data) => {
-    const items = data[updatedItem.policy_id] || []
-    const itemIndex = items.findIndex((item) => item.id === updatedItem.id)
-    items[itemIndex] = updatedItem
-    data[updatedItem.policy_id] = items
-    return data
-  })
+  updateStoreItem(updatedItem)
+
+  return updatedItem
+}
+
+export async function denyItem(itemId: string, status_reason: string): Promise<PolicyItem> {
+  const urlPath = `items/${itemId}/deny`
+  const data = { status_reason }
+
+  const updatedItem = await CREATE<PolicyItem>(urlPath, data)
+
+  updateStoreItem(updatedItem)
+
+  return updatedItem
+}
+
+export async function reviseItem(itemId: string, status_reason: string): Promise<PolicyItem> {
+  const urlPath = `items/${itemId}/revision`
+  const data = { status_reason }
+
+  const updatedItem = await CREATE<PolicyItem>(urlPath, data)
+
+  updateStoreItem(updatedItem)
 
   return updatedItem
 }
@@ -227,3 +244,13 @@ export async function deleteItem(policyId: string, itemId: string): Promise<any>
 }
 
 export const itemBelongsToPolicy = (policyId: string, item: PolicyItem): boolean => item.policy_id === policyId
+
+function updateStoreItem(updatedItem: PolicyItem) {
+  itemsByPolicyId.update((data) => {
+    const items = data[updatedItem.policy_id] || []
+    const itemIndex = items.findIndex((item) => item.id === updatedItem.id)
+    items[itemIndex] = updatedItem
+    data[updatedItem.policy_id] = items
+    return data
+  })
+}

@@ -39,6 +39,10 @@ export const commonStates: { [stateName: string]: State } = {
     bgColor: '--mdc-theme-status-error-bg',
     title: 'Denied',
   },
+  Revision: {
+    ...pending,
+    title: 'Awaiting changes',
+  },
   Draft: {
     icon: 'edit',
     color: '--mdc-theme-primary',

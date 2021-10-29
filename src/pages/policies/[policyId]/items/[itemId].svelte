@@ -1,17 +1,19 @@
 <script lang="ts">
 import user, { isAdmin as checkIsAdmin } from '../../../../authn/user'
-import { Breadcrumb, ItemDeleteModal } from 'components'
+import { Breadcrumb, Description, ItemDeleteModal } from 'components'
 import { loading } from 'components/progress'
 import { formatDate } from 'components/dates'
 import { loadDependents } from 'data/dependents'
 import {
   approveItem,
   deleteItem,
+  denyItem,
   itemBelongsToPolicy,
   ItemCoverageStatus,
   itemsByPolicyId,
   loadItems,
   PolicyItem,
+  reviseItem,
 } from 'data/items'
 import { loadPolicy, policies, Policy } from 'data/policies'
 import { loadMembersOfPolicy } from 'data/policy-members'
@@ -20,7 +22,7 @@ import ItemDetails from 'ItemDetails.svelte'
 import { items as itemsRoute, itemDetails, itemEdit, itemNewClaim, POLICIES, policyDetails } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags, params } from '@roxi/routify'
-import { Button, Page, Datatable } from '@silintl/ui-components'
+import { Button, Page, Datatable, Dialog, TextArea, Form, setNotice } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 export let itemId: string
@@ -31,7 +33,10 @@ onMount(() => {
   loadPolicy(policyId)
 })
 
-let open: boolean = false
+let deleteDialgoOpen = false
+let denyDialogOpen = false
+let denyDialogButtons: Dialog.AlertButton[] = []
+let denyDialogMessage: string
 
 $: isAdmin = checkIsAdmin($user)
 
@@ -76,8 +81,8 @@ const goToNewClaim = () => {
   $goto(itemNewClaim(policyId, itemId))
 }
 
-const handleDialog = async (event: CustomEvent<string>) => {
-  open = false
+const handleRemoveDialog = async (event: CustomEvent<string>) => {
+  deleteDialgoOpen = false
   if (event.detail === 'remove') {
     await deleteItem(policyId, itemId)
 
@@ -85,10 +90,47 @@ const handleDialog = async (event: CustomEvent<string>) => {
   }
 }
 
+const handleDenyDialog = async (event: CustomEvent<string>) => {
+  denyDialogOpen = false
+
+  if ((event.detail === 'deny' || event.detail === 'revise') && !denyDialogMessage) {
+    setNotice('A message is required')
+  } else {
+    if (event.detail === 'deny') {
+      denyItem(itemId, denyDialogMessage)
+    } else if (event.detail === 'revise') {
+      reviseItem(itemId, denyDialogMessage)
+    }
+  }
+}
+
 const onApproveItem = async () => {
   await approveItem(itemId)
 }
+
+const onDenyItem = () => {
+  denyDialogButtons = [
+    { label: 'Deny Coverage', action: 'deny', class: 'error-button' },
+    { label: 'cancel', action: 'cancel', class: 'mdc-dialog__button' },
+  ]
+  denyDialogOpen = true
+}
+
+const onReviseItem = () => {
+  denyDialogButtons = [
+    { label: 'Ask for Changes', action: 'revise', class: 'error-button' },
+    { label: 'cancel', action: 'cancel', class: 'mdc-dialog__button' },
+  ]
+  denyDialogOpen = true
+}
 </script>
+
+<style>
+.message-box {
+  width: 500px;
+  height: 128x;
+}
+</style>
 
 <Page>
   {#if !item.id}
@@ -102,7 +144,7 @@ const onApproveItem = async () => {
       <Breadcrumb links={breadcrumbLinks} />
       <div>
         {#if allowRemoveCovereage}
-          <Button class="remove-button mx-5px" on:click={() => (open = true)}>Remove</Button>
+          <Button class="remove-button mx-5px" on:click={() => (deleteDialgoOpen = true)}>Remove</Button>
         {/if}
         {#if canEdit}
           <Button on:click={goToEditItem}>Edit Item</Button>
@@ -110,7 +152,7 @@ const onApproveItem = async () => {
       </div>
     </div>
 
-    <ItemDeleteModal {open} {item} on:closed={handleDialog} />
+    <ItemDeleteModal open={deleteDialgoOpen} {item} on:closed={handleRemoveDialog} />
     <ItemDetails {item} {policyId} />
 
     <br />
@@ -119,8 +161,10 @@ const onApproveItem = async () => {
         <Button class="mdc-theme--secondary-background" on:click={goToNewClaim} raised>File Claim</Button>
       </div>
     {:else if status === 'Pending' && isAdmin}
-      <div class="m-1">
-        <Button class="mdc-theme--secondary-background" on:click={onApproveItem} raised>Approve Item Coverage</Button>
+      <div>
+        <Button class="mdc-theme--secondary-background" on:click={onDenyItem} raised>Deny Item Coverage</Button>
+        <Button class="m-1 mdc-theme--primary-variant" on:click={onReviseItem} raised>Ask for Changes</Button>
+        <Button class="mdc-theme--primary-background" on:click={onApproveItem} raised>Approve Item Coverage</Button>
       </div>
     {/if}
 
@@ -146,5 +190,23 @@ const onApproveItem = async () => {
         </Datatable.Data>
       </Datatable>
     {/if}
+
+    <Dialog.Alert
+      open={denyDialogOpen}
+      buttons={denyDialogButtons}
+      defaultAction="cancel"
+      title="Send a message"
+      on:chosen={handleDenyDialog}
+      on:closed={handleDenyDialog}
+    >
+      <p class="message-box">
+        <TextArea
+          style="width: 300px"
+          rows="4"
+          placeholder="A message is required to deny coverage or ask for changes"
+          bind:value={denyDialogMessage}
+        />
+      </p>
+    </Dialog.Alert>
   {/if}
 </Page>

@@ -17,13 +17,19 @@ let status: ClaimStatus
 $: status = claim.status
 
 let action: string
+let actionLabel: string
 $: switch (status) {
   case 'Review1':
     action = 'preapprove'
+    actionLabel = action
     break
   case 'Review2':
+    action = 'approve'
+    actionLabel = action
+    break
   case 'Review3':
     action = 'approve'
+    actionLabel = 'give final approval'
     break
   default:
     action = 'Unknown'
@@ -35,6 +41,7 @@ $: showSubmit = ['Receipt', 'Revision'].includes(status) || (status === 'Draft' 
 
 const on = (eventType: string) => () => dispatch(eventType)
 const onAskForChanges = () => dispatch('ask-for-changes', message)
+const onFixReceipt = () => dispatch('fix-receipt', message)
 const onDeny = () => dispatch('deny', message)
 </script>
 
@@ -43,6 +50,7 @@ const onDeny = () => dispatch('deny', message)
   display: grid;
   grid-template-columns: 1fr auto;
   grid-template-rows: 1fr auto;
+  row-gap: 1rem;
 }
 .text-input {
   grid-column: 1 / span 2;
@@ -57,6 +65,11 @@ const onDeny = () => dispatch('deny', message)
   grid-row-start: 2;
   text-align: right;
 }
+.lower-buttons {
+  grid-column-start: 2;
+  grid-row-start: 3;
+  text-align: right;
+}
 </style>
 
 {#if userIsSteward}
@@ -67,11 +80,18 @@ const onDeny = () => dispatch('deny', message)
         <Description>A message is required to deny or ask for changes.</Description>
       </div>
       <div class="left-buttons">
-        <Button on:click={onDeny} disabled={!message} outlined>Deny</Button>
+        <Button on:click={onDeny} disabled={!message} outlined>deny</Button>
       </div>
       <div class="right-buttons">
-        <Button class="mx-1" on:click={onAskForChanges} disabled={!message} raised>Ask for Changes</Button>
-        <Button on:click={on(action)} raised>{action}</Button>
+        {#if ['Review1', 'Review3'].includes(status)}
+          <Button on:click={onAskForChanges} disabled={!message} outlined>ask for changes</Button>
+        {/if}
+        {#if ['Review2', 'Review3'].includes(status)}
+          <Button class="ml-1" on:click={onFixReceipt} disabled={!message} outlined>request a new receipt</Button>
+        {/if}
+      </div>
+      <div class="lower-buttons">
+        <Button on:click={on(action)} raised>{actionLabel}</Button>
       </div>
     </div>
   {/if}

@@ -1,6 +1,5 @@
 <script lang="ts">
-import Banner from './Banner.svelte'
-import ItemBanner from './banners/ItemBanner.svelte'
+import { Banner, ItemBanner, MessageBanner } from 'components'
 import {
   AccountablePersonOptions,
   getAccountablePerson,
@@ -11,9 +10,9 @@ import { dependentsByPolicyId } from 'data/dependents'
 import type { PolicyItem, ItemCoverageStatus } from 'data/items'
 import { getPolicyById, loadPolicy, policies, Policy } from 'data/policies'
 import { membersByPolicyId } from 'data/policy-members'
-import { formatDistanceToNow } from 'date-fns'
-import { formatDate } from './dates'
 import { formatMoney } from 'helpers/money'
+import { formatDate } from './dates'
+import { formatDistanceToNow } from 'date-fns'
 import { onMount } from 'svelte'
 
 export let item: PolicyItem
@@ -30,6 +29,7 @@ $: householdId = policy.household_id ? policy.household_id : ''
 
 $: submittedText = item.updated_at ? formatDistanceToNow(Date.parse(item.updated_at), { addSuffix: true }) : ''
 $: status = (item.coverage_status || '') as ItemCoverageStatus
+$: showRevisionMessage = item.status_reason && status === 'Revision'
 $: startDate = formatDate(item.coverage_start_date)
 
 $: dependents = $dependentsByPolicyId[policyId] || []
@@ -65,6 +65,9 @@ $: accountablePersonName = getAccountablePerson(item, accountablePersons)?.name
   <div class="w-75">
     {#if !isCheckingOut}
       <ItemBanner itemStatus={status}>Submitted {submittedText}</ItemBanner>
+      {#if showRevisionMessage}
+        <MessageBanner>{item.status_reason}</MessageBanner>
+      {/if}
     {/if}
     <h3 class="break-word">{item.make || ''} {item.model || ''}</h3>
     {#if item.serial_number}

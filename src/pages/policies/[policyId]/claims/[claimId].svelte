@@ -11,6 +11,7 @@ import {
   Breadcrumb,
   ClaimActions,
   ClaimBanner,
+  MessageBanner,
   ConvertCurrencyLink,
   FileDropArea,
   FilePreview,
@@ -48,6 +49,7 @@ import { formatPageTitle } from 'helpers/pageTitle'
 import { onMount } from 'svelte'
 import { goto, metatags, params } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
+import { formatDistanceToNow } from 'date-fns'
 
 export let claimId: string
 export let policyId: string = $params.policyId
@@ -70,6 +72,10 @@ onMount(() => {
 
 $: claim = ($claims.find((clm: Claim) => clm.id === claimId) || {}) as Claim
 $: claimItem = claim.claim_items?.[0] || ({} as ClaimItem) //For now there will only be one claim_item
+$: submittedText = claimItem.updated_at
+  ? formatDistanceToNow(Date.parse(claimItem.updated_at), { addSuffix: true })
+  : ''
+
 $: items = $itemsByPolicyId[policyId] || []
 $: policyId && loadItems(policyId)
 $: item = items.find((itm) => itm.id === claimItem.item_id) || ({} as PolicyItem)
@@ -95,6 +101,7 @@ $: householdId = policy.household_id ? policy.household_id : ''
 $: incidentDate = formatDate(claim.incident_date)
 $: claimStatus = (claim.status || '') as ClaimStatus
 $: payoutOption = claimItem.payout_option as PayoutOption
+$: showRevisionMessage = claim.status_reason && claimStatus === 'Revision'
 
 $: needsReceipt = claimStatus === 'Receipt'
 $: needsFile = needsReceipt || isEvidenceNeeded(claimItem, claimStatus)
@@ -236,11 +243,14 @@ function onDeleted(event: CustomEvent<string>) {
       </div>
     </Row>
     <Row cols="9">
-      <ClaimBanner {claimStatus} {receiptType}>{claim.status_reason || ''}</ClaimBanner>
+      <ClaimBanner {claimStatus} {receiptType}>Submitted {submittedText}</ClaimBanner>
       {#if needsFile && noFilesUploaded}
         <ClaimBanner claimStatus={`${claimStatus}Secondary`}>
           Upload {uploadLabel} to get reimbursed.
         </ClaimBanner>
+      {/if}
+      {#if showRevisionMessage}
+        <MessageBanner>{claim.status_reason}</MessageBanner>
       {/if}
       <p class="break-word">
         {claim.incident_description || ''}

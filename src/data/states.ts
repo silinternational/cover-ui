@@ -65,12 +65,6 @@ export const claimStates: { [stateName: string]: State } = {
     bgColor: '--mdc-theme-status-success-bg',
     title: 'Approved', // TODO: show what it is approved for
   },
-  Revision: {
-    icon: 'chat',
-    color: '--mdc-theme-primary',
-    bgColor: '--mdc-theme-primary-header-bg',
-    title: '',
-  },
   Paid: {
     icon: 'paid',
     color: '--mdc-theme-status-success',

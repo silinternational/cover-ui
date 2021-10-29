@@ -11,7 +11,6 @@ import { ROOT } from 'helpers/routes'
 export let menuItems: any[]
 export let myPolicies: Policy[]
 export let role: UserAppRole | undefined
-export let selectedPolicyId: string | undefined
 
 let toggle = false
 
@@ -32,7 +31,7 @@ const logoClickHandler = () => $goto(ROOT)
   <AppHeader on:toggleDrawer={() => (toggle = !toggle)} />
 
   <div class="role-and-policy-menu pt-1" slot="drawer-content-top">
-    <RoleAndPolicyMenu {myPolicies} {role} {selectedPolicyId} on:policy on:role />
+    <RoleAndPolicyMenu {myPolicies} {role} on:policy on:role />
   </div>
 
   <slot />

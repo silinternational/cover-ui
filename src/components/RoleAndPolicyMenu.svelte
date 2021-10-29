@@ -1,44 +1,52 @@
 <script lang="ts">
 import type { UserAppRole } from 'authn/user'
 import type { Policy } from 'data/policies.ts'
+import {
+  haveSetRolePolicySelection,
+  RolePolicySelection,
+  rolePolicySelection,
+  recordPolicySelection,
+  recordRoleSelection,
+} from 'data/role-policy-selection'
 import { POLICY_NEW_CORPORATE } from 'helpers/routes'
 import { Button, Menu, MenuItem } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let myPolicies: Policy[]
 export let role: UserAppRole | undefined
-export let selectedPolicyId: string | undefined
 
-const dispatch = createEventDispatcher()
-
-$: myCorporatePolicies = myPolicies.filter(isCorporatePolicy)
-$: myHouseholdPolicies = myPolicies.filter(isHouseholdPolicy)
-
-$: tryToUpdateButtonText(role, selectedPolicyId, myCorporatePolicies, myHouseholdPolicies)
-
-let roleEntries: MenuItem[] = []
-$: roleEntries = getEntriesForRole(role)
-$: corporatePolicyEntries = getCorporatePolicyEntries(myCorporatePolicies)
-$: householdPolicyEntries = getHouseholdEntries(myHouseholdPolicies)
-const newCreateCorporatePolicyEntry: MenuItem = {
+const addCorporatePolicyEntry: MenuItem = {
   icon: 'add',
   label: 'Add corporate policy',
   url: POLICY_NEW_CORPORATE,
 }
+const dispatch = createEventDispatcher()
 
-$: menuItems = [...roleEntries, ...corporatePolicyEntries, newCreateCorporatePolicyEntry, ...householdPolicyEntries]
-
+let buttonText: string
+let corporatePolicyEntries: MenuItem[]
+let householdPolicyEntries: MenuItem[]
 let menuIsOpen = false
-let buttonText = ''
+let menuItems: MenuItem[]
+let myCorporatePolicies: Policy[]
+let myHouseholdPolicies: Policy[]
+let roleEntries: MenuItem[]
 
-const selectCorporatePolicy = (policy: Policy) => {
-  buttonText = policy.account_detail
-  dispatch('policy', policy.id)
-}
+$: myCorporatePolicies = myPolicies.filter(isCorporatePolicy)
+$: myHouseholdPolicies = myPolicies.filter(isHouseholdPolicy)
 
-const selectHouseholdPolicy = (policy: Policy) => {
-  buttonText = 'Household' // TODO: Replace with name, when available
-  dispatch('policy', policy.id)
+$: $haveSetRolePolicySelection || tryToSetInitialRolePolicySelection(role, myCorporatePolicies, myHouseholdPolicies)
+
+$: buttonText = getButtonText($rolePolicySelection, myCorporatePolicies, myHouseholdPolicies)
+
+$: roleEntries = getEntriesForRole(role)
+$: corporatePolicyEntries = getCorporatePolicyEntries(myCorporatePolicies)
+$: householdPolicyEntries = getHouseholdEntries(myHouseholdPolicies)
+
+$: menuItems = [...roleEntries, ...corporatePolicyEntries, addCorporatePolicyEntry, ...householdPolicyEntries]
+
+const selectPolicy = (policyId: string) => {
+  recordPolicySelection(policyId)
+  dispatch('policy', policyId)
 }
 
 const getCorporatePolicyEntries = (policies: Policy[]): MenuItem[] => {
@@ -46,7 +54,7 @@ const getCorporatePolicyEntries = (policies: Policy[]): MenuItem[] => {
     return {
       icon: 'work',
       label: policy.account_detail,
-      action: () => selectCorporatePolicy(policy),
+      action: () => selectPolicy(policy.id),
     }
   })
 }
@@ -56,69 +64,58 @@ const getHouseholdEntries = (policies: Policy[]): MenuItem[] => {
     return {
       icon: 'family_restroom',
       label: 'Household', // TODO: Replace with name, when available
-      action: () => selectHouseholdPolicy(policy),
+      action: () => selectPolicy(policy.id),
     }
   })
 }
 
-const selectSignator = () => {
-  buttonText = 'Signator'
-  dispatch('role', 'signator')
-}
-
-const selectSteward = () => {
-  buttonText = 'Steward'
-  dispatch('role', 'steward')
+const selectRole = (role: UserAppRole) => {
+  recordRoleSelection(role)
+  dispatch('role', role)
 }
 
 const getEntriesForRole = (role: UserAppRole | undefined): MenuItem[] => {
   const specialEntriesByRole = {
-    Signator: [{ icon: 'gavel', label: 'Signator', action: selectSignator }],
-    Steward: [{ icon: 'gavel', label: 'Steward', action: selectSteward }],
+    Signator: [{ icon: 'gavel', label: 'Signator', action: () => selectRole('Signator') }],
+    Steward: [{ icon: 'gavel', label: 'Steward', action: () => selectRole('Steward') }],
   }
   return specialEntriesByRole[role] || []
 }
 
 const isAdminRole = (role: UserAppRole) => ['Signator', 'Steward'].includes(role)
 
-const getDefaultButtonTextForRole = (role: UserAppRole, corporatePolicies: Policy[], householdPolicies: Policy[]) => {
-  if (!role) {
-    return ''
-  }
-
-  if (isAdminRole(role)) {
-    return role
-  }
-
-  if (corporatePolicies.length > 0) {
-    return corporatePolicies[0].account_detail
-  }
-
-  return 'Household' // TODO: Replace with name, when available
-}
-
-const tryToUpdateButtonText = (
-  role: UserAppRole,
-  selectedPolicyId: string | undefined,
+const tryToSetInitialRolePolicySelection = (
+  actualRole: UserAppRole,
   corporatePolicies: Policy[],
   householdPolicies: Policy[]
 ) => {
+  if (actualRole) {
+    if (isAdminRole(actualRole)) {
+      recordRoleSelection(actualRole)
+    } else if (corporatePolicies.length > 0) {
+      recordPolicySelection(corporatePolicies[0].id)
+    } else if (householdPolicies.length > 0) {
+      recordPolicySelection(householdPolicies[0].id)
+    }
+  }
+}
+
+const getButtonText = (
+  rolePolicySelection: RolePolicySelection,
+  corporatePolicies: Policy[],
+  householdPolicies: Policy[]
+) => {
+  const selectedPolicyId = rolePolicySelection.selectedPolicyId
   if (!selectedPolicyId) {
-    buttonText = getDefaultButtonTextForRole(role, corporatePolicies, householdPolicies)
-    return
+    return rolePolicySelection.selectedRole || ''
   }
 
   const corporatePolicy = corporatePolicies.find((policy) => policy.id === selectedPolicyId)
   if (corporatePolicy) {
-    buttonText = corporatePolicy.account_detail
-    return
+    return corporatePolicy.account_detail
   }
 
-  const householdPolicy = householdPolicies.find((policy) => policy.id === selectedPolicyId)
-  if (householdPolicy) {
-    buttonText = 'Household' // TODO: Replace with name, when available
-    return
-  }
+  return 'Household' // TODO: Replace with name, when available
 }
 
 const isCorporatePolicy = (policy: Policy): boolean => policy.type === 'Corporate'

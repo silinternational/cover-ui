@@ -3,13 +3,12 @@ import user, { isUserSteward } from '../authn/user'
 import { AppDrawer } from 'components'
 import { initialized as policiesInitialized, loadPolicies, Policy } from 'data/policies'
 import * as routes from 'helpers/routes'
-import { goto, params } from '@roxi/routify'
+import { goto } from '@roxi/routify'
 
 $: $policiesInitialized || loadPolicies()
 
 $: myPolicies = ($user.policies || []) as Policy[]
 $: myHouseholdPolicyId = $user.policy_id
-$: selectedPolicyId = $params.policyId
 
 // TODO: Update this based on the user's role and/or the RoleAndPolicyMenu selection.
 $: menuItems = [
@@ -58,13 +57,6 @@ const goToPolicyAsCustomer = (event: CustomEvent) => $goto(routes.policyHome(eve
 const goToRoleHome = (event: CustomEvent) => $goto(routes.adminRoleHome(event.detail))
 </script>
 
-<AppDrawer
-  {menuItems}
-  {myPolicies}
-  {selectedPolicyId}
-  role={$user.app_role}
-  on:policy={goToPolicyAsCustomer}
-  on:role={goToRoleHome}
->
+<AppDrawer {menuItems} {myPolicies} role={$user.app_role} on:policy={goToPolicyAsCustomer} on:role={goToRoleHome}>
   <slot />
 </AppDrawer>

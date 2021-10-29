@@ -39,6 +39,10 @@ export const commonStates: { [stateName: string]: State } = {
     bgColor: '--mdc-theme-status-error-bg',
     title: 'Denied',
   },
+  Revision: {
+    ...pending,
+    title: 'Awaiting changes',
+  },
   Draft: {
     icon: 'edit',
     color: '--mdc-theme-primary',
@@ -60,12 +64,6 @@ export const claimStates: { [stateName: string]: State } = {
     color: '--mdc-theme-status-success',
     bgColor: '--mdc-theme-status-success-bg',
     title: 'Approved', // TODO: show what it is approved for
-  },
-  Revision: {
-    icon: 'chat',
-    color: '--mdc-theme-primary',
-    bgColor: '--mdc-theme-primary-header-bg',
-    title: '',
   },
   Paid: {
     icon: 'paid',

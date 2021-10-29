@@ -22,6 +22,7 @@ import RecentActivityTable from './RecentActivityTable.svelte'
 import Row from './mdc/Row.svelte'
 import ClaimBanner from './banners/ClaimBanner.svelte'
 import StatusBanner from './banners/StatusBanner.svelte'
+import MessageBanner from './banners/MessageBanner.svelte'
 import SearchableSelect from './SearchableSelect.svelte'
 
 export {
@@ -50,4 +51,5 @@ export {
   ClaimBanner,
   SearchableSelect,
   StatusBanner,
+  MessageBanner,
 }

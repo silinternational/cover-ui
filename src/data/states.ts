@@ -70,7 +70,7 @@ export const claimStates: { [stateName: string]: State } = {
     icon: 'done',
     color: '--mdc-theme-status-success',
     bgColor: '--mdc-theme-status-success-bg',
-    title: 'Approved', // TODO: show what it is approved for
+    title: 'Approved',
   },
   Paid: {
     icon: 'paid',
@@ -86,6 +86,9 @@ export const adminClaimStates: { [stateName: string]: State } = {
   Review2: needsReview,
   Review3: { ...needsReview, title: 'Needs final claim review' },
   Revision: { ...pending, title: 'Needs changes' },
+  Receipt: { ...pending, icon: 'check_circle', title: 'Approved' },
+  ReceiptSecondary: { ...pending, title: 'Needs changes' },
+  Approved: { ...pending, title: 'Approved for payout', icon: 'paid' },
 }
 
 export const itemStates: { [stateName: string]: State } = {

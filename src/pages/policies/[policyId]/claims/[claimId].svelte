@@ -257,12 +257,12 @@ const getClaimStatusText = (claim: Claim, item: ClaimItem) => {
     <Row cols="9">
       <ClaimBanner {claimStatus} {receiptType} {isAdmin}>{statusText}</ClaimBanner>
       {#if needsFile}
-        <ClaimBanner claimStatus={`${claimStatus}Secondary`}>
+        <ClaimBanner claimStatus={`${claimStatus}Secondary`} {isAdmin} class="mt-4px">
           Upload {uploadLabel} to get reimbursed.
         </ClaimBanner>
       {/if}
       {#if showRevisionMessage}
-        <MessageBanner>{claim.status_reason}</MessageBanner>
+        <MessageBanner class="mt-4px">{claim.status_reason}</MessageBanner>
       {/if}
       <p class="break-word">
         {claim.incident_description || ''}

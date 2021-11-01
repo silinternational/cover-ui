@@ -6,6 +6,7 @@ export const ROOT = '/'
 export const HOME = '/home'
 export const LOGOUT = '/logout'
 
+export const ADMIN_POLICIES = '/admin/policies'
 export const adminPolicySearch = (name: string) => `/admin/policies?${qs.stringify({ name })}`
 export const adminRoleHome = (role: AdminAppRole) => `/${role.toLowerCase()}/home`
 

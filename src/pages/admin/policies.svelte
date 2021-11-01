@@ -3,7 +3,7 @@ import { Policy, searchPoliciesFor } from 'data/policies'
 import { PolicyMember } from 'data/policy-members'
 import { query } from 'data/query-string'
 import { formatPageTitle } from 'helpers/pageTitle'
-import { adminPolicySearch, policyDetails } from 'helpers/routes'
+import { ADMIN_POLICIES, adminPolicySearch, policyDetails } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
 import { Datatable, Form, Page, TextField } from '@silintl/ui-components'
 
@@ -24,7 +24,9 @@ const getNameOfMember = (member: PolicyMember) => {
   return member.first_name + ' ' + member.last_name
 }
 const onSubmit = () => putSearchIntoUrlQuery(searchFieldContents)
-const putSearchIntoUrlQuery = (name) => $goto(adminPolicySearch(name))
+const putSearchIntoUrlQuery = (name) => {
+  $goto(name ? adminPolicySearch(name) : ADMIN_POLICIES)
+}
 </script>
 
 <style>

@@ -99,12 +99,15 @@ export const itemStates: { [stateName: string]: State } = {
 }
 
 export const getClaimState = (status: ClaimStatus, isAdmin = false): State => {
-  if (claimStates[status] === undefined && adminClaimStates[status] === undefined) {
-    console.error('No such state (for claim status):', status, Object.keys({ ...claimStates, ...adminClaimStates }))
-  }
   if (isAdmin) {
+    adminClaimStates[status] === undefined &&
+      console.error('No such state (for claim status):', status, Object.keys(adminClaimStates))
+
     return adminClaimStates[status] || ({} as State)
   } else {
+    claimStates[status] === undefined &&
+      console.error('No such state (for claim status):', status, Object.keys(claimStates))
+
     return claimStates[status] || ({} as State)
   }
 }

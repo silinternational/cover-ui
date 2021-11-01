@@ -157,13 +157,13 @@ const onDenyClaim = async (event: CustomEvent<string>) => {
 const onSubmit = async () => await submitClaim(claimId)
 
 const setInitialValues = (claimItem: ClaimItem) => {
-  updatedClaimItemData.payoutOption = (claimItem.payout_option || payoutOption)
+  updatedClaimItemData.payoutOption = claimItem.payout_option || payoutOption
   updatedClaimItemData.repairEstimateUSD = claimItem.repair_estimate / 100
   updatedClaimItemData.replaceEstimateUSD = claimItem.replace_estimate / 100
   updatedClaimItemData.fairMarketValueUSD = claimItem.fmv / 100
   updatedClaimItemData.repairActual = claimItem.repair_actual / 100
   updatedClaimItemData.replaceActual = claimItem.replace_actual / 100
-  updatedClaimItemData.isRepairable = claimItem.is_repairable,
+  updatedClaimItemData.isRepairable = claimItem.is_repairable
 }
 
 const onPreview = (event: CustomEvent<string>) => {

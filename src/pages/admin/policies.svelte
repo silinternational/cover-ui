@@ -1,29 +1,30 @@
 <script lang="ts">
-import { searchPoliciesFor } from 'data/policies'
+import { Policy, searchPoliciesFor } from 'data/policies'
 import { PolicyMember } from 'data/policy-members'
+import { query } from 'data/query-string'
 import { formatPageTitle } from 'helpers/pageTitle'
-import { policyDetails } from 'helpers/routes'
+import { adminPolicySearch, policyDetails } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
 import { Datatable, Form, Page, TextField } from '@silintl/ui-components'
-import { onMount } from 'svelte'
+
+let matchingPolicies: Policy[] = []
+let mostRecentSearchQuery = ''
+let searchFieldContents = ''
 
 metatags.title = formatPageTitle('Policies')
 
-let matchingPolicies = []
-let searchFieldContents = ''
-let searchedFor = ''
+$: doSearch($query.name || '')
 
+const doSearch = async (name: string) => {
+  searchFieldContents = name
+  mostRecentSearchQuery = name
+  matchingPolicies = await searchPoliciesFor(name)
+}
 const getNameOfMember = (member: PolicyMember) => {
   return member.first_name + ' ' + member.last_name
 }
-const doSearch = async () => {
-  searchedFor = searchFieldContents
-  matchingPolicies = await searchPoliciesFor(searchedFor)
-}
-
-onMount(() => {
-  doSearch()
-})
+const onSubmit = () => putSearchIntoUrlQuery(searchFieldContents)
+const putSearchIntoUrlQuery = (name) => $goto(adminPolicySearch(name))
 </script>
 
 <style>
@@ -37,13 +38,13 @@ onMount(() => {
 </style>
 
 <Page>
-  <Form on:submit={doSearch}>
+  <Form on:submit={onSubmit}>
     Search:
     <TextField bind:value={searchFieldContents} placeholder="First or last name" />
   </Form>
   <h3>
-    {#if searchedFor}
-      Policies matching {searchedFor}
+    {#if mostRecentSearchQuery}
+      Policies matching "{mostRecentSearchQuery}"
     {:else}
       Recently-updated policies
     {/if}

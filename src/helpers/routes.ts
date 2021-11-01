@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import type { AdminAppRole } from '../authn/user'
+import qs from 'qs'
 
 export const ROOT = '/'
 export const HOME = '/home'
 export const LOGOUT = '/logout'
 
+export const adminPolicySearch = (name: string) => `/admin/policies?${qs.stringify({ name })}`
 export const adminRoleHome = (role: AdminAppRole) => `/${role.toLowerCase()}/home`
 
 export const CHAT = '/chat'

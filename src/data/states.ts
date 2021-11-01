@@ -100,9 +100,9 @@ export const getClaimState = (status: ClaimStatus, isAdmin = false): State => {
     console.error('No such state (for claim status):', status, Object.keys({ ...claimStates, ...adminClaimStates }))
   }
   if (isAdmin) {
-    return adminClaimStates[status]
+    return adminClaimStates[status] || ({} as State)
   } else {
-    return (claimStates[status] || {}) as State
+    return claimStates[status] || ({} as State)
   }
 }
 

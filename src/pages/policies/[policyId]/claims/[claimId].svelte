@@ -119,7 +119,8 @@ $: maximumPayout = determineMaxPayout(payoutOption, claimItem, item.coverage_amo
 // Dynamic breadcrumbs data:
 $: item.name && claim.reference_number && (claimName = `${item.name} (${claim.reference_number})`)
 $: policyName = policy.type === 'Corporate' ? policy.account : policy.household_id
-$: adminBreadcrumbs = checkIsAdmin($user)
+$: isAdmin = checkIsAdmin($user)
+$: adminBreadcrumbs = isAdmin
   ? [
       { name: 'Policies', url: POLICIES },
       { name: policyName, url: policyDetails(policyId) },
@@ -254,7 +255,7 @@ const getClaimStatusText = (claim: Claim, item: ClaimItem) => {
       </div>
     </Row>
     <Row cols="9">
-      <ClaimBanner {claimStatus} {receiptType}>{statusText}</ClaimBanner>
+      <ClaimBanner {claimStatus} {receiptType} {isAdmin}>{statusText}</ClaimBanner>
       {#if needsFile}
         <ClaimBanner claimStatus={`${claimStatus}Secondary`}>
           Upload {uploadLabel} to get reimbursed.

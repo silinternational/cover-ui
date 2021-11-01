@@ -13,6 +13,13 @@ export const approved = {
   bgColor: '--mdc-theme-status-success-bg',
 }
 
+export const needsReview: State = {
+  icon: 'assignment',
+  color: '--mdc-theme-primary',
+  bgColor: '--mdc-theme-primary-header-bg',
+  title: 'Needs claim review',
+}
+
 export const pending: State = {
   icon: 'watch_later',
   color: '--mdc-theme-neutral-variant',
@@ -73,6 +80,14 @@ export const claimStates: { [stateName: string]: State } = {
   },
 }
 
+export const adminClaimStates: { [stateName: string]: State } = {
+  ...claimStates,
+  Review1: needsReview,
+  Review2: needsReview,
+  Review3: { ...needsReview, title: 'Needs final claim review' },
+  Revision: { ...pending, title: 'Needs changes' },
+}
+
 export const itemStates: { [stateName: string]: State } = {
   ...commonStates,
   Approved: { ...approved, title: 'Approved' },
@@ -80,11 +95,15 @@ export const itemStates: { [stateName: string]: State } = {
   Pending: { ...pending, title: 'Awaiting item coverage review' },
 }
 
-export const getClaimState = (status: ClaimStatus): State => {
-  if (claimStates[status] === undefined) {
-    console.error('No such state (for claim status):', status, Object.keys(claimStates))
+export const getClaimState = (status: ClaimStatus, isAdmin = false): State => {
+  if (claimStates[status] === undefined && adminClaimStates[status] === undefined) {
+    console.error('No such state (for claim status):', status, Object.keys({ ...claimStates, ...adminClaimStates }))
   }
-  return (claimStates[status] || {}) as State
+  if (isAdmin) {
+    return adminClaimStates[status]
+  } else {
+    return (claimStates[status] || {}) as State
+  }
 }
 
 export const getItemState = (status: ItemCoverageStatus): State => {

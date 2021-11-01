@@ -1,5 +1,5 @@
 <script lang="ts">
-import { initialized, loadPolicies, policies, searchPoliciesFor } from 'data/policies'
+import { searchPoliciesFor } from 'data/policies'
 import { PolicyMember } from 'data/policy-members'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { policyDetails } from 'helpers/routes'

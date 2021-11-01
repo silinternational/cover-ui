@@ -47,6 +47,7 @@ import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import { formatMoney } from 'helpers/money'
 import { customerClaimEdit, customerClaims, customerClaimDetails, POLICIES, policyDetails } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
+import { assertHas } from '../../../../validation/assertions'
 import { onMount } from 'svelte'
 import { goto, metatags, params } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
@@ -73,6 +74,7 @@ onMount(() => {
 
 $: claim = ($claims.find((clm: Claim) => clm.id === claimId) || {}) as Claim
 $: claimItem = claim.claim_items?.[0] || ({} as ClaimItem) //For now there will only be one claim_item
+$: setInitialValues(claimItem)
 $: statusText = getClaimStatusText(claim, claimItem)
 
 $: items = $itemsByPolicyId[policyId] || []
@@ -154,6 +156,16 @@ const onDenyClaim = async (event: CustomEvent<string>) => {
 
 const onSubmit = async () => await submitClaim(claimId)
 
+const setInitialValues = (claimItem: ClaimItem) => {
+  updatedClaimItemData.payoutOption = (claimItem.payout_option || payoutOption)
+  updatedClaimItemData.repairEstimateUSD = claimItem.repair_estimate / 100
+  updatedClaimItemData.replaceEstimateUSD = claimItem.replace_estimate / 100
+  updatedClaimItemData.fairMarketValueUSD = claimItem.fmv / 100
+  updatedClaimItemData.repairActual = claimItem.repair_actual / 100
+  updatedClaimItemData.replaceActual = claimItem.replace_actual / 100
+  updatedClaimItemData.isRepairable = claimItem.is_repairable,
+}
+
 const onPreview = (event: CustomEvent<string>) => {
   showImg = true
 
@@ -169,6 +181,10 @@ const onBlur = () => {
     updatedClaimItemData.replaceActual = repairOrReplacementCost
   }
 
+  assertHas(
+    updatedClaimItemData.repairActual || updatedClaimItemData.replaceActual,
+    `Please enter the actual ${receiptType} cost`
+  )
   claimItem.id && updateClaimItem(claim.id, claimItem.id, updatedClaimItemData)
 }
 

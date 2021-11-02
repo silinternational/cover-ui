@@ -25,10 +25,6 @@ body {
   height: 300px;
 }
 
-.absolute {
-  position: absolute !important;
-}
-
 .break-word {
   overflow-wrap: break-word;
 }

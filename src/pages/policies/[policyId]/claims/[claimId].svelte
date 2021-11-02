@@ -39,6 +39,7 @@ import {
   Claim,
   claims,
   fixReceipt,
+  ClaimFilePurpose,
 } from 'data/claims'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { loadItems, itemsByPolicyId, PolicyItem, itemBelongsToPolicy } from 'data/items'
@@ -110,12 +111,12 @@ $: needsFile = needsReceipt || isEvidenceNeeded(claimItem, claimStatus)
 $: needsRepairReceipt = needsReceipt && payoutOption === 'Repair'
 $: needsReplaceReceipt = needsReceipt && payoutOption === 'Replacement'
 
-$: noFilesUploaded = !claim.claim_files?.length //TODO check for specific file purpose to show banner
-$: filePurpose = getFilePurpose(claimItem, needsReceipt)
+$: filePurpose = getFilePurpose(claimItem, needsReceipt) as ClaimFilePurpose
+$: noFilesUploaded = !isFileUploadedByPurpose(filePurpose, claimFiles)
 $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType) as string
 $: moneyFormLabel = needsRepairReceipt ? 'Actual cost of repair' : 'Actual cost of replacement'
 $: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
-$: claimFiles = claim.claim_files || []
+$: claimFiles = claim.claim_files || ([] as ClaimFile[])
 $: maximumPayout = determineMaxPayout(payoutOption, claimItem, item.coverage_amount)
 
 // Dynamic breadcrumbs data:
@@ -164,12 +165,17 @@ const setInitialValues = (claimItem: ClaimItem) => {
   updatedClaimItemData.repairActual = claimItem.repair_actual / 100
   updatedClaimItemData.replaceActual = claimItem.replace_actual / 100
   updatedClaimItemData.isRepairable = claimItem.is_repairable
+  repairOrReplacementCost = claimItem.repair_actual / 100 || claimItem.replace_actual / 100
 }
 
 const onPreview = (event: CustomEvent<string>) => {
-  showImg = true
+  previewFile = claimFiles.find((file) => file.id === event.detail) || ({} as ClaimFile)
 
-  previewFile = claimFiles.find((file) => file.id === event.detail)
+  if (previewFile.file?.url) {
+    previewFile.file.content_type === 'image/jpeg' && (showImg = true)
+
+    window.open(previewFile.file.url, '_blank')
+  }
 }
 
 const onImgError = () => (showImg = false)
@@ -194,7 +200,7 @@ async function onUpload(event: CustomEvent<FormData>) {
 
     const file = await upload(event.detail)
 
-    await claimsFileAttach(claimId, file.id, filePurpose)
+    filePurpose !== '' && (await claimsFileAttach(claimId, file.id, filePurpose))
 
     await loadClaims()
   } finally {
@@ -213,6 +219,10 @@ const getClaimStatusText = (claim: Claim, item: ClaimItem) => {
   const statusChangeStr = claim.status_change ? `${claim.status_change} ` : updatedAtStr ? 'Submitted ' : ''
 
   return statusChangeStr + updatedAtStr
+}
+
+const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]): boolean => {
+  return files.filter((file) => file.purpose === purpose).length > 0
 }
 </script>
 
@@ -292,10 +302,6 @@ const getClaimStatusText = (claim: Claim, item: ClaimItem) => {
         {formatMoney(maximumPayout)}
       </p>
 
-      {#if showImg}
-        <img class="receipt" src={previewFile.file?.url} alt="receipt" on:error={onImgError} />
-      {/if}
-
       <p>
         <ClaimActions
           {noFilesUploaded}
@@ -328,7 +334,17 @@ const getClaimStatusText = (claim: Claim, item: ClaimItem) => {
         {/if}
       {/if}
 
-      <FilePreview class="w-50" previews={claimFiles} on:deleted={onDeleted} on:preview={onPreview} />
+      {#if showImg}
+        <img class="receipt" src={previewFile.file?.url} alt="document" on:error={onImgError} />
+      {/if}
+
+      <FilePreview
+        class="pointer w-50"
+        previews={claimFiles}
+        {isMemberOfPolicy}
+        on:deleted={onDeleted}
+        on:preview={onPreview}
+      />
 
       <br />
     </Row>

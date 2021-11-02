@@ -1,38 +1,20 @@
 import type { UserAppRole } from '../authn/user'
-import { get, writable } from 'svelte/store'
+import { readable, writable } from 'svelte/store'
+import { route } from '@roxi/routify'
 
-export type RolePolicySelection = {
-  selectedRole: UserAppRole | undefined
-  selectedPolicyId: string | undefined
-}
-
-// TODO: Change this to a `readable` to avoid changes by any means other than our provided methods.
-export const rolePolicySelection = writable<RolePolicySelection>({
-  selectedRole: undefined,
-  selectedPolicyId: undefined,
+export const selectedPolicyId = readable<string>('', function start(set) {
+  const unsubscriber = route.subscribe((r: any) => {
+    if (r?.params?.policyId) {
+      set(r.params.policyId)
+    }
+  })
+  return function stop() {
+    unsubscriber()
+  }
 })
 
-export const haveSetRolePolicySelection = writable<boolean>(false)
+export const roleSelection = writable<UserAppRole>()
 
-const recordThatWeHaveSetRolePolicySelection = () => {
-  const haveAlreadySet = get(haveSetRolePolicySelection)
-  if (!haveAlreadySet) {
-    haveSetRolePolicySelection.set(true)
-  }
-}
-
-export const recordRoleSelection = (role: UserAppRole) => {
-  recordThatWeHaveSetRolePolicySelection()
-  rolePolicySelection.set({
-    selectedRole: role,
-    selectedPolicyId: undefined,
-  })
-}
-
-export const recordPolicySelection = (policyId: string) => {
-  recordThatWeHaveSetRolePolicySelection()
-  rolePolicySelection.set({
-    selectedRole: 'User',
-    selectedPolicyId: policyId,
-  })
+export const recordRoleSelection = (role: UserAppRole): void => {
+  roleSelection.set(role)
 }

@@ -1,6 +1,6 @@
 <script lang="ts">
-import { loadPolicy, policies, Policy } from 'data/policies'
-import { loadItems, itemsByPolicyId } from 'data/items'
+import { loadPolicy, Policy } from 'data/policies'
+import { loadItems, selectedPolicyItems } from 'data/items'
 import type { PolicyMember } from 'data/policy-members'
 import { getAccountablePerson, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
 import { dependentsByPolicyId } from 'data/dependents'
@@ -29,9 +29,9 @@ $: dependentOptions = getDependentOptions(dependents)
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions]
 
 $: policyId && loadItems(policyId)
-$: items = $itemsByPolicyId[policyId] || []
+$: items = $selectedPolicyItems
 $: claims = policy.claims || []
-$: policyName = policy.type === 'Corporate' ? policy.account : policy.household_id
+$: policyName = policy.type === 'Corporate' ? policy.account_detail : policy.household_id
 $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))
 </script>
 
@@ -57,6 +57,10 @@ th {
       <tr>
         <th>Account</th>
         <td>{policy.account}</td>
+      </tr>
+      <tr>
+        <th>Account Detail</th>
+        <td>{policy.account_detail}</td>
       </tr>
       <tr>
         <th>Cost Center</th>

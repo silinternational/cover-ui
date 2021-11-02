@@ -33,7 +33,8 @@ export const POLICY_NEW_CORPORATE = '/policies/new'
 
 export const SETTINGS = '/settings'
 export const SETTINGS_PERSONAL = '/settings/personal'
-export const SETTINGS_HOUSEHOLD = '/settings/household'
-export const householdSettingsDependent = (dependentId: string) => `/settings/household/dependent/${dependentId}`
+export const settingsPolicy = (policyId: string) => `/policies/${policyId}/settings`
+export const householdSettingsDependent = (policyId: string, dependentId: string) =>
+  `/policies/${policyId}/settings/dependents/${dependentId}`
 
 export const TERMS = '/terms-of-service'

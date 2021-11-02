@@ -1,10 +1,10 @@
 <script lang="ts">
 import { ClaimCards, ItemsTable, Row } from 'components'
 import { isLoadingById } from 'components/progress'
-import { Claim, claims, loadClaimsByPolicyId } from 'data/claims'
+import { Claim, claims, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
-import { deleteItem, itemsByPolicyId, loadItems, PolicyItem } from 'data/items'
+import { deleteItem, loadItems, selectedPolicyItems } from 'data/items'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import * as routes from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -14,7 +14,7 @@ import { Page } from '@silintl/ui-components'
 export let policyId: string
 
 $: policyId && loadItems(policyId)
-$: items = $itemsByPolicyId[policyId] || ([] as PolicyItem[])
+$: items = $selectedPolicyItems
 
 $: policyId && loadClaimsByPolicyId(policyId)
 
@@ -45,7 +45,7 @@ const onGotoItem = (event: CustomEvent<string>) => $goto(event.detail)
 
 <Page layout="grid">
   <Row cols={'12'}>
-    <ClaimCards claims={$claims} {items} {accountablePersons} on:goto-claim={onGotoClaim} />
+    <ClaimCards claims={$selectedPolicyClaims} {items} {accountablePersons} on:goto-claim={onGotoClaim} />
   </Row>
 
   <Row cols={'12'}>

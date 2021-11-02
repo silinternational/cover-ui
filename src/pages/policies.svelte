@@ -37,7 +37,7 @@ $: metatags.title = formatPageTitle('Policies')
             {policy.type || ''}
           </Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{policy.household_id || ''}</Datatable.Data.Row.Item>
-          <Datatable.Data.Row.Item>{policy.account || ''}</Datatable.Data.Row.Item>
+          <Datatable.Data.Row.Item>{policy.account_detail || ''}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{policy.cost_center || ''}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{policy.entity_code?.code || ''}</Datatable.Data.Row.Item>
         </Datatable.Data.Row>

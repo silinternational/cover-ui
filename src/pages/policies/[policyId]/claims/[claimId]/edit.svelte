@@ -11,14 +11,15 @@ import {
   updateClaimItem,
   Claim,
 } from 'data/claims'
-import { itemsByPolicyId, loadItems, PolicyItem } from 'data/items'
+import { loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
+import { selectedPolicyId } from 'data/role-policy-selection'
 import { customerClaims, customerClaimDetails, customerClaimEdit } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
-import { goto, metatags, params } from '@roxi/routify'
+import { goto, metatags } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
 export let claimId: string
-export let policyId: string = $params.policyId
+export let policyId = $selectedPolicyId
 
 let claimName: string
 
@@ -32,7 +33,7 @@ $: itemId = claimItem.item_id
 $: claimItemId = claimItem.id
 
 $: policyId && loadItems(policyId)
-$: items = $itemsByPolicyId[policyId] || []
+$: items = $selectedPolicyItems
 $: item = items.find((anItem) => anItem.id === itemId) || ({} as PolicyItem)
 
 // Dynamic breadcrumbs data:

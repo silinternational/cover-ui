@@ -1,19 +1,13 @@
 <script lang="ts">
-import type { UserAppRole } from 'authn/user'
-import type { Policy } from 'data/policies.ts'
-import {
-  haveSetRolePolicySelection,
-  RolePolicySelection,
-  rolePolicySelection,
-  recordPolicySelection,
-  recordRoleSelection,
-} from 'data/role-policy-selection'
+import type { UserAppRole } from '../authn/user'
+import type { Policy } from 'data/policies'
+import { roleSelection, recordRoleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { POLICY_NEW_CORPORATE } from 'helpers/routes'
 import { Button, Menu, MenuItem } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let myPolicies: Policy[]
-export let role: UserAppRole | undefined
+export let role: UserAppRole
 
 const addCorporatePolicyEntry: MenuItem = {
   icon: 'add',
@@ -34,9 +28,9 @@ let roleEntries: MenuItem[]
 $: myCorporatePolicies = myPolicies.filter(isCorporatePolicy)
 $: myHouseholdPolicies = myPolicies.filter(isHouseholdPolicy)
 
-$: $haveSetRolePolicySelection || tryToSetInitialRolePolicySelection(role, myCorporatePolicies, myHouseholdPolicies)
+$: setInitialRolePolicySelection(role, $selectedPolicyId, [...myCorporatePolicies, ...myHouseholdPolicies])
 
-$: buttonText = getButtonText($rolePolicySelection, myCorporatePolicies, myHouseholdPolicies)
+$: buttonText = getButtonText($roleSelection, $selectedPolicyId, myPolicies)
 
 $: roleEntries = getEntriesForRole(role)
 $: corporatePolicyEntries = getCorporatePolicyEntries(myCorporatePolicies)
@@ -44,8 +38,8 @@ $: householdPolicyEntries = getHouseholdEntries(myHouseholdPolicies)
 
 $: menuItems = [...roleEntries, ...corporatePolicyEntries, addCorporatePolicyEntry, ...householdPolicyEntries]
 
-const selectPolicy = (policyId: string) => {
-  recordPolicySelection(policyId)
+const selectPolicy = (userRole: UserAppRole, policyId: string) => {
+  recordRoleSelection(userRole)
   dispatch('policy', policyId)
 }
 
@@ -54,7 +48,7 @@ const getCorporatePolicyEntries = (policies: Policy[]): MenuItem[] => {
     return {
       icon: 'work',
       label: policy.account_detail,
-      action: () => selectPolicy(policy.id),
+      action: () => selectPolicy('User', policy.id),
     }
   })
 }
@@ -63,8 +57,8 @@ const getHouseholdEntries = (policies: Policy[]): MenuItem[] => {
   return policies.map((policy: Policy): MenuItem => {
     return {
       icon: 'family_restroom',
-      label: 'Household', // TODO: Replace with name, when available
-      action: () => selectPolicy(policy.id),
+      label: policy.household_id || 'Household',
+      action: () => selectPolicy('User', policy.id),
     }
   })
 }
@@ -74,8 +68,8 @@ const selectRole = (role: UserAppRole) => {
   dispatch('role', role)
 }
 
-const getEntriesForRole = (role: UserAppRole | undefined): MenuItem[] => {
-  const specialEntriesByRole = {
+const getEntriesForRole = (role: UserAppRole): MenuItem[] => {
+  const specialEntriesByRole: { [role: string]: MenuItem[] } = {
     Signator: [{ icon: 'gavel', label: 'Signator', action: () => selectRole('Signator') }],
     Steward: [{ icon: 'gavel', label: 'Steward', action: () => selectRole('Steward') }],
   }
@@ -84,38 +78,31 @@ const getEntriesForRole = (role: UserAppRole | undefined): MenuItem[] => {
 
 const isAdminRole = (role: UserAppRole) => ['Signator', 'Steward'].includes(role)
 
-const tryToSetInitialRolePolicySelection = (
-  actualRole: UserAppRole,
-  corporatePolicies: Policy[],
-  householdPolicies: Policy[]
-) => {
-  if (actualRole) {
-    if (isAdminRole(actualRole)) {
-      recordRoleSelection(actualRole)
-    } else if (corporatePolicies.length > 0) {
-      recordPolicySelection(corporatePolicies[0].id)
-    } else if (householdPolicies.length > 0) {
-      recordPolicySelection(householdPolicies[0].id)
-    }
+const setInitialRolePolicySelection = (actualRole: UserAppRole, policyId: string, myPolicies: Policy[]) => {
+  // If the current user is an admin but the policy selected ON STARTUP was one of their own,
+  // assume that they are editing their own policy as a user
+  if (myPolicies.some((p) => p.id === policyId)) {
+    recordRoleSelection('User')
+  } else if (actualRole && isAdminRole(actualRole)) {
+    recordRoleSelection(actualRole)
+  } else {
+    recordRoleSelection('User')
   }
 }
 
-const getButtonText = (
-  rolePolicySelection: RolePolicySelection,
-  corporatePolicies: Policy[],
-  householdPolicies: Policy[]
-) => {
-  const selectedPolicyId = rolePolicySelection.selectedPolicyId
-  if (!selectedPolicyId) {
-    return rolePolicySelection.selectedRole || ''
+// TODO: Long policy names cause the dropdown and menu to expand in an unexpected way
+// Either truncate it or do something more clever
+const getButtonText = (userAppRoleSelection: UserAppRole, policyIdSelection: string, myPolicies: Policy[]) => {
+  if (userAppRoleSelection !== 'User') {
+    return userAppRoleSelection
   }
 
-  const corporatePolicy = corporatePolicies.find((policy) => policy.id === selectedPolicyId)
-  if (corporatePolicy) {
-    return corporatePolicy.account_detail
+  const policy = myPolicies.find((policy) => policy.id === policyIdSelection)
+  if (policy) {
+    return isCorporatePolicy(policy) ? policy.account_detail : policy.household_id
   }
 
-  return 'Household' // TODO: Replace with name, when available
+  return 'Household'
 }
 
 const isCorporatePolicy = (policy: Policy): boolean => policy.type === 'Corporate'

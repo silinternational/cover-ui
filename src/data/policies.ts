@@ -16,6 +16,7 @@ export type Policy = {
   household_id: string
   id: string
   members?: PolicyMember[]
+  name: string
   type: PolicyType
   updated_at: string /*Date*/
 }
@@ -27,6 +28,7 @@ export type CreatePolicyRequestBody = {
   account_detail: string
   cost_center: string
   entity_code: string
+  name: string
 }
 
 export type UpdatePolicyRequestBody = {
@@ -89,9 +91,9 @@ export async function updatePolicy(id: string, policyData: any): Promise<void> {
 export async function createPolicy(policyFormData: any): Promise<Policy> {
   const parsedPolicyData: CreatePolicyRequestBody = {
     account: policyFormData.account,
-    account_detail: policyFormData.groupName,
     cost_center: policyFormData.costCenter,
     entity_code: policyFormData.entityCode,
+    name: policyFormData.groupName,
   }
   const createdPolicy = await CREATE<Policy>('policies', parsedPolicyData)
   updatePoliciesStore(createdPolicy)

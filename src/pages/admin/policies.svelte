@@ -76,8 +76,7 @@ const putSearchIntoUrlQuery = (name) => {
             {#if policy.type === 'Household'}
               Household {policy.household_id}
             {:else}
-              <!-- TODO: Change to new corporate policy name field, when that field exists. -->
-              {policy.account_detail}
+              {policy.name || policy.type}
             {/if}
           </Datatable.Data.Row.Item>
 

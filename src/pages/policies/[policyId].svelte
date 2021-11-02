@@ -55,6 +55,10 @@ th {
     </tr>
     {#if policy.type === 'Corporate'}
       <tr>
+        <th>Name</th>
+        <td>{policy.name}</td>
+      </tr>
+      <tr>
         <th>Account</th>
         <td>{policy.account}</td>
       </tr>

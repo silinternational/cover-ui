@@ -335,7 +335,7 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
       {/if}
 
       {#if showImg}
-        <img class="receipt" src={previewFile.file?.url} alt="receipt" on:error={onImgError} />
+        <img class="receipt" src={previewFile.file?.url} alt="document" on:error={onImgError} />
       {/if}
 
       <FilePreview

@@ -2,6 +2,7 @@
 import type { ClaimFile } from 'data/claims'
 import { formatDate } from '../dates'
 import { Button, Progress } from '@silintl/ui-components'
+import { Banner } from 'components'
 import { createEventDispatcher } from 'svelte'
 import { flip } from 'svelte/animate'
 
@@ -66,6 +67,10 @@ function onDelete(event: CustomEvent, id: string) {
       </div>
       {#if isMemberOfPolicy}
         <Button class="delete-button" raised on:click={(evt) => onDelete(evt, preview.id)}>Delete</Button>
+      {:else if preview.purpose}
+        <Banner class="mdc-bold-font" color="hsla(213, 8%, 46%, 1)" background="hsla(213, 22%, 94%, 1)"
+          >{preview.purpose}</Banner
+        >
       {/if}
     </div>
   {/each}

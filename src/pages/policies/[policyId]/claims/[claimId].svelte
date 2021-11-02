@@ -39,6 +39,7 @@ import {
   Claim,
   claims,
   fixReceipt,
+  ClaimFilePurpose,
 } from 'data/claims'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { loadItems, itemsByPolicyId, PolicyItem, itemBelongsToPolicy } from 'data/items'
@@ -110,8 +111,8 @@ $: needsFile = needsReceipt || isEvidenceNeeded(claimItem, claimStatus)
 $: needsRepairReceipt = needsReceipt && payoutOption === 'Repair'
 $: needsReplaceReceipt = needsReceipt && payoutOption === 'Replacement'
 
-$: noFilesUploaded = !claim.claim_files?.length //TODO check for specific file purpose to show banner
-$: filePurpose = getFilePurpose(claimItem, needsReceipt)
+$: filePurpose = getFilePurpose(claimItem, needsReceipt) as ClaimFilePurpose
+$: noFilesUploaded = !isFileUploadedByPurpose(filePurpose, claimFiles)
 $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType) as string
 $: moneyFormLabel = needsRepairReceipt ? 'Actual cost of repair' : 'Actual cost of replacement'
 $: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
@@ -218,6 +219,10 @@ const getClaimStatusText = (claim: Claim, item: ClaimItem) => {
   const statusChangeStr = claim.status_change ? `${claim.status_change} ` : updatedAtStr ? 'Submitted ' : ''
 
   return statusChangeStr + updatedAtStr
+}
+
+const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]): boolean => {
+  return files.filter((file) => file.purpose === purpose).length > 0
 }
 </script>
 

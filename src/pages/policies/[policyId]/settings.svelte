@@ -5,7 +5,7 @@ import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { policies, updatePolicy, affiliations, Policy, loadPolicy } from 'data/policies'
 import { loadMembersOfPolicy, membersByPolicyId, PolicyMember } from 'data/policy-members'
 import { selectedPolicyId } from 'data/role-policy-selection'
-import { householdSettingsDependent, settingsPolicy } from 'helpers/routes'
+import { householdSettingsDependent, householdSettingsNewDependent, settingsPolicy } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
 import { Button, TextField, IconButton, Page, setNotice } from '@silintl/ui-components'
@@ -33,6 +33,7 @@ $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
 $: policy.household_id && setPolicyHouseholdId()
 $: policy.cost_center && setPolicyCostCenter()
 $: policy.entity_code && setAffiliation()
+$: addDependentUrl = householdSettingsNewDependent(policyId)
 
 const setAffiliation = () => (affiliationChoice = $affiliations[policy.entity_code])
 const setPolicyHouseholdId = () => (householdId = policy.household_id || '')
@@ -170,5 +171,5 @@ p {
       </li>
     {/each}
   </ul>
-  <Button prependIcon="add" url="household/dependent" outlined>Add dependent</Button>
+  <Button prependIcon="add" url={addDependentUrl} outlined>Add dependent</Button>
 </Page>

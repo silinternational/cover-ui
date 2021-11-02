@@ -48,6 +48,7 @@ import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { formatMoney } from 'helpers/money'
 import { customerClaimEdit, customerClaims, customerClaimDetails, POLICIES, policyDetails } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
+import { assertHas } from '../../../../validation/assertions'
 import { onMount } from 'svelte'
 import { goto, metatags } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
@@ -74,6 +75,7 @@ onMount(() => {
 
 $: claim = ($claims.find((clm: Claim) => clm.id === claimId) || {}) as Claim
 $: claimItem = claim.claim_items?.[0] || ({} as ClaimItem) //For now there will only be one claim_item
+$: setInitialValues(claimItem)
 $: statusText = getClaimStatusText(claim, claimItem)
 
 $: items = $selectedPolicyItems
@@ -120,8 +122,9 @@ $: maximumPayout = determineMaxPayout(payoutOption, claimItem, item.coverage_amo
 // Dynamic breadcrumbs data:
 $: item.name && claim.reference_number && (claimName = `${item.name} (${claim.reference_number})`)
 $: policyName = policy.type === 'Corporate' ? policy.account_detail : policy.household_id
+$: isAdmin = checkIsAdmin($user)
 $: adminBreadcrumbs =
-  checkIsAdmin($user) && $roleSelection !== 'User'
+  isAdmin && $roleSelection !== 'User'
     ? [
         { name: 'Policies', url: POLICIES },
         { name: policyName, url: policyDetails(policyId) },
@@ -155,6 +158,16 @@ const onDenyClaim = async (event: CustomEvent<string>) => {
 
 const onSubmit = async () => await submitClaim(claimId)
 
+const setInitialValues = (claimItem: ClaimItem) => {
+  updatedClaimItemData.payoutOption = claimItem.payout_option || payoutOption
+  updatedClaimItemData.repairEstimateUSD = claimItem.repair_estimate / 100
+  updatedClaimItemData.replaceEstimateUSD = claimItem.replace_estimate / 100
+  updatedClaimItemData.fairMarketValueUSD = claimItem.fmv / 100
+  updatedClaimItemData.repairActual = claimItem.repair_actual / 100
+  updatedClaimItemData.replaceActual = claimItem.replace_actual / 100
+  updatedClaimItemData.isRepairable = claimItem.is_repairable
+}
+
 const onPreview = (event: CustomEvent<string>) => {
   showImg = true
 
@@ -170,6 +183,10 @@ const onBlur = () => {
     updatedClaimItemData.replaceActual = repairOrReplacementCost
   }
 
+  assertHas(
+    updatedClaimItemData.repairActual || updatedClaimItemData.replaceActual,
+    `Please enter the actual ${receiptType} cost`
+  )
   claimItem.id && updateClaimItem(claim.id, claimItem.id, updatedClaimItemData)
 }
 
@@ -256,14 +273,14 @@ const getClaimStatusText = (claim: Claim, item: ClaimItem) => {
       </div>
     </Row>
     <Row cols="9">
-      <ClaimBanner {claimStatus} {receiptType}>{statusText}</ClaimBanner>
+      <ClaimBanner {claimStatus} {receiptType} {isAdmin}>{statusText}</ClaimBanner>
       {#if needsFile}
-        <ClaimBanner claimStatus={`${claimStatus}Secondary`}>
+        <ClaimBanner claimStatus={`${claimStatus}Secondary`} {isAdmin} class="mt-4px">
           Upload {uploadLabel} to get reimbursed.
         </ClaimBanner>
       {/if}
       {#if showRevisionMessage}
-        <MessageBanner>{claim.status_reason}</MessageBanner>
+        <MessageBanner class="mt-4px">{claim.status_reason}</MessageBanner>
       {/if}
       <p class="break-word">
         {claim.incident_description || ''}

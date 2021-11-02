@@ -1,9 +1,9 @@
 <script lang="ts">
+import user from '../../authn/user'
 import { policyHome } from 'helpers/routes'
-import { goto } from '@roxi/routify'
-import { selectedPolicyId } from 'data/role-policy-selection'
+import { redirect } from '@roxi/routify'
 
 /* TODO: Load customer's corporate policies (if any) and intelligently decide
  * which policy to default to. */
-$: $goto(policyHome($selectedPolicyId))
+$: $user.policy_id && $redirect(policyHome($user.policy_id))
 </script>

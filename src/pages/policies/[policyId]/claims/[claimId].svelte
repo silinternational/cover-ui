@@ -115,7 +115,7 @@ $: filePurpose = getFilePurpose(claimItem, needsReceipt)
 $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType) as string
 $: moneyFormLabel = needsRepairReceipt ? 'Actual cost of repair' : 'Actual cost of replacement'
 $: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
-$: claimFiles = claim.claim_files || []
+$: claimFiles = claim.claim_files || ([] as ClaimFile[])
 $: maximumPayout = determineMaxPayout(payoutOption, claimItem, item.coverage_amount)
 
 // Dynamic breadcrumbs data:
@@ -164,6 +164,7 @@ const setInitialValues = (claimItem: ClaimItem) => {
   updatedClaimItemData.repairActual = claimItem.repair_actual / 100
   updatedClaimItemData.replaceActual = claimItem.replace_actual / 100
   updatedClaimItemData.isRepairable = claimItem.is_repairable
+  repairOrReplacementCost = claimItem.repair_actual / 100 || claimItem.replace_actual / 100
 }
 
 const onPreview = (event: CustomEvent<string>) => {
@@ -332,7 +333,13 @@ const getClaimStatusText = (claim: Claim, item: ClaimItem) => {
         <img class="receipt" src={previewFile.file?.url} alt="receipt" on:error={onImgError} />
       {/if}
 
-      <FilePreview class="pointer w-50" previews={claimFiles} on:deleted={onDeleted} on:preview={onPreview} />
+      <FilePreview
+        class="pointer w-50"
+        previews={claimFiles}
+        {isMemberOfPolicy}
+        on:deleted={onDeleted}
+        on:preview={onPreview}
+      />
 
       <br />
     </Row>

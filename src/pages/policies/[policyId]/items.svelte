@@ -1,6 +1,6 @@
 <script lang="ts">
 import { ClaimCards, ItemsTable, Row } from 'components'
-import { isLoadingById } from 'components/progress'
+import { isLoadingById, loading } from 'components/progress'
 import { Claim, claims, loadClaimsByPolicyId } from 'data/claims'
 import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
@@ -49,7 +49,7 @@ const onGotoItem = (event: CustomEvent<string>) => $goto(event.detail)
   </Row>
 
   <Row cols={'12'}>
-    {#if isLoadingById(policyId)}
+    {#if $loading && isLoadingById(`policies/${policyId}/items`)}
       Loading items...
     {:else}
       <ItemsTable {items} {accountablePersons} {policyId} on:delete={onDelete} on:gotoItem={onGotoItem} />

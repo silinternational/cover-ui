@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Policy, searchPoliciesFor } from 'data/policies'
-import { PolicyMember } from 'data/policy-members'
+import type { PolicyMember } from 'data/policy-members'
 import { query } from 'data/query-string'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { ADMIN_POLICIES, adminPolicySearch, policyDetails } from 'helpers/routes'
@@ -24,7 +24,7 @@ const getNameOfMember = (member: PolicyMember) => {
   return member.first_name + ' ' + member.last_name
 }
 const onSubmit = () => putSearchIntoUrlQuery(searchFieldContents)
-const putSearchIntoUrlQuery = (name) => {
+const putSearchIntoUrlQuery = (name: string) => {
   $goto(name ? adminPolicySearch(name) : ADMIN_POLICIES)
 }
 </script>
@@ -77,13 +77,13 @@ const putSearchIntoUrlQuery = (name) => {
               Household {policy.household_id}
             {:else}
               <!-- TODO: Change to new corporate policy name field, when that field exists. -->
-              {policy.account_detail}
+              {policy.account_detail || ''}
             {/if}
           </Datatable.Data.Row.Item>
 
           <Datatable.Data.Row.Item>
             <div class="members">
-              {policy.members.map(getNameOfMember).join('\n') || ''}
+              {policy.members?.map(getNameOfMember).join('\n') || ''}
             </div>
           </Datatable.Data.Row.Item>
 

@@ -28,7 +28,7 @@ let roleEntries: MenuItem[]
 $: myCorporatePolicies = myPolicies.filter(isCorporatePolicy)
 $: myHouseholdPolicies = myPolicies.filter(isHouseholdPolicy)
 
-$: setInitialRolePolicySelection(role, $selectedPolicyId, [...myCorporatePolicies, ...myHouseholdPolicies])
+$: setInitialRoleSelection(role)
 
 $: buttonText = getButtonText($roleSelection, $selectedPolicyId, myPolicies)
 
@@ -38,8 +38,8 @@ $: householdPolicyEntries = getHouseholdEntries(myHouseholdPolicies)
 
 $: menuItems = [...roleEntries, ...corporatePolicyEntries, addCorporatePolicyEntry, ...householdPolicyEntries]
 
-const selectPolicy = (userRole: UserAppRole, policyId: string) => {
-  recordRoleSelection(userRole)
+const selectUserPolicy = (policyId: string) => {
+  recordRoleSelection('User')
   dispatch('policy', policyId)
 }
 
@@ -48,7 +48,7 @@ const getCorporatePolicyEntries = (policies: Policy[]): MenuItem[] => {
     return {
       icon: 'work',
       label: policy.account_detail,
-      action: () => selectPolicy('User', policy.id),
+      action: () => selectUserPolicy(policy.id),
     }
   })
 }
@@ -57,8 +57,8 @@ const getHouseholdEntries = (policies: Policy[]): MenuItem[] => {
   return policies.map((policy: Policy): MenuItem => {
     return {
       icon: 'family_restroom',
-      label: policy.household_id || 'Household',
-      action: () => selectPolicy('User', policy.id),
+      label: 'Household', // TODO: Replace with name, when available
+      action: () => selectUserPolicy(policy.id),
     }
   })
 }
@@ -78,12 +78,8 @@ const getEntriesForRole = (role: UserAppRole): MenuItem[] => {
 
 const isAdminRole = (role: UserAppRole) => ['Signator', 'Steward'].includes(role)
 
-const setInitialRolePolicySelection = (actualRole: UserAppRole, policyId: string, myPolicies: Policy[]) => {
-  // If the current user is an admin but the policy selected ON STARTUP was one of their own,
-  // assume that they are editing their own policy as a user
-  if (myPolicies.some((p) => p.id === policyId)) {
-    recordRoleSelection('User')
-  } else if (actualRole && isAdminRole(actualRole)) {
+const setInitialRoleSelection = (actualRole: UserAppRole) => {
+  if (actualRole && isAdminRole(actualRole)) {
     recordRoleSelection(actualRole)
   } else {
     recordRoleSelection('User')
@@ -98,8 +94,8 @@ const getButtonText = (userAppRoleSelection: UserAppRole, policyIdSelection: str
   }
 
   const policy = myPolicies.find((policy) => policy.id === policyIdSelection)
-  if (policy) {
-    return isCorporatePolicy(policy) ? policy.account_detail : policy.household_id
+  if (policy && isCorporatePolicy(policy)) {
+    return policy.account_detail
   }
 
   return 'Household'

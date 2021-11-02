@@ -1,5 +1,5 @@
 <script lang="ts">
-import Banner from 'components/Banner.svelte'
+import Banner from '../components/Banner.svelte'
 import type { ClaimFile } from 'data/claims'
 import { formatDate } from '../dates'
 import { createEventDispatcher } from 'svelte'

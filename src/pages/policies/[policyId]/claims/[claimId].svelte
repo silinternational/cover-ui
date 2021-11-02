@@ -167,9 +167,13 @@ const setInitialValues = (claimItem: ClaimItem) => {
 }
 
 const onPreview = (event: CustomEvent<string>) => {
-  showImg = true
+  previewFile = claimFiles.find((file) => file.id === event.detail) || ({} as ClaimFile)
 
-  previewFile = claimFiles.find((file) => file.id === event.detail)
+  if (previewFile.file?.url) {
+    previewFile.file.content_type === 'image/jpeg' && (showImg = true)
+
+    window.open(previewFile.file.url, '_blank')
+  }
 }
 
 const onImgError = () => (showImg = false)
@@ -194,7 +198,7 @@ async function onUpload(event: CustomEvent<FormData>) {
 
     const file = await upload(event.detail)
 
-    await claimsFileAttach(claimId, file.id, filePurpose)
+    filePurpose !== '' && (await claimsFileAttach(claimId, file.id, filePurpose))
 
     await loadClaims()
   } finally {
@@ -292,10 +296,6 @@ const getClaimStatusText = (claim: Claim, item: ClaimItem) => {
         {formatMoney(maximumPayout)}
       </p>
 
-      {#if showImg}
-        <img class="receipt" src={previewFile.file?.url} alt="receipt" on:error={onImgError} />
-      {/if}
-
       <p>
         <ClaimActions
           {noFilesUploaded}
@@ -328,7 +328,11 @@ const getClaimStatusText = (claim: Claim, item: ClaimItem) => {
         {/if}
       {/if}
 
-      <FilePreview class="w-50" previews={claimFiles} on:deleted={onDeleted} on:preview={onPreview} />
+      {#if showImg}
+        <img class="receipt" src={previewFile.file?.url} alt="receipt" on:error={onImgError} />
+      {/if}
+
+      <FilePreview class="pointer w-50" previews={claimFiles} on:deleted={onDeleted} on:preview={onPreview} />
 
       <br />
     </Row>

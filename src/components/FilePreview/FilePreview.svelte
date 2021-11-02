@@ -42,6 +42,9 @@ function onDelete(event, id) {
 .preview {
   background-color: hsla(213, 26%, 23%, 1);
 }
+.preview:hover {
+  background-color: hsla(213, 26%, 23%, 0.8);
+}
 .selected {
   background-color: hsla(213, 26%, 23%, 0.6);
 }

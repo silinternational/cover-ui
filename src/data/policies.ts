@@ -3,6 +3,7 @@ import { get, writable } from 'svelte/store'
 import type { Claim } from './claims'
 import { CREATE, GET, UPDATE } from './index'
 import type { PolicyMember } from './policy-members'
+import qs from 'qs'
 
 export type Policy = {
   account: string
@@ -118,6 +119,12 @@ export async function loadPolicy(policyId: string): Promise<Policy> {
   updatePoliciesStore(response)
 
   return response
+}
+
+export async function searchPoliciesFor(name: string): Promise<Policy[]> {
+  const query = qs.stringify({ search: `name:${name}` })
+  const response = await GET<{ data: Policy[]; meta: any }>(`policies?${query}`)
+  return response.data
 }
 
 export const affiliations = writable<{ [key: string]: string }>({

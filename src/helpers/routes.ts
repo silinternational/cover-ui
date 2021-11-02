@@ -1,10 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import type { AdminAppRole } from '../authn/user'
+import qs from 'qs'
 
 export const ROOT = '/'
 export const HOME = '/home'
 export const LOGOUT = '/logout'
 
+export const ADMIN_POLICIES = '/admin/policies'
+export const adminPolicySearch = (name: string) => `/admin/policies?${qs.stringify({ name })}`
 export const adminRoleHome = (role: AdminAppRole) => `/${role.toLowerCase()}/home`
 
 export const CHAT = '/chat'
@@ -26,7 +29,7 @@ export const itemNewClaim = (policyId: string, itemId: string) => `/policies/${p
 export const itemRemoveCoverage = (policyId: string, itemId: string) =>
   `/policies/${policyId}/items/${itemId}/remove-coverage`
 
-export const POLICIES = '/policies'
+export const POLICIES = '/admin/policies'
 export const policyDetails = (policyId: string) => `/policies/${policyId}`
 export const policyHome = (policyId: string) => `/policies/${policyId}/home`
 export const POLICY_NEW_CORPORATE = '/policies/new'

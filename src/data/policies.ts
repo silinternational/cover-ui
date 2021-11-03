@@ -127,9 +127,9 @@ export async function loadPolicy(policyId: string): Promise<Policy> {
   return response
 }
 
-export async function searchPoliciesFor(name: string): Promise<Policy[]> {
-  const query = qs.stringify({ search: `name:${name}` })
-  const response = await GET<{ data: Policy[]; meta: any }>(`policies?${query}`)
+export async function searchPoliciesFor(searchText: string): Promise<Policy[]> {
+  const queryString = qs.stringify({ search: searchText })
+  const response = await GET<{ data: Policy[]; meta: any }>(`policies?${queryString}`)
   return response.data
 }
 

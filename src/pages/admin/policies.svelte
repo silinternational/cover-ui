@@ -1,31 +1,25 @@
 <script lang="ts">
+import { SearchForm } from 'components'
 import { Policy, searchPoliciesFor } from 'data/policies'
 import type { PolicyMember } from 'data/policy-members'
-import { query } from 'data/query-string'
+import { urlQuery } from 'data/query-string'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { ADMIN_POLICIES, adminPolicySearch, policyDetails } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
-import { Datatable, Form, Page, TextField } from '@silintl/ui-components'
+import { Datatable, Page } from '@silintl/ui-components'
 
 let matchingPolicies: Policy[] = []
-let mostRecentSearchQuery = ''
-let searchFieldContents = ''
+let searchText = ''
 
 metatags.title = formatPageTitle('Policies')
 
-$: doSearch($query.name || '')
+$: searchText = $urlQuery.search || ''
+$: searchPoliciesFor(searchText).then((result) => (matchingPolicies = result))
 
-const doSearch = async (name: string) => {
-  searchFieldContents = name
-  mostRecentSearchQuery = name
-  matchingPolicies = await searchPoliciesFor(name)
-}
-const getNameOfMember = (member: PolicyMember) => {
-  return member.first_name + ' ' + member.last_name
-}
-const onSubmit = () => putSearchIntoUrlQuery(searchFieldContents)
-const putSearchIntoUrlQuery = (name: string) => {
-  $goto(name ? adminPolicySearch(name) : ADMIN_POLICIES)
+const getNameOfMember = (member: PolicyMember) => member.first_name + ' ' + member.last_name
+
+const onSearch = (event: CustomEvent) => {
+  $goto(event.detail ? adminPolicySearch(event.detail) : ADMIN_POLICIES)
 }
 </script>
 
@@ -40,13 +34,10 @@ const putSearchIntoUrlQuery = (name: string) => {
 </style>
 
 <Page>
-  <Form on:submit={onSubmit}>
-    Search:
-    <TextField bind:value={searchFieldContents} placeholder="First or last name" />
-  </Form>
+  <SearchForm on:search={onSearch} />
   <h3>
-    {#if mostRecentSearchQuery}
-      Policies matching "{mostRecentSearchQuery}"
+    {#if searchText}
+      Policies matching "{searchText}"
     {:else}
       Recently-updated policies
     {/if}

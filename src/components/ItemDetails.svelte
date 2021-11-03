@@ -10,6 +10,7 @@ import { dependentsByPolicyId } from 'data/dependents'
 import type { PolicyItem, ItemCoverageStatus } from 'data/items'
 import { getPolicyById, loadPolicy, policies, Policy } from 'data/policies'
 import { membersByPolicyId } from 'data/policy-members'
+import { roleSelection } from 'data/role-policy-selection'
 import { formatMoney } from 'helpers/money'
 import { formatDate } from './dates'
 import { formatDistanceToNow } from 'date-fns'
@@ -41,6 +42,8 @@ $: policyMemberOptions = getPolicyMemberOptions(policyMembers)
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions]
 $: accountablePersonName = getAccountablePerson(item, accountablePersons)?.name
 
+$: isAdmin = $roleSelection !== 'User'
+
 const getItemStatusText = (item: PolicyItem) => {
   const updatedAtStr = item.updated_at ? formatDistanceToNow(Date.parse(item.updated_at), { addSuffix: true }) : ''
   const statusChangeStr = item.status_change ? `${item.status_change} ` : updatedAtStr ? 'Submitted ' : ''
@@ -71,9 +74,9 @@ const getItemStatusText = (item: PolicyItem) => {
 
   <div class="w-75">
     {#if !isCheckingOut}
-      <ItemBanner itemStatus={status}>{statusText}</ItemBanner>
+      <ItemBanner itemStatus={status} {isAdmin}>{statusText}</ItemBanner>
       {#if showRevisionMessage}
-        <MessageBanner>{item.status_reason}</MessageBanner>
+        <MessageBanner class="mt-4px">{item.status_reason}</MessageBanner>
       {/if}
     {/if}
     <h3 class="break-word">{item.make || ''} {item.model || ''}</h3>

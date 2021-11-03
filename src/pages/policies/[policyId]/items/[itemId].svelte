@@ -1,6 +1,6 @@
 <script lang="ts">
 import user, { isAdmin as checkIsAdmin } from '../../../../authn/user'
-import { Breadcrumb, Description, ItemDeleteModal } from 'components'
+import { Breadcrumb, ItemDeleteModal } from 'components'
 import { loading } from 'components/progress'
 import { formatDate } from 'components/dates'
 import { loadDependents } from 'data/dependents'

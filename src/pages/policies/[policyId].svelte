@@ -5,7 +5,7 @@ import type { PolicyMember } from 'data/policy-members'
 import { getAccountablePerson, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
 import { dependentsByPolicyId } from 'data/dependents'
 import { formatDate } from 'components/dates'
-import { isLoadingById } from 'components/progress'
+import { isLoadingById, loading } from 'components/progress'
 import { formatFriendlyDate } from 'helpers/date'
 import { formatMoney } from 'helpers/money'
 import { customerClaimDetails, itemDetails } from 'helpers/routes'
@@ -97,7 +97,7 @@ th {
   </Datatable>
 
   <h4>Items</h4>
-  {#if isLoadingById(policyId)}
+  {#if $loading && isLoadingById(`policies/${policyId}/items`)}
     Loading items...
   {:else}
     <Datatable>
@@ -128,7 +128,7 @@ th {
   {/if}
 
   <h4>Claims</h4>
-  {#if isLoadingById(policyId)}
+  {#if $loading && isLoadingById(`policies/${policyId}/claims`)}
     Loading claims...
   {:else}
     <Datatable>

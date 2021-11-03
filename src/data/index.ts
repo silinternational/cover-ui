@@ -46,7 +46,7 @@ async function customFetch<T>(method: FetchMethod, uri: string, body: any = unde
   const url = includesHost(uri) ? uri : `${process.env.API_HOST}/${uri}`
   let response = {} as Response
   try {
-    start(url)
+    start(uri)
 
     response = await fetch(url, {
       method,
@@ -62,7 +62,7 @@ async function customFetch<T>(method: FetchMethod, uri: string, body: any = unde
     //     CORS preflight failures
     throwError(e)
   } finally {
-    stop(url)
+    stop(uri)
   }
   const results = response.status === 204 /* No Content */ ? {} : await response.json()
 

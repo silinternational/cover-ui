@@ -1,5 +1,5 @@
 <script lang="ts">
-import user, { isAdmin as checkIsAdmin } from '../../../../authn/user'
+import user, { isAdmin as checkIsAdmin, UserAppRole } from '../../../../authn/user'
 import {
   determineMaxPayout,
   getFilePurpose,
@@ -125,7 +125,7 @@ $: item.name && claim.reference_number && (claimName = `${item.name} (${claim.re
 $: policyName = policy.type === 'Corporate' ? policy.account_detail : policy.household_id
 $: isAdmin = checkIsAdmin($user)
 $: adminBreadcrumbs =
-  isAdmin && $roleSelection !== 'User'
+  isAdmin && $roleSelection !== UserAppRole.Customer
     ? [
         { name: 'Policies', url: POLICIES },
         { name: policyName, url: policyDetails(policyId) },

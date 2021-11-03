@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { UserAppRole } from '../authn/user'
+import { UserAppRole } from '../authn/user'
 import type { Policy } from 'data/policies'
 import { roleSelection, recordRoleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { POLICY_NEW_CORPORATE } from 'helpers/routes'
@@ -39,7 +39,7 @@ $: householdPolicyEntries = getHouseholdEntries(myHouseholdPolicies)
 $: menuItems = [...roleEntries, ...corporatePolicyEntries, addCorporatePolicyEntry, ...householdPolicyEntries]
 
 const selectUserPolicy = (policyId: string) => {
-  recordRoleSelection('User')
+  recordRoleSelection(UserAppRole.Customer)
   dispatch('policy', policyId)
 }
 
@@ -70,26 +70,26 @@ const selectRole = (role: UserAppRole) => {
 
 const getEntriesForRole = (role: UserAppRole): MenuItem[] => {
   const specialEntriesByRole: { [role: string]: MenuItem[] } = {
-    Signator: [{ icon: 'gavel', label: 'Signator', action: () => selectRole('Signator') }],
-    Steward: [{ icon: 'gavel', label: 'Steward', action: () => selectRole('Steward') }],
+    Signator: [{ icon: 'gavel', label: 'Signator', action: () => selectRole(UserAppRole.Signator) }],
+    Steward: [{ icon: 'gavel', label: 'Steward', action: () => selectRole(UserAppRole.Steward) }],
   }
   return specialEntriesByRole[role] || []
 }
 
-const isAdminRole = (role: UserAppRole) => ['Signator', 'Steward'].includes(role)
+const isAdminRole = (role: UserAppRole) => [UserAppRole.Signator, UserAppRole.Steward].includes(role)
 
 const setInitialRoleSelection = (actualRole: UserAppRole) => {
   if (actualRole && isAdminRole(actualRole)) {
     recordRoleSelection(actualRole)
   } else {
-    recordRoleSelection('User')
+    recordRoleSelection(UserAppRole.Customer)
   }
 }
 
 // TODO: Long policy names cause the dropdown and menu to expand in an unexpected way
 // Either truncate it or do something more clever
 const getButtonText = (userAppRoleSelection: UserAppRole, policyIdSelection: string, myPolicies: Policy[]) => {
-  if (userAppRoleSelection !== 'User') {
+  if (userAppRoleSelection !== UserAppRole.Customer) {
     return userAppRoleSelection
   }
 

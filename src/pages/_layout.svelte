@@ -1,14 +1,16 @@
 <script lang="ts">
-import user, { isUserSteward } from '../authn/user'
+import user, { AdminAppRole, isAdmin } from '../authn/user'
 import { AppDrawer } from 'components'
-import { initialized as policiesInitialized, loadPolicies, Policy } from 'data/policies'
+import { initialized as policiesInitialized, loadPolicies, policies, Policy } from 'data/policies'
 import * as routes from 'helpers/routes'
 import { goto } from '@roxi/routify'
+import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 
 $: $policiesInitialized || loadPolicies()
 
-$: myPolicies = ($user.policies || []) as Policy[]
-$: myHouseholdPolicyId = $user.policy_id
+$: myPolicies = $user?.policies || []
+$: policyId = $selectedPolicyId || $user.policy_id
+$: inAdminRole = isAdmin($user) && ($roleSelection === 'Steward' || $roleSelection === 'Signator')
 
 // TODO: Update this based on the user's role and/or the RoleAndPolicyMenu selection.
 $: menuItems = [
@@ -22,10 +24,10 @@ $: menuItems = [
     url: routes.POLICIES,
     icon: 'description',
     label: 'Policies',
-    hide: !isUserSteward($user),
+    hide: !inAdminRole,
   },
   {
-    url: routes.customerClaims(myHouseholdPolicyId),
+    url: inAdminRole ? routes.adminRoleHome($roleSelection as AdminAppRole) : routes.customerClaims(policyId),
     icon: 'label',
     label: 'Claims',
   },
@@ -40,16 +42,17 @@ $: menuItems = [
   //   label: 'Chat',
   // },
   {
-    url: routes.SETTINGS_HOUSEHOLD,
+    url: routes.settingsPolicy(policyId),
     icon: 'settings',
     label: 'Settings',
     tooltip: 'Group Settings',
   },
   {
-    url: routes.itemsNew(myHouseholdPolicyId),
+    url: routes.itemsNew(policyId),
     icon: 'add_circle',
     label: 'Add Item',
     button: true,
+    hide: inAdminRole,
   },
 ]
 

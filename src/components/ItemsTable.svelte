@@ -1,5 +1,5 @@
 <script lang="ts">
-import { ItemDeleteModal } from 'components'
+import ItemDeleteModal from './ItemDeleteModal.svelte'
 import { formatDate } from 'components/dates'
 import { AccountablePersonOptions, getAccountablePerson } from 'data/accountablePersons'
 import type { PolicyItem } from 'data/items'

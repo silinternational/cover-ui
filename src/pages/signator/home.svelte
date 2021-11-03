@@ -4,7 +4,7 @@ import { loading } from 'components/progress'
 import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
 import { Claim, claims, initialized as claimsInitialized, loadClaims, statusesAwaitingSignator } from 'data/claims'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
-import { itemsByPolicyId, loadItems } from 'data/items'
+import { allPolicyItems, itemsByPolicyId, loadItems } from 'data/items'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import { loadRecentActivity, recentChanges } from 'data/recent-activity'
 import { goto } from '@roxi/routify'
@@ -18,7 +18,7 @@ $: $claimsInitialized || loadClaims()
 $: claimsAwaitingSignator = $claims.filter(isAwaitingSignator)
 $: claimsAwaitingSignator.map((claim) => claim.policy_id).forEach(loadDataOnce)
 
-$: items = [].concat(...Object.values($itemsByPolicyId))
+$: items = $allPolicyItems
 $: dependents = [].concat(...Object.values($dependentsByPolicyId))
 $: policyMembers = [].concat(...Object.values($membersByPolicyId))
 

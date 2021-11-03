@@ -1,8 +1,9 @@
 import { loadUser } from '../authn/user'
-import { get, writable } from 'svelte/store'
+import { derived, get, writable } from 'svelte/store'
 import type { Claim } from './claims'
 import { CREATE, GET, UPDATE } from './index'
 import type { PolicyMember } from './policy-members'
+import { selectedPolicyId } from './role-policy-selection'
 import qs from 'qs'
 
 export type Policy = {
@@ -39,6 +40,9 @@ export type UpdatePolicyRequestBody = {
 }
 
 export const policies = writable<Policy[]>([])
+export const selectedPolicy = derived([policies, selectedPolicyId], ([policies, selectedPolicyId]) => {
+  return policies.find((p) => p.id === selectedPolicyId) || {}
+})
 export const initialized = writable<boolean>(false)
 
 /**
@@ -136,4 +140,11 @@ export const affiliations = writable<{ [key: string]: string }>({
 export const getPolicyById = (policyId: string): Policy => {
   const policy = get(policies).find((policy) => policy.id === policyId) || ({} as Policy)
   return policy
+}
+
+export const memberBelongsToPolicy = (memberId: string, policies: Policy[], policyId: string): boolean => {
+  const policy = policies?.find((p) => p.id === policyId)
+  const member = policy?.members?.find((m) => m.id === memberId)
+
+  return !!member
 }

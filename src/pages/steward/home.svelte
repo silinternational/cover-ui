@@ -4,7 +4,7 @@ import { loading } from 'components/progress'
 import { getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
 import { Claim, claims, initialized as claimsInitialized, loadClaims, statusesAwaitingSteward } from 'data/claims'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
-import { itemsByPolicyId, loadItems } from 'data/items'
+import { allPolicyItems, itemsByPolicyId, loadItems } from 'data/items'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import { loadRecentActivity, recentChanges } from 'data/recent-activity'
 import { customerClaimDetails } from 'helpers/routes'
@@ -19,7 +19,7 @@ $: $claimsInitialized || loadClaims()
 $: claimsAwaitingSteward = $claims.filter(isAwaitingSteward)
 $: claimsAwaitingSteward.map((claim) => claim.policy_id).forEach(loadDataOnce)
 
-$: items = [].concat(...Object.values($itemsByPolicyId))
+$: items = $allPolicyItems
 $: dependents = [].concat(...Object.values($dependentsByPolicyId))
 $: policyMembers = [].concat(...Object.values($membersByPolicyId))
 

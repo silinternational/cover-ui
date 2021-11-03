@@ -2,8 +2,9 @@
 import user from '../authn/user'
 import { CUSTOMER_HOME } from 'helpers/routes'
 import { redirect } from '@roxi/routify'
+import { roleSelection } from 'data/role-policy-selection'
 
-$: $user.app_role && sendToRoleHome($user.app_role)
+$: sendToRoleHome($roleSelection)
 
 const sendToRoleHome = (appRole: string) => {
   switch (appRole) {

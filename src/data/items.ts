@@ -1,6 +1,7 @@
 import { CREATE, DELETE, GET, UPDATE } from '.'
 import { throwError } from '../error'
-import { writable } from 'svelte/store'
+import { derived, writable } from 'svelte/store'
+import { selectedPolicyId } from './role-policy-selection'
 
 export type ItemCoverageStatus = 'Draft' | 'Pending' | 'Approved' | 'Denied' | 'Revision' | 'Inactive'
 
@@ -73,6 +74,15 @@ export type UpdatePolicyItemRequestBody = {
 }
 
 export const itemsByPolicyId = writable<{ [policyId: string]: PolicyItem[] }>({})
+export const allPolicyItems = derived(itemsByPolicyId, (itemsByPolicyId) => {
+  return Object.values(itemsByPolicyId).flat()
+})
+export const selectedPolicyItems = derived(
+  [itemsByPolicyId, selectedPolicyId],
+  ([itemsByPolicyId, selectedPolicyId]) => {
+    return itemsByPolicyId[selectedPolicyId] || []
+  }
+)
 
 /**
  * Load the items for the specified policy.

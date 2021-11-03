@@ -1,5 +1,5 @@
 <script lang="ts">
-import { loadPolicy, Policy } from 'data/policies'
+import { getNameOfPolicy, loadPolicy, Policy } from 'data/policies'
 import { loadItems, selectedPolicyItems } from 'data/items'
 import type { PolicyMember } from 'data/policy-members'
 import { getAccountablePerson, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
@@ -56,7 +56,7 @@ th {
     {#if policy.type === 'Corporate'}
       <tr>
         <th>Name</th>
-        <td>{policy.name}</td>
+        <td>{getNameOfPolicy(policy)}</td>
       </tr>
       <tr>
         <th>Account</th>

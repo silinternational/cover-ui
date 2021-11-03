@@ -111,6 +111,18 @@ export function clear(): void {
   initialized.set(false)
 }
 
+export const getNameOfPolicy = (policy: Policy): string => {
+  let policyName = ''
+  if (policy?.type === 'Corporate') {
+    policyName = policy?.name || 'Corporate'
+  } else if (policy?.type === 'Household') {
+    const members = policy?.members || []
+    const lastName = members[0]?.last_name || ''
+    policyName = lastName + ' Household'
+  }
+  return policyName.trim()
+}
+
 //claims or members/dependents fields from this endpoint are deprecated
 export async function loadPolicies(): Promise<void> {
   const response = await GET<{ data: Policy[]; meta: any }>('policies')

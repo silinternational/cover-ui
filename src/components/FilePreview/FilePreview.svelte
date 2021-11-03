@@ -1,22 +1,25 @@
 <script lang="ts">
+import Banner from '../components/Banner.svelte'
+import type { ClaimFile } from 'data/claims'
 import { formatDate } from '../dates'
-import { Button, Progress } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 import { flip } from 'svelte/animate'
+import { Button, Progress } from '@silintl/ui-components'
 
-export let previews = []
-export let uploading = false
+export let previews = [] as ClaimFile[]
+export let uploading: boolean = false
+export let isMemberOfPolicy: boolean = false
 
-let selectedId = ''
+let selectedId: string = ''
 
 const dispatch = createEventDispatcher()
 
-const isSelected = {}
+const isSelected = {} as any
 
 $: isSelected[selectedId] = true
 $: selectedId && setOthersFalse(selectedId)
 
-const setOthersFalse = (id) => {
+const setOthersFalse = (id: string) => {
   for (const key of Object.keys(isSelected)) {
     if (key != id) {
       isSelected[key] = false
@@ -24,13 +27,13 @@ const setOthersFalse = (id) => {
   }
 }
 
-const onClick = (id) => {
+const onClick = (id: string) => {
   selectedId = id
 
   dispatch('preview', id)
 }
 
-function onDelete(event, id) {
+function onDelete(event: CustomEvent, id: string) {
   event.preventDefault()
   event.stopPropagation()
 
@@ -41,6 +44,9 @@ function onDelete(event, id) {
 <style>
 .preview {
   background-color: hsla(213, 26%, 23%, 1);
+}
+.preview:hover {
+  background-color: hsla(213, 26%, 23%, 0.8);
 }
 .selected {
   background-color: hsla(213, 26%, 23%, 0.6);
@@ -59,7 +65,13 @@ function onDelete(event, id) {
         <p class="white my-0">{preview.file.name}</p>
         <p class="white my-0">{formatDate(preview.created_at)}</p>
       </div>
-      <Button class="delete-button" raised on:click={(evt) => onDelete(evt, preview.id)}>Delete</Button>
+      {#if isMemberOfPolicy}
+        <Button class="delete-button" raised on:click={(evt) => onDelete(evt, preview.id)}>Delete</Button>
+      {:else if preview.purpose}
+        <Banner class="mdc-bold-font" color="hsla(213, 8%, 46%, 1)" background="hsla(213, 22%, 94%, 1)"
+          >{preview.purpose}</Banner
+        >
+      {/if}
     </div>
   {/each}
   {#if uploading}

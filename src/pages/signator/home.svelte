@@ -52,6 +52,7 @@ const onGotoClaim = (event: CustomEvent<Claim>) => $goto(`/signator/claims/${eve
   </Row>
 
   <Row cols={'12'}>
+    <h3>Recent activity</h3>
     <RecentActivityTable {dependents} loading={$loading} {policyMembers} recentChanges={$recentChanges} />
   </Row>
 </Page>

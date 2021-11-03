@@ -21,6 +21,7 @@ import RadioOptions from './RadioOptions.svelte'
 import RecentActivityTable from './RecentActivityTable.svelte'
 import Row from './mdc/Row.svelte'
 import ClaimBanner from './banners/ClaimBanner.svelte'
+import SearchForm from './forms/SearchForm.svelte'
 import StatusBanner from './banners/StatusBanner.svelte'
 import MessageBanner from './banners/MessageBanner.svelte'
 import SearchableSelect from './SearchableSelect.svelte'
@@ -50,6 +51,7 @@ export {
   Row,
   ClaimBanner,
   SearchableSelect,
+  SearchForm,
   StatusBanner,
   MessageBanner,
 }

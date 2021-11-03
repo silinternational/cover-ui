@@ -26,7 +26,7 @@ export type PolicyType = 'Household' | 'Corporate'
 
 export type CreatePolicyRequestBody = {
   account: string
-  account_detail: string
+  account_detail?: string
   cost_center: string
   entity_code: string
   name: string

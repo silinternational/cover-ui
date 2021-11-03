@@ -1,18 +1,19 @@
 import { get, writable } from 'svelte/store'
 import { CREATE, GET, UPDATE } from 'data'
+import type { Policy } from 'data/policies'
 
 export type AdminAppRole = 'Steward' | 'Signator'
 export type UserAppRole = 'User' | AdminAppRole
 
 export type User = {
   app_role: UserAppRole
+  country: string
   email: string
   email_override: string
   first_name: string
   id: string
   last_login_utc: string /*Date*/
   last_name: string
-  country: string
   name: string
   photo_file: {
     content_type: string
@@ -24,6 +25,7 @@ export type User = {
     url_expiration: string /*Date*/
   }
   photo_file_id: string
+  policies: Policy[]
   policy_id: string
 }
 

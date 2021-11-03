@@ -8,7 +8,7 @@ import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 
 $: $policiesInitialized || loadPolicies()
 
-$: myPolicies = $policies.filter((p) => p.members?.some((m) => m.id === $user.id))
+$: myPolicies = $user?.policies || []
 $: policyId = $selectedPolicyId || $user.policy_id
 $: inAdminRole = isAdmin($user) && ($roleSelection === 'Steward' || $roleSelection === 'Signator')
 

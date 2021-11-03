@@ -82,7 +82,7 @@ $: items = $selectedPolicyItems
 $: policyId && loadItems(policyId)
 $: item = items.find((itm) => itm.id === claimItem.item_id) || ({} as PolicyItem)
 
-$: isMemberOfPolicy = memberBelongsToPolicy($user.id, $policies, item.policy_id)
+$: isMemberOfPolicy = memberBelongsToPolicy($user.id, $policies, policyId)
 
 // Accountable persons
 $: policyId && loadDependents(policyId)

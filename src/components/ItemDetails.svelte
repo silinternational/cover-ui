@@ -18,6 +18,7 @@ import { onMount } from 'svelte'
 export let item: PolicyItem
 export let isCheckingOut: boolean
 export let policyId: string
+export let isMemberOfPolicy: boolean
 
 let policy: Policy
 let accountablePersons: AccountablePersonOptions[]
@@ -40,6 +41,8 @@ $: policyMemberOptions = getPolicyMemberOptions(policyMembers)
 
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions]
 $: accountablePersonName = getAccountablePerson(item, accountablePersons)?.name
+
+$: isAdmin = !isMemberOfPolicy
 
 const getItemStatusText = (item: PolicyItem) => {
   const updatedAtStr = item.updated_at ? formatDistanceToNow(Date.parse(item.updated_at), { addSuffix: true }) : ''
@@ -71,9 +74,9 @@ const getItemStatusText = (item: PolicyItem) => {
 
   <div class="w-75">
     {#if !isCheckingOut}
-      <ItemBanner itemStatus={status}>{statusText}</ItemBanner>
+      <ItemBanner itemStatus={status} {isAdmin}>{statusText}</ItemBanner>
       {#if showRevisionMessage}
-        <MessageBanner>{item.status_reason}</MessageBanner>
+        <MessageBanner class="mt-4px">{item.status_reason}</MessageBanner>
       {/if}
     {/if}
     <h3 class="break-word">{item.make || ''} {item.model || ''}</h3>

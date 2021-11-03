@@ -46,10 +46,7 @@ export const commonStates: { [stateName: string]: State } = {
     bgColor: '--mdc-theme-status-error-bg',
     title: 'Denied',
   },
-  Revision: {
-    ...pending,
-    title: 'Awaiting changes',
-  },
+  Revision: warning,
   Draft: {
     icon: 'edit',
     color: '--mdc-theme-primary',
@@ -85,9 +82,9 @@ export const adminClaimStates: { [stateName: string]: State } = {
   Review1: needsReview,
   Review2: needsReview,
   Review3: { ...needsReview, title: 'Needs final claim review' },
-  Revision: { ...pending, title: 'Needs changes' },
+  Revision: { ...pending, title: 'Awaiting changes' },
   Receipt: { ...pending, icon: 'check_circle', title: 'Approved' },
-  ReceiptSecondary: { ...pending, title: 'Needs changes' },
+  ReceiptSecondary: { ...pending, title: 'Awaiting changes' },
   Approved: { ...pending, title: 'Approved for payout', icon: 'paid' },
 }
 
@@ -96,6 +93,10 @@ export const itemStates: { [stateName: string]: State } = {
   Approved: { ...approved, title: 'Approved' },
   Inactive: { ...pending, title: 'This item has no coverage', icon: 'umbrella' },
   Pending: { ...pending, title: 'Awaiting item coverage review' },
+}
+export const adminItemStates: { [stateName: string]: State } = {
+  ...itemStates,
+  Revision: { ...pending, title: 'Awaiting changes' },
 }
 
 export const getClaimState = (status: ClaimStatus, isAdmin = false): State => {
@@ -112,9 +113,16 @@ export const getClaimState = (status: ClaimStatus, isAdmin = false): State => {
   }
 }
 
-export const getItemState = (status: ItemCoverageStatus): State => {
-  if (itemStates[status] === undefined) {
-    console.error('No such state (for claim/item status):', status, Object.keys(itemStates))
+export const getItemState = (status: ItemCoverageStatus, isAdmin = false): State => {
+  if (isAdmin) {
+    adminItemStates[status] === undefined &&
+      console.error('No such state (for item status):', status, Object.keys(adminItemStates))
+
+    return adminItemStates[status] || ({} as State)
+  } else {
+    itemStates[status] === undefined &&
+      console.error('No such state (for item status):', status, Object.keys(itemStates))
+
+    return itemStates[status] || ({} as State)
   }
-  return (itemStates[status] || {}) as State
 }

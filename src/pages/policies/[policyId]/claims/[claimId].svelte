@@ -123,14 +123,13 @@ $: maximumPayout = determineMaxPayout(payoutOption, claimItem, item.coverage_amo
 // Dynamic breadcrumbs data:
 $: item.name && claim.reference_number && (claimName = `${item.name} (${claim.reference_number})`)
 $: policyName = policy.type === 'Corporate' ? policy.account_detail : policy.household_id
-$: isAdmin = checkIsAdmin($user)
-$: adminBreadcrumbs =
-  isAdmin && $roleSelection !== 'User'
-    ? [
-        { name: 'Policies', url: POLICIES },
-        { name: policyName, url: policyDetails(policyId) },
-      ]
-    : []
+$: isAdmin = $roleSelection !== 'Customer'
+$: adminBreadcrumbs = isAdmin
+  ? [
+      { name: 'Policies', url: POLICIES },
+      { name: policyName, url: policyDetails(policyId) },
+    ]
+  : []
 const claimsBreadcrumb = { name: 'Claims', url: customerClaims(policyId) }
 $: thisClaimBreadcrumb = { name: claimName || 'This item', url: customerClaimDetails(policyId, claimId) }
 $: breadcrumbLinks = [...adminBreadcrumbs, claimsBreadcrumb, thisClaimBreadcrumb]

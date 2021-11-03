@@ -47,7 +47,7 @@ const getCorporatePolicyEntries = (policies: Policy[]): MenuItem[] => {
   return policies.map((policy: Policy): MenuItem => {
     return {
       icon: 'work',
-      label: policy.account_detail,
+      label: policy.name || 'Corporate',
       action: () => selectUserPolicy(policy.id),
     }
   })
@@ -95,7 +95,7 @@ const getButtonText = (userAppRoleSelection: UserAppRole, policyIdSelection: str
 
   const policy = myPolicies.find((policy) => policy.id === policyIdSelection)
   if (policy && isCorporatePolicy(policy)) {
-    return policy.account_detail
+    return policy.name || 'Corporate'
   }
 
   return 'Household'

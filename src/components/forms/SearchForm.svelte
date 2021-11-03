@@ -4,7 +4,10 @@ import { Form, TextField } from '@silintl/ui-components'
 
 const dispatch = createEventDispatcher()
 
-let searchFieldContents = ''
+export let initial = ''
+
+let searchFieldContents: string
+$: searchFieldContents = initial
 
 const onSubmit = () => dispatch('search', searchFieldContents)
 </script>

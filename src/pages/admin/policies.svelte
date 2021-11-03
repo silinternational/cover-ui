@@ -34,7 +34,7 @@ const onSearch = (event: CustomEvent) => {
 </style>
 
 <Page>
-  <SearchForm on:search={onSearch} />
+  <SearchForm initial={searchText} on:search={onSearch} />
   <h3>
     {#if searchText}
       Policies matching "{searchText}"

@@ -157,7 +157,7 @@ const onReviseItem = () => {
     </div>
 
     <ItemDeleteModal open={deleteDialgoOpen} {item} on:closed={handleRemoveDialog} />
-    <ItemDetails {item} {policyId} {isMemberOfPolicy} />
+    <ItemDetails {item} {policyId} />
 
     <br />
     {#if status === 'Approved' && isMemberOfPolicy}

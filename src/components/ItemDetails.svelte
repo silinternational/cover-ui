@@ -10,6 +10,7 @@ import { dependentsByPolicyId } from 'data/dependents'
 import type { PolicyItem, ItemCoverageStatus } from 'data/items'
 import { getPolicyById, loadPolicy, policies, Policy } from 'data/policies'
 import { membersByPolicyId } from 'data/policy-members'
+import { roleSelection } from 'data/role-policy-selection'
 import { formatMoney } from 'helpers/money'
 import { formatDate } from './dates'
 import { formatDistanceToNow } from 'date-fns'
@@ -18,7 +19,6 @@ import { onMount } from 'svelte'
 export let item: PolicyItem
 export let isCheckingOut: boolean
 export let policyId: string
-export let isMemberOfPolicy: boolean
 
 let policy: Policy
 let accountablePersons: AccountablePersonOptions[]
@@ -42,7 +42,7 @@ $: policyMemberOptions = getPolicyMemberOptions(policyMembers)
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions]
 $: accountablePersonName = getAccountablePerson(item, accountablePersons)?.name
 
-$: isAdmin = !isMemberOfPolicy
+$: isAdmin = $roleSelection !== 'User'
 
 const getItemStatusText = (item: PolicyItem) => {
   const updatedAtStr = item.updated_at ? formatDistanceToNow(Date.parse(item.updated_at), { addSuffix: true }) : ''

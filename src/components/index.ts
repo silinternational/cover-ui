@@ -14,6 +14,7 @@ import FileDropArea from './FileDropArea'
 import FilePreview from './FilePreview'
 import ItemBanner from './banners/ItemBanner.svelte'
 import ItemDeleteModal from './ItemDeleteModal.svelte'
+import ItemDetails from './ItemDetails.svelte'
 import ItemForm from './forms/ItemForm.svelte'
 import ItemsTable from './ItemsTable.svelte'
 import MoneyInput from './MoneyInput.svelte'
@@ -40,6 +41,7 @@ export {
   FilePreview,
   ItemBanner,
   ItemDeleteModal,
+  ItemDetails,
   ItemForm,
   ItemsTable,
   MoneyInput,

@@ -2,8 +2,11 @@ import { get, writable } from 'svelte/store'
 import { CREATE, GET, UPDATE } from 'data'
 import type { Policy } from 'data/policies'
 
-export type AdminAppRole = 'Steward' | 'Signator'
-export type UserAppRole = 'User' | AdminAppRole
+export enum UserAppRole {
+  Customer = 'Customer',
+  Steward = 'Steward',
+  Signator = 'Signator',
+}
 
 export type User = {
   app_role: UserAppRole
@@ -61,9 +64,9 @@ export const clear = (): void => {
   user.set({} as User)
 }
 
-export const isUserSteward = (user: User): boolean => user.app_role === 'Steward'
+export const isUserSteward = (user: User): boolean => user.app_role === UserAppRole.Steward
 
-export const isSignator = (user: User): boolean => user.app_role === 'Signator'
+export const isSignator = (user: User): boolean => user.app_role === UserAppRole.Signator
 
 export const isAdmin = (user: User): boolean => isUserSteward(user) || isSignator(user)
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-import user, { AdminAppRole, isAdmin } from '../authn/user'
+import user, { isAdmin, UserAppRole } from '../authn/user'
 import { AppDrawer } from 'components'
 import { initialized as policiesInitialized, loadPolicies, policies, Policy } from 'data/policies'
 import * as routes from 'helpers/routes'
@@ -10,7 +10,7 @@ $: $policiesInitialized || loadPolicies()
 
 $: myPolicies = $user?.policies || []
 $: policyId = $selectedPolicyId || $user.policy_id
-$: inAdminRole = isAdmin($user) && ($roleSelection === 'Steward' || $roleSelection === 'Signator')
+$: inAdminRole = isAdmin($user) && ($roleSelection === UserAppRole.Steward || $roleSelection === UserAppRole.Signator)
 
 // TODO: Update this based on the user's role and/or the RoleAndPolicyMenu selection.
 $: menuItems = [
@@ -27,7 +27,7 @@ $: menuItems = [
     hide: !inAdminRole,
   },
   {
-    url: inAdminRole ? routes.adminRoleHome($roleSelection as AdminAppRole) : routes.customerClaims(policyId),
+    url: inAdminRole ? routes.adminRoleHome($roleSelection) : routes.customerClaims(policyId),
     icon: 'label',
     label: 'Claims',
   },

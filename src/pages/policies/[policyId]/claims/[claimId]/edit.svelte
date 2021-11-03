@@ -60,7 +60,7 @@ const onSubmit = async (event: CustomEvent) => {
 }
 </script>
 
-{#if $loading && isLoadingById(`claimss/${claimId}`)}
+{#if $loading && isLoadingById(`claims/${claimId}`)}
   Loading...
 {:else if claims && !claim.id}
   We could not find that claim. Please

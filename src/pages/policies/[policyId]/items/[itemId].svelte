@@ -8,25 +8,25 @@ import {
   approveItem,
   deleteItem,
   denyItem,
-  itemBelongsToPolicy,
   ItemCoverageStatus,
-  itemsByPolicyId,
   loadItems,
   PolicyItem,
   reviseItem,
+  selectedPolicyItems,
 } from 'data/items'
-import { loadPolicy, policies, Policy } from 'data/policies'
+import { loadPolicy, memberBelongsToPolicy, policies, Policy } from 'data/policies'
 import { loadMembersOfPolicy } from 'data/policy-members'
 import { loadPolicyItemHistory, policyHistoryByItemId } from 'data/policy-history'
 import ItemDetails from 'ItemDetails.svelte'
 import { items as itemsRoute, itemDetails, itemEdit, itemNewClaim, POLICIES, policyDetails } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
-import { goto, metatags, params, redirect } from '@roxi/routify'
+import { goto, metatags, redirect } from '@roxi/routify'
 import { Button, Page, Datatable, Dialog, TextArea, Form, setNotice } from '@silintl/ui-components'
 import { onMount } from 'svelte'
+import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 
 export let itemId: string
-export let policyId: string = $params.policyId
+export let policyId = $selectedPolicyId
 
 onMount(() => {
   loadItems(policyId)
@@ -38,18 +38,18 @@ let denyDialogOpen = false
 let denyDialogButtons: Dialog.AlertButton[] = []
 let denyDialogMessage: string
 
-$: isAdmin = checkIsAdmin($user)
+$: isAdmin = checkIsAdmin($user) && $roleSelection !== 'User'
 
 // Accountable persons
 $: policyId && loadDependents(policyId)
 
 $: policyId && loadMembersOfPolicy(policyId)
 
-$: items = $itemsByPolicyId[policyId] || []
+$: items = $selectedPolicyItems
 $: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
 $: itemName = item.name || ''
 $: status = (item.coverage_status || '') as ItemCoverageStatus
-$: isMemberOfPolicy = itemBelongsToPolicy($user.policy_id, item)
+$: isMemberOfPolicy = memberBelongsToPolicy($user.id, $policies, item.policy_id)
 $: status === 'Draft' && isMemberOfPolicy && editItemRedirect()
 
 $: policyId && item.id && loadPolicyItemHistory(policyId, item.id)
@@ -61,7 +61,7 @@ $: allowRemoveCovereage = (!['Inactive', 'Denied'].includes(status) && isMemberO
 $: canEdit = ['Draft', 'Pending', 'Revision'].includes(status) && isMemberOfPolicy
 
 // Dynamic breadcrumbs data:
-$: policyName = policy.type === 'Corporate' ? policy.account : policy.household_id
+$: policyName = policy.type === 'Corporate' ? policy.account_detail : policy.household_id
 $: adminBreadcrumbs = isAdmin
   ? [
       { name: 'Policies', url: POLICIES },

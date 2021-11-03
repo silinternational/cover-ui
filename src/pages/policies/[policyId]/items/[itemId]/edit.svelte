@@ -4,14 +4,15 @@ import { Breadcrumb, ItemBanner, ItemForm } from 'components'
 import { loading } from 'components/progress'
 import { loadDependents } from 'data/dependents'
 import { loadMembersOfPolicy } from 'data/policy-members'
-import { deleteItem, itemsByPolicyId, loadItems, PolicyItem, submitItem, updateItem } from 'data/items'
+import { deleteItem, loadItems, PolicyItem, selectedPolicyItems, submitItem, updateItem } from 'data/items'
+import { selectedPolicyId } from 'data/role-policy-selection'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { HOME, items as itemsRoute, itemDetails, itemEdit } from 'helpers/routes'
-import { goto, metatags, params } from '@roxi/routify'
+import { goto, metatags } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
 export let itemId: string
-export let policyId: string = $params.policyId
+export let policyId = $selectedPolicyId
 
 let isCheckingOut: boolean = false
 
@@ -19,7 +20,7 @@ $: policyId && loadDependents(policyId)
 $: policyId && loadMembersOfPolicy(policyId)
 
 $: policyId && loadItems(policyId)
-$: items = $itemsByPolicyId[policyId] || []
+$: items = $selectedPolicyItems
 $: item = items.find((anItem) => anItem.id === itemId) || ({} as PolicyItem)
 $: itemName = item.name || ''
 

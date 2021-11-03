@@ -1,6 +1,7 @@
 <script lang="ts">
-import { SETTINGS_HOUSEHOLD } from 'helpers/routes'
+import { settingsPolicy } from 'helpers/routes'
+import user from '../authn/user'
 import { redirect } from '@roxi/routify'
 
-$redirect(SETTINGS_HOUSEHOLD)
+$: $user.policy_id && $redirect(settingsPolicy($user.policy_id))
 </script>

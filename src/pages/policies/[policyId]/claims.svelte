@@ -1,26 +1,34 @@
 <script lang="ts">
+import user, { isAdmin } from '../../../authn/user'
 import { ClaimCards, Row, Breadcrumb } from 'components'
 import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
-import { Claim, claims, loadClaimsByPolicyId } from 'data/claims'
+import { Claim, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
-import { itemsByPolicyId, loadItems } from 'data/items'
+import { loadItems, selectedPolicyItems } from 'data/items'
+import { selectedPolicy } from 'data/policies'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
-import { customerClaims, customerClaimDetails, customerClaimsNew } from 'helpers/routes'
+import { roleSelection } from 'data/role-policy-selection'
+import { customerClaims, customerClaimDetails, POLICIES, policyDetails } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
-import { Page, Button } from '@silintl/ui-components'
+import { Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 export let policyId: string
+$: policy = $selectedPolicy
 
-const breadcrumbLinks = [{ name: 'Claims', url: customerClaims(policyId) }]
+$: policyName = policy.type === 'Corporate' ? policy.account_detail : policy.household_id
+$: adminBreadcrumbs =
+  isAdmin($user) && $roleSelection !== 'User'
+    ? [
+        { name: 'Policies', url: POLICIES },
+        { name: policyName, url: policyDetails(policyId) },
+      ]
+    : []
 
-$: policyId && loadItems(policyId)
-$: policyId && loadClaimsByPolicyId(policyId)
-$: policyId && loadDependents(policyId)
-$: policyId && loadMembersOfPolicy(policyId)
+$: breadcrumbLinks = [...adminBreadcrumbs, { name: 'Claims', url: customerClaims(policyId) }]
 
-$: items = $itemsByPolicyId[policyId] || []
+$: items = $selectedPolicyItems
 
 $: dependents = $dependentsByPolicyId[policyId] || []
 $: dependentOptions = getDependentOptions(dependents)
@@ -30,7 +38,12 @@ $: policyMemberOptions = getPolicyMemberOptions(policyMembers)
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions] as AccountablePersonOptions[]
 $: metatags.title = formatPageTitle('Claims')
 
-onMount(() => loadClaimsByPolicyId(policyId))
+onMount(() => {
+  loadItems(policyId)
+  loadClaimsByPolicyId(policyId)
+  loadDependents(policyId)
+  loadMembersOfPolicy(policyId)
+})
 
 const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(event.detail.policy_id, event.detail.id))
 </script>
@@ -42,8 +55,8 @@ const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(ev
   </Row> -->
 
   <Row cols={'12'}>
-    {#if $claims.length}
-      <ClaimCards {accountablePersons} claims={$claims} {items} on:goto-claim={onGotoClaim} />
+    {#if $selectedPolicyClaims.length}
+      <ClaimCards {accountablePersons} claims={$selectedPolicyClaims} {items} on:goto-claim={onGotoClaim} />
     {:else}
       No claims at this time.
     {/if}

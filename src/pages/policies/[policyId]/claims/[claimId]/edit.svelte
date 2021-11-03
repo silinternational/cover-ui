@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Breadcrumb, ClaimBanner, ClaimForm } from 'components'
-import { isLoadingById } from 'components/progress'
+import { isLoadingById, loading } from 'components/progress'
 import {
   ClaimItem,
   claims,
@@ -60,7 +60,7 @@ const onSubmit = async (event: CustomEvent) => {
 }
 </script>
 
-{#if isLoadingById(claimId)}
+{#if $loading && isLoadingById(`claims/${claimId}`)}
   Loading...
 {:else if claims && !claim.id}
   We could not find that claim. Please

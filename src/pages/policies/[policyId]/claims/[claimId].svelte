@@ -182,7 +182,7 @@ const onPreview = (event: CustomEvent<string>) => {
 
 const onImgError = () => (showImg = false)
 
-const onBlur = () => {
+const onMoneyInputBlur = () => {
   assertHas(
     needsRepairReceipt || needsReplaceReceipt,
     `You do not need to enter a value for payout option: ${payoutOption}`
@@ -327,7 +327,7 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
 
       {#if isMemberOfPolicy}
         {#if needsReceipt}
-          <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onBlur} />
+          <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onMoneyInputBlur} />
 
           <p class="label ml-1 mt-6px">
             <ConvertCurrencyLink />

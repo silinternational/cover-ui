@@ -309,6 +309,7 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
           {noFilesUploaded}
           {needsFile}
           {claim}
+          {isAdmin}
           {isMemberOfPolicy}
           on:ask-for-changes={onAskForChanges}
           on:deny={onDenyClaim}

@@ -11,6 +11,7 @@ export const approved = {
   icon: 'paid',
   color: '--mdc-theme-status-success',
   bgColor: '--mdc-theme-status-success-bg',
+  title: 'Approved',
 }
 
 export const needsReview: State = {
@@ -63,16 +64,9 @@ export const claimStates: { [stateName: string]: State } = {
   Review2: pendingClaim,
   Review3: pendingClaim,
   ReceiptSecondary: warning,
-  Receipt: {
-    icon: 'done',
-    color: '--mdc-theme-status-success',
-    bgColor: '--mdc-theme-status-success-bg',
-    title: 'Approved',
-  },
+  Receipt: { ...approved, icon: 'done' },
   Paid: {
-    icon: 'paid',
-    color: '--mdc-theme-status-success',
-    bgColor: '--mdc-theme-status-success-bg',
+    ...approved,
     title: 'Complete',
   },
 }
@@ -90,7 +84,7 @@ export const adminClaimStates: { [stateName: string]: State } = {
 
 export const itemStates: { [stateName: string]: State } = {
   ...commonStates,
-  Approved: { ...approved, title: 'Approved' },
+  Approved: approved,
   Inactive: { ...pending, title: 'This item has no coverage', icon: 'umbrella' },
   Pending: { ...pending, title: 'Awaiting item coverage review' },
 }

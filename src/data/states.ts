@@ -80,7 +80,7 @@ export const claimStates: { [stateName: string]: State } = {
 export const adminClaimStates: { [stateName: string]: State } = {
   ...claimStates,
   Review1: needsReview,
-  Review2: needsReview,
+  Review2: { ...needsReview, title: 'Needs receipt review' },
   Review3: { ...needsReview, title: 'Needs final claim review' },
   Revision: { ...pending, title: 'Awaiting changes' },
   Receipt: { ...pending, icon: 'check_circle', title: 'Approved' },

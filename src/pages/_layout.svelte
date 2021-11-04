@@ -27,7 +27,7 @@ $: menuItems = [
     hide: !inAdminRole,
   },
   {
-    url: inAdminRole ? routes.adminRoleHome($roleSelection) : routes.customerClaims(policyId),
+    url: inAdminRole ? routes.ADMIN_HOME : routes.customerClaims(policyId),
     icon: 'label',
     label: 'Claims',
   },
@@ -57,9 +57,9 @@ $: menuItems = [
 ]
 
 const goToPolicyAsCustomer = (event: CustomEvent) => $goto(routes.policyHome(event.detail))
-const goToRoleHome = (event: CustomEvent) => $goto(routes.adminRoleHome(event.detail))
+const goToAdminHome = () => $goto(routes.ADMIN_HOME)
 </script>
 
-<AppDrawer {menuItems} {myPolicies} role={$user.app_role} on:policy={goToPolicyAsCustomer} on:role={goToRoleHome}>
+<AppDrawer {menuItems} {myPolicies} role={$user.app_role} on:policy={goToPolicyAsCustomer} on:role={goToAdminHome}>
   <slot />
 </AppDrawer>

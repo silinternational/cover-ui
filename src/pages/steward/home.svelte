@@ -1,15 +1,9 @@
 <script lang="ts">
+import { UserAppRole } from '../../authn/user'
 import { ClaimCards, RecentActivityTable, Row } from 'components'
 import { loading } from 'components/progress'
 import { getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
-import {
-  Claim,
-  claims,
-  getClaimsAwaitingAdmin,
-  initialized as claimsInitialized,
-  getClaimsAwaitingAdmin,
-  statusesAwaitingSteward,
-} from 'data/claims'
+import { Claim, getClaimsAwaitingAdmin } from 'data/claims'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { allPolicyItems, itemsByPolicyId, loadItems } from 'data/items'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
@@ -18,7 +12,6 @@ import { roleSelection } from 'data/role-policy-selection'
 import { customerClaimDetails } from 'helpers/routes'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
-import { UserAppRole } from '../../authn/user'
 
 let claimsAwaitingSteward: Claim[] = []
 

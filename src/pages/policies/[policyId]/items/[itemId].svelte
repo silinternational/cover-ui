@@ -1,5 +1,5 @@
 <script lang="ts">
-import user, { isAdmin as checkIsAdmin, UserAppRole } from '../../../../authn/user'
+import user, { UserAppRole } from '../../../../authn/user'
 import { Breadcrumb, ItemDeleteModal, ItemDetails } from 'components'
 import { loading } from 'components/progress'
 import { formatDate } from 'components/dates'
@@ -37,7 +37,7 @@ let denyDialogOpen = false
 let denyDialogButtons: Dialog.AlertButton[] = []
 let denyDialogMessage: string
 
-$: isAdmin = checkIsAdmin($user) && $roleSelection !== UserAppRole.Customer
+$: isAdmin = $roleSelection !== UserAppRole.Customer
 
 // Accountable persons
 $: policyId && loadDependents(policyId)

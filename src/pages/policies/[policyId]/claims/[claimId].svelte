@@ -1,5 +1,5 @@
 <script lang="ts">
-import user, { isAdmin as checkIsAdmin, UserAppRole } from '../../../../authn/user'
+import user, { UserAppRole } from '../../../../authn/user'
 import {
   determineMaxPayout,
   getFilePurpose,
@@ -123,7 +123,7 @@ $: maximumPayout = determineMaxPayout(payoutOption, claimItem, item.coverage_amo
 // Dynamic breadcrumbs data:
 $: item.name && claim.reference_number && (claimName = `${item.name} (${claim.reference_number})`)
 $: policyName = policy.type === 'Corporate' ? policy.account_detail : policy.household_id
-$: isAdmin = $roleSelection !== UserAppRole.Customer && checkIsAdmin($user)
+$: isAdmin = $roleSelection !== UserAppRole.Customer
 $: adminBreadcrumbs = isAdmin
   ? [
       { name: 'Policies', url: POLICIES },

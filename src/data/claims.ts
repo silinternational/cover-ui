@@ -1,4 +1,5 @@
 import { CREATE, GET, UPDATE } from '.'
+import { UserAppRole } from '../authn/user'
 import { convertToCents } from 'helpers/money'
 import type { PolicyItem } from './items'
 import { derived, writable } from 'svelte/store'
@@ -368,6 +369,19 @@ export async function loadClaims(): Promise<void> {
 
   claims.set(response)
   initialized.set(true)
+}
+
+export async function getClaimsAwaitingAdmin(adminRole: UserAppRole): Promise<Claim[]> {
+  let desiredStatuses: ClaimStatus[] = []
+  if (adminRole === UserAppRole.Steward) {
+    desiredStatuses = statusesAwaitingSteward
+  } else if (adminRole === UserAppRole.Signator) {
+    desiredStatuses = statusesAwaitingSignator
+  }
+
+  const statusesForQueryString = desiredStatuses.map(encodeURIComponent).join(',')
+
+  return await GET<Claim[]>('claims/?status=' + statusesForQueryString)
 }
 
 export async function loadClaimsByPolicyId(policyId: string): Promise<void> {

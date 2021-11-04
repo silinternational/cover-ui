@@ -6,6 +6,7 @@ export enum UserAppRole {
   Customer = 'Customer',
   Steward = 'Steward',
   Signator = 'Signator',
+  Admin = 'Admin',
 }
 
 export type User = {
@@ -68,6 +69,7 @@ export const isUserSteward = (user: User): boolean => user.app_role === UserAppR
 
 export const isSignator = (user: User): boolean => user.app_role === UserAppRole.Signator
 
-export const isAdmin = (user: User): boolean => isUserSteward(user) || isSignator(user)
+export const isAdmin = (user: User): boolean =>
+  isUserSteward(user) || isSignator(user) || user.app_role === UserAppRole.Admin
 
 export const isCustomer = (user: User): boolean => !isUserSteward(user) && !isSignator(user) && !!user.app_role

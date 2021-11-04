@@ -97,6 +97,7 @@ export const itemStates: { [stateName: string]: State } = {
 export const adminItemStates: { [stateName: string]: State } = {
   ...itemStates,
   Revision: { ...pending, title: 'Awaiting changes' },
+  Pending: { ...needsReview, title: 'Needs item coverage review' },
 }
 
 export const getClaimState = (status: ClaimStatus, isAdmin = false): State => {

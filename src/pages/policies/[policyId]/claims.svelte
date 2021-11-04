@@ -1,5 +1,5 @@
 <script lang="ts">
-import user, { isAdmin, UserAppRole } from '../../../authn/user'
+import { UserAppRole } from '../../../authn/user'
 import { ClaimCards, Row, Breadcrumb } from 'components'
 import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
 import { Claim, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
@@ -19,7 +19,7 @@ $: policy = $selectedPolicy
 
 $: policyName = policy.type === 'Corporate' ? policy.account_detail : policy.household_id
 $: adminBreadcrumbs =
-  isAdmin($user) && $roleSelection !== UserAppRole.Customer
+  $roleSelection !== UserAppRole.Customer
     ? [
         { name: 'Policies', url: POLICIES },
         { name: policyName, url: policyDetails(policyId) },

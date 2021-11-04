@@ -1,6 +1,6 @@
 <script lang="ts">
-import user, { isAdmin as checkIsAdmin, UserAppRole } from '../../../../authn/user'
-import { Breadcrumb, ItemDeleteModal } from 'components'
+import user, { UserAppRole } from '../../../../authn/user'
+import { Breadcrumb, ItemDeleteModal, ItemDetails } from 'components'
 import { loading } from 'components/progress'
 import { formatDate } from 'components/dates'
 import { loadDependents } from 'data/dependents'
@@ -17,11 +17,10 @@ import {
 import { loadPolicy, memberBelongsToPolicy, policies, Policy } from 'data/policies'
 import { loadMembersOfPolicy } from 'data/policy-members'
 import { loadPolicyItemHistory, policyHistoryByItemId } from 'data/policy-history'
-import ItemDetails from 'ItemDetails.svelte'
 import { items as itemsRoute, itemDetails, itemEdit, itemNewClaim, POLICIES, policyDetails } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags, redirect } from '@roxi/routify'
-import { Button, Page, Datatable, Dialog, TextArea, Form, setNotice } from '@silintl/ui-components'
+import { Button, Page, Datatable, Dialog, TextArea, setNotice } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 
@@ -38,7 +37,7 @@ let denyDialogOpen = false
 let denyDialogButtons: Dialog.AlertButton[] = []
 let denyDialogMessage: string
 
-$: isAdmin = checkIsAdmin($user) && $roleSelection !== UserAppRole.Customer
+$: isAdmin = $roleSelection !== UserAppRole.Customer
 
 // Accountable persons
 $: policyId && loadDependents(policyId)
@@ -157,7 +156,7 @@ const onReviseItem = () => {
     </div>
 
     <ItemDeleteModal open={deleteDialgoOpen} {item} on:closed={handleRemoveDialog} />
-    <ItemDetails {item} {policyId} />
+    <ItemDetails {item} {policyId} {isAdmin} />
 
     <br />
     {#if status === 'Approved' && isMemberOfPolicy}

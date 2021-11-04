@@ -1,5 +1,5 @@
 <script lang="ts">
-import user, { isAdmin as checkIsAdmin, UserAppRole } from '../../../../authn/user'
+import user, { UserAppRole } from '../../../../authn/user'
 import {
   determineMaxPayout,
   getFilePurpose,
@@ -123,14 +123,14 @@ $: maximumPayout = determineMaxPayout(payoutOption, claimItem, item.coverage_amo
 // Dynamic breadcrumbs data:
 $: item.name && claim.reference_number && (claimName = `${item.name} (${claim.reference_number})`)
 $: policyName = policy.type === 'Corporate' ? policy.account_detail : policy.household_id
-$: isAdmin = checkIsAdmin($user)
-$: adminBreadcrumbs =
-  isAdmin && $roleSelection !== UserAppRole.Customer
-    ? [
-        { name: 'Policies', url: POLICIES },
-        { name: policyName, url: policyDetails(policyId) },
-      ]
-    : []
+$: isAdmin = $roleSelection !== UserAppRole.Customer
+$: adminBreadcrumbs = isAdmin
+  ? [
+      { name: 'Policies', url: POLICIES },
+      { name: policyName, url: policyDetails(policyId) },
+    ]
+  : []
+
 const claimsBreadcrumb = { name: 'Claims', url: customerClaims(policyId) }
 $: thisClaimBreadcrumb = { name: claimName || 'This item', url: customerClaimDetails(policyId, claimId) }
 $: breadcrumbLinks = [...adminBreadcrumbs, claimsBreadcrumb, thisClaimBreadcrumb]
@@ -309,6 +309,7 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
           {noFilesUploaded}
           {needsFile}
           {claim}
+          {isAdmin}
           {isMemberOfPolicy}
           on:ask-for-changes={onAskForChanges}
           on:deny={onDenyClaim}

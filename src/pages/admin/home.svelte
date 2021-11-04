@@ -13,12 +13,12 @@ import { customerClaimDetails } from 'helpers/routes'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
-let claimsAwaitingSteward: Claim[] = []
+let actionableClaims: Claim[] = []
 
 loadRecentActivity()
 
 $: loadClaimsAwaitingAdmin($roleSelection)
-$: claimsAwaitingSteward.map((claim) => claim.policy_id).forEach(loadDataOnce)
+$: actionableClaims.map((claim) => claim.policy_id).forEach(loadDataOnce)
 
 $: items = $allPolicyItems
 $: dependents = [].concat(...Object.values($dependentsByPolicyId))
@@ -29,9 +29,7 @@ $: policyMemberOptions = getPolicyMemberOptions(policyMembers)
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions]
 
 const loadClaimsAwaitingAdmin = async (role: UserAppRole) => {
-  if (role === UserAppRole.Steward) {
-    claimsAwaitingSteward = await getClaimsAwaitingAdmin(role)
-  }
+  actionableClaims = await getClaimsAwaitingAdmin(role)
 }
 const loadDataOnce = (policyId: string) => {
   if (!Array.isArray($itemsByPolicyId[policyId])) {
@@ -52,7 +50,7 @@ const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(ev
 
 <Page layout="grid">
   <Row cols="12">
-    <ClaimCards isAdmin {accountablePersons} claims={claimsAwaitingSteward} {items} on:goto-claim={onGotoClaim} />
+    <ClaimCards isAdmin {accountablePersons} claims={actionableClaims} {items} on:goto-claim={onGotoClaim} />
   </Row>
 
   <Row cols={'12'}>

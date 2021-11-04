@@ -1,7 +1,7 @@
 <script lang="ts">
 import { formatDate, getYear } from 'components/dates'
 import type { PolicyItem } from 'data/items'
-import { getPolicyById } from 'data/policies'
+import { selectedPolicy } from 'data/policies'
 import { formatMoney } from 'helpers/money'
 import { CUSTOMER_HOME, TERMS } from 'helpers/routes'
 import ItemDeleteModal from 'ItemDeleteModal.svelte'
@@ -18,7 +18,7 @@ let checked: boolean = false
 
 $: itemId = item?.id
 
-$: policy = getPolicyById(policyId)
+$: policy = $selectedPolicy
 $: householdId = policy.household_id ? policy.household_id : ''
 $: org = policy?.entity_code?.name
 

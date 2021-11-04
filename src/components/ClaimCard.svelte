@@ -14,12 +14,13 @@ export let accountablePersons: AccountablePersonOptions[] = []
 export let claim: Claim = {} as Claim
 export let claimItem: ClaimItem = {} as ClaimItem
 export let item: PolicyItem = {} as PolicyItem
+export let isAdmin: boolean
 
 const dispatch = createEventDispatcher<{ 'goto-claim': Claim }>()
 
 $: wasUpdated = differenceInSeconds(Date.parse(claimItem.updated_at), Date.parse(claimItem.created_at)) > 1
 $: changedText = formatDistanceToNow(Date.parse(claimItem.updated_at), { addSuffix: true })
-$: state = getClaimState(claim.status) || ({} as State)
+$: state = getClaimState(claim.status, isAdmin) || ({} as State)
 $: statusReason = claim.status_reason || ('' as string)
 $: showRevisionMessage = (statusReason && ['Revision', 'Receipt'].includes(claim.status)) as boolean
 $: accountablePerson = accountablePersons.find(

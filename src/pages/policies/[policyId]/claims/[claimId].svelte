@@ -182,7 +182,11 @@ const onPreview = (event: CustomEvent<string>) => {
 
 const onImgError = () => (showImg = false)
 
-const onBlur = () => {
+const onMoneyInputBlur = () => {
+  assertHas(
+    needsRepairReceipt || needsReplaceReceipt,
+    `You do not need to enter a value for payout option: ${payoutOption}`
+  )
   if (needsRepairReceipt) {
     updatedClaimItemData.repairActual = repairOrReplacementCost
   } else if (needsReplaceReceipt) {
@@ -204,7 +208,7 @@ async function onUpload(event: CustomEvent<FormData>) {
 
     filePurpose !== '' && (await claimsFileAttach(claimId, file.id, filePurpose))
 
-    await loadClaims()
+    await getClaimById(claimId)
   } finally {
     uploading = false
   }
@@ -323,7 +327,7 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
 
       {#if isMemberOfPolicy}
         {#if needsReceipt}
-          <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onBlur} />
+          <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onMoneyInputBlur} />
 
           <p class="label ml-1 mt-6px">
             <ConvertCurrencyLink />

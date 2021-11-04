@@ -28,6 +28,8 @@ $: switch (status) {
     actionLabel = action
     break
   case 'Review3':
+  case 'Review3a':
+  case 'Review3b':
     action = 'approve'
     actionLabel = 'give final approval'
     break
@@ -72,7 +74,7 @@ const onDeny = () => dispatch('deny', message)
 </style>
 
 {#if isAdmin}
-  {#if ['Review1', 'Review2', 'Review3'].includes(status)}
+  {#if ['Review1', 'Review2', 'Review3', 'Review3a', 'Review3b'].includes(status)}
     <div class="container">
       <div class="text-input">
         <TextField class="w-100" label="Send a message" bind:value={message} />
@@ -82,10 +84,10 @@ const onDeny = () => dispatch('deny', message)
         <Button on:click={onDeny} disabled={!message} outlined>deny</Button>
       </div>
       <div class="right-buttons">
-        {#if ['Review1', 'Review3'].includes(status)}
+        {#if ['Review1', 'Review3', 'Review3a', 'Review3b'].includes(status)}
           <Button on:click={onAskForChanges} disabled={!message} outlined>ask for changes</Button>
         {/if}
-        {#if ['Review2', 'Review3'].includes(status)}
+        {#if ['Review2', 'Review3', 'Review3a', 'Review3b'].includes(status)}
           <Button class="ml-1" on:click={onFixReceipt} disabled={!message} outlined>request a new receipt</Button>
         {/if}
       </div>

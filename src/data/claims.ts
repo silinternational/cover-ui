@@ -136,7 +136,16 @@ export const selectedPolicyClaims = derived([claims, selectedPolicyId], ([claims
   return claims.filter((c) => c.policy_id === selectedPolicyId)
 })
 export const initialized = writable<boolean>(false)
-export const editableStatuses: ClaimStatus[] = ['Draft', 'Review1', 'Review2', 'Review3', 'Revision', 'Receipt']
+export const editableStatuses: ClaimStatus[] = [
+  'Draft',
+  'Review1',
+  'Review2',
+  'Review3',
+  'Review3a',
+  'Review3b',
+  'Revision',
+  'Receipt',
+]
 export const statusesAwaitingSteward: ClaimStatus[] = ['Review1', 'Review2', 'Review3', 'Review3b']
 export const statusesAwaitingSignator: ClaimStatus[] = ['Review1', 'Review2', 'Review3', 'Review3a']
 
@@ -282,7 +291,8 @@ export const denyClaim = async (claimId: string, reason: string): Promise<void> 
 }
 
 /**
- * Admin reverts a claim to request a new/better receipt. Can be used at state "Review2" or "Review3".
+ * Admin reverts a claim to request a new/better receipt. Can be used at state
+ * "Review2" or "Review3"/"Review3a"/"Review3b".
  *
  * @export
  * @param {String} claimId

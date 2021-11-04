@@ -138,7 +138,7 @@ export const selectedPolicyClaims = derived([claims, selectedPolicyId], ([claims
 export const initialized = writable<boolean>(false)
 export const editableStatuses: ClaimStatus[] = ['Draft', 'Review1', 'Review2', 'Review3', 'Revision', 'Receipt']
 export const statusesAwaitingSteward: ClaimStatus[] = ['Review1', 'Review2', 'Review3', 'Review3b']
-export const statusesAwaitingSignator: ClaimStatus[] = ['Review2', 'Review3', 'Review3a']
+export const statusesAwaitingSignator: ClaimStatus[] = ['Review1', 'Review2', 'Review3', 'Review3a']
 
 /**
  * Update a claim in our local list (store) of claims.

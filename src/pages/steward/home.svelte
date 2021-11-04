@@ -2,21 +2,29 @@
 import { ClaimCards, RecentActivityTable, Row } from 'components'
 import { loading } from 'components/progress'
 import { getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
-import { Claim, claims, initialized as claimsInitialized, loadClaims, statusesAwaitingSteward } from 'data/claims'
+import {
+  Claim,
+  claims,
+  getClaimsAwaitingAdmin,
+  initialized as claimsInitialized,
+  getClaimsAwaitingAdmin,
+  statusesAwaitingSteward,
+} from 'data/claims'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { allPolicyItems, itemsByPolicyId, loadItems } from 'data/items'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import { loadRecentActivity, recentChanges } from 'data/recent-activity'
+import { roleSelection } from 'data/role-policy-selection'
 import { customerClaimDetails } from 'helpers/routes'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
+import { UserAppRole } from '../../authn/user'
 
-let claimsAwaitingSteward: Claim[]
+let claimsAwaitingSteward: Claim[] = []
 
 loadRecentActivity()
 
-$: $claimsInitialized || loadClaims()
-$: claimsAwaitingSteward = $claims.filter(isAwaitingSteward)
+$: loadClaimsAwaitingAdmin($roleSelection)
 $: claimsAwaitingSteward.map((claim) => claim.policy_id).forEach(loadDataOnce)
 
 $: items = $allPolicyItems
@@ -27,8 +35,10 @@ $: dependentOptions = getDependentOptions(dependents)
 $: policyMemberOptions = getPolicyMemberOptions(policyMembers)
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions]
 
-const isAwaitingSteward = (claim: Claim): boolean => {
-  return statusesAwaitingSteward.includes(claim.status)
+const loadClaimsAwaitingAdmin = async (role: UserAppRole) => {
+  if (role === UserAppRole.Steward) {
+    claimsAwaitingSteward = await getClaimsAwaitingAdmin(role)
+  }
 }
 const loadDataOnce = (policyId: string) => {
   if (!Array.isArray($itemsByPolicyId[policyId])) {

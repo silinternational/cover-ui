@@ -18,13 +18,13 @@ export let policyId: string
 $: policy = $selectedPolicy
 
 $: policyName = policy.type === 'Corporate' ? policy.account_detail : policy.household_id
-$: adminBreadcrumbs =
-  $roleSelection !== UserAppRole.Customer
-    ? [
-        { name: 'Policies', url: POLICIES },
-        { name: policyName, url: policyDetails(policyId) },
-      ]
-    : []
+$: isAdmin = $roleSelection !== UserAppRole.Customer
+$: adminBreadcrumbs = isAdmin
+  ? [
+      { name: 'Policies', url: POLICIES },
+      { name: policyName, url: policyDetails(policyId) },
+    ]
+  : []
 
 $: breadcrumbLinks = [...adminBreadcrumbs, { name: 'Claims', url: customerClaims(policyId) }]
 
@@ -56,7 +56,7 @@ const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(ev
 
   <Row cols={'12'}>
     {#if $selectedPolicyClaims.length}
-      <ClaimCards {accountablePersons} claims={$selectedPolicyClaims} {items} on:goto-claim={onGotoClaim} />
+      <ClaimCards {accountablePersons} {isAdmin} claims={$selectedPolicyClaims} {items} on:goto-claim={onGotoClaim} />
     {:else}
       No claims at this time.
     {/if}

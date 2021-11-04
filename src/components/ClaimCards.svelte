@@ -7,6 +7,7 @@ import ClaimCard from './ClaimCard.svelte'
 export let claims: Claim[]
 export let items: PolicyItem[]
 export let accountablePersons = [] as AccountablePersonOptions[]
+export let isAdmin: boolean
 </script>
 
 <style>
@@ -24,6 +25,7 @@ export let accountablePersons = [] as AccountablePersonOptions[]
           {claim}
           {claimItem}
           {accountablePersons}
+          {isAdmin}
           item={items.find((item) => item.id === claimItem.item_id) || {}}
           on:goto-claim
         />

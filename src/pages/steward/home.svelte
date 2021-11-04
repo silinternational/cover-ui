@@ -49,7 +49,7 @@ const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(ev
 
 <Page layout="grid">
   <Row cols="12">
-    <ClaimCards {accountablePersons} claims={claimsAwaitingSteward} {items} on:goto-claim={onGotoClaim} />
+    <ClaimCards isAdmin {accountablePersons} claims={claimsAwaitingSteward} {items} on:goto-claim={onGotoClaim} />
   </Row>
 
   <Row cols={'12'}>

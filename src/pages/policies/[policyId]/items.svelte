@@ -5,6 +5,7 @@ import { Claim, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { deleteItem, loadItems, selectedPolicyItems } from 'data/items'
+import { getNameOfPolicy, selectedPolicy } from 'data/policies'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import * as routes from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -45,6 +46,7 @@ const onGotoItem = (event: CustomEvent<string>) => $goto(event.detail)
 
 <Page layout="grid">
   <Row cols={'12'}>
+    <h3>{getNameOfPolicy($selectedPolicy)} Policy</h3>
     <ClaimCards claims={$selectedPolicyClaims} {items} {accountablePersons} on:goto-claim={onGotoClaim} />
   </Row>
 

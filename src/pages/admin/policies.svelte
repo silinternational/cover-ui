@@ -1,6 +1,6 @@
 <script lang="ts">
 import { SearchForm } from 'components'
-import { Policy, searchPoliciesFor } from 'data/policies'
+import { getNameOfPolicy, Policy, searchPoliciesFor } from 'data/policies'
 import type { PolicyMember } from 'data/policy-members'
 import { urlQuery } from 'data/query-string'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -67,7 +67,7 @@ const onSearch = (event: CustomEvent) => {
             {#if policy.type === 'Household'}
               Household {policy.household_id}
             {:else}
-              {policy.name || policy.type}
+              {getNameOfPolicy(policy)}
             {/if}
           </Datatable.Data.Row.Item>
 

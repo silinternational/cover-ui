@@ -1,6 +1,6 @@
 <script lang="ts">
 import { UserAppRole } from '../authn/user'
-import type { Policy } from 'data/policies'
+import { getNameOfPolicy, Policy } from 'data/policies'
 import { roleSelection, recordRoleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { POLICY_NEW_CORPORATE } from 'helpers/routes'
 import { Button, Menu, MenuItem } from '@silintl/ui-components'
@@ -47,7 +47,7 @@ const getCorporatePolicyEntries = (policies: Policy[]): MenuItem[] => {
   return policies.map((policy: Policy): MenuItem => {
     return {
       icon: 'work',
-      label: policy.name || 'Corporate',
+      label: getNameOfPolicy(policy),
       action: () => selectUserPolicy(policy.id),
     }
   })
@@ -95,7 +95,7 @@ const getButtonText = (userAppRoleSelection: UserAppRole, policyIdSelection: str
 
   const policy = myPolicies.find((policy) => policy.id === policyIdSelection)
   if (policy && isCorporatePolicy(policy)) {
-    return policy.name || 'Corporate'
+    return getNameOfPolicy(policy)
   }
 
   return 'Household'

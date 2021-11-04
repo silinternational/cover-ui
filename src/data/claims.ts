@@ -46,6 +46,7 @@ export type ClaimItem = {
   fmv: number
   id: string
   is_repairable: boolean
+  item: PolicyItem
   item_id: string
   payout_amount: number
   payout_option: PayoutOption

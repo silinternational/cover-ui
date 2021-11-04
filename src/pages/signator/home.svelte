@@ -48,7 +48,7 @@ const onGotoClaim = (event: CustomEvent<Claim>) => $goto(`/signator/claims/${eve
 
 <Page layout="grid">
   <Row cols="12">
-    <ClaimCards {accountablePersons} claims={claimsAwaitingSignator} {items} on:goto-claim={onGotoClaim} />
+    <ClaimCards isAdmin {accountablePersons} claims={claimsAwaitingSignator} {items} on:goto-claim={onGotoClaim} />
   </Row>
 
   <Row cols={'12'}>

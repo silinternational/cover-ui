@@ -183,6 +183,10 @@ const onPreview = (event: CustomEvent<string>) => {
 const onImgError = () => (showImg = false)
 
 const onBlur = () => {
+  assertHas(
+    needsRepairReceipt || needsReplaceReceipt,
+    `You do not need to enter a value for payout option: ${payoutOption}`
+  )
   if (needsRepairReceipt) {
     updatedClaimItemData.repairActual = repairOrReplacementCost
   } else if (needsReplaceReceipt) {
@@ -204,7 +208,7 @@ async function onUpload(event: CustomEvent<FormData>) {
 
     filePurpose !== '' && (await claimsFileAttach(claimId, file.id, filePurpose))
 
-    await loadClaims()
+    await getClaimById(claimId)
   } finally {
     uploading = false
   }

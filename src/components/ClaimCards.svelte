@@ -1,11 +1,27 @@
 <script lang="ts">
-import type { AccountablePersonOptions } from 'data/accountablePersons'
-import type { Claim } from 'data/claims'
 import ClaimCard from './ClaimCard.svelte'
+import type { AccountablePersonOptions } from 'data/accountablePersons'
+import { Claim, ClaimItem, incompleteClaimItemStatuses } from '../data/claims'
 
 export let claims: Claim[]
 export let accountablePersons = [] as AccountablePersonOptions[]
 export let isAdmin: boolean
+
+const isIncomplete = (claimItem: ClaimItem) => incompleteClaimItemStatuses.includes(claimItem.status)
+
+const isRecent = (claimItem: ClaimItem) => {
+  const updatedAt = new Date(claimItem.updated_at)
+  const today = new Date()
+  const aWeekAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7)
+  return Number(updatedAt) > Number(aWeekAgo)
+}
+
+const isRecentOrIncomplete = (claimItem: ClaimItem) => isIncomplete(claimItem) || isRecent(claimItem)
+
+const getRecentOrIncompleteClaimItems = (claim: Claim): ClaimItem[] => {
+  const claimItems: ClaimItem[] = claim.claim_items || []
+  return claimItems.filter(isRecentOrIncomplete)
+}
 </script>
 
 <style>
@@ -17,7 +33,7 @@ export let isAdmin: boolean
 
 <div class="flex justify-start flex-wrap {$$props.class}">
   {#each claims as claim (claim.id)}
-    {#each claim.claim_items || [] as claimItem (claimItem.id)}
+    {#each getRecentOrIncompleteClaimItems(claim) as claimItem (claimItem.id)}
       <div class="card">
         <ClaimCard {claim} {claimItem} {accountablePersons} {isAdmin} on:goto-claim />
       </div>

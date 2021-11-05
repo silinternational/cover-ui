@@ -93,10 +93,10 @@ export async function updatePolicy(id: string, policyData: UpdatePolicyRequestBo
 export async function createPolicy(policyFormData: any): Promise<Policy> {
   const parsedPolicyData: CreatePolicyRequestBody = {
     account: policyFormData.account,
+    account_detail: policyFormData.accountDetail,
     cost_center: policyFormData.costCenter,
     entity_code: policyFormData.entityCode,
     name: policyFormData.groupName,
-    account_detail: policyFormData.accountDetail,
   }
   const createdPolicy = await CREATE<Policy>('policies', parsedPolicyData)
   updatePoliciesStore(createdPolicy)

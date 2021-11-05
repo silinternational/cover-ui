@@ -148,11 +148,22 @@ export const selectedPolicyClaims = derived([claims, selectedPolicyId], ([claims
   return claims.filter((c) => c.policy_id === selectedPolicyId)
 })
 export const initialized = writable<boolean>(false)
+
 export const editableStatuses: ClaimStatus[] = [
   'Draft',
   'Review1',
   'Review2',
   'Review3',
+  'Review3a',
+  'Review3b',
+  'Revision',
+  'Receipt',
+]
+export const incompleteClaimItemStatuses: ClaimItemStatus[] = [
+  'Draft',
+  'Review1',
+  'Review2',
+  'Review3', // TODO: Remove once API is updated to use Review3a / Review3b.
   'Review3a',
   'Review3b',
   'Revision',

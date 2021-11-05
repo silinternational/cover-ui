@@ -1,5 +1,7 @@
 <script lang="ts">
-import { Banner, ItemBanner, MessageBanner } from 'components'
+import Banner from './Banner.svelte'
+import ItemBanner from './banners/ItemBanner.svelte'
+import MessageBanner from './banners/MessageBanner.svelte'
 import {
   AccountablePersonOptions,
   getAccountablePerson,

@@ -56,11 +56,7 @@ const validateForm = (formData: any) => {
 
   <p>
     <span class="header">Entity code<span class="required">*</span></span>
-    <SearchableSelect
-      options={entityOptions}
-      placeholder="ABC"
-      on:chosen={(e) => (entityCode = entityOptions[e.detail])}
-    />
+    <SearchableSelect options={entityOptions} placeholder="ABC" on:chosen={(e) => (entityCode = e.detail)} />
   </p>
 
   <p>

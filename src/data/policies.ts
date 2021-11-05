@@ -36,10 +36,12 @@ export type CreatePolicyRequestBody = {
 }
 
 export type UpdatePolicyRequestBody = {
-  account: string
-  cost_center: string
-  entity_code: string
-  household_id: any /* This seemed complicated */
+  account?: string
+  account_detail?: string
+  cost_center?: string
+  entity_code?: string
+  household_id?: any /* This seemed complicated */
+  name?: string
 }
 
 export const policies = writable<Policy[]>([])
@@ -72,15 +74,8 @@ const updatePoliciesStore = (changedPolicy: Policy) => {
  * @param {Number} id
  * @param {Object} policyData
  */
-export async function updatePolicy(id: string, policyData: any): Promise<void> {
-  const parsedPolicyData: UpdatePolicyRequestBody = {
-    household_id: policyData.household_id,
-    cost_center: policyData.cost_center,
-    account: policyData.account,
-    entity_code: policyData.entity_code,
-  }
-
-  const updatedPolicy = await UPDATE<Policy>(`policies/${id}`, parsedPolicyData)
+export async function updatePolicy(id: string, policyData: UpdatePolicyRequestBody): Promise<void> {
+  const updatedPolicy = await UPDATE<Policy>(`policies/${id}`, policyData)
 
   policies.update((currPolicies) => {
     const i = currPolicies.findIndex((pol) => pol.id === id)

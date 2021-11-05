@@ -1,6 +1,6 @@
 <script lang="ts">
 import { UserAppRole } from '../authn/user'
-import { CUSTOMER_HOME } from 'helpers/routes'
+import { ADMIN_HOME, CUSTOMER_HOME } from 'helpers/routes'
 import { redirect } from '@roxi/routify'
 import { roleSelection } from 'data/role-policy-selection'
 
@@ -12,10 +12,8 @@ const sendToRoleHome = (appRole: string) => {
       $redirect(CUSTOMER_HOME)
       break
     case UserAppRole.Steward:
-      $redirect('/steward/home')
-      break
     case UserAppRole.Signator:
-      $redirect('/signator/home')
+      $redirect(ADMIN_HOME)
       break
     default:
       console.error('Unknown role:', appRole)

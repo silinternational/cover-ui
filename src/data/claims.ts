@@ -6,7 +6,18 @@ import { derived, writable } from 'svelte/store'
 import { selectedPolicyId } from './role-policy-selection'
 
 export type PayoutOption = 'Repair' | 'Replacement' | 'FMV' | 'FixedFraction'
-export type ClaimItemStatus = 'Pending' | 'Approved' | 'Denied'
+export type ClaimItemStatus =
+  | 'Draft'
+  | 'Review1'
+  | 'Review2'
+  | 'Review3' // TODO: Remove once API is updated to use Review3a / Review3b.
+  | 'Review3a'
+  | 'Review3b'
+  | 'Revision'
+  | 'Receipt'
+  | 'Approved'
+  | 'Paid'
+  | 'Denied'
 export type ClaimIncidentTypeName = string // dynamically defined by the claim-incident-types endpoint
 export type ClaimStatus =
   | 'Draft'

@@ -52,7 +52,7 @@ $: menuItems = [
     icon: 'add_circle',
     label: 'Add Item',
     button: true,
-    hide: inAdminRole,
+    hide: inAdminRole || !policyId,
   },
 ]
 

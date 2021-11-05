@@ -2,9 +2,9 @@ import { GET } from '.'
 import { writable } from 'svelte/store'
 
 export type EntityCode = {
-  code: 'string'
-  id: 'string'
-  name: 'string'
+  code: string
+  id: string
+  name: string
 }
 
 export const entityCodes = writable<EntityCode[]>([])

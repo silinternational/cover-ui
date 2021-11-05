@@ -17,12 +17,9 @@ let entityOptions: any = {}
 loadEntityCodes()
 
 $: metatags.title = formatPageTitle('New Corporate Policy')
-$: $entityCodes.length
-  ? $entityCodes.forEach((code) => {
-      entityOptions[code.name] = code.code
-    })
-  : (entityOptions.ABC = 'ABC')
-
+$: $entityCodes.forEach((code) => {
+  entityOptions[code.name] = code.code
+})
 const onCreatePolicy = async () => {
   const formData = {
     account,

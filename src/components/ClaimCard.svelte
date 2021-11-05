@@ -13,11 +13,11 @@ import { differenceInSeconds, formatDistanceToNow } from 'date-fns'
 export let accountablePersons: AccountablePersonOptions[] = []
 export let claim: Claim = {} as Claim
 export let claimItem: ClaimItem = {} as ClaimItem
-export let item: PolicyItem = {} as PolicyItem
 export let isAdmin: boolean
 
 const dispatch = createEventDispatcher<{ 'goto-claim': Claim }>()
 
+$: item = claimItem.item || ({} as PolicyItem)
 $: wasUpdated = differenceInSeconds(Date.parse(claimItem.updated_at), Date.parse(claimItem.created_at)) > 1
 $: changedText = formatDistanceToNow(Date.parse(claimItem.updated_at), { addSuffix: true })
 $: state = getClaimState(claim.status, isAdmin) || ({} as State)

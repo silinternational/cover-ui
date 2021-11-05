@@ -4,7 +4,7 @@ import { ClaimCards, Row, Breadcrumb } from 'components'
 import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
 import { Claim, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
-import { loadItems, selectedPolicyItems } from 'data/items'
+import { loadItems } from 'data/items'
 import { selectedPolicy } from 'data/policies'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import { roleSelection } from 'data/role-policy-selection'
@@ -27,8 +27,6 @@ $: adminBreadcrumbs = isAdmin
   : []
 
 $: breadcrumbLinks = [...adminBreadcrumbs, { name: 'Claims', url: customerClaims(policyId) }]
-
-$: items = $selectedPolicyItems
 
 $: dependents = $dependentsByPolicyId[policyId] || []
 $: dependentOptions = getDependentOptions(dependents)
@@ -56,7 +54,7 @@ const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(ev
 
   <Row cols={'12'}>
     {#if $selectedPolicyClaims.length}
-      <ClaimCards {accountablePersons} {isAdmin} claims={$selectedPolicyClaims} {items} on:goto-claim={onGotoClaim} />
+      <ClaimCards {accountablePersons} {isAdmin} claims={$selectedPolicyClaims} on:goto-claim={onGotoClaim} />
     {:else}
       No claims at this time.
     {/if}

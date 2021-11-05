@@ -1,14 +1,16 @@
 <script lang="ts">
 import { Claim, ClaimStatus, editableStatuses } from 'data/claims'
+import Description from './Description.svelte'
+import { throwError } from '../error'
 import { Button, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
-import Description from './Description.svelte'
 
 export let claim = {} as Claim
 export let noFilesUploaded: boolean
 export let needsFile: boolean
 export let isMemberOfPolicy: boolean
 export let isAdmin: boolean
+export let receiptType: string
 
 const dispatch = createEventDispatcher()
 
@@ -16,29 +18,35 @@ let message = ''
 let status: ClaimStatus
 $: status = claim.status
 
+$: approveButtonLabel = receiptType === 'Replacement' ? 'replace' : 'repair'
+
 let action: string
 let actionLabel: string
 $: switch (status) {
   case 'Review1':
     action = 'preapprove'
-    actionLabel = action
+    actionLabel = `okay to ${approveButtonLabel}`
     break
   case 'Review2':
     action = 'approve'
-    actionLabel = action
+    actionLabel = 'approve payout'
     break
   case 'Review3':
+  case 'Review3a':
+  case 'Review3b':
     action = 'approve'
     actionLabel = 'give final approval'
     break
   default:
-    action = 'Unknown'
+    action = 'error'
 }
 
 $: isEditable = editableStatuses.includes(status)
 $: showSubmit = ['Receipt', 'Revision'].includes(status) || (status === 'Draft' && needsFile)
 
-const on = (eventType: string) => () => dispatch(eventType)
+const on = (eventType: string) => () => {
+  eventType !== 'error' ? dispatch(eventType) : throwError(`An error has occured due to unkown status ${status}`)
+}
 const onAskForChanges = () => dispatch('ask-for-changes', message)
 const onFixReceipt = () => dispatch('fix-receipt', message)
 const onDeny = () => dispatch('deny', message)
@@ -72,7 +80,7 @@ const onDeny = () => dispatch('deny', message)
 </style>
 
 {#if isAdmin}
-  {#if ['Review1', 'Review2', 'Review3'].includes(status)}
+  {#if ['Review1', 'Review2', 'Review3', 'Review3a', 'Review3b'].includes(status)}
     <div class="container">
       <div class="text-input">
         <TextField class="w-100" label="Send a message" bind:value={message} />
@@ -82,10 +90,10 @@ const onDeny = () => dispatch('deny', message)
         <Button on:click={onDeny} disabled={!message} outlined>deny</Button>
       </div>
       <div class="right-buttons">
-        {#if ['Review1', 'Review3'].includes(status)}
+        {#if ['Review1', 'Review3', 'Review3a', 'Review3b'].includes(status)}
           <Button on:click={onAskForChanges} disabled={!message} outlined>ask for changes</Button>
         {/if}
-        {#if ['Review2', 'Review3'].includes(status)}
+        {#if ['Review2', 'Review3', 'Review3a', 'Review3b'].includes(status)}
           <Button class="ml-1" on:click={onFixReceipt} disabled={!message} outlined>request a new receipt</Button>
         {/if}
       </div>

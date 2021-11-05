@@ -9,6 +9,7 @@ import { goto, metatags } from '@roxi/routify'
 import { Button, TextField, Page } from '@silintl/ui-components'
 
 let account = ''
+let accountDetail = ''
 let costCenter = ''
 let groupName = ''
 let entityCode = ''
@@ -23,6 +24,7 @@ $: $entityCodes.forEach((code) => {
 const onCreatePolicy = async () => {
   const formData = {
     account,
+    accountDetail,
     costCenter,
     entityCode,
     groupName,
@@ -67,6 +69,11 @@ const validateForm = (formData: any) => {
   <p>
     <span class="header">Account<span class="required">*</span></span>
     <TextField placeholder="12345" bind:value={account} />
+  </p>
+
+  <p>
+    <span class="header">Account Detail</span>
+    <TextField placeholder="details" bind:value={accountDetail} />
   </p>
 
   <Button raised on:click={onCreatePolicy}>Create policy</Button>

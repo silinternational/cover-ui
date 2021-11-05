@@ -96,6 +96,7 @@ export async function createPolicy(policyFormData: any): Promise<Policy> {
     cost_center: policyFormData.costCenter,
     entity_code: policyFormData.entityCode,
     name: policyFormData.groupName,
+    account_detail: policyFormData.accountDetail,
   }
   const createdPolicy = await CREATE<Policy>('policies', parsedPolicyData)
   updatePoliciesStore(createdPolicy)

@@ -70,6 +70,7 @@ const onChange = () => {
     placeholder="&nbsp;"
     bind:value={choice}
     on:change={onChange}
+    on:blur={() => dispatch('check', choice)}
   />
   <span class="placeholder">{placeholder}</span>
 </label>

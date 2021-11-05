@@ -98,6 +98,10 @@ const updateCostCenter = async () => {
   }
 }
 
+const validateEntityCode = (e) => {
+  !entityOptions[e.detail] && setNotice('Please select a valid entity code')
+}
+
 const updateEntityCode = async (e: CustomEvent<string>) => {
   entityCode = e.detail
 
@@ -194,6 +198,7 @@ p {
         {placeholder}
         padding={'16px'}
         on:chosen={updateEntityCode}
+        on:check={validateEntityCode}
       />
     </p>
     <p>

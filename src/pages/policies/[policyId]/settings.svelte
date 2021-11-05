@@ -1,6 +1,6 @@
 <script lang="ts">
 import user from '../../../authn/user'
-import { Breadcrumb, SearchableSelect } from 'components'
+import { Breadcrumb, Description, SearchableSelect } from 'components'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { policies, updatePolicy, Policy, PolicyType, loadPolicy } from 'data/policies'
@@ -17,10 +17,13 @@ loadEntityCodes()
 
 $: policyId = $selectedPolicyId
 
-let affiliationChoice = ''
+let account = ''
+let accountDetail = ''
+let entityCode = ''
 let entityOptions: any = {}
 let householdId = ''
 let costCenter = ''
+let policyName = ''
 let placeholder = 'Your entity of affiliation'
 let breadcrumbLinks = [{ name: 'Group Settings', url: settingsPolicy(policyId) }]
 metatags.title = formatPageTitle('Group Settings')
@@ -37,20 +40,48 @@ $: $entityCodes.forEach((code) => {
 $: dependents = $dependentsByPolicyId[policyId] || []
 $: householdMembers = $membersByPolicyId[policyId] || []
 $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
+
+$: policy.account && setAccount()
+$: policy.account_detail && setAccountDetail()
 $: policy.household_id && setPolicyHouseholdId()
 $: policy.cost_center && setPolicyCostCenter()
-$: policy.entity_code && setAffiliation()
+$: policy.entity_code && setEntityCode()
+$: policy.name && setPolicyName()
+
 $: addDependentUrl = householdSettingsNewDependent(policyId)
 
-const setAffiliation = () => (affiliationChoice = entityOptions[policy.entity_code])
+const setAccount = () => (account = policy.account || '')
+const setAccountDetail = () => (accountDetail = policy.account_detail)
+const setEntityCode = () => (entityCode = policy.entity_code.code)
 const setPolicyHouseholdId = () => (householdId = policy.household_id || '')
 const setPolicyCostCenter = () => (costCenter = policy.cost_center || '')
+const setPolicyName = () => (policyName = policy.name || '')
+
+const updateAccount = async (account: string) => {
+  if (account !== policy.account) {
+    policyData.account = account
+    await callUpdatePolicy()
+
+    setNotice('Your account number has been saved')
+  } else {
+    setNotice('Please enter a valid account number')
+  }
+}
+
+const updateAccountDetail = async (account: string) => {
+  if (accountDetail !== policy.account_detail) {
+    policyData.account_detail = accountDetail
+    await callUpdatePolicy()
+
+    setNotice('Your account detail has been saved')
+  }
+}
 
 const updateHouseholdId = async () => {
   householdId = householdId.replaceAll(' ', '')
   if (householdId !== policy.household_id) {
     if (isIdValid(householdId)) {
-      await callUpdatePolicy(householdId)
+      await callUpdatePolicy()
 
       setNotice('Your household ID has been saved')
     } else {
@@ -63,7 +94,7 @@ const updateCostCenter = async () => {
   costCenter = costCenter.replaceAll(' ', '')
   if (costCenter !== policy.cost_center) {
     if (isIdValid(costCenter)) {
-      await callUpdatePolicy(householdId, costCenter)
+      await callUpdatePolicy()
 
       setNotice('Your cost center has been saved')
     } else {
@@ -72,20 +103,35 @@ const updateCostCenter = async () => {
   }
 }
 
-const updateAffiliation = async (e: CustomEvent<string>) => {
-  const entityCode = entityOptions[e.detail]
+const updateEntityCode = async (e: CustomEvent<string>) => {
+  entityCode = e.detail
 
   if (entityCode !== policyData.entity_code) {
-    await callUpdatePolicy(householdId, costCenter, entityCode)
+    await callUpdatePolicy()
 
     setNotice('Your affiliation has been saved')
   }
 }
 
-const callUpdatePolicy = async (id: string, costCenter?: string, affiliation?: string) => {
-  policyData.household_id = id
-  affiliation && (policyData.entity_code = affiliation)
-  costCenter && (policyData.cost_center = costCenter)
+const updatePolicyName = async () => {
+  if (policyName !== policy.name) {
+    await callUpdatePolicy()
+
+    setNotice('Your policy name has been saved')
+  }
+}
+
+const callUpdatePolicy = async () => {
+  if ((policy.type = PolicyType.Household)) {
+    policyData.household_id = householdId
+  }
+  if ((policy.type = PolicyType.Corporate)) {
+    policyData.account = account
+    policyData.cost_center = costCenter
+    policyData.entity_code = entityCode
+  }
+  policyData.account_detail = accountDetail
+  policyData.name = policyName
 
   await updatePolicy(policyId, policyData)
 }
@@ -134,24 +180,40 @@ p {
   {#if policy.type === PolicyType.Household}
     <p>
       <span class="header">Household ID<span class="required">*</span></span>
-      <TextField placeholder={'1234567'} autofocus bind:value={householdId} on:blur={updateHouseholdId} />
+      <TextField placeholder={'1234567'} bind:value={householdId} on:blur={updateHouseholdId} />
     </p>
   {/if}
 
   {#if policy.type === PolicyType.Corporate}
     <p>
+      <span class="header">Policy name<span class="required">*</span></span>
+      <TextField bind:value={policyName} on:blur={updatePolicyName} />
+      <Description>Appears in your statements</Description>
+    </p>
+
+    <p>
       <span class="header">Affiliation<span class="required">*</span></span>
       <SearchableSelect
         options={entityOptions}
-        choice={affiliationChoice}
+        choice={$entityCodes.find((code) => code.code === entityCode)?.name}
         {placeholder}
         padding={'16px'}
-        on:chosen={updateAffiliation}
+        on:chosen={updateEntityCode}
       />
     </p>
     <p>
       <span class="header">Cost center<span class="required">*</span></span>
       <TextField placeholder={'1234567'} bind:value={costCenter} on:blur={updateCostCenter} />
+    </p>
+
+    <p>
+      <span class="header">Account<span class="required">*</span></span>
+      <TextField placeholder="12345" bind:value={account} on:blur={updateAccount} />
+    </p>
+
+    <p>
+      <span class="header">Account Detail</span>
+      <TextField placeholder="details" bind:value={accountDetail} on:blur={updateAccountDetail} />
     </p>
   {/if}
 

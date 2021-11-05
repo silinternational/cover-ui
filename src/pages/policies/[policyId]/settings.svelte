@@ -41,21 +41,18 @@ $: dependents = $dependentsByPolicyId[policyId] || []
 $: householdMembers = $membersByPolicyId[policyId] || []
 $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
 
-$: policy.account && setAccount()
-$: policy.account_detail && setAccountDetail()
-$: policy.household_id && setPolicyHouseholdId()
-$: policy.cost_center && setPolicyCostCenter()
-$: policy.entity_code && setEntityCode()
-$: policy.name && setPolicyName()
+$: setInitialValues(policy)
 
 $: addDependentUrl = householdSettingsNewDependent(policyId)
 
-const setAccount = () => (account = policy.account || '')
-const setAccountDetail = () => (accountDetail = policy.account_detail)
-const setEntityCode = () => (entityCode = policy.entity_code.code)
-const setPolicyHouseholdId = () => (householdId = policy.household_id || '')
-const setPolicyCostCenter = () => (costCenter = policy.cost_center || '')
-const setPolicyName = () => (policyName = policy.name || '')
+function setInitialValues(policy: Policy): void {
+  account = policy.account || ''
+  accountDetail = policy.account_detail || ''
+  entityCode = policy.entity_code?.code || ''
+  householdId = policy.household_id || ''
+  costCenter = policy.cost_center || ''
+  policyName = policy.name || ''
+}
 
 const updateAccount = async () => {
   if (account !== policy.account) {

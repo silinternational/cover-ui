@@ -14,7 +14,7 @@ let groupName = ''
 let entityCode = ''
 let entityOptions: any = {}
 
-loadEntityCodes()
+$: $entityCodes.length || loadEntityCodes()
 
 $: metatags.title = formatPageTitle('New Corporate Policy')
 $: $entityCodes.forEach((code) => {

@@ -47,7 +47,7 @@ const onGotoItem = (event: CustomEvent<string>) => $goto(event.detail)
 <Page layout="grid">
   <Row cols={'12'}>
     <h3>{getNameOfPolicy($selectedPolicy)} Policy</h3>
-    <ClaimCards claims={$selectedPolicyClaims} {items} {accountablePersons} on:goto-claim={onGotoClaim} />
+    <ClaimCards claims={$selectedPolicyClaims} {accountablePersons} on:goto-claim={onGotoClaim} />
   </Row>
 
   <Row cols={'12'}>

@@ -24,7 +24,6 @@ import { upload } from 'data'
 import { getAccountablePerson, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
 import {
   denyClaim,
-  loadClaims,
   claimsFileAttach,
   updateClaimItem,
   ClaimItem,
@@ -315,6 +314,7 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
           {claim}
           {isAdmin}
           {isMemberOfPolicy}
+          {receiptType}
           on:ask-for-changes={onAskForChanges}
           on:deny={onDenyClaim}
           on:edit={editClaim}

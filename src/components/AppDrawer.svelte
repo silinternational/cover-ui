@@ -23,7 +23,7 @@ const logoClickHandler = () => $goto(ROOT)
 }
 </style>
 
-<Drawer miniMenu modal hideForPhonesOnly {toggle} {menuItems} title="Covered" class="auto-width border-white">
+<Drawer modal hideForPhonesOnly {toggle} {menuItems} title="Covered" class="auto-width border-white">
   <span class="pointer" on:click={logoClickHandler} slot="header">
     <img class="w-100" src="/logo.svg" alt="Cover" />
   </span>

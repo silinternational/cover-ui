@@ -57,18 +57,16 @@ const setPolicyHouseholdId = () => (householdId = policy.household_id || '')
 const setPolicyCostCenter = () => (costCenter = policy.cost_center || '')
 const setPolicyName = () => (policyName = policy.name || '')
 
-const updateAccount = async (account: string) => {
+const updateAccount = async () => {
   if (account !== policy.account) {
     policyData.account = account
     await callUpdatePolicy()
 
     setNotice('Your account number has been saved')
-  } else {
-    setNotice('Please enter a valid account number')
   }
 }
 
-const updateAccountDetail = async (account: string) => {
+const updateAccountDetail = async () => {
   if (accountDetail !== policy.account_detail) {
     policyData.account_detail = accountDetail
     await callUpdatePolicy()

@@ -14,8 +14,8 @@ const dispatch = createEventDispatcher()
 
 const onChange = () => {
   for (const [key, value] of Object.entries(options)) {
-    if (choice === value) {
-      dispatch('chosen', key)
+    if (choice === key) {
+      dispatch('chosen', value)
     }
   }
 }
@@ -75,6 +75,6 @@ const onChange = () => {
 </label>
 
 <datalist id={randomId}>
-  {#each Object.values(options) as option}
+  {#each Object.keys(options) as option}
     <option value={option} />{/each}
 </datalist>

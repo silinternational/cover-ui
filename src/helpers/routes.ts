@@ -41,4 +41,4 @@ export const householdSettingsDependent = (policyId: string, dependentId: string
   `/policies/${policyId}/settings/dependents/${dependentId}`
 export const householdSettingsNewDependent = (policyId: string) => `/policies/${policyId}/settings/dependents/new`
 
-export const TERMS = '/terms-of-service'
+export const TERMS = '/terms'

@@ -2,7 +2,8 @@
 import user from '../../../authn/user'
 import { Breadcrumb, SearchableSelect } from 'components'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
-import { policies, updatePolicy, affiliations, Policy, loadPolicy } from 'data/policies'
+import { entityCodes, loadEntityCodes } from 'data/entityCodes'
+import { policies, updatePolicy, Policy, PolicyType, loadPolicy } from 'data/policies'
 import { loadMembersOfPolicy, membersByPolicyId, PolicyMember } from 'data/policy-members'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import { householdSettingsDependent, householdSettingsNewDependent, settingsPolicy } from 'helpers/routes'
@@ -12,9 +13,12 @@ import { Button, TextField, IconButton, Page, setNotice } from '@silintl/ui-comp
 
 const policyData = {} as Policy
 
+$: $entityCodes.length || loadEntityCodes()
+
 $: policyId = $selectedPolicyId
 
 let affiliationChoice = ''
+let entityOptions: any = {}
 let householdId = ''
 let costCenter = ''
 let placeholder = 'Your entity of affiliation'
@@ -27,6 +31,9 @@ $: if (policyId) {
   loadMembersOfPolicy(policyId)
 }
 
+$: $entityCodes.forEach((code) => {
+  entityOptions[code.name] = code.code
+})
 $: dependents = $dependentsByPolicyId[policyId] || []
 $: householdMembers = $membersByPolicyId[policyId] || []
 $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
@@ -35,7 +42,7 @@ $: policy.cost_center && setPolicyCostCenter()
 $: policy.entity_code && setAffiliation()
 $: addDependentUrl = householdSettingsNewDependent(policyId)
 
-const setAffiliation = () => (affiliationChoice = $affiliations[policy.entity_code])
+const setAffiliation = () => (affiliationChoice = entityOptions[policy.entity_code])
 const setPolicyHouseholdId = () => (householdId = policy.household_id || '')
 const setPolicyCostCenter = () => (costCenter = policy.cost_center || '')
 
@@ -66,10 +73,10 @@ const updateCostCenter = async () => {
 }
 
 const updateAffiliation = async (e: CustomEvent<string>) => {
-  const choice = e.detail
+  const entityCode = entityOptions[e.detail]
 
-  if (choice !== policyData.entity_code) {
-    await callUpdatePolicy(householdId, costCenter, choice)
+  if (entityCode !== policyData.entity_code) {
+    await callUpdatePolicy(householdId, costCenter, entityCode)
 
     setNotice('Your affiliation has been saved')
   }
@@ -124,17 +131,18 @@ p {
 
 <Page>
   <Breadcrumb links={breadcrumbLinks} />
+  {#if policy.type === PolicyType.Household}
+    <p>
+      <span class="header">Household ID<span class="required">*</span></span>
+      <TextField placeholder={'1234567'} autofocus bind:value={householdId} on:blur={updateHouseholdId} />
+    </p>
+  {/if}
 
-  <p>
-    <span class="header">Household ID<span class="required">*</span></span>
-    <TextField placeholder={'1234567'} autofocus bind:value={householdId} on:blur={updateHouseholdId} />
-  </p>
-
-  {#if policy.type === 'Corporate'}
+  {#if policy.type === PolicyType.Corporate}
     <p>
       <span class="header">Affiliation<span class="required">*</span></span>
       <SearchableSelect
-        options={$affiliations}
+        options={entityOptions}
         choice={affiliationChoice}
         {placeholder}
         padding={'16px'}

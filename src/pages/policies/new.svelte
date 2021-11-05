@@ -1,5 +1,6 @@
 <script lang="ts">
-import { Breadcrumb, Description } from 'components'
+import { Breadcrumb, Description, SearchableSelect } from 'components'
+import { entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { createPolicy } from 'data/policies'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { policyDetails } from 'helpers/routes'
@@ -11,8 +12,16 @@ let account = ''
 let costCenter = ''
 let groupName = ''
 let entityCode = ''
+let entityOptions: any = {}
+
+loadEntityCodes()
 
 $: metatags.title = formatPageTitle('New Corporate Policy')
+$: $entityCodes.length
+  ? $entityCodes.forEach((code) => {
+      entityOptions[code.name] = code.code
+    })
+  : (entityOptions.ABC = 'ABC')
 
 const onCreatePolicy = async () => {
   const formData = {
@@ -25,7 +34,7 @@ const onCreatePolicy = async () => {
   const newPolicy = await createPolicy(formData)
   $goto(policyDetails(newPolicy.id))
 }
-const validateForm = (formData) => {
+const validateForm = (formData: any) => {
   assertHas(formData.groupName, 'Please provide a group name')
   assertHas(formData.entityCode, 'Please provide an entity code')
   assertHas(formData.costCenter, 'Please provide a cost center')
@@ -50,7 +59,11 @@ const validateForm = (formData) => {
 
   <p>
     <span class="header">Entity code<span class="required">*</span></span>
-    <TextField placeholder="ABC" bind:value={entityCode} />
+    <SearchableSelect
+      options={entityOptions}
+      placeholder="ABC"
+      on:chosen={(e) => (entityCode = entityOptions[e.detail])}
+    />
   </p>
 
   <p>

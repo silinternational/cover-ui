@@ -22,7 +22,10 @@ export type Policy = {
   updated_at: string /*Date*/
 }
 
-export type PolicyType = 'Household' | 'Corporate'
+export enum PolicyType {
+  Household = 'Household',
+  Corporate = 'Corporate',
+}
 
 export type CreatePolicyRequestBody = {
   account: string
@@ -144,10 +147,6 @@ export async function searchPoliciesFor(searchText: string): Promise<Policy[]> {
   const response = await GET<{ data: Policy[]; meta: any }>(`policies?${queryString}`)
   return response.data
 }
-
-export const affiliations = writable<{ [key: string]: string }>({
-  SIL: 'SIL International',
-})
 
 export const getPolicyById = (policyId: string): Policy => {
   const policy = get(policies).find((policy) => policy.id === policyId) || ({} as Policy)

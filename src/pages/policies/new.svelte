@@ -53,7 +53,6 @@ const validateForm = (formData: any) => {
   <p>
     <span class="header">Group name<span class="required">*</span></span>
     <TextField autofocus bind:value={groupName} />
-    <Description>Appears in your statements</Description>
   </p>
 
   <p>
@@ -74,6 +73,7 @@ const validateForm = (formData: any) => {
   <p>
     <span class="header">Account Detail</span>
     <TextField placeholder="details" bind:value={accountDetail} />
+    <Description>Appears in your statements</Description>
   </p>
 
   <Button raised on:click={onCreatePolicy}>Create policy</Button>

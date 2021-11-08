@@ -1,15 +1,15 @@
 <script lang="ts">
-import { UserAppRole } from '../../authn/user'
-import { ClaimCards, RecentActivityTable, Row } from 'components'
+import type { UserAppRole } from '../../authn/user'
+import { CardsGrid, ClaimCards, RecentActivityTable, Row } from 'components'
 import { loading } from 'components/progress'
 import { getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
 import { Claim, getClaimsAwaitingAdmin } from 'data/claims'
-import { dependentsByPolicyId, loadDependents } from 'data/dependents'
-import { allPolicyItems, itemsByPolicyId, loadItems } from 'data/items'
-import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
+import { allPolicyDependents, dependentsByPolicyId, loadDependents } from 'data/dependents'
+import { allPolicyItems, itemsByPolicyId, loadItems, PolicyItem } from 'data/items'
+import { allPolicyMembers, loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import { loadRecentActivity, recentChanges } from 'data/recent-activity'
 import { roleSelection } from 'data/role-policy-selection'
-import { customerClaimDetails } from 'helpers/routes'
+import { customerClaimDetails, itemDetails } from 'helpers/routes'
 import { goto } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
@@ -17,12 +17,12 @@ let actionableClaims: Claim[] = []
 
 loadRecentActivity()
 
-$: loadClaimsAwaitingAdmin($roleSelection)
+// $: loadClaimsAwaitingAdmin($roleSelection)
 $: actionableClaims.map((claim) => claim.policy_id).forEach(loadDataOnce)
 
-$: items = $allPolicyItems
-$: dependents = [].concat(...Object.values($dependentsByPolicyId))
-$: policyMembers = [].concat(...Object.values($membersByPolicyId))
+$: policyItems = $allPolicyItems
+$: dependents = $allPolicyDependents
+$: policyMembers = $allPolicyMembers
 
 $: dependentOptions = getDependentOptions(dependents)
 $: policyMemberOptions = getPolicyMemberOptions(policyMembers)
@@ -43,6 +43,7 @@ const loadDataOnce = (policyId: string) => {
   }
 }
 const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(event.detail.policy_id, event.detail.id))
+const onGotoPolicyItem = (event: CustomEvent<PolicyItem>) => $goto(itemDetails(event.detail.policy_id, event.detail.id))
 </script>
 
 <style>
@@ -50,7 +51,13 @@ const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(ev
 
 <Page layout="grid">
   <Row cols="12">
-    <ClaimCards isAdmin {accountablePersons} claims={actionableClaims} {items} on:goto-claim={onGotoClaim} />
+    <CardsGrid
+      isAdmin
+      {accountablePersons}
+      recentChanges={$recentChanges}
+      on:goto-claim={onGotoClaim}
+      on:goto-item={onGotoPolicyItem}
+    />
   </Row>
 
   <Row cols={'12'}>

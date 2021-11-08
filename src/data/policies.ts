@@ -46,7 +46,7 @@ export type UpdatePolicyRequestBody = {
 
 export const policies = writable<Policy[]>([])
 export const selectedPolicy = derived([policies, selectedPolicyId], ([policies, selectedPolicyId]) => {
-  return policies.find((p) => p.id === selectedPolicyId) || {}
+  return policies.find((p) => p.id === selectedPolicyId) || ({} as Policy)
 })
 export const initialized = writable<boolean>(false)
 

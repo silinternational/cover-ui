@@ -3,7 +3,19 @@ import { throwError } from '../error'
 import { derived, writable } from 'svelte/store'
 import { selectedPolicyId } from './role-policy-selection'
 
-export type ItemCoverageStatus = 'Draft' | 'Pending' | 'Approved' | 'Denied' | 'Revision' | 'Inactive'
+export enum ItemCoverageStatus {
+  Draft = 'Draft',
+  Pending = 'Pending',
+  Approved = 'Approved',
+  Denied = 'Denied',
+  Revision = 'Revision',
+  Inactive = 'Inactive',
+}
+export const incompleteItemCoverageStatus = [
+  ItemCoverageStatus.Draft,
+  ItemCoverageStatus.Pending,
+  ItemCoverageStatus.Revision,
+]
 
 export type RiskCategory = {
   created_at: string /*Date*/

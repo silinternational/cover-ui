@@ -1,5 +1,5 @@
 import { GET } from './index'
-import { writable } from 'svelte/store'
+import { derived, writable } from 'svelte/store'
 
 export type PolicyMember = {
   email: string
@@ -12,6 +12,9 @@ export type PolicyMember = {
 }
 
 export const membersByPolicyId = writable<{ [policyId: string]: PolicyMember[] }>({})
+export const allPolicyMembers = derived(membersByPolicyId, (membersByPolicyId) => {
+  return Object.values(membersByPolicyId).flat()
+})
 
 /**
  * A function to fetch the items of a policy

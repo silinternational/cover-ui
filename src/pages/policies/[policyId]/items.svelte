@@ -1,10 +1,10 @@
 <script lang="ts">
-import { ClaimCards, ItemsTable, Row } from 'components'
-import { isLoadingById, loading } from 'components/progress'
+import { CardsGrid, ItemsTable, Row } from 'components'
+import { isLoadingPolicyItems, loading } from 'components/progress'
 import { Claim, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
-import { deleteItem, loadItems, selectedPolicyItems } from 'data/items'
+import { deleteItem, loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
 import { getNameOfPolicy, selectedPolicy } from 'data/policies'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import * as routes from 'helpers/routes'
@@ -15,8 +15,6 @@ import { Page } from '@silintl/ui-components'
 export let policyId: string
 
 $: policyId && loadItems(policyId)
-$: items = $selectedPolicyItems
-
 $: policyId && loadClaimsByPolicyId(policyId)
 
 $: policyId && loadDependents(policyId)
@@ -41,20 +39,35 @@ const onDelete = async (event: CustomEvent<any>) => {
 const onGotoClaim = (event: CustomEvent<Claim>) =>
   $goto(routes.customerClaimDetails(event.detail.policy_id, event.detail.id))
 
+const onGotoPolicyItem = (event: CustomEvent<PolicyItem>) =>
+  $goto(routes.itemDetails(event.detail.policy_id, event.detail.id))
+
 const onGotoItem = (event: CustomEvent<string>) => $goto(event.detail)
 </script>
 
 <Page layout="grid">
   <Row cols={'12'}>
     <h3>{getNameOfPolicy($selectedPolicy)} Policy</h3>
-    <ClaimCards claims={$selectedPolicyClaims} {accountablePersons} on:goto-claim={onGotoClaim} />
+    <CardsGrid
+      {accountablePersons}
+      claims={$selectedPolicyClaims}
+      policyItems={$selectedPolicyItems}
+      on:goto-claim={onGotoClaim}
+      on:goto-item={onGotoPolicyItem}
+    />
   </Row>
 
   <Row cols={'12'}>
-    {#if $loading && isLoadingById(`policies/${policyId}/items`)}
+    {#if $loading && isLoadingPolicyItems(policyId)}
       Loading items...
     {:else}
-      <ItemsTable {items} {accountablePersons} {policyId} on:delete={onDelete} on:gotoItem={onGotoItem} />
+      <ItemsTable
+        items={$selectedPolicyItems}
+        {accountablePersons}
+        {policyId}
+        on:delete={onDelete}
+        on:gotoItem={onGotoItem}
+      />
     {/if}
   </Row>
 </Page>

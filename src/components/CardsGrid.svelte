@@ -1,0 +1,77 @@
+<script lang="ts">
+import ClaimCard from './ClaimCard.svelte'
+import ItemCard from './ItemCard.svelte'
+import type { AccountablePersonOptions } from 'data/accountablePersons'
+import { Claim, ClaimItem, incompleteClaimItemStatuses, isClaimItem } from 'data/claims'
+import { incompleteItemCoverageStatus, PolicyItem } from 'data/items'
+import { isRecentClaim, RecentChange } from 'data/recent-activity'
+
+type CardItem = { data: ClaimItem | PolicyItem; claim?: Claim }
+
+export let recentChanges: RecentChange[] = []
+export let claims: Claim[] = []
+export let policyItems: PolicyItem[] = []
+export let accountablePersons: AccountablePersonOptions[] = []
+export let isAdmin: boolean = false
+
+$: items = recentChanges.length ? getRecentChanges(recentChanges) : mergeClaimsAndPolicyItems(claims, policyItems)
+
+const isIncomplete = (card: CardItem) => {
+  return isClaimItem(card.data)
+    ? incompleteClaimItemStatuses.includes(card.data.status)
+    : incompleteItemCoverageStatus.includes(card.data.coverage_status)
+}
+
+const isRecent = (card: CardItem) => {
+  const updatedAt = new Date(card.data.updated_at)
+  const today = new Date()
+  const aWeekAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7)
+  return Number(updatedAt) > Number(aWeekAgo)
+}
+
+const isRecentOrIncomplete = (card: CardItem) => isIncomplete(card) || isRecent(card)
+
+const sortByUpdateDate = (cardA: CardItem, cardB: CardItem) =>
+  +new Date(cardB.data.updated_at) - +new Date(cardA.data.updated_at)
+
+const getRecentChanges = (changes: RecentChange[]): CardItem[] => {
+  let cards: CardItem[] = []
+  for (let change of changes) {
+    if (isRecentClaim(change)) {
+      cards.push({ data: change.Claim?.claim_items[0], claim: change.Claim })
+    } else {
+      cards.push({ data: change.Item })
+    }
+  }
+  return cards
+}
+const mergeClaimsAndPolicyItems = (claims: Claim[], policyItems: PolicyItem[]): CardItem[] => {
+  // Add all the policy items and claim items together then filter and sort them
+  let cards: CardItem[] = policyItems.map((item) => ({ data: item })) || []
+  for (let claim of claims) {
+    for (let claimItem of claim.claim_items) {
+      cards.push({ data: claimItem, claim })
+    }
+  }
+  return cards.filter(isRecentOrIncomplete).sort(sortByUpdateDate)
+}
+</script>
+
+<style>
+.card {
+  margin: 8px 8px 8px 0;
+  flex-basis: 330px;
+}
+</style>
+
+<div class="flex justify-start flex-wrap {$$props.class}">
+  {#each items as item (item.data.id)}
+    <div class="card">
+      {#if isClaimItem(item.data)}
+        <ClaimCard claim={item.claim} claimItem={item.data} {accountablePersons} {isAdmin} on:goto-claim />
+      {:else}
+        <ItemCard item={item.data} {accountablePersons} {isAdmin} on:goto-item />
+      {/if}
+    </div>
+  {/each}
+</div>

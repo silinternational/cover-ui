@@ -20,7 +20,7 @@ import MoneyInput from 'MoneyInput.svelte'
 import RadioOptions from 'RadioOptions.svelte'
 import { assertHas } from '../../validation/assertions'
 import { Button, Form, TextArea } from '@silintl/ui-components'
-import { createEventDispatcher } from 'svelte'
+import { createEventDispatcher, onMount } from 'svelte'
 
 export let claim = {} as Claim
 export let item = {} as PolicyItem
@@ -72,11 +72,11 @@ let repairEstimateUSD: number | undefined
 let replaceEstimateUSD: number | undefined
 let fairMarketValueUSD: number | undefined
 
+// Load the necessary data.
+onMount(() => $claimIncidentTypes.length || loadClaimIncidentTypes())
+
 // Set initial form values based on the provided data.
 $: setInitialValues(claim, claimItem)
-
-// Load the necessary data.
-$: $claimIncidentTypes.length || loadClaimIncidentTypes()
 
 // Find applicable data from component props.
 $: claimItems = claim.claim_items || []

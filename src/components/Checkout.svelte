@@ -3,7 +3,7 @@ import { formatDate, getYear } from 'components/dates'
 import type { PolicyItem } from 'data/items'
 import { selectedPolicy } from 'data/policies'
 import { formatMoney } from 'helpers/money'
-import { CUSTOMER_HOME, TERMS } from 'helpers/routes'
+import { CUSTOMER_HOME, TERMS_OF_SERVICE } from 'helpers/routes'
 import ItemDeleteModal from 'ItemDeleteModal.svelte'
 import ItemDetails from 'ItemDetails.svelte'
 import { goto } from '@roxi/routify'
@@ -64,7 +64,7 @@ const handleDialog = (event: CustomEvent<string>) => {
 <div class="flex align-items-center my-2">
   <Checkbox on:checked={() => (checked = true)} on:unchecked={() => (checked = false)} />
 
-  <span class="mr-3px">I have read and agree to</span><a target="_blank" href={TERMS}> Terms of Service</a>
+  <span class="mr-3px">I have read and agree to</span><a target="_blank" href={TERMS_OF_SERVICE}> Terms of Service</a>
 </div>
 
 <div class="flex align-items-center p-1">

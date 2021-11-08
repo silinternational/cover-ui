@@ -110,7 +110,7 @@ const toggleRoleAndPolicyMenu = () => (menuIsOpen = !menuIsOpen)
 }
 </style>
 
-<Button appendIcon="arrow_drop_down" on:click={toggleRoleAndPolicyMenu}>{buttonText}</Button>
+<Button appendIcon="arrow_drop_down" on:click={toggleRoleAndPolicyMenu}>{buttonText || ''}</Button>
 <div id="role-and-policy-menu-options-container">
   <Menu bind:menuOpen={menuIsOpen} {menuItems} />
 </div>

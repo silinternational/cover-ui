@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getUploadLabel } from '../business-rules/claim-payout-amount'
+import { getUploadLabel, isEvidenceNeeded } from '../business-rules/claim-payout-amount'
 import ClaimBanner from './banners/ClaimBanner.svelte'
 import ClaimCardBanner from './ClaimCardBanner.svelte'
 import type { AccountablePersonOptions } from 'data/accountablePersons'
@@ -31,7 +31,7 @@ $: needsRepairReceipt = needsReceipt && payoutOption === 'Repair'
 $: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
 $: needsReceipt = claim.status === 'Receipt'
 $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType)
-$: showSecondBanner = needsReceipt
+$: showSecondBanner = needsReceipt || isEvidenceNeeded(claimItem, claim.status)
 
 const gotoClaim = () => dispatch('goto-claim', claim)
 </script>

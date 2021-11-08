@@ -42,8 +42,8 @@ const onChange = () => {
 
 .custom-field .placeholder {
   position: absolute;
-  bottom: -45px;
-  top: 22px;
+  bottom: -52px;
+  top: 23px;
   transform: translateY(-50%);
   color: #aaa;
   overflow: hidden;
@@ -70,6 +70,8 @@ const onChange = () => {
     placeholder="&nbsp;"
     bind:value={choice}
     on:change={onChange}
+    on:blur={() => dispatch('check', choice)}
+    on:focus={() => (choice = '')}
   />
   <span class="placeholder">{placeholder}</span>
 </label>

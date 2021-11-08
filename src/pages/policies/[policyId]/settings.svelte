@@ -98,14 +98,14 @@ const updateCostCenter = async () => {
   }
 }
 
-const validateEntityCode = (e) => {
+const warnUserCodeIsNotValid = (e: CustomEvent<string>) => {
   !entityOptions[e.detail] && setNotice('Please select a valid entity code')
 }
 
 const updateEntityCode = async (e: CustomEvent<string>) => {
   entityCode = e.detail
 
-  if (entityCode !== policyData.entity_code) {
+  if (entityCode !== policy.entity_code?.code) {
     await callUpdatePolicy()
 
     setNotice('Your affiliation has been saved')
@@ -194,11 +194,11 @@ p {
       <span class="header">Affiliation<span class="required">*</span></span>
       <SearchableSelect
         options={entityOptions}
-        choice={$entityCodes.find((code) => code.code === entityCode)?.name}
+        choice={$entityCodes.find((code) => code.code === entityCode)?.name || ''}
         {placeholder}
         padding={'16px'}
         on:chosen={updateEntityCode}
-        on:check={validateEntityCode}
+        on:check={warnUserCodeIsNotValid}
       />
     </p>
     <p>

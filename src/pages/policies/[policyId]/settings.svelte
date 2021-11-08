@@ -10,10 +10,11 @@ import { householdSettingsDependent, householdSettingsNewDependent, settingsPoli
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
 import { Button, TextField, IconButton, Page, setNotice } from '@silintl/ui-components'
+import { onMount } from 'svelte'
 
 const policyData = {} as Policy
 
-$entityCodes.length || loadEntityCodes()
+onMount(() => $entityCodes.length || loadEntityCodes())
 
 $: policyId = $selectedPolicyId
 

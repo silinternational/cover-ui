@@ -6,6 +6,8 @@ import * as routes from 'helpers/routes'
 import { goto } from '@roxi/routify'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 
+// TODO: Avoid trying to load the policies until the user has authenticated (to
+// avoid doing so on public pages, like the Privacy Policy).
 $: $policiesInitialized || loadPolicies()
 
 $: myPolicies = $user?.policies || []

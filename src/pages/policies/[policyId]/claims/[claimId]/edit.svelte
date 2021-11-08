@@ -23,7 +23,7 @@ export let policyId = $selectedPolicyId
 
 let claimName: string
 
-$: $initialized || getClaimById(claimId)
+$initialized || getClaimById(claimId)
 $: claim = ($claims.find((clm: Claim) => clm.id === claimId) || {}) as Claim
 $: claimItems = claim.claim_items || []
 

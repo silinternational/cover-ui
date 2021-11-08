@@ -25,7 +25,7 @@ $: items = $selectedPolicyItems
 $: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
 $: itemName = item.name || ''
 
-$: $initialized || loadClaimsByPolicyId(policyId)
+$initialized || loadClaimsByPolicyId(policyId)
 $: existingClaim = $claims.find((claim) => isItemIdOnClaim(itemId, claim)) || ({} as Claim)
 $: claimExists = !!existingClaim.id
 

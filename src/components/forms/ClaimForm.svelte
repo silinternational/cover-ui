@@ -76,7 +76,7 @@ let fairMarketValueUSD: number | undefined
 $: setInitialValues(claim, claimItem)
 
 // Load the necessary data.
-$: $claimIncidentTypes.length || loadClaimIncidentTypes()
+$claimIncidentTypes.length || loadClaimIncidentTypes()
 
 // Find applicable data from component props.
 $: claimItems = claim.claim_items || []

@@ -71,8 +71,8 @@ export type ClaimItem = {
   updated_at: string /*Date*/
 }
 
-export function isClaimItem(item: any): item is ClaimItem {
-  return (item as ClaimItem).claim_id !== undefined
+export function isClaimItem(obj: any): obj is ClaimItem {
+  return (obj as ClaimItem)?.claim_id !== undefined
 }
 
 export type Claim = {

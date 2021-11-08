@@ -13,7 +13,7 @@ import { Button, TextField, IconButton, Page, setNotice } from '@silintl/ui-comp
 
 const policyData = {} as Policy
 
-$: $entityCodes.length || loadEntityCodes()
+$entityCodes.length || loadEntityCodes()
 
 $: policyId = $selectedPolicyId
 

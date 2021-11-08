@@ -16,16 +16,18 @@ import * as routes from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
+import { onMount } from 'svelte'
 
 export let itemId: string
 export let policyId = $selectedPolicyId
+
+onMount(() => $initialized || loadClaimsByPolicyId(policyId))
 
 $: policyId && loadItems(policyId)
 $: items = $selectedPolicyItems
 $: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
 $: itemName = item.name || ''
 
-$: $initialized || loadClaimsByPolicyId(policyId)
 $: existingClaim = $claims.find((claim) => isItemIdOnClaim(itemId, claim)) || ({} as Claim)
 $: claimExists = !!existingClaim.id
 

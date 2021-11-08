@@ -7,6 +7,7 @@ import { policyDetails } from 'helpers/routes'
 import { assertHas } from '../../validation/assertions'
 import { goto, metatags } from '@roxi/routify'
 import { Button, TextField, Page } from '@silintl/ui-components'
+import { onMount } from 'svelte'
 
 let account = ''
 let accountDetail = ''
@@ -15,7 +16,7 @@ let groupName = ''
 let entityCode = ''
 let entityOptions: any = {}
 
-$: $entityCodes.length || loadEntityCodes()
+onMount(() => $entityCodes.length || loadEntityCodes())
 
 $: metatags.title = formatPageTitle('New Corporate Policy')
 $: $entityCodes.forEach((code) => {

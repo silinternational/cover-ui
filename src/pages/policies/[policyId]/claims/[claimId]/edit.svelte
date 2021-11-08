@@ -17,13 +17,15 @@ import { customerClaims, customerClaimDetails, customerClaimEdit } from 'helpers
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
+import { onMount } from 'svelte'
 
 export let claimId: string
 export let policyId = $selectedPolicyId
 
 let claimName: string
 
-$: $initialized || getClaimById(claimId)
+onMount(() => $initialized || getClaimById(claimId))
+
 $: claim = ($claims.find((clm: Claim) => clm.id === claimId) || {}) as Claim
 $: claimItems = claim.claim_items || []
 

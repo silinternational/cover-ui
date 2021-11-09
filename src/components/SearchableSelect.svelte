@@ -12,7 +12,7 @@ let randomId = generateRandomID('dataList-')
 
 const dispatch = createEventDispatcher()
 
-const onChange = () => dispatch('chosen', options[choice])
+const onChange = () => options[choice] && dispatch('chosen', options[choice])
 </script>
 
 <style>

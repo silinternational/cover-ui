@@ -5,7 +5,7 @@ import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions }
 import { Claim, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { loadItems } from 'data/items'
-import { selectedPolicy } from 'data/policies'
+import { getNameOfPolicy, selectedPolicy } from 'data/policies'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import { roleSelection } from 'data/role-policy-selection'
 import { customerClaims, customerClaimDetails, POLICIES, policyDetails } from 'helpers/routes'
@@ -17,7 +17,7 @@ import { onMount } from 'svelte'
 export let policyId: string
 $: policy = $selectedPolicy
 
-$: policyName = policy.type === 'Team' ? policy.account_detail : policy.household_id
+$: policyName = getNameOfPolicy(policy)
 $: isAdmin = $roleSelection !== UserAppRole.Customer
 $: adminBreadcrumbs = isAdmin
   ? [

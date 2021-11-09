@@ -14,7 +14,7 @@ export let policyItems: PolicyItem[] = []
 export let accountablePersons: AccountablePersonOptions[] = []
 export let isAdmin: boolean = false
 
-$: items = recentChanges.length ? parseRecentChanges(recentChanges) : parseClaimsAndPolicyItems(claims, policyItems)
+$: cardItems = recentChanges.length ? parseRecentChanges(recentChanges) : parseClaimsAndPolicyItems(claims, policyItems)
 
 const isIncomplete = (card: CardItem) => {
   return isClaimItem(card.data)
@@ -66,12 +66,12 @@ const parseClaimsAndPolicyItems = (claims: Claim[], policyItems: PolicyItem[]): 
 </style>
 
 <div class="flex justify-start flex-wrap {$$props.class}">
-  {#each items as item (item.data.id)}
+  {#each cardItems as cardItem (cardItem.data.id)}
     <div class="card">
-      {#if isClaimItem(item.data)}
-        <ClaimCard claim={item.claim} claimItem={item.data} {accountablePersons} {isAdmin} on:goto-claim />
+      {#if isClaimItem(cardItem.data)}
+        <ClaimCard claim={cardItem.claim} claimItem={cardItem.data} {accountablePersons} {isAdmin} on:goto-claim />
       {:else}
-        <ItemCard item={item.data} {accountablePersons} {isAdmin} on:goto-item />
+        <ItemCard item={cardItem.data} {accountablePersons} {isAdmin} on:goto-item />
       {/if}
     </div>
   {/each}

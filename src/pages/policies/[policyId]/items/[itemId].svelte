@@ -60,7 +60,7 @@ $: allowRemoveCovereage = (!['Inactive', 'Denied'].includes(status) && isMemberO
 $: canEdit = ['Draft', 'Pending', 'Revision'].includes(status) && isMemberOfPolicy
 
 // Dynamic breadcrumbs data:
-$: policyName = policy.type === 'Corporate' ? policy.account_detail : policy.household_id
+$: policyName = policy.type === 'Team' ? policy.account_detail : policy.household_id
 $: adminBreadcrumbs = isAdmin
   ? [
       { name: 'Policies', url: POLICIES },

@@ -2,30 +2,30 @@
 import { UserAppRole } from '../authn/user'
 import { getNameOfPolicy, Policy } from 'data/policies'
 import { roleSelection, recordRoleSelection, selectedPolicyId } from 'data/role-policy-selection'
-import { POLICY_NEW_CORPORATE } from 'helpers/routes'
+import { POLICY_NEW_TEAM } from 'helpers/routes'
 import { Button, Menu, MenuItem } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let myPolicies: Policy[]
 export let role: UserAppRole
 
-const addCorporatePolicyEntry: MenuItem = {
+const addTeamPolicyEntry: MenuItem = {
   icon: 'add',
-  label: 'Add corporate policy',
-  url: POLICY_NEW_CORPORATE,
+  label: 'Add team policy',
+  url: POLICY_NEW_TEAM,
 }
 const dispatch = createEventDispatcher()
 
 let buttonText: string
-let corporatePolicyEntries: MenuItem[]
+let teamPolicyEntries: MenuItem[]
 let householdPolicyEntries: MenuItem[]
 let menuIsOpen = false
 let menuItems: MenuItem[]
-let myCorporatePolicies: Policy[]
+let myTeamPolicies: Policy[]
 let myHouseholdPolicies: Policy[]
 let roleEntries: MenuItem[]
 
-$: myCorporatePolicies = myPolicies.filter(isCorporatePolicy)
+$: myTeamPolicies = myPolicies.filter(isTeamPolicy)
 $: myHouseholdPolicies = myPolicies.filter(isHouseholdPolicy)
 
 $: setInitialRoleSelection(role)
@@ -33,17 +33,17 @@ $: setInitialRoleSelection(role)
 $: buttonText = getButtonText($roleSelection, $selectedPolicyId, myPolicies)
 
 $: roleEntries = getEntriesForRole(role)
-$: corporatePolicyEntries = getCorporatePolicyEntries(myCorporatePolicies)
+$: teamPolicyEntries = getTeamPolicyEntries(myTeamPolicies)
 $: householdPolicyEntries = getHouseholdEntries(myHouseholdPolicies)
 
-$: menuItems = [...roleEntries, ...corporatePolicyEntries, addCorporatePolicyEntry, ...householdPolicyEntries]
+$: menuItems = [...roleEntries, ...teamPolicyEntries, addTeamPolicyEntry, ...householdPolicyEntries]
 
 const selectUserPolicy = (policyId: string) => {
   recordRoleSelection(UserAppRole.Customer)
   dispatch('policy', policyId)
 }
 
-const getCorporatePolicyEntries = (policies: Policy[]): MenuItem[] => {
+const getTeamPolicyEntries = (policies: Policy[]): MenuItem[] => {
   return policies.map((policy: Policy): MenuItem => {
     return {
       icon: 'work',
@@ -92,14 +92,14 @@ const getButtonText = (userAppRoleSelection: UserAppRole, policyIdSelection: str
   }
 
   const policy = myPolicies.find((policy) => policy.id === policyIdSelection)
-  if (policy && isCorporatePolicy(policy)) {
+  if (policy && isTeamPolicy(policy)) {
     return getNameOfPolicy(policy)
   }
 
   return 'Household'
 }
 
-const isCorporatePolicy = (policy: Policy): boolean => policy.type === 'Corporate'
+const isTeamPolicy = (policy: Policy): boolean => policy.type === 'Team'
 const isHouseholdPolicy = (policy: Policy): boolean => policy.type === 'Household'
 const toggleRoleAndPolicyMenu = () => (menuIsOpen = !menuIsOpen)
 </script>

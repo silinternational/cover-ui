@@ -57,7 +57,7 @@ const onSearch = (event: CustomEvent) => {
           <Datatable.Data.Row.Item>
             {#if policy.type === 'Household'}
               <span class="material-icons">family_restroom</span>
-            {:else if policy.type === 'Corporate'}
+            {:else if policy.type === 'Team'}
               <span class="material-icons">business</span>
             {/if}
           </Datatable.Data.Row.Item>

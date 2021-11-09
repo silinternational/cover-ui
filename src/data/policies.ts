@@ -24,7 +24,7 @@ export type Policy = {
 
 export enum PolicyType {
   Household = 'Household',
-  Corporate = 'Corporate',
+  Team = 'Team',
 }
 
 export type CreatePolicyRequestBody = {
@@ -112,8 +112,8 @@ export function clear(): void {
 
 export const getNameOfPolicy = (policy: Policy): string => {
   let policyName = ''
-  if (policy?.type === 'Corporate') {
-    policyName = policy?.name || 'Corporate'
+  if (policy?.type === 'Team') {
+    policyName = policy?.name || 'Team'
   } else if (policy?.type === 'Household') {
     const members = policy?.members || []
     const lastName = members[0]?.last_name || ''

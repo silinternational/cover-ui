@@ -125,7 +125,7 @@ const callUpdatePolicy = async () => {
   if ((policy.type = PolicyType.Household)) {
     policyData.household_id = householdId
   }
-  if ((policy.type = PolicyType.Corporate)) {
+  if ((policy.type = PolicyType.Team)) {
     policyData.account = account
     policyData.cost_center = costCenter
     policyData.entity_code = entityCode
@@ -184,7 +184,7 @@ p {
     </p>
   {/if}
 
-  {#if policy.type === PolicyType.Corporate}
+  {#if policy.type === PolicyType.Team}
     <p>
       <span class="header">Policy name<span class="required">*</span></span>
       <TextField bind:value={policyName} on:blur={updatePolicyName} />

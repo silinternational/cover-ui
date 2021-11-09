@@ -213,11 +213,12 @@ async function onUpload(event: CustomEvent<FormData>) {
   }
 }
 
-function onDeleted(event: CustomEvent<string>) {
-  const id = event.detail
+//TODO use endpoint when avialable
+// function onDeleted(event: CustomEvent<string>) {
+//   const id = event.detail
 
-  console.log('deleting file: ' + id) //TODO use endpoint when avialable
-}
+//   console.log('deleting file: ' + id)
+// }
 
 const getClaimStatusText = (claim: Claim, item: ClaimItem) => {
   const updatedAtStr = item.updated_at ? formatDistanceToNow(Date.parse(item.updated_at), { addSuffix: true }) : ''
@@ -345,13 +346,7 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
         <img class="receipt" src={previewFile.file?.url} alt="document" on:error={onImgError} />
       {/if}
 
-      <FilePreview
-        class="pointer w-50"
-        previews={claimFiles}
-        {isMemberOfPolicy}
-        on:deleted={onDeleted}
-        on:preview={onPreview}
-      />
+      <FilePreview class="pointer w-50" previews={claimFiles} {isMemberOfPolicy} on:preview={onPreview} />
 
       <br />
     </Row>

@@ -58,9 +58,7 @@ const onGotoItem = (event: CustomEvent<string>) => $goto(event.detail)
   </Row>
 
   <Row cols={'12'}>
-    {#if $loading && isLoadingPolicyItems(policyId)}
-      Loading items...
-    {:else}
+    {#if $selectedPolicyItems.length > 0}
       <ItemsTable
         items={$selectedPolicyItems}
         {accountablePersons}
@@ -68,6 +66,8 @@ const onGotoItem = (event: CustomEvent<string>) => $goto(event.detail)
         on:delete={onDelete}
         on:gotoItem={onGotoItem}
       />
-    {/if}
+    {:else if $loading && isLoadingPolicyItems(policyId)}
+      Loading items...
+    {:else}{/if}
   </Row>
 </Page>

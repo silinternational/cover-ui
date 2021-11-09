@@ -25,8 +25,8 @@ export type UpdatePolicyDependentRequestBody = {
 }
 
 export const dependentsByPolicyId = writable<{ [policyId: string]: PolicyDependent[] }>({})
-export const allPolicyDependents = derived(dependentsByPolicyId, (dependentsByPolicyId) => {
-  return Object.values(dependentsByPolicyId).flat()
+export const allPolicyDependents = derived(dependentsByPolicyId, ($dependentsByPolicyId) => {
+  return Object.values($dependentsByPolicyId).flat()
 })
 
 /**

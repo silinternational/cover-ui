@@ -11,7 +11,7 @@ export enum ItemCoverageStatus {
   Revision = 'Revision',
   Inactive = 'Inactive',
 }
-export const incompleteItemCoverageStatus = [
+export const incompleteItemCoverageStatuses = [
   ItemCoverageStatus.Draft,
   ItemCoverageStatus.Pending,
   ItemCoverageStatus.Revision,
@@ -86,13 +86,13 @@ export type UpdatePolicyItemRequestBody = {
 }
 
 export const itemsByPolicyId = writable<{ [policyId: string]: PolicyItem[] }>({})
-export const allPolicyItems = derived(itemsByPolicyId, (itemsByPolicyId) => {
-  return Object.values(itemsByPolicyId).flat()
+export const allPolicyItems = derived(itemsByPolicyId, ($itemsByPolicyId) => {
+  return Object.values($itemsByPolicyId).flat()
 })
 export const selectedPolicyItems = derived(
   [itemsByPolicyId, selectedPolicyId],
-  ([itemsByPolicyId, selectedPolicyId]) => {
-    return itemsByPolicyId[selectedPolicyId] || []
+  ([$itemsByPolicyId, $selectedPolicyId]) => {
+    return $itemsByPolicyId[$selectedPolicyId] || []
   }
 )
 

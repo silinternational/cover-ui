@@ -148,8 +148,8 @@ export type DenyClaimRequestBody = {
 }
 
 export const claims = writable<Claim[]>([])
-export const selectedPolicyClaims = derived([claims, selectedPolicyId], ([claims, selectedPolicyId]) => {
-  return claims.filter((c) => c.policy_id === selectedPolicyId)
+export const selectedPolicyClaims = derived([claims, selectedPolicyId], ([$claims, $selectedPolicyId]) => {
+  return $claims.filter((c) => c.policy_id === $selectedPolicyId)
 })
 export const initialized = writable<boolean>(false)
 

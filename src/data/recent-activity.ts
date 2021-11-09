@@ -26,12 +26,12 @@ export type RecentActivity = {
   Items: RecentItem[]
 }
 
-export const recentActivity = writable<RecentActivity>()
-export const recentChanges = derived(recentActivity, (recentActivity) => {
-  if (!recentActivity) return []
+const recentActivity = writable<RecentActivity>()
+export const recentChanges = derived(recentActivity, ($recentActivity) => {
+  if (!$recentActivity) return []
 
-  const recentClaims = recentActivity.Claims
-  const recentItems = recentActivity.Items
+  const recentClaims = $recentActivity.Claims
+  const recentItems = $recentActivity.Items
   const mergedRecentObjects = [...recentClaims, ...recentItems]
 
   mergedRecentObjects.sort((a: RecentChange, b: RecentChange) => {

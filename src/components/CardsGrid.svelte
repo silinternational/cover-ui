@@ -3,7 +3,7 @@ import ClaimCard from './ClaimCard.svelte'
 import ItemCard from './ItemCard.svelte'
 import type { AccountablePersonOptions } from 'data/accountablePersons'
 import { Claim, ClaimItem, incompleteClaimItemStatuses, isClaimItem } from 'data/claims'
-import { incompleteItemCoverageStatus, PolicyItem } from 'data/items'
+import { incompleteItemCoverageStatuses, PolicyItem } from 'data/items'
 import { isRecentClaim, RecentChange } from 'data/recent-activity'
 
 type CardItem = { data: ClaimItem | PolicyItem; claim?: Claim }
@@ -14,12 +14,12 @@ export let policyItems: PolicyItem[] = []
 export let accountablePersons: AccountablePersonOptions[] = []
 export let isAdmin: boolean = false
 
-$: items = recentChanges.length ? getRecentChanges(recentChanges) : mergeClaimsAndPolicyItems(claims, policyItems)
+$: items = recentChanges.length ? parseRecentChanges(recentChanges) : parseClaimsAndPolicyItems(claims, policyItems)
 
 const isIncomplete = (card: CardItem) => {
   return isClaimItem(card.data)
     ? incompleteClaimItemStatuses.includes(card.data.status)
-    : incompleteItemCoverageStatus.includes(card.data.coverage_status)
+    : incompleteItemCoverageStatuses.includes(card.data.coverage_status)
 }
 
 const isRecent = (card: CardItem) => {
@@ -34,7 +34,7 @@ const isRecentOrIncomplete = (card: CardItem) => isIncomplete(card) || isRecent(
 const sortByUpdateDate = (cardA: CardItem, cardB: CardItem) =>
   +new Date(cardB.data.updated_at) - +new Date(cardA.data.updated_at)
 
-const getRecentChanges = (changes: RecentChange[]): CardItem[] => {
+const parseRecentChanges = (changes: RecentChange[]): CardItem[] => {
   let cards: CardItem[] = []
   for (let change of changes) {
     if (isRecentClaim(change)) {
@@ -45,7 +45,8 @@ const getRecentChanges = (changes: RecentChange[]): CardItem[] => {
   }
   return cards
 }
-const mergeClaimsAndPolicyItems = (claims: Claim[], policyItems: PolicyItem[]): CardItem[] => {
+
+const parseClaimsAndPolicyItems = (claims: Claim[], policyItems: PolicyItem[]): CardItem[] => {
   // Add all the policy items and claim items together then filter and sort them
   let cards: CardItem[] = policyItems.map((item) => ({ data: item })) || []
   for (let claim of claims) {

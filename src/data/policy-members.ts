@@ -12,8 +12,8 @@ export type PolicyMember = {
 }
 
 export const membersByPolicyId = writable<{ [policyId: string]: PolicyMember[] }>({})
-export const allPolicyMembers = derived(membersByPolicyId, (membersByPolicyId) => {
-  return Object.values(membersByPolicyId).flat()
+export const allPolicyMembers = derived(membersByPolicyId, ($membersByPolicyId) => {
+  return Object.values($membersByPolicyId).flat()
 })
 
 /**

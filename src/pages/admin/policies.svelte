@@ -55,7 +55,7 @@ const onSearch = (event: CustomEvent) => {
         <Datatable.Data.Row on:click={() => $goto(policyDetails(policy.id))} clickable>
           <!-- icon: -->
           <Datatable.Data.Row.Item>
-            {#if policy.type === 'Household'}
+            {#if policy.type === PolicyType.Household}
               <span class="material-icons">family_restroom</span>
             {:else if policy.type === PolicyType.Team}
               <span class="material-icons">business</span>
@@ -64,7 +64,7 @@ const onSearch = (event: CustomEvent) => {
 
           <!-- Name: -->
           <Datatable.Data.Row.Item>
-            {#if policy.type === 'Household'}
+            {#if policy.type === PolicyType.Household}
               Household {policy.household_id}
             {:else}
               {getNameOfPolicy(policy)}

@@ -13,7 +13,7 @@ const redirectToAppropriatePolicy = (user: User, selectedPolicyId: string) => {
   } else if (user.id) {
     const policies = user.policies || []
     const teamPolicies = policies.filter((p: Policy) => p.type === PolicyType.Team)
-    const householdPolicies = policies.filter((p: Policy) => p.type === 'Household')
+    const householdPolicies = policies.filter((p: Policy) => p.type === PolicyType.Household)
 
     const policyIdToUse = teamPolicies[0]?.id || householdPolicies[0]?.id || user.policy_id
     $redirect(policyHome(policyIdToUse))

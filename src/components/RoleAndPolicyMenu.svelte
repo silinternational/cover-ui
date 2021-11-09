@@ -100,7 +100,7 @@ const getButtonText = (userAppRoleSelection: UserAppRole, policyIdSelection: str
 }
 
 const isTeamPolicy = (policy: Policy): boolean => policy.type === PolicyType.Team
-const isHouseholdPolicy = (policy: Policy): boolean => policy.type === 'Household'
+const isHouseholdPolicy = (policy: Policy): boolean => policy.type === PolicyType.Household
 const toggleRoleAndPolicyMenu = () => (menuIsOpen = !menuIsOpen)
 </script>
 

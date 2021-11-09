@@ -74,7 +74,7 @@ th {
         <th>Entity Code</th>
         <td>{policy.entity_code?.code}</td>
       </tr>
-    {:else if policy.type === 'Household'}
+    {:else if policy.type === PolicyType.Household}
       <tr>
         <th>Household ID</th>
         <td>{policy.household_id}</td>

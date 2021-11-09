@@ -22,11 +22,13 @@ let showImage = true
 let alt = 'avatar'
 let showDrawerButton: boolean
 let menuOpen = false
+let nameOfUser: string
 
 const dispatch = createEventDispatcher()
 
 $: src = $user.photo_file?.url
 $: ownerInitial = $user.first_name?.charAt(0) || ''
+$: nameOfUser = $user.id ? $user.first_name + ' ' + $user.last_name : ''
 
 onMount(() => showOrHideDrawerButton())
 
@@ -50,6 +52,11 @@ img {
   height: 36px;
   width: 36px;
 }
+
+.name-of-user {
+  color: rgba(0, 0, 0, 0.87); /* Color is set to match the left menu's text. */
+  margin-right: 1ex;
+}
 </style>
 
 <svelte:window on:resize={showOrHideDrawerButton} />
@@ -63,6 +70,7 @@ img {
 
   <div id="toolbar" class="flex justify-end toolbar mdc-menu-surface--anchor">
     <button class="mdc-button clickable pr-1" on:click={toggleMenu}>
+      <span class="name-of-user">{nameOfUser}</span>
       {#if showImage && src}
         <img {src} {alt} on:error={avatarError} />
       {:else}

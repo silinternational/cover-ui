@@ -1,6 +1,7 @@
 <script lang="ts">
 import { DependentForm } from 'components'
 import { addDependent, dependentsByPolicyId, loadDependents } from 'data/dependents'
+import { PolicyType, selectedPolicy } from 'data/policies'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import { settingsPolicy } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -9,6 +10,9 @@ import { Page } from '@silintl/ui-components'
 
 $: policyId = $selectedPolicyId
 
+let isHouseholdPolicy: boolean
+
+$: isHouseholdPolicy = $selectedPolicy?.type === PolicyType.Household
 $: policyId && loadDependents(policyId)
 $: dependents = $dependentsByPolicyId[policyId] || []
 $: metatags.title = formatPageTitle('Settings > Household > Add Dependent')
@@ -24,5 +28,5 @@ const onSubmit = async (event: CustomEvent<string>) => {
 </script>
 
 <Page>
-  <DependentForm {dependents} on:cancel={onCancel} on:submit={onSubmit} />
+  <DependentForm {dependents} {isHouseholdPolicy} on:cancel={onCancel} on:submit={onSubmit} />
 </Page>

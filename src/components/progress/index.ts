@@ -20,3 +20,4 @@ export const stop = (id: string): void => {
 }
 
 export const isLoadingById = (id: string): boolean => pending.includes(id)
+export const isLoadingPolicyItems = (policyId: string): boolean => pending.includes(`policies/${policyId}/items`)

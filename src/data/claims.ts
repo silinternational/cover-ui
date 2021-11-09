@@ -71,6 +71,10 @@ export type ClaimItem = {
   updated_at: string /*Date*/
 }
 
+export function isClaimItem(obj: any): obj is ClaimItem {
+  return (obj as ClaimItem)?.claim_id !== undefined
+}
+
 export type Claim = {
   claim_files: ClaimFile[]
   claim_items: ClaimItem[]
@@ -144,8 +148,8 @@ export type DenyClaimRequestBody = {
 }
 
 export const claims = writable<Claim[]>([])
-export const selectedPolicyClaims = derived([claims, selectedPolicyId], ([claims, selectedPolicyId]) => {
-  return claims.filter((c) => c.policy_id === selectedPolicyId)
+export const selectedPolicyClaims = derived([claims, selectedPolicyId], ([$claims, $selectedPolicyId]) => {
+  return $claims.filter((c) => c.policy_id === $selectedPolicyId)
 })
 export const initialized = writable<boolean>(false)
 

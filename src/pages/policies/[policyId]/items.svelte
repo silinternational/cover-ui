@@ -7,12 +7,15 @@ import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { deleteItem, loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
 import { getNameOfPolicy, selectedPolicy } from 'data/policies'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
+import { selectedPolicyId } from 'data/role-policy-selection'
 import * as routes from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
-import { Page } from '@silintl/ui-components'
+import { Button, Page } from '@silintl/ui-components'
 
-export let policyId: string
+let policyId: string
+
+$: policyId = $selectedPolicyId
 
 $: policyId && loadItems(policyId)
 $: policyId && loadClaimsByPolicyId(policyId)

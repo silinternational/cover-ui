@@ -79,10 +79,8 @@ const getEntriesForRole = (role: UserAppRole): MenuItem[] => {
 const isAdminRole = (role: UserAppRole) => [UserAppRole.Signator, UserAppRole.Steward].includes(role)
 
 const setInitialRoleSelection = (actualRole: UserAppRole) => {
-  if (actualRole && isAdminRole(actualRole)) {
+  if (actualRole) {
     recordRoleSelection(actualRole)
-  } else {
-    recordRoleSelection(UserAppRole.Customer)
   }
 }
 
@@ -112,7 +110,7 @@ const toggleRoleAndPolicyMenu = () => (menuIsOpen = !menuIsOpen)
 }
 </style>
 
-<Button appendIcon="arrow_drop_down" on:click={toggleRoleAndPolicyMenu}>{buttonText}</Button>
+<Button appendIcon="arrow_drop_down" on:click={toggleRoleAndPolicyMenu}>{buttonText || ''}</Button>
 <div id="role-and-policy-menu-options-container">
   <Menu bind:menuOpen={menuIsOpen} {menuItems} />
 </div>

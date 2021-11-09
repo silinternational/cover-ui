@@ -15,6 +15,9 @@ const sendToRoleHome = (appRole: string) => {
     case UserAppRole.Signator:
       $redirect(ADMIN_HOME)
       break
+    case undefined:
+      // Don't redirect the user anywhere if we don't know their role yet.
+      break
     default:
       console.error('Unknown role:', appRole)
       $redirect(CUSTOMER_HOME)

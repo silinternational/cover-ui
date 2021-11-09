@@ -12,13 +12,7 @@ let randomId = generateRandomID('dataList-')
 
 const dispatch = createEventDispatcher()
 
-const onChange = () => {
-  for (const [key, value] of Object.entries(options)) {
-    if (choice === key) {
-      dispatch('chosen', value)
-    }
-  }
-}
+const onChange = () => options[choice] && dispatch('chosen', options[choice])
 </script>
 
 <style>

@@ -47,7 +47,7 @@ $: menuItems = [
     url: routes.settingsPolicy(policyId),
     icon: 'settings',
     label: 'Settings',
-    tooltip: 'Group Settings',
+    tooltip: 'Policy Settings',
   },
   {
     url: routes.itemsNew(policyId),

@@ -33,12 +33,13 @@ const onClick = (id: string) => {
   dispatch('preview', id)
 }
 
-function onDelete(event: CustomEvent, id: string) {
-  event.preventDefault()
-  event.stopPropagation()
+//Todo bring back delete for 1.1
+// function onDelete(event: CustomEvent, id: string) {
+//   event.preventDefault()
+//   event.stopPropagation()
 
-  dispatch('deleted', id)
-}
+//   dispatch('deleted', id)
+// }
 </script>
 
 <style>
@@ -65,9 +66,7 @@ function onDelete(event: CustomEvent, id: string) {
         <p class="white my-0">{preview.file.name}</p>
         <p class="white my-0">{formatDate(preview.created_at)}</p>
       </div>
-      {#if isMemberOfPolicy}
-        <Button class="delete-button" raised on:click={(evt) => onDelete(evt, preview.id)}>Delete</Button>
-      {:else if preview.purpose}
+      {#if preview.purpose}
         <Banner class="mdc-bold-font" color="hsla(213, 8%, 46%, 1)" background="hsla(213, 22%, 94%, 1)"
           >{preview.purpose}</Banner
         >

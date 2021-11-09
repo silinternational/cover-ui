@@ -12,7 +12,7 @@ import { onMount } from 'svelte'
 let account = ''
 let accountDetail = ''
 let costCenter = ''
-let groupName = ''
+let policyName = ''
 let entityCode = ''
 let entityOptions: any = {}
 
@@ -28,14 +28,14 @@ const onCreatePolicy = async () => {
     accountDetail,
     costCenter,
     entityCode,
-    groupName,
+    policyName,
   }
   validateForm(formData)
   const newPolicy = await createPolicy(formData)
   $goto(policyDetails(newPolicy.id))
 }
 const validateForm = (formData: any) => {
-  assertHas(formData.groupName, 'Please provide a group name')
+  assertHas(formData.policyName, 'Please provide a policy name')
   assertHas(formData.entityCode, 'Please provide an entity code')
   assertHas(formData.costCenter, 'Please provide a cost center')
   assertHas(formData.account, 'Please provide an account number')
@@ -52,8 +52,8 @@ const validateForm = (formData: any) => {
   <Breadcrumb />
 
   <p>
-    <span class="header">Group name<span class="required">*</span></span>
-    <TextField autofocus bind:value={groupName} />
+    <span class="header">Policy name<span class="required">*</span></span>
+    <TextField autofocus bind:value={policyName} />
   </p>
 
   <p>

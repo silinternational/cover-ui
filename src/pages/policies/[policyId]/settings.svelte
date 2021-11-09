@@ -26,8 +26,8 @@ let householdId = ''
 let costCenter = ''
 let policyName = ''
 let placeholder = 'Your entity of affiliation'
-let breadcrumbLinks = [{ name: 'Group Settings', url: settingsPolicy(policyId) }]
-metatags.title = formatPageTitle('Group Settings')
+let breadcrumbLinks = [{ name: 'Policy Settings', url: settingsPolicy(policyId) }]
+metatags.title = formatPageTitle('Policy Settings')
 
 $: if (policyId) {
   loadPolicy(policyId)

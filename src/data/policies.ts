@@ -112,7 +112,7 @@ export function clear(): void {
 
 export const getNameOfPolicy = (policy: Policy): string => {
   let policyName = ''
-  if (policy?.type === 'Team') {
+  if (policy?.type === PolicyType.Team) {
     policyName = policy?.name || 'Team'
   } else if (policy?.type === 'Household') {
     const members = policy?.members || []

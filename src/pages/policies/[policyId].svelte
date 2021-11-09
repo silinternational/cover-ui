@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getNameOfPolicy, loadPolicy, Policy } from 'data/policies'
+import { getNameOfPolicy, loadPolicy, Policy, PolicyType } from 'data/policies'
 import { loadItems, selectedPolicyItems } from 'data/items'
 import type { PolicyMember } from 'data/policy-members'
 import { getAccountablePerson, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
@@ -31,7 +31,7 @@ $: accountablePersons = [...policyMemberOptions, ...dependentOptions]
 $: policyId && loadItems(policyId)
 $: items = $selectedPolicyItems
 $: claims = policy.claims || []
-$: policyName = policy.type === 'Team' ? policy.account_detail : policy.household_id
+$: policyName = policy.type === PolicyType.Team ? policy.account_detail : policy.household_id
 $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))
 </script>
 
@@ -53,7 +53,7 @@ th {
       <th>Type</th>
       <td>{policy.type}</td>
     </tr>
-    {#if policy.type === 'Team'}
+    {#if policy.type === PolicyType.Team}
       <tr>
         <th>Name</th>
         <td>{getNameOfPolicy(policy)}</td>

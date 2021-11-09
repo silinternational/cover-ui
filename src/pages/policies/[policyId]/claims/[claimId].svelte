@@ -42,7 +42,7 @@ import {
 } from 'data/claims'
 import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
-import { getPolicyById, loadPolicy, memberBelongsToPolicy, policies, Policy } from 'data/policies'
+import { getPolicyById, loadPolicy, memberBelongsToPolicy, policies, Policy, PolicyType } from 'data/policies'
 import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { formatMoney } from 'helpers/money'
@@ -121,7 +121,7 @@ $: maximumPayout = determineMaxPayout(payoutOption, claimItem, item.coverage_amo
 
 // Dynamic breadcrumbs data:
 $: item.name && claim.reference_number && (claimName = `${item.name} (${claim.reference_number})`)
-$: policyName = policy.type === 'Team' ? policy.account_detail : policy.household_id
+$: policyName = policy.type === PolicyType.Team ? policy.account_detail : policy.household_id
 $: isAdmin = $roleSelection !== UserAppRole.Customer
 $: adminBreadcrumbs = isAdmin
   ? [

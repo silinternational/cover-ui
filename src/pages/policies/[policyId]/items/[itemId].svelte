@@ -14,7 +14,7 @@ import {
   reviseItem,
   selectedPolicyItems,
 } from 'data/items'
-import { loadPolicy, memberBelongsToPolicy, policies, Policy, PolicyType } from 'data/policies'
+import { loadPolicy, memberBelongsToPolicy, policies, Policy } from 'data/policies'
 import { loadMembersOfPolicy } from 'data/policy-members'
 import { loadPolicyItemHistory, policyHistoryByItemId } from 'data/policy-history'
 import { items as itemsRoute, itemDetails, itemEdit, itemNewClaim, POLICIES, policyDetails } from 'helpers/routes'
@@ -60,7 +60,7 @@ $: allowRemoveCovereage = (!['Inactive', 'Denied'].includes(status) && isMemberO
 $: canEdit = ['Draft', 'Pending', 'Revision'].includes(status) && isMemberOfPolicy
 
 // Dynamic breadcrumbs data:
-$: policyName = policy.type === PolicyType.Team ? policy.account_detail : policy.household_id
+$: policyName = policy.type === 'Team' ? policy.account_detail : policy.household_id
 $: adminBreadcrumbs = isAdmin
   ? [
       { name: 'Policies', url: POLICIES },

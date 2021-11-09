@@ -17,7 +17,7 @@ import { onMount } from 'svelte'
 export let policyId: string
 $: policy = $selectedPolicy
 
-$: policyName = policy.type === 'Corporate' ? policy.account_detail : policy.household_id
+$: policyName = policy.type === 'Team' ? policy.account_detail : policy.household_id
 $: isAdmin = $roleSelection !== UserAppRole.Customer
 $: adminBreadcrumbs = isAdmin
   ? [

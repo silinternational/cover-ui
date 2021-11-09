@@ -18,7 +18,7 @@ let entityOptions: any = {}
 
 onMount(() => $entityCodes.length || loadEntityCodes())
 
-$: metatags.title = formatPageTitle('New Corporate Policy')
+$: metatags.title = formatPageTitle('New Team Policy')
 $: $entityCodes.forEach((code) => {
   entityOptions[code.name] = code.code
 })

@@ -1,5 +1,4 @@
 <script lang="ts">
-import { throwError } from '../error'
 import { HOME } from 'helpers/routes'
 import { goto, url } from '@roxi/routify'
 
@@ -25,9 +24,7 @@ $: if (links.length === 0) {
 } else {
   urls = []
   links.forEach((val) => {
-    if (!val.url || !val.name) {
-      throwError('Error: no url or name field for provided links array')
-    } else {
+    if (val.url && val.name) {
       urls = [...urls, { url: val.url, name: val.name }]
     }
   })

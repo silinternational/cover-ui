@@ -1,6 +1,6 @@
 import { get, writable } from 'svelte/store'
 import { CREATE, GET, UPDATE } from 'data'
-import type { Policy } from 'data/policies'
+import { Policy, PolicyType } from 'data/policies'
 
 export enum UserAppRole {
   Customer = 'Customer',
@@ -73,3 +73,12 @@ export const isAdmin = (user: User): boolean =>
   isUserSteward(user) || isSignator(user) || user.app_role === UserAppRole.Admin
 
 export const isCustomer = (user: User): boolean => !isUserSteward(user) && !isSignator(user) && !!user.app_role
+
+export const getDefaultPolicyId = (user: User): string => {
+  const policies = user.policies || []
+  const teamPolicies = policies.filter((p: Policy) => p.type === PolicyType.Team)
+  const householdPolicies = policies.filter((p: Policy) => p.type === PolicyType.Household)
+  const policyIdToUse = teamPolicies[0]?.id || householdPolicies[0]?.id || user.policy_id
+
+  return policyIdToUse
+}

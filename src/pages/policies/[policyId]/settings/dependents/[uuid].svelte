@@ -1,6 +1,7 @@
 <script lang="ts">
 import { DependentForm } from 'components'
 import { deleteDependent, dependentsByPolicyId, loadDependents, updateDependent } from 'data/dependents'
+import { PolicyType, selectedPolicy } from 'data/policies'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import { settingsPolicy } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -8,6 +9,10 @@ import { goto, metatags } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
 export let uuid: string
+
+let isHouseholdPolicy: boolean
+
+$: isHouseholdPolicy = $selectedPolicy?.type === PolicyType.Household
 
 $: policyId = $selectedPolicyId
 $: policyId && loadDependents(policyId)
@@ -33,6 +38,6 @@ const onSubmit = async (event: CustomEvent<FormData>) => {
 
 <Page>
   {#if dependent}
-    <DependentForm {dependent} on:cancel={onCancel} on:remove={onRemove} on:submit={onSubmit} />
+    <DependentForm {dependent} {isHouseholdPolicy} on:cancel={onCancel} on:remove={onRemove} on:submit={onSubmit} />
   {/if}
 </Page>

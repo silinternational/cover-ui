@@ -99,8 +99,8 @@ const getStatusClass = (status: string) => (status === 'Draft' ? 'mdc-theme--pri
     <Datatable.Header.Item>Item</Datatable.Header.Item>
     <Datatable.Header.Item>Status</Datatable.Header.Item>
     <Datatable.Header.Item>Accountable Person</Datatable.Header.Item>
-    <Datatable.Header.Item>Covered Value</Datatable.Header.Item>
-    <Datatable.Header.Item>Premium</Datatable.Header.Item>
+    <Datatable.Header.Item numeric>Covered Value</Datatable.Header.Item>
+    <Datatable.Header.Item numeric>Premium</Datatable.Header.Item>
     <Datatable.Header.Item>Recent Activity</Datatable.Header.Item>
   </Datatable.Header>
   <Datatable.Data>
@@ -112,8 +112,8 @@ const getStatusClass = (status: string) => (status === 'Draft' ? 'mdc-theme--pri
           >{item.coverage_status || ''}</Datatable.Data.Row.Item
         >
         <Datatable.Data.Row.Item>{item.accountable_person?.name || ''}</Datatable.Data.Row.Item>
-        <Datatable.Data.Row.Item>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
-        <Datatable.Data.Row.Item>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
+        <Datatable.Data.Row.Item numeric>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
+        <Datatable.Data.Row.Item numeric>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item>{formatDate(item.updated_at)}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item>
           <svg class="home-table-more-vert" viewBox="0 0 30 30" on:click={() => handleMoreVertClick(item.id)}>

@@ -1,6 +1,6 @@
 <script lang="ts">
 import { UserAppRole } from '../authn/user'
-import { getNameOfPolicy, Policy } from 'data/policies'
+import { getNameOfPolicy, Policy, PolicyType } from 'data/policies'
 import { roleSelection, recordRoleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { POLICY_NEW_TEAM } from 'helpers/routes'
 import { Button, Menu, MenuItem } from '@silintl/ui-components'
@@ -99,8 +99,8 @@ const getButtonText = (userAppRoleSelection: UserAppRole, policyIdSelection: str
   return 'Household'
 }
 
-const isTeamPolicy = (policy: Policy): boolean => policy.type === 'Team'
-const isHouseholdPolicy = (policy: Policy): boolean => policy.type === 'Household'
+const isTeamPolicy = (policy: Policy): boolean => policy.type === PolicyType.Team
+const isHouseholdPolicy = (policy: Policy): boolean => policy.type === PolicyType.Household
 const toggleRoleAndPolicyMenu = () => (menuIsOpen = !menuIsOpen)
 </script>
 

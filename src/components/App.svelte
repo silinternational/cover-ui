@@ -4,6 +4,7 @@ import user, { isCustomer, loadUser } from '../authn/user'
 import type { CustomError } from '../error'
 import './mdc/_index.scss'
 import t from '../i18n'
+import FreshdeskWidget from './FreshdeskWidget.svelte'
 import { parse, stringify } from 'qs'
 import { afterPageLoad, Router } from '@roxi/routify'
 import { routes } from '../../.routify/routes'
@@ -45,3 +46,5 @@ $afterPageLoad((page: { path: string }) => {
 <Router {routes} config={{ queryHandler }} />
 
 <Snackbar />
+
+<FreshdeskWidget />

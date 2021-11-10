@@ -1,15 +1,14 @@
 <script lang="ts">
 import type { Claim } from 'data/claims'
+import type { PolicyItem } from 'data/items'
+import { isRecentClaim, isRecentItem, RecentChange } from 'data/recent-activity'
 import { formatMoney } from 'helpers/money'
-import { Datatable } from '@silintl/ui-components'
-import type { PolicyItem } from '../data/items'
-import { goto } from '@roxi/routify'
 import { customerClaimDetails, itemDetails } from 'helpers/routes'
+import { goto } from '@roxi/routify'
+import { Datatable } from '@silintl/ui-components'
 
-export let dependents = []
 export let loading = false
-export let policyMembers = []
-export let recentChanges = []
+export let recentChanges: RecentChange[] = []
 
 const HeaderRow = Datatable.Header
 const HeaderItem = Datatable.Header.Item
@@ -17,29 +16,18 @@ const TableBody = Datatable.Data
 const DataRow = Datatable.Data.Row
 const RowItem = Datatable.Data.Row.Item
 
-$: people = { policyMembers, dependents }
-
 const getClaimItemName = (claim: Claim): string => {
   const claimItem = claim.claim_items[0]
   return claimItem?.item?.name || ''
 }
 
-const getClaimItemPersonName = (claim: Claim, people): string => {
+const getClaimItemPersonName = (claim: Claim): string => {
   const claimItem = claim.claim_items[0]
-  return getItemPersonName(claimItem?.item, people)
+  return getItemPersonName(claimItem?.item)
 }
 
-const getItemPersonName = (item: PolicyItem | undefined, people): string => {
-  const accountableUserId = item?.accountable_user_id
-  if (accountableUserId) {
-    const accountableUser = people.policyMembers.find((policyMember) => policyMember.id === accountableUserId)
-    const userDisplayName = accountableUser?.first_name + ' ' + accountableUser?.last_name
-    return accountableUser ? userDisplayName : ''
-  }
-
-  const accountableDependentId = item?.accountable_dependent_id
-  const accountableDependent = people.dependents.find((dependent) => dependent.id === accountableDependentId)
-  return accountableDependent?.name || ''
+const getItemPersonName = (item: PolicyItem): string => {
+  return item?.accountable_person?.name || ''
 }
 
 const getFormattedClaimItemValue = (claim: Claim): string => {
@@ -64,20 +52,20 @@ const getFormattedClaimItemPremium = (claim: Claim): string => {
   </HeaderRow>
   <TableBody>
     {#each recentChanges as recentChange}
-      {#if recentChange.Claim}
+      {#if isRecentClaim(recentChange)}
         <DataRow clickable on:click={$goto(customerClaimDetails(recentChange.Claim.policy_id, recentChange.Claim.id))}>
           <RowItem>{getClaimItemName(recentChange.Claim)}</RowItem>
           <RowItem>{recentChange.Claim.status_change}</RowItem>
-          <RowItem>{getClaimItemPersonName(recentChange.Claim, people)}</RowItem>
+          <RowItem>{getClaimItemPersonName(recentChange.Claim)}</RowItem>
           <RowItem numeric>{getFormattedClaimItemValue(recentChange.Claim)}</RowItem>
           <RowItem numeric>{getFormattedClaimItemPremium(recentChange.Claim)}</RowItem>
           <RowItem>Claim</RowItem>
         </DataRow>
-      {:else if recentChange.Item}
+      {:else if isRecentItem(recentChange)}
         <DataRow clickable on:click={$goto(itemDetails(recentChange.Item.policy_id, recentChange.Item.id))}>
           <RowItem>{recentChange.Item.name}</RowItem>
           <RowItem>{recentChange.Item.status_change}</RowItem>
-          <RowItem>{getItemPersonName(recentChange.Item, people)}</RowItem>
+          <RowItem>{getItemPersonName(recentChange.Item)}</RowItem>
           <RowItem numeric>{formatMoney(recentChange.Item.coverage_amount)}</RowItem>
           <RowItem numeric>{formatMoney(recentChange.Item.annual_premium)}</RowItem>
           <RowItem>Coverage</RowItem>
@@ -85,7 +73,7 @@ const getFormattedClaimItemPremium = (claim: Claim): string => {
       {/if}
     {:else}
       <DataRow>
-        <RowItem colspan="7">
+        <RowItem colspan={7}>
           {#if loading}
             Loading...
           {:else}

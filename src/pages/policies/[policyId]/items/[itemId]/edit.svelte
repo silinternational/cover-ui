@@ -10,16 +10,19 @@ import { formatPageTitle } from 'helpers/pageTitle'
 import { HOME, items as itemsRoute, itemDetails, itemEdit } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
+import { onMount } from 'svelte'
 
 export let itemId: string
 export let policyId = $selectedPolicyId
 
 let isCheckingOut: boolean = false
 
-$: policyId && loadDependents(policyId)
-$: policyId && loadMembersOfPolicy(policyId)
+onMount(() => {
+  loadDependents(policyId)
+  loadMembersOfPolicy(policyId)
+  loadItems(policyId)
+})
 
-$: policyId && loadItems(policyId)
 $: items = $selectedPolicyItems
 $: item = items.find((anItem) => anItem.id === itemId) || ({} as PolicyItem)
 $: itemName = item.name || ''

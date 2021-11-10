@@ -1,7 +1,6 @@
 <script lang="ts">
 import ItemDeleteModal from './ItemDeleteModal.svelte'
 import { formatDate } from 'components/dates'
-import { AccountablePersonOptions, getAccountablePerson } from 'data/accountablePersons'
 import type { PolicyItem } from 'data/items'
 import { formatMoney } from 'helpers/money'
 import { itemDetails, itemEdit } from 'helpers/routes'
@@ -9,7 +8,6 @@ import { createEventDispatcher } from 'svelte'
 import { Datatable, Menu, MenuItem } from '@silintl/ui-components'
 
 export let items = [] as PolicyItem[]
-export let accountablePersons = [] as AccountablePersonOptions[]
 export let policyId: string
 
 let currentItem = {} as PolicyItem
@@ -113,7 +111,7 @@ const getStatusClass = (status: string) => (status === 'Draft' ? 'mdc-theme--pri
         <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}
           >{item.coverage_status || ''}</Datatable.Data.Row.Item
         >
-        <Datatable.Data.Row.Item>{getAccountablePerson(item, accountablePersons).name || ''}</Datatable.Data.Row.Item>
+        <Datatable.Data.Row.Item>{item.accountable_person?.name || ''}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item>{formatDate(item.updated_at)}</Datatable.Data.Row.Item>

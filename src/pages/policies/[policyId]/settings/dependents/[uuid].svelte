@@ -1,18 +1,21 @@
 <script lang="ts">
 import { DependentForm } from 'components'
-import { deleteDependent, dependentsByPolicyId, loadDependents, updateDependent } from 'data/dependents'
+import { deleteDependent, loadDependents, selectedPolicyDependents, updateDependent } from 'data/dependents'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import { settingsPolicy } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
+import { onMount } from 'svelte'
 
 export let uuid: string
 
 $: policyId = $selectedPolicyId
-$: policyId && loadDependents(policyId)
+onMount(() => {
+  loadDependents(policyId)
+})
 
-$: dependents = $dependentsByPolicyId[policyId] || []
+$: dependents = $selectedPolicyDependents
 $: dependent = dependents.find((d) => uuid && d.id === uuid)
 $: metatags.title = formatPageTitle(`Settings > Household > Edit Dependent`)
 

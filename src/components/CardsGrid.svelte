@@ -1,7 +1,6 @@
 <script lang="ts">
 import ClaimCard from './ClaimCard.svelte'
 import ItemCard from './ItemCard.svelte'
-import type { AccountablePersonOptions } from 'data/accountablePersons'
 import { Claim, ClaimItem, incompleteClaimItemStatuses, isClaimItem } from 'data/claims'
 import { incompleteItemCoverageStatuses, PolicyItem } from 'data/items'
 import { isRecentClaim, RecentChange } from 'data/recent-activity'
@@ -11,7 +10,6 @@ type CardItem = { data: ClaimItem | PolicyItem; claim?: Claim }
 export let recentChanges: RecentChange[] = []
 export let claims: Claim[] = []
 export let policyItems: PolicyItem[] = []
-export let accountablePersons: AccountablePersonOptions[] = []
 export let isAdmin: boolean = false
 
 $: cardItems = recentChanges.length ? parseRecentChanges(recentChanges) : parseClaimsAndPolicyItems(claims, policyItems)
@@ -69,9 +67,9 @@ const parseClaimsAndPolicyItems = (claims: Claim[], policyItems: PolicyItem[]): 
   {#each cardItems as cardItem (cardItem.data.id)}
     <div class="card">
       {#if isClaimItem(cardItem.data)}
-        <ClaimCard claim={cardItem.claim} claimItem={cardItem.data} {accountablePersons} {isAdmin} on:goto-claim />
+        <ClaimCard claim={cardItem.claim} claimItem={cardItem.data} {isAdmin} on:goto-claim />
       {:else}
-        <ItemCard item={cardItem.data} {accountablePersons} {isAdmin} on:goto-item />
+        <ItemCard item={cardItem.data} {isAdmin} on:goto-item />
       {/if}
     </div>
   {/each}

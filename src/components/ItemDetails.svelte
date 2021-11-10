@@ -2,28 +2,19 @@
 import Banner from './Banner.svelte'
 import ItemBanner from './banners/ItemBanner.svelte'
 import MessageBanner from './banners/MessageBanner.svelte'
-import {
-  AccountablePersonOptions,
-  getAccountablePerson,
-  getDependentOptions,
-  getPolicyMemberOptions,
-} from 'data/accountablePersons'
-import { dependentsByPolicyId } from 'data/dependents'
 import type { PolicyItem, ItemCoverageStatus } from 'data/items'
 import { getPolicyById, loadPolicy, policies, Policy } from 'data/policies'
-import { membersByPolicyId } from 'data/policy-members'
 import { formatMoney } from 'helpers/money'
 import { formatDate } from './dates'
 import { formatDistanceToNow } from 'date-fns'
 import { onMount } from 'svelte'
 
 export let item: PolicyItem
-export let isCheckingOut: boolean
+export let isCheckingOut: boolean = false
 export let policyId: string
 export let isAdmin: boolean
 
 let policy: Policy
-let accountablePersons: AccountablePersonOptions[]
 
 onMount(() => loadPolicy(policyId))
 
@@ -34,15 +25,6 @@ $: statusText = getItemStatusText(item)
 $: status = (item.coverage_status || '') as ItemCoverageStatus
 $: showRevisionMessage = item.status_reason && status === 'Revision'
 $: startDate = formatDate(item.coverage_start_date)
-
-$: dependents = $dependentsByPolicyId[policyId] || []
-$: dependentOptions = getDependentOptions(dependents)
-
-$: policyMembers = $membersByPolicyId[policyId] || []
-$: policyMemberOptions = getPolicyMemberOptions(policyMembers)
-
-$: accountablePersons = [...policyMemberOptions, ...dependentOptions]
-$: accountablePersonName = getAccountablePerson(item, accountablePersons)?.name
 
 const getItemStatusText = (item: PolicyItem) => {
   const updatedAtStr = item.updated_at ? formatDistanceToNow(Date.parse(item.updated_at), { addSuffix: true }) : ''
@@ -67,7 +49,7 @@ const getItemStatusText = (item: PolicyItem) => {
     <b>Annual premium</b>
     <div class="my-2px">{formatMoney(item.annual_premium)}</div>
     <br />
-    <b>{accountablePersonName || ''}</b>
+    <b>{item.accountable_person?.name || ''}</b>
     <div class="mt-4px">Household ID</div>
     <div>{householdId}</div>
   </div>

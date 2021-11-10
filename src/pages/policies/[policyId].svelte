@@ -1,9 +1,6 @@
 <script lang="ts">
 import { getNameOfPolicy, loadPolicy, Policy, PolicyType } from 'data/policies'
 import { loadItems, selectedPolicyItems } from 'data/items'
-import type { PolicyMember } from 'data/policy-members'
-import { getAccountablePerson, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
-import { dependentsByPolicyId } from 'data/dependents'
 import { formatDate } from 'components/dates'
 import { isLoadingById, loading } from 'components/progress'
 import { formatFriendlyDate } from 'helpers/date'
@@ -22,11 +19,7 @@ onMount(async () => {
   policy = await loadPolicy(policyId)
 })
 
-$: members = policy.members || ([] as PolicyMember[])
-$: policyMemberOptions = getPolicyMemberOptions(members)
-$: dependents = $dependentsByPolicyId[policyId] || []
-$: dependentOptions = getDependentOptions(dependents)
-$: accountablePersons = [...policyMemberOptions, ...dependentOptions]
+$: members = policy.members || []
 
 $: policyId && loadItems(policyId)
 $: items = $selectedPolicyItems
@@ -123,9 +116,7 @@ th {
               ><a href={itemDetails(policyId, item.id)}>{item.name || ''}</a> ({item.coverage_status ||
                 ''})</Datatable.Data.Row.Item
             >
-            <Datatable.Data.Row.Item
-              >{getAccountablePerson(item, accountablePersons).name || ''}</Datatable.Data.Row.Item
-            >
+            <Datatable.Data.Row.Item>{item.accountable_person?.name || ''}</Datatable.Data.Row.Item>
             <Datatable.Data.Row.Item>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
             <Datatable.Data.Row.Item>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
             <Datatable.Data.Row.Item>{formatDate(item.updated_at)}</Datatable.Data.Row.Item>

@@ -1,4 +1,4 @@
-import { CREATE, GET, UPDATE } from '.'
+import { CREATE, DELETE, GET, UPDATE } from '.'
 import { derived, writable } from 'svelte/store'
 
 export type PolicyDependent = {
@@ -56,18 +56,14 @@ export async function addDependent(policyId: string, depData: any): Promise<void
 }
 
 /**
+ * Delete a dependent from a Policy.
  *
- * @description a function to delete a dependent
  * @export
  * @param {string} policyId -- The UUID for the applicable policy
  * @param {string} dependentId -- The UUID for the desired dependent
  */
 export async function deleteDependent(policyId: string, dependentId: string): Promise<void> {
-  const urlPath = `dependents/${dependentId}`
-
-  // TODO: uncomment when endpoint is finished
-  // const response = await DELETE<...>(urlPath)
-
+  await DELETE(`policy-dependents/${dependentId}`)
   dependentsByPolicyId.update((data) => {
     const dependents = data[policyId] || []
     data[policyId] = dependents.filter((dependent) => dependent.id !== dependentId)

@@ -112,8 +112,8 @@ th {
       <Datatable.Header>
         <Datatable.Header.Item>Item</Datatable.Header.Item>
         <Datatable.Header.Item>Accountable Person</Datatable.Header.Item>
-        <Datatable.Header.Item>Covered Value</Datatable.Header.Item>
-        <Datatable.Header.Item>Premium</Datatable.Header.Item>
+        <Datatable.Header.Item numeric>Covered Value</Datatable.Header.Item>
+        <Datatable.Header.Item numeric>Premium</Datatable.Header.Item>
         <Datatable.Header.Item>Recent Activity</Datatable.Header.Item>
       </Datatable.Header>
       <Datatable.Data>
@@ -126,8 +126,8 @@ th {
             <Datatable.Data.Row.Item
               >{getAccountablePerson(item, accountablePersons).name || ''}</Datatable.Data.Row.Item
             >
-            <Datatable.Data.Row.Item>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
-            <Datatable.Data.Row.Item>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
+            <Datatable.Data.Row.Item numeric>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
+            <Datatable.Data.Row.Item numeric>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
             <Datatable.Data.Row.Item>{formatDate(item.updated_at)}</Datatable.Data.Row.Item>
           </Datatable.Data.Row>
         {/each}
@@ -146,9 +146,9 @@ th {
         <Datatable.Header.Item>Status</Datatable.Header.Item>
         <Datatable.Header.Item>Repairable</Datatable.Header.Item>
         <Datatable.Header.Item>Payout Option</Datatable.Header.Item>
-        <Datatable.Header.Item>Repair</Datatable.Header.Item>
-        <Datatable.Header.Item>Replacement</Datatable.Header.Item>
-        <Datatable.Header.Item>FMV</Datatable.Header.Item>
+        <Datatable.Header.Item numeric>Repair</Datatable.Header.Item>
+        <Datatable.Header.Item numeric>Replacement</Datatable.Header.Item>
+        <Datatable.Header.Item numeric>FMV</Datatable.Header.Item>
       </Datatable.Header>
       <Datatable.Data>
         {#each claims as claim (claim.id)}
@@ -162,9 +162,9 @@ th {
               <Datatable.Data.Row.Item>{claimItem.status || ''}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{claimItem.is_repairable ? 'Yes' : 'No'}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{claimItem.payout_option || ''}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item>{formatMoney(claimItem.repair_estimate)}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item>{formatMoney(claimItem.replace_estimate)}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item>{formatMoney(claimItem.fmv)}</Datatable.Data.Row.Item>
+              <Datatable.Data.Row.Item numeric>{formatMoney(claimItem.repair_estimate)}</Datatable.Data.Row.Item>
+              <Datatable.Data.Row.Item numeric>{formatMoney(claimItem.replace_estimate)}</Datatable.Data.Row.Item>
+              <Datatable.Data.Row.Item numeric>{formatMoney(claimItem.fmv)}</Datatable.Data.Row.Item>
             </Datatable.Data.Row>
           {:else}
             <Datatable.Data.Row>

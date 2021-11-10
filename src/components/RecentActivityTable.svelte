@@ -85,7 +85,7 @@ const getFormattedClaimItemPremium = (claim: Claim): string => {
       {/if}
     {:else}
       <DataRow>
-        <RowItem colspan="7">
+        <RowItem colspan={7}>
           {#if loading}
             Loading...
           {:else}

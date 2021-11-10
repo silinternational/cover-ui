@@ -13,7 +13,7 @@ export const CHAT = '/chat'
 
 export const CUSTOMER_HOME = '/customer/home'
 
-export const CLAMS = '/claims'
+export const CLAIMS = '/claims'
 export const customerClaims = (policyId: string) => `/policies/${policyId}/claims`
 export const customerClaimsNew = (policyId: string) => `/policies/${policyId}/claims/new`
 export const customerClaimDetails = (policyId: string, claimId: string) => `/policies/${policyId}/claims/${claimId}`

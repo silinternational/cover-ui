@@ -1,4 +1,4 @@
-import { CREATE, GET } from '.'
+import { CREATE, GET, UPDATE } from '.'
 import { derived, writable } from 'svelte/store'
 
 export type PolicyDependent = {
@@ -18,7 +18,6 @@ export type CreatePolicyDependentRequestBody = {
 
 export type UpdatePolicyDependentRequestBody = {
   child_birth_year: number
-  id: string
   country: string
   name: string
   relationship: /*PolicyDependentRelationship*/ 'Spouse' | 'Child'
@@ -85,19 +84,16 @@ export async function deleteDependent(policyId: string, dependentId: string): Pr
  * @param {Object} depData
  */
 export async function updateDependent(policyId: string, dependentId: string, depData: any): Promise<void> {
-  const urlPath = `dependents/${dependentId}`
+  const urlPath = `policy-dependents/${dependentId}`
 
   const parsedDep: UpdatePolicyDependentRequestBody = {
-    id: dependentId,
     name: depData.name,
     relationship: depData.relationship,
     country: depData.country,
     child_birth_year: depData.childBirthYear,
   }
 
-  // TODO: uncomment when endpoint is finished
-  // const updatedDependent = await UPDATE<PolicyDependent>(urlPath)
-  const updatedDependent = parsedDep // TEMP - until we can use API return value.
+  const updatedDependent = await UPDATE<PolicyDependent>(urlPath, parsedDep)
 
   dependentsByPolicyId.update((data) => {
     const dependents = data[policyId] || []

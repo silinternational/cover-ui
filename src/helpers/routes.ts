@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import type { UserAppRole } from '../authn/user'
 import qs from 'qs'
 
 export const ROOT = '/'
@@ -14,6 +13,7 @@ export const CHAT = '/chat'
 
 export const CUSTOMER_HOME = '/customer/home'
 
+export const CLAMS = '/claims'
 export const customerClaims = (policyId: string) => `/policies/${policyId}/claims`
 export const customerClaimsNew = (policyId: string) => `/policies/${policyId}/claims/new`
 export const customerClaimDetails = (policyId: string, claimId: string) => `/policies/${policyId}/claims/${claimId}`

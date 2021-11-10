@@ -31,7 +31,7 @@ $: accountablePersons = [...policyMemberOptions, ...dependentOptions]
 $: policyId && loadItems(policyId)
 $: items = $selectedPolicyItems
 $: claims = policy.claims || []
-$: policyName = policy.type === 'Team' ? policy.account_detail : policy.household_id
+$: policyName = getNameOfPolicy(policy)
 $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))
 </script>
 

@@ -55,7 +55,7 @@ type OpenArticleOptions = {
 declare function FreshworksWidget(command: 'hide', target?: 'launcher'): void
 declare function FreshworksWidget(command: 'show', target?: 'launcher'): void
 declare function FreshworksWidget(command: 'open', target?: 'ticketForm'): void
-declare function FreshworksWidget(command: 'close' | 'destory' | 'boot'): void
+declare function FreshworksWidget(command: 'close' | 'destroy' | 'boot'): void
 declare function FreshworksWidget(command: 'identify', target: 'ticketForm', options: IdentifyOptions): void
 declare function FreshworksWidget(command: 'prefill', target: 'ticketForm', options: PrefillOptions): void
 declare function FreshworksWidget(command: 'disable', target: 'ticketForm', options: FieldAttribute[]): void

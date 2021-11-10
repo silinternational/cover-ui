@@ -4,7 +4,7 @@ import { onMount } from 'svelte'
 
 onMount(() => {
   // Here be dragons
-  window.fwSettings = { widget_id: 73000000445 }
+  window.fwSettings = { widget_id: Number(process.env.FRESHDESK_ID) }
   // @ts-ignore
   // prettier-ignore
   !function(){if("function"!=typeof window.FreshworksWidget){var n=function(){n.q.push(arguments)};n.q=[],window.FreshworksWidget=n}}()
@@ -23,5 +23,9 @@ const setUserData = (user: User) => {
 </script>
 
 <svelte:head>
-  <script type="text/javascript" src="https://widget.freshworks.com/widgets/73000000445.js" async defer></script>
+  <script
+    type="text/javascript"
+    src="https://widget.freshworks.com/widgets/{process.env.FRESHDESK_ID}.js"
+    async
+    defer></script>
 </svelte:head>

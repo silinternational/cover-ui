@@ -301,6 +301,7 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
           {isAdmin}
           {isMemberOfPolicy}
           {receiptType}
+          {payoutOption}
           on:ask-for-changes={onAskForChanges}
           on:deny={onDenyClaim}
           on:edit={editClaim}

@@ -21,6 +21,7 @@ export const customerClaimEdit = (policyId: string, claimId: string) => `/polici
 
 export const FAQ = '/faq'
 
+export const ITEMS = '/items'
 export const items = (policyId: string) => `/policies/${policyId}/items`
 export const itemsNew = (policyId: string) => `/policies/${policyId}/items/new`
 export const itemDetails = (policyId: string, itemId: string) => `/policies/${policyId}/items/${itemId}`

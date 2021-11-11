@@ -1,6 +1,7 @@
 <script lang="ts">
 import { DependentForm } from 'components'
 import { deleteDependent, loadDependents, selectedPolicyDependents, updateDependent } from 'data/dependents'
+import { PolicyType, selectedPolicy } from 'data/policies'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import { settingsPolicy } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -9,6 +10,10 @@ import { Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 export let uuid: string
+
+let isHouseholdPolicy: boolean
+
+$: isHouseholdPolicy = $selectedPolicy?.type === PolicyType.Household
 
 $: policyId = $selectedPolicyId
 onMount(() => {
@@ -36,6 +41,6 @@ const onSubmit = async (event: CustomEvent<FormData>) => {
 
 <Page>
   {#if dependent}
-    <DependentForm {dependent} on:cancel={onCancel} on:remove={onRemove} on:submit={onSubmit} />
+    <DependentForm {dependent} {isHouseholdPolicy} on:cancel={onCancel} on:remove={onRemove} on:submit={onSubmit} />
   {/if}
 </Page>

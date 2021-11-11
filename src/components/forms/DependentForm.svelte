@@ -7,6 +7,7 @@ import { createEventDispatcher } from 'svelte'
 
 export let dependent: PolicyDependent = {}
 export let dependents: PolicyDependent[] = []
+export let isHouseholdPolicy = true
 
 const dispatch = createEventDispatcher()
 const relationshipOptions = [
@@ -36,12 +37,13 @@ $: alreadyHasSpouse = !!dependents
 
 $: alreadyHasSpouse && (relationshipOptions[0].disabled = true)
 
-const validate = (isChild: boolean): boolean | void => {
+const validate = (isChild: boolean) => {
   assertHas(formData.name, 'Please specify a name')
   assertHas(formData.country, 'Please specify a country')
-  assertHas(formData.relationship, 'Please select "Spouse" or "Child"')
-  isChild && assertHas(formData.childBirthYear, "Please specify your child's birthyear")
-  return true
+  if (isHouseholdPolicy) {
+    assertHas(formData.relationship, 'Please select "Spouse" or "Child"')
+    isChild && assertHas(formData.childBirthYear, "Please specify your child's birthyear")
+  }
 }
 const onCancel = (event: Event) => {
   event.preventDefault()
@@ -52,10 +54,16 @@ const onRemove = (event: Event) => {
   dispatch('remove', formData.id)
 }
 const onSubmit = () => {
-  const isChild: boolean = formData.relationship === 'Child'
-  validate(isChild)
-  if (!isChild) {
+  if (isHouseholdPolicy) {
+    const isChild: boolean = formData.relationship === 'Child'
+    validate(isChild)
+    if (!isChild) {
+      delete formData.childBirthYear
+    }
+  } else {
+    delete formData.relationship
     delete formData.childBirthYear
+    validate(false)
   }
   dispatch('submit', formData)
 }
@@ -81,20 +89,24 @@ const onSubmit = () => {
     <p>
       <TextField label="Dependent Name" bind:value={formData.name} class="w-100" autofocus />
     </p>
-    <p>
-      Dependents include non-member spouses and children under 26 who haven't married or finished college. Coverage for
-      dependents is limited to $3,000 per person.
-    </p>
+    {#if isHouseholdPolicy}
+      <p>
+        Dependents include non-member spouses and children under 26 who haven't married or finished college. Coverage
+        for dependents is limited to $3,000 per person.
+      </p>
+    {/if}
     <p>
       <TextField label="Country" bind:value={formData.country} class="w-100" />
     </p>
-    <p>
-      <RadioOptions name="relationship" options={relationshipOptions} bind:value={formData.relationship} />
-    </p>
-    {#if formData.relationship === 'Child'}
+    {#if isHouseholdPolicy}
       <p>
-        <TextField label="Child's birth year" bind:value={formData.childBirthYear} class="w-100" />
+        <RadioOptions name="relationship" options={relationshipOptions} bind:value={formData.relationship} />
       </p>
+      {#if formData.relationship === 'Child'}
+        <p>
+          <TextField label="Child's birth year" bind:value={formData.childBirthYear} class="w-100" />
+        </p>
+      {/if}
     {/if}
     <div class="float-right form-button">
       <Button raised>Save</Button>

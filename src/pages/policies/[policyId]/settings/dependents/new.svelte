@@ -1,6 +1,7 @@
 <script lang="ts">
 import { DependentForm } from 'components'
 import { addDependent, loadDependents, selectedPolicyDependents } from 'data/dependents'
+import { PolicyType, selectedPolicy } from 'data/policies'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import { settingsPolicy } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -13,6 +14,9 @@ onMount(() => {
   loadDependents(policyId)
 })
 
+let isHouseholdPolicy: boolean
+
+$: isHouseholdPolicy = $selectedPolicy?.type === PolicyType.Household
 $: dependents = $selectedPolicyDependents
 $: metatags.title = formatPageTitle('Settings > Household > Add Dependent')
 
@@ -27,5 +31,5 @@ const onSubmit = async (event: CustomEvent<string>) => {
 </script>
 
 <Page>
-  <DependentForm {dependents} on:cancel={onCancel} on:submit={onSubmit} />
+  <DependentForm {dependents} {isHouseholdPolicy} on:cancel={onCancel} on:submit={onSubmit} />
 </Page>

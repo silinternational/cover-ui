@@ -1,7 +1,6 @@
 <script lang="ts">
 import { CardsGrid, ItemsTable, Row } from 'components'
 import { isLoadingPolicyItems, loading } from 'components/progress'
-import { Claim, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import { deleteItem, loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
 import { getNameOfPolicy, selectedPolicy } from 'data/policies'
 import { selectedPolicyId } from 'data/role-policy-selection'
@@ -12,10 +11,11 @@ import { Button, Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 $: policyId = $selectedPolicyId
+$: activeItems = $selectedPolicyItems.filter((item) => item.coverage_status !== 'Inactive')
+$: inactiveItems = $selectedPolicyItems.filter((item) => item.coverage_status === 'Inactive')
 
 onMount(() => {
   loadItems(policyId)
-  loadClaimsByPolicyId(policyId)
 })
 
 $: metatags.title = formatPageTitle('Home')
@@ -29,9 +29,6 @@ const onDelete = async (event: CustomEvent<any>) => {
   loadItems(policyId)
 }
 
-const onGotoClaim = (event: CustomEvent<Claim>) =>
-  $goto(routes.customerClaimDetails(event.detail.policy_id, event.detail.id))
-
 const onGotoPolicyItem = (event: CustomEvent<PolicyItem>) =>
   $goto(routes.itemDetails(event.detail.policy_id, event.detail.id))
 
@@ -41,17 +38,28 @@ const onGotoItem = (event: CustomEvent<string>) => $goto(event.detail)
 <Page layout="grid">
   <Row cols={'12'}>
     <h3>{getNameOfPolicy($selectedPolicy)} Policy</h3>
-    <CardsGrid
-      claims={$selectedPolicyClaims}
-      policyItems={$selectedPolicyItems}
-      on:goto-claim={onGotoClaim}
-      on:goto-item={onGotoPolicyItem}
-    />
+    <CardsGrid policyItems={$selectedPolicyItems} on:goto-item={onGotoPolicyItem} />
   </Row>
 
   <Row cols={'12'}>
     {#if $selectedPolicyItems.length > 0}
-      <ItemsTable items={$selectedPolicyItems} {policyId} on:delete={onDelete} on:gotoItem={onGotoItem} />
+      {#if activeItems.length > 0}
+        <ItemsTable items={activeItems} {policyId} title="Active Items" on:delete={onDelete} on:gotoItem={onGotoItem} />
+      {:else}
+        <p>No active items</p>
+      {/if}
+      <br />
+      {#if inactiveItems.length > 0}
+        <ItemsTable
+          items={inactiveItems}
+          {policyId}
+          title="Inactive Items"
+          on:delete={onDelete}
+          on:gotoItem={onGotoItem}
+        />
+      {:else}
+        <p>No Inactive items</p>
+      {/if}
     {:else if $loading && isLoadingPolicyItems(policyId)}
       Loading items...
     {:else}

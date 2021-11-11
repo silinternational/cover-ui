@@ -21,7 +21,6 @@ import {
 import { formatDate } from 'components/dates'
 import { loading } from 'components/progress'
 import { upload } from 'data'
-import { getAccountablePerson, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
 import {
   denyClaim,
   claimsFileAttach,
@@ -40,10 +39,8 @@ import {
   fixReceipt,
   ClaimFilePurpose,
 } from 'data/claims'
-import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
 import { getNameOfPolicy, getPolicyById, loadPolicy, memberBelongsToPolicy, policies, Policy } from 'data/policies'
-import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { formatMoney } from 'helpers/money'
 import { customerClaimEdit, customerClaims, customerClaimDetails, POLICIES, policyDetails } from 'helpers/routes'
@@ -83,18 +80,6 @@ $: policyId && loadItems(policyId)
 $: item = items.find((itm) => itm.id === claimItem.item_id) || ({} as PolicyItem)
 
 $: isMemberOfPolicy = memberBelongsToPolicy($user.id, $policies, policyId)
-
-// Accountable persons
-$: policyId && loadDependents(policyId)
-$: dependents = $dependentsByPolicyId[policyId] || []
-$: dependentOptions = getDependentOptions(dependents)
-
-$: policyId && loadMembersOfPolicy(policyId)
-$: policyMembers = $membersByPolicyId[policyId] || []
-$: policyMemberOptions = getPolicyMemberOptions(policyMembers)
-
-$: accountablePersons = [...policyMemberOptions, ...dependentOptions]
-$: accountablePersonName = getAccountablePerson(item, accountablePersons)?.name
 
 // policies
 $: $policies && (policy = getPolicyById(policyId))
@@ -264,7 +249,7 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
       <b>Covered value</b>
       <div>{formatMoney(item.coverage_amount)}</div>
       <br />
-      <b>{accountablePersonName || ''}</b>
+      <b>{item.accountable_person?.name || ''}</b>
       <br />
       <div class="left-detail">
         <b>Household ID</b>

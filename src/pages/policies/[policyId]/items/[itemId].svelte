@@ -3,7 +3,6 @@ import user, { UserAppRole } from '../../../../authn/user'
 import { Breadcrumb, ItemDeleteModal, ItemDetails } from 'components'
 import { loading } from 'components/progress'
 import { formatDate } from 'components/dates'
-import { loadDependents } from 'data/dependents'
 import {
   approveItem,
   deleteItem,
@@ -15,7 +14,6 @@ import {
   selectedPolicyItems,
 } from 'data/items'
 import { getNameOfPolicy, loadPolicy, memberBelongsToPolicy, policies, Policy } from 'data/policies'
-import { loadMembersOfPolicy } from 'data/policy-members'
 import { loadPolicyItemHistory, policyHistoryByItemId } from 'data/policy-history'
 import { items as itemsRoute, itemDetails, itemEdit, itemNewClaim, POLICIES, policyDetails } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -38,11 +36,6 @@ let denyDialogButtons: Dialog.AlertButton[] = []
 let denyDialogMessage: string
 
 $: isAdmin = $roleSelection !== UserAppRole.Customer
-
-// Accountable persons
-$: policyId && loadDependents(policyId)
-
-$: policyId && loadMembersOfPolicy(policyId)
 
 $: items = $selectedPolicyItems
 $: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)

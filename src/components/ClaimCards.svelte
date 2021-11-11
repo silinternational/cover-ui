@@ -1,10 +1,8 @@
 <script lang="ts">
 import ClaimCard from './ClaimCard.svelte'
-import type { AccountablePersonOptions } from 'data/accountablePersons'
 import { Claim, ClaimItem, incompleteClaimItemStatuses } from '../data/claims'
 
 export let claims: Claim[]
-export let accountablePersons = [] as AccountablePersonOptions[]
 export let isAdmin: boolean
 
 const isIncomplete = (claimItem: ClaimItem) => incompleteClaimItemStatuses.includes(claimItem.status)
@@ -35,7 +33,7 @@ const getRecentOrIncompleteClaimItems = (claim: Claim): ClaimItem[] => {
   {#each claims as claim (claim.id)}
     {#each getRecentOrIncompleteClaimItems(claim) as claimItem (claimItem.id)}
       <div class="card">
-        <ClaimCard {claim} {claimItem} {accountablePersons} {isAdmin} on:goto-claim />
+        <ClaimCard {claim} {claimItem} {isAdmin} on:goto-claim />
       </div>
     {/each}
   {/each}

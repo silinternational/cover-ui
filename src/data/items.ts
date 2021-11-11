@@ -17,6 +17,10 @@ export const incompleteItemCoverageStatuses = [
   ItemCoverageStatus.Revision,
 ]
 
+export type AccountablePerson = {
+  id: string
+  name: string
+}
 export type RiskCategory = {
   created_at: string /*Date*/
   id: string
@@ -26,9 +30,7 @@ export type RiskCategory = {
 }
 
 export type PolicyItem = {
-  accountable_person_id?: string
-  accountable_dependent_id?: string
-  accountable_user_id?: string
+  accountable_person: AccountablePerson
   annual_premium: number
   category: any /*ItemCategory*/
   country: string

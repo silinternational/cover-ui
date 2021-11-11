@@ -1,5 +1,6 @@
 import { GET } from './index'
 import { derived, writable } from 'svelte/store'
+import { selectedPolicyId } from './role-policy-selection'
 
 export type PolicyMember = {
   email: string
@@ -12,6 +13,12 @@ export type PolicyMember = {
 }
 
 export const membersByPolicyId = writable<{ [policyId: string]: PolicyMember[] }>({})
+export const selectedPolicyMembers = derived(
+  [membersByPolicyId, selectedPolicyId],
+  ([$membersByPolicyId, $selectedPolicyId]) => {
+    return $membersByPolicyId[$selectedPolicyId] || []
+  }
+)
 export const allPolicyMembers = derived(membersByPolicyId, ($membersByPolicyId) => {
   return Object.values($membersByPolicyId).flat()
 })

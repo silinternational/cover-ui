@@ -1,10 +1,10 @@
 <script lang="ts">
 import user from '../../../authn/user'
 import { Breadcrumb, Description, SearchableSelect } from 'components'
-import { dependentsByPolicyId, loadDependents } from 'data/dependents'
+import { loadDependents, selectedPolicyDependents } from 'data/dependents'
 import { entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { policies, updatePolicy, Policy, PolicyType, loadPolicy } from 'data/policies'
-import { loadMembersOfPolicy, membersByPolicyId, PolicyMember } from 'data/policy-members'
+import { loadMembersOfPolicy, PolicyMember, selectedPolicyMembers } from 'data/policy-members'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import { householdSettingsDependent, householdSettingsNewDependent, settingsPolicy } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -38,8 +38,8 @@ $: if (policyId) {
 $: $entityCodes.forEach((code) => {
   entityOptions[code.name] = code.code
 })
-$: dependents = $dependentsByPolicyId[policyId] || []
-$: householdMembers = $membersByPolicyId[policyId] || []
+$: dependents = $selectedPolicyDependents
+$: householdMembers = $selectedPolicyMembers
 $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
 
 $: setInitialValues(policy)

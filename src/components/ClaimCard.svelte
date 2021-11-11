@@ -2,7 +2,6 @@
 import { getUploadLabel, isEvidenceNeeded } from '../business-rules/claim-payout-amount'
 import ClaimBanner from './banners/ClaimBanner.svelte'
 import ClaimCardBanner from './ClaimCardBanner.svelte'
-import type { AccountablePersonOptions } from 'data/accountablePersons'
 import type { Claim, ClaimItem } from 'data/claims'
 import type { PolicyItem } from 'data/items'
 import { getClaimState, State } from 'data/states'
@@ -10,7 +9,6 @@ import { Card, Button } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 import { differenceInSeconds, formatDistanceToNow } from 'date-fns'
 
-export let accountablePersons: AccountablePersonOptions[] = []
 export let claim: Claim = {} as Claim
 export let claimItem: ClaimItem = {} as ClaimItem
 export let isAdmin: boolean
@@ -23,9 +21,6 @@ $: changedText = formatDistanceToNow(Date.parse(claimItem.updated_at), { addSuff
 $: state = getClaimState(claim.status, isAdmin) || ({} as State)
 $: statusReason = claim.status_reason || ('' as string)
 $: showRevisionMessage = (statusReason && ['Revision', 'Receipt'].includes(claim.status)) as boolean
-$: accountablePerson = accountablePersons.find(
-  (person) => person.id === (item.accountable_user_id || item.accountable_dependent_id)
-)
 $: payoutOption = claimItem.payout_option
 $: needsRepairReceipt = needsReceipt && payoutOption === 'Repair'
 $: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
@@ -79,7 +74,7 @@ const gotoClaim = () => dispatch('goto-claim', claim)
   </div>
 
   <div class="content multi-line-truncate ml-50px">
-    {accountablePerson?.name || ''}
+    {item.accountable_person?.name || ''}
   </div>
 
   <div class="action pb-2 ml-50px" slot="actions">

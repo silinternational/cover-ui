@@ -91,14 +91,14 @@ form > * {
       />
     {/if}
     <label
-      class="mdc-button my-8px"
+      class="mdc-button m-8px"
       for="fileElem"
       class:custom-text-button={raised}
       class:mdc-button--outlined={outlined}
       class:disabled={uploading}
       class:mdc-button--raised={raised}>Choose files</label
     >
-    <div class="my-8px">or drop files here</div>
-    <i class="material-icons icon my-8px" id="upload-icon">cloud_upload</i>
+    <div class="m-8px">or drop files here</div>
+    <i class="material-icons icon m-8px" id="upload-icon">cloud_upload</i>
   </form>
 </div>

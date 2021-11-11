@@ -4,7 +4,7 @@ import Banner from './Banner.svelte'
 import ItemBanner from './banners/ItemBanner.svelte'
 import MessageBanner from './banners/MessageBanner.svelte'
 import type { PolicyItem, ItemCoverageStatus } from 'data/items'
-import { getPolicyById, loadPolicy, policies, Policy } from 'data/policies'
+import { getPolicyById, loadPolicy, policies, Policy, PolicyType } from 'data/policies'
 import { formatMoney } from 'helpers/money'
 import { formatDate } from './dates'
 import { formatDistanceToNow } from 'date-fns'
@@ -51,10 +51,10 @@ const getItemStatusText = (item: PolicyItem) => {
     <div class="my-2px">{formatMoney(item.annual_premium)}</div>
     <br />
     <div class="mb-1">{item.accountable_person?.name || ''}</div>
-    {#if policy.type === 'Household'}
+    {#if policy.type === PolicyType.Household}
       <div class="mt-4px">Household ID</div>
       <div>{householdId}</div>
-    {:else if policy.type === 'Team'}
+    {:else if policy.type === PolicyType.Team}
       <div class="mt-4px">Policy Name</div>
       <div>{policy.name}</div>
       <div class="mt-4px">Affiliation</div>

@@ -1,6 +1,13 @@
 <script lang="ts">
 import { UserAppRole } from '../authn/user'
-import { Claim, ClaimStatus, editableStatuses, PayoutOption } from 'data/claims'
+import {
+  Claim,
+  ClaimStatus,
+  editableStatuses,
+  PayoutOption,
+  statusesAwaitingSignator,
+  statusesAwaitingSteward,
+} from 'data/claims'
 import { roleSelection } from 'data/role-policy-selection'
 import Description from './Description.svelte'
 import { throwError } from '../error'
@@ -36,8 +43,6 @@ $: switch (status) {
     actionLabel = 'approve payout'
     break
   case 'Review3':
-  case 'Review3a':
-  case 'Review3b':
     action = 'approve'
     actionLabel = 'give final approval'
     break
@@ -48,8 +53,8 @@ $: switch (status) {
 $: isEditable = editableStatuses.includes(status)
 $: showSubmit = ['Receipt', 'Revision'].includes(status) || (status === 'Draft' && needsFile)
 $: showLowerButtons =
-  (['Review1', 'Review2'].includes(status) && $roleSelection === UserAppRole.Steward) ||
-  (status === 'Review3' && $roleSelection === UserAppRole.Signator)
+  (statusesAwaitingSteward.includes(status) && $roleSelection === UserAppRole.Steward) ||
+  (statusesAwaitingSignator.includes(status) && $roleSelection === UserAppRole.Signator)
 
 const on = (eventType: string) => () => {
   eventType !== 'error' ? dispatch(eventType) : throwError(`An error has occured due to unkown status ${status}`)
@@ -87,7 +92,7 @@ const onDeny = () => dispatch('deny', message)
 </style>
 
 {#if isAdmin}
-  {#if ['Review1', 'Review2', 'Review3', 'Review3a', 'Review3b'].includes(status)}
+  {#if ['Review1', 'Review2', 'Review3'].includes(status)}
     <div class="container">
       <div class="text-input">
         <TextField class="w-100" label="Send a message" bind:value={message} />
@@ -97,10 +102,10 @@ const onDeny = () => dispatch('deny', message)
         <Button on:click={onDeny} disabled={!message} outlined>deny</Button>
       </div>
       <div class="right-buttons">
-        {#if ['Review1', 'Review3', 'Review3a', 'Review3b'].includes(status)}
+        {#if ['Review1', 'Review3'].includes(status)}
           <Button on:click={onAskForChanges} disabled={!message} outlined>ask for changes</Button>
         {/if}
-        {#if ['Review2', 'Review3', 'Review3a', 'Review3b'].includes(status)}
+        {#if ['Review2', 'Review3'].includes(status)}
           <Button class="ml-1" on:click={onFixReceipt} disabled={!message} outlined>request a new receipt</Button>
         {/if}
       </div>

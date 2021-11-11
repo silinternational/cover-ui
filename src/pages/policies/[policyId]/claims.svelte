@@ -1,12 +1,9 @@
 <script lang="ts">
 import { UserAppRole } from '../../../authn/user'
 import { ClaimCards, Row, Breadcrumb } from 'components'
-import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
 import { Claim, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
-import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { loadItems } from 'data/items'
 import { getNameOfPolicy, selectedPolicy } from 'data/policies'
-import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import { roleSelection } from 'data/role-policy-selection'
 import { customerClaims, customerClaimDetails, POLICIES, policyDetails } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -27,20 +24,11 @@ $: adminBreadcrumbs = isAdmin
   : []
 
 $: breadcrumbLinks = [...adminBreadcrumbs, { name: 'Claims', url: customerClaims(policyId) }]
-
-$: dependents = $dependentsByPolicyId[policyId] || []
-$: dependentOptions = getDependentOptions(dependents)
-
-$: policyMembers = $membersByPolicyId[policyId] || []
-$: policyMemberOptions = getPolicyMemberOptions(policyMembers)
-$: accountablePersons = [...policyMemberOptions, ...dependentOptions] as AccountablePersonOptions[]
 $: metatags.title = formatPageTitle('Claims')
 
 onMount(() => {
   loadItems(policyId)
   loadClaimsByPolicyId(policyId)
-  loadDependents(policyId)
-  loadMembersOfPolicy(policyId)
 })
 
 const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(event.detail.policy_id, event.detail.id))
@@ -54,7 +42,7 @@ const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(ev
 
   <Row cols={'12'}>
     {#if $selectedPolicyClaims.length}
-      <ClaimCards {accountablePersons} {isAdmin} claims={$selectedPolicyClaims} on:goto-claim={onGotoClaim} />
+      <ClaimCards {isAdmin} claims={$selectedPolicyClaims} on:goto-claim={onGotoClaim} />
     {:else}
       No claims at this time.
     {/if}

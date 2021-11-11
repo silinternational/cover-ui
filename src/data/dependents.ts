@@ -1,5 +1,6 @@
 import { CREATE, DELETE, GET, UPDATE } from '.'
 import { derived, writable } from 'svelte/store'
+import { selectedPolicyId } from './role-policy-selection'
 
 export type PolicyDependent = {
   child_birth_year?: number
@@ -24,6 +25,12 @@ export type UpdatePolicyDependentRequestBody = {
 }
 
 export const dependentsByPolicyId = writable<{ [policyId: string]: PolicyDependent[] }>({})
+export const selectedPolicyDependents = derived(
+  [dependentsByPolicyId, selectedPolicyId],
+  ([$dependentsByPolicyId, $selectedPolicyId]) => {
+    return $dependentsByPolicyId[$selectedPolicyId] || []
+  }
+)
 export const allPolicyDependents = derived(dependentsByPolicyId, ($dependentsByPolicyId) => {
   return Object.values($dependentsByPolicyId).flat()
 })

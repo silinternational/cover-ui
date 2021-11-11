@@ -6,16 +6,16 @@ import MakeAndModelModal from 'MakeAndModelModal.svelte'
 import MoneyInput from '../MoneyInput.svelte'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
-import { dependentsByPolicyId } from 'data/dependents'
+import { selectedPolicyDependents } from 'data/dependents'
 import type { ItemCoverageStatus, PolicyItem } from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
-import { membersByPolicyId } from 'data/policy-members'
+import { selectedPolicyMembers } from 'data/policy-members'
 import { assertHas } from '../../validation/assertions'
 import { Button, Form, Select, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let item = {} as PolicyItem
-export let policyId: any = undefined
+export let policyId: string
 
 let formData = {} as any
 let open = false
@@ -41,16 +41,13 @@ let uniqueIdentifier: string = ''
 // Set initial values based on the provided item data.
 $: setInitialValues(item)
 
-let accountablePersons = [] as AccountablePersonOptions[]
-let initialAccountablePersonId: any = undefined
-let initialCategoryId: any = undefined
+let accountablePersons: AccountablePersonOptions[] = []
+let initialAccountablePersonId: string
+let initialCategoryId: string
 let today = new Date()
 
-$: dependents = $dependentsByPolicyId[policyId] || []
-$: dependentOptions = getDependentOptions(dependents)
-
-$: policyMembers = $membersByPolicyId[policyId] || []
-$: policyMemberOptions = getPolicyMemberOptions(policyMembers)
+$: dependentOptions = getDependentOptions($selectedPolicyDependents)
+$: policyMemberOptions = getPolicyMemberOptions($selectedPolicyMembers)
 
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions]
 $: accountablePerson = accountablePersons.find(
@@ -87,7 +84,7 @@ const getFormData = () => {
 }
 
 const onAccountablePersonSelectPopulated = () => {
-  initialAccountablePersonId = item.accountable_user_id || item.accountable_dependent_id || $user.id
+  initialAccountablePersonId = item.accountable_person?.id || $user.id
 }
 
 const onCategorySelectPopulated = () => {

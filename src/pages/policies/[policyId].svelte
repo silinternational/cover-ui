@@ -1,9 +1,6 @@
 <script lang="ts">
 import { getNameOfPolicy, loadPolicy, Policy, PolicyType } from 'data/policies'
 import { loadItems, selectedPolicyItems } from 'data/items'
-import type { PolicyMember } from 'data/policy-members'
-import { getAccountablePerson, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
-import { dependentsByPolicyId } from 'data/dependents'
 import { formatDate } from 'components/dates'
 import { isLoadingById, loading } from 'components/progress'
 import { formatFriendlyDate } from 'helpers/date'
@@ -22,11 +19,7 @@ onMount(async () => {
   policy = await loadPolicy(policyId)
 })
 
-$: members = policy.members || ([] as PolicyMember[])
-$: policyMemberOptions = getPolicyMemberOptions(members)
-$: dependents = $dependentsByPolicyId[policyId] || []
-$: dependentOptions = getDependentOptions(dependents)
-$: accountablePersons = [...policyMemberOptions, ...dependentOptions]
+$: members = policy.members || []
 
 $: policyId && loadItems(policyId)
 $: items = $selectedPolicyItems
@@ -112,8 +105,8 @@ th {
       <Datatable.Header>
         <Datatable.Header.Item>Item</Datatable.Header.Item>
         <Datatable.Header.Item>Accountable Person</Datatable.Header.Item>
-        <Datatable.Header.Item>Covered Value</Datatable.Header.Item>
-        <Datatable.Header.Item>Premium</Datatable.Header.Item>
+        <Datatable.Header.Item numeric>Covered Value</Datatable.Header.Item>
+        <Datatable.Header.Item numeric>Premium</Datatable.Header.Item>
         <Datatable.Header.Item>Recent Activity</Datatable.Header.Item>
       </Datatable.Header>
       <Datatable.Data>
@@ -123,11 +116,9 @@ th {
               ><a href={itemDetails(policyId, item.id)}>{item.name || ''}</a> ({item.coverage_status ||
                 ''})</Datatable.Data.Row.Item
             >
-            <Datatable.Data.Row.Item
-              >{getAccountablePerson(item, accountablePersons).name || ''}</Datatable.Data.Row.Item
-            >
-            <Datatable.Data.Row.Item>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
-            <Datatable.Data.Row.Item>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
+            <Datatable.Data.Row.Item>{item.accountable_person?.name || ''}</Datatable.Data.Row.Item>
+            <Datatable.Data.Row.Item numeric>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
+            <Datatable.Data.Row.Item numeric>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
             <Datatable.Data.Row.Item>{formatDate(item.updated_at)}</Datatable.Data.Row.Item>
           </Datatable.Data.Row>
         {/each}
@@ -146,9 +137,9 @@ th {
         <Datatable.Header.Item>Status</Datatable.Header.Item>
         <Datatable.Header.Item>Repairable</Datatable.Header.Item>
         <Datatable.Header.Item>Payout Option</Datatable.Header.Item>
-        <Datatable.Header.Item>Repair</Datatable.Header.Item>
-        <Datatable.Header.Item>Replacement</Datatable.Header.Item>
-        <Datatable.Header.Item>FMV</Datatable.Header.Item>
+        <Datatable.Header.Item numeric>Repair</Datatable.Header.Item>
+        <Datatable.Header.Item numeric>Replacement</Datatable.Header.Item>
+        <Datatable.Header.Item numeric>FMV</Datatable.Header.Item>
       </Datatable.Header>
       <Datatable.Data>
         {#each claims as claim (claim.id)}
@@ -162,9 +153,9 @@ th {
               <Datatable.Data.Row.Item>{claimItem.status || ''}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{claimItem.is_repairable ? 'Yes' : 'No'}</Datatable.Data.Row.Item>
               <Datatable.Data.Row.Item>{claimItem.payout_option || ''}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item>{formatMoney(claimItem.repair_estimate)}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item>{formatMoney(claimItem.replace_estimate)}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item>{formatMoney(claimItem.fmv)}</Datatable.Data.Row.Item>
+              <Datatable.Data.Row.Item numeric>{formatMoney(claimItem.repair_estimate)}</Datatable.Data.Row.Item>
+              <Datatable.Data.Row.Item numeric>{formatMoney(claimItem.replace_estimate)}</Datatable.Data.Row.Item>
+              <Datatable.Data.Row.Item numeric>{formatMoney(claimItem.fmv)}</Datatable.Data.Row.Item>
             </Datatable.Data.Row>
           {:else}
             <Datatable.Data.Row>

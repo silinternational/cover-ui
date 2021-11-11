@@ -1,13 +1,11 @@
 <script lang="ts">
 import ClaimCardBanner from './ClaimCardBanner.svelte'
-import type { AccountablePersonOptions } from 'data/accountablePersons'
 import type { PolicyItem } from 'data/items'
 import { getItemState, State } from 'data/states'
 import { Card, Button } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 import { differenceInSeconds, formatDistanceToNow } from 'date-fns'
 
-export let accountablePersons: AccountablePersonOptions[] = []
 export let item: PolicyItem = {} as PolicyItem
 export let isAdmin: boolean
 
@@ -18,9 +16,6 @@ $: changedText = formatDistanceToNow(Date.parse(item.updated_at), { addSuffix: t
 $: state = getItemState(item.coverage_status, isAdmin) || ({} as State)
 $: statusReason = item.status_reason || ''
 $: showRevisionMessage = statusReason && ['Revision', 'Receipt'].includes(item.coverage_status)
-$: accountablePerson = accountablePersons.find(
-  (person) => person.id === (item.accountable_user_id || item.accountable_dependent_id)
-)
 
 const gotoItem = () => dispatch('goto-item', item)
 </script>
@@ -57,7 +52,7 @@ const gotoItem = () => dispatch('goto-item', item)
   </div>
 
   <div class="content multi-line-truncate ml-50px">
-    {accountablePerson?.name || ''}
+    {item.accountable_person?.name || ''}
   </div>
 
   <div class="action pb-2 ml-50px" slot="actions">

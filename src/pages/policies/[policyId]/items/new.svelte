@@ -8,14 +8,18 @@ import { formatPageTitle } from 'helpers/pageTitle'
 import { HOME, items as itemsRoute, itemDetails, itemsNew } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
+import { onMount } from 'svelte'
 
 export let policyId: string
 
 let isCheckingOut: boolean = false
 let item: PolicyItem
 
-$: policyId && loadDependents(policyId)
-$: policyId && loadMembersOfPolicy(policyId)
+onMount(() => {
+  loadDependents(policyId)
+  loadMembersOfPolicy(policyId)
+})
+
 $: metatags.title = formatPageTitle('Items > New')
 
 $: policyId && loadItems(policyId)

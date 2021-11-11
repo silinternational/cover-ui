@@ -2,32 +2,22 @@
 import { CardsGrid, ItemsTable, Row } from 'components'
 import { isLoadingPolicyItems, loading } from 'components/progress'
 import { Claim, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
-import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
-import { dependentsByPolicyId, loadDependents } from 'data/dependents'
 import { deleteItem, loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
 import { getNameOfPolicy, selectedPolicy } from 'data/policies'
-import { loadMembersOfPolicy, membersByPolicyId } from 'data/policy-members'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import * as routes from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
 import { Button, Page } from '@silintl/ui-components'
-
-let policyId: string
+import { onMount } from 'svelte'
 
 $: policyId = $selectedPolicyId
 
-$: policyId && loadItems(policyId)
-$: policyId && loadClaimsByPolicyId(policyId)
+onMount(() => {
+  loadItems(policyId)
+  loadClaimsByPolicyId(policyId)
+})
 
-$: policyId && loadDependents(policyId)
-$: dependents = $dependentsByPolicyId[policyId] || []
-$: dependentOptions = getDependentOptions(dependents)
-
-$: policyId && loadMembersOfPolicy(policyId)
-$: policyMembers = $membersByPolicyId[policyId] || []
-$: policyMemberOptions = getPolicyMemberOptions(policyMembers)
-$: accountablePersons = [...policyMemberOptions, ...dependentOptions] as AccountablePersonOptions[]
 $: metatags.title = formatPageTitle('Home')
 
 const onDelete = async (event: CustomEvent<any>) => {
@@ -52,7 +42,6 @@ const onGotoItem = (event: CustomEvent<string>) => $goto(event.detail)
   <Row cols={'12'}>
     <h3>{getNameOfPolicy($selectedPolicy)} Policy</h3>
     <CardsGrid
-      {accountablePersons}
       claims={$selectedPolicyClaims}
       policyItems={$selectedPolicyItems}
       on:goto-claim={onGotoClaim}
@@ -62,13 +51,7 @@ const onGotoItem = (event: CustomEvent<string>) => $goto(event.detail)
 
   <Row cols={'12'}>
     {#if $selectedPolicyItems.length > 0}
-      <ItemsTable
-        items={$selectedPolicyItems}
-        {accountablePersons}
-        {policyId}
-        on:delete={onDelete}
-        on:gotoItem={onGotoItem}
-      />
+      <ItemsTable items={$selectedPolicyItems} {policyId} on:delete={onDelete} on:gotoItem={onGotoItem} />
     {:else if $loading && isLoadingPolicyItems(policyId)}
       Loading items...
     {:else}

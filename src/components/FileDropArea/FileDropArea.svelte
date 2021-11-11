@@ -1,5 +1,6 @@
 <script lang="ts">
 import { createEventDispatcher } from 'svelte'
+import { isAboveMobile } from '@silintl/ui-components'
 
 export let raised = false
 export let outlined = false
@@ -77,7 +78,7 @@ form > * {
   on:dragover|preventDefault|stopPropagation={highlight}
   on:drop|preventDefault|stopPropagation={handleDrop}
 >
-  <form class="flex justify-between align-items-center my-1 px-1">
+  <form class="flex justify-between align-items-center my-1 px-1" class:column={!isAboveMobile()}>
     {#if !uploading}
       <input
         bind:this={fileInput}
@@ -90,14 +91,14 @@ form > * {
       />
     {/if}
     <label
-      class="mdc-button mt-1"
+      class="mdc-button my-8px"
       for="fileElem"
       class:custom-text-button={raised}
       class:mdc-button--outlined={outlined}
       class:disabled={uploading}
       class:mdc-button--raised={raised}>Choose files</label
     >
-    <div>or drop files here</div>
-    <i class="material-icons icon" id="upload-icon">cloud_upload</i>
+    <div class="my-8px">or drop files here</div>
+    <i class="material-icons icon my-8px" id="upload-icon">cloud_upload</i>
   </form>
 </div>

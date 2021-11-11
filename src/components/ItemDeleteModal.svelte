@@ -9,7 +9,7 @@ export let item: PolicyItem
 const dispatch = createEventDispatcher<{ closed: string }>()
 
 const buttons: Dialog.AlertButton[] = [
-  { label: 'Yes, I’m Sure', action: 'remove', class: 'error-button' },
+  { label: 'Yes, Remove', action: 'remove', class: 'error-button' },
   { label: 'cancel', action: 'cancel', class: 'mdc-dialog__button' },
 ]
 

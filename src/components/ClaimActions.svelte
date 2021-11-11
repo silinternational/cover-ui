@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Claim, ClaimStatus, editableStatuses } from 'data/claims'
+import { Claim, ClaimStatus, editableStatuses, PayoutOption } from 'data/claims'
 import Description from './Description.svelte'
 import { throwError } from '../error'
 import { Button, TextField } from '@silintl/ui-components'
@@ -11,6 +11,7 @@ export let needsFile: boolean
 export let isMemberOfPolicy: boolean
 export let isAdmin: boolean
 export let receiptType: string
+export let payoutOption: PayoutOption
 
 const dispatch = createEventDispatcher()
 
@@ -22,10 +23,11 @@ $: approveButtonLabel = receiptType === 'Replacement' ? 'replace' : 'repair'
 
 let action: string
 let actionLabel: string
+$: isFMVorEvacuation = payoutOption === 'FMV' || payoutOption === 'FixedFraction'
 $: switch (status) {
   case 'Review1':
-    action = 'preapprove'
-    actionLabel = `okay to ${approveButtonLabel}`
+    action = isFMVorEvacuation ? 'approve' : 'preapprove'
+    actionLabel = isFMVorEvacuation ? 'approve payout' : `okay to ${approveButtonLabel}`
     break
   case 'Review2':
     action = 'approve'

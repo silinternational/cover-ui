@@ -1,4 +1,5 @@
 <script lang="ts">
+import B from './B.svelte'
 import Banner from './Banner.svelte'
 import ItemBanner from './banners/ItemBanner.svelte'
 import MessageBanner from './banners/MessageBanner.svelte'
@@ -44,14 +45,25 @@ const getItemStatusText = (item: PolicyItem) => {
 <div class="flex p-1" class:isCheckingOut>
   <div class="w-25">
     <h2 class="break-word my-1">{item.name || ''}</h2>
-    <b>Covered value</b>
+    <B>Covered value</B>
     <div class="my-2px">{formatMoney(item.coverage_amount)}</div>
-    <b>Annual premium</b>
+    <B>Annual premium</B>
     <div class="my-2px">{formatMoney(item.annual_premium)}</div>
     <br />
-    <b>{item.accountable_person?.name || ''}</b>
-    <div class="mt-4px">Household ID</div>
-    <div>{householdId}</div>
+    <div class="mb-1">{item.accountable_person?.name || ''}</div>
+    {#if policy.type === 'Household'}
+      <div class="mt-4px">Household ID</div>
+      <div>{householdId}</div>
+    {:else if policy.type === 'Team'}
+      <div class="mt-4px">Policy Name</div>
+      <div>{policy.name}</div>
+      <div class="mt-4px">Affiliation</div>
+      <div>{policy.entity_code?.name}</div>
+      <div class="mt-4px">Cost Center</div>
+      <div>{policy.cost_center}</div>
+      <div class="mt-4px">Account</div>
+      <div>{policy.account}</div>
+    {/if}
   </div>
 
   <div class="w-75">

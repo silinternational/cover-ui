@@ -9,10 +9,10 @@ $: redirectToAppropriatePolicyItems($user, $selectedPolicyId)
 const redirectToAppropriatePolicyItems = (user: User, selectedPolicyId: string) => {
   if (isAdmin($roleSelection)) {
     $redirect(ADMIN_HOME)
-  } else if (user.id) {
-    $redirect(items(getDefaultPolicyId(user)))
   } else if (selectedPolicyId) {
     $redirect(items(selectedPolicyId))
+  } else if (user.id) {
+    $redirect(items(getDefaultPolicyId(user)))
   }
 }
 </script>

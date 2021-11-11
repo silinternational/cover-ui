@@ -1,5 +1,7 @@
 <script lang="ts">
+import { UserAppRole } from '../authn/user'
 import { Claim, ClaimStatus, editableStatuses, PayoutOption } from 'data/claims'
+import { roleSelection } from 'data/role-policy-selection'
 import Description from './Description.svelte'
 import { throwError } from '../error'
 import { Button, TextField } from '@silintl/ui-components'
@@ -45,6 +47,9 @@ $: switch (status) {
 
 $: isEditable = editableStatuses.includes(status)
 $: showSubmit = ['Receipt', 'Revision'].includes(status) || (status === 'Draft' && needsFile)
+$: showLowerButtons =
+  (['Review1', 'Review2'].includes(status) && $roleSelection === UserAppRole.Steward) ||
+  (status === 'Review3' && $roleSelection === UserAppRole.Signator)
 
 const on = (eventType: string) => () => {
   eventType !== 'error' ? dispatch(eventType) : throwError(`An error has occured due to unkown status ${status}`)
@@ -99,9 +104,11 @@ const onDeny = () => dispatch('deny', message)
           <Button class="ml-1" on:click={onFixReceipt} disabled={!message} outlined>request a new receipt</Button>
         {/if}
       </div>
-      <div class="lower-buttons">
-        <Button on:click={on(action)} raised>{actionLabel}</Button>
-      </div>
+      {#if showLowerButtons}
+        <div class="lower-buttons">
+          <Button on:click={on(action)} raised>{actionLabel}</Button>
+        </div>
+      {/if}
     </div>
   {/if}
 {/if}

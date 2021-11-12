@@ -7,8 +7,9 @@ import { getNameOfPolicy, selectedPolicy } from 'data/policies'
 import { roleSelection } from 'data/role-policy-selection'
 import { customerClaims, customerClaimDetails, POLICIES, policyDetails } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
+import { items } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
-import { Page } from '@silintl/ui-components'
+import { Button, Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 export let policyId: string
@@ -44,7 +45,10 @@ const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(ev
     {#if $selectedPolicyClaims.length}
       <ClaimCards {isAdmin} claims={$selectedPolicyClaims} on:goto-claim={onGotoClaim} />
     {:else}
-      No claims at this time.
+      <p class="text-align-center">You don't have any claims in this policy</p>
+      <p class="text-align-center">
+        <Button class="m-1" raised url={items(policyId)}>Pick an item</Button>
+      </p>
     {/if}
   </Row>
 </Page>

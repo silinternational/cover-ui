@@ -1,6 +1,18 @@
 <script lang="ts">
-import { HOME } from 'helpers/routes'
+import user, { getDefaultPolicyId, isAdmin, User } from '../authn/user'
+import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
+import { ADMIN_HOME, items } from 'helpers/routes'
 import { redirect } from '@roxi/routify'
 
-$redirect(HOME)
+$: redirectToAppropriatePolicyItems($user, $selectedPolicyId)
+
+const redirectToAppropriatePolicyItems = (user: User, selectedPolicyId: string) => {
+  if (isAdmin($roleSelection)) {
+    $redirect(ADMIN_HOME)
+  } else if (selectedPolicyId) {
+    $redirect(items(selectedPolicyId))
+  } else if (user.id) {
+    $redirect(items(getDefaultPolicyId(user)))
+  }
+}
 </script>

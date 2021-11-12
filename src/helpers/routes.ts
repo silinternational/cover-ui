@@ -4,6 +4,7 @@ import qs from 'qs'
 export const ROOT = '/'
 export const HOME = '/home'
 export const LOGOUT = '/logout'
+export const LOGGEDOUT = '/logged-out'
 
 export const ADMIN_HOME = '/admin/home'
 export const ADMIN_POLICIES = '/admin/policies'
@@ -21,6 +22,7 @@ export const customerClaimEdit = (policyId: string, claimId: string) => `/polici
 
 export const FAQ = '/faq'
 
+export const ITEMS = '/items'
 export const items = (policyId: string) => `/policies/${policyId}/items`
 export const itemsNew = (policyId: string) => `/policies/${policyId}/items/new`
 export const itemDetails = (policyId: string, itemId: string) => `/policies/${policyId}/items/${itemId}`

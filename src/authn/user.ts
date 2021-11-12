@@ -65,14 +65,15 @@ export const clear = (): void => {
   user.set({} as User)
 }
 
-export const isUserSteward = (user: User): boolean => user.app_role === UserAppRole.Steward
+export const isUserSteward = (userRole: UserAppRole): boolean => userRole === UserAppRole.Steward
 
-export const isSignator = (user: User): boolean => user.app_role === UserAppRole.Signator
+export const isSignator = (userRole: UserAppRole): boolean => userRole === UserAppRole.Signator
 
-export const isAdmin = (user: User): boolean =>
-  isUserSteward(user) || isSignator(user) || user.app_role === UserAppRole.Admin
+export const isAdmin = (userRole: UserAppRole): boolean =>
+  isUserSteward(userRole) || isSignator(userRole) || userRole === UserAppRole.Admin
 
-export const isCustomer = (user: User): boolean => !isUserSteward(user) && !isSignator(user) && !!user.app_role
+export const isCustomer = (userRole: UserAppRole): boolean =>
+  !isUserSteward(userRole) && !isSignator(userRole) && !!userRole
 
 export const getDefaultPolicyId = (user: User): string => {
   const policies = user.policies || []

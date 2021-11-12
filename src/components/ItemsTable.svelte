@@ -9,6 +9,7 @@ import { Datatable, Menu, MenuItem } from '@silintl/ui-components'
 
 export let items = [] as PolicyItem[]
 export let policyId: string
+export let title: string = ''
 
 let currentItem = {} as PolicyItem
 let goToItemDetails = true
@@ -92,10 +93,12 @@ const getStatusClass = (status: string) => (status === 'Draft' ? 'mdc-theme--pri
 }
 </style>
 
+{#if title}
+  <h3>{title}</h3>
+{/if}
 <Datatable>
   <Datatable.Header>
     <!--TODO: make the amount of columns shown be dependent on the device size-->
-    <Datatable.Header.Item />
     <Datatable.Header.Item>Item</Datatable.Header.Item>
     <Datatable.Header.Item>Status</Datatable.Header.Item>
     <Datatable.Header.Item>Accountable Person</Datatable.Header.Item>
@@ -104,9 +107,8 @@ const getStatusClass = (status: string) => (status === 'Draft' ? 'mdc-theme--pri
     <Datatable.Header.Item>Recent Activity</Datatable.Header.Item>
   </Datatable.Header>
   <Datatable.Data>
-    {#each items.filter((item) => item.coverage_status !== 'Inactive') as item (item.id)}
+    {#each items as item (item.id)}
       <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} clickable>
-        <Datatable.Data.Row.Item />
         <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}
           >{item.coverage_status || ''}</Datatable.Data.Row.Item

@@ -52,7 +52,7 @@ $: switch (status) {
 
 $: isEditable = editableStatuses.includes(status)
 $: showSubmit = ['Receipt', 'Revision'].includes(status) || (status === 'Draft' && needsFile)
-$: showLowerButtons =
+$: showApprovalButton =
   (statusesAwaitingSteward.includes(status) && $roleSelection === UserAppRole.Steward) ||
   (statusesAwaitingSignator.includes(status) && $roleSelection === UserAppRole.Signator)
 
@@ -109,7 +109,7 @@ const onDeny = () => dispatch('deny', message)
           <Button class="ml-1" on:click={onFixReceipt} disabled={!message} outlined>request a new receipt</Button>
         {/if}
       </div>
-      {#if showLowerButtons}
+      {#if showApprovalButton}
         <div class="lower-buttons">
           <Button on:click={on(action)} raised>{actionLabel}</Button>
         </div>

@@ -1,5 +1,4 @@
 <script lang="ts">
-import B from './B.svelte'
 import Banner from './Banner.svelte'
 import ItemBanner from './banners/ItemBanner.svelte'
 import MessageBanner from './banners/MessageBanner.svelte'
@@ -45,9 +44,9 @@ const getItemStatusText = (item: PolicyItem) => {
 <div class="flex p-1" class:isCheckingOut>
   <div class="w-25">
     <h2 class="break-word my-1">{item.name || ''}</h2>
-    <B>Covered value</B>
+    <div class="mdc-bold-font">Covered value</div>
     <div class="my-2px">{formatMoney(item.coverage_amount)}</div>
-    <B>Annual premium</B>
+    <div class="mdc-bold-font">Annual premium</div>
     <div class="my-2px">{formatMoney(item.annual_premium)}</div>
     <br />
     <div class="mb-1">{item.accountable_person?.name || ''}</div>

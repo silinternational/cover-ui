@@ -1,7 +1,6 @@
 import AppDrawer from './AppDrawer.svelte'
 import AppFooter from './AppFooter.svelte'
 import Banner from './Banner.svelte'
-import B from './B.svelte'
 import Breadcrumb from './Breadcrumb.svelte'
 import CardsGrid from './CardsGrid.svelte'
 import ClaimActions from './ClaimActions.svelte'
@@ -32,7 +31,6 @@ import SearchableSelect from './SearchableSelect.svelte'
 export {
   AppDrawer,
   AppFooter,
-  B,
   Banner,
   Breadcrumb,
   ClaimActions,

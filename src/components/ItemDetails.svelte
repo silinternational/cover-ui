@@ -3,7 +3,7 @@ import Banner from './Banner.svelte'
 import ItemBanner from './banners/ItemBanner.svelte'
 import MessageBanner from './banners/MessageBanner.svelte'
 import type { PolicyItem, ItemCoverageStatus } from 'data/items'
-import { getPolicyById, loadPolicy, policies, Policy } from 'data/policies'
+import { getPolicyById, loadPolicy, policies, Policy, PolicyType } from 'data/policies'
 import { formatMoney } from 'helpers/money'
 import { formatDate } from './dates'
 import { formatDistanceToNow } from 'date-fns'
@@ -25,13 +25,24 @@ $: status = (item.coverage_status || '') as ItemCoverageStatus
 $: showRevisionMessage = item.status_reason && status === 'Revision'
 $: startDate = formatDate(item.coverage_start_date)
 $: endDate = formatDate(item.coverage_end_date)
-$: sidebarItems = {
-  'Accountable Person': item?.accountable_person?.name,
+$: householdDetails = {
   Location: item.country,
   'Household ID': policy?.household_id,
   'Covered value': formatMoney(item.coverage_amount),
   Premium: `${formatMoney(item.annual_premium)} / yr`,
 }
+$: teamDetails = {
+  Affiliation: policy.entity_code?.name,
+  'Cost Center': policy.cost_center,
+  Account: policy.account,
+}
+$: sidebarDetails =
+  policy.type === PolicyType.Team
+    ? {
+        'Accountable Person': item?.accountable_person?.name,
+        ...teamDetails,
+      }
+    : { 'Accountable Person': item?.accountable_person?.name, ...householdDetails }
 $: bodyItems = {
   Model: `${item?.make} ${item?.model}`,
   'Unique ID': item?.serial_number,
@@ -77,7 +88,7 @@ const getItemStatusText = (item: PolicyItem) => {
   <div class="w-25 sidebar">
     <h2 class="break-word my-1">{item.name || ''}</h2>
 
-    {#each Object.entries(sidebarItems) as [title, value]}
+    {#each Object.entries(sidebarDetails) as [title, value], i}
       {#if title && value}
         <div class="sidebar-item">
           <div class="title"><b>{title}</b></div>
@@ -98,7 +109,7 @@ const getItemStatusText = (item: PolicyItem) => {
     {/if}
 
     {#each Object.entries(bodyItems) as [title, value]}
-      {#if title && value}
+      {#if title && value && value !== ' '}
         <div class="body-item">
           <div class="title"><b>{title}</b></div>
           <div class="value break-word">{value}</div>

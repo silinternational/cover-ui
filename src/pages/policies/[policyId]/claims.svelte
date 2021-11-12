@@ -47,7 +47,7 @@ const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(ev
     {:else}
       <p class="text-align-center">You don't have any claims in this policy</p>
       <p class="text-align-center">
-        <Button class="m-1" raised url={items(policyId)}>Pick an item</Button>
+        <a class="m-1 mdc-theme--primary" href={items(policyId)}>Pick an item to file a claim</a>
       </p>
     {/if}
   </Row>

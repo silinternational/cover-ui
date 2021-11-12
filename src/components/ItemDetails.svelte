@@ -59,7 +59,7 @@ const getItemStatusText = (item: PolicyItem) => {
   margin-bottom: 0.4em;
 }
 .value {
-  font-size: x-large;
+  font-size: larger;
 }
 .coverage-dates {
   margin-top: 1em;

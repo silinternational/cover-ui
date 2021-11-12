@@ -12,7 +12,8 @@ $: $policiesInitialized || loadPolicies()
 
 $: myPolicies = $user?.policies || []
 $: policyId = $selectedPolicyId || $user.policy_id
-$: inAdminRole = isAdmin($user) && ($roleSelection === UserAppRole.Steward || $roleSelection === UserAppRole.Signator)
+$: inAdminRole =
+  isAdmin($user.app_role) && ($roleSelection === UserAppRole.Steward || $roleSelection === UserAppRole.Signator)
 
 // TODO: Update this based on the user's role and/or the RoleAndPolicyMenu selection.
 $: menuItems = [
@@ -27,6 +28,11 @@ $: menuItems = [
     icon: 'description',
     label: 'Policies',
     hide: !inAdminRole,
+  },
+  {
+    url: routes.ITEMS,
+    icon: 'umbrella',
+    label: 'items',
   },
   {
     url: inAdminRole ? routes.ADMIN_HOME : routes.customerClaims(policyId),

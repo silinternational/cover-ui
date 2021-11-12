@@ -12,7 +12,7 @@ $: {
   // only ever redirect to the last path once per session
   const shouldResumeSession = lastPath && !$initialized && isBefore(Date.now(), add(lastPath.lastSet, { minutes: 5 }))
   if (shouldResumeSession) {
-    initialized.set(true)
+    $initialized = true
     $redirect(lastPath.path)
   } else {
     sendToRoleHome($roleSelection)

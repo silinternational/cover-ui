@@ -37,7 +37,7 @@ const parseRecentChanges = (changes: RecentChange[]): CardItem[] => {
   for (let change of changes) {
     if (isRecentClaim(change)) {
       cards.push({ data: change.Claim?.claim_items[0], claim: change.Claim })
-    } else {
+    } else if (change.Item?.coverage_status !== 'Inactive') {
       cards.push({ data: change.Item })
     }
   }

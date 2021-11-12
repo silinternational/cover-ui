@@ -12,9 +12,10 @@ export const getLastPath = (): { path: string; lastSet: number } => {
 
 const lastPathBlacklist = [routes.ROOT, routes.HOME, routes.LOGOUT, routes.LOGGEDOUT]
 export const setLastPath = (path: string): void => {
+  localStorage.setItem('last-path-set', String(Date.now()))
+
   if (!lastPathBlacklist.includes(path)) {
     initialized.set(true)
     localStorage.setItem('last-path', path)
-    localStorage.setItem('last-path-set', String(Date.now()))
   }
 }

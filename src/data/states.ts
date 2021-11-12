@@ -63,8 +63,6 @@ export const claimStates: { [stateName: string]: State } = {
   Review1: pendingClaim,
   Review2: pendingClaim,
   Review3: pendingClaim,
-  Review3a: pendingClaim,
-  Review3b: pendingClaim,
   ReceiptSecondary: warning,
   Receipt: { ...approved, icon: 'done' },
   Paid: {
@@ -78,8 +76,6 @@ export const adminClaimStates: { [stateName: string]: State } = {
   Review1: needsReview,
   Review2: { ...needsReview, title: 'Needs receipt review' },
   Review3: { ...needsReview, title: 'Needs final claim review' },
-  Review3a: { ...needsReview, title: 'Needs final claim review' },
-  Review3b: { ...needsReview, title: 'Needs final claim review' },
   Revision: { ...pending, title: 'Awaiting changes' },
   Receipt: { ...pending, icon: 'check_circle', title: 'Approved' },
   ReceiptSecondary: { ...pending, title: 'Awaiting changes' },

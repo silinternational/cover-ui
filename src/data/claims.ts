@@ -10,9 +10,7 @@ export type ClaimItemStatus =
   | 'Draft'
   | 'Review1'
   | 'Review2'
-  | 'Review3' // TODO: Remove once API is updated to use Review3a / Review3b.
-  | 'Review3a'
-  | 'Review3b'
+  | 'Review3'
   | 'Revision'
   | 'Receipt'
   | 'Approved'
@@ -23,9 +21,7 @@ export type ClaimStatus =
   | 'Draft'
   | 'Review1'
   | 'Review2'
-  | 'Review3' // TODO: Remove once API is updated to use Review3a / Review3b.
-  | 'Review3a'
-  | 'Review3b'
+  | 'Review3'
   | 'Revision'
   | 'Receipt'
   | 'Approved'
@@ -153,28 +149,17 @@ export const selectedPolicyClaims = derived([claims, selectedPolicyId], ([$claim
 })
 export const initialized = writable<boolean>(false)
 
-export const editableStatuses: ClaimStatus[] = [
-  'Draft',
-  'Review1',
-  'Review2',
-  'Review3',
-  'Review3a',
-  'Review3b',
-  'Revision',
-  'Receipt',
-]
+export const editableStatuses: ClaimStatus[] = ['Draft', 'Review1', 'Review2', 'Review3', 'Revision', 'Receipt']
 export const incompleteClaimItemStatuses: ClaimItemStatus[] = [
   'Draft',
   'Review1',
   'Review2',
-  'Review3', // TODO: Remove once API is updated to use Review3a / Review3b.
-  'Review3a',
-  'Review3b',
+  'Review3',
   'Revision',
   'Receipt',
 ]
-export const statusesAwaitingSteward: ClaimStatus[] = ['Review1', 'Review2', 'Review3', 'Review3b']
-export const statusesAwaitingSignator: ClaimStatus[] = ['Review1', 'Review2', 'Review3', 'Review3a']
+export const statusesAwaitingSteward: ClaimStatus[] = ['Review1', 'Review2']
+export const statusesAwaitingSignator: ClaimStatus[] = ['Review3']
 
 /**
  * Update a claim in our local list (store) of claims.
@@ -319,7 +304,7 @@ export const denyClaim = async (claimId: string, reason: string): Promise<void> 
 
 /**
  * Admin reverts a claim to request a new/better receipt. Can be used at state
- * "Review2" or "Review3"/"Review3a"/"Review3b".
+ * "Review2" or "Review3".
  *
  * @export
  * @param {String} claimId

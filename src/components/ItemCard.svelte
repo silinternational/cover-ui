@@ -44,10 +44,10 @@ const gotoItem = () => dispatch('goto-item', item)
 }
 </style>
 
-<Card noPadding class="h-300 py-0 {$$props.class}">
+<Card noPadding class="h-100 py-0 {$$props.class}">
   <ClaimCardBanner {statusReason} {state} {showRevisionMessage} />
 
-  <div class="mdc-typography--headline5 multi-line-truncate content ml-50px">
+  <div class="mdc-typography--headline5 content ml-50px">
     {item.name || ''}
   </div>
 

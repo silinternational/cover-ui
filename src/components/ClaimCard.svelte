@@ -55,7 +55,7 @@ const gotoClaim = () => dispatch('goto-claim', claim)
 }
 </style>
 
-<Card noPadding class="h-300 py-0 {$$props.class}">
+<Card noPadding class="py-0 h-100 {$$props.class}">
   <ClaimCardBanner
     class={showSecondBanner ? 'mb-0 pb-4px pt-6px' : 'mb-2'}
     {statusReason}
@@ -69,7 +69,7 @@ const gotoClaim = () => dispatch('goto-claim', claim)
     </ClaimBanner>
   {/if}
 
-  <div class="mdc-typography--headline5 multi-line-truncate content ml-50px">
+  <div class="mdc-typography--headline5 content ml-50px">
     {item.name || ''}
   </div>
 

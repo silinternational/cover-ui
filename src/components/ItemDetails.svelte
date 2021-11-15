@@ -25,12 +25,12 @@ $: status = (item.coverage_status || '') as ItemCoverageStatus
 $: showRevisionMessage = item.status_reason && status === 'Revision'
 $: startDate = formatDate(item.coverage_start_date)
 $: endDate = formatDate(item.coverage_end_date)
-$: commonDetails = { 'Accountable Person': item?.accountable_person?.name, Location: item.country || '-' }
+$: commonDetails = { 'Accountable Person': item?.accountable_person?.name, Location: item.country || '-' } //TODO add item.accountable_person.country as first choice when available
 $: householdId = {
   'Household ID': policy?.household_id,
 }
 $: teamDetails = {
-  Name: policy?.name,
+  'Policy Name': policy?.name,
   Affiliation: policy.entity_code?.name,
   'Cost Center': policy.cost_center,
   Account: policy.account,

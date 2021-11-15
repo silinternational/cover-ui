@@ -1,6 +1,6 @@
 <script lang="ts">
 import { DependentForm } from 'components'
-import { addDependent, loadDependents, selectedPolicyDependents } from 'data/dependents'
+import { addDependent, loadDependents, PolicyDependent, selectedPolicyDependents } from 'data/dependents'
 import { PolicyType, selectedPolicy } from 'data/policies'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import { settingsPolicy } from 'helpers/routes'
@@ -23,9 +23,14 @@ $: metatags.title = formatPageTitle('Settings > Household > Add Dependent')
 const onCancel = () => {
   $goto(settingsPolicy(policyId))
 }
-const onSubmit = async (event: CustomEvent<string>) => {
-  const formData = event.detail
-  await addDependent(policyId, formData)
+const onSubmit = async (event: CustomEvent<PolicyDependent>) => {
+  const dependent = event.detail
+  await addDependent(policyId, {
+    child_birth_year: dependent.child_birth_year,
+    country: dependent.country,
+    name: dependent.name,
+    relationship: dependent.relationship,
+  })
   $goto(settingsPolicy(policyId))
 }
 </script>

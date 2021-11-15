@@ -2,26 +2,28 @@ import { CREATE, DELETE, GET, UPDATE } from '.'
 import { derived, writable } from 'svelte/store'
 import { selectedPolicyId } from './role-policy-selection'
 
+export type PolicyDependentRelationship = 'Spouse' | 'Child' | 'None'
+
 export type PolicyDependent = {
-  child_birth_year?: number
   id: string
   country: string
   name: string
-  relationship: /*PolicyDependentRelationship*/ 'Spouse' | 'Child'
+  relationship: PolicyDependentRelationship
+  child_birth_year: number
 }
 
 export type CreatePolicyDependentRequestBody = {
   child_birth_year: number
   country: string
   name: string
-  relationship: /*PolicyDependentRelationship*/ 'Spouse' | 'Child'
+  relationship: PolicyDependentRelationship
 }
 
 export type UpdatePolicyDependentRequestBody = {
   child_birth_year: number
   country: string
   name: string
-  relationship: /*PolicyDependentRelationship*/ 'Spouse' | 'Child'
+  relationship: PolicyDependentRelationship
 }
 
 export const dependentsByPolicyId = writable<{ [policyId: string]: PolicyDependent[] }>({})
@@ -39,20 +41,13 @@ export const allPolicyDependents = derived(dependentsByPolicyId, ($dependentsByP
  *
  * @description a function to create a dependent for a certain policy
  * @export
- * @param {string} policyId -- The UUID for the desired policy
- * @param {Object} depData
+ * @param policyId -- The UUID for the desired policy
+ * @param depData
  */
-export async function addDependent(policyId: string, depData: any): Promise<void> {
+export async function addDependent(policyId: string, depData: CreatePolicyDependentRequestBody): Promise<void> {
   const urlPath = `policies/${policyId}/dependents`
 
-  const parsedDep: CreatePolicyDependentRequestBody = {
-    name: depData.name,
-    relationship: depData.relationship,
-    country: depData.country,
-    child_birth_year: depData.childBirthYear && parseInt(depData.childBirthYear),
-  }
-
-  const addedDependent = await CREATE<PolicyDependent>(urlPath, parsedDep)
+  const addedDependent = await CREATE<PolicyDependent>(urlPath, depData)
 
   dependentsByPolicyId.update((data) => {
     const dependents = data[policyId] || []
@@ -86,17 +81,14 @@ export async function deleteDependent(policyId: string, dependentId: string): Pr
  * @param {string} dependentId -- The UUID for the desired dependent
  * @param {Object} depData
  */
-export async function updateDependent(policyId: string, dependentId: string, depData: any): Promise<void> {
+export async function updateDependent(
+  policyId: string,
+  dependentId: string,
+  depData: UpdatePolicyDependentRequestBody
+): Promise<void> {
   const urlPath = `policy-dependents/${dependentId}`
 
-  const parsedDep: UpdatePolicyDependentRequestBody = {
-    name: depData.name,
-    relationship: depData.relationship,
-    country: depData.country,
-    child_birth_year: depData.childBirthYear,
-  }
-
-  const updatedDependent = await UPDATE<PolicyDependent>(urlPath, parsedDep)
+  const updatedDependent = await UPDATE<PolicyDependent>(urlPath, depData)
 
   dependentsByPolicyId.update((data) => {
     const dependents = data[policyId] || []

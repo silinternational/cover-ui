@@ -1,6 +1,12 @@
 <script lang="ts">
 import { DependentForm } from 'components'
-import { deleteDependent, loadDependents, selectedPolicyDependents, updateDependent } from 'data/dependents'
+import {
+  deleteDependent,
+  loadDependents,
+  PolicyDependent,
+  selectedPolicyDependents,
+  updateDependent,
+} from 'data/dependents'
 import { PolicyType, selectedPolicy } from 'data/policies'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import { settingsPolicy } from 'helpers/routes'
@@ -32,9 +38,14 @@ const onRemove = async (event: CustomEvent<string>) => {
   await deleteDependent(policyId, dependentId)
   $goto(settingsPolicy(policyId))
 }
-const onSubmit = async (event: CustomEvent<FormData>) => {
-  const formData = event.detail
-  await updateDependent(policyId, formData.id, formData)
+const onSubmit = async (event: CustomEvent<PolicyDependent>) => {
+  const dependent = event.detail
+  await updateDependent(policyId, dependent.id, {
+    child_birth_year: dependent.child_birth_year,
+    country: dependent.country,
+    name: dependent.name,
+    relationship: dependent.relationship,
+  })
   $goto(settingsPolicy(policyId))
 }
 </script>

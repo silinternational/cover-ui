@@ -9,7 +9,7 @@ export let dependent: PolicyDependent = {}
 export let dependents: PolicyDependent[] = []
 export let isHouseholdPolicy = true
 
-const dispatch = createEventDispatcher()
+const dispatch = createEventDispatcher<{ cancel: void; remove: string; submit: PolicyDependent }>()
 const relationshipOptions = [
   {
     label: 'Spouse',
@@ -23,14 +23,6 @@ const relationshipOptions = [
   },
 ]
 
-let formData = {
-  id: dependent.id,
-  name: dependent.name || '',
-  country: dependent.country || '',
-  relationship: dependent.relationship || '',
-  childBirthYear: dependent.child_birth_year || undefined,
-}
-
 $: alreadyHasSpouse = !!dependents
   .filter((dep) => dep.id !== dependent.id)
   .find((dependent) => dependent.relationship === 'Spouse')
@@ -38,34 +30,39 @@ $: alreadyHasSpouse = !!dependents
 $: alreadyHasSpouse && (relationshipOptions[0].disabled = true)
 
 const validate = (isChild: boolean) => {
-  assertHas(formData.name, 'Please specify a name')
-  assertHas(formData.country, 'Please specify a country')
+  assertHas(dependent?.name, 'Please specify a name')
+  assertHas(dependent?.country, 'Please specify a country')
   if (isHouseholdPolicy) {
-    assertHas(formData.relationship, 'Please select "Spouse" or "Child"')
-    isChild && assertHas(formData.childBirthYear, "Please specify your child's birthyear")
+    assertHas(dependent?.relationship, 'Please select "Spouse" or "Child"')
+    isChild && assertHas(dependent?.child_birth_year, "Please specify your child's birthyear")
   }
 }
+
 const onCancel = (event: Event) => {
   event.preventDefault()
   dispatch('cancel')
 }
+
 const onRemove = (event: Event) => {
   event.preventDefault()
-  dispatch('remove', formData.id)
+  dispatch('remove', dependent.id)
 }
+
 const onSubmit = () => {
   if (isHouseholdPolicy) {
-    const isChild: boolean = formData.relationship === 'Child'
+    const isChild: boolean = dependent.relationship === 'Child'
     validate(isChild)
     if (!isChild) {
-      delete formData.childBirthYear
+      dependent.child_birth_year = 0
     }
   } else {
-    delete formData.relationship
-    delete formData.childBirthYear
+    dependent.relationship = 'None'
+    dependent.child_birth_year = 0
     validate(false)
   }
-  dispatch('submit', formData)
+
+  dependent.child_birth_year = Number(dependent.child_birth_year) // TODO: add a numeric based TextField
+  dispatch('submit', dependent)
 }
 </script>
 
@@ -87,7 +84,7 @@ const onSubmit = () => {
   <Form on:submit={onSubmit}>
     <h4>Dependent</h4>
     <p>
-      <TextField label="Dependent Name" bind:value={formData.name} class="w-100" autofocus />
+      <TextField label="Dependent Name" bind:value={dependent.name} class="w-100" autofocus />
     </p>
     {#if isHouseholdPolicy}
       <p>
@@ -96,15 +93,15 @@ const onSubmit = () => {
       </p>
     {/if}
     <p>
-      <TextField label="Country" bind:value={formData.country} class="w-100" />
+      <TextField label="Country" bind:value={dependent.country} class="w-100" />
     </p>
     {#if isHouseholdPolicy}
       <p>
-        <RadioOptions name="relationship" options={relationshipOptions} bind:value={formData.relationship} />
+        <RadioOptions name="relationship" options={relationshipOptions} bind:value={dependent.relationship} />
       </p>
-      {#if formData.relationship === 'Child'}
+      {#if dependent?.relationship === 'Child'}
         <p>
-          <TextField label="Child's birth year" bind:value={formData.childBirthYear} class="w-100" />
+          <TextField label="Child's birth year" bind:value={dependent.child_birth_year} class="w-100" />
         </p>
       {/if}
     {/if}
@@ -114,7 +111,7 @@ const onSubmit = () => {
     <div class="float-right form-button">
       <Button on:click={onCancel}>Cancel</Button>
     </div>
-    {#if formData.id !== undefined}
+    {#if dependent?.id !== undefined}
       <div class="float-left form-button">
         <Button on:click={onRemove} outlined class="mdc-theme--error">Remove</Button>
       </div>

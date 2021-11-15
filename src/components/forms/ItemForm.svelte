@@ -94,7 +94,7 @@ const onCategorySelectPopulated = () => {
 }
 
 const validateOnSave = (formData: any) => {
-  assertHas(formData.accountablePersonId, 'Please select an accountable person')
+  assertHas(formData.accountablePersonId, 'Please Assign an Accountable Person')
   assertHas(formData.categoryId, 'Please select a category')
   assertHas(formData.shortName, 'Please specify a short name')
 
@@ -193,7 +193,7 @@ const setInitialValues = (item: PolicyItem) => {
   </p>
   <p>
     <Select
-      label="Accountable person"
+      label="Assigned To"
       on:change={onAccountablePersonChange}
       on:populated={onAccountablePersonSelectPopulated}
       options={accountablePersons}

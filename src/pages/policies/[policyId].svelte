@@ -104,7 +104,7 @@ th {
     <Datatable>
       <Datatable.Header>
         <Datatable.Header.Item>Item</Datatable.Header.Item>
-        <Datatable.Header.Item>Accountable Person</Datatable.Header.Item>
+        <Datatable.Header.Item>Assigned To</Datatable.Header.Item>
         <Datatable.Header.Item numeric>Covered Value</Datatable.Header.Item>
         <Datatable.Header.Item numeric>Premium</Datatable.Header.Item>
         <Datatable.Header.Item>Recent Activity</Datatable.Header.Item>

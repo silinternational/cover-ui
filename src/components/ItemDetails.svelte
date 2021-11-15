@@ -26,7 +26,7 @@ $: showRevisionMessage = item.status_reason && status === 'Revision'
 $: startDate = formatDate(item.coverage_start_date)
 $: endDate = formatDate(item.coverage_end_date)
 $: commonDetails = {
-  'Accountable Person': item?.accountable_person?.name,
+  'Assigned To': item?.accountable_person?.name,
   Location: item.accountable_person?.country || item.country || '-',
 }
 $: householdId = {

@@ -4,6 +4,7 @@ import { entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { createPolicy, CreatePolicyRequestBody } from 'data/policies'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { policyDetails } from 'helpers/routes'
+import { loadUser } from '../../authn/user'
 import { assertHas } from '../../validation/assertions'
 import { goto, metatags } from '@roxi/routify'
 import { Button, TextField, Page } from '@silintl/ui-components'
@@ -34,6 +35,7 @@ const onCreatePolicy = async () => {
 
   validateForm(formData)
   const newPolicy = await createPolicy(formData)
+  loadUser(true) // Don't wait, just refresh user's policies in the background.
   $goto(policyDetails(newPolicy.id))
 }
 

@@ -127,7 +127,7 @@ export const getNameOfPolicy = (policy: Policy): string => {
 }
 
 //claims or members/dependents fields from this endpoint are deprecated
-export async function loadPolicies(limit = '20'): Promise<void> {
+export async function loadPolicies(limit = 20): Promise<void> {
   const queryString = qs.stringify({ limit })
   const response = await GET<{ data: Policy[]; meta: any }>(`policies?${queryString}`)
   const data = response.data

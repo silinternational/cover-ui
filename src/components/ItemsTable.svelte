@@ -115,7 +115,7 @@ const getStatusClass = (status: string) => (status === 'Draft' ? 'mdc-theme--pri
           >{item.coverage_status || ''}</Datatable.Data.Row.Item
         >
         <Datatable.Data.Row.Item>{item.accountable_person?.name || ''}</Datatable.Data.Row.Item>
-        <Datatable.Data.Row.Item>{item.country || ''}</Datatable.Data.Row.Item>
+        <Datatable.Data.Row.Item>{item.accountable_person?.country || item.country || ''}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item numeric>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item numeric>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item>{formatDate(item.updated_at)}</Datatable.Data.Row.Item>

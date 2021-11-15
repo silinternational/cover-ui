@@ -20,6 +20,7 @@ export const incompleteItemCoverageStatuses = [
 export type AccountablePerson = {
   id: string
   name: string
+  country: string
 }
 export type RiskCategory = {
   created_at: string /*Date*/

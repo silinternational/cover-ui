@@ -26,6 +26,7 @@ const sendToRoleHome = (appRole: string) => {
       break
     case UserAppRole.Steward:
     case UserAppRole.Signator:
+    case UserAppRole.Admin:
       $redirect(ADMIN_HOME)
       break
     case undefined:

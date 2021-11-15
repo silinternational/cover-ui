@@ -101,7 +101,7 @@ const getStatusClass = (status: string) => (status === 'Draft' ? 'mdc-theme--pri
     <!--TODO: make the amount of columns shown be dependent on the device size-->
     <Datatable.Header.Item>Item</Datatable.Header.Item>
     <Datatable.Header.Item>Status</Datatable.Header.Item>
-    <Datatable.Header.Item>Accountable Person</Datatable.Header.Item>
+    <Datatable.Header.Item>Assigned To</Datatable.Header.Item>
     <Datatable.Header.Item>Location</Datatable.Header.Item>
     <Datatable.Header.Item numeric>Covered Value</Datatable.Header.Item>
     <Datatable.Header.Item numeric>Premium</Datatable.Header.Item>

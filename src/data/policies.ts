@@ -3,7 +3,9 @@ import { derived, get, writable } from 'svelte/store'
 import type { Claim } from './claims'
 import { CREATE, GET, UPDATE } from './index'
 import type { PolicyMember } from './policy-members'
+import type { PolicyDependent } from './dependents'
 import { selectedPolicyId } from './role-policy-selection'
+import type { EntityCode } from './entityCodes'
 import qs from 'qs'
 
 export type Policy = {
@@ -12,8 +14,8 @@ export type Policy = {
   claims?: Claim[]
   cost_center: string
   created_at: string /*Date*/
-  dependents?: any[] /*PolicyDependent*/
-  entity_code: any /*EntityCode*/
+  dependents?: PolicyDependent[]
+  entity_code: EntityCode
   household_id: string
   id: string
   members?: PolicyMember[]
@@ -90,15 +92,8 @@ export async function updatePolicy(id: string, policyData: UpdatePolicyRequestBo
  * @export
  * @param {Object} policyFormData
  */
-export async function createPolicy(policyFormData: any): Promise<Policy> {
-  const parsedPolicyData: CreatePolicyRequestBody = {
-    account: policyFormData.account,
-    account_detail: policyFormData.accountDetail,
-    cost_center: policyFormData.costCenter,
-    entity_code: policyFormData.entityCode,
-    name: policyFormData.policyName,
-  }
-  const createdPolicy = await CREATE<Policy>('policies', parsedPolicyData)
+export async function createPolicy(policyData: CreatePolicyRequestBody): Promise<Policy> {
+  const createdPolicy = await CREATE<Policy>('policies', policyData)
   updatePoliciesStore(createdPolicy)
   loadUser(true) // Don't wait, just refresh user's policies in the background.
   return createdPolicy
@@ -128,7 +123,7 @@ export const getNameOfPolicy = (policy: Policy): string => {
 
 //claims or members/dependents fields from this endpoint are deprecated
 export async function loadPolicies(): Promise<void> {
-  const response = await GET<{ data: Policy[]; meta: any }>('policies')
+  const response = await GET<{ data: Policy[]; meta: unknown }>('policies')
   const data = response.data
   policies.set(data)
   initialized.set(true)
@@ -144,7 +139,7 @@ export async function loadPolicy(policyId: string): Promise<Policy> {
 
 export async function searchPoliciesFor(searchText: string): Promise<Policy[]> {
   const queryString = qs.stringify({ search: searchText })
-  const response = await GET<{ data: Policy[]; meta: any }>(`policies?${queryString}`)
+  const response = await GET<{ data: Policy[]; meta: unknown }>(`policies?${queryString}`)
   return response.data
 }
 

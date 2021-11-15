@@ -64,7 +64,7 @@ const getItemStatusText = (item: PolicyItem) => {
 }
 .sidebar-chunk,
 .body-item {
-  margin-bottom: 1em;
+  margin-bottom: 1.25em;
 }
 .sidebar-item {
   margin-bottom: 0.5em;

@@ -135,7 +135,7 @@ p {
   {/if}
 
   <p>
-    <span class="header">Country<span class="required">*</span></span>
+    <span class="header">Primary Location<span class="required">*</span></span>
     <TextField placeholder={'Enter country'} bind:value={country} on:blur={updateCountry} />
   </p>
 

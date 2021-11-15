@@ -127,8 +127,9 @@ export const getNameOfPolicy = (policy: Policy): string => {
 }
 
 //claims or members/dependents fields from this endpoint are deprecated
-export async function loadPolicies(): Promise<void> {
-  const response = await GET<{ data: Policy[]; meta: any }>('policies')
+export async function loadPolicies(limit = '20'): Promise<void> {
+  const queryString = qs.stringify({ limit })
+  const response = await GET<{ data: Policy[]; meta: any }>(`policies?${queryString}`)
   const data = response.data
   policies.set(data)
   initialized.set(true)
@@ -142,8 +143,8 @@ export async function loadPolicy(policyId: string): Promise<Policy> {
   return response
 }
 
-export async function searchPoliciesFor(searchText: string): Promise<Policy[]> {
-  const queryString = qs.stringify({ search: searchText })
+export async function searchPoliciesFor(searchText: string, limit = '20'): Promise<Policy[]> {
+  const queryString = qs.stringify({ search: searchText, limit })
   const response = await GET<{ data: Policy[]; meta: any }>(`policies?${queryString}`)
   return response.data
 }

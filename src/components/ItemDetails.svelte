@@ -33,7 +33,7 @@ $: teamDetails = {
   'Policy Name': policy?.name,
   Affiliation: policy.entity_code?.name,
   'Cost Center': policy.cost_center,
-  Account: policy.account,
+  'Internal Account': policy.account,
 }
 $: moneyDetails = {
   'Covered value': formatMoney(item.coverage_amount),

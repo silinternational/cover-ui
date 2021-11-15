@@ -342,7 +342,7 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
         <img class="receipt" src={previewFile.file?.url} alt="document" on:error={onImgError} />
       {/if}
 
-      <FilePreview class="pointer w-50" previews={claimFiles} {isMemberOfPolicy} on:preview={onPreview} />
+      <FilePreview class="pointer w-50" previews={claimFiles} on:preview={onPreview} />
 
       <br />
     </Row>

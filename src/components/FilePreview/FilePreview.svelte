@@ -4,11 +4,10 @@ import type { ClaimFile } from 'data/claims'
 import { formatDate } from '../dates'
 import { createEventDispatcher } from 'svelte'
 import { flip } from 'svelte/animate'
-import { Button, Progress } from '@silintl/ui-components'
+import { Progress } from '@silintl/ui-components'
 
 export let previews = [] as ClaimFile[]
 export let uploading: boolean = false
-export let isMemberOfPolicy: boolean = false
 
 let selectedId: string = ''
 

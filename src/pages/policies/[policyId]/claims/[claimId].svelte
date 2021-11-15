@@ -38,11 +38,12 @@ import {
   claims,
   fixReceipt,
   ClaimFilePurpose,
+  ClaimItemDetailsData,
 } from 'data/claims'
 import { loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
 import { getNameOfPolicy, getPolicyById, loadPolicy, memberBelongsToPolicy, policies, Policy } from 'data/policies'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
-import { formatMoney } from 'helpers/money'
+import { convertToCents, formatMoney } from 'helpers/money'
 import { customerClaimEdit, customerClaims, customerClaimDetails, POLICIES, policyDetails } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { assertHas } from '../../../../validation/assertions'
@@ -54,7 +55,7 @@ import { formatDistanceToNow } from 'date-fns'
 export let claimId: string
 export let policyId = $selectedPolicyId
 
-const updatedClaimItemData = {} as any
+const updatedClaimItemData: ClaimItemDetailsData = {}
 
 let showImg: boolean = false
 let repairOrReplacementCost: number
@@ -181,7 +182,16 @@ const onMoneyInputBlur = () => {
     updatedClaimItemData.repairActual || updatedClaimItemData.replaceActual,
     `Please enter the actual ${receiptType} cost`
   )
-  claimItem.id && updateClaimItem(claim.id, claimItem.id, updatedClaimItemData)
+  claimItem.id &&
+    updateClaimItem(claim.id, claimItem.id, {
+      fmv: convertToCents(updatedClaimItemData.fairMarketValueUSD),
+      is_repairable: updatedClaimItemData.isRepairable,
+      payout_option: updatedClaimItemData.payoutOption,
+      repair_estimate: convertToCents(updatedClaimItemData.repairEstimateUSD),
+      replace_estimate: convertToCents(updatedClaimItemData.replaceEstimateUSD),
+      repair_actual: convertToCents(updatedClaimItemData.repairActual),
+      replace_actual: convertToCents(updatedClaimItemData.replaceActual),
+    })
 }
 
 async function onUpload(event: CustomEvent<FormData>) {

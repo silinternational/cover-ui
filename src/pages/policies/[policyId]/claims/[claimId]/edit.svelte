@@ -10,6 +10,7 @@ import {
   updateClaim,
   updateClaimItem,
   Claim,
+  ClaimFormData,
 } from 'data/claims'
 import { loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
 import { selectedPolicyId } from 'data/role-policy-selection'
@@ -18,6 +19,7 @@ import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
+import { convertToCents } from 'helpers/money'
 
 export let claimId: string
 export let policyId = $selectedPolicyId
@@ -46,17 +48,29 @@ const editBreadcrumb = { name: 'Edit', url: customerClaimEdit(policyId, claimId)
 $: breadcrumbLinks = [claimsBreadcrumb, thisClaimBreadcrumb, editBreadcrumb]
 $: claimName && (metatags.title = formatPageTitle(`Claims > ${claimName} > Edit`))
 
-const updateClaimAndItem = async (event: CustomEvent): Promise<void> => {
+const updateClaimAndItem = async (event: CustomEvent<ClaimFormData>): Promise<void> => {
   const { claimData, claimItemData } = event.detail
 
-  await updateClaim(claimId, claimData)
-  await updateClaimItem(claimId, claimItemId, claimItemData)
+  await updateClaim(claimId, {
+    incident_date: new Date(claimData.lostDate).toISOString(),
+    incident_type: claimData.lossReason,
+    incident_description: claimData.situationDescription,
+  })
+  await updateClaimItem(claimId, claimItemId, {
+    fmv: convertToCents(claimItemData.fairMarketValueUSD),
+    is_repairable: claimItemData.isRepairable,
+    payout_option: claimItemData.payoutOption,
+    repair_estimate: convertToCents(claimItemData.repairEstimateUSD),
+    replace_estimate: convertToCents(claimItemData.replaceEstimateUSD),
+    // repair_actual: convertToCents(claimItemData.repairActual),
+    // replace_actual: convertToCents(claimItemData.replaceActual),
+  })
 }
-const onSaveForLater = async (event: CustomEvent) => {
+const onSaveForLater = async (event: CustomEvent<ClaimFormData>) => {
   await updateClaimAndItem(event)
   $goto(customerClaimDetails(policyId, claimId))
 }
-const onSubmit = async (event: CustomEvent) => {
+const onSubmit = async (event: CustomEvent<ClaimFormData>) => {
   await updateClaimAndItem(event)
   await submitClaim(claimId)
   $goto(customerClaimDetails(policyId, claimId))

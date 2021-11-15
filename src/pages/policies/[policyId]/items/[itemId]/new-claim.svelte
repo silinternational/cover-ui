@@ -9,6 +9,7 @@ import {
   Claim,
   submitClaim,
   loadClaimsByPolicyId,
+  ClaimFormData,
 } from 'data/claims'
 import { loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
 import { selectedPolicyId } from 'data/role-policy-selection'
@@ -17,6 +18,7 @@ import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
+import { convertToCents } from 'helpers/money'
 
 export let itemId: string
 export let policyId = $selectedPolicyId
@@ -42,7 +44,7 @@ const isItemIdOnClaim = (itemId: string, claim: Claim) => {
   const claimItems = claim.claim_items || []
   return claimItems.some((claimItem) => claimItem.item_id === itemId)
 }
-const createClaimAndItem = async (event: CustomEvent): Promise<string> => {
+const createClaimAndItem = async (event: CustomEvent<ClaimFormData>): Promise<string> => {
   const { claimData, claimItemData } = event.detail
 
   // TODO - Handle situations where the claim is created, but the claim-item
@@ -50,15 +52,26 @@ const createClaimAndItem = async (event: CustomEvent): Promise<string> => {
   // the form could send the Claim ID on submit. If we receive a Claim ID here,
   // use it. Otherwise, create a new claim. */
 
-  const claim = await createClaim(item, claimData)
-  await createClaimItem(claim.id, claimItemData)
+  const claim = await createClaim(item, {
+    incident_date: new Date(claimData.lostDate),
+    incident_description: claimData.situationDescription,
+    incident_type: claimData.lossReason,
+  })
+  await createClaimItem(claim.id, {
+    fmv: convertToCents(claimItemData.fairMarketValueUSD),
+    is_repairable: claimItemData.isRepairable,
+    item_id: claimItemData.itemId,
+    payout_option: claimItemData.payoutOption,
+    repair_estimate: convertToCents(claimItemData.repairEstimateUSD),
+    replace_estimate: convertToCents(claimItemData.replaceEstimateUSD),
+  })
   return claim.id
 }
-const onSaveForLater = async (event: CustomEvent) => {
+const onSaveForLater = async (event: CustomEvent<ClaimFormData>) => {
   const claimId = await createClaimAndItem(event)
   $goto(routes.customerClaimDetails(policyId, claimId))
 }
-const onSubmit = async (event: CustomEvent) => {
+const onSubmit = async (event: CustomEvent<ClaimFormData>) => {
   const claimId = await createClaimAndItem(event)
   await submitClaim(claimId)
   $goto(routes.customerClaimDetails(policyId, claimId))

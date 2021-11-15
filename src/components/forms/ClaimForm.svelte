@@ -11,7 +11,7 @@ import {
   PAYOUT_OPTION_REPLACE,
 } from '../../business-rules/claim-payout-amount'
 import { claimIncidentTypes, loadClaimIncidentTypes } from 'data/claim-incident-types'
-import type { Claim, ClaimItem, PayoutOption } from 'data/claims'
+import type { Claim, ClaimFormData, ClaimItem, PayoutOption } from 'data/claims'
 import type { PolicyItem } from 'data/items'
 import DateInput from 'DateInput.svelte'
 import Description from 'Description.svelte'
@@ -25,7 +25,7 @@ import { createEventDispatcher, onMount } from 'svelte'
 export let claim = {} as Claim
 export let item = {} as PolicyItem
 
-const dispatch = createEventDispatcher()
+const dispatch = createEventDispatcher<{ submit: ClaimFormData; 'save-for-later': ClaimFormData }>()
 
 const todayDateString = new Date().toISOString().split('T')[0]
 const repairableOptions = [
@@ -155,7 +155,7 @@ const onSaveForLater = (event: Event) => {
   dispatch('save-for-later', getFormData())
 }
 
-const getFormData = () => {
+const getFormData = (): ClaimFormData => {
   return {
     claimData: {
       lostDate,

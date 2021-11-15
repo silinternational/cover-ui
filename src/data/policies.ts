@@ -143,7 +143,7 @@ export async function loadPolicy(policyId: string): Promise<Policy> {
   return response
 }
 
-export async function searchPoliciesFor(searchText: string, limit = '50'): Promise<Policy[]> {
+export async function searchPoliciesFor(searchText: string, limit = 50): Promise<Policy[]> {
   const queryString = qs.stringify({ search: searchText, limit })
   const response = await GET<{ data: Policy[]; meta: any }>(`policies?${queryString}`)
   return response.data

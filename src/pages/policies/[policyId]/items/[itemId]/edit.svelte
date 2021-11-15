@@ -96,12 +96,12 @@ const parseItemFormData = (itemData: ItemFormData): UpdatePolicyItemRequestBody 
     We could not find that item. Please <a href={itemsRoute(policyId)}>go back</a> and select an item from the list.
   {/if}
 {:else if isCheckingOut}
-  <Checkout {item} {policyId} on:agreeAndPay={onAgreeAndPay} on:delete={onDelete} on:edit={onEdit} />
+  <Checkout {item} on:agreeAndPay={onAgreeAndPay} on:delete={onDelete} on:edit={onEdit} />
 {:else}
   <!-- @todo Handle situations where the user isn't allowed to edit this item (if any). -->
   <Page>
     <Breadcrumb links={breadcrumbLinks} />
     <ItemBanner itemStatus="Draft" class="my-2" />
-    <ItemForm {item} {policyId} on:submit={onSubmit} on:save-for-later={onSaveForLater} on:delete={onDelete} />
+    <ItemForm {item} on:submit={onSubmit} on:save-for-later={onSaveForLater} on:delete={onDelete} />
   </Page>
 {/if}

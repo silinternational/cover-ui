@@ -21,7 +21,7 @@ import { onMount } from 'svelte'
 export let policyId: string
 
 let isCheckingOut: boolean = false
-let item: PolicyItem
+let item: PolicyItem = { policy_id: policyId }
 
 onMount(() => {
   loadDependents(policyId)
@@ -84,8 +84,8 @@ const onEdit = () => {
 <Page>
   {#if !isCheckingOut}
     <Breadcrumb links={breadcrumbLinks} />
-    <ItemForm {item} {policyId} on:submit={onSubmit} on:save-for-later={onSaveForLater} />
+    <ItemForm {item} on:submit={onSubmit} on:save-for-later={onSaveForLater} />
   {:else}
-    <Checkout {item} {policyId} on:agreeAndPay={onAgreeAndPay} on:delete={onDelete} on:edit={onEdit} />
+    <Checkout {item} on:agreeAndPay={onAgreeAndPay} on:delete={onDelete} on:edit={onEdit} />
   {/if}
 </Page>

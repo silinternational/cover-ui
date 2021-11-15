@@ -6,16 +6,15 @@ import MakeAndModelModal from 'MakeAndModelModal.svelte'
 import MoneyInput from '../MoneyInput.svelte'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
-import { selectedPolicyDependents } from 'data/dependents'
+import { dependentsByPolicyId } from 'data/dependents'
 import type { ItemCoverageStatus, ItemFormData, PolicyItem } from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
-import { selectedPolicyMembers } from 'data/policy-members'
+import { membersByPolicyId } from 'data/policy-members'
 import { assertHas } from '../../validation/assertions'
 import { Button, Form, Select, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let item = {} as PolicyItem
-export let policyId: string
 
 let open = false
 let makeModelIsOpen = false
@@ -45,8 +44,8 @@ let initialAccountablePersonId: string
 let initialCategoryId: string
 let today = new Date()
 
-$: dependentOptions = getDependentOptions($selectedPolicyDependents)
-$: policyMemberOptions = getPolicyMemberOptions($selectedPolicyMembers)
+$: dependentOptions = getDependentOptions($dependentsByPolicyId[item?.policy_id] || [])
+$: policyMemberOptions = getPolicyMemberOptions($membersByPolicyId[item?.policy_id] || [])
 
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions]
 $: accountablePerson = accountablePersons.find(

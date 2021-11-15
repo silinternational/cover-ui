@@ -11,13 +11,13 @@ import { onMount } from 'svelte'
 
 export let item: PolicyItem
 export let isCheckingOut: boolean = false
-export let policyId: string
 export let isAdmin: boolean
 
 let policy: Policy
 
 onMount(() => loadPolicy(policyId))
 
+$: policyId = item?.policy_id
 $: $policies && (policy = getPolicyById(policyId))
 
 $: statusText = getItemStatusText(item)

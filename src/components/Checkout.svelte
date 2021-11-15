@@ -11,11 +11,11 @@ import { Button, Checkbox } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let item: PolicyItem
-export let policyId: string
 
-let open: boolean = false
-let checked: boolean = false
+let open = false
+let checked = false
 
+$: policyId = item?.policy_id
 $: itemId = item?.id
 
 $: policy = $selectedPolicy

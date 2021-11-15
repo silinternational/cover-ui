@@ -25,24 +25,24 @@ $: status = (item.coverage_status || '') as ItemCoverageStatus
 $: showRevisionMessage = item.status_reason && status === 'Revision'
 $: startDate = formatDate(item.coverage_start_date)
 $: endDate = formatDate(item.coverage_end_date)
-$: householdDetails = {
-  Location: item.country,
+$: commonDetails = { 'Accountable Person': item?.accountable_person?.name, Location: item.country || '-' }
+$: householdId = {
   'Household ID': policy?.household_id,
-  'Covered value': formatMoney(item.coverage_amount),
-  Premium: `${formatMoney(item.annual_premium)} / yr`,
 }
 $: teamDetails = {
+  Name: policy?.name,
   Affiliation: policy.entity_code?.name,
   'Cost Center': policy.cost_center,
   Account: policy.account,
 }
-$: sidebarDetails =
+$: moneyDetails = {
+  'Covered value': formatMoney(item.coverage_amount),
+  Premium: `${formatMoney(item.annual_premium)} / yr`,
+}
+$: sidebarDetailsArray =
   policy.type === PolicyType.Team
-    ? {
-        'Accountable Person': item?.accountable_person?.name,
-        ...teamDetails,
-      }
-    : { 'Accountable Person': item?.accountable_person?.name, ...householdDetails }
+    ? [commonDetails, teamDetails, moneyDetails]
+    : [commonDetails, householdId, moneyDetails]
 $: bodyItems = {
   Model: `${item?.make} ${item?.model}`,
   'Unique ID': item?.serial_number,
@@ -62,9 +62,12 @@ const getItemStatusText = (item: PolicyItem) => {
   background-color: var(--mdc-theme-neutral-9);
   border-radius: 0 0 8px 8px;
 }
-.sidebar-item,
+.sidebar-chunk,
 .body-item {
   margin-bottom: 1em;
+}
+.sidebar-item {
+  margin-bottom: 0.5em;
 }
 .title {
   margin-bottom: 0.4em;
@@ -88,13 +91,15 @@ const getItemStatusText = (item: PolicyItem) => {
   <div class="w-25 sidebar">
     <h2 class="break-word my-1">{item.name || ''}</h2>
 
-    {#each Object.entries(sidebarDetails) as [title, value], i}
-      {#if title && value}
-        <div class="sidebar-item">
-          <div class="title"><b>{title}</b></div>
-          <div class="value">{value}</div>
-        </div>
-      {/if}
+    {#each sidebarDetailsArray as sidebarDetail}
+      <div class="sidebar-chunk">
+        {#each Object.entries(sidebarDetail) as [title, value], i}
+          <div class="sidebar-item">
+            <div class="title"><b>{title}</b></div>
+            <div class="value">{value}</div>
+          </div>
+        {/each}
+      </div>
     {/each}
   </div>
 

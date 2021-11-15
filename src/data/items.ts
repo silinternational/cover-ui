@@ -75,7 +75,7 @@ export type UpdatePolicyItemRequestBody = {
   category_id: string
   country: string
   coverage_amount: number
-  coverage_end_date: string /*Date*/
+  coverage_end_date?: string /*Date*/
   coverage_start_date: string /*Date*/
   coverage_status: ItemCoverageStatus
   description: string
@@ -85,6 +85,22 @@ export type UpdatePolicyItemRequestBody = {
   name: string
   risk_category_id?: string
   serial_number: string
+}
+
+export type ItemFormData = {
+  accountablePersonId: string
+  categoryId: string
+  country: string
+  marketValueUSD: string
+  coverageEndDate: string
+  coverageStartDate: string
+  coverageStatus: ItemCoverageStatus
+  itemDescription: string
+  inStorage: boolean
+  make: string
+  model: string
+  shortName: string
+  uniqueIdentifier: string
 }
 
 export const itemsByPolicyId = writable<{ [policyId: string]: PolicyItem[] }>({})
@@ -124,25 +140,10 @@ export async function loadItems(policyId: string): Promise<void> {
  * @param {Object} itemData
  * @return {Object}
  */
-export async function addItem(policyId: string, itemData: any): Promise<PolicyItem> {
+export async function addItem(policyId: string, itemData: CreatePolicyItemRequestBody): Promise<PolicyItem> {
   const urlPath = `policies/${policyId}/items`
 
-  const parsedItemData: CreatePolicyItemRequestBody = {
-    accountable_person_id: itemData.accountablePersonId,
-    category_id: itemData.categoryId,
-    country: itemData.country,
-    coverage_amount: Number(itemData.marketValueUSD) * 100,
-    coverage_start_date: itemData.coverageStartDate,
-    coverage_status: itemData.coverageStatus,
-    description: itemData.itemDescription,
-    in_storage: itemData.inStorage,
-    make: itemData.make,
-    model: itemData.model,
-    name: itemData.shortName,
-    serial_number: itemData.uniqueIdentifier,
-  }
-
-  const addedItem = await CREATE<PolicyItem>(urlPath, parsedItemData as any)
+  const addedItem = await CREATE<PolicyItem>(urlPath, itemData)
 
   itemsByPolicyId.update((data) => {
     const items = data[policyId] || []
@@ -212,28 +213,16 @@ export async function submitItem(policyId: string, itemId: string): Promise<void
  * @param {Object} itemData
  * @return {Object}
  */
-export async function updateItem(policyId: string, itemId: string, itemData: any): Promise<void> {
+export async function updateItem(
+  policyId: string,
+  itemId: string,
+  itemData: UpdatePolicyItemRequestBody
+): Promise<void> {
   if (!itemId) {
     throwError('item id not set')
   }
   const urlPath = `items/${itemId}`
-
-  const parsedItemData: UpdatePolicyItemRequestBody = {
-    accountable_person_id: itemData.accountablePersonId,
-    category_id: itemData.categoryId,
-    country: itemData.country,
-    coverage_amount: Number(itemData.marketValueUSD) * 100,
-    coverage_end_date: itemData.coverageEndDate,
-    coverage_start_date: itemData.coverageStartDate,
-    coverage_status: itemData.coverageStatus,
-    description: itemData.itemDescription,
-    in_storage: itemData.inStorage,
-    make: itemData.make,
-    model: itemData.model,
-    name: itemData.shortName,
-    serial_number: itemData.uniqueIdentifier,
-  }
-  const updatedItem = await UPDATE<PolicyItem>(urlPath, parsedItemData)
+  const updatedItem = await UPDATE<PolicyItem>(urlPath, itemData)
 
   itemsByPolicyId.update((data) => {
     const items = data[policyId] || []

@@ -4,7 +4,16 @@ import { Breadcrumb, ItemBanner, ItemForm } from 'components'
 import { loading } from 'components/progress'
 import { loadDependents } from 'data/dependents'
 import { loadMembersOfPolicy } from 'data/policy-members'
-import { deleteItem, loadItems, PolicyItem, selectedPolicyItems, submitItem, updateItem } from 'data/items'
+import {
+  deleteItem,
+  ItemFormData,
+  loadItems,
+  PolicyItem,
+  selectedPolicyItems,
+  submitItem,
+  updateItem,
+  UpdatePolicyItemRequestBody,
+} from 'data/items'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { HOME, items as itemsRoute, itemDetails, itemEdit } from 'helpers/routes'
@@ -34,13 +43,13 @@ const editBreadcrumb = { name: 'Edit', url: itemEdit(policyId, itemId) }
 $: breadcrumbLinks = [itemsBreadcrumb, thisItemBreadcrumb, editBreadcrumb]
 $: itemName && (metatags.title = formatPageTitle(`Items > ${itemName} > Edit`))
 
-const onApply = async (event: CustomEvent) => {
-  await updateItem(policyId, itemId, event.detail)
+const onSubmit = async (event: CustomEvent<ItemFormData>) => {
+  await updateItem(policyId, itemId, parseItemFormData(event.detail))
   isCheckingOut = true
 }
 
-const onSaveForLater = async (event: CustomEvent) => {
-  await updateItem(policyId, itemId, event.detail)
+const onSaveForLater = async (event: CustomEvent<ItemFormData>) => {
+  await updateItem(policyId, itemId, parseItemFormData(event.detail))
 
   $goto(HOME)
 }
@@ -60,6 +69,24 @@ const onAgreeAndPay = async (event: CustomEvent<string>) => {
 const onEdit = () => {
   isCheckingOut = false
 }
+
+const parseItemFormData = (itemData: ItemFormData): UpdatePolicyItemRequestBody => {
+  return {
+    accountable_person_id: itemData.accountablePersonId,
+    category_id: itemData.categoryId,
+    country: itemData.country,
+    coverage_amount: Number(itemData.marketValueUSD) * 100,
+    coverage_end_date: itemData.coverageEndDate || undefined,
+    coverage_start_date: itemData.coverageStartDate,
+    coverage_status: itemData.coverageStatus,
+    description: itemData.itemDescription,
+    in_storage: itemData.inStorage,
+    make: itemData.make,
+    model: itemData.model,
+    name: itemData.shortName,
+    serial_number: itemData.uniqueIdentifier,
+  }
+}
 </script>
 
 {#if !item.id}
@@ -75,6 +102,6 @@ const onEdit = () => {
   <Page>
     <Breadcrumb links={breadcrumbLinks} />
     <ItemBanner itemStatus="Draft" class="my-2" />
-    <ItemForm {item} {policyId} on:submit={onApply} on:save-for-later={onSaveForLater} on:delete={onDelete} />
+    <ItemForm {item} {policyId} on:submit={onSubmit} on:save-for-later={onSaveForLater} on:delete={onDelete} />
   </Page>
 {/if}

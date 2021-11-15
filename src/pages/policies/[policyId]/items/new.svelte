@@ -2,7 +2,15 @@
 import Checkout from 'Checkout.svelte'
 import { Breadcrumb, ItemForm } from 'components'
 import { loadDependents } from 'data/dependents'
-import { addItem, deleteItem, loadItems, PolicyItem, submitItem } from 'data/items'
+import {
+  addItem,
+  CreatePolicyItemRequestBody,
+  deleteItem,
+  ItemFormData,
+  loadItems,
+  PolicyItem,
+  submitItem,
+} from 'data/items'
 import { loadMembersOfPolicy } from 'data/policy-members'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { HOME, items as itemsRoute, itemDetails, itemsNew } from 'helpers/routes'
@@ -29,13 +37,13 @@ $: breadcrumbLinks = [
   { name: 'New', url: itemsNew(policyId) },
 ]
 
-const onApply = async (event: CustomEvent) => {
-  item = await addItem(policyId, event.detail)
+const onSubmit = async (event: CustomEvent<ItemFormData>) => {
+  item = await addItem(policyId, parseItemFormData(event.detail))
   isCheckingOut = true
 }
 
-const onSaveForLater = async (event: CustomEvent) => {
-  await addItem(policyId, event.detail)
+const onSaveForLater = async (event: CustomEvent<ItemFormData>) => {
+  await addItem(policyId, parseItemFormData(event.detail))
 
   $goto(HOME)
 }
@@ -51,6 +59,23 @@ const onDelete = async (event: CustomEvent<string>) => {
   $goto(itemsRoute(policyId))
 }
 
+const parseItemFormData = (itemData: ItemFormData): CreatePolicyItemRequestBody => {
+  return {
+    accountable_person_id: itemData.accountablePersonId,
+    category_id: itemData.categoryId,
+    country: itemData.country,
+    coverage_amount: Number(itemData.marketValueUSD) * 100,
+    coverage_start_date: itemData.coverageStartDate,
+    coverage_status: itemData.coverageStatus,
+    description: itemData.itemDescription,
+    in_storage: itemData.inStorage,
+    make: itemData.make,
+    model: itemData.model,
+    name: itemData.shortName,
+    serial_number: itemData.uniqueIdentifier,
+  }
+}
+
 const onEdit = () => {
   isCheckingOut = false
 }
@@ -59,7 +84,7 @@ const onEdit = () => {
 <Page>
   {#if !isCheckingOut}
     <Breadcrumb links={breadcrumbLinks} />
-    <ItemForm {item} {policyId} on:submit={onApply} on:save-for-later={onSaveForLater} />
+    <ItemForm {item} {policyId} on:submit={onSubmit} on:save-for-later={onSaveForLater} />
   {:else}
     <Checkout {item} {policyId} on:agreeAndPay={onAgreeAndPay} on:delete={onDelete} on:edit={onEdit} />
   {/if}

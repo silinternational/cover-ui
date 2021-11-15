@@ -7,7 +7,7 @@ import MoneyInput from '../MoneyInput.svelte'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
 import { selectedPolicyDependents } from 'data/dependents'
-import type { ItemCoverageStatus, PolicyItem } from 'data/items'
+import type { ItemCoverageStatus, ItemFormData, PolicyItem } from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
 import { selectedPolicyMembers } from 'data/policy-members'
 import { assertHas } from '../../validation/assertions'
@@ -17,26 +17,25 @@ import { createEventDispatcher } from 'svelte'
 export let item = {} as PolicyItem
 export let policyId: string
 
-let formData = {} as any
 let open = false
 let makeModelIsOpen = false
 
-const dispatch = createEventDispatcher<{ submit: any; 'save-for-later': any; delete: any }>()
+const dispatch = createEventDispatcher<{ submit: ItemFormData; 'save-for-later': ItemFormData; delete: void }>()
 
 // Set default values.
-let accountablePersonId: string = ''
-let categoryId: string = ''
-let country: string = ''
-let marketValueUSD: string = ''
-let coverageEndDate = {}
-let coverageStartDate: string = ''
+let accountablePersonId = ''
+let categoryId = ''
+let country = ''
+let marketValueUSD = ''
+let coverageEndDate = ''
+let coverageStartDate = ''
 let coverageStatus: ItemCoverageStatus
-let itemDescription: string = ''
+let itemDescription = ''
 let inStorage = false
-let make: string = ''
-let model: string = ''
-let shortName: string = ''
-let uniqueIdentifier: string = ''
+let make = ''
+let model = ''
+let shortName = ''
+let uniqueIdentifier = ''
 
 // Set initial values based on the provided item data.
 $: setInitialValues(item)
@@ -65,7 +64,7 @@ const onSelectCategory = (event: any) => {
   categoryId = event.detail?.id
 }
 
-const getFormData = () => {
+const getFormData = (): ItemFormData => {
   return {
     accountablePersonId,
     categoryId,
@@ -93,7 +92,7 @@ const onCategorySelectPopulated = () => {
   }
 }
 
-const validateOnSave = (formData: any) => {
+const validateOnSave = (formData: ItemFormData) => {
   assertHas(formData.accountablePersonId, 'Please select an accountable person')
   assertHas(formData.categoryId, 'Please select a category')
   assertHas(formData.shortName, 'Please specify a short name')
@@ -101,7 +100,7 @@ const validateOnSave = (formData: any) => {
   return true
 }
 
-const validate = (formData: any) => {
+const validate = (formData: ItemFormData) => {
   validateOnSave(formData)
   assertHas(formData.marketValueUSD, 'Please specify the market value')
   assertHas(formData.itemDescription, 'Please add a description')
@@ -112,7 +111,7 @@ const validate = (formData: any) => {
 const areMakeAndModelRequired = () => $categories.find((category) => category.id === categoryId)?.require_make_model
 
 const onSubmit = (event: Event) => {
-  formData = getFormData()
+  const formData = getFormData()
   validate(formData)
   if (!(make && model) && areMakeAndModelRequired()) {
     makeModelIsOpen = true
@@ -142,7 +141,7 @@ const handleDialog = (event: CustomEvent<string>) => {
 
 const onMakeModelClosed = (event: CustomEvent<string>) => {
   makeModelIsOpen = false
-  event.detail === 'submit' && dispatch('submit', formData)
+  event.detail === 'submit' && dispatch('submit', getFormData())
 }
 
 const setInitialValues = (item: PolicyItem) => {

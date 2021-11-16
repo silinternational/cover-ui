@@ -35,7 +35,7 @@ $: menuItems = [
     hide: inAdminRole,
   },
   {
-    url: inAdminRole ? routes.ADMIN_HOME : routes.customerClaims(policyId),
+    url: routes.customerClaims(policyId),
     icon: 'label',
     label: 'Claims',
     hide: inAdminRole,

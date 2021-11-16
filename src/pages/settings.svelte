@@ -4,5 +4,7 @@ import { settingsPolicy } from 'helpers/routes'
 import { redirect } from '@roxi/routify'
 import { selectedPolicyId } from 'data/role-policy-selection'
 
-$: $selectedPolicyId ? $redirect(settingsPolicy($selectedPolicyId)) : $redirect(settingsPolicy($user.policy_id))
+$: $user.policy_id && $selectedPolicyId
+  ? $redirect(settingsPolicy($selectedPolicyId))
+  : $redirect(settingsPolicy($user.policy_id))
 </script>

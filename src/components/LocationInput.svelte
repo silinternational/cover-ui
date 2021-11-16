@@ -12,6 +12,13 @@ const options = {
 }
 const placeholder = 'Enter country'
 
+/* This intermediate (internal) value is to cause the GooglePlacesAutocomplete
+ * component to be updated when our incoming `value` parameter is changed.
+ * Otherwise, this would continue showing the selected value rather than the
+ * value we dispatched. */
+let internalValue: string
+$: internalValue = value
+
 const getCountryFrom = (placeChangeDetail) => {
   const addressComponents = placeChangeDetail?.place?.address_components || []
   const countryEntry = addressComponents.find((entry) => entry.types.includes('country'))
@@ -32,7 +39,7 @@ const onPlaceChanged = (event) => {
     {options}
     on:place_changed={onPlaceChanged}
     {placeholder}
-    {value}
+    value={internalValue}
   />
 {:else}
   (Please provide a GOOGLE_PLACES_API_KEY environment variable)

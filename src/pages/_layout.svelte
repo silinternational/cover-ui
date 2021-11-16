@@ -1,7 +1,7 @@
 <script lang="ts">
-import user, { isAdmin, UserAppRole } from '../authn/user'
+import user, { isAdmin } from '../authn/user'
 import { AppDrawer } from 'components'
-import { initialized as policiesInitialized, loadPolicies, policies, Policy } from 'data/policies'
+import { initialized as policiesInitialized, loadPolicies } from 'data/policies'
 import * as routes from 'helpers/routes'
 import { goto } from '@roxi/routify'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
@@ -12,8 +12,7 @@ $: $policiesInitialized || loadPolicies()
 
 $: myPolicies = $user?.policies || []
 $: policyId = $selectedPolicyId || $user.policy_id
-$: inAdminRole =
-  isAdmin($user.app_role) && ($roleSelection === UserAppRole.Steward || $roleSelection === UserAppRole.Signator)
+$: inAdminRole = isAdmin($roleSelection)
 
 // TODO: Update this based on the user's role and/or the RoleAndPolicyMenu selection.
 $: menuItems = [
@@ -33,16 +32,19 @@ $: menuItems = [
     url: routes.ITEMS,
     icon: 'umbrella',
     label: 'items',
+    hide: inAdminRole,
   },
   {
     url: inAdminRole ? routes.ADMIN_HOME : routes.customerClaims(policyId),
     icon: 'label',
     label: 'Claims',
+    hide: inAdminRole,
   },
   {
     url: routes.FAQ,
     icon: 'quiz',
     label: 'FAQ',
+    hide: true,
   },
   // {
   //   url: routes.CHAT,

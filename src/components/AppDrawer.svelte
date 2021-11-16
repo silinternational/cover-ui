@@ -10,7 +10,7 @@ import { ROOT } from 'helpers/routes'
 
 export let menuItems: any[]
 export let myPolicies: Policy[]
-export let role: UserAppRole | undefined
+export let role: UserAppRole
 
 let toggle = false
 

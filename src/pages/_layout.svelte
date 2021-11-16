@@ -3,7 +3,7 @@ import user, { isAdmin } from '../authn/user'
 import { AppDrawer } from 'components'
 import { initialized as policiesInitialized, loadPolicies } from 'data/policies'
 import * as routes from 'helpers/routes'
-import { goto } from '@roxi/routify'
+import { goto, params, route, url } from '@roxi/routify'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 
 // TODO: Avoid trying to load the policies until the user has authenticated (to
@@ -67,10 +67,30 @@ $: menuItems = [
   },
 ]
 
-const goToPolicyAsCustomer = (event: CustomEvent) => $goto(routes.policyHome(event.detail))
-const goToAdminHome = () => $goto(routes.ADMIN_HOME)
+const gotoPath = (policyId: string, claimOrItemIdObj = {}) =>
+  $goto($url($route.path, { policyId, ...claimOrItemIdObj }))
+
+const goToPolicyAsCustomer = (event: CustomEvent) => {
+  if ($params.policyId && !$params.claimId && !$params.itemId) {
+    gotoPath(event.detail)
+  } else if ($params.policyId && ($params.claimId || $params.itemId)) {
+    //TODO check if item/claim belongs to new selected policy
+    const claimOrItemIdObj = $params.claimId ? { claimId: $params.claimId } : { itemId: $params.itemId }
+    gotoPath(event.detail, claimOrItemIdObj)
+  } else {
+    $goto(routes.policyHome(event.detail))
+  }
+}
+const goToAdminView = (event: CustomEvent) => {
+  if ($params.policyId && ($params.claimId || $params.itemId)) {
+    const claimOrItemIdObj = $params.claimId ? { claimId: $params.claimId } : { itemId: $params.itemId }
+    gotoPath(event.detail.policyId, claimOrItemIdObj)
+  } else {
+    $goto(routes.ADMIN_HOME)
+  }
+}
 </script>
 
-<AppDrawer {menuItems} {myPolicies} role={$user.app_role} on:policy={goToPolicyAsCustomer} on:role={goToAdminHome}>
+<AppDrawer {menuItems} {myPolicies} role={$user.app_role} on:policy={goToPolicyAsCustomer} on:role={goToAdminView}>
   <slot />
 </AppDrawer>

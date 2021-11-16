@@ -54,8 +54,9 @@ $: menuItems = [
   {
     url: routes.settingsPolicy(policyId),
     icon: 'settings',
-    label: 'Settings',
+    label: 'Policy Settings',
     tooltip: 'Policy Settings',
+    hide: inAdminRole,
   },
   {
     url: routes.itemsNew(policyId),

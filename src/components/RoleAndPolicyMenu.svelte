@@ -76,8 +76,6 @@ const getEntriesForRole = (role: UserAppRole): MenuItem[] => {
   return specialEntriesByRole[role] || []
 }
 
-const isAdminRole = (role: UserAppRole) => [UserAppRole.Signator, UserAppRole.Steward].includes(role)
-
 const setInitialRoleSelection = (actualRole: UserAppRole) => {
   if (actualRole) {
     recordRoleSelection(actualRole)

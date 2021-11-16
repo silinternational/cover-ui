@@ -1,6 +1,6 @@
 <script lang="ts">
 import user, { attachUserPhoto, updateUser } from '../../authn/user'
-import { Breadcrumb, FileDropArea, RadioOptions } from 'components'
+import { Breadcrumb, FileDropArea, LocationInput, RadioOptions } from 'components'
 import { upload } from 'data'
 import { policies } from 'data/policies'
 import { assertEmailAddress } from '../../validation/assertions'
@@ -105,6 +105,10 @@ async function onUpload() {
 }
 
 const isCountryValid = (country: string) => !!country
+const onLocationSelected = (event: CustomEvent) => {
+  country = event.detail
+  updateCountry()
+}
 </script>
 
 <style>
@@ -136,7 +140,7 @@ p {
 
   <p>
     <span class="header">Primary Location<span class="required">*</span></span>
-    <TextField placeholder={'Enter country'} bind:value={country} on:blur={updateCountry} />
+    <LocationInput value={country} on:location_selected={onLocationSelected} />
   </p>
 
   {#if 0}

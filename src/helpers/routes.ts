@@ -46,4 +46,15 @@ export const householdSettingsNewDependent = (policyId: string) => `/policies/${
 export const TERMS_OF_SERVICE = '/terms'
 export const PRIVACY_POLICY = '/privacy'
 
-export const pathIsNotPolicySettings = (path: string): boolean => path !== '/policies/:policyId/settings'
+export const pathIsNotforAdmins = (path: string): boolean =>
+  [
+    '/policies/:policyId/settings',
+    '/policies/:policyId/items/new',
+    '/policies/:policyId/items/:itemId/edit',
+    '/policies/:policyId/items/:itemId/remove-coverage',
+    '/policies/:policyId/claims/new',
+    '/policies/:policyId/items/:itemId/new-claim',
+    '/policies/:policyId/claims/:claimId/edit',
+    '/policies/:policyId/settings/dependents/new',
+    '/policies/:policyId/settings/dependents/:uuid',
+  ].includes(path)

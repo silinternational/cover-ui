@@ -29,6 +29,12 @@ $: menuItems = [
     hide: !inAdminRole,
   },
   {
+    url: routes.policyDetails(policyId),
+    icon: 'description',
+    label: 'Policy Details',
+    hide: inAdminRole,
+  },
+  {
     url: routes.ITEMS,
     icon: 'umbrella',
     label: 'items',

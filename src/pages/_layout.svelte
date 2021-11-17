@@ -69,7 +69,7 @@ $: menuItems = [
 const isCustomerOnOwnPolicy = (policyId: string) => policyId === $selectedPolicyId
 
 const gotoPath = (policyId: string, claimOrItemIdObj = {}) =>
-  $goto($url($route.path, { policyId, ...claimOrItemIdObj }))
+  $goto($route.path, { policyId, ...claimOrItemIdObj })
 
 const goToCustomerView = (event: CustomEvent) => {
   if ($params.policyId && !$params.claimId && !$params.itemId) {

@@ -71,7 +71,7 @@ const isCustomerOnOwnPolicy = (policyId: string) => policyId === $selectedPolicy
 const gotoPath = (policyId: string, claimOrItemIdObj = {}) =>
   $goto($url($route.path, { policyId, ...claimOrItemIdObj }))
 
-const goToPolicyAsCustomer = (event: CustomEvent) => {
+const goToCustomerView = (event: CustomEvent) => {
   if ($params.policyId && !$params.claimId && !$params.itemId) {
     gotoPath(event.detail)
   } else if ($params.policyId && ($params.claimId || $params.itemId) && isCustomerOnOwnPolicy(event.detail)) {
@@ -91,6 +91,6 @@ const goToAdminView = (event: CustomEvent) => {
 }
 </script>
 
-<AppDrawer {menuItems} {myPolicies} role={$user.app_role} on:policy={goToPolicyAsCustomer} on:role={goToAdminView}>
+<AppDrawer {menuItems} {myPolicies} role={$user.app_role} on:policy={goToCustomerView} on:role={goToAdminView}>
   <slot />
 </AppDrawer>

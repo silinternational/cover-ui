@@ -1,6 +1,6 @@
 <script lang="ts">
 import user, { attachUserPhoto, updateUser } from '../../authn/user'
-import { Breadcrumb, FileDropArea, LocationInput, RadioOptions } from 'components'
+import { Breadcrumb, FileDropArea, RadioOptions } from 'components'
 import { upload } from 'data'
 import { policies } from 'data/policies'
 import { assertEmailAddress } from '../../validation/assertions'
@@ -15,17 +15,14 @@ const NOTIFICATION_OPTION_DEFAULT = 'default_email'
 const NOTIFICATION_OPTION_CUSTOM = 'custom_email'
 
 let uploading = false
-let notification_email: string
-let email_override: string
-let country: string
+let notification_email = $user.email_override ? NOTIFICATION_OPTION_CUSTOM : NOTIFICATION_OPTION_DEFAULT
+let email_override = $user.email_override || ''
+let country = $user.country || ''
 let croppie: Croppie
 let croppieContainer: HTMLDivElement
 let breadcrumbLinks = [{ name: 'Personal Settings', url: SETTINGS_PERSONAL }]
 metatags.title = formatPageTitle('Personal Settings')
 
-$: notification_email = $user.email_override ? NOTIFICATION_OPTION_CUSTOM : NOTIFICATION_OPTION_DEFAULT
-$: email_override = $user.email_override || ''
-$: country = $user.country || ''
 $: notificationOptions = [
   { label: 'Default email: ' + $user.email, value: NOTIFICATION_OPTION_DEFAULT },
   { label: 'Custom email', value: NOTIFICATION_OPTION_CUSTOM },
@@ -108,10 +105,6 @@ async function onUpload() {
 }
 
 const isCountryValid = (country: string) => !!country
-const onLocationSelected = (event: CustomEvent) => {
-  country = event.detail
-  updateCountry()
-}
 </script>
 
 <style>
@@ -143,7 +136,7 @@ p {
 
   <p>
     <span class="header">Primary Location<span class="required">*</span></span>
-    <LocationInput value={country} on:location_selected={onLocationSelected} />
+    <TextField placeholder={'Enter country'} bind:value={country} on:blur={updateCountry} />
   </p>
 
   {#if 0}

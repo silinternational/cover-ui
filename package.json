@@ -3,7 +3,7 @@
   "scripts": {
     "prebuild:dev": "npm run clean:build",
     "build:dev": "rollup -c -w",
-    "prebuild:prod": "echo GA_MEASUREMENT_ID=${GA_MEASUREMENT_ID} >> .env; echo GOOGLE_PLACES_API_KEY=${GOOGLE_PLACES_API_KEY} >> .env; echo FRESHDESK_ID=${FRESHDESK_ID} >> .env; echo API_HOST=${API_HOST} >> .env; npm run clean:build",
+    "prebuild:prod": "echo GA_MEASUREMENT_ID=${GA_MEASUREMENT_ID} >> .env; echo FRESHDESK_ID=${FRESHDESK_ID} >> .env; echo API_HOST=${API_HOST} >> .env; npm run clean:build",
     "build:prod": "rollup -c",
     "check": "npx svelte-check",
     "clean": "run-p -l clean:build clean:deps",
@@ -24,7 +24,6 @@
     "@rollup/plugin-node-resolve": "^13.0.6",
     "@rollup/plugin-typescript": "^8.3.0",
     "@roxi/routify": "^2.18.3",
-    "@silintl/svelte-google-places-autocomplete": "^1.1.6",
     "@silintl/ui-components": "^3.6.0",
     "@tsconfig/svelte": "^2.0.1",
     "@types/croppie": "^2.6.1",

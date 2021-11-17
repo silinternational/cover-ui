@@ -93,7 +93,7 @@ const goToAdminView = (event: CustomEvent) => {
       gotoPath(event.detail.policyId, { claimId: $params.claimId })
     } else if ($params.itemId) {
       gotoPath(event.detail.policyId, { itemId: $params.itemId })
-    } else if (routes.routeIsNotPolicySettings($route.path)) {
+    } else if (routes.pathIsNotPolicySettings($route.path)) {
       gotoPath(event.detail.policyId)
     }
   } else {

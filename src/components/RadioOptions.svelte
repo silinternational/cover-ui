@@ -23,8 +23,8 @@ label {
   margin: 0.3em 0 0 2em;
 }
 .has-description {
-  margin-top: -13px;
-  margin-bottom: -13px;
+  margin-top: -11px;
+  margin-bottom: -11px;
 }
 </style>
 

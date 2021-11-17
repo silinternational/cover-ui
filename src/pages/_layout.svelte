@@ -82,11 +82,14 @@ const goToCustomerView = (event: CustomEvent) => {
   }
 }
 const goToAdminView = (event: CustomEvent) => {
-  if ($params.policyId && ($params.claimId || $params.itemId)) {
-    const claimOrItemIdObj = $params.claimId ? { claimId: $params.claimId } : { itemId: $params.itemId }
-    gotoPath(event.detail.policyId, claimOrItemIdObj)
-  } else if ($params.policyId) {
-    gotoPath(event.detail.policyId)
+  if ($params.policyId) {
+    if ($params.claimId) {
+      gotoPath(event.detail.policyId, { claimId: $params.claimId })
+    } else if ($params.itemId) {
+      gotoPath(event.detail.policyId, { itemId: $params.itemId })
+    } else {
+      gotoPath(event.detail.policyId)
+    }
   } else {
     $goto(routes.ADMIN_HOME)
   }

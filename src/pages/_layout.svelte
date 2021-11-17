@@ -66,6 +66,7 @@ $: menuItems = [
     hide: inAdminRole || !policyId,
   },
 ]
+const isCustomerOnOwnPolicy = (policyId: string) => policyId === $selectedPolicyId
 
 const gotoPath = (policyId: string, claimOrItemIdObj = {}) =>
   $goto($url($route.path, { policyId, ...claimOrItemIdObj }))
@@ -73,8 +74,7 @@ const gotoPath = (policyId: string, claimOrItemIdObj = {}) =>
 const goToPolicyAsCustomer = (event: CustomEvent) => {
   if ($params.policyId && !$params.claimId && !$params.itemId) {
     gotoPath(event.detail)
-  } else if ($params.policyId && ($params.claimId || $params.itemId)) {
-    //TODO check if item/claim belongs to new selected policy
+  } else if ($params.policyId && ($params.claimId || $params.itemId) && isCustomerOnOwnPolicy(event.detail)) {
     const claimOrItemIdObj = $params.claimId ? { claimId: $params.claimId } : { itemId: $params.itemId }
     gotoPath(event.detail, claimOrItemIdObj)
   } else {

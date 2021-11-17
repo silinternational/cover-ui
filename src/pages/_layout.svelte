@@ -2,9 +2,9 @@
 import user, { isAdmin } from '../authn/user'
 import { AppDrawer } from 'components'
 import { initialized as policiesInitialized, loadPolicies } from 'data/policies'
+import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import * as routes from 'helpers/routes'
 import { goto, params, route, url } from '@roxi/routify'
-import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 
 // TODO: Avoid trying to load the policies until the user has authenticated (to
 // avoid doing so on public pages, like the Privacy Policy).
@@ -91,7 +91,7 @@ const goToAdminView = (event: CustomEvent) => {
   if ($params.policyId && ($params.claimId || $params.itemId)) {
     const claimOrItemIdObj = $params.claimId ? { claimId: $params.claimId } : { itemId: $params.itemId }
     gotoPath(event.detail.policyId, claimOrItemIdObj)
-  } else if ($params.policyId) {
+  } else if ($params.policyId && routes.routeIsNotPolicySettings($route.path)) {
     gotoPath(event.detail.policyId)
   } else {
     $goto(routes.ADMIN_HOME)

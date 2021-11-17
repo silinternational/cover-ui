@@ -19,8 +19,9 @@ let checked: boolean = false
 $: itemId = item?.id
 
 $: policy = $selectedPolicy
-$: householdId = policy.household_id ? policy.household_id : ''
-$: org = policy?.entity_code?.name
+$: householdId = policy.household_id || ''
+$: accountOrhouseholdId = householdId || policy.account || ''
+$: org = policy?.entity_code?.code
 
 $: startDate = formatDate(item?.coverage_start_date)
 $: year = getYear(startDate)
@@ -71,7 +72,7 @@ const handleDialog = (event: CustomEvent<string>) => {
 
 <div class="flex align-items-center p-1">
   <div>
-    Pay {formatMoney(item.prorated_annual_premium)} for the remainder of {year} from {org} account {householdId}.
+    Pay {formatMoney(item.prorated_annual_premium)} for the remainder of {year} from {org} account {accountOrhouseholdId}.
     Auto-renew and pay {formatMoney(item.annual_premium)} on {renewDate}.
   </div>
   <Button class="ml-1" disabled={!checked} raised on:click={onAgreeAndPay}>Agree and Pay</Button>

@@ -72,8 +72,7 @@ export const isSignator = (userRole: UserAppRole): boolean => userRole === UserA
 export const isAdmin = (userRole: UserAppRole): boolean =>
   isUserSteward(userRole) || isSignator(userRole) || userRole === UserAppRole.Admin
 
-export const isCustomer = (userRole: UserAppRole): boolean =>
-  !isUserSteward(userRole) && !isSignator(userRole) && !!userRole
+export const isCustomer = (userRole: UserAppRole): boolean => userRole === UserAppRole.Customer
 
 export const getDefaultPolicyId = (user: User): string => {
   const policies = user.policies || []

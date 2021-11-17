@@ -3,7 +3,7 @@ import user, { isAdmin } from '../authn/user'
 import { AppDrawer } from 'components'
 import { initialized as policiesInitialized, loadPolicies } from 'data/policies'
 import * as routes from 'helpers/routes'
-import { goto } from '@roxi/routify'
+import { goto, params, route, url } from '@roxi/routify'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 
 // TODO: Avoid trying to load the policies until the user has authenticated (to
@@ -13,6 +13,7 @@ $: $policiesInitialized || loadPolicies()
 $: myPolicies = $user?.policies || []
 $: policyId = $selectedPolicyId || $user.policy_id
 $: inAdminRole = isAdmin($roleSelection)
+$: urlIsClaimOrItem = $params.claimId || $params.itemId
 
 // TODO: Update this based on the user's role and/or the RoleAndPolicyMenu selection.
 $: menuItems = [
@@ -66,11 +67,35 @@ $: menuItems = [
     hide: inAdminRole || !policyId,
   },
 ]
+const isCustomerOnOwnPolicy = (policyId: string) => policyId === $selectedPolicyId
 
-const goToPolicyAsCustomer = (event: CustomEvent) => $goto(routes.policyHome(event.detail))
-const goToAdminHome = () => $goto(routes.ADMIN_HOME)
+const gotoPath = (policyId: string, claimOrItemIdObj = {}) => $goto($route.path, { policyId, ...claimOrItemIdObj })
+
+const goToCustomerView = (event: CustomEvent) => {
+  if (!urlIsClaimOrItem && $params.policyId) {
+    gotoPath(event.detail)
+  } else if (urlIsClaimOrItem && isCustomerOnOwnPolicy(event.detail)) {
+    const claimOrItemIdObj = $params.claimId ? { claimId: $params.claimId } : { itemId: $params.itemId }
+    gotoPath(event.detail, claimOrItemIdObj)
+  } else {
+    $goto(routes.policyHome(event.detail))
+  }
+}
+const goToAdminView = (event: CustomEvent) => {
+  if ($params.policyId) {
+    if ($params.claimId) {
+      gotoPath(event.detail.policyId, { claimId: $params.claimId })
+    } else if ($params.itemId) {
+      gotoPath(event.detail.policyId, { itemId: $params.itemId })
+    } else {
+      gotoPath(event.detail.policyId)
+    }
+  } else {
+    $goto(routes.ADMIN_HOME)
+  }
+}
 </script>
 
-<AppDrawer {menuItems} {myPolicies} role={$user.app_role} on:policy={goToPolicyAsCustomer} on:role={goToAdminHome}>
+<AppDrawer {menuItems} {myPolicies} role={$user.app_role} on:policy={goToCustomerView} on:role={goToAdminView}>
   <slot />
 </AppDrawer>

@@ -88,12 +88,12 @@ const goToCustomerView = (event: CustomEvent) => {
   }
 }
 const goToAdminView = (event: CustomEvent) => {
-  if ($params.policyId) {
+  if ($params.policyId && routes.pathIsforAdmins($route.path)) {
     if ($params.claimId) {
       gotoPath(event.detail.policyId, { claimId: $params.claimId })
     } else if ($params.itemId) {
       gotoPath(event.detail.policyId, { itemId: $params.itemId })
-    } else if (routes.pathIsNotforAdmins($route.path)) {
+    } else {
       gotoPath(event.detail.policyId)
     }
   } else {

@@ -46,8 +46,8 @@ export const householdSettingsNewDependent = (policyId: string) => `/policies/${
 export const TERMS_OF_SERVICE = '/terms'
 export const PRIVACY_POLICY = '/privacy'
 
-export const pathIsNotforAdmins = (path: string): boolean =>
-  [
+export const pathIsforAdmins = (path: string): boolean =>
+  ![
     '/policies/:policyId/settings',
     '/policies/:policyId/items/new',
     '/policies/:policyId/items/:itemId/edit',

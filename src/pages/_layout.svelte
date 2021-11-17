@@ -13,6 +13,7 @@ $: $policiesInitialized || loadPolicies()
 $: myPolicies = $user?.policies || []
 $: policyId = $selectedPolicyId || $user.policy_id
 $: inAdminRole = isAdmin($roleSelection)
+$: urlIsClaimOrItem = $params.claimId || $params.itemId
 
 // TODO: Update this based on the user's role and/or the RoleAndPolicyMenu selection.
 $: menuItems = [
@@ -71,9 +72,9 @@ const isCustomerOnOwnPolicy = (policyId: string) => policyId === $selectedPolicy
 const gotoPath = (policyId: string, claimOrItemIdObj = {}) => $goto($route.path, { policyId, ...claimOrItemIdObj })
 
 const goToCustomerView = (event: CustomEvent) => {
-  if ($params.policyId && !$params.claimId && !$params.itemId) {
+  if (!urlIsClaimOrItem && $params.policyId) {
     gotoPath(event.detail)
-  } else if ($params.policyId && ($params.claimId || $params.itemId) && isCustomerOnOwnPolicy(event.detail)) {
+  } else if (urlIsClaimOrItem && isCustomerOnOwnPolicy(event.detail)) {
     const claimOrItemIdObj = $params.claimId ? { claimId: $params.claimId } : { itemId: $params.itemId }
     gotoPath(event.detail, claimOrItemIdObj)
   } else {

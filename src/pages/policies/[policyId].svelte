@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getNameOfPolicy, loadPolicy, Policy, PolicyType } from 'data/policies'
+import { getNameOfPolicy, loadPolicy, Policy, PolicyType, selectedPolicy } from 'data/policies'
 import { loadItems, selectedPolicyItems } from 'data/items'
 import { formatDate } from 'components/dates'
 import { isLoadingById, loading } from 'components/progress'
@@ -18,6 +18,7 @@ let policy = {} as Policy
 onMount(async () => {
   policy = await loadPolicy(policyId)
 })
+$: policy = $selectedPolicy
 
 $: members = policy.members || []
 

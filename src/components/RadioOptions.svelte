@@ -18,10 +18,18 @@ label {
   display: block;
   margin: 1rem 0;
 }
+.description {
+  display: block;
+  margin: 0.3em 0 0 2em;
+}
+.has-description {
+  margin-top: -13px;
+  margin-bottom: -13px;
+}
 </style>
 
 {#each options as option (option.value)}
-  <label>
+  <label class:has-description={option.description}>
     <input
       type="radio"
       {name}
@@ -32,7 +40,7 @@ label {
     />
     {option.label}
     {#if option.description}
-      <small>{option.description}</small>
+      <small class="description">{option.description}</small>
     {/if}
   </label>
 {/each}

@@ -102,7 +102,7 @@ $: canContinueToEvidence =
   (repairEstimateUSD > 0 && fairMarketValueUSD > 0) || (fairMarketValueUSD > 0 && !isRepairable)
 
 // Calculate dynamic options for radio-button prompts.
-$: lossReasonOptions = $claimIncidentTypes.map(({ name }) => ({ label: name, value: name }))
+$: lossReasonOptions = $claimIncidentTypes.map(({ name, description }) => ({ label: name, value: name, description }))
 
 // TODO: get accountable person from item
 // TODO: add reimbursed value

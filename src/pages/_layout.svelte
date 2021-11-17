@@ -13,6 +13,7 @@ $: $policiesInitialized || loadPolicies()
 $: myPolicies = $user?.policies || []
 $: policyId = $selectedPolicyId || $user.policy_id
 $: inAdminRole = isAdmin($roleSelection)
+$: urlIsClaimOrItem = $params.claimId || $params.itemId
 
 // TODO: Update this based on the user's role and/or the RoleAndPolicyMenu selection.
 $: menuItems = [
@@ -74,13 +75,12 @@ $: menuItems = [
 ]
 const isCustomerOnOwnPolicy = (policyId: string) => policyId === $selectedPolicyId
 
-const gotoPath = (policyId: string, claimOrItemIdObj = {}) =>
-  $goto($url($route.path, { policyId, ...claimOrItemIdObj }))
+const gotoPath = (policyId: string, claimOrItemIdObj = {}) => $goto($route.path, { policyId, ...claimOrItemIdObj })
 
 const goToCustomerView = (event: CustomEvent) => {
-  if ($params.policyId && !$params.claimId && !$params.itemId) {
+  if (!urlIsClaimOrItem && $params.policyId) {
     gotoPath(event.detail)
-  } else if ($params.policyId && ($params.claimId || $params.itemId) && isCustomerOnOwnPolicy(event.detail)) {
+  } else if (urlIsClaimOrItem && isCustomerOnOwnPolicy(event.detail)) {
     const claimOrItemIdObj = $params.claimId ? { claimId: $params.claimId } : { itemId: $params.itemId }
     gotoPath(event.detail, claimOrItemIdObj)
   } else {
@@ -88,11 +88,14 @@ const goToCustomerView = (event: CustomEvent) => {
   }
 }
 const goToAdminView = (event: CustomEvent) => {
-  if ($params.policyId && ($params.claimId || $params.itemId)) {
-    const claimOrItemIdObj = $params.claimId ? { claimId: $params.claimId } : { itemId: $params.itemId }
-    gotoPath(event.detail.policyId, claimOrItemIdObj)
-  } else if ($params.policyId && routes.routeIsNotPolicySettings($route.path)) {
-    gotoPath(event.detail.policyId)
+  if ($params.policyId) {
+    if ($params.claimId) {
+      gotoPath(event.detail.policyId, { claimId: $params.claimId })
+    } else if ($params.itemId) {
+      gotoPath(event.detail.policyId, { itemId: $params.itemId })
+    } else if (routes.routeIsNotPolicySettings($route.path)) {
+      gotoPath(event.detail.policyId)
+    }
   } else {
     $goto(routes.ADMIN_HOME)
   }

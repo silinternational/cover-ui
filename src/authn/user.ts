@@ -79,7 +79,7 @@ export const getDefaultPolicyId = (user: User): string => {
   const policies = user.policies || []
   const teamPolicies = policies.filter((p: Policy) => p.type === PolicyType.Team)
   const householdPolicies = policies.filter((p: Policy) => p.type === PolicyType.Household)
-  const policyIdToUse = teamPolicies[0]?.id || householdPolicies[0]?.id || user.policy_id
+  const policyIdToUse = teamPolicies[0]?.id || householdPolicies[0]?.id
 
   return policyIdToUse
 }

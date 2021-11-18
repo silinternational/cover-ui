@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getNameOfPolicy, loadPolicy, Policy, PolicyType } from 'data/policies'
+import { getNameOfPolicy, loadPolicy, Policy, PolicyType, selectedPolicy } from 'data/policies'
 import { loadItems, selectedPolicyItems } from 'data/items'
 import { formatDate } from 'components/dates'
 import { isLoadingById, loading } from 'components/progress'
@@ -18,6 +18,7 @@ let policy = {} as Policy
 onMount(async () => {
   policy = await loadPolicy(policyId)
 })
+$: policy = $selectedPolicy
 
 $: members = policy.members || []
 
@@ -53,24 +54,24 @@ th {
       </tr>
       <tr>
         <th>Account</th>
-        <td>{policy.account}</td>
+        <td>{policy.account || '-'}</td>
       </tr>
       <tr>
         <th>Account Detail</th>
-        <td>{policy.account_detail}</td>
+        <td>{policy.account_detail || '-'}</td>
       </tr>
       <tr>
         <th>Cost Center</th>
-        <td>{policy.cost_center}</td>
+        <td>{policy.cost_center || '-'}</td>
       </tr>
       <tr>
         <th>Entity Code</th>
-        <td>{policy.entity_code?.code}</td>
+        <td>{policy.entity_code?.code || '-'}</td>
       </tr>
     {:else if policy.type === PolicyType.Household}
       <tr>
         <th>Household ID</th>
-        <td>{policy.household_id}</td>
+        <td>{policy.household_id || '-'}</td>
       </tr>
     {/if}
     <tr>

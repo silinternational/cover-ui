@@ -65,7 +65,7 @@ const getHouseholdEntries = (policies: Policy[]): MenuItem[] => {
 
 const selectRole = (role: UserAppRole) => {
   recordRoleSelection(role)
-  dispatch('role', { role, policyId: $selectedPolicyId })
+  dispatch('role', role)
 }
 
 const getEntriesForRole = (role: UserAppRole): MenuItem[] => {

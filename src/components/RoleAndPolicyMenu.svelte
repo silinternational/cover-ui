@@ -65,7 +65,7 @@ const getHouseholdEntries = (policies: Policy[]): MenuItem[] => {
 
 const selectRole = (role: UserAppRole) => {
   recordRoleSelection(role)
-  dispatch('role', role)
+  dispatch('role', { role, policyId: $selectedPolicyId })
 }
 
 const getEntriesForRole = (role: UserAppRole): MenuItem[] => {
@@ -75,8 +75,6 @@ const getEntriesForRole = (role: UserAppRole): MenuItem[] => {
   }
   return specialEntriesByRole[role] || []
 }
-
-const isAdminRole = (role: UserAppRole) => [UserAppRole.Signator, UserAppRole.Steward].includes(role)
 
 const setInitialRoleSelection = (actualRole: UserAppRole) => {
   if (actualRole) {

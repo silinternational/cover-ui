@@ -18,6 +18,7 @@ import ItemDeleteModal from './ItemDeleteModal.svelte'
 import ItemDetails from './ItemDetails.svelte'
 import ItemForm from './forms/ItemForm.svelte'
 import ItemsTable from './ItemsTable.svelte'
+import Modal from './mdc/Modal.svelte'
 import MoneyInput from './MoneyInput.svelte'
 import RadioOptions from './RadioOptions.svelte'
 import RecentActivityTable from './RecentActivityTable.svelte'
@@ -46,6 +47,7 @@ export {
   ItemDetails,
   ItemForm,
   ItemsTable,
+  Modal,
   MoneyInput,
   RadioOptions,
   CardsGrid,

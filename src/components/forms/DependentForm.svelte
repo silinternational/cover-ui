@@ -36,6 +36,7 @@ $: alreadyHasSpouse = !!dependents
   .find((dependent) => dependent.relationship === 'Spouse')
 
 $: alreadyHasSpouse && (relationshipOptions[0].disabled = true)
+$: alreadyHasSpouse && isHouseholdPolicy && (formData.relationship = 'Child')
 
 const validate = (isChild: boolean) => {
   assertHas(formData.name, 'Please specify a name')
@@ -83,7 +84,7 @@ const onSubmit = () => {
 }
 </style>
 
-<div class="w-50">
+<div class={$$props.class}>
   <Form on:submit={onSubmit}>
     <h4>Dependent</h4>
     <p>

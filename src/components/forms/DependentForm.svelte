@@ -1,6 +1,6 @@
 <script lang="ts">
 import RadioOptions from '../RadioOptions.svelte'
-import { assertHas } from '../../validation/assertions'
+import { assertHas, assertIsLessThan, assertUnique } from '../../validation/assertions'
 import type { PolicyDependent } from 'data/dependents'
 import { Button, Form, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
@@ -40,10 +40,17 @@ $: alreadyHasSpouse && isHouseholdPolicy && (formData.relationship = 'Child')
 
 const validate = (isChild: boolean) => {
   assertHas(formData.name, 'Please specify a name')
+  assertUnique(
+    formData.name,
+    dependents.filter((d) => d.id !== formData.id).map((d) => d.name),
+    'Dependent must have unique name'
+  )
   assertHas(formData.country, 'Please specify a country')
   if (isHouseholdPolicy) {
     assertHas(formData.relationship, 'Please select "Spouse" or "Child"')
     isChild && assertHas(formData.childBirthYear, "Please specify your child's birthyear")
+    const year = new Date().getFullYear()
+    isChild && assertIsLessThan(formData.childBirthYear, year + 1, `Birthyear should be ${year} or earlier`)
   }
 }
 const onCancel = (event: Event) => {

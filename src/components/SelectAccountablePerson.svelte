@@ -4,7 +4,7 @@ import Modal from './mdc/Modal.svelte'
 import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
 import { addDependent, dependentsByPolicyId, PolicyDependent } from 'data/dependents'
 import { policies, Policy, PolicyType } from 'data/policies'
-import { membersByPolicyId } from 'data/policy-members'
+import { membersByPolicyId, PolicyMember } from 'data/policy-members'
 import { Select } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
@@ -22,11 +22,20 @@ $: isHouseholdPolicy = policy.type === PolicyType.Household
 $: dependents = $dependentsByPolicyId[policyId] || []
 $: dependentOptions = getDependentOptions(dependents)
 $: policyMemberOptions = getPolicyMemberOptions($membersByPolicyId[policyId] || [])
-$: addPersonOption = createAddPersonOption(policy, dependents)
+$: addPersonOption = createAddPersonOption(policy, $membersByPolicyId[policyId], dependents)
 
 $: accountablePersons = [...policyMemberOptions, ...dependentOptions, addPersonOption]
 
-const createAddPersonOption = (policy: Policy, dependents: PolicyDependent[]): AccountablePersonOptions => {
+const createAddPersonOption = (
+  policy: Policy,
+  members: PolicyMember[],
+  dependents: PolicyDependent[]
+): AccountablePersonOptions => {
+  if (!members?.length) {
+    // This occurs when the members list hasn't been loaded yet. If we return the [ Add Person ] option it will be
+    // accidentally selected as the first item and open the modal
+    return { id: '', name: '' }
+  }
   if (policy.type === PolicyType.Household) {
     const hasSpouse = dependents?.some((d) => d.relationship === 'Spouse')
     return { id: 'new', name: `[ Add ${!hasSpouse ? 'Spouse or' : ''} Child ]` }
@@ -35,6 +44,7 @@ const createAddPersonOption = (policy: Policy, dependents: PolicyDependent[]): A
   }
 }
 
+// TODO: On a fresh page load there is a chance that the label on the Select component will overlap with the selected value
 const onAccountablePersonChange = (event: CustomEvent<AccountablePersonOptions>): void => {
   const person = event.detail
   selectedID = person.id
@@ -64,14 +74,14 @@ const onModalFormSubmit = async (event: CustomEvent) => {
 
 const onDialogClosed = (event: CustomEvent) => {
   if (selectedID === 'new') {
-    selectedID = accountablePersons[0].id
+    selectedID = accountablePersons[0]?.id
   }
   modalOpen = false
 }
 
 const onModalFormCancel = (event: CustomEvent) => {
   modalOpen = false
-  selectedID = accountablePersons[0].id
+  selectedID = accountablePersons[0]?.id
 }
 </script>
 

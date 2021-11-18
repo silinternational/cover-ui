@@ -4,6 +4,7 @@ import { writable } from 'svelte/store'
 export type ClaimIncidentType = {
   name: string
   is_repairable: boolean
+  description: string
 }
 
 export const claimIncidentTypes = writable<ClaimIncidentType[]>([])

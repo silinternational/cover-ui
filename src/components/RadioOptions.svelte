@@ -14,33 +14,31 @@ const onInput = (event) => {
 </script>
 
 <style>
-label {
-  display: block;
-  margin: 1rem 0;
-}
 .description {
   display: block;
-  margin: 0.3em 0 0 2em;
 }
-.has-description {
-  margin-top: -11px;
-  margin-bottom: -11px;
+#radio {
+  margin-right: 0.3rem;
+  margin-bottom: 0.2rem;
 }
 </style>
 
 {#each options as option (option.value)}
-  <label class:has-description={option.description}>
+  <div class="flex align-items-center my-1">
     <input
       type="radio"
       {name}
+      id="radio"
       disabled={option.disabled}
       value={option.value}
       checked={isSelected(option)}
       on:input={onInput}
     />
-    {option.label}
-    {#if option.description}
-      <small class="description">{option.description}</small>
-    {/if}
-  </label>
+    <label for="radio">
+      {option.label}
+      {#if option.description}
+        <small class="description">{option.description}</small>
+      {/if}
+    </label>
+  </div>
 {/each}

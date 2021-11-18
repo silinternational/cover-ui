@@ -19,6 +19,7 @@ import ItemDetails from './ItemDetails.svelte'
 import ItemForm from './forms/ItemForm.svelte'
 import ItemsTable from './ItemsTable.svelte'
 import MoneyInput from './MoneyInput.svelte'
+import NoHouseholdIdModal from './NoHouseholdIdModal.svelte'
 import RadioOptions from './RadioOptions.svelte'
 import RecentActivityTable from './RecentActivityTable.svelte'
 import Row from './mdc/Row.svelte'
@@ -47,6 +48,7 @@ export {
   ItemForm,
   ItemsTable,
   MoneyInput,
+  NoHouseholdIdModal,
   RadioOptions,
   CardsGrid,
   ClaimCard,

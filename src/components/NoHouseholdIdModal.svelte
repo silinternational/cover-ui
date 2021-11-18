@@ -2,13 +2,13 @@
 import { Dialog } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
-export let open = true
+export let open = false
 
 let message = 'A household ID is required before getting coverage. Add it in Policy Settings.'
 let title = 'Missing information'
 
 const buttons: Dialog.AlertButton[] = [
-  { label: 'cancel', action: 'cancel', class: 'mdc-dialog__button' },
+  { label: 'Go Back', action: 'cancel', class: 'mdc-dialog__button' },
   { label: 'Policy Settings', action: 'gotoSettings', class: 'mdc-button--raised' },
 ]
 

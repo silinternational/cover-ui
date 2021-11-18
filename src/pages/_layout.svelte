@@ -89,11 +89,10 @@ const goToCustomerView = (event: CustomEvent) => {
 }
 const goToAdminView = (event: CustomEvent) => {
   if ($params.policyId) {
-    const parameters: any = $params.claimId
-      ? { claimId: $params.claimId }
-      : $params.itemId
-      ? { itemId: $params.itemId }
-      : {}
+    const parameters: any =
+      $params.claimId ? { claimId: $params.claimId } :
+      $params.itemId ? { itemId: $params.itemId } : 
+      {}
     gotoPath($selectedPolicyId, parameters)
   } else {
     $goto(routes.ADMIN_HOME)

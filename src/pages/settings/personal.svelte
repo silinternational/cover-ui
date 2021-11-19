@@ -1,7 +1,8 @@
 <script lang="ts">
 import user, { attachUserPhoto, updateUser } from '../../authn/user'
-import { Breadcrumb, FileDropArea, RadioOptions } from 'components'
+import { Breadcrumb, FileDropArea, RadioOptions, SearchableSelect } from 'components'
 import { upload } from 'data'
+import { countries, Country } from 'data/countries'
 import { policies } from 'data/policies'
 import { assertEmailAddress } from '../../validation/assertions'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -18,10 +19,13 @@ let uploading = false
 let notification_email = $user.email_override ? NOTIFICATION_OPTION_CUSTOM : NOTIFICATION_OPTION_DEFAULT
 let email_override = $user.email_override || ''
 let country = $user.country || ''
+let countryOptions = {}
 let croppie: Croppie
 let croppieContainer: HTMLDivElement
 let breadcrumbLinks = [{ name: 'Personal Settings', url: SETTINGS_PERSONAL }]
 metatags.title = formatPageTitle('Personal Settings')
+
+$: $countries.forEach((country: Country) => (countryOptions[country.name] = country.name))
 
 $: notificationOptions = [
   { label: 'Default email: ' + $user.email, value: NOTIFICATION_OPTION_DEFAULT },
@@ -38,7 +42,8 @@ const updateCustomEmail = async () => {
   setNotice('Your notification email has been saved')
 }
 
-const updateCountry = async () => {
+const updateCountry = async (event: CustomEvent) => {
+  country = event.detail
   if (isCountryValid(country)) {
     await updateUser({
       email_override,
@@ -46,7 +51,7 @@ const updateCountry = async () => {
     })
     setNotice('Your country has been saved')
   } else {
-    setNotice('Please enter a country')
+    setNotice('Please select a country from the list')
   }
 }
 
@@ -104,7 +109,7 @@ async function onUpload() {
   }
 }
 
-const isCountryValid = (country: string) => !!country
+const isCountryValid = (countryName: string) => $countries.some((country) => country.name === countryName)
 </script>
 
 <style>
@@ -136,7 +141,7 @@ p {
 
   <p>
     <span class="header">Primary Location<span class="required">*</span></span>
-    <TextField placeholder={'Enter country'} bind:value={country} on:blur={updateCountry} />
+    <SearchableSelect choice={country} options={countryOptions} placeholder="Enter country" on:check={updateCountry} />
   </p>
 
   {#if 0}

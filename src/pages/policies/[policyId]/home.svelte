@@ -1,17 +1,15 @@
 <script lang="ts">
-import { CardsGrid, ItemsTable, NoHouseholdIdModal, Row } from 'components'
+import { CardsGrid, ItemsTable, Row } from 'components'
 import { isLoadingPolicyItems, loading } from 'components/progress'
 import { Claim, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import { deleteItem, loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
-import { getNameOfPolicy, PolicyType, selectedPolicy } from 'data/policies'
+import { getNameOfPolicy, selectedPolicy } from 'data/policies'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import * as routes from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
 import { Button, Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
-
-let open = false
 
 $: policyId = $selectedPolicyId
 $: items = $selectedPolicyItems.filter((item) => item.coverage_status !== 'Inactive')
@@ -39,19 +37,6 @@ const onGotoPolicyItem = (event: CustomEvent<PolicyItem>) =>
   $goto(routes.itemDetails(event.detail.policy_id, event.detail.id))
 
 const onGotoItem = (event: CustomEvent<string>) => $goto(event.detail)
-
-const onAddItem = () => {
-  if ($selectedPolicy.household_id || $selectedPolicy.type === PolicyType.Team) {
-    $goto(routes.itemsNew(policyId))
-  } else {
-    open = true
-  }
-}
-
-const onClosed = (event: CustomEvent<any>) => {
-  event.detail === 'gotoSettings' && $goto(routes.settingsPolicy(policyId))
-  open = false
-}
 </script>
 
 <Page layout="grid">
@@ -73,9 +58,8 @@ const onClosed = (event: CustomEvent<any>) => {
     {:else}
       <p class="text-align-center">You don't have any items in this policy</p>
       <p class="text-align-center">
-        <Button class="m-1" raised prependIcon="add_circle" on:click={onAddItem}>Add Item</Button>
+        <Button class="m-1" raised prependIcon="add_circle" url={routes.itemsNew(policyId)}>Add Item</Button>
       </p>
-      <NoHouseholdIdModal {open} on:closed={onClosed} />
     {/if}
   </Row>
 </Page>

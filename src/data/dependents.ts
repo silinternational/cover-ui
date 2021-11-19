@@ -42,7 +42,7 @@ export const allPolicyDependents = derived(dependentsByPolicyId, ($dependentsByP
  * @param {string} policyId -- The UUID for the desired policy
  * @param {Object} depData
  */
-export async function addDependent(policyId: string, depData: any): Promise<void> {
+export async function addDependent(policyId: string, depData: any): Promise<PolicyDependent> {
   const urlPath = `policies/${policyId}/dependents`
 
   const parsedDep: CreatePolicyDependentRequestBody = {
@@ -60,6 +60,8 @@ export async function addDependent(policyId: string, depData: any): Promise<void
     data[policyId] = dependents
     return data
   })
+
+  return addedDependent
 }
 
 /**

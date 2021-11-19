@@ -5,11 +5,10 @@ import Description from '../Description.svelte'
 import MakeAndModelModal from 'MakeAndModelModal.svelte'
 import MoneyInput from '../MoneyInput.svelte'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
-import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
-import { selectedPolicyDependents } from 'data/dependents'
+import SelectAccountablePerson from '../SelectAccountablePerson.svelte'
+import type { AccountablePersonOptions } from 'data/accountablePersons'
 import type { ItemCoverageStatus, PolicyItem } from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
-import { selectedPolicyMembers } from 'data/policy-members'
 import { assertHas } from '../../validation/assertions'
 import { Button, Form, Select, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
@@ -41,23 +40,14 @@ let uniqueIdentifier: string = ''
 // Set initial values based on the provided item data.
 $: setInitialValues(item)
 
-let accountablePersons: AccountablePersonOptions[] = []
-let initialAccountablePersonId: string
 let initialCategoryId: string
 let today = new Date()
 
-$: dependentOptions = getDependentOptions($selectedPolicyDependents)
-$: policyMemberOptions = getPolicyMemberOptions($selectedPolicyMembers)
-
-$: accountablePersons = [...policyMemberOptions, ...dependentOptions]
-$: accountablePerson = accountablePersons.find(
-  (person) => person.id === (accountablePersonId || initialAccountablePersonId)
-)
-
-$: country = accountablePerson?.country || country
+$: selectedAccountablePersonId = item?.accountable_person?.id || $user.id
+$: country = item?.accountable_person?.country || country
 $: !$catItemsInitialized && loadCategories()
 
-const onAccountablePersonChange = (event: any) => {
+const onAccountablePersonChange = (event: CustomEvent<AccountablePersonOptions>) => {
   accountablePersonId = event.detail?.id
 }
 
@@ -84,7 +74,7 @@ const getFormData = () => {
 }
 
 const onAccountablePersonSelectPopulated = () => {
-  initialAccountablePersonId = item.accountable_person?.id || $user.id
+  selectedAccountablePersonId = item.accountable_person?.id || $user.id
 }
 
 const onCategorySelectPopulated = () => {
@@ -192,12 +182,11 @@ const setInitialValues = (item: PolicyItem) => {
     <Description>Required for mobile items.</Description>
   </p>
   <p>
-    <Select
-      label="Assigned To"
-      on:change={onAccountablePersonChange}
+    <SelectAccountablePerson
+      {policyId}
+      selectedID={selectedAccountablePersonId}
       on:populated={onAccountablePersonSelectPopulated}
-      options={accountablePersons}
-      selectedID={initialAccountablePersonId}
+      on:change={onAccountablePersonChange}
     />
     <Description>
       Dependents are eligible. Dependents include spouses and children under 26 who haven't married or finished college.

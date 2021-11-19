@@ -41,6 +41,13 @@ const onSubmit = async (event: CustomEvent<FormData>) => {
 
 <Page>
   {#if dependent}
-    <DependentForm {dependent} {isHouseholdPolicy} on:cancel={onCancel} on:remove={onRemove} on:submit={onSubmit} />
+    <DependentForm
+      class="w-50"
+      {dependent}
+      {isHouseholdPolicy}
+      on:cancel={onCancel}
+      on:remove={onRemove}
+      on:submit={onSubmit}
+    />
   {/if}
 </Page>

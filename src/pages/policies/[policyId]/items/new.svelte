@@ -3,13 +3,13 @@ import Checkout from 'Checkout.svelte'
 import { Breadcrumb, ItemForm, NoHouseholdIdModal } from 'components'
 import { loadDependents } from 'data/dependents'
 import { addItem, deleteItem, loadItems, PolicyItem, submitItem } from 'data/items'
+import { PolicyType, selectedPolicy, updatePolicy } from 'data/policies'
 import { loadMembersOfPolicy } from 'data/policy-members'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { HOME, items as itemsRoute, itemDetails, itemsNew } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
 import { Page, setNotice } from '@silintl/ui-components'
 import { onMount } from 'svelte'
-import { PolicyType, selectedPolicy, updatePolicy } from 'data/policies'
 
 export let policyId: string
 

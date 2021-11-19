@@ -5,11 +5,11 @@ import { loadDependents } from 'data/dependents'
 import { addItem, deleteItem, loadItems, PolicyItem, submitItem } from 'data/items'
 import { loadMembersOfPolicy } from 'data/policy-members'
 import { formatPageTitle } from 'helpers/pageTitle'
-import { HOME, items as itemsRoute, itemDetails, itemsNew, settingsPolicy } from 'helpers/routes'
+import { HOME, items as itemsRoute, itemDetails, itemsNew } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
-import { Page } from '@silintl/ui-components'
+import { Page, setNotice } from '@silintl/ui-components'
 import { onMount } from 'svelte'
-import { PolicyType, selectedPolicy } from 'data/policies'
+import { PolicyType, selectedPolicy, updatePolicy } from 'data/policies'
 
 export let policyId: string
 
@@ -59,9 +59,14 @@ const onEdit = () => {
   isCheckingOut = false
 }
 
-const onClosed = (event: CustomEvent<any>) => {
-  event.detail === 'gotoSettings' && $goto(settingsPolicy(policyId))
-  history.back()
+const onClosed = async (event: CustomEvent<any>) => {
+  const choice = event.detail.choice
+  if (choice === 'submit') {
+    await updatePolicy(policyId, event.detail.data)
+    setNotice('Your household ID has been saved')
+  } else {
+    history.back()
+  }
   open = false
 }
 </script>

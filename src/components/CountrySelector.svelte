@@ -4,7 +4,6 @@ import { countries, Country } from 'data/countries'
 import { setNotice } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
-export let title = 'Country'
 export let country = ''
 
 let countryOptions: any = {}
@@ -25,5 +24,4 @@ const updateCountry = (event: CustomEvent) => {
 }
 </script>
 
-<span class="header">{title}<span class="required">*</span></span>
 <SearchableSelect choice={country} options={countryOptions} placeholder="Enter country" on:check={updateCountry} />

@@ -107,7 +107,8 @@ const onChosen = (event: CustomEvent) => (formData.country = event.detail)
       </p>
     {/if}
     <p>
-      <CountrySelector on:chosen={onChosen} title={'Dependent Location'} />
+      <span class="header">Dependent Location<span class="required">*</span></span>
+      <CountrySelector on:chosen={onChosen} />
     </p>
     {#if isHouseholdPolicy}
       <p>

@@ -130,7 +130,8 @@ p {
   {/if}
 
   <p>
-    <CountrySelector on:chosen={updateCountry} {country} title={'Primary Location'} />
+    <span class="header">Primary Location<span class="required">*</span></span>
+    <CountrySelector on:chosen={updateCountry} {country} />
   </p>
 
   {#if 0}

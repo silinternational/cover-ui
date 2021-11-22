@@ -20,6 +20,7 @@ $: menuItems = [
   {},
   {
     url: routes.HOME,
+    urlPattern: /\/home$/,
     icon: 'home',
     label: 'Home',
   },
@@ -37,12 +38,14 @@ $: menuItems = [
   },
   {
     url: routes.ITEMS,
+    urlPattern: /(\/items$)|(\/items\/)/,
     icon: 'umbrella',
-    label: 'items',
+    label: 'Items',
     hide: inAdminRole,
   },
   {
     url: routes.customerClaims(policyId),
+    urlPattern: /(\/claims$)|(\/claims\/)/,
     icon: 'label',
     label: 'Claims',
     hide: inAdminRole,
@@ -60,6 +63,7 @@ $: menuItems = [
   // },
   {
     url: routes.settingsPolicy(policyId),
+    urlPattern: /(\/settings$)|(\/settings\/)/,
     icon: 'settings',
     label: 'Policy Settings',
     tooltip: 'Policy Settings',
@@ -89,10 +93,11 @@ const goToCustomerView = (event: CustomEvent) => {
 }
 const goToAdminView = (event: CustomEvent) => {
   if ($params.policyId) {
-    const parameters: any =
-      $params.claimId ? { claimId: $params.claimId } :
-      $params.itemId ? { itemId: $params.itemId } : 
-      {}
+    const parameters: any = $params.claimId
+      ? { claimId: $params.claimId }
+      : $params.itemId
+      ? { itemId: $params.itemId }
+      : {}
     gotoPath($selectedPolicyId, parameters)
   } else {
     $goto(routes.ADMIN_HOME)

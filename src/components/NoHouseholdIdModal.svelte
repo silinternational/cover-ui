@@ -33,6 +33,7 @@ const handleDialog = (event: CustomEvent) => {
     dispatch('closed', { choice })
     hasClosed = true
     // prevents emiiting a second 'closed' event
+  } else if (!hasClosed) {
     dispatch('closed', { choice })
   }
 }

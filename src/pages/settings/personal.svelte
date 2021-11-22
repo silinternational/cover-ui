@@ -107,10 +107,6 @@ p {
   margin-top: 2rem;
 }
 
-.required {
-  color: var(--mdc-theme-status-error);
-}
-
 .photo-preview {
   width: 300px;
   height: 300px;

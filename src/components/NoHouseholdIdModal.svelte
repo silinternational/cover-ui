@@ -9,7 +9,7 @@ const policyData: UpdatePolicyRequestBody = {}
 
 let title = 'Missing information'
 let householdId = ''
-let hasSubmitted: boolean = false
+let hasClosed: boolean = false
 
 const buttons: Dialog.AlertButton[] = [
   { label: 'Go Back', action: 'cancel', class: 'mdc-dialog__button' },
@@ -25,14 +25,14 @@ const handleDialog = (event: CustomEvent) => {
     if (isIdValid(householdId)) {
       policyData.household_id = householdId
       dispatch('closed', { choice, data: policyData })
-      hasSubmitted = true
+      hasClosed = true
     } else {
       setNotice('Please enter a valid Household ID')
     }
   } else if (choice === 'cancel') {
     dispatch('closed', { choice })
-    // the second event when this closes happens before the policy is updated so I need to prevent it from firing if a valid id is selected
-  } else if (!hasSubmitted) {
+    hasClosed = true
+    // prevents emiiting a second 'closed' event
     dispatch('closed', { choice })
   }
 }

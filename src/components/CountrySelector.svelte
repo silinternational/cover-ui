@@ -5,8 +5,7 @@ import { setNotice } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let title = 'Country'
-
-let country = ''
+export let country = ''
 
 let countryOptions: any = {}
 

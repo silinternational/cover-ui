@@ -8,6 +8,7 @@ import ClaimCard from './ClaimCard.svelte'
 import ClaimCards from './ClaimCards.svelte'
 import ClaimForm from './forms/ClaimForm.svelte'
 import ConvertCurrencyLink from './ConvertCurrencyLink.svelte'
+import CountrySelector from './CountrySelector.svelte'
 import DateInput from './DateInput.svelte'
 import DependentForm from './forms/DependentForm.svelte'
 import Description from './Description.svelte'
@@ -37,6 +38,7 @@ export {
   ClaimActions,
   ClaimForm,
   ConvertCurrencyLink,
+  CountrySelector,
   DateInput,
   DependentForm,
   Description,

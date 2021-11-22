@@ -75,7 +75,7 @@ const updateAccountDetail = async () => {
 
 const updateHouseholdId = async () => {
   householdId = householdId.replaceAll(' ', '')
-  if (householdId !== policy.household_id) {
+  if (householdId !== policy.household_id || !householdId) {
     if (isIdValid(householdId)) {
       await callUpdatePolicy()
 
@@ -136,8 +136,8 @@ const callUpdatePolicy = async () => {
   await updatePolicy(policyId, policyData)
 }
 
-const isIdValid = (sanitizedId: string) =>
-  sanitizedId.length && sanitizedId.split('').every((digit) => /[0-9]/.test(digit))
+const isIdValid = (id: string): boolean => /^[0-9]+$/.test(id)
+
 const edit = (id: string) => $goto(householdSettingsDependent(policyId, id))
 const isYou = (householdMember: PolicyMember) => householdMember.id === $user.id
 </script>

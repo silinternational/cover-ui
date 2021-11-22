@@ -38,7 +38,7 @@ const handleDialog = (event: CustomEvent) => {
   }
 }
 
-const isIdValid = (sanitizedId: string): number | boolean =>
+const isIdValid = (sanitizedId: string): boolean =>
   (sanitizedId.length > 0) && sanitizedId.split('').every((digit) => /[0-9]/.test(digit))
 </script>
 

@@ -1,13 +1,17 @@
 <script lang="ts">
 import RadioOptions from '../RadioOptions.svelte'
-import { assertHas, assertIsLessThan, assertUnique } from '../../validation/assertions'
+import SearchableSelect from '../components/SearchableSelect.svelte'
+import { countries, Country } from 'data/countries'
 import type { PolicyDependent } from 'data/dependents'
-import { Button, Form, TextField } from '@silintl/ui-components'
+import { assertHas, assertIsLessThan, assertUnique } from '../../validation/assertions'
+import { Button, Form, setNotice, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let dependent: PolicyDependent = {}
 export let dependents: PolicyDependent[] = []
 export let isHouseholdPolicy = true
+
+let countryOptions: any = {}
 
 const dispatch = createEventDispatcher()
 const relationshipOptions = [
@@ -37,6 +41,8 @@ $: alreadyHasSpouse = !!dependents
 
 $: alreadyHasSpouse && (relationshipOptions[0].disabled = true)
 $: alreadyHasSpouse && isHouseholdPolicy && (formData.relationship = 'Child')
+
+$: $countries.forEach((country: Country) => (countryOptions[country.name] = country.name))
 
 const validate = (isChild: boolean) => {
   assertHas(formData.name, 'Please specify a name')
@@ -75,6 +81,16 @@ const onSubmit = () => {
   }
   dispatch('submit', formData)
 }
+
+const isCountryValid = (countryName: string) => $countries.some((country) => country.name === countryName)
+
+const updateCountry = (event: CustomEvent) => {
+  if (isCountryValid(event.detail)) {
+    formData.country = event.detail
+  } else {
+    setNotice('Please select a country from the list')
+  }
+}
 </script>
 
 <style>
@@ -104,7 +120,13 @@ const onSubmit = () => {
       </p>
     {/if}
     <p>
-      <TextField label="Country" bind:value={formData.country} class="w-100" />
+      <span class="header">Dependent Location<span class="required">*</span></span>
+      <SearchableSelect
+        choice={formData.country}
+        options={countryOptions}
+        placeholder="Enter country"
+        on:check={updateCountry}
+      />
     </p>
     {#if isHouseholdPolicy}
       <p>

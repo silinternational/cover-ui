@@ -1,8 +1,7 @@
 <script lang="ts">
 import user, { attachUserPhoto, updateUser } from '../../authn/user'
-import { Breadcrumb, FileDropArea, RadioOptions, SearchableSelect } from 'components'
+import { Breadcrumb, CountrySelector, FileDropArea, RadioOptions } from 'components'
 import { upload } from 'data'
-import { countries, Country } from 'data/countries'
 import { policies } from 'data/policies'
 import { assertEmailAddress } from '../../validation/assertions'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -19,13 +18,10 @@ let uploading = false
 let notification_email = $user.email_override ? NOTIFICATION_OPTION_CUSTOM : NOTIFICATION_OPTION_DEFAULT
 let email_override = $user.email_override || ''
 let country = $user.country || ''
-let countryOptions = {}
 let croppie: Croppie
 let croppieContainer: HTMLDivElement
 let breadcrumbLinks = [{ name: 'Personal Settings', url: SETTINGS_PERSONAL }]
 metatags.title = formatPageTitle('Personal Settings')
-
-$: $countries.forEach((country: Country) => (countryOptions[country.name] = country.name))
 
 $: notificationOptions = [
   { label: 'Default email: ' + $user.email, value: NOTIFICATION_OPTION_DEFAULT },
@@ -44,15 +40,11 @@ const updateCustomEmail = async () => {
 
 const updateCountry = async (event: CustomEvent) => {
   country = event.detail
-  if (isCountryValid(country)) {
-    await updateUser({
-      email_override,
-      country,
-    })
-    setNotice('Your country has been saved')
-  } else {
-    setNotice('Please select a country from the list')
-  }
+  await updateUser({
+    email_override,
+    country,
+  })
+  setNotice('Your country has been saved')
 }
 
 const handleChecked = (policyId: string) => {
@@ -108,17 +100,11 @@ async function onUpload() {
     }
   }
 }
-
-const isCountryValid = (countryName: string) => $countries.some((country) => country.name === countryName)
 </script>
 
 <style>
 p {
   margin-top: 2rem;
-}
-
-.required {
-  color: var(--mdc-theme-status-error);
 }
 
 .photo-preview {
@@ -141,7 +127,7 @@ p {
 
   <p>
     <span class="header">Primary Location<span class="required">*</span></span>
-    <SearchableSelect choice={country} options={countryOptions} placeholder="Enter country" on:check={updateCountry} />
+    <CountrySelector on:chosen={updateCountry} {country} />
   </p>
 
   {#if 0}

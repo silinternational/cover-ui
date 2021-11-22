@@ -1,7 +1,8 @@
 <script lang="ts">
 import RadioOptions from '../RadioOptions.svelte'
-import { assertHas, assertIsLessThan, assertUnique } from '../../validation/assertions'
+import CountrySelector from '../components/CountrySelector.svelte'
 import type { PolicyDependent } from 'data/dependents'
+import { assertHas, assertIsLessThan, assertUnique } from '../../validation/assertions'
 import { Button, Form, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
@@ -75,6 +76,8 @@ const onSubmit = () => {
   }
   dispatch('submit', formData)
 }
+
+const onChosen = (event: CustomEvent) => (formData.country = event.detail)
 </script>
 
 <style>
@@ -104,7 +107,8 @@ const onSubmit = () => {
       </p>
     {/if}
     <p>
-      <TextField label="Country" bind:value={formData.country} class="w-100" />
+      <span class="header">Dependent Location<span class="required">*</span></span>
+      <CountrySelector on:chosen={onChosen} />
     </p>
     {#if isHouseholdPolicy}
       <p>

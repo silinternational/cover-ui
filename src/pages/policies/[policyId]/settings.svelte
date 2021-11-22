@@ -170,9 +170,6 @@ p {
   top: 0.25rem;
   color: rgba(0, 0, 0, 0.5);
 }
-.required {
-  color: var(--mdc-theme-status-error);
-}
 </style>
 
 <Page>

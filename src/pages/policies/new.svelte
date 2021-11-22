@@ -42,12 +42,6 @@ const validateForm = (formData: any) => {
 }
 </script>
 
-<style>
-.required {
-  color: var(--mdc-theme-status-error);
-}
-</style>
-
 <Page>
   <Breadcrumb />
 

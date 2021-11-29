@@ -25,7 +25,7 @@ const queryHandler = {
   stringify,
 }
 
-const publicRoutes = ['/invite/:uuid', '/privacy']
+const publicRoutes = ['/invite/:uuid', '/privacy', '/terms']
 
 const authenticateUser = async () => {
   loadUser().catch((error: CustomError) => {

@@ -9,8 +9,8 @@ body {
   width: 100%;
 }
 
-.auto-width {
-  width: auto;
+p {
+  max-width: 80ch;
 }
 
 .max-content-width {
@@ -19,10 +19,6 @@ body {
 
 #main-drawer-content {
   background: #fff;
-}
-
-.h-300 {
-  height: 300px;
 }
 
 .break-word {

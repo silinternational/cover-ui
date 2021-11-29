@@ -1,15 +1,20 @@
 <script lang="ts">
 import user from '../../../authn/user'
-import { Breadcrumb, Description, SearchableSelect } from 'components'
+import { Breadcrumb, Description, SearchableSelect, Modal, PolicyMemberForm } from 'components'
 import { loadDependents, selectedPolicyDependents } from 'data/dependents'
 import { entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { policies, updatePolicy, Policy, PolicyType, loadPolicy } from 'data/policies'
 import { loadMembersOfPolicy, PolicyMember, selectedPolicyMembers } from 'data/policy-members'
 import { selectedPolicyId } from 'data/role-policy-selection'
-import { householdSettingsDependent, householdSettingsNewDependent, settingsPolicy } from 'helpers/routes'
+import {
+  householdSettingsDependent,
+  householdSettingsNewDependent,
+  settingsPolicy,
+  SETTINGS_PERSONAL,
+} from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
-import { Button, TextField, IconButton, Page, setNotice } from '@silintl/ui-components'
+import { Button, TextField, IconButton, Page, setNotice, Tooltip } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 const policyData = {} as Policy
@@ -26,6 +31,9 @@ let householdId = ''
 let costCenter = ''
 let policyName = ''
 let placeholder = 'Your entity of affiliation'
+let modalPolicyMember: PolicyMember
+let showInviteModal = false
+
 let breadcrumbLinks = [{ name: 'Policy Settings', url: settingsPolicy(policyId) }]
 metatags.title = formatPageTitle('Policy Settings')
 
@@ -39,12 +47,13 @@ $: $entityCodes.forEach((code) => {
   entityOptions[code.name] = code.code
 })
 $: dependents = $selectedPolicyDependents
-$: householdMembers = $selectedPolicyMembers
+$: policyMembers = $selectedPolicyMembers
 $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
 
 $: setInitialValues(policy)
 
 $: addDependentUrl = householdSettingsNewDependent(policyId)
+$: isYou = (member: PolicyMember) => false && $user.id === member.id
 
 function setInitialValues(policy: Policy): void {
   account = policy.account || ''
@@ -122,10 +131,10 @@ const updatePolicyName = async () => {
 }
 
 const callUpdatePolicy = async () => {
-  if ((policy.type = PolicyType.Household)) {
+  if (policy.type === PolicyType.Household) {
     policyData.household_id = householdId
   }
-  if ((policy.type = PolicyType.Team)) {
+  if (policy.type === PolicyType.Team) {
     policyData.account = account
     policyData.cost_center = costCenter
     policyData.entity_code = entityCode
@@ -136,10 +145,35 @@ const callUpdatePolicy = async () => {
   await updatePolicy(policyId, policyData)
 }
 
+const onInviteMember = () => {
+  modalPolicyMember = {}
+  showInviteModal = true
+}
+
+const onInviteModalClosed = (event: CustomEvent) => {
+  showInviteModal = false
+}
+const onModalClose = (event: CustomEvent) => {
+  console.log('onModalClose', event)
+  showInviteModal = false
+}
+const onModalRemove = (event: CustomEvent<string>) => {
+  // TODO: Remove policy member with id from event.detail
+  showInviteModal = false
+}
+const onModalSubmit = (event: CustomEvent) => {
+  // TODO: Add policy member from event.detail
+  showInviteModal = false
+}
+
 const isIdValid = (sanitizedId: string) =>
   sanitizedId.length && sanitizedId.split('').every((digit) => /[0-9]/.test(digit))
-const edit = (id: string) => $goto(householdSettingsDependent(policyId, id))
-const isYou = (householdMember: PolicyMember) => householdMember.id === $user.id
+const editProfile = () => $goto(SETTINGS_PERSONAL)
+const editDependent = (id: string) => $goto(householdSettingsDependent(policyId, id))
+const editPerson = (member: PolicyMember) => {
+  modalPolicyMember = member
+  showInviteModal = true
+}
 </script>
 
 <style>
@@ -155,20 +189,22 @@ p {
 }
 
 .accountable-people-list-item {
+  display: flex;
+  justify-content: space-between;
   border: 0 solid rgba(0, 0, 0, 0.12);
   border-top-width: 1px;
   padding: 10px;
   position: relative;
 }
+
 .accountable-people-list-item:last-of-type {
   border-bottom-width: 1px;
 }
 
 .edit-button {
-  position: absolute;
-  right: 1rem;
   top: 0.25rem;
   color: rgba(0, 0, 0, 0.5);
+  padding-right: 2rem;
 }
 .required {
   color: var(--mdc-theme-status-error);
@@ -222,25 +258,71 @@ p {
     <span class="header">Accountable people</span>
   </p>
   <ul class="accountable-people-list">
-    {#each householdMembers as householdMember}
+    {#each policyMembers as policyMember}
       <li class="accountable-people-list-item">
-        {householdMember.first_name}
-        {householdMember.last_name}
-        {isYou(householdMember) ? '(you)' : ''}
-        <br />
-        <small>{householdMember.email}</small>
+        <span>
+          {policyMember.first_name}
+          {policyMember.last_name}
+          {isYou(policyMember) ? '(you)' : ''}
+          <br />
+          <small>{policyMember.email}</small>
+        </span>
+        <span class="edit-button">
+          {#if isYou(policyMember)}
+            <Tooltip.Wrapper ariaDescribedBy="edit-profile-button">
+              <IconButton icon="person" ariaLabel="Edit your profile" on:click={editProfile} />
+            </Tooltip.Wrapper>
+
+            <Tooltip tooltipID="edit-profile-button" positionX="start">Edit your profile</Tooltip>
+          {:else}
+            <Tooltip.Wrapper ariaDescribedBy={'edit-person-' + policyMember.id}>
+              <IconButton icon="edit" ariaLabel="Edit" on:click={() => editPerson(policyMember)} />
+            </Tooltip.Wrapper>
+
+            <Tooltip tooltipID={'edit-person-' + policyMember.id} positionX="end">Edit Person</Tooltip>
+          {/if}
+        </span>
       </li>
     {/each}
     {#each dependents as dependent}
       <li class="accountable-people-list-item">
-        {dependent.name}
-        <br />
-        <small>Dependent</small>
-        <span class="edit-button" title="Edit">
-          <IconButton icon="edit" ariaLabel="Edit" on:click={() => edit(dependent.id)} />
+        <span>
+          {dependent.name}
+          <br />
+          <small>Dependent ({dependent.relationship})</small>
+          <br />
+          <small>{dependent.country}</small>
+        </span>
+        <span class="edit-button">
+          <Tooltip.Wrapper ariaDescribedBy={'edit-person-' + dependent.id}>
+            <IconButton icon="edit" ariaLabel="Edit" on:click={() => editDependent(dependent.id)} />
+          </Tooltip.Wrapper>
+
+          <Tooltip tooltipID={'edit-person-' + dependent.id} positionX="end">Edit dependent</Tooltip>
         </span>
       </li>
     {/each}
   </ul>
   <Button prependIcon="add" url={addDependentUrl} outlined>Add dependent</Button>
+  {#if policy?.type === PolicyType.Team}
+    <Button prependIcon="add" on:click={onInviteMember} outlined>Invite Member</Button>
+  {/if}
+
+  <Modal
+    open={showInviteModal}
+    buttons={[]}
+    defaultAction="cancel"
+    title="Invite Policy Member"
+    titleIcon="assignment_ind"
+    on:closed={onInviteModalClosed}
+  >
+    {#if showInviteModal}
+      <PolicyMemberForm
+        person={modalPolicyMember}
+        on:cancel={onModalClose}
+        on:remove={onModalRemove}
+        on:submit={onModalSubmit}
+      />
+    {/if}
+  </Modal>
 </Page>

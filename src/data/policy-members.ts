@@ -1,4 +1,4 @@
-import { GET } from './index'
+import { GET, CREATE as POST } from './index'
 import { derived, writable } from 'svelte/store'
 import { selectedPolicyId } from './role-policy-selection'
 
@@ -37,4 +37,21 @@ export async function loadMembersOfPolicy(policyId: string): Promise<void> {
     data[policyId] = policyMembers
     return data
   })
+}
+
+export async function invitePolicyMember(
+  policyId: string,
+  name: string,
+  email: string,
+  message: string
+): Promise<unknown> {
+  const urlPath = `policies/${policyId}/members`
+
+  const response = await POST<unknown>(urlPath, {
+    email,
+    name,
+    inviter_message: message,
+  })
+
+  return response
 }

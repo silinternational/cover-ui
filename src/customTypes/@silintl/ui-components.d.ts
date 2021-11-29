@@ -194,10 +194,17 @@ declare module '@silintl/ui-components' {
 
   interface TooltipProps extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
     tooltipID?: any
-    positionX?: any
-    positionY?: any
+    positionX?: 'start' | 'center' | 'end'
+    positionY?: 'above' | 'below'
   }
   export class Tooltip extends SvelteComponentTyped<TooltipProps> {}
+
+  export namespace Tooltip {
+    interface TooltipWrapperProps extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
+      ariaDescribedBy?: any
+    }
+    export class Wrapper extends SvelteComponentTyped<TooltipWrapperProps> {}
+  }
 
   interface TopAppBarProps extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
     bgColorIsVariant?: boolean

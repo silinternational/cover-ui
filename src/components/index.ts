@@ -20,6 +20,7 @@ import ItemForm from './forms/ItemForm.svelte'
 import ItemsTable from './ItemsTable.svelte'
 import Modal from './mdc/Modal.svelte'
 import MoneyInput from './MoneyInput.svelte'
+import PolicyMemberForm from './forms/PolicyMemberForm.svelte'
 import RadioOptions from './RadioOptions.svelte'
 import RecentActivityTable from './RecentActivityTable.svelte'
 import Row from './mdc/Row.svelte'
@@ -49,6 +50,7 @@ export {
   ItemsTable,
   Modal,
   MoneyInput,
+  PolicyMemberForm,
   RadioOptions,
   CardsGrid,
   ClaimCard,

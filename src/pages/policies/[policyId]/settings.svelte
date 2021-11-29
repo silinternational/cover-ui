@@ -14,7 +14,7 @@ import { entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { policies, updatePolicy, Policy, PolicyType, loadPolicy } from 'data/policies'
 import { invitePolicyMember, loadMembersOfPolicy, PolicyMember, selectedPolicyMembers } from 'data/policy-members'
 import { selectedPolicyId } from 'data/role-policy-selection'
-import { householdSettingsNewDependent, settingsPolicy, SETTINGS_PERSONAL } from 'helpers/routes'
+import { settingsPolicy, SETTINGS_PERSONAL } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
 import { Button, TextField, IconButton, Page, setNotice, Tooltip } from '@silintl/ui-components'
@@ -330,7 +330,9 @@ p {
       </li>
     {/each}
   </ul>
-  <Button prependIcon="add" on:click={onAddDependent} outlined>Add dependent</Button>
+  <Button prependIcon="add" on:click={onAddDependent} outlined
+    >{isHouseholdPolicy ? 'Add dependent' : 'Add person'}</Button
+  >
 
   <Modal
     open={showAddDependentModal}

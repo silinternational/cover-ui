@@ -88,7 +88,7 @@ const updateAccountDetail = async () => {
 
 const updateHouseholdId = async () => {
   householdId = householdId.replaceAll(' ', '')
-  if (householdId !== policy.household_id) {
+  if (householdId !== policy.household_id || !householdId) {
     if (isIdValid(householdId)) {
       await callUpdatePolicy()
 
@@ -192,8 +192,7 @@ const onSubmitModal = async (event: CustomEvent<DependentFormData>) => {
   showAddDependentModal = false
 }
 
-const isIdValid = (sanitizedId: string) =>
-  sanitizedId.length && sanitizedId.split('').every((digit) => /[0-9]/.test(digit))
+const isIdValid = (id: string): boolean => /^[0-9]+$/.test(id)
 const editProfile = () => $goto(SETTINGS_PERSONAL)
 const editDependent = (dependent: PolicyDependent) => {
   modalTitle = isHouseholdPolicy ? 'Edit Child or Spouse' : 'Edit Person'
@@ -231,9 +230,6 @@ p {
   top: 0.25rem;
   color: rgba(0, 0, 0, 0.5);
   padding-right: 2rem;
-}
-.required {
-  color: var(--mdc-theme-status-error);
 }
 </style>
 

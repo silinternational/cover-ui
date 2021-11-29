@@ -13,9 +13,10 @@ export type DependentFormData = {
 
 <script lang="ts">
 import RadioOptions from '../RadioOptions.svelte'
+import CountrySelector from '../components/CountrySelector.svelte'
+import type { PolicyDependent } from 'data/dependents
 import { assertHas, assertIsLessThan, assertUnique } from '../../validation/assertions'
-import type { PolicyDependent } from 'data/dependents'
-import { Button, Form, TextArea, TextField } from '@silintl/ui-components'
+import { Button, Form, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let dependent: PolicyDependent = {}
@@ -111,6 +112,8 @@ const onSubmit = () => {
   }
   dispatch('submit', formData)
 }
+
+const onChosen = (event: CustomEvent) => (formData.country = event.detail)
 </script>
 
 <style>
@@ -139,7 +142,8 @@ const onSubmit = () => {
       </p>
     {/if}
     <p>
-      <TextField label="Primary Location" bind:value={formData.country} class="w-100" />
+      <span class="header">Dependent Location<span class="required">*</span></span>
+      <CountrySelector on:chosen={onChosen} />
     </p>
     {#if isHouseholdPolicy}
       <p>

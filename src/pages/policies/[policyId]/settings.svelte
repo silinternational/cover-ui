@@ -1,17 +1,20 @@
 <script lang="ts">
 import user from '../../../authn/user'
-import { Breadcrumb, Description, SearchableSelect, Modal, PolicyMemberForm } from 'components'
-import { loadDependents, selectedPolicyDependents } from 'data/dependents'
+import { throwError } from '../../../error'
+import { Breadcrumb, Description, SearchableSelect, Modal, DependentForm } from 'components'
+import type { DependentFormData } from 'components/forms/DependentForm.svelte'
+import {
+  addDependent,
+  loadDependents,
+  PolicyDependent,
+  selectedPolicyDependents,
+  updateDependent,
+} from 'data/dependents'
 import { entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { policies, updatePolicy, Policy, PolicyType, loadPolicy } from 'data/policies'
-import { loadMembersOfPolicy, PolicyMember, selectedPolicyMembers } from 'data/policy-members'
+import { invitePolicyMember, loadMembersOfPolicy, PolicyMember, selectedPolicyMembers } from 'data/policy-members'
 import { selectedPolicyId } from 'data/role-policy-selection'
-import {
-  householdSettingsDependent,
-  householdSettingsNewDependent,
-  settingsPolicy,
-  SETTINGS_PERSONAL,
-} from 'helpers/routes'
+import { householdSettingsNewDependent, settingsPolicy, SETTINGS_PERSONAL } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
 import { Button, TextField, IconButton, Page, setNotice, Tooltip } from '@silintl/ui-components'
@@ -31,8 +34,9 @@ let householdId = ''
 let costCenter = ''
 let policyName = ''
 let placeholder = 'Your entity of affiliation'
-let modalPolicyMember: PolicyMember
-let showInviteModal = false
+let modalData: PolicyDependent
+let showAddDependentModal = false
+let modalTitle = 'Add Person'
 
 let breadcrumbLinks = [{ name: 'Policy Settings', url: settingsPolicy(policyId) }]
 metatags.title = formatPageTitle('Policy Settings')
@@ -52,8 +56,8 @@ $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
 
 $: setInitialValues(policy)
 
-$: addDependentUrl = householdSettingsNewDependent(policyId)
-$: isYou = (member: PolicyMember) => false && $user.id === member.id
+$: isYou = (member: PolicyMember) => $user.id === member.id
+$: isHouseholdPolicy = policy.type === PolicyType.Household
 
 function setInitialValues(policy: Policy): void {
   account = policy.account || ''
@@ -145,34 +149,56 @@ const callUpdatePolicy = async () => {
   await updatePolicy(policyId, policyData)
 }
 
-const onInviteMember = () => {
-  modalPolicyMember = {}
-  showInviteModal = true
+const onAddDependent = () => {
+  modalData = {}
+  modalTitle = isHouseholdPolicy ? 'Add Child or Spouse' : 'Add Person'
+  showAddDependentModal = true
 }
 
-const onInviteModalClosed = (event: CustomEvent) => {
-  showInviteModal = false
+const onDependentModalClosed = (event: CustomEvent) => {
+  showAddDependentModal = false
 }
-const onModalClose = (event: CustomEvent) => {
-  console.log('onModalClose', event)
-  showInviteModal = false
+const onCancelModal = (event: CustomEvent) => {
+  showAddDependentModal = false
 }
-const onModalRemove = (event: CustomEvent<string>) => {
+const onRemoveModal = (event: CustomEvent<string>) => {
   // TODO: Remove policy member with id from event.detail
-  showInviteModal = false
+  throwError('Removeing a policy member is not yet supported')
+  showAddDependentModal = false
 }
-const onModalSubmit = (event: CustomEvent) => {
-  // TODO: Add policy member from event.detail
-  showInviteModal = false
+const onSubmitModal = async (event: CustomEvent<DependentFormData>) => {
+  let { id, name, relationship, country, childBirthYear, permissions, email, message } = event.detail
+  if (id) {
+    await updateDependent(policyId, id, {
+      name,
+      relationship,
+      country,
+      childBirthYear,
+    })
+  } else {
+    await addDependent(policyId, {
+      name,
+      relationship,
+      country,
+      childBirthYear,
+    })
+  }
+
+  if (permissions === 'can-edit') {
+    // TODO: Figure out if we've already sent an invite or not
+    await invitePolicyMember(policyId, name, email, message)
+  }
+
+  showAddDependentModal = false
 }
 
 const isIdValid = (sanitizedId: string) =>
   sanitizedId.length && sanitizedId.split('').every((digit) => /[0-9]/.test(digit))
 const editProfile = () => $goto(SETTINGS_PERSONAL)
-const editDependent = (id: string) => $goto(householdSettingsDependent(policyId, id))
-const editPerson = (member: PolicyMember) => {
-  modalPolicyMember = member
-  showInviteModal = true
+const editDependent = (dependent: PolicyDependent) => {
+  modalTitle = isHouseholdPolicy ? 'Edit Child or Spouse' : 'Edit Person'
+  modalData = dependent
+  showAddDependentModal = true
 }
 </script>
 
@@ -266,6 +292,8 @@ p {
           {isYou(policyMember) ? '(you)' : ''}
           <br />
           <small>{policyMember.email}</small>
+          <br />
+          <small>{policyMember.country}</small>
         </span>
         <span class="edit-button">
           {#if isYou(policyMember)}
@@ -275,11 +303,12 @@ p {
 
             <Tooltip tooltipID="edit-profile-button" positionX="start">Edit your profile</Tooltip>
           {:else}
-            <Tooltip.Wrapper ariaDescribedBy={'edit-person-' + policyMember.id}>
+            <!-- TODO: Figure out how editing a policy member is different from editing a dependent -->
+            <!-- <Tooltip.Wrapper ariaDescribedBy={'edit-person-' + policyMember.id}>
               <IconButton icon="edit" ariaLabel="Edit" on:click={() => editPerson(policyMember)} />
             </Tooltip.Wrapper>
 
-            <Tooltip tooltipID={'edit-person-' + policyMember.id} positionX="end">Edit Person</Tooltip>
+            <Tooltip tooltipID={'edit-person-' + policyMember.id} positionX="end">Edit Person</Tooltip> -->
           {/if}
         </span>
       </li>
@@ -288,14 +317,16 @@ p {
       <li class="accountable-people-list-item">
         <span>
           {dependent.name}
-          <br />
-          <small>Dependent ({dependent.relationship})</small>
+          {#if isHouseholdPolicy}
+            <br />
+            <small>Dependent ({dependent.relationship})</small>
+          {/if}
           <br />
           <small>{dependent.country}</small>
         </span>
         <span class="edit-button">
           <Tooltip.Wrapper ariaDescribedBy={'edit-person-' + dependent.id}>
-            <IconButton icon="edit" ariaLabel="Edit" on:click={() => editDependent(dependent.id)} />
+            <IconButton icon="edit" ariaLabel="Edit" on:click={() => editDependent(dependent)} />
           </Tooltip.Wrapper>
 
           <Tooltip tooltipID={'edit-person-' + dependent.id} positionX="end">Edit dependent</Tooltip>
@@ -303,25 +334,25 @@ p {
       </li>
     {/each}
   </ul>
-  <Button prependIcon="add" url={addDependentUrl} outlined>Add dependent</Button>
-  {#if policy?.type === PolicyType.Team}
-    <Button prependIcon="add" on:click={onInviteMember} outlined>Invite Member</Button>
-  {/if}
+  <Button prependIcon="add" on:click={onAddDependent} outlined>Add dependent</Button>
 
   <Modal
-    open={showInviteModal}
+    open={showAddDependentModal}
     buttons={[]}
     defaultAction="cancel"
-    title="Invite Policy Member"
-    titleIcon="assignment_ind"
-    on:closed={onInviteModalClosed}
+    title={modalTitle}
+    titleIcon={isHouseholdPolicy ? 'child_care' : 'assignment_ind'}
+    on:closed={onDependentModalClosed}
   >
-    {#if showInviteModal}
-      <PolicyMemberForm
-        person={modalPolicyMember}
-        on:cancel={onModalClose}
-        on:remove={onModalRemove}
-        on:submit={onModalSubmit}
+    {#if showAddDependentModal}
+      <DependentForm
+        class="w-100 mw-500"
+        dependent={modalData}
+        {dependents}
+        {isHouseholdPolicy}
+        on:submit={onSubmitModal}
+        on:cancel={onCancelModal}
+        on:remove={onRemoveModal}
       />
     {/if}
   </Modal>

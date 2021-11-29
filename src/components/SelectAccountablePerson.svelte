@@ -99,8 +99,8 @@ const onModalFormCancel = (event: CustomEvent) => {
   open={modalOpen}
   buttons={[]}
   defaultAction="cancel"
-  title="Add Dependent"
-  titleIcon="child_care"
+  title={isHouseholdPolicy ? 'Add Child or Spouse' : 'Add Person'}
+  titleIcon={isHouseholdPolicy ? 'child_care' : 'assignment_ind'}
   on:closed={onDialogClosed}
 >
   {#if modalOpen}

@@ -31,5 +31,6 @@ const onSubmit = async (event: CustomEvent<string>) => {
 </script>
 
 <Page>
+  <h4>Add Person</h4>
   <DependentForm class="w-50" {dependents} {isHouseholdPolicy} on:cancel={onCancel} on:submit={onSubmit} />
 </Page>

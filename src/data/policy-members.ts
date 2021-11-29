@@ -44,14 +44,12 @@ export async function invitePolicyMember(
   name: string,
   email: string,
   message: string
-): Promise<unknown> {
+): Promise<void> {
   const urlPath = `policies/${policyId}/members`
 
-  const response = await POST<unknown>(urlPath, {
+  const response = await POST<void>(urlPath, {
     email,
     name,
     inviter_message: message,
   })
-
-  return response
 }

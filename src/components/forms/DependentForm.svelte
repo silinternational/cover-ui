@@ -1,8 +1,21 @@
+<script context="module" lang="ts">
+export type DependentFormData = {
+  id: string
+  name: string
+  country: string
+  relationship: string
+  childBirthYear?: number
+  permissions: 'no-login' | 'can-edit'
+  email: string
+  message: string
+}
+</script>
+
 <script lang="ts">
 import RadioOptions from '../RadioOptions.svelte'
 import { assertHas, assertIsLessThan, assertUnique } from '../../validation/assertions'
 import type { PolicyDependent } from 'data/dependents'
-import { Button, Form, TextField } from '@silintl/ui-components'
+import { Button, Form, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let dependent: PolicyDependent = {}
@@ -22,13 +35,28 @@ const relationshipOptions = [
     disabled: false,
   },
 ]
+const permissionOptions = [
+  {
+    label: 'No login',
+    value: 'no-login',
+    disabled: false,
+  },
+  {
+    label: 'Can edit items and claims for team',
+    value: 'can-edit',
+    disabled: false,
+  },
+]
 
-let formData = {
+let formData: DependentFormData = {
   id: dependent.id,
   name: dependent.name || '',
   country: dependent.country || '',
   relationship: dependent.relationship || '',
   childBirthYear: dependent.child_birth_year || undefined,
+  permissions: 'no-login',
+  email: '',
+  message: '',
 }
 
 $: alreadyHasSpouse = !!dependents
@@ -37,6 +65,14 @@ $: alreadyHasSpouse = !!dependents
 
 $: alreadyHasSpouse && (relationshipOptions[0].disabled = true)
 $: alreadyHasSpouse && isHouseholdPolicy && (formData.relationship = 'Child')
+$: if (formData.relationship === 'Child') {
+  formData.permissions = 'no-login'
+  permissionOptions[0].disabled = true
+  permissionOptions[1].disabled = true
+} else {
+  permissionOptions[0].disabled = false
+  permissionOptions[1].disabled = false
+}
 
 const validate = (isChild: boolean) => {
   assertHas(formData.name, 'Please specify a name')
@@ -93,9 +129,8 @@ const onSubmit = () => {
 
 <div class={$$props.class}>
   <Form on:submit={onSubmit}>
-    <h4>Dependent</h4>
     <p>
-      <TextField label="Dependent Name" bind:value={formData.name} class="w-100" autofocus />
+      <TextField label="Person's Name" bind:value={formData.name} class="w-100" autofocus />
     </p>
     {#if isHouseholdPolicy}
       <p>
@@ -104,10 +139,11 @@ const onSubmit = () => {
       </p>
     {/if}
     <p>
-      <TextField label="Country" bind:value={formData.country} class="w-100" />
+      <TextField label="Primary Location" bind:value={formData.country} class="w-100" />
     </p>
     {#if isHouseholdPolicy}
       <p>
+        <label class="mdc-bold-font" for="relationship">Relationship</label>
         <RadioOptions name="relationship" options={relationshipOptions} bind:value={formData.relationship} />
       </p>
       {#if formData.relationship === 'Child'}
@@ -116,8 +152,26 @@ const onSubmit = () => {
         </p>
       {/if}
     {/if}
+    <p>
+      <label class="mdc-bold-font" for="permissions">Permissions</label>
+      <RadioOptions name="permissions" options={permissionOptions} bind:value={formData.permissions} />
+    </p>
+    {#if formData.permissions === 'can-edit'}
+      <p>
+        <TextField label="Email" bind:value={formData.email} class="w-100" />
+      </p>
+      <p>
+        <TextArea
+          class="w-100"
+          rows="4"
+          placeholder="A personalized message for the person you are inviting"
+          bind:value={formData.message}
+        />
+      </p>
+    {/if}
+
     <div class="float-right form-button">
-      <Button raised>Save</Button>
+      <Button raised>{formData.permissions === 'no-login' ? 'Save' : 'Invite Person'}</Button>
     </div>
     <div class="float-right form-button">
       <Button on:click={onCancel}>Cancel</Button>

@@ -129,7 +129,7 @@ export async function loadPolicies(limit = 20): Promise<void> {
   const response = await GET<{ data: Policy[]; meta: any }>(`policies?${queryString}`)
   const data = response.data
   policies.set(data)
-  initialized.set(true)
+  get(policies).length && initialized.set(true)
 }
 
 export async function loadPolicy(policyId: string): Promise<Policy> {

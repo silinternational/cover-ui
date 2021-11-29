@@ -1,17 +1,16 @@
 <script lang="ts">
-import user, { isAdmin } from '../authn/user'
+import user, { getDefaultPolicyId, isAdmin } from '../authn/user'
 import { AppDrawer } from 'components'
 import { initialized as policiesInitialized, loadPolicies } from 'data/policies'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import * as routes from 'helpers/routes'
-import { goto, params, route, url } from '@roxi/routify'
+import { goto, params, route } from '@roxi/routify'
 
-// TODO: Avoid trying to load the policies until the user has authenticated (to
-// avoid doing so on public pages, like the Privacy Policy).
-$: $policiesInitialized || loadPolicies()
+// polcies were not being loaded on initial login, once selectedPolicyId exists they load properly
+$: $policiesInitialized || ($selectedPolicyId && loadPolicies())
 
 $: myPolicies = $user?.policies || []
-$: policyId = $selectedPolicyId || $user.policy_id
+$: policyId = $selectedPolicyId || getDefaultPolicyId($user)
 $: inAdminRole = isAdmin($roleSelection)
 $: urlIsClaimOrItem = $params.claimId || $params.itemId
 

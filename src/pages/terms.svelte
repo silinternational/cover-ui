@@ -217,7 +217,7 @@ td > p {
   <ol start="1">
     <li>
       <b>Manage coverage</b>
-      <p class="not-bold">
+      <p>
         Customers are responsible to manage coverage for their items using the Cover Website. This includes removing
         coverage from items no longer needing coverage and updating the primary locations of covered items or the people
         immediately responsible for such items.

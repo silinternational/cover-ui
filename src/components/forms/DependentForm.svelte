@@ -15,7 +15,7 @@ export type DependentFormData = {
 import RadioOptions from '../RadioOptions.svelte'
 import CountrySelector from '../components/CountrySelector.svelte'
 import type { PolicyDependent } from 'data/dependents'
-import { assertHas, assertIsLessThan, assertUnique } from '../../validation/assertions'
+import { assertEmailAddress, assertHas, assertIsLessThan, assertUnique } from '../../validation/assertions'
 import { Button, Form, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
@@ -80,7 +80,7 @@ const validate = (isChild: boolean) => {
   assertUnique(
     formData.name,
     dependents.filter((d) => d.id !== formData.id).map((d) => d.name),
-    'Dependent must have unique name'
+    `${isHouseholdPolicy ? 'Dependent' : 'Person'} must have unique name`
   )
   assertHas(formData.country, 'Please specify a country')
   if (isHouseholdPolicy) {
@@ -88,6 +88,10 @@ const validate = (isChild: boolean) => {
     isChild && assertHas(formData.childBirthYear, "Please specify your child's birthyear")
     const year = new Date().getFullYear()
     isChild && assertIsLessThan(formData.childBirthYear, year + 1, `Birthyear should be ${year} or earlier`)
+  }
+  if (formData.permissions === 'can-edit') {
+    assertEmailAddress(formData.email, 'Please enter a valid email address')
+    assertHas(formData.message, 'Please supply a personalized message')
   }
 }
 const onCancel = (event: Event) => {
@@ -142,7 +146,7 @@ const onChosen = (event: CustomEvent) => (formData.country = event.detail)
       </p>
     {/if}
     <p>
-      <span class="header">Dependent Location<span class="required">*</span></span>
+      <span class="header">Primary Location<span class="required">*</span></span>
       <CountrySelector country={formData.country} on:chosen={onChosen} />
     </p>
     {#if isHouseholdPolicy}

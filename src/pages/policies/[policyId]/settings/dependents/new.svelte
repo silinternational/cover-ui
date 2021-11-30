@@ -18,7 +18,7 @@ let isHouseholdPolicy: boolean
 
 $: isHouseholdPolicy = $selectedPolicy?.type === PolicyType.Household
 $: dependents = $selectedPolicyDependents
-$: metatags.title = formatPageTitle('Settings > Household > Add Dependent')
+$: metatags.title = formatPageTitle(`Settings > Household > Add ${isHouseholdPolicy ? 'Dependent' : 'Person'}`)
 
 const onCancel = () => {
   $goto(settingsPolicy(policyId))
@@ -31,6 +31,6 @@ const onSubmit = async (event: CustomEvent<string>) => {
 </script>
 
 <Page>
-  <h4>Add Person</h4>
+  <h4>Add {isHouseholdPolicy ? 'Dependent' : 'Person'}</h4>
   <DependentForm class="w-50" {dependents} {isHouseholdPolicy} on:cancel={onCancel} on:submit={onSubmit} />
 </Page>

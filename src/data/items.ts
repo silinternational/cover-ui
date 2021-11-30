@@ -224,7 +224,7 @@ export async function updateItem(policyId: string, itemId: string, itemData: any
     category_id: itemData.categoryId,
     country: itemData.country,
     coverage_amount: Number(itemData.marketValueUSD) * 100,
-    coverage_end_date: itemData.coverageEndDate,
+    coverage_end_date: itemData.coverageEndDate || null, // BE blows up on an empty string
     coverage_start_date: itemData.coverageStartDate,
     coverage_status: itemData.coverageStatus,
     description: itemData.itemDescription,

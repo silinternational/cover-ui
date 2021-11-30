@@ -36,6 +36,10 @@ body {
   margin-bottom: 1rem;
 }
 
+p {
+  line-height: 1.5;
+}
+
 .required {
   color: var(--mdc-theme-status-error);
 }

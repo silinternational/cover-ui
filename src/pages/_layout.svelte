@@ -7,7 +7,7 @@ import * as routes from 'helpers/routes'
 import { goto, params, route } from '@roxi/routify'
 
 // polcies were not being loaded on initial login, once selectedPolicyId exists they load properly
-$: $policiesInitialized || ($selectedPolicyId && loadPolicies())
+$: $policiesInitialized || ($user.policies.length > 0 && loadPolicies())
 
 $: myPolicies = $user?.policies || []
 $: policyId = $selectedPolicyId || getDefaultPolicyId($user)

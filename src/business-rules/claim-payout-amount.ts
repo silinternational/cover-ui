@@ -101,9 +101,14 @@ export const getFilePurpose = (claimItem: ClaimItem, needsReceipt: boolean): Cla
   else return ''
 }
 
-export const getUploadLabel = (claimItem: ClaimItem, needsReceipt: boolean, receiptType: string): string => {
-  if (needsReceipt) return `a ${receiptType} item receipt`
-  else if (claimItem.repair_estimate) return 'a repair estimate'
-  else if (claimItem.fmv) return 'evidence of fair market value'
+export const getUploadLabel = (
+  claimItem: ClaimItem,
+  needsReceipt: boolean,
+  receiptType: string,
+  longLabel = true
+): string => {
+  if (needsReceipt) return longLabel ? `a ${receiptType} item receipt` : 'receipt'
+  else if (claimItem.repair_estimate) return longLabel ? 'a repair estimate' : 'estimate'
+  else if (claimItem.fmv) return longLabel ? 'evidence of fair market value' : 'evidence'
   else return ''
 }

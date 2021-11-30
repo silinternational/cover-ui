@@ -29,7 +29,7 @@ export type User = {
   }
   photo_file_id: string
   policies: Policy[]
-  policy_id: string
+  policy_id: string //deprecated
 }
 
 export type UpdatedUserBody = {
@@ -39,10 +39,23 @@ export type UpdatedUserBody = {
 
 const user = writable<User>({} as User)
 
+// Update a policy in the user store when it has been updated
+export function updateUserPolicyStore(updatedPolicy: Policy): void {
+  user.update((user) => {
+    if (user?.policies?.length > 0 && updatedPolicy?.id) {
+      const idx = user.policies.findIndex((p) => p.id === updatedPolicy.id)
+      if (idx !== -1) {
+        user.policies[idx] = updatedPolicy
+      }
+    }
+    return user
+  })
+}
+
 export default user
 
 export async function loadUser(forceReload?: boolean): Promise<void> {
-  const alreadyLoadedUser = get(user).policy_id
+  const alreadyLoadedUser = get(user).policies?.length > 0
 
   if (!alreadyLoadedUser || forceReload) {
     const userData = await GET<User>('users/me')

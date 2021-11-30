@@ -95,7 +95,7 @@ export async function updateDependent(policyId: string, dependentId: string, dep
     name: depData.name,
     relationship: depData.relationship,
     country: depData.country,
-    child_birth_year: depData.childBirthYear,
+    child_birth_year: depData.childBirthYear && parseInt(depData.childBirthYear),
   }
 
   const updatedDependent = await UPDATE<PolicyDependent>(urlPath, parsedDep)

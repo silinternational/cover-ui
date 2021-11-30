@@ -51,7 +51,7 @@ $: switch (status) {
 }
 
 $: isEditable = editableStatuses.includes(status)
-$: showSubmit = ['Receipt', 'Revision'].includes(status) || (status === 'Draft' && needsFile)
+$: showSubmit = status === 'Draft' && needsFile
 $: showApprovalButton =
   (statusesAwaitingSteward.includes(status) && $roleSelection === UserAppRole.Steward) ||
   (statusesAwaitingSignator.includes(status) && $roleSelection === UserAppRole.Signator)

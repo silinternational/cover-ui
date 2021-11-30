@@ -1,17 +1,16 @@
 <script lang="ts">
-import user, { isAdmin } from '../authn/user'
+import user, { getDefaultPolicyId, isAdmin } from '../authn/user'
 import { AppDrawer } from 'components'
 import { initialized as policiesInitialized, loadPolicies } from 'data/policies'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import * as routes from 'helpers/routes'
-import { goto, params, route, url } from '@roxi/routify'
+import { goto, params, route } from '@roxi/routify'
 
-// TODO: Avoid trying to load the policies until the user has authenticated (to
-// avoid doing so on public pages, like the Privacy Policy).
-$: $policiesInitialized || loadPolicies()
+// polcies were not being loaded on initial login, once selectedPolicyId exists they load properly
+$: $policiesInitialized || ($user.policies?.length > 0 && loadPolicies())
 
 $: myPolicies = $user?.policies || []
-$: policyId = $selectedPolicyId || $user.policy_id
+$: policyId = $selectedPolicyId || getDefaultPolicyId($user)
 $: inAdminRole = isAdmin($roleSelection)
 $: urlIsClaimOrItem = $params.claimId || $params.itemId
 
@@ -20,6 +19,7 @@ $: menuItems = [
   {},
   {
     url: routes.HOME,
+    urlPattern: /\/home$/,
     icon: 'home',
     label: 'Home',
   },
@@ -37,12 +37,14 @@ $: menuItems = [
   },
   {
     url: routes.ITEMS,
+    urlPattern: /(\/items$)|(\/items\/)/,
     icon: 'umbrella',
-    label: 'items',
+    label: 'Items',
     hide: inAdminRole,
   },
   {
     url: routes.customerClaims(policyId),
+    urlPattern: /(\/claims$)|(\/claims\/)/,
     icon: 'label',
     label: 'Claims',
     hide: inAdminRole,
@@ -60,6 +62,7 @@ $: menuItems = [
   // },
   {
     url: routes.settingsPolicy(policyId),
+    urlPattern: /(\/settings$)|(\/settings\/)/,
     icon: 'settings',
     label: 'Policy Settings',
     tooltip: 'Policy Settings',
@@ -89,10 +92,11 @@ const goToCustomerView = (event: CustomEvent) => {
 }
 const goToAdminView = (event: CustomEvent) => {
   if ($params.policyId) {
-    const parameters: any =
-      $params.claimId ? { claimId: $params.claimId } :
-      $params.itemId ? { itemId: $params.itemId } : 
-      {}
+    const parameters: any = $params.claimId
+      ? { claimId: $params.claimId }
+      : $params.itemId
+      ? { itemId: $params.itemId }
+      : {}
     gotoPath($selectedPolicyId, parameters)
   } else {
     $goto(routes.ADMIN_HOME)

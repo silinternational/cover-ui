@@ -9,8 +9,8 @@ body {
   width: 100%;
 }
 
-.auto-width {
-  width: auto;
+p {
+  max-width: 80ch;
 }
 
 .max-content-width {
@@ -21,8 +21,8 @@ body {
   background: #fff;
 }
 
-.h-300 {
-  height: 300px;
+.mw-500 {
+  min-width: 500px;
 }
 
 .break-word {

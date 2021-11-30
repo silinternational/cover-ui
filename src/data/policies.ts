@@ -1,4 +1,4 @@
-import { loadUser } from '../authn/user'
+import { loadUser, updateUserPolicyStore } from '../authn/user'
 import { derived, get, writable } from 'svelte/store'
 import type { Claim } from './claims'
 import { CREATE, GET, UPDATE } from './index'
@@ -77,11 +77,8 @@ const updatePoliciesStore = (changedPolicy: Policy) => {
 export async function updatePolicy(id: string, policyData: UpdatePolicyRequestBody): Promise<void> {
   const updatedPolicy = await UPDATE<Policy>(`policies/${id}`, policyData)
 
-  policies.update((currPolicies) => {
-    const i = currPolicies.findIndex((pol) => pol.id === id)
-    currPolicies[i] = updatedPolicy
-    return currPolicies
-  })
+  updatePoliciesStore(updatedPolicy)
+  updateUserPolicyStore(updatedPolicy)
 }
 
 /**
@@ -132,7 +129,7 @@ export async function loadPolicies(limit = 20): Promise<void> {
   const response = await GET<{ data: Policy[]; meta: any }>(`policies?${queryString}`)
   const data = response.data
   policies.set(data)
-  initialized.set(true)
+  data.length && initialized.set(true)
 }
 
 export async function loadPolicy(policyId: string): Promise<Policy> {

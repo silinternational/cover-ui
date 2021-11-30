@@ -1,5 +1,5 @@
 <script lang="ts">
-import user from '../../authn/user'
+import user, { User } from '../../authn/user'
 import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
 import Description from '../Description.svelte'
 import MakeAndModelModal from 'MakeAndModelModal.svelte'
@@ -23,22 +23,22 @@ let makeModelIsOpen = false
 const dispatch = createEventDispatcher<{ submit: any; 'save-for-later': any; delete: any }>()
 
 // Set default values.
-let accountablePersonId: string = ''
-let categoryId: string = ''
-let country: string = ''
-let marketValueUSD: string = ''
-let coverageEndDate = {}
-let coverageStartDate: string = ''
+let accountablePersonId = ''
+let categoryId = ''
+let country = ''
+let marketValueUSD = ''
+let coverageEndDate = ''
+let coverageStartDate = ''
 let coverageStatus: ItemCoverageStatus
-let itemDescription: string = ''
+let itemDescription = ''
 let inStorage = false
-let make: string = ''
-let model: string = ''
-let shortName: string = ''
-let uniqueIdentifier: string = ''
+let make = ''
+let model = ''
+let shortName = ''
+let uniqueIdentifier = ''
 
 // Set initial values based on the provided item data.
-$: setInitialValues(item)
+$: setInitialValues($user, item)
 
 let initialCategoryId: string
 let today = new Date()
@@ -135,7 +135,8 @@ const onMakeModelClosed = (event: CustomEvent<string>) => {
   event.detail === 'submit' && dispatch('submit', formData)
 }
 
-const setInitialValues = (item: PolicyItem) => {
+const setInitialValues = (user: User, item: PolicyItem) => {
+  accountablePersonId = user.id
   categoryId = item.category?.id || categoryId
   country = item.country || country
   marketValueUSD = Number.isInteger(item.coverage_amount) ? String(item.coverage_amount / 100) : ''

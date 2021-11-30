@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { Page } from '@silintl/ui-components'
 </script>
 

@@ -32,19 +32,19 @@ td > p {
   </p>
 
   <h2>Table of Contents</h2>
-  <p><a href="#h.brs5n7pk45rz">Terms &amp; Definitions</a></p>
-  <p><a href="#h.52adxzks7dcn">Acceptable Use</a></p>
-  <p><a href="#h.fr550d5sd91e">Responsibilities of Customers</a></p>
-  <p><a href="#h.ka0q17ro144d">Responsibilities of Cover Administrators</a></p>
-  <p><a href="#h.kt8o2yjj767e">Payment</a></p>
-  <p><a href="#h.nam5jodpgn9a">Cancellation and Termination</a></p>
-  <p><a href="#h.n7rf6whf4jks">Limitations of Coverage</a></p>
-  <p><a href="#h.aje0cisrbf7w">Disclaimer of Warranties</a></p>
-  <p><a href="#h.uu4balxh17kx">Limitation of Liability</a></p>
-  <p><a href="#h.6ekdy0qkr2mq">Changes to these Terms of Service</a></p>
-  <p><a href="#h.wr3ah7gozau8">Severability</a></p>
+  <p><a href="#terms-and-definitions">Terms &amp; Definitions</a></p>
+  <p><a href="#acceptable-use">Acceptable Use</a></p>
+  <p><a href="#responsibilities-of-customers">Responsibilities of Customers</a></p>
+  <p><a href="#responsibilities-of-cover-administrators">Responsibilities of Cover Administrators</a></p>
+  <p><a href="#payment">Payment</a></p>
+  <p><a href="#cancellation-and-termination">Cancellation and Termination</a></p>
+  <p><a href="#limitations-of-coverage">Limitations of Coverage</a></p>
+  <p><a href="#disclaimer-of-warranties">Disclaimer of Warranties</a></p>
+  <p><a href="#limitation-of-liability">Limitation of Liability</a></p>
+  <p><a href="#changes-to-these-terms-of-service">Changes to these Terms of Service</a></p>
+  <p><a href="#severability">Severability</a></p>
 
-  <h2 id="h.brs5n7pk45rz">Terms &amp; Definitions</h2>
+  <h2 id="terms-and-definitions">Terms &amp; Definitions</h2>
   <table>
     <tbody>
       <tr>
@@ -191,7 +191,7 @@ td > p {
       </tr>
     </tbody>
   </table>
-  <h2 id="h.52adxzks7dcn">Acceptable Use</h2>
+  <h2 id="acceptable-use">Acceptable Use</h2>
   <p>
     Background: Many of SIL&#39;s staff, as well as some partner organizations, take on a degree of risk with regard to
     their personal property in the process of serving in their jobs. To alleviate some of this burden, SIL operates an
@@ -213,7 +213,7 @@ td > p {
     integrity expected of one who has accepted the Call. If fraud is suspected, your claim may be denied and coverage
     terminated.
   </p>
-  <h2 id="h.fr550d5sd91e">Responsibilities of Customers</h2>
+  <h2 id="responsibilities-of-customers">Responsibilities of Customers</h2>
   <ol start="1">
     <li>
       <b>Manage coverage</b>
@@ -251,7 +251,7 @@ td > p {
       <p>Customers are responsible for getting a covered item repaired or obtaining a replacement after approval.</p>
     </li>
   </ol>
-  <h2 id="h.ka0q17ro144d">Responsibilities of Cover Administrators</h2>
+  <h2 id="responsibilities-of-cover-administrators">Responsibilities of Cover Administrators</h2>
   <ol start="1">
     <li>
       <b>Decide coverage</b>
@@ -282,7 +282,7 @@ td > p {
       </p>
     </li>
   </ol>
-  <h2 id="h.kt8o2yjj767e">Payment</h2>
+  <h2 id="payment">Payment</h2>
   <ul>
     <li>
       <p>
@@ -294,16 +294,16 @@ td > p {
       <p>Team policies are paid through internal accounting and charged to an entity, cost center, and account.</p>
     </li>
   </ul>
-  <h2 id="h.nam5jodpgn9a">Cancellation and Termination</h2>
+  <h2 id="cancellation-and-termination">Cancellation and Termination</h2>
   <p>
     Coverage for an item can be cancelled at any time, by either an administrator or the Customer. It is the
     responsibility of the Customer to remove coverage using the Cover website. When possible, a partial refund will be
     issued to the Customer&#39;s household account or department cost center.
   </p>
-  <h2 id="h.n7rf6whf4jks">Limitations of Coverage</h2>
+  <h2 id="limitations-of-coverage">Limitations of Coverage</h2>
   <p>
     Cover is not an all-encompassing insurance program. It is intended only for use cases as described above in
-    <a href="#h.52adxzks7dcn">Acceptable Use</a>.
+    <a href="#acceptable-use">Acceptable Use</a>.
   </p>
   <p>As such, we will not cover:</p>
   <ol start="1">
@@ -361,7 +361,7 @@ td > p {
       </p>
     </li>
   </ol>
-  <h2 id="h.aje0cisrbf7w">Disclaimer of Warranties</h2>
+  <h2 id="disclaimer-of-warranties">Disclaimer of Warranties</h2>
   <p>
     Short version: We provide our service as is, and we make no promises or guarantees about this service. Please read
     this section carefully; you should understand what to expect.
@@ -385,7 +385,7 @@ td > p {
     available when you need it. If you believe we are falling short in any of these areas, please let us know:
     <span><a href="mailto:cover@sil.org">cover@sil.org</a></span>.
   </p>
-  <h2 id="h.uu4balxh17kx">Limitation of Liability</h2>
+  <h2 id="limitation-of-liability">Limitation of Liability</h2>
   <p>
     Short version: We will not be liable for damages or losses arising from your use of the service, or your inability
     to use the service, or otherwise arising under this agreement. Please read this section carefully; it limits our
@@ -412,7 +412,7 @@ td > p {
     remedy set forth in this Agreement is found to have failed of its essential purpose. We will have no liability for
     any failure or delay due to matters beyond our reasonable control.
   </p>
-  <h2 id="h.6ekdy0qkr2mq">Changes to these Terms of Service</h2>
+  <h2 id="changes-to-these-terms-of-service">Changes to these Terms of Service</h2>
   <p>
     Short version: We want our users to be informed of important changes to our terms, but some changes aren&#39;t that
     important; <span>
@@ -431,7 +431,7 @@ td > p {
     We reserve the right at any time and from time to time to modify or discontinue, temporarily or permanently, the
     Website (or any part of it) with or without notice.
   </p>
-  <h2 id="h.wr3ah7gozau8">Severability</h2>
+  <h2 id="severability">Severability</h2>
   <p>
     If any clause, or portion of a clause, in this Agreement is considered invalid under the rule of law, it shall be
     regarded as stricken while the remainder of this Agreement shall continue to be in full effect.

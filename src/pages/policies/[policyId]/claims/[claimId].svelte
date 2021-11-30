@@ -98,8 +98,8 @@ $: needsReplaceReceipt = needsReceipt && payoutOption === 'Replacement'
 
 $: filePurpose = getFilePurpose(claimItem, needsReceipt) as ClaimFilePurpose
 $: noFilesUploaded = !isFileUploadedByPurpose(filePurpose, claimFiles)
-$: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType) as string
-$: uploadLabelForButton = getUploadLabel(claimItem, needsReceipt, receiptType, false) as string
+$: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType)
+$: uploadLabelForButton = getUploadLabel(claimItem, needsReceipt, receiptType, false)
 $: showUploadButton = ['Receipt', 'Revision'].includes(claimStatus) && !isAdmin
 $: moneyFormLabel = needsRepairReceipt ? 'Actual cost of repair' : 'Actual cost of replacement'
 $: receiptType = needsRepairReceipt ? 'repair' : 'replacement'

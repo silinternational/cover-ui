@@ -38,7 +38,6 @@ td > p {
   <p><a href="#h.ka0q17ro144d">Responsibilities of Cover Administrators</a></p>
   <p><a href="#h.kt8o2yjj767e">Payment</a></p>
   <p><a href="#h.nam5jodpgn9a">Cancellation and Termination</a></p>
-  <p><a href="#h.2svxmg71pznc">Communication with Cover Stewards</a></p>
   <p><a href="#h.n7rf6whf4jks">Limitations of Coverage</a></p>
   <p><a href="#h.aje0cisrbf7w">Disclaimer of Warranties</a></p>
   <p><a href="#h.uu4balxh17kx">Limitation of Liability</a></p>

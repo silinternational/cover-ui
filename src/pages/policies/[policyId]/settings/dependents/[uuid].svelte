@@ -22,7 +22,7 @@ onMount(() => {
 
 $: dependents = $selectedPolicyDependents
 $: dependent = dependents.find((d) => uuid && d.id === uuid)
-$: metatags.title = formatPageTitle(`Settings > Household > Edit Dependent`)
+$: metatags.title = formatPageTitle(`Settings > Household > Edit ${isHouseholdPolicy ? 'Dependent' : 'Person'}`)
 
 const onCancel = () => {
   $goto(settingsPolicy(policyId))
@@ -41,6 +41,7 @@ const onSubmit = async (event: CustomEvent<FormData>) => {
 
 <Page>
   {#if dependent}
+    <h4>Edit {isHouseholdPolicy ? 'Dependent' : 'Person'}</h4>
     <DependentForm
       class="w-50"
       {dependent}

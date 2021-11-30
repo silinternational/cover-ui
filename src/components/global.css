@@ -21,6 +21,10 @@ p {
   background: #fff;
 }
 
+.mw-500 {
+  min-width: 500px;
+}
+
 .break-word {
   overflow-wrap: break-word;
 }

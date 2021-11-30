@@ -48,7 +48,7 @@ import { formatPageTitle } from 'helpers/pageTitle'
 import { assertHas } from '../../../../validation/assertions'
 import { onMount } from 'svelte'
 import { goto, metatags } from '@roxi/routify'
-import { Page } from '@silintl/ui-components'
+import { Button, Page, setNotice } from '@silintl/ui-components'
 import { formatDistanceToNow } from 'date-fns'
 
 export let claimId: string
@@ -99,6 +99,8 @@ $: needsReplaceReceipt = needsReceipt && payoutOption === 'Replacement'
 $: filePurpose = getFilePurpose(claimItem, needsReceipt) as ClaimFilePurpose
 $: noFilesUploaded = !isFileUploadedByPurpose(filePurpose, claimFiles)
 $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType) as string
+$: uploadLabelForButton = getUploadLabel(claimItem, needsReceipt, receiptType, false) as string
+$: showUploadButton = ['Receipt', 'Revision'].includes(claimStatus) && !isAdmin
 $: moneyFormLabel = needsRepairReceipt ? 'Actual cost of repair' : 'Actual cost of replacement'
 $: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
 $: claimFiles = claim.claim_files || ([] as ClaimFile[])
@@ -141,7 +143,10 @@ const onDenyClaim = async (event: CustomEvent<string>) => {
   await denyClaim(claimId, message)
 }
 
-const onSubmit = async () => await submitClaim(claimId)
+const onSubmit = async () => {
+  await submitClaim(claimId)
+  setNotice('Added replacement cost and receipt')
+}
 
 const setInitialValues = (claimItem: ClaimItem) => {
   updatedClaimItemData.payoutOption = claimItem.payout_option || payoutOption
@@ -334,6 +339,9 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
 
       <FilePreview class="pointer w-50" previews={claimFiles} {isMemberOfPolicy} on:preview={onPreview} />
 
+      {#if showUploadButton}
+        <Button raised disabled={noFilesUploaded} on:click={onSubmit}>Upload {uploadLabelForButton}</Button>
+      {/if}
       <br />
     </Row>
   {/if}

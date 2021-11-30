@@ -34,6 +34,7 @@ let itemDescription = ''
 let inStorage = false
 let make = ''
 let model = ''
+let riskCategoryId = ''
 let shortName = ''
 let uniqueIdentifier = ''
 
@@ -46,6 +47,7 @@ let today = new Date()
 $: selectedAccountablePersonId = item?.accountable_person?.id || $user.id
 $: country = item?.accountable_person?.country || country
 $: !$catItemsInitialized && loadCategories()
+$: isMarketValueDisabled = !!item.id && item.coverage_status !== 'Draft'
 
 const onAccountablePersonChange = (event: CustomEvent<AccountablePersonOptions>) => {
   accountablePersonId = event.detail?.id
@@ -69,6 +71,7 @@ const getFormData = () => {
     make,
     model,
     shortName,
+    riskCategoryId,
     uniqueIdentifier,
   }
 }
@@ -147,6 +150,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
   inStorage = typeof item.in_storage === 'boolean' ? item.in_storage : false
   make = item.make || make
   model = item.model || model
+  riskCategoryId = item.risk_category?.id || riskCategoryId
   shortName = item.name || shortName
   uniqueIdentifier = item.serial_number || uniqueIdentifier
 }
@@ -195,7 +199,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
     </Description>
   </p>
   <p>
-    <MoneyInput label="Market value (USD)" bind:value={marketValueUSD} />
+    <MoneyInput label="Market value (USD)" bind:value={marketValueUSD} disabled={isMarketValueDisabled} />
     <Description>
       <ConvertCurrencyLink />
     </Description>

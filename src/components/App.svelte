@@ -17,6 +17,7 @@ $: if (!($user.policies?.length > 0) && isCustomer($user.app_role)) {
   setTimeout(() => loadUser(true), 5000)
 }
 
+//This can make it hard to reload the page after an error without experienceing the same error.
 $: $route && $user && setLastPath(location.pathname)
 
 // added because of this:  https://github.com/sveltech/routify/issues/201

@@ -76,9 +76,6 @@ export type UpdatePolicyItemRequestBody = {
   category_id: string
   country: string
   coverage_amount: number
-  coverage_end_date: string /*Date*/
-  coverage_start_date: string /*Date*/
-  coverage_status: ItemCoverageStatus
   description: string
   in_storage: boolean
   make: string
@@ -224,14 +221,12 @@ export async function updateItem(policyId: string, itemId: string, itemData: any
     category_id: itemData.categoryId,
     country: itemData.country,
     coverage_amount: Number(itemData.marketValueUSD) * 100,
-    coverage_end_date: itemData.coverageEndDate || null, // BE blows up on an empty string
-    coverage_start_date: itemData.coverageStartDate,
-    coverage_status: itemData.coverageStatus,
     description: itemData.itemDescription,
     in_storage: itemData.inStorage,
     make: itemData.make,
     model: itemData.model,
     name: itemData.shortName,
+    risk_category_id: itemData.riskCategoryId,
     serial_number: itemData.uniqueIdentifier,
   }
   const updatedItem = await UPDATE<PolicyItem>(urlPath, parsedItemData)

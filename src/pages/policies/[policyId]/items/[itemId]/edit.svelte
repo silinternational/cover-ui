@@ -36,7 +36,12 @@ $: itemName && (metatags.title = formatPageTitle(`Items > ${itemName} > Edit`))
 
 const onApply = async (event: CustomEvent) => {
   await updateItem(policyId, itemId, event.detail)
-  isCheckingOut = true
+  if (item.coverage_status === 'Draft') {
+    isCheckingOut = true
+  } else {
+    await submitItem(policyId, itemId)
+    $goto(itemDetails(policyId, itemId))
+  }
 }
 
 const onSaveForLater = async (event: CustomEvent) => {

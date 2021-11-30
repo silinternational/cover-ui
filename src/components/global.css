@@ -10,6 +10,7 @@ body {
 }
 
 p {
+  line-height: 1.5;
   max-width: 80ch;
 }
 
@@ -34,10 +35,6 @@ p {
   font-size: 1.17em;
   display: block;
   margin-bottom: 1rem;
-}
-
-p {
-  line-height: 1.5;
 }
 
 .required {

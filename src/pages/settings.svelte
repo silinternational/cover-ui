@@ -1,8 +1,8 @@
 <script lang="ts">
-import user from '../authn/user'
+import user, { getDefaultPolicyId } from '../authn/user'
 import { settingsPolicy } from 'helpers/routes'
 import { redirect } from '@roxi/routify'
 import { selectedPolicyId } from 'data/role-policy-selection'
 
-$: $user.policy_id && $redirect(settingsPolicy($selectedPolicyId || $user.policy_id))
+$: $user.policies?.length > 0 && $redirect(settingsPolicy($selectedPolicyId || getDefaultPolicyId($user)))
 </script>

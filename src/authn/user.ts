@@ -29,7 +29,7 @@ export type User = {
   }
   photo_file_id: string
   policies: Policy[]
-  policy_id: string
+  policy_id: string //deprecated
 }
 
 export type UpdatedUserBody = {
@@ -55,7 +55,7 @@ export function updateUserPolicyStore(updatedPolicy: Policy): void {
 export default user
 
 export async function loadUser(forceReload?: boolean): Promise<void> {
-  const alreadyLoadedUser = get(user).policy_id
+  const alreadyLoadedUser = get(user).policies?.length > 0
 
   if (!alreadyLoadedUser || forceReload) {
     const userData = await GET<User>('users/me')

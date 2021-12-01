@@ -38,7 +38,7 @@ $: menuItems = [
   {
     url: routes.ITEMS,
     urlPattern: /(\/items$)|(\/items\/)/,
-    icon: 'umbrella',
+    icon: 'beach_access',
     label: 'Items',
     hide: inAdminRole,
   },

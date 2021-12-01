@@ -83,3 +83,8 @@ make build-prod
 ```
 
 ...then deploy contents of `dist` to your host.
+
+## Icons
+
+This code uses Material Design icons. To search for additional icons, go here:  
+<https://fonts.google.com/icons>

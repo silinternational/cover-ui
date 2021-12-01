@@ -2,6 +2,7 @@
 import ItemDeleteModal from './ItemDeleteModal.svelte'
 import { formatDate } from 'components/dates'
 import type { PolicyItem } from 'data/items'
+import { formatFriendlyDate } from 'helpers/date'
 import { formatMoney } from 'helpers/money'
 import { itemDetails, itemEdit } from 'helpers/routes'
 import { createEventDispatcher } from 'svelte'
@@ -111,9 +112,13 @@ const getStatusClass = (status: string) => (status === 'Draft' ? 'mdc-theme--pri
     {#each items as item (item.id)}
       <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} clickable>
         <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
-        <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}
-          >{item.coverage_status || ''}</Datatable.Data.Row.Item
-        >
+        <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}>
+          {#if item.coverage_status === 'Approved' && item.coverage_end_date}
+            Covered through {formatFriendlyDate(item.coverage_end_date)}
+          {:else}
+            {item.coverage_status || ''}
+          {/if}
+        </Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item>{item.accountable_person?.name || ''}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item>{item.accountable_person?.country || item.country || ''}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item numeric>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>

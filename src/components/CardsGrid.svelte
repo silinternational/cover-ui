@@ -14,6 +14,10 @@ export let isAdmin: boolean = false
 
 $: cardItems = recentChanges.length ? parseRecentChanges(recentChanges) : parseClaimsAndPolicyItems(claims, policyItems)
 
+const coverageIsEnding = (item: PolicyItem): boolean => {
+  return item.coverage_status === 'Approved' && item.coverage_end_date
+}
+
 const isIncomplete = (card: CardItem) => {
   return isClaimItem(card.data)
     ? incompleteClaimItemStatuses.includes(card.data.status)
@@ -46,7 +50,12 @@ const parseRecentChanges = (changes: RecentChange[]): CardItem[] => {
 
 const parseClaimsAndPolicyItems = (claims: Claim[], policyItems: PolicyItem[]): CardItem[] => {
   // Add all the policy items and claim items together then filter and sort them
-  let cards: CardItem[] = policyItems.map((item) => ({ data: item })) || []
+  let cards: CardItem[] = []
+  for (let policyItem of policyItems) {
+    if (!coverageIsEnding(policyItem)) {
+      cards.push({ data: policyItem })
+    }
+  }
   for (let claim of claims) {
     for (let claimItem of claim.claim_items) {
       cards.push({ data: claimItem, claim })

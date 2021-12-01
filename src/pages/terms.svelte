@@ -283,6 +283,10 @@ td > p {
     </li>
   </ol>
   <h2 id="payment">Payment</h2>
+  <p>
+    Policies auto-renew every year, starting January 1. Policies are paid through the internal accounting of SIL and its
+    Wycliffe Global Alliance partners.
+  </p>
   <ul>
     <li>
       <p>
@@ -297,8 +301,9 @@ td > p {
   <h2 id="cancellation-and-termination">Cancellation and Termination</h2>
   <p>
     Coverage for an item can be cancelled at any time, by either an administrator or the Customer. It is the
-    responsibility of the Customer to remove coverage using the Cover website. When possible, a partial refund will be
-    issued to the Customer&#39;s household account or department cost center.
+    responsibility of the Customer to remove coverage using the Cover website. If canceled, coverage will terminate at
+    the end of the requested month. When possible, coverage for the remaining (full) months will be issued to the
+    Customer's household account or departmental cost center.
   </p>
   <h2 id="limitations-of-coverage">Limitations of Coverage</h2>
   <p>

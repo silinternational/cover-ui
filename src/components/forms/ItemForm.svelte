@@ -48,9 +48,9 @@ let today = new Date()
 $: selectedAccountablePersonId = item?.accountable_person?.id || $user.id
 $: country = item?.accountable_person?.country || country
 $: !$catItemsInitialized && loadCategories()
-$: marketValueIsDisabled = !!item.id && item.coverage_status !== ItemCoverageStatus.Draft
-$: applyBtnLabel =
-  !item.coverage_status || item.coverage_status === ItemCoverageStatus.Draft ? 'get approval' : 'save changes'
+$: itemIsDraft = item.coverage_status === ItemCoverageStatus.Draft
+$: marketValueIsDisabled = !!item.id && !itemIsDraft
+$: applyBtnLabel = !item.coverage_status || itemIsDraft ? 'get approval' : 'save changes'
 
 const onAccountablePersonChange = (event: CustomEvent<AccountablePersonOptions>) => {
   accountablePersonId = event.detail?.id
@@ -209,7 +209,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
   </p>
   <p>
     <Button outlined on:click={saveForLater}>Save for later</Button>
-    {#if item.coverage_status === ItemCoverageStatus.Draft}
+    {#if itemIsDraft}
       <Button outlined on:click={onDelete}>Delete</Button>
       <ItemDeleteModal {open} {item} on:closed={handleDialog} />
     {/if}

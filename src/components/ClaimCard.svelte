@@ -2,7 +2,7 @@
 import { getUploadLabel, isEvidenceNeeded } from '../business-rules/claim-payout-amount'
 import ClaimBanner from './banners/ClaimBanner.svelte'
 import ClaimCardBanner from './ClaimCardBanner.svelte'
-import { Claim, ClaimItem, PayoutOption } from 'data/claims'
+import { Claim, ClaimItem, ClaimStatus, PayoutOption } from 'data/claims'
 import type { PolicyItem } from 'data/items'
 import { getClaimState, State } from 'data/states'
 import { ReceiptType } from '../pages/policies/[policyId]/claims/[claimId].svelte'
@@ -21,11 +21,11 @@ $: wasUpdated = differenceInSeconds(Date.parse(claimItem.updated_at), Date.parse
 $: changedText = formatDistanceToNow(Date.parse(claimItem.updated_at), { addSuffix: true })
 $: state = getClaimState(claim.status, isAdmin) || ({} as State)
 $: statusReason = claim.status_reason || ('' as string)
-$: showRevisionMessage = (statusReason && ['Revision', 'Receipt'].includes(claim.status)) as boolean
+$: showRevisionMessage = (statusReason && [ClaimStatus.Revision, ClaimStatus.Receipt].includes(claim.status)) as boolean
 $: payoutOption = claimItem.payout_option
 $: needsRepairReceipt = needsReceipt && payoutOption === PayoutOption.Repair
 $: receiptType = needsRepairReceipt ? ReceiptType.repair : ReceiptType.replacement
-$: needsReceipt = claim.status === 'Receipt'
+$: needsReceipt = claim.status === ClaimStatus.Receipt
 $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType)
 $: showSecondBanner = needsReceipt || isEvidenceNeeded(claimItem, claim.status)
 

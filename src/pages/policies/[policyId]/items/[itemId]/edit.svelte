@@ -47,7 +47,7 @@ const onApply = async (event: CustomEvent) => {
   if (item.coverage_status === ItemCoverageStatus.Draft) {
     isCheckingOut = true
   } else {
-    if (item.coverage_status === 'Revision') {
+    if (item.coverage_status === ItemCoverageStatus.Revision) {
       await submitItem(itemId)
     }
     $goto(itemDetails(policyId, itemId))

@@ -2,7 +2,7 @@
 import { CardsGrid, ItemsTable, Row } from 'components'
 import { isLoadingPolicyItems, loading } from 'components/progress'
 import { Claim, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
-import { deleteItem, loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
+import { deleteItem, ItemCoverageStatus, loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
 import { getNameOfPolicy, selectedPolicy } from 'data/policies'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import * as routes from 'helpers/routes'
@@ -12,7 +12,7 @@ import { Button, Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 $: policyId = $selectedPolicyId
-$: items = $selectedPolicyItems.filter((item) => item.coverage_status !== 'Inactive')
+$: items = $selectedPolicyItems.filter((item) => item.coverage_status !== ItemCoverageStatus.Inactive)
 
 onMount(() => {
   loadItems(policyId)

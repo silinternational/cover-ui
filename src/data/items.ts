@@ -11,6 +11,14 @@ export enum ItemCoverageStatus {
   Revision = 'Revision',
   Inactive = 'Inactive',
 }
+
+export const editableCoverageStatuses = [
+  ItemCoverageStatus.Approved,
+  ItemCoverageStatus.Draft,
+  ItemCoverageStatus.Pending,
+  ItemCoverageStatus.Revision,
+]
+
 export const incompleteItemCoverageStatuses = [
   ItemCoverageStatus.Draft,
   ItemCoverageStatus.Pending,

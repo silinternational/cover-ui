@@ -1,6 +1,6 @@
 <script lang="ts">
 import ClaimCardBanner from './ClaimCardBanner.svelte'
-import type { PolicyItem } from 'data/items'
+import { ItemCoverageStatus, PolicyItem } from 'data/items'
 import { getItemState, State } from 'data/states'
 import { Card, Button } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
@@ -15,7 +15,7 @@ $: wasUpdated = differenceInSeconds(Date.parse(item.updated_at), Date.parse(item
 $: changedText = formatDistanceToNow(Date.parse(item.updated_at), { addSuffix: true })
 $: state = getItemState(item.coverage_status, isAdmin) || ({} as State)
 $: statusReason = item.status_reason || ''
-$: showRevisionMessage = statusReason && ['Revision', 'Receipt'].includes(item.coverage_status)
+$: showRevisionMessage = statusReason && [ItemCoverageStatus.Revision, 'Receipt'].includes(item.coverage_status)
 
 const gotoItem = () => dispatch('goto-item', item)
 </script>

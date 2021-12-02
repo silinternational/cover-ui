@@ -36,7 +36,14 @@ $: itemName && (metatags.title = formatPageTitle(`Items > ${itemName} > Edit`))
 
 const onApply = async (event: CustomEvent) => {
   await updateItem(policyId, itemId, event.detail)
-  isCheckingOut = true
+  if (item.coverage_status === 'Draft') {
+    isCheckingOut = true
+  } else {
+    if (item.coverage_status === 'Revision') {
+      await submitItem(policyId, itemId)
+    }
+    $goto(itemDetails(policyId, itemId))
+  }
 }
 
 const onSaveForLater = async (event: CustomEvent) => {
@@ -74,7 +81,7 @@ const onEdit = () => {
   <!-- @todo Handle situations where the user isn't allowed to edit this item (if any). -->
   <Page>
     <Breadcrumb links={breadcrumbLinks} />
-    <ItemBanner itemStatus="Draft" class="my-2" />
+    <ItemBanner itemStatus={item.coverage_status} class="my-2" />
     <ItemForm {item} {policyId} on:submit={onApply} on:save-for-later={onSaveForLater} on:delete={onDelete} />
   </Page>
 {/if}

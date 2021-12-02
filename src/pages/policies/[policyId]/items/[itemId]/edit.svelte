@@ -4,7 +4,15 @@ import { Breadcrumb, ItemBanner, ItemForm } from 'components'
 import { loading } from 'components/progress'
 import { loadDependents } from 'data/dependents'
 import { loadMembersOfPolicy } from 'data/policy-members'
-import { deleteItem, loadItems, PolicyItem, selectedPolicyItems, submitItem, updateItem } from 'data/items'
+import {
+  deleteItem,
+  ItemCoverageStatus,
+  loadItems,
+  PolicyItem,
+  selectedPolicyItems,
+  submitItem,
+  updateItem,
+} from 'data/items'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { HOME, items as itemsRoute, itemDetails, itemEdit } from 'helpers/routes'
@@ -36,11 +44,11 @@ $: itemName && (metatags.title = formatPageTitle(`Items > ${itemName} > Edit`))
 
 const onApply = async (event: CustomEvent) => {
   await updateItem(policyId, itemId, event.detail)
-  if (item.coverage_status === 'Draft') {
+  if (item.coverage_status === ItemCoverageStatus.Draft) {
     isCheckingOut = true
   } else {
     if (item.coverage_status === 'Revision') {
-      await submitItem(policyId, itemId)
+      await submitItem(itemId)
     }
     $goto(itemDetails(policyId, itemId))
   }
@@ -60,7 +68,7 @@ const onDelete = async () => {
 
 const onAgreeAndPay = async (event: CustomEvent<string>) => {
   const itemId = event.detail
-  await submitItem(policyId, itemId)
+  await submitItem(itemId)
   $goto(itemDetails(policyId, itemId))
 }
 

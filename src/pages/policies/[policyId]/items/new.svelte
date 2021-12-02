@@ -46,7 +46,7 @@ const onSaveForLater = async (event: CustomEvent) => {
 
 const onAgreeAndPay = async (event: CustomEvent<string>) => {
   const itemId = event.detail
-  await submitItem(policyId, itemId)
+  await submitItem(itemId)
   $goto(itemDetails(policyId, itemId))
 }
 

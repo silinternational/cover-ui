@@ -5,7 +5,12 @@ import type { PolicyItem } from './items'
 import { derived, writable } from 'svelte/store'
 import { selectedPolicyId } from './role-policy-selection'
 
-export type PayoutOption = 'Repair' | 'Replacement' | 'FMV' | 'FixedFraction'
+export enum PayoutOption {
+  Repair = 'Repair',
+  Replacement = 'Replacement',
+  FMV = 'FMV',
+  FixedFraction = 'FixedFraction',
+}
 export type ClaimItemStatus =
   | 'Draft'
   | 'Review1'

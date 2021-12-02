@@ -28,7 +28,7 @@ let message = ''
 let status: ClaimStatus
 $: status = claim.status
 
-$: approveButtonLabel = receiptType === 'Replacement' ? 'replace' : 'repair'
+$: approveButtonLabel = receiptType === 'replacement' ? 'replace' : 'repair'
 
 let action: string
 let actionLabel: string

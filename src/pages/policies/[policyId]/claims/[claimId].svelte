@@ -87,14 +87,14 @@ $: householdId = policy.household_id ? policy.household_id : ''
 
 $: incidentDate = formatDate(claim.incident_date)
 $: claimStatus = (claim.status || '') as ClaimStatus
-$: payoutOption = claimItem.payout_option as PayoutOption
+$: payoutOption = claimItem.payout_option
 $: showRevisionMessage = claim.status_reason && claimStatus === 'Revision'
 
 $: needsReceipt = claimStatus === 'Receipt'
 $: needsFile = needsReceipt || isEvidenceNeeded(claimItem, claimStatus)
 
-$: needsRepairReceipt = needsReceipt && payoutOption === 'Repair'
-$: needsReplaceReceipt = needsReceipt && payoutOption === 'Replacement'
+$: needsRepairReceipt = needsReceipt && payoutOption === PayoutOption.Repair
+$: needsReplaceReceipt = needsReceipt && payoutOption === PayoutOption.Replacement
 
 $: filePurpose = getFilePurpose(claimItem, needsReceipt) as ClaimFilePurpose
 $: noFilesUploaded = !isFileUploadedByPurpose(filePurpose, claimFiles)

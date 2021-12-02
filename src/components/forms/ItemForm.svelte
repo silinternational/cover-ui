@@ -49,7 +49,7 @@ $: selectedAccountablePersonId = item?.accountable_person?.id || $user.id
 $: country = item?.accountable_person?.country || country
 $: !$catItemsInitialized && loadCategories()
 $: marketValueIsDisabled = !!item.id && item.coverage_status !== 'Draft'
-$: applyBtnLabel = item.coverage_status === 'Draft' ? 'get approval' : 'save changes'
+$: applyBtnLabel = !item.coverage_status || item.coverage_status === 'Draft' ? 'get approval' : 'save changes'
 
 const onAccountablePersonChange = (event: CustomEvent<AccountablePersonOptions>) => {
   accountablePersonId = event.detail?.id

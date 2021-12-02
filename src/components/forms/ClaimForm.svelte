@@ -5,13 +5,9 @@ import {
   isRepairCostTooHigh,
   isUnrepairableOrTooExpensive,
   LOSS_REASON_EVACUATION,
-  PAYOUT_OPTION_FIXED_FRACTION,
-  PAYOUT_OPTION_FMV,
-  PAYOUT_OPTION_REPAIR,
-  PAYOUT_OPTION_REPLACE,
 } from '../../business-rules/claim-payout-amount'
 import { claimIncidentTypes, loadClaimIncidentTypes } from 'data/claim-incident-types'
-import type { Claim, ClaimItem, PayoutOption } from 'data/claims'
+import { Claim, ClaimItem, PayoutOption } from 'data/claims'
 import type { PolicyItem } from 'data/items'
 import DateInput from 'DateInput.svelte'
 import Description from 'Description.svelte'
@@ -41,11 +37,11 @@ const repairableOptions = [
 const payoutOptions = [
   {
     label: 'Replace and get reimbursed later',
-    value: PAYOUT_OPTION_REPLACE,
+    value: PayoutOption.Replacement,
   },
   {
     label: 'Get fair market value (no replacement)',
-    value: PAYOUT_OPTION_FMV,
+    value: PayoutOption.FMV,
   },
 ]
 
@@ -91,15 +87,14 @@ $: unrepairableOrTooExpensive = isUnrepairableOrTooExpensive(isRepairable, repai
 $: shouldAskReplaceOrFMV = !isEvacuation && unrepairableOrTooExpensive === true
 $: shouldAskIfRepairable = !!(potentiallyRepairable && lossReason)
 $: shouldAskForFMV = isFairMarketValueNeeded(isRepairable, payoutOption)
-$: payoutOption !== PAYOUT_OPTION_REPLACE && unSetReplaceEstimate()
+$: payoutOption !== PayoutOption.Replacement && unSetReplaceEstimate()
 $: !shouldAskReplaceOrFMV && unSetPayoutOption()
 $: !shouldAskIfRepairable && unSetRepairableSelection()
 $: !shouldAskForFMV && unSetFairMarketValue()
 $: !isRepairable && unSetRepairEstimate()
-$: needsEvidence = !unrepairableOrTooExpensive || payoutOption === PAYOUT_OPTION_FMV
+$: needsEvidence = !unrepairableOrTooExpensive || payoutOption === PayoutOption.FMV
 $: needsPayoutOption = !(isRepairable || isEvacuation) || repairCostIsTooHigh
-$: canContinueToEvidence =
-  (repairEstimateUSD > 0 && fairMarketValueUSD > 0) || (fairMarketValueUSD > 0 && !isRepairable)
+$: canContinueToEvidence = (!!repairEstimateUSD && !!fairMarketValueUSD) || (!!fairMarketValueUSD && !isRepairable)
 
 // Calculate dynamic options for radio-button prompts.
 $: lossReasonOptions = $claimIncidentTypes.map(({ name, description }) => ({ label: name, value: name, description }))
@@ -123,11 +118,11 @@ const determinePayoutOption = (
   selectedPayoutOption?: PayoutOption
 ) => {
   if (isEvacuation) {
-    return PAYOUT_OPTION_FIXED_FRACTION
+    return PayoutOption.FixedFraction
   }
   if (repairCostIsTooHigh === false) {
     // ... not merely falsy, like `null` or `undefined`
-    return PAYOUT_OPTION_REPAIR
+    return PayoutOption.Repair
   }
   return selectedPayoutOption
 }
@@ -145,7 +140,7 @@ const validateForm = () => {
 const onSubmitClaim = (event: Event) => {
   event.preventDefault()
   validateForm()
-  if (payoutOption === PAYOUT_OPTION_REPLACE) assertHas(replaceEstimateUSD, 'Please enter a replacement estimate')
+  if (payoutOption === PayoutOption.Replacement) assertHas(replaceEstimateUSD, 'Please enter a replacement estimate')
   dispatch('submit', getFormData())
 }
 
@@ -251,7 +246,7 @@ const unSetReplaceEstimate = () => {
         <span class="header">Payout options</span>
         <RadioOptions name="payoutOption" options={payoutOptions} bind:value={payoutOption} />
       </div>
-      {#if payoutOption === PAYOUT_OPTION_REPLACE}
+      {#if payoutOption === PayoutOption.Replacement}
         <p>
           <MoneyInput label="Replacement estimate (USD)" bind:value={replaceEstimateUSD} />
           <Description>
@@ -263,7 +258,7 @@ const unSetReplaceEstimate = () => {
       {/if}
     {/if}
 
-    {#if isRepairable === false && payoutOption === PAYOUT_OPTION_FMV}
+    {#if isRepairable === false && payoutOption === PayoutOption.FMV}
       <p>
         <!-- If we know it's not repairable, position this AFTER the "Payout options" prompt. -->
         <MoneyInput label="Fair market value (USD)" bind:value={fairMarketValueUSD} />

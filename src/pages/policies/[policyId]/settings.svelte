@@ -283,13 +283,13 @@ p {
     {#each policyMembers as policyMember}
       <li class="accountable-people-list-item">
         <span>
-          {policyMember.first_name}
-          {policyMember.last_name}
+          {policyMember.first_name || ''}
+          {policyMember.last_name || ''}
           {isYou(policyMember) ? '(you)' : ''}
           <br />
-          <small>{policyMember.email}</small>
+          <small>{policyMember.email || '-'}</small>
           <br />
-          <small>{policyMember.country}</small>
+          <small>{policyMember.country || '-'}</small>
         </span>
         <span class="edit-button">
           {#if isYou(policyMember)}
@@ -312,13 +312,13 @@ p {
     {#each dependents as dependent}
       <li class="accountable-people-list-item">
         <span>
-          {dependent.name}
+          {dependent.name || ''}
           {#if isHouseholdPolicy}
             <br />
-            <small>Dependent ({dependent.relationship})</small>
+            <small>Dependent ({dependent.relationship || '-'})</small>
           {/if}
           <br />
-          <small>{dependent.country}</small>
+          <small>{dependent.country || '-'}</small>
         </span>
         <span class="edit-button">
           <Tooltip.Wrapper ariaDescribedBy={'edit-person-' + dependent.id}>

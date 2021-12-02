@@ -16,6 +16,7 @@ import { createEventDispatcher } from 'svelte'
 export let item = {} as PolicyItem
 export let policyId: string
 
+let applyBtnLabel = ''
 let formData = {} as any
 let open = false
 let makeModelIsOpen = false
@@ -47,7 +48,8 @@ let today = new Date()
 $: selectedAccountablePersonId = item?.accountable_person?.id || $user.id
 $: country = item?.accountable_person?.country || country
 $: !$catItemsInitialized && loadCategories()
-$: isMarketValueDisabled = !!item.id && item.coverage_status !== 'Draft'
+$: marketValueIsDisabled = !!item.id && item.coverage_status !== 'Draft'
+$: applyBtnLabel = item.coverage_status === 'Draft' ? 'get approval' : 'save changes'
 
 const onAccountablePersonChange = (event: CustomEvent<AccountablePersonOptions>) => {
   accountablePersonId = event.detail?.id
@@ -199,7 +201,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
     </Description>
   </p>
   <p>
-    <MoneyInput label="Market value (USD)" bind:value={marketValueUSD} disabled={isMarketValueDisabled} />
+    <MoneyInput label="Market value (USD)" bind:value={marketValueUSD} disabled={marketValueIsDisabled} />
     <Description>
       <ConvertCurrencyLink />
     </Description>
@@ -210,7 +212,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
       <Button outlined on:click={onDelete}>Delete</Button>
       <ItemDeleteModal {open} {item} on:closed={handleDialog} />
     {/if}
-    <Button raised>Get approval</Button>
+    <Button raised>{applyBtnLabel}</Button>
     <MakeAndModelModal open={makeModelIsOpen} on:closed={onMakeModelClosed} />
   </p>
 </Form>

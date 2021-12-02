@@ -56,8 +56,8 @@ const onGotoItem = (event: CustomEvent<string>) => $goto(event.detail)
     {:else if $loading && isLoadingPolicyItems(policyId)}
       Loading items...
     {:else}
-      <p class="text-align-center">You don't have any items in this policy</p>
-      <p class="text-align-center">
+      <p class="m-0-auto text-align-center">You don't have any items in this policy</p>
+      <p class="m-0-auto text-align-center">
         <Button class="m-1" raised prependIcon="add_circle" url={routes.itemsNew(policyId)}>Add Item</Button>
       </p>
     {/if}

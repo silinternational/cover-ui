@@ -287,9 +287,9 @@ p {
           {policyMember.last_name || ''}
           {isYou(policyMember) ? '(you)' : ''}
           <br />
-          <small>{policyMember.email || '-'}</small>
+          <small>{policyMember.email || ''}</small>
           <br />
-          <small>{policyMember.country || '-'}</small>
+          <small>{policyMember.country || ''}</small>
         </span>
         <span class="edit-button">
           {#if isYou(policyMember)}
@@ -318,7 +318,7 @@ p {
             <small>Dependent ({dependent.relationship || '-'})</small>
           {/if}
           <br />
-          <small>{dependent.country || '-'}</small>
+          <small>{dependent.country || ''}</small>
         </span>
         <span class="edit-button">
           <Tooltip.Wrapper ariaDescribedBy={'edit-person-' + dependent.id}>

@@ -15,7 +15,7 @@ $: wasUpdated = differenceInSeconds(Date.parse(item.updated_at), Date.parse(item
 $: changedText = formatDistanceToNow(Date.parse(item.updated_at), { addSuffix: true })
 $: state = getItemState(item.coverage_status, isAdmin) || ({} as State)
 $: statusReason = item.status_reason || ''
-$: showRevisionMessage = statusReason && [ItemCoverageStatus.Revision].includes(item.coverage_status)
+$: showRevisionMessage = !!statusReason && [ItemCoverageStatus.Revision].includes(item.coverage_status)
 
 const gotoItem = () => dispatch('goto-item', item)
 </script>

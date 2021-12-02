@@ -10,6 +10,7 @@ import {
   updateClaim,
   updateClaimItem,
   Claim,
+  ClaimStatus,
 } from 'data/claims'
 import { loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
 import { selectedPolicyId } from 'data/role-policy-selection'
@@ -77,7 +78,7 @@ const onSubmit = async (event: CustomEvent) => {
   <!-- @todo Handle situations where the user isn't allowed to edit this claim. -->
   <Page>
     <Breadcrumb links={breadcrumbLinks} />
-    <ClaimBanner claimStatus={'Draft'} class="my-2" />
+    <ClaimBanner claimStatus={ClaimStatus.Draft} class="my-2" />
     <ClaimForm {claim} {item} on:save-for-later={onSaveForLater} on:submit={onSubmit} />
   </Page>
 {/if}

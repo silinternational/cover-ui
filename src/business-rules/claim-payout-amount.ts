@@ -1,13 +1,13 @@
 import type { ClaimIncidentType } from 'data/claim-incident-types'
-import type { PayoutOption, ClaimItem, ClaimStatus, ClaimFilePurpose } from 'data/claims'
+import { PayoutOption, ClaimItem, ClaimStatus, ClaimFilePurpose } from 'data/claims'
 
 export const DEDUCTIBLE = 0.05
 export const LOSS_REASON_EVACUATION = 'Evacuation'
 
-export const PAYOUT_OPTION_FIXED_FRACTION: PayoutOption = 'FixedFraction'
-export const PAYOUT_OPTION_FMV: PayoutOption = 'FMV'
-export const PAYOUT_OPTION_REPAIR: PayoutOption = 'Repair'
-export const PAYOUT_OPTION_REPLACE: PayoutOption = 'Replacement'
+export const PAYOUT_OPTION_FIXED_FRACTION: PayoutOption = PayoutOption.FixedFraction
+export const PAYOUT_OPTION_FMV: PayoutOption = PayoutOption.FMV
+export const PAYOUT_OPTION_REPAIR: PayoutOption = PayoutOption.Repair
+export const PAYOUT_OPTION_REPLACE: PayoutOption = PayoutOption.Replacement
 
 export const isFairMarketValueNeeded = (isRepairable?: boolean, payoutOption?: string): boolean => {
   return isRepairable || payoutOption === PAYOUT_OPTION_FMV
@@ -90,7 +90,7 @@ export const determineMaxPayout = (
 export const isEvidenceNeeded = (claimItem: ClaimItem, claimStatus: ClaimStatus): boolean => {
   const willNeedEvidence = claimItem.fmv > 0 || claimItem.repair_estimate > 0
   const repairCostIsNotTooHigh = !isRepairCostTooHigh(claimItem.repair_estimate, claimItem.fmv)
-  const canProvideEvidenceNow = ['Draft'].includes(claimStatus)
+  const canProvideEvidenceNow = [ClaimStatus.Draft].includes(claimStatus)
   return willNeedEvidence && repairCostIsNotTooHigh && canProvideEvidenceNow
 }
 

@@ -2,9 +2,10 @@
 import { getUploadLabel, isEvidenceNeeded } from '../business-rules/claim-payout-amount'
 import ClaimBanner from './banners/ClaimBanner.svelte'
 import ClaimCardBanner from './ClaimCardBanner.svelte'
-import type { Claim, ClaimItem } from 'data/claims'
+import { Claim, ClaimItem, PayoutOption } from 'data/claims'
 import type { PolicyItem } from 'data/items'
 import { getClaimState, State } from 'data/states'
+import { ReceiptType } from '../pages/policies/[policyId]/claims/[claimId].svelte'
 import { Card, Button } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 import { differenceInSeconds, formatDistanceToNow } from 'date-fns'
@@ -22,8 +23,8 @@ $: state = getClaimState(claim.status, isAdmin) || ({} as State)
 $: statusReason = claim.status_reason || ('' as string)
 $: showRevisionMessage = (statusReason && ['Revision', 'Receipt'].includes(claim.status)) as boolean
 $: payoutOption = claimItem.payout_option
-$: needsRepairReceipt = needsReceipt && payoutOption === 'Repair'
-$: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
+$: needsRepairReceipt = needsReceipt && payoutOption === PayoutOption.Repair
+$: receiptType = needsRepairReceipt ? ReceiptType.repair : ReceiptType.replacement
 $: needsReceipt = claim.status === 'Receipt'
 $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType)
 $: showSecondBanner = needsReceipt || isEvidenceNeeded(claimItem, claim.status)

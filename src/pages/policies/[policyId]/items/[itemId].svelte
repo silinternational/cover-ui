@@ -50,7 +50,7 @@ $: policyItemHistory = $policyHistoryByItemId[item.id]
 $: hasHistory = policyItemHistory && policyItemHistory.length > 0
 
 $: allowRemoveCovereage = (!['Inactive', 'Denied'].includes(status) && isMemberOfPolicy) as boolean
-$: canEdit = ['Draft', 'Pending', 'Revision'].includes(status) && isMemberOfPolicy
+$: canEdit = ['Approved', 'Draft', 'Pending', 'Revision'].includes(status) && isMemberOfPolicy
 
 // Dynamic breadcrumbs data:
 $: policyName = getNameOfPolicy(policy)

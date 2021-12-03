@@ -1,15 +1,12 @@
 <script lang="ts">
 import Checkout from 'Checkout.svelte'
 import { Breadcrumb, ItemForm, NoHouseholdIdModal } from 'components'
-import { loadDependents } from 'data/dependents'
 import { addItem, deleteItem, loadItems, PolicyItem, submitItem } from 'data/items'
 import { PolicyType, selectedPolicy, updatePolicy } from 'data/policies'
-import { loadMembersOfPolicy } from 'data/policy-members'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { HOME, items as itemsRoute, itemDetails, itemsNew } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
 import { Page, setNotice } from '@silintl/ui-components'
-import { onMount } from 'svelte'
 
 export let policyId: string
 
@@ -17,11 +14,7 @@ let isCheckingOut = false
 let item: PolicyItem
 let open = false
 
-onMount(() => {
-  loadDependents(policyId)
-  loadMembersOfPolicy(policyId)
-})
-
+//dependents and members are loaded in _layout.svelte see TODO there
 $: metatags.title = formatPageTitle('Items > New')
 
 $: policyId && loadItems(policyId)

@@ -7,7 +7,7 @@ import MoneyInput from '../MoneyInput.svelte'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import SelectAccountablePerson from '../SelectAccountablePerson.svelte'
 import type { AccountablePersonOptions } from 'data/accountablePersons'
-import type { ItemCoverageStatus, PolicyItem } from 'data/items'
+import { ItemCoverageStatus, PolicyItem } from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
 import { assertHas } from '../../validation/assertions'
 import { Button, Form, Select, TextArea, TextField } from '@silintl/ui-components'
@@ -48,8 +48,9 @@ let today = new Date()
 $: selectedAccountablePersonId = item?.accountable_person?.id || $user.id
 $: country = item?.accountable_person?.country || country
 $: !$catItemsInitialized && loadCategories()
-$: marketValueIsDisabled = !!item.id && item.coverage_status !== 'Draft'
-$: applyBtnLabel = !item.coverage_status || item.coverage_status === 'Draft' ? 'get approval' : 'save changes'
+$: itemIsDraft = item.coverage_status === ItemCoverageStatus.Draft
+$: marketValueIsDisabled = !!item.id && !itemIsDraft
+$: applyBtnLabel = !item.coverage_status || itemIsDraft ? 'get approval' : 'save changes'
 
 const onAccountablePersonChange = (event: CustomEvent<AccountablePersonOptions>) => {
   accountablePersonId = event.detail?.id
@@ -208,7 +209,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
   </p>
   <p>
     <Button outlined on:click={saveForLater}>Save for later</Button>
-    {#if item.coverage_status === 'Draft'}
+    {#if itemIsDraft}
       <Button outlined on:click={onDelete}>Delete</Button>
       <ItemDeleteModal {open} {item} on:closed={handleDialog} />
     {/if}

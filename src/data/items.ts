@@ -11,6 +11,14 @@ export enum ItemCoverageStatus {
   Revision = 'Revision',
   Inactive = 'Inactive',
 }
+
+export const editableCoverageStatuses = [
+  ItemCoverageStatus.Approved,
+  ItemCoverageStatus.Draft,
+  ItemCoverageStatus.Pending,
+  ItemCoverageStatus.Revision,
+]
+
 export const incompleteItemCoverageStatuses = [
   ItemCoverageStatus.Draft,
   ItemCoverageStatus.Pending,
@@ -192,13 +200,12 @@ export async function reviseItem(itemId: string, status_reason: string): Promise
  * @param {string} itemId -- The UUID for the applicable policy item
  * @return {Object}
  */
-export async function submitItem(policyId: string, itemId: string): Promise<void> {
+export async function submitItem(itemId: string): Promise<void> {
   const urlPath = `items/${itemId}/submit`
 
-  // TODO: update a store with this response data instead of doing a full reload
   const response = await CREATE<PolicyItem>(urlPath)
 
-  await loadItems(policyId)
+  updateStoreItem(response)
 }
 
 /**
@@ -253,7 +260,7 @@ export async function updateItem(policyId: string, itemId: string, itemData: any
 export async function deleteItem(policyId: string, itemId: string): Promise<any> {
   const urlPath = `items/${itemId}`
 
-  // TODO: Check the contenst of the delete response before removing the item from the store
+  // TODO: Check the contents of the delete response before removing the item from the store
   const response = await DELETE(urlPath)
 
   itemsByPolicyId.update((data) => {

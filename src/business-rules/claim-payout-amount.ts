@@ -1,16 +1,11 @@
 import type { ClaimIncidentType } from 'data/claim-incident-types'
-import type { PayoutOption, ClaimItem, ClaimStatus, ClaimFilePurpose } from 'data/claims'
+import { PayoutOption, ClaimItem, ClaimStatus, ClaimFilePurpose } from 'data/claims'
 
 export const DEDUCTIBLE = 0.05
 export const LOSS_REASON_EVACUATION = 'Evacuation'
 
-export const PAYOUT_OPTION_FIXED_FRACTION: PayoutOption = 'FixedFraction'
-export const PAYOUT_OPTION_FMV: PayoutOption = 'FMV'
-export const PAYOUT_OPTION_REPAIR: PayoutOption = 'Repair'
-export const PAYOUT_OPTION_REPLACE: PayoutOption = 'Replacement'
-
 export const isFairMarketValueNeeded = (isRepairable?: boolean, payoutOption?: string): boolean => {
-  return isRepairable || payoutOption === PAYOUT_OPTION_FMV
+  return isRepairable || payoutOption === PayoutOption.FMV
 }
 
 export const isPotentiallyRepairable = (claimIncidentTypes: ClaimIncidentType[], incidentTypeName: string): boolean => {
@@ -70,16 +65,16 @@ export const determineMaxPayout = (
   coverageAmount: number
 ): number | undefined => {
   switch (payoutOption) {
-    case PAYOUT_OPTION_REPAIR:
+    case PayoutOption.Repair:
       return computeRepairMaxPayout(claimItem, coverageAmount)
       break
-    case PAYOUT_OPTION_REPLACE:
+    case PayoutOption.Replacement:
       return computeReplaceMaxPayout(claimItem, coverageAmount)
       break
-    case PAYOUT_OPTION_FMV:
+    case PayoutOption.FMV:
       return computeCashMaxPayout(claimItem, coverageAmount)
       break
-    case PAYOUT_OPTION_FIXED_FRACTION:
+    case PayoutOption.FixedFraction:
       return (coverageAmount * 2) / 3
       break
     default:
@@ -90,7 +85,7 @@ export const determineMaxPayout = (
 export const isEvidenceNeeded = (claimItem: ClaimItem, claimStatus: ClaimStatus): boolean => {
   const willNeedEvidence = claimItem.fmv > 0 || claimItem.repair_estimate > 0
   const repairCostIsNotTooHigh = !isRepairCostTooHigh(claimItem.repair_estimate, claimItem.fmv)
-  const canProvideEvidenceNow = ['Draft'].includes(claimStatus)
+  const canProvideEvidenceNow = [ClaimStatus.Draft].includes(claimStatus)
   return willNeedEvidence && repairCostIsNotTooHigh && canProvideEvidenceNow
 }
 

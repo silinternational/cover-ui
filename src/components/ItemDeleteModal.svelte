@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Dialog } from '@silintl/ui-components'
-import type { PolicyItem } from 'data/items'
+import { ItemCoverageStatus, PolicyItem } from 'data/items'
 import { createEventDispatcher } from 'svelte'
 
 export let open = true
@@ -14,9 +14,9 @@ const buttons: Dialog.AlertButton[] = [
 ]
 
 $: status = item.coverage_status
-$: title = status === 'Draft' ? 'Delete' : 'Remove Coverage'
+$: title = status === ItemCoverageStatus.Draft ? 'Delete' : 'Remove Coverage'
 $: message =
-  status === 'Draft'
+  status === ItemCoverageStatus.Draft
     ? `Are you sure you would like to delete ${item.name}?`
     : `Are you sure you would like to remove coverage for ${item.name}?`
 

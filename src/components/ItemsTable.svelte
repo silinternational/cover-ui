@@ -1,7 +1,7 @@
 <script lang="ts">
 import ItemDeleteModal from './ItemDeleteModal.svelte'
 import { formatDate } from 'components/dates'
-import type { PolicyItem } from 'data/items'
+import { ItemCoverageStatus, PolicyItem } from 'data/items'
 import { formatFriendlyDate } from 'helpers/date'
 import { formatMoney } from 'helpers/money'
 import { itemDetails, itemEdit } from 'helpers/routes'
@@ -26,13 +26,13 @@ const getMenuItems = (item: PolicyItem) => {
       url: itemDetails(policyId, item.id),
     },
   ]
-  if (item.coverage_status !== 'Inactive') {
+  if (item.coverage_status !== ItemCoverageStatus.Inactive) {
     menuItems.push({
-      label: item.coverage_status === 'Draft' ? 'Delete' : 'Remove Coverage',
+      label: item.coverage_status === ItemCoverageStatus.Draft ? 'Delete' : 'Remove Coverage',
       action: handleDeleteClick,
     })
   }
-  if (['Draft', 'Pending'].includes(item.coverage_status)) {
+  if ([ItemCoverageStatus.Draft, ItemCoverageStatus.Pending].includes(item.coverage_status)) {
     menuItems.push({
       label: 'Edit',
       url: itemEdit(policyId, item.id),
@@ -70,7 +70,8 @@ const redirectAndSetCurrentItem = (item: PolicyItem) => {
   }
 }
 
-const getStatusClass = (status: string) => (status === 'Draft' ? 'mdc-theme--primary mdc-bold-font' : '')
+const getStatusClass = (status: string) =>
+  status === ItemCoverageStatus.Draft ? 'mdc-theme--primary mdc-bold-font' : ''
 </script>
 
 <style>
@@ -113,7 +114,7 @@ const getStatusClass = (status: string) => (status === 'Draft' ? 'mdc-theme--pri
       <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} clickable>
         <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}>
-          {#if item.coverage_status === 'Approved' && item.coverage_end_date}
+          {#if item.coverage_status === ItemCoverageStatus.Approved && item.coverage_end_date}
             Covered through {formatFriendlyDate(item.coverage_end_date)}
           {:else}
             {item.coverage_status || ''}

@@ -38,6 +38,7 @@ import {
   claims,
   fixReceipt,
   ClaimFilePurpose,
+  ReceiptType,
 } from 'data/claims'
 import { loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
 import { getNameOfPolicy, getPolicyById, loadPolicy, memberBelongsToPolicy, policies, Policy } from 'data/policies'
@@ -88,9 +89,9 @@ $: householdId = policy.household_id ? policy.household_id : ''
 $: incidentDate = formatDate(claim.incident_date)
 $: claimStatus = (claim.status || '') as ClaimStatus
 $: payoutOption = claimItem.payout_option
-$: showRevisionMessage = claim.status_reason && claimStatus === 'Revision'
+$: showRevisionMessage = claim.status_reason && claimStatus === ClaimStatus.Revision
 
-$: needsReceipt = claimStatus === 'Receipt'
+$: needsReceipt = claimStatus === ClaimStatus.Receipt
 $: needsFile = needsReceipt || isEvidenceNeeded(claimItem, claimStatus)
 
 $: needsRepairReceipt = needsReceipt && payoutOption === PayoutOption.Repair
@@ -100,9 +101,9 @@ $: filePurpose = getFilePurpose(claimItem, needsReceipt) as ClaimFilePurpose
 $: noFilesUploaded = !isFileUploadedByPurpose(filePurpose, claimFiles)
 $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType)
 $: uploadLabelForButton = getUploadLabel(claimItem, needsReceipt, receiptType, false)
-$: showUploadButton = ['Receipt', 'Revision'].includes(claimStatus) && !isAdmin
+$: showUploadButton = [ClaimStatus.Receipt, ClaimStatus.Revision].includes(claimStatus) && !isAdmin
 $: moneyFormLabel = needsRepairReceipt ? 'Actual cost of repair' : 'Actual cost of replacement'
-$: receiptType = needsRepairReceipt ? 'repair' : 'replacement'
+$: receiptType = needsRepairReceipt ? ReceiptType.repair : ReceiptType.replacement
 $: claimFiles = claim.claim_files || ([] as ClaimFile[])
 $: maximumPayout = determineMaxPayout(payoutOption, claimItem, item.coverage_amount)
 

@@ -2,8 +2,6 @@
 import Checkout from 'Checkout.svelte'
 import { Breadcrumb, ItemBanner, ItemForm } from 'components'
 import { loading } from 'components/progress'
-import { loadDependents } from 'data/dependents'
-import { loadMembersOfPolicy } from 'data/policy-members'
 import {
   deleteItem,
   ItemCoverageStatus,
@@ -26,8 +24,6 @@ export let policyId = $selectedPolicyId
 let isCheckingOut: boolean = false
 
 onMount(() => {
-  loadDependents(policyId)
-  loadMembersOfPolicy(policyId)
   loadItems(policyId)
 })
 

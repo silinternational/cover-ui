@@ -20,6 +20,7 @@ let applyBtnLabel = ''
 let formData = {} as any
 let open = false
 let makeModelIsOpen = false
+let selectedAccountablePersonId: string
 
 const dispatch = createEventDispatcher<{ submit: any; 'save-for-later': any; delete: any }>()
 
@@ -45,7 +46,6 @@ $: setInitialValues($user, item)
 let initialCategoryId: string
 let today = new Date()
 
-$: selectedAccountablePersonId = item?.accountable_person?.id || $user.id
 $: country = item?.accountable_person?.country || country
 $: !$catItemsInitialized && loadCategories()
 $: itemIsDraft = item.coverage_status === ItemCoverageStatus.Draft

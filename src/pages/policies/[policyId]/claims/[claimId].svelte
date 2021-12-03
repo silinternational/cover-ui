@@ -1,10 +1,3 @@
-<script context="module" lang="ts">
-export enum ReceiptType {
-  repair = 'repair',
-  replacement = 'replacement',
-}
-</script>
-
 <script lang="ts">
 import user, { UserAppRole } from '../../../../authn/user'
 import {
@@ -45,6 +38,7 @@ import {
   claims,
   fixReceipt,
   ClaimFilePurpose,
+  ReceiptType,
 } from 'data/claims'
 import { loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
 import { getNameOfPolicy, getPolicyById, loadPolicy, memberBelongsToPolicy, policies, Policy } from 'data/policies'

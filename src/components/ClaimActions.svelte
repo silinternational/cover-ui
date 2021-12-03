@@ -8,11 +8,11 @@ import {
   statusesAvaitingAdmin,
   statusesAwaitingSignator,
   statusesAwaitingSteward,
+  ReceiptType,
 } from 'data/claims'
 import { roleSelection } from 'data/role-policy-selection'
 import Description from './Description.svelte'
 import { throwError } from '../error'
-import { ReceiptType } from '../pages/policies/[policyId]/claims/[claimId].svelte'
 import { Button, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 

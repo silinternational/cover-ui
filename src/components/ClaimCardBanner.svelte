@@ -1,9 +1,10 @@
 <script lang="ts">
+import type { ReceiptType } from 'data/claims'
 import type { State } from 'data/states'
 
 export let state = {} as State
 export let statusReason = '' as string
-export let receiptType = '' as string
+export let receiptType = '' as ReceiptType
 export let showRevisionMessage: boolean = false
 
 $: bgColor = state.bgColor || ''

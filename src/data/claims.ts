@@ -11,17 +11,10 @@ export enum PayoutOption {
   FMV = 'FMV',
   FixedFraction = 'FixedFraction',
 }
-export type ClaimItemStatus =
-  | 'Draft'
-  | 'Review1'
-  | 'Review2'
-  | 'Review3'
-  | 'Revision'
-  | 'Receipt'
-  | 'Approved'
-  | 'Paid'
-  | 'Denied'
-export type ClaimIncidentTypeName = string // dynamically defined by the claim-incident-types endpoint
+export enum ReceiptType {
+  repair = 'repair',
+  replacement = 'replacement',
+}
 export enum ClaimStatus {
   Draft = 'Draft',
   Review1 = 'Review1',
@@ -33,6 +26,17 @@ export enum ClaimStatus {
   Paid = 'Paid',
   Denied = 'Denied',
 }
+export type ClaimItemStatus =
+  | 'Draft'
+  | 'Review1'
+  | 'Review2'
+  | 'Review3'
+  | 'Revision'
+  | 'Receipt'
+  | 'Approved'
+  | 'Paid'
+  | 'Denied'
+export type ClaimIncidentTypeName = string // dynamically defined by the claim-incident-types endpoint
 export type ClaimFilePurpose = 'Receipt' | 'Evidence of FMV' | 'Repair Estimate'
 
 export type ClaimFile = {

@@ -24,6 +24,7 @@ export let policyId = $selectedPolicyId
 let isCheckingOut: boolean = false
 
 onMount(() => {
+//dependents and members are loading from _layout.svelte
   loadItems(policyId)
 })
 

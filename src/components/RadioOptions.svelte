@@ -1,23 +1,27 @@
 <script lang="ts">
-/** @type {{label, value, disabled}[]} */
-export let options = []
+type RadioOption = {
+  label: string
+  value: string
+  disabled: boolean
+  description?: string
+}
+export let options: RadioOption[] = []
 
 export let name: string
 export let value: string | undefined
 
-const isSelected = (option) => {
-  return option.value === value ? 'checked' : undefined
-}
 const onInput = (event) => {
-  value = event.target.value
+  value = event?.target?.value
 }
+const isSelected = (option: RadioOption) => option.value === value
+const optionId = (option: RadioOption) => `radio-options-${String(option.value).toLowerCase().replace(' ', '-')}`
 </script>
 
 <style>
 .description {
   display: block;
 }
-#radio {
+input {
   margin-right: 0.3rem;
   margin-bottom: 0.2rem;
 }
@@ -28,13 +32,13 @@ const onInput = (event) => {
     <input
       type="radio"
       {name}
-      id="radio"
+      id={optionId(option)}
       disabled={option.disabled}
       value={option.value}
       checked={isSelected(option)}
       on:input={onInput}
     />
-    <label for="radio">
+    <label for={optionId(option)}>
       {option.label}
       {#if option.description}
         <small class="description">{option.description}</small>

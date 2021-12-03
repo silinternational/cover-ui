@@ -1,5 +1,6 @@
 <script lang="ts">
 import type { UpdatePolicyRequestBody } from 'data/policies'
+import { POLICY_NEW_TEAM } from 'helpers/routes'
 import { Dialog, setNotice, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
@@ -49,6 +50,9 @@ const isIdValid = (id: string): boolean => /^[0-9]+$/.test(id)
 
 <Dialog.Alert {open} {buttons} defaultAction="cancel" {title} on:chosen={handleDialog} on:closed={handleDialog}>
   <p>A household ID is required before getting coverage</p>
+  <p>
+    If you would like to pay with a cost center, consider creating a <a href={POLICY_NEW_TEAM}>Team Policy</a>
+  </p>
   <span class="header">Household ID<span class="required">*</span></span>
   <TextField placeholder={'1234567'} bind:value={householdId} /></Dialog.Alert
 >

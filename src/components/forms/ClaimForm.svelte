@@ -7,7 +7,7 @@ import {
   LOSS_REASON_EVACUATION,
 } from '../../business-rules/claim-payout-amount'
 import { claimIncidentTypes, loadClaimIncidentTypes } from 'data/claim-incident-types'
-import { Claim, ClaimItem, PayoutOption } from 'data/claims'
+import { Claim, ClaimItem, ClaimStatus, PayoutOption } from 'data/claims'
 import type { PolicyItem } from 'data/items'
 import DateInput from 'DateInput.svelte'
 import Description from 'Description.svelte'
@@ -95,6 +95,7 @@ $: !isRepairable && unSetRepairEstimate()
 $: needsEvidence = !unrepairableOrTooExpensive || payoutOption === PayoutOption.FMV
 $: needsPayoutOption = !(isRepairable || isEvacuation) || repairCostIsTooHigh
 $: canContinueToEvidence = (!!repairEstimateUSD && !!fairMarketValueUSD) || (!!fairMarketValueUSD && !isRepairable)
+$: canSaveForLater = claim.status === ClaimStatus.Draft || !claim.status
 
 // Calculate dynamic options for radio-button prompts.
 $: lossReasonOptions = $claimIncidentTypes.map(({ name, description }) => ({ label: name, value: name, description }))
@@ -284,7 +285,9 @@ const unSetReplaceEstimate = () => {
           <Button on:click={onSaveForLater} outlined>Save For Later</Button>
         {/if}
       {:else}
-        <Button on:click={onSaveForLater} outlined>Save For Later</Button>
+        {#if canSaveForLater}
+          <Button on:click={onSaveForLater} outlined>Save For Later</Button>
+        {/if}
         <Button on:click={onSubmitClaim} raised>Submit Claim</Button>
       {/if}
     </p>

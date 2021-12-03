@@ -17,7 +17,7 @@ p {
 </style>
 
 <Page>
-  <p>
+  <p class="m-0-auto">
     Sorry, this page doesn't exist.
     <a class="mdc-theme--primary" href={HOME}>Go home</a>
   </p>

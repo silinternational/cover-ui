@@ -45,8 +45,8 @@ const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(ev
     {#if $selectedPolicyClaims.length}
       <ClaimCards {isAdmin} claims={$selectedPolicyClaims} on:goto-claim={onGotoClaim} />
     {:else}
-      <p class="text-align-center">You don't have any claims in this policy</p>
-      <p class="text-align-center">
+      <p class="m-0-auto text-align-center">You don't have any claims in this policy</p>
+      <p class="m-0-auto text-align-center">
         <a class="m-1 mdc-theme--primary" href={items(policyId)}>Pick an item to file a claim</a>
       </p>
     {/if}

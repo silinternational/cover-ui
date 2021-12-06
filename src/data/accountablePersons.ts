@@ -1,5 +1,6 @@
-import type { PolicyDependent } from './dependents'
-import type { PolicyMember } from './policy-members'
+import { PolicyDependent, selectedPolicyDependents } from './dependents'
+import { PolicyMember, selectedPolicyMembers } from './policy-members'
+import { derived } from 'svelte/store'
 
 export type AccountablePersonOptions = {
   id: string
@@ -22,3 +23,10 @@ export const getDependentOptions = (dependents: PolicyDependent[]): AccountableP
     country: dependent.country,
   }))
 }
+
+export const selectedAccountablePersonOptions = derived(
+  [selectedPolicyMembers, selectedPolicyDependents],
+  ([$selectedPolicyMembers, $selectedPolicyDependents]) => {
+    return [...getPolicyMemberOptions($selectedPolicyMembers), ...getDependentOptions($selectedPolicyDependents)] || []
+  }
+)

@@ -1,10 +1,10 @@
 <script lang="ts">
 import DependentForm from './forms/DependentForm.svelte'
 import Modal from './mdc/Modal.svelte'
-import { AccountablePersonOptions, getDependentOptions, getPolicyMemberOptions } from 'data/accountablePersons'
-import { addDependent, dependentsByPolicyId, PolicyDependent } from 'data/dependents'
+import { AccountablePersonOptions, selectedAccountablePersonOptions } from 'data/accountablePersons'
+import { addDependent, dependentsByPolicyId, initialized, PolicyDependent } from 'data/dependents'
 import { policies, Policy, PolicyType } from 'data/policies'
-import { membersByPolicyId, PolicyMember } from 'data/policy-members'
+import { membersByPolicyId, PolicyMember, selectedPolicyMembers } from 'data/policy-members'
 import { Select } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
@@ -20,11 +20,10 @@ $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
 $: isHouseholdPolicy = policy.type === PolicyType.Household
 
 $: dependents = $dependentsByPolicyId[policyId] || []
-$: dependentOptions = getDependentOptions(dependents)
-$: policyMemberOptions = getPolicyMemberOptions($membersByPolicyId[policyId] || [])
 $: addPersonOption = createAddPersonOption(policy, $membersByPolicyId[policyId], dependents)
 
-$: accountablePersons = [...policyMemberOptions, ...dependentOptions, addPersonOption]
+$: accountablePersonsHasBeenPopulated = $initialized && $selectedPolicyMembers.length > 0
+$: accountablePersons = [...$selectedAccountablePersonOptions, addPersonOption]
 
 const createAddPersonOption = (
   policy: Policy,
@@ -86,13 +85,15 @@ const onModalFormCancel = (event: CustomEvent) => {
 </script>
 
 {#if showSelectBox}
-  <Select
-    label="Assigned To"
-    on:change={onAccountablePersonChange}
-    on:populated
-    options={accountablePersons}
-    {selectedID}
-  />
+  {#if accountablePersonsHasBeenPopulated}
+    <Select
+      label="Assigned To"
+      on:change={onAccountablePersonChange}
+      on:populated
+      options={accountablePersons}
+      {selectedID}
+    />
+  {/if}
 {/if}
 
 <Modal

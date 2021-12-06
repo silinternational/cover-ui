@@ -23,7 +23,7 @@ export type UpdatePolicyDependentRequestBody = {
   name: string
   relationship: /*PolicyDependentRelationship*/ 'Spouse' | 'Child'
 }
-
+export const initialized = writable(false)
 export const dependentsByPolicyId = writable<{ [policyId: string]: PolicyDependent[] }>({})
 export const selectedPolicyDependents = derived(
   [dependentsByPolicyId, selectedPolicyId],
@@ -123,4 +123,5 @@ export async function loadDependents(policyId: string): Promise<void> {
     data[policyId] = loadedDependents
     return data
   })
+  initialized.set(true)
 }

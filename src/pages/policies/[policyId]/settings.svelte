@@ -14,7 +14,7 @@ import { entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { policies, updatePolicy, Policy, PolicyType, loadPolicy } from 'data/policies'
 import { invitePolicyMember, loadMembersOfPolicy, PolicyMember, selectedPolicyMembers } from 'data/policy-members'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
-import { settingsPolicy, SETTINGS_PERSONAL } from 'helpers/routes'
+import { POLICIES, policyDetails, settingsPolicy, SETTINGS_PERSONAL } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
 import { Button, TextField, IconButton, Page, setNotice, Tooltip } from '@silintl/ui-components'
@@ -38,7 +38,14 @@ let modalData: PolicyDependent
 let showAddDependentModal = false
 let modalTitle = 'Add Person'
 
-let breadcrumbLinks = [{ name: 'Policy Settings', url: settingsPolicy(policyId) }]
+$: breadcrumbLinks = isAdmin($roleSelection)
+  ? [
+      { name: 'Policies', url: POLICIES },
+      { name: policy.name, url: policyDetails(policyId) },
+      { name: 'Policy Settings', url: settingsPolicy(policyId) },
+    ]
+  : [{ name: 'Policy Settings', url: settingsPolicy(policyId) }]
+
 metatags.title = formatPageTitle('Policy Settings')
 
 $: if (policyId) {

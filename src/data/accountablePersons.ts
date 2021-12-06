@@ -1,14 +1,12 @@
 import { PolicyDependent, selectedPolicyDependents } from './dependents'
 import { PolicyMember, selectedPolicyMembers } from './policy-members'
-import { derived, writable } from 'svelte/store'
+import { derived } from 'svelte/store'
 
 export type AccountablePersonOptions = {
   id: string
   name: string
   country?: string
 }
-
-export const initialized = writable(false)
 
 export const getPolicyMemberOptions = (policyMembers: PolicyMember[]): AccountablePersonOptions[] => {
   return policyMembers.map((policyMember) => ({

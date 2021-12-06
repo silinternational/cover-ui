@@ -1,0 +1,15 @@
+{
+  "files.trimTrailingWhitespace": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.rulers": [120],
+
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+  },
+
+  "[svelte]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true
+  }
+}

@@ -1,4 +1,54 @@
 // https://material.io/develop/web/docs/theming
+@use '@material/theme';
+@include theme.core-styles;
+
 :root {
-	--mdc-theme-primary: orange;
+  --mdc-theme-primary: #005cb9;
+  --mdc-theme-primary-variant: #5885b3;
+  --mdc-theme-primary-header-bg: #eef2fa;
+  --mdc-theme-secondary: #ffb619;
+  --mdc-theme-error: #c30000;
+  --mdc-theme-neutral: #6d7580;
+  --mdc-theme-neutral-variant: #394452;
+  --mdc-theme-neutral-bg: hsla(213, 22%, 94%, 1);
+  --mdc-theme-neutral-9: hsla(213, 29%, 97%, 1);
+  --mdc-theme-neutral-action: hsla(214, 11%, 37%, 1);
+  --progress-bar-color: #005cb9;
+  --mdc-theme-status-warning: #b95000;
+  --mdc-theme-status-warning-bg: #fff4ec;
+  --mdc-theme-status-error: #da1414;
+  --mdc-theme-status-error-bg: #feefef;
+  --mdc-theme-status-info: #2e5aac;
+  --mdc-theme-status-info-bg: #eef2fa;
+  --mdc-theme-status-success: hsla(134, 52%, 32%, 1);
+  --mdc-theme-status-success-bg: hsla(135, 50%, 95%, 1);
+}
+
+.mdc-theme--primary {
+  color: var(--mdc-theme-primary);
+}
+
+.mdc-theme--primary-variant {
+  color: var(--mdc-theme-primary-variant);
+}
+
+.mdc-theme--neutral {
+  color: var(--mdc-theme-neutral);
+}
+
+.mdc-theme--secondary-background {
+  background-color: var(--mdc-theme-secondary) !important;
+}
+
+.mdc-theme--neutral-background {
+  background-color: var(--mdc-theme-neutral-bg) !important;
+}
+
+.remove-button {
+  --mdc-theme-primary: var(--mdc-theme-neutral-action);
+}
+
+.error-button {
+  --mdc-theme-primary: var(--mdc-theme-status-error);
+  border: 2px solid !important;
 }

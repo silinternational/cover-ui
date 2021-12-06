@@ -1,8 +1,47 @@
-html, body {
-	height: 100%;
+html,
+body {
+  height: 100%;
 }
 
 body {
-	margin: 0;
-	box-sizing: border-box;
+  margin: 0;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+p {
+  line-height: 1.5;
+  max-width: 80ch;
+}
+
+/* TODO move this to ui-components */
+.m-0-auto {
+  margin: 0 auto !important;
+}
+
+.max-content-width {
+  width: max-content;
+}
+
+#main-drawer-content {
+  background: #fff;
+}
+
+.mw-500 {
+  min-width: 500px;
+}
+
+.break-word {
+  overflow-wrap: break-word;
+}
+
+.header {
+  font-weight: var(--mdc-typography-bold-font-weight);
+  font-size: 1.17em;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.required {
+  color: var(--mdc-theme-status-error);
 }

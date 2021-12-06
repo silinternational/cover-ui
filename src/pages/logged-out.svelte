@@ -1,17 +1,20 @@
-<script>
+<script lang="ts">
+import { logout } from '../authn'
 import user from '../authn/user'
-import { goto } from '@roxi/routify'
+import { Page } from '@silintl/ui-components'
 
-$: stillLoggedIn = !! $user.id
+$: stillLoggedIn = !!$user.id
 $: if (stillLoggedIn) {
-  setTimeout(() => $goto('home'), 3000)
+  setTimeout(() => logout(), 3000)
 }
 </script>
 
-<p>
-  {#if stillLoggedIn}
-    looks like you're still logged in, sending you home!
-  {:else}
-    logged out
-  {/if}
-</p>
+<Page>
+  <p>
+    {#if stillLoggedIn}
+      It looks like you're still logged in. Logging you out...
+    {:else}
+      You have successfully logged out.
+    {/if}
+  </p>
+</Page>

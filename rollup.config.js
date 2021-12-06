@@ -1,19 +1,21 @@
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import resolve from '@rollup/plugin-node-resolve'
+import includePaths from 'rollup-plugin-includepaths'
 import dotenv from 'rollup-plugin-dotenv'
 import livereload from 'rollup-plugin-livereload'
 import postcss from 'rollup-plugin-postcss'
 import svelte from 'rollup-plugin-svelte'
 import { terser } from 'rollup-plugin-terser'
-import { generateSW } from 'rollup-plugin-workbox'
 import routify from '@roxi/routify/plugins/rollup'
 import autoPreprocess from 'svelte-preprocess'
+import typescript from '@rollup/plugin-typescript'
+import nodePolyfills from 'rollup-plugin-polyfill-node'
 
 const production = !process.env.ROLLUP_WATCH
 
 export default {
-	input: 'src/main.js',
+	input: 'src/main.ts',
 	output: {
 		file: 'dist/bundle.js',
 		format: 'iife',
@@ -27,6 +29,9 @@ export default {
 			preprocess: autoPreprocess(),
 		}),
 
+		typescript({ sourceMap: !production }),
+		nodePolyfills(),
+
 		// If you have external dependencies installed from
 		// npm, you'll most likely need these plugins. In
 		// some cases you'll need additional configuration -
@@ -35,6 +40,12 @@ export default {
 		resolve({
 			browser: true,
 			dedupe: ['svelte'],
+		}),
+		includePaths({
+			include: {},
+			paths: ['src/components', 'src/data', 'src/helpers'],
+			external: [],
+			extensions: ['.js', '.ts']
 		}),
 		commonjs(),
 
@@ -57,17 +68,17 @@ export default {
 		production ? terser() : livereload('dist'),
 
 		// https://developers.google.com/web/tools/workbox/reference-docs/latest/module-workbox-build#.generateSW
-		generateSW({
-			additionalManifestEntries: [
-				'https://fonts.googleapis.com/icon?family=Material+Icons&display=swap', // request for this generated in `components/mdc/index.js`
-				'https://fonts.gstatic.com/s/materialicons/v53/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2', // this response might need to be tweaked periodically for the lastest version
-			],
-			globDirectory: 'dist',
-			globPatterns: ['**/*.{css,html,js,json,png}'],
-			navigateFallback: 'index.html',
-			offlineGoogleAnalytics: true,
-			swDest: 'dist/service-worker.js',
-		}),
+		// generateSW({
+		// 	additionalManifestEntries: [
+		// 		'https://fonts.googleapis.com/icon?family=Material+Icons&display=swap', // request for this generated in `components/mdc/index.js`
+		// 		'https://fonts.gstatic.com/s/materialicons/v53/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2', // this response might need to be tweaked periodically for the lastest version
+		// 	],
+		// 	globDirectory: 'dist',
+		// 	globPatterns: ['**/*.{css,html,js,json,png}'],
+		// 	navigateFallback: 'index.html',
+		// 	offlineGoogleAnalytics: true,
+		// 	swDest: 'dist/service-worker.js',
+		// }),
 	],
 	watch: {
 		clearScreen: false,

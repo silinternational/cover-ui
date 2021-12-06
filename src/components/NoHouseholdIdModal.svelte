@@ -7,8 +7,6 @@ import { createEventDispatcher } from 'svelte'
 
 export let open = false
 
-const policyData: UpdatePolicyRequestBody = {}
-
 let title = 'Missing information'
 let hasClosed: boolean = false
 
@@ -26,8 +24,6 @@ const handleDialog = (event: CustomEvent) => {
     dispatch('closed', { choice })
   }
 }
-
-const isIdValid = (id: string): boolean => /^[0-9]+$/.test(id)
 </script>
 
 <Dialog.Alert {open} {buttons} defaultAction="cancel" {title} on:chosen={handleDialog} on:closed={handleDialog}>

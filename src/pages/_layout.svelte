@@ -1,19 +1,10 @@
 <script lang="ts">
 import user, { getDefaultPolicyId, isAdmin } from '../authn/user'
 import { AppDrawer } from 'components'
-import { loadDependents } from 'data/dependents'
 import { initialized as policiesInitialized, loadPolicies } from 'data/policies'
-import { loadMembersOfPolicy } from 'data/policy-members'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import * as routes from 'helpers/routes'
 import { goto, params, route } from '@roxi/routify'
-import { onMount } from 'svelte'
-
-onMount(() => {
-  //TODO find a better solution. These 2 lines prevent SelectAccountablePerson from initializing without options.
-  loadMembersOfPolicy($selectedPolicyId)
-  loadDependents($selectedPolicyId)
-})
 
 // polcies were not being loaded on initial login, once selectedPolicyId exists they load properly
 $: $policiesInitialized || ($user.policies?.length > 0 && loadPolicies())

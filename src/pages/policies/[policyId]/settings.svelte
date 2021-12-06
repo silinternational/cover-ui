@@ -1,5 +1,5 @@
 <script lang="ts">
-import user from '../../../authn/user'
+import user, { isAdmin } from '../../../authn/user'
 import { throwError } from '../../../error'
 import { Breadcrumb, Description, SearchableSelect, Modal, DependentForm } from 'components'
 import type { DependentFormData } from 'components/forms/DependentForm.svelte'
@@ -13,7 +13,7 @@ import {
 import { entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { policies, updatePolicy, Policy, PolicyType, loadPolicy } from 'data/policies'
 import { invitePolicyMember, loadMembersOfPolicy, PolicyMember, selectedPolicyMembers } from 'data/policy-members'
-import { selectedPolicyId } from 'data/role-policy-selection'
+import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { settingsPolicy, SETTINGS_PERSONAL } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
@@ -235,7 +235,7 @@ p {
 
 <Page>
   <Breadcrumb links={breadcrumbLinks} />
-  {#if policy.type === PolicyType.Household}
+  {#if policy.type === PolicyType.Household && isAdmin($roleSelection)}
     <p>
       <span class="header">Household ID<span class="required">*</span></span>
       <TextField placeholder={'1234567'} bind:value={householdId} on:blur={updateHouseholdId} />

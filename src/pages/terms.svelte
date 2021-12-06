@@ -1,4 +1,6 @@
 <script lang="ts">
+import { COVER_EMAIL } from 'components/const'
+import { COVER_EMAIL_HREF } from 'helpers/routes'
 import { Page } from '@silintl/ui-components'
 </script>
 
@@ -28,7 +30,7 @@ td > p {
     liability for the Cover service.
   </p>
   <p>
-    You may contact us at any time by emailing <a href="mailto:cover@sil.org">cover@sil.org</a>.
+    You may contact us at any time by emailing <a href={COVER_EMAIL_HREF}>{COVER_EMAIL}</a>.
   </p>
 
   <h2>Table of Contents</h2>
@@ -388,7 +390,7 @@ td > p {
     With all that scary stuff said, we do care deeply about you, your data, and any information we store about you. As a
     team, we care deeply about security and take every reasonable effort to ensure the service is stable, secure, and
     available when you need it. If you believe we are falling short in any of these areas, please let us know:
-    <span><a href="mailto:cover@sil.org">cover@sil.org</a></span>.
+    <span><a href={COVER_EMAIL_HREF}>{COVER_EMAIL}</a></span>.
   </p>
   <h2 id="limitation-of-liability">Limitation of Liability</h2>
   <p>

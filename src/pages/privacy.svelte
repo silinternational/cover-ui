@@ -1,4 +1,6 @@
 <script>
+import { COVER_EMAIL } from 'components/const'
+import { COVER_EMAIL_HREF } from 'helpers/routes'
 import { Page } from '@silintl/ui-components'
 </script>
 
@@ -205,9 +207,9 @@ td > p {
   </table>
   <h2 id="access-or-removal">How you can access or request removal of information about you</h2>
   <p>
-    You may send an email to <a href="mailto:cover@sil.org">cover@sil.org</a> to request access to the information we have
-    about you, or to request that we delete the information we have about you. In some cases, removal of your information
-    may not be possible due to financial obligations or the service in general.
+    You may send an email to <a href={COVER_EMAIL_HREF}>{COVER_EMAIL}</a> to request access to the information we have about
+    you, or to request that we delete the information we have about you. In some cases, removal of your information may not
+    be possible due to financial obligations or the service in general.
   </p>
   <h2 id="cookies-and-tracking">How we use cookies and tracking</h2>
   <p>
@@ -269,7 +271,7 @@ td > p {
   <p>
     We may also reach out to you personally if we notice you have encountered an error with the system or if we&#39;d
     like to ask for your participation in trying new features or giving us feedback about Cover. These emails will be
-    sent from <a href="mailto:cover@sil.org">cover@sil.org</a>.
+    sent from <a href={COVER_EMAIL_HREF}>{COVER_EMAIL}</a>.
   </p>
   <h2 id="changes-to-our-privacy-policy">Changes to our Privacy Policy</h2>
   <p>
@@ -280,6 +282,6 @@ td > p {
   </p>
   <h2 id="contacting-us">Contacting us</h2>
   <p>
-    You may contact us at any time for any reason by emailing <a href="mailto:cover@sil.org">cover@sil.org</a>.
+    You may contact us at any time for any reason by emailing <a href={COVER_EMAIL_HREF}>{COVER_EMAIL}</a>.
   </p>
 </Page>

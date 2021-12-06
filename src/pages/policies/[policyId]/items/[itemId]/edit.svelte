@@ -26,8 +26,8 @@ export let policyId = $selectedPolicyId
 let isCheckingOut: boolean = false
 
 onMount(() => {
-  loadMembersOfPolicy(policyId)
   loadDependents(policyId)
+  loadMembersOfPolicy(policyId)
   loadItems(policyId)
 })
 

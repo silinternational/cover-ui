@@ -18,8 +18,8 @@ let item: PolicyItem
 let open = false
 
 onMount(() => {
-  loadMembersOfPolicy(policyId)
   loadDependents(policyId)
+  loadMembersOfPolicy(policyId)
 })
 
 $: metatags.title = formatPageTitle('Items > New')

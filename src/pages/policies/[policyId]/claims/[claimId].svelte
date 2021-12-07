@@ -100,7 +100,9 @@ $: needsReplaceReceipt = needsReceipt && payoutOption === PayoutOption.Replaceme
 $: filePurpose = getFilePurpose(claimItem, needsReceipt) as ClaimFilePurpose
 $: noFilesUploaded = !isFileUploadedByPurpose(filePurpose, claimFiles)
 $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType)
-$: uploadLabelForButton = getUploadLabel(claimItem, needsReceipt, receiptType, false)
+$: uploadLabelForButton = needsFile
+  ? `upload ${getUploadLabel(claimItem, needsReceipt, receiptType, false)}`
+  : 'submit changes'
 $: showUploadButton = [ClaimStatus.Receipt, ClaimStatus.Revision].includes(claimStatus) && !isAdmin
 $: moneyFormLabel = needsRepairReceipt ? 'Actual cost of repair' : 'Actual cost of replacement'
 $: receiptType = needsRepairReceipt ? ReceiptType.repair : ReceiptType.replacement
@@ -145,8 +147,10 @@ const onDenyClaim = async (event: CustomEvent<string>) => {
 }
 
 const onSubmit = async () => {
+  const didNeedFile = needsFile
+  const oldUploadLabel = uploadLabel
   await submitClaim(claimId)
-  setNotice('Added replacement cost and receipt')
+  setNotice(didNeedFile ? `Added replacement cost and ${oldUploadLabel}` : 'Submitted changes')
 }
 
 const setInitialValues = (claimItem: ClaimItem) => {
@@ -351,7 +355,7 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
       <FilePreview class="pointer w-50" previews={claimFiles} {isMemberOfPolicy} on:preview={onPreview} />
 
       {#if showUploadButton}
-        <Button raised disabled={noFilesUploaded} on:click={onSubmit}>Upload {uploadLabelForButton}</Button>
+        <Button raised disabled={noFilesUploaded} on:click={onSubmit}>{uploadLabelForButton}</Button>
       {/if}
       <br />
     </Row>

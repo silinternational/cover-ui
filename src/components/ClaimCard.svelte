@@ -26,7 +26,7 @@ $: needsRepairReceipt = needsReceipt && payoutOption === PayoutOption.Repair
 $: receiptType = needsRepairReceipt ? ReceiptType.repair : ReceiptType.replacement
 $: needsReceipt = claim.status === ClaimStatus.Receipt
 $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType)
-$: showSecondBanner = needsReceipt || isEvidenceNeeded(claimItem, claim.status)
+$: showSecondBanner = !isAdmin && (needsReceipt || isEvidenceNeeded(claimItem, claim.status))
 
 const gotoClaim = () => dispatch('goto-claim', claim)
 </script>

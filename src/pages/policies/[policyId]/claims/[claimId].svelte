@@ -252,11 +252,14 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
     </Row>
     <Row cols="3">
       <h2 class="break-word my-1">{item.name || ''}</h2>
+
       <b>Covered value</b>
       <div>{formatMoney(item.coverage_amount)}</div>
       <br />
+
       <b>{item.accountable_person?.name || ''}</b>
       <br />
+
       <div class="left-detail">
         <b>Household ID</b>
         <div>{householdId}</div>
@@ -290,6 +293,13 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
       <p class="break-word">
         {claim.incident_description || ''}
       </p>
+      <div>
+        <h2>Resolution</h2>
+        <h3>{payoutOption}</h3>
+        {#if payoutOption == PayoutOption.Replacement}
+          <p>Payout is the item’s covered value or replacement cost, whichever is less, minus a 5% deductible.</p>
+        {/if}
+      </div>
       <p>
         <b>Covered value</b><br />
         {formatMoney(item.coverage_amount)}

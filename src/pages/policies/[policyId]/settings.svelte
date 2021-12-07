@@ -1,5 +1,5 @@
 <script lang="ts">
-import user from '../../../authn/user'
+import user, { isAdmin } from '../../../authn/user'
 import { throwError } from '../../../error'
 import { Breadcrumb, Description, SearchableSelect, Modal, DependentForm } from 'components'
 import type { DependentFormData } from 'components/forms/DependentForm.svelte'
@@ -13,8 +13,8 @@ import {
 import { entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { policies, updatePolicy, Policy, PolicyType, loadPolicy } from 'data/policies'
 import { invitePolicyMember, loadMembersOfPolicy, PolicyMember, selectedPolicyMembers } from 'data/policy-members'
-import { selectedPolicyId } from 'data/role-policy-selection'
-import { settingsPolicy, SETTINGS_PERSONAL } from 'helpers/routes'
+import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
+import { POLICIES, policyDetails, settingsPolicy, SETTINGS_PERSONAL } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
 import { Button, TextField, IconButton, Page, setNotice, Tooltip } from '@silintl/ui-components'
@@ -38,7 +38,14 @@ let modalData: PolicyDependent
 let showAddDependentModal = false
 let modalTitle = 'Add Person'
 
-let breadcrumbLinks = [{ name: 'Policy Settings', url: settingsPolicy(policyId) }]
+$: breadcrumbLinks = isAdmin($roleSelection)
+  ? [
+      { name: 'Policies', url: POLICIES },
+      { name: policy.name, url: policyDetails(policyId) },
+      { name: 'Policy Settings', url: settingsPolicy(policyId) },
+    ]
+  : [{ name: 'Policy Settings', url: settingsPolicy(policyId) }]
+
 metatags.title = formatPageTitle('Policy Settings')
 
 $: if (policyId) {
@@ -235,7 +242,7 @@ p {
 
 <Page>
   <Breadcrumb links={breadcrumbLinks} />
-  {#if policy.type === PolicyType.Household}
+  {#if policy.type === PolicyType.Household && isAdmin($roleSelection)}
     <p>
       <span class="header">Household ID<span class="required">*</span></span>
       <TextField placeholder={'1234567'} bind:value={householdId} on:blur={updateHouseholdId} />

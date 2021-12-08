@@ -9,7 +9,7 @@ export type State = {
 }
 export type SecondaryClaimStatus = 'ReceiptSecondary' | 'DraftSecondary'
 
-export const approved = {
+export const approved: State = {
   icon: 'paid',
   color: '--mdc-theme-status-success',
   bgColor: '--mdc-theme-status-success-bg',

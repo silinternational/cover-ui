@@ -7,7 +7,9 @@ export type State = {
   bgColor: string
   title: string
 }
-export const approved = {
+export type SecondaryClaimStatus = 'ReceiptSecondary' | 'DraftSecondary'
+
+export const approved: State = {
   icon: 'paid',
   color: '--mdc-theme-status-success',
   bgColor: '--mdc-theme-status-success-bg',
@@ -94,7 +96,7 @@ export const adminItemStates: { [stateName: string]: State } = {
   Pending: { ...needsReview, title: 'Needs item coverage review' },
 }
 
-export const getClaimState = (status: ClaimStatus, isAdmin = false): State => {
+export const getClaimState = (status: ClaimStatus | SecondaryClaimStatus, isAdmin = false): State => {
   if (isAdmin) {
     adminClaimStates[status] === undefined &&
       console.error('No such state (for claim status):', status, Object.keys(adminClaimStates))

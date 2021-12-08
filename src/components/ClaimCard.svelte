@@ -4,7 +4,7 @@ import ClaimBanner from './banners/ClaimBanner.svelte'
 import ClaimCardBanner from './ClaimCardBanner.svelte'
 import { Claim, ClaimItem, ClaimStatus, PayoutOption, ReceiptType } from 'data/claims'
 import type { PolicyItem } from 'data/items'
-import { getClaimState, State } from 'data/states'
+import { getClaimState, SecondaryClaimStatus, State } from 'data/states'
 import { Card, Button } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 import { differenceInSeconds, formatDistanceToNow } from 'date-fns'
@@ -26,7 +26,8 @@ $: needsRepairReceipt = needsReceipt && payoutOption === PayoutOption.Repair
 $: receiptType = needsRepairReceipt ? ReceiptType.repair : ReceiptType.replacement
 $: needsReceipt = claim.status === ClaimStatus.Receipt
 $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType)
-$: showSecondBanner = needsReceipt || isEvidenceNeeded(claimItem, claim.status)
+$: showNeedsFileBanner = !isAdmin && (needsReceipt || isEvidenceNeeded(claimItem, claim.status))
+$: secondaryClaimStatus = `${claim.status}Secondary` as SecondaryClaimStatus
 
 const gotoClaim = () => dispatch('goto-claim', claim)
 </script>
@@ -57,14 +58,14 @@ const gotoClaim = () => dispatch('goto-claim', claim)
 
 <Card noPadding class="py-0 h-100 {$$props.class}">
   <ClaimCardBanner
-    class={showSecondBanner ? 'mb-0 pb-4px pt-6px' : 'mb-2'}
+    class={showNeedsFileBanner ? 'mb-0 pb-4px pt-6px' : 'mb-2'}
     {statusReason}
     {state}
     {receiptType}
     {showRevisionMessage}
   />
-  {#if showSecondBanner}
-    <ClaimBanner class="mb-1" claimStatus={`${claim.status}Secondary`}>
+  {#if showNeedsFileBanner}
+    <ClaimBanner class="mb-1" claimStatus={secondaryClaimStatus}>
       Upload {uploadLabel} to get reimbursed.
     </ClaimBanner>
   {/if}

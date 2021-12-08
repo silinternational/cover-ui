@@ -45,43 +45,6 @@ export const isUnrepairableOrTooExpensive = (
   return repairCostIsTooHigh
 }
 
-const computePayout = (...values: number[]) => {
-  const filteredValues = [...values]?.filter((value) => value !== undefined)
-  return Math.min(...filteredValues) * (1 - DEDUCTIBLE)
-}
-
-const computeRepairMaxPayout = (claimItem: ClaimItem, coverageAmount: number) =>
-  computePayout(claimItem.repair_actual || claimItem.repair_estimate, coverageAmount, claimItem.fmv)
-
-const computeReplaceMaxPayout = (claimItem: ClaimItem, coverageAmount: number) =>
-  computePayout(claimItem.replace_estimate, coverageAmount)
-
-const computeCashMaxPayout = (claimItem: ClaimItem, coverageAmount: number) =>
-  computePayout(coverageAmount, claimItem.fmv)
-
-export const determineMaxPayout = (
-  payoutOption: PayoutOption,
-  claimItem: ClaimItem,
-  coverageAmount: number
-): number | undefined => {
-  switch (payoutOption) {
-    case PayoutOption.Repair:
-      return computeRepairMaxPayout(claimItem, coverageAmount)
-      break
-    case PayoutOption.Replacement:
-      return computeReplaceMaxPayout(claimItem, coverageAmount)
-      break
-    case PayoutOption.FMV:
-      return computeCashMaxPayout(claimItem, coverageAmount)
-      break
-    case PayoutOption.FixedFraction:
-      return (coverageAmount * 2) / 3
-      break
-    default:
-      return undefined
-  }
-}
-
 export const isEvidenceNeeded = (claimItem: ClaimItem, claimStatus: ClaimStatus): boolean => {
   const willNeedEvidence = claimItem.fmv > 0 || claimItem.repair_estimate > 0
   const repairCostIsNotTooHigh = !isRepairCostTooHigh(claimItem.repair_estimate, claimItem.fmv)

@@ -1,7 +1,6 @@
 import type { ClaimIncidentType } from 'data/claim-incident-types'
 import { PayoutOption, ClaimItem, ClaimStatus, ClaimFilePurpose } from 'data/claims'
 
-export const DEDUCTIBLE = 0.05
 export const LOSS_REASON_EVACUATION = 'Evacuation'
 
 export const isFairMarketValueNeeded = (isRepairable?: boolean, payoutOption?: string): boolean => {

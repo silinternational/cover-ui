@@ -3,8 +3,8 @@ import { generateRandomID } from '@silintl/ui-components/random'
 import { createEventDispatcher } from 'svelte'
 
 export let options = {}
-export let choice: string
-export let placeholder: string
+export let choice = ''
+export let placeholder = ''
 export let padding = '12px'
 export let width = '232px'
 

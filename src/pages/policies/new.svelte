@@ -22,6 +22,7 @@ $: metatags.title = formatPageTitle('New Team Policy')
 $: $entityCodes.forEach((code) => {
   entityOptions[code.name] = code.code
 })
+$: entityCodeName = $entityCodes.find((code) => code.code === entityCode)?.name || ''
 const onCreatePolicy = async () => {
   const formData = {
     account,
@@ -52,12 +53,7 @@ const validateForm = (formData: any) => {
 
   <p>
     <span class="header">Entity code<span class="required">*</span></span>
-    <SearchableSelect
-      options={entityOptions}
-      choice={entityCode}
-      placeholder="ABC"
-      on:chosen={(e) => (entityCode = e.detail)}
-    />
+    <SearchableSelect options={entityOptions} choice={entityCodeName} on:chosen={(e) => (entityCode = e.detail)} />
   </p>
 
   <p>

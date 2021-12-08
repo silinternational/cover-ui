@@ -146,7 +146,8 @@ const onSubmitClaim = (event: Event) => {
 
 const onSaveForLater = (event: Event) => {
   event.preventDefault()
-  validateForm()
+  assertHas(lossReason, 'Please select a reason for loss or damage')
+  assertHas(situationDescription, 'Please describe the situation')
   dispatch('save-for-later', getFormData())
 }
 
@@ -279,6 +280,7 @@ const unSetReplaceEstimate = () => {
     <p>
       {#if needsEvidence}
         {#if canContinueToEvidence}
+          <Button on:click={onSaveForLater} outlined>Save For Later</Button>
           <Button on:click={onSaveForLater} raised>Continue</Button>
         {:else}
           <Button on:click={onSaveForLater} outlined>Save For Later</Button>

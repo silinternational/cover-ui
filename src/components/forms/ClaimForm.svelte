@@ -95,6 +95,13 @@ $: !isRepairable && unSetRepairEstimate()
 $: needsEvidence = !unrepairableOrTooExpensive || payoutOption === PayoutOption.FMV
 $: needsPayoutOption = !(isRepairable || isEvacuation) || repairCostIsTooHigh
 $: canContinueToEvidence = (!!repairEstimateUSD && !!fairMarketValueUSD) || (!!fairMarketValueUSD && !isRepairable)
+$: saveButtonIsDisable = !situationDescription || !lossReason || !repairableSelection
+$: submitIsDisabled =
+  saveButtonIsDisable ||
+  (potentiallyRepairable && !repairableSelection) ||
+  (isRepairable && (!repairEstimateUSD || !fairMarketValueUSD)) ||
+  (needsPayoutOption && !payoutOption) ||
+  (payoutOption === PayoutOption.Replacement && !replaceEstimateUSD)
 
 // Calculate dynamic options for radio-button prompts.
 $: lossReasonOptions = $claimIncidentTypes.map(({ name, description }) => ({ label: name, value: name, description }))
@@ -146,8 +153,6 @@ const onSubmitClaim = (event: Event) => {
 
 const onSaveForLater = (event: Event) => {
   event.preventDefault()
-  assertHas(lossReason, 'Please select a reason for loss or damage')
-  assertHas(situationDescription, 'Please describe the situation')
   dispatch('save-for-later', getFormData())
 }
 
@@ -279,15 +284,11 @@ const unSetReplaceEstimate = () => {
     <!--TODO: add evacuation amount when items is done (covered_value*(2/3))-->
     <p>
       {#if needsEvidence}
-        {#if canContinueToEvidence}
-          <Button on:click={onSaveForLater} outlined>Save For Later</Button>
-          <Button on:click={onSaveForLater} raised>Continue</Button>
-        {:else}
-          <Button on:click={onSaveForLater} outlined>Save For Later</Button>
-        {/if}
+        <Button on:click={onSaveForLater} disabled={saveButtonIsDisable} outlined>Save For Later</Button>
+        <Button on:click={onSaveForLater} disabled={!canContinueToEvidence} raised>Continue</Button>
       {:else}
-        <Button on:click={onSaveForLater} outlined>Save For Later</Button>
-        <Button on:click={onSubmitClaim} raised>Submit Claim</Button>
+        <Button on:click={onSaveForLater} disabled={saveButtonIsDisable} outlined>Save For Later</Button>
+        <Button on:click={onSubmitClaim} disabled={submitIsDisabled} raised>Submit Claim</Button>
       {/if}
     </p>
   </Form>

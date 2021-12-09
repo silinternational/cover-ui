@@ -37,6 +37,7 @@ input {
       value={option.value}
       checked={isSelected(option)}
       on:input={onInput}
+      on:change
     />
     <label for={optionId(option)}>
       {option.label}

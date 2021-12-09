@@ -49,7 +49,7 @@ const payoutOptions = [
 let lostDate = todayDateString
 let lossReason: string
 let situationDescription = ''
-let isRepairable: boolean | undefined
+let isRepairable: boolean | null | undefined
 let payoutOption: PayoutOption | undefined
 
 // Set default derived (or intermediate) values.
@@ -95,7 +95,7 @@ $: !isRepairable && unSetRepairEstimate()
 $: needsEvidence = !unrepairableOrTooExpensive || payoutOption === PayoutOption.FMV
 $: needsPayoutOption = !(isRepairable || isEvacuation) || repairCostIsTooHigh
 $: canContinueToEvidence = (!!repairEstimateUSD && !!fairMarketValueUSD) || (!!fairMarketValueUSD && !isRepairable)
-$: saveButtonIsDisable = !situationDescription || !lossReason || !repairableSelection
+$: saveButtonIsDisable = !situationDescription || !lossReason
 $: submitIsDisabled =
   saveButtonIsDisable ||
   (potentiallyRepairable && !repairableSelection) ||
@@ -114,7 +114,7 @@ const calculateIsRepairable = (potentiallyRepairable: boolean, repairableSelecti
     return false
   }
   if (!repairableSelection) {
-    return undefined
+    return null
   }
   return repairableSelection === 'repairable'
 }
@@ -180,7 +180,7 @@ const setInitialValues = (claim: Claim, claimItem: ClaimItem) => {
   }
   lossReason = claim.incident_type || lossReason
   situationDescription = claim.incident_description || situationDescription
-  if (claimItem.is_repairable !== undefined) {
+  if (claimItem.is_repairable !== null && claimItem.is_repairable !== undefined) {
     repairableSelection = claimItem.is_repairable ? 'repairable' : 'not_repairable'
   }
 

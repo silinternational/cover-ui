@@ -4,7 +4,7 @@ import { PayoutOption, ClaimItem, ClaimStatus, ClaimFilePurpose } from 'data/cla
 export const DEDUCTIBLE = 0.05
 export const LOSS_REASON_EVACUATION = 'Evacuation'
 
-export const isFairMarketValueNeeded = (isRepairable?: boolean, payoutOption?: string): boolean => {
+export const isFairMarketValueNeeded = (isRepairable?: boolean | null, payoutOption?: string): boolean => {
   return isRepairable || payoutOption === PayoutOption.FMV
 }
 
@@ -31,14 +31,14 @@ export const isRepairCostTooHigh = (repairEstimateUSD?: number, fairMarketValueU
 }
 
 export const isUnrepairableOrTooExpensive = (
-  isRepairable?: boolean,
+  isRepairable?: boolean | null,
   repairCostIsTooHigh?: boolean
 ): boolean | undefined => {
   if (isRepairable === false) {
     return true
   }
 
-  if (isRepairable === undefined || repairCostIsTooHigh === undefined) {
+  if ([null, undefined].includes(isRepairable) || repairCostIsTooHigh === undefined) {
     return undefined
   }
 

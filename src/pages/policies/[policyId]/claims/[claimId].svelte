@@ -103,6 +103,7 @@ $: moneyFormLabel = needsRepairReceipt ? 'Actual cost of repair' : 'Actual cost 
 $: receiptType = needsRepairReceipt ? ReceiptType.repair : ReceiptType.replacement
 $: claimFiles = claim.claim_files || ([] as ClaimFile[])
 $: maximumPayout = claim.total_payout || 0
+$: maximumPayoutLabel = claimStatus !== ClaimStatus.Paid ? 'Maximum payout (if approved)' : 'Maximum payout'
 
 // Dynamic breadcrumbs data:
 $: item.name && claim.reference_number && (claimName = `${item.name} (${claim.reference_number})`)
@@ -304,7 +305,7 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
         {formatMoney(item.coverage_amount)}
       </p>
       <p>
-        <b>Maximum payout (if approved)</b><br />
+        <b>{maximumPayoutLabel}</b><br />
         {formatMoney(maximumPayout)}
       </p>
 

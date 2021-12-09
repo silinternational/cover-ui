@@ -24,14 +24,15 @@ metatags.title = formatPageTitle('Personal Settings')
 
 $: country = $user.country || ''
 $: $user.id && setEmail()
-$: notification_email = email_override ? NOTIFICATION_OPTION_CUSTOM : NOTIFICATION_OPTION_DEFAULT
 $: notificationOptions = [
   { label: 'Default email: ' + $user.email, value: NOTIFICATION_OPTION_DEFAULT },
   { label: 'Custom email', value: NOTIFICATION_OPTION_CUSTOM },
 ]
 
 const setEmail = () => {
-  email_override = $user.email_override || ''
+  if ($user.email_override !== $user.email) {
+    email_override = $user.email_override || ''
+  }
   notification_email = email_override ? NOTIFICATION_OPTION_CUSTOM : NOTIFICATION_OPTION_DEFAULT
 }
 
@@ -43,6 +44,16 @@ const updateCustomEmail = async () => {
     country,
   })
   setNotice('Your notification email has been saved')
+}
+
+const updateEmailSelection = async () => {
+  if (notification_email === NOTIFICATION_OPTION_DEFAULT) {
+    email_override = ''
+    await updateUser({
+      email_override: $user.email,
+      country,
+    })
+  }
 }
 
 const updateCountry = async (event: CustomEvent) => {
@@ -126,7 +137,12 @@ p {
 
   <p>
     <span class="header">Notification email</span>
-    <RadioOptions name="notificationEmail" options={notificationOptions} bind:value={notification_email} />
+    <RadioOptions
+      name="notificationEmail"
+      options={notificationOptions}
+      bind:value={notification_email}
+      on:change={updateEmailSelection}
+    />
   </p>
   {#if notification_email === NOTIFICATION_OPTION_CUSTOM}
     <TextField placeholder={'Custom email'} bind:value={email_override} on:blur={updateCustomEmail} />

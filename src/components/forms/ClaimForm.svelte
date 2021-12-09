@@ -283,11 +283,10 @@ const unSetReplaceEstimate = () => {
     {/if}
     <!--TODO: add evacuation amount when items is done (covered_value*(2/3))-->
     <p>
+      <Button on:click={onSaveForLater} disabled={saveButtonIsDisabled} outlined>Save For Later</Button>
       {#if needsEvidence}
-        <Button on:click={onSaveForLater} disabled={saveButtonIsDisabled} outlined>Save For Later</Button>
         <Button on:click={onSaveForLater} disabled={!canContinueToEvidence} raised>Continue</Button>
       {:else}
-        <Button on:click={onSaveForLater} disabled={saveButtonIsDisabled} outlined>Save For Later</Button>
         <Button on:click={onSubmitClaim} disabled={submitIsDisabled} raised>Submit Claim</Button>
       {/if}
     </p>

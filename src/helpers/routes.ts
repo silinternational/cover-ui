@@ -4,7 +4,6 @@ import qs from 'qs'
 export const ROOT = '/'
 export const HOME = '/home'
 export const LOGOUT = '/logout'
-export const LOGGEDOUT = '/logged-out'
 
 export const ADMIN_HOME = '/admin/home'
 export const ADMIN_POLICIES = '/admin/policies'

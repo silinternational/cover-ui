@@ -6,19 +6,15 @@ import './mdc/_index.scss'
 import t from '../i18n'
 import FreshdeskWidget from './FreshdeskWidget.svelte'
 import { parse, stringify } from 'qs'
-import { afterPageLoad, route, Router } from '@roxi/routify'
+import { afterPageLoad, Router } from '@roxi/routify'
 import { routes } from '../../.routify/routes'
 import { Snackbar } from '@silintl/ui-components'
-import { setLastPath } from '../authn/session'
 
 // If we've loaded the user, but their policy wasn't quite ready, try again.
 $: if (!($user.policies?.length > 0) && isCustomer($user.app_role)) {
   //TODO remove this when fixed on the backend
   setTimeout(() => loadUser(true), 5000)
 }
-
-//This can make it hard to reload the page after an error without experienceing the same error.
-$: $route && $user && setLastPath(location.pathname)
 
 // added because of this:  https://github.com/sveltech/routify/issues/201
 const queryHandler = {

@@ -254,7 +254,7 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
       <h2 class="break-word my-1">{item.name || ''}</h2>
 
       <b>Covered value</b>
-      <div>{formatMoney(item.coverage_amount)}</div>
+      <div>{formatMoney(claimItem.coverage_amount)}</div>
       <br />
 
       <b>{item.accountable_person?.name || ''}</b>
@@ -302,7 +302,7 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
       </div>
       <p>
         <b>Covered value</b><br />
-        {formatMoney(item.coverage_amount)}
+        {formatMoney(claimItem.coverage_amount)}
       </p>
       <p>
         <b>{payoutLabel}</b><br />

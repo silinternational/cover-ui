@@ -59,6 +59,7 @@ export type ClaimFile = {
 
 export type ClaimItem = {
   claim_id: string
+  coverage_amount: number /*cents*/
   created_at: string /*Date*/
   fmv: number
   id: string

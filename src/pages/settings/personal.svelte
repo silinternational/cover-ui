@@ -14,19 +14,26 @@ import 'croppie/croppie.css'
 const NOTIFICATION_OPTION_DEFAULT = 'default_email'
 const NOTIFICATION_OPTION_CUSTOM = 'custom_email'
 
+let email_override: string
+let notification_email: string
 let uploading = false
-let notification_email = $user.email_override ? NOTIFICATION_OPTION_CUSTOM : NOTIFICATION_OPTION_DEFAULT
-let email_override = $user.email_override || ''
 let croppie: Croppie
 let croppieContainer: HTMLDivElement
 let breadcrumbLinks = [{ name: 'Personal Settings', url: SETTINGS_PERSONAL }]
 metatags.title = formatPageTitle('Personal Settings')
 
 $: country = $user.country || ''
+$: $user.id && setEmail()
+$: notification_email = email_override ? NOTIFICATION_OPTION_CUSTOM : NOTIFICATION_OPTION_DEFAULT
 $: notificationOptions = [
   { label: 'Default email: ' + $user.email, value: NOTIFICATION_OPTION_DEFAULT },
   { label: 'Custom email', value: NOTIFICATION_OPTION_CUSTOM },
 ]
+
+const setEmail = () => {
+  email_override = $user.email_override || ''
+  notification_email = email_override ? NOTIFICATION_OPTION_CUSTOM : NOTIFICATION_OPTION_DEFAULT
+}
 
 const updateCustomEmail = async () => {
   assertEmailAddress(email_override, 'Please enter a valid email address')

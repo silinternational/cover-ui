@@ -4,7 +4,7 @@ import { PayoutOption, ClaimItem, ClaimStatus, ClaimFilePurpose } from 'data/cla
 export const DEDUCTIBLE = 0.05
 export const LOSS_REASON_EVACUATION = 'Evacuation'
 
-export const isFairMarketValueNeeded = (isRepairable?: boolean | null, payoutOption?: string): boolean => {
+export const isFairMarketValueNeeded = (isRepairable?: boolean, payoutOption?: string): boolean => {
   return isRepairable || payoutOption === PayoutOption.FMV
 }
 

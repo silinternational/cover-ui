@@ -5,11 +5,9 @@ import { initialized as policiesInitialized, loadPolicies } from 'data/policies'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import * as routes from 'helpers/routes'
 import { goto, params, route } from '@roxi/routify'
-import { afterUpdate, onMount } from 'svelte'
+import { afterUpdate } from 'svelte'
 
 let userIsAnonymous: boolean
-
-onMount(() => loadUser())
 
 //has to set this afterUpdate rather than in a reactive statement bc Tooltip in Drawer was throwing an
 afterUpdate(() => {

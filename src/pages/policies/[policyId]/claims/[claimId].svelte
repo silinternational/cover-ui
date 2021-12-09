@@ -1,11 +1,6 @@
 <script lang="ts">
 import user, { UserAppRole } from '../../../../authn/user'
-import {
-  determineMaxPayout,
-  getFilePurpose,
-  getUploadLabel,
-  isEvidenceNeeded,
-} from '../../../../business-rules/claim-payout-amount'
+import { getFilePurpose, getUploadLabel, isEvidenceNeeded } from '../../../../business-rules/claim-payout-amount'
 import {
   Banner,
   Breadcrumb,
@@ -107,7 +102,8 @@ $: showUploadButton = [ClaimStatus.Receipt, ClaimStatus.Revision].includes(claim
 $: moneyFormLabel = needsRepairReceipt ? 'Actual cost of repair' : 'Actual cost of replacement'
 $: receiptType = needsRepairReceipt ? ReceiptType.repair : ReceiptType.replacement
 $: claimFiles = claim.claim_files || ([] as ClaimFile[])
-$: maximumPayout = determineMaxPayout(payoutOption, claimItem, claimItem.coverage_amount)
+$: maximumPayout = claim.total_payout || 0
+$: payoutLabel = claimStatus !== ClaimStatus.Paid ? 'Maximum payout (if approved)' : 'Payout'
 
 // Dynamic breadcrumbs data:
 $: item.name && claim.reference_number && (claimName = `${item.name} (${claim.reference_number})`)
@@ -309,7 +305,7 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
         {formatMoney(claimItem.coverage_amount)}
       </p>
       <p>
-        <b>Maximum payout (if approved)</b><br />
+        <b>{payoutLabel}</b><br />
         {formatMoney(maximumPayout)}
       </p>
 

@@ -7,6 +7,10 @@ footer {
   height: 150px;
   display: flex;
   justify-content: center;
+  align-items: end;
+}
+a {
+  padding-bottom: 2rem;
 }
 </style>
 

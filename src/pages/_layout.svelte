@@ -9,7 +9,6 @@ import { afterUpdate } from 'svelte'
 
 let userIsAnonymous: boolean
 
-//has to set this afterUpdate rather than in a reactive statement bc Tooltip in Drawer was throwing an
 afterUpdate(() => {
   userIsAnonymous = !$user.id
 })

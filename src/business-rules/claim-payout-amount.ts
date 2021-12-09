@@ -30,14 +30,14 @@ export const isRepairCostTooHigh = (repairEstimateUSD?: number, fairMarketValueU
 }
 
 export const isUnrepairableOrTooExpensive = (
-  isRepairable?: boolean,
+  isRepairable?: boolean | null,
   repairCostIsTooHigh?: boolean
 ): boolean | undefined => {
   if (isRepairable === false) {
     return true
   }
 
-  if (isRepairable === undefined || repairCostIsTooHigh === undefined) {
+  if ([null, undefined].includes(isRepairable) || repairCostIsTooHigh === undefined) {
     return undefined
   }
 

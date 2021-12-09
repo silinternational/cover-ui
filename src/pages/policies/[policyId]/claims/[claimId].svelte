@@ -295,7 +295,7 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
       </p>
       <div>
         <h2>Resolution</h2>
-        <h3>{payoutOption}</h3>
+        <h3>{payoutOption || 'No payout option selected'}</h3>
         {#if payoutOption == PayoutOption.Replacement}
           <p>Payout is the item’s covered value or replacement cost, whichever is less, minus a 5% deductible.</p>
         {/if}

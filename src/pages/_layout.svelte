@@ -40,21 +40,21 @@ $: menuItems = [
     url: routes.policyDetails(policyId),
     icon: 'description',
     label: 'Policy Details',
-    hide: inAdminRole || userIsAnonymous,
+    hide: inAdminRole || userIsAnonymous || !policyId,
   },
   {
     url: routes.ITEMS,
     urlPattern: /(\/items$)|(\/items\/)/,
     icon: 'beach_access',
     label: 'Items',
-    hide: inAdminRole || userIsAnonymous,
+    hide: inAdminRole || userIsAnonymous || !policyId,
   },
   {
     url: routes.customerClaims(policyId),
     urlPattern: /(\/claims$)|(\/claims\/)/,
     icon: 'label',
     label: 'Claims',
-    hide: inAdminRole || userIsAnonymous,
+    hide: inAdminRole || userIsAnonymous || !policyId,
   },
   {
     url: routes.FAQ,
@@ -73,7 +73,7 @@ $: menuItems = [
     icon: 'settings',
     label: 'Policy Settings',
     tooltip: 'Policy Settings',
-    hide: inAdminRole || userIsAnonymous,
+    hide: inAdminRole || userIsAnonymous || !policyId,
   },
   {
     url: routes.itemsNew(policyId),

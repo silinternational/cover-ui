@@ -49,7 +49,7 @@ const payoutOptions = [
 let lostDate = todayDateString
 let lossReason: string
 let situationDescription = ''
-let isRepairable: boolean | null | undefined
+let isRepairable: boolean | undefined
 let payoutOption: PayoutOption | undefined
 
 // Set default derived (or intermediate) values.
@@ -86,7 +86,7 @@ $: repairCostIsTooHigh = isRepairCostTooHigh(repairEstimateUSD, fairMarketValueU
 $: unrepairableOrTooExpensive = isUnrepairableOrTooExpensive(isRepairable, repairCostIsTooHigh)
 $: shouldAskReplaceOrFMV = !isEvacuation && unrepairableOrTooExpensive === true
 $: shouldAskIfRepairable = !!(potentiallyRepairable && lossReason)
-$: shouldAskForFMV = isRepairable !== null && isFairMarketValueNeeded(isRepairable, payoutOption)
+$: shouldAskForFMV = isFairMarketValueNeeded(isRepairable, payoutOption)
 $: payoutOption !== PayoutOption.Replacement && unSetReplaceEstimate()
 $: !shouldAskReplaceOrFMV && unSetPayoutOption()
 $: !shouldAskIfRepairable && unSetRepairableSelection()
@@ -114,7 +114,7 @@ const calculateIsRepairable = (potentiallyRepairable: boolean, repairableSelecti
     return false
   }
   if (!repairableSelection) {
-    return null
+    return undefined
   }
   return repairableSelection === 'repairable'
 }
@@ -165,7 +165,7 @@ const getFormData = () => {
     },
     claimItemData: {
       itemId: item.id,
-      isRepairable,
+      isRepairable: isRepairable ?? null,
       payoutOption: determinePayoutOption(isEvacuation, repairCostIsTooHigh, payoutOption),
       repairEstimateUSD,
       replaceEstimateUSD,
@@ -180,7 +180,7 @@ const setInitialValues = (claim: Claim, claimItem: ClaimItem) => {
   }
   lossReason = claim.incident_type || lossReason
   situationDescription = claim.incident_description || situationDescription
-  if (claimItem.is_repairable !== null && claimItem.is_repairable !== undefined) {
+  if ((claimItem.is_repairable as any) instanceof Boolean) {
     repairableSelection = claimItem.is_repairable ? 'repairable' : 'not_repairable'
   }
 

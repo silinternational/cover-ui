@@ -165,7 +165,7 @@ const getFormData = () => {
     },
     claimItemData: {
       itemId: item.id,
-      isRepairable: isRepairable ?? null,
+      isRepairable,
       payoutOption: determinePayoutOption(isEvacuation, repairCostIsTooHigh, payoutOption),
       repairEstimateUSD,
       replaceEstimateUSD,

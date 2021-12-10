@@ -362,7 +362,7 @@ export async function submitClaim(claimId: string): Promise<void> {
 export async function updateClaimItem(claimId: string, claimItemId: string, claimItemData: any): Promise<void> {
   const parsedData: UpdateClaimItemRequestBody = {
     fmv: convertToCents(claimItemData.fairMarketValueUSD),
-    is_repairable: claimItemData.isRepairable,
+    is_repairable: claimItemData.isRepairable ?? null,
     payout_option: claimItemData.payoutOption,
     repair_estimate: convertToCents(claimItemData.repairEstimateUSD),
     replace_estimate: convertToCents(claimItemData.replaceEstimateUSD),

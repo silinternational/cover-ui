@@ -5,6 +5,13 @@ import { initialized as policiesInitialized, loadPolicies } from 'data/policies'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import * as routes from 'helpers/routes'
 import { goto, params, route } from '@roxi/routify'
+import { afterUpdate } from 'svelte'
+
+let userIsAnonymous: boolean
+
+afterUpdate(() => {
+  userIsAnonymous = !$user.id
+})
 
 // polcies were not being loaded on initial login, once selectedPolicyId exists they load properly
 $: $policiesInitialized || ($user.policies?.length > 0 && loadPolicies())
@@ -14,7 +21,6 @@ $: policyId = $selectedPolicyId || getDefaultPolicyId($user)
 $: inAdminRole = isAdmin($roleSelection)
 $: urlIsClaimOrItem = $params.claimId || $params.itemId
 
-// TODO: Update this based on the user's role and/or the RoleAndPolicyMenu selection.
 $: menuItems = [
   {},
   {
@@ -22,32 +28,33 @@ $: menuItems = [
     urlPattern: /\/home$/,
     icon: 'home',
     label: 'Home',
+    hide: userIsAnonymous,
   },
   {
     url: routes.POLICIES,
     icon: 'description',
     label: 'Policies',
-    hide: !inAdminRole,
+    hide: !inAdminRole || userIsAnonymous,
   },
   {
     url: routes.policyDetails(policyId),
     icon: 'description',
     label: 'Policy Details',
-    hide: inAdminRole,
+    hide: inAdminRole || userIsAnonymous,
   },
   {
     url: routes.ITEMS,
     urlPattern: /(\/items$)|(\/items\/)/,
     icon: 'beach_access',
     label: 'Items',
-    hide: inAdminRole,
+    hide: inAdminRole || userIsAnonymous,
   },
   {
     url: routes.customerClaims(policyId),
     urlPattern: /(\/claims$)|(\/claims\/)/,
     icon: 'label',
     label: 'Claims',
-    hide: inAdminRole,
+    hide: inAdminRole || userIsAnonymous,
   },
   {
     url: routes.FAQ,
@@ -66,7 +73,7 @@ $: menuItems = [
     icon: 'settings',
     label: 'Policy Settings',
     tooltip: 'Policy Settings',
-    hide: inAdminRole,
+    hide: inAdminRole || userIsAnonymous,
   },
   {
     url: routes.itemsNew(policyId),
@@ -74,6 +81,25 @@ $: menuItems = [
     label: 'Add Item',
     button: true,
     hide: inAdminRole || !policyId,
+  },
+  //Menu items for anonymous users
+  {
+    url: routes.ROOT,
+    icon: 'person',
+    label: 'Login',
+    hide: !userIsAnonymous,
+  },
+  {
+    url: routes.TERMS_OF_SERVICE,
+    icon: 'article',
+    label: 'Terms of Service',
+    hide: !userIsAnonymous,
+  },
+  {
+    url: routes.PRIVACY_POLICY,
+    icon: 'policy',
+    label: 'Privacy Policy',
+    hide: !userIsAnonymous,
   },
 ]
 const isCustomerOnOwnPolicy = (policyId: string) => policyId === $selectedPolicyId

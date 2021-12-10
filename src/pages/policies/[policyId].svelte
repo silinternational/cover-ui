@@ -5,7 +5,7 @@ import { formatDate } from 'components/dates'
 import { isLoadingById, loading } from 'components/progress'
 import { formatFriendlyDate } from 'helpers/date'
 import { formatMoney } from 'helpers/money'
-import { customerClaimDetails, itemDetails } from 'helpers/routes'
+import { customerClaimDetails, itemDetails, settingsPolicy } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { metatags } from '@roxi/routify'
 import { Datatable, Page } from '@silintl/ui-components'
@@ -23,7 +23,11 @@ $: policy = $selectedPolicy
 $: members = policy.members || []
 
 $: policyId && loadItems(policyId)
-$: items = $selectedPolicyItems
+
+// sort items so inactive is last
+$: items = $selectedPolicyItems.sort((a, b) =>
+  a.coverage_status === b.coverage_status ? 0 : a.coverage_status > b.coverage_status ? 1 : -1
+)
 $: claims = policy.claims || []
 $: policyName = getNameOfPolicy(policy)
 $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))
@@ -79,6 +83,10 @@ th {
       <td>{formatFriendlyDate(policy.updated_at)}</td>
     </tr>
   </table>
+
+  <div class="mt-1">
+    <a class="mdc-theme--primary mt-2" href={settingsPolicy(policyId)}>Policy Settings</a>
+  </div>
 
   <h4>Members</h4>
   <Datatable>

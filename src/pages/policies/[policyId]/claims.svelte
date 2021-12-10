@@ -9,7 +9,7 @@ import { customerClaims, customerClaimDetails, POLICIES, policyDetails } from 'h
 import { formatPageTitle } from 'helpers/pageTitle'
 import { items } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
-import { Button, Page } from '@silintl/ui-components'
+import { Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 export let policyId: string

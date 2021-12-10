@@ -10,9 +10,11 @@ export let width = '232px'
 
 let randomId = generateRandomID('dataList-')
 
+$: internalChoice = choice
+
 const dispatch = createEventDispatcher()
 
-const onChange = () => options[choice] && dispatch('chosen', options[choice])
+const onChange = () => options[internalChoice] && dispatch('chosen', options[internalChoice])
 </script>
 
 <style>
@@ -62,10 +64,13 @@ const onChange = () => options[choice] && dispatch('chosen', options[choice])
     style="width: {width}"
     list={randomId}
     placeholder="&nbsp;"
-    bind:value={choice}
+    bind:value={internalChoice}
     on:change={onChange}
-    on:blur={() => dispatch('check', choice)}
-    on:focus={() => (choice = '')}
+    on:blur={() => {
+      dispatch('check', internalChoice)
+      internalChoice = choice
+    }}
+    on:focus={() => (internalChoice = '')}
   />
   <span class="placeholder">{placeholder}</span>
 </label>

@@ -4,7 +4,6 @@ import qs from 'qs'
 export const ROOT = '/'
 export const HOME = '/home'
 export const LOGOUT = '/logout'
-export const LOGGEDOUT = '/logged-out'
 
 export const ADMIN_HOME = '/admin/home'
 export const ADMIN_POLICIES = '/admin/policies'
@@ -45,3 +44,5 @@ export const householdSettingsNewDependent = (policyId: string) => `/policies/${
 
 export const TERMS_OF_SERVICE = '/terms'
 export const PRIVACY_POLICY = '/privacy'
+
+export const COVER_EMAIL_HREF = 'mailto:cover@sil.org'

@@ -29,7 +29,6 @@ export type User = {
   }
   photo_file_id: string
   policies: Policy[]
-  policy_id: string //deprecated
 }
 
 export type UpdatedUserBody = {

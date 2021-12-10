@@ -180,7 +180,7 @@ const setInitialValues = (claim: Claim, claimItem: ClaimItem) => {
   }
   lossReason = claim.incident_type || lossReason
   situationDescription = claim.incident_description || situationDescription
-  if ((claimItem.is_repairable as any) instanceof Boolean) {
+  if (typeof claimItem.is_repairable === 'boolean') {
     repairableSelection = claimItem.is_repairable ? 'repairable' : 'not_repairable'
   }
 

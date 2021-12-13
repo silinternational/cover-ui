@@ -21,7 +21,7 @@ onMount(() => {
   drawerEl = document.querySelector('.mdc-drawer')
 })
 
-$: drawerWidth = `${drawerEl?.offsetWidth}px`
+$: drawerWidth = `${drawerEl?.offsetWidth || 0}px`
 
 const logoClickHandler = () => $goto(ROOT)
 </script>

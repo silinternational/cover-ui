@@ -281,3 +281,7 @@ function updateStoreItem(updatedItem: PolicyItem) {
     return data
   })
 }
+
+export const itemIsActive = (item: PolicyItem): boolean => {
+  return item.coverage_status == ItemCoverageStatus.Approved
+}

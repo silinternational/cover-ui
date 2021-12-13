@@ -18,7 +18,7 @@ const updateCountry = (event: CustomEvent) => {
   if (isCountryValid(event.detail)) {
     country = event.detail
     dispatch('chosen', country)
-  } else {
+  } else if (country === '') {
     setNotice('Please select a country from the list')
   }
 }

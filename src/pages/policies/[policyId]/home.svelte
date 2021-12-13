@@ -1,10 +1,11 @@
 <script lang="ts">
+import { isAdmin } from '../../../authn/user'
 import { CardsGrid, ItemsTable, Row } from 'components'
 import { isLoadingPolicyItems, loading } from 'components/progress'
 import { Claim, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import { deleteItem, ItemCoverageStatus, loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
 import { getNameOfPolicy, selectedPolicy } from 'data/policies'
-import { selectedPolicyId } from 'data/role-policy-selection'
+import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import * as routes from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
@@ -43,6 +44,7 @@ const onGotoItem = (event: CustomEvent<string>) => $goto(event.detail)
   <Row cols={'12'}>
     <h3>{getNameOfPolicy($selectedPolicy)} Policy</h3>
     <CardsGrid
+      isAdmin={isAdmin($roleSelection)}
       claims={$selectedPolicyClaims}
       policyItems={items}
       on:goto-claim={onGotoClaim}

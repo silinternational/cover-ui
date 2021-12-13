@@ -1,11 +1,6 @@
 <script lang="ts">
 import user, { UserAppRole } from '../../../../authn/user'
-import {
-  determineMaxPayout,
-  getFilePurpose,
-  getUploadLabel,
-  isEvidenceNeeded,
-} from '../../../../business-rules/claim-payout-amount'
+import { getFilePurpose, getUploadLabel, isEvidenceNeeded } from '../../../../business-rules/claim-payout-amount'
 import {
   Banner,
   Breadcrumb,
@@ -100,12 +95,15 @@ $: needsReplaceReceipt = needsReceipt && payoutOption === PayoutOption.Replaceme
 $: filePurpose = getFilePurpose(claimItem, needsReceipt) as ClaimFilePurpose
 $: noFilesUploaded = !isFileUploadedByPurpose(filePurpose, claimFiles)
 $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType)
-$: uploadLabelForButton = getUploadLabel(claimItem, needsReceipt, receiptType, false)
+$: uploadLabelForButton = needsFile
+  ? `upload ${getUploadLabel(claimItem, needsReceipt, receiptType, false)}`
+  : 'submit changes'
 $: showUploadButton = [ClaimStatus.Receipt, ClaimStatus.Revision].includes(claimStatus) && !isAdmin
 $: moneyFormLabel = needsRepairReceipt ? 'Actual cost of repair' : 'Actual cost of replacement'
 $: receiptType = needsRepairReceipt ? ReceiptType.repair : ReceiptType.replacement
 $: claimFiles = claim.claim_files || ([] as ClaimFile[])
-$: maximumPayout = determineMaxPayout(payoutOption, claimItem, item.coverage_amount)
+$: maximumPayout = claim.total_payout || 0
+$: payoutLabel = claimStatus !== ClaimStatus.Paid ? 'Maximum payout (if approved)' : 'Payout'
 
 // Dynamic breadcrumbs data:
 $: item.name && claim.reference_number && (claimName = `${item.name} (${claim.reference_number})`)
@@ -145,8 +143,10 @@ const onDenyClaim = async (event: CustomEvent<string>) => {
 }
 
 const onSubmit = async () => {
+  const didNeedFile = needsFile
+  const oldUploadLabel = uploadLabel
   await submitClaim(claimId)
-  setNotice('Added replacement cost and receipt')
+  setNotice(didNeedFile ? `Added replacement cost and ${oldUploadLabel}` : 'Submitted changes')
 }
 
 const setInitialValues = (claimItem: ClaimItem) => {
@@ -252,11 +252,14 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
     </Row>
     <Row cols="3">
       <h2 class="break-word my-1">{item.name || ''}</h2>
+
       <b>Covered value</b>
-      <div>{formatMoney(item.coverage_amount)}</div>
+      <div>{formatMoney(claimItem.coverage_amount)}</div>
       <br />
+
       <b>{item.accountable_person?.name || ''}</b>
       <br />
+
       <div class="left-detail">
         <b>Household ID</b>
         <div>{householdId}</div>
@@ -290,12 +293,19 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
       <p class="break-word">
         {claim.incident_description || ''}
       </p>
+      <div>
+        <h2>Resolution</h2>
+        <h3>{payoutOption || 'No payout option selected'}</h3>
+        {#if payoutOption == PayoutOption.Replacement}
+          <p>Payout is the item’s covered value or replacement cost, whichever is less, minus a 5% deductible.</p>
+        {/if}
+      </div>
       <p>
         <b>Covered value</b><br />
-        {formatMoney(item.coverage_amount)}
+        {formatMoney(claimItem.coverage_amount)}
       </p>
       <p>
-        <b>Maximum payout (if approved)</b><br />
+        <b>{payoutLabel}</b><br />
         {formatMoney(maximumPayout)}
       </p>
 
@@ -341,7 +351,7 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
       <FilePreview class="pointer w-50" previews={claimFiles} {isMemberOfPolicy} on:preview={onPreview} />
 
       {#if showUploadButton}
-        <Button raised disabled={noFilesUploaded} on:click={onSubmit}>Upload {uploadLabelForButton}</Button>
+        <Button raised disabled={noFilesUploaded} on:click={onSubmit}>{uploadLabelForButton}</Button>
       {/if}
       <br />
     </Row>

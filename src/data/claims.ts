@@ -59,10 +59,11 @@ export type ClaimFile = {
 
 export type ClaimItem = {
   claim_id: string
+  coverage_amount: number /*cents*/
   created_at: string /*Date*/
   fmv: number
   id: string
-  is_repairable: boolean
+  is_repairable: boolean | null
   item: PolicyItem
   item_id: string
   payout_amount: number

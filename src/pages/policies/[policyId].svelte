@@ -9,7 +9,7 @@ import { formatFriendlyDate } from 'helpers/date'
 import { formatMoney } from 'helpers/money'
 import { itemDetails, settingsPolicy } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
-import { reduceRight } from 'lodash-es'
+import { reduce } from 'lodash-es'
 import { metatags } from '@roxi/routify'
 import { Datatable, Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
@@ -35,8 +35,8 @@ $: claims = policy?.claims || []
 $: openClaimCount = claims.filter(claimIsOpen).length
 $: policyName = getNameOfPolicy(policy)
 $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))
-$: coverage = formatMoney(reduceRight(activeItems, (idx, item) => item.coverage_amount, 0))
-$: premium = formatMoney(reduceRight(activeItems, (idx, item) => item.annual_premium, 0))
+$: coverage = formatMoney(reduce(activeItems, (sum, item) => sum + item.coverage_amount, 0))
+$: premium = formatMoney(reduce(activeItems, (sum, item) => sum + item.annual_premium, 0))
 </script>
 
 <style>

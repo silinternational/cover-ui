@@ -7,12 +7,21 @@ import type { Policy } from 'data/policies'
 import { goto } from '@roxi/routify'
 import { Drawer } from '@silintl/ui-components'
 import { ROOT } from 'helpers/routes'
+import { onMount } from 'svelte'
 
 export let menuItems: any[]
 export let myPolicies: Policy[]
 export let role: UserAppRole
 
+let drawerEl = {} as any
+let drawerWidth: string
 let toggle = false
+
+onMount(() => {
+  drawerEl = document.querySelector('.mdc-drawer')
+})
+
+$: drawerWidth = `${drawerEl?.offsetWidth || 0}px`
 
 const logoClickHandler = () => $goto(ROOT)
 </script>
@@ -36,5 +45,5 @@ const logoClickHandler = () => $goto(ROOT)
 
   <slot />
 
-  <AppFooter />
+  <AppFooter rightMargin={drawerWidth} />
 </Drawer>

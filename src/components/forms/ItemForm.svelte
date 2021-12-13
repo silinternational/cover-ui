@@ -105,7 +105,12 @@ const validate = (formData: any) => {
   return true
 }
 
-const areMakeAndModelRequired = () => $categories.find((category) => category.id === categoryId)?.require_make_model
+const areMakeAndModelRequired = () => {
+  return (
+    item.coverage_status !== ItemCoverageStatus.Approved &&
+    $categories.find((category) => category.id === categoryId)?.require_make_model
+  )
+}
 
 const onSubmit = (event: Event) => {
   formData = getFormData()

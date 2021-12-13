@@ -440,3 +440,7 @@ export const getClaimById = async (claimId: string): Promise<Claim> => {
 
   return response
 }
+
+export const claimIsOpen = (claim: Claim): boolean => {
+  return incompleteClaimItemStatuses.includes(claim.status)
+}

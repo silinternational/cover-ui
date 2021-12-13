@@ -144,7 +144,7 @@ export async function addItem(policyId: string, itemData: any): Promise<PolicyIt
     in_storage: itemData.inStorage,
     make: itemData.make,
     model: itemData.model,
-    name: itemData.shortName,
+    name: itemData.name,
     serial_number: itemData.uniqueIdentifier,
   }
 
@@ -232,7 +232,7 @@ export async function updateItem(policyId: string, itemId: string, itemData: any
     in_storage: itemData.inStorage,
     make: itemData.make,
     model: itemData.model,
-    name: itemData.shortName,
+    name: itemData.name,
     risk_category_id: itemData.riskCategoryId,
     serial_number: itemData.uniqueIdentifier,
   }
@@ -280,4 +280,8 @@ function updateStoreItem(updatedItem: PolicyItem) {
     data[updatedItem.policy_id] = items
     return data
   })
+}
+
+export const itemIsActive = (item: PolicyItem): boolean => {
+  return item.coverage_status == ItemCoverageStatus.Approved
 }

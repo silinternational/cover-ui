@@ -37,7 +37,7 @@ let inStorage = false
 let make = ''
 let model = ''
 let riskCategoryId = ''
-let shortName = ''
+let name = ''
 let uniqueIdentifier = ''
 
 // Set initial values based on the provided item data.
@@ -73,7 +73,7 @@ const getFormData = () => {
     inStorage,
     make,
     model,
-    shortName,
+    name,
     riskCategoryId,
     uniqueIdentifier,
   }
@@ -92,7 +92,7 @@ const onCategorySelectPopulated = () => {
 const validateOnSave = (formData: any) => {
   assertHas(formData.accountablePersonId, 'Please Assign an Accountable Person')
   assertHas(formData.categoryId, 'Please select a category')
-  assertHas(formData.shortName, 'Please specify a short name')
+  assertHas(formData.name, 'Please specify a short name')
 
   return true
 }
@@ -154,7 +154,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
   make = item.make || make
   model = item.model || model
   riskCategoryId = item.risk_category?.id || riskCategoryId
-  shortName = item.name || shortName
+  name = item.name || name
   uniqueIdentifier = item.serial_number || uniqueIdentifier
 }
 </script>
@@ -170,7 +170,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
     />
   </p>
   <p>
-    <TextField label="Short name" bind:value={shortName} />
+    <TextField label="Short name" bind:value={name} />
     <Description>This label will appear on your statements.</Description>
   </p>
   <p>

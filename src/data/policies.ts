@@ -61,7 +61,12 @@ const updatePoliciesStore = (changedPolicy: Policy) => {
     if (i === -1) {
       policies.push(changedPolicy)
     } else {
-      policies[i] = changedPolicy
+      // the policies returned from the get policies list never include claims on them
+      // if the value is 'null' then keep the last claims
+      policies[i] = {
+        ...changedPolicy,
+        claims: changedPolicy.claims == null ? policies[i].claims : changedPolicy.claims,
+      }
     }
     return policies
   })
@@ -127,9 +132,11 @@ export const getNameOfPolicy = (policy: Policy): string => {
 export async function loadPolicies(limit = 20): Promise<void> {
   const queryString = qs.stringify({ limit })
   const response = await GET<{ data: Policy[]; meta: any }>(`policies?${queryString}`)
-  const data = response.data
-  policies.set(data)
-  data.length && initialized.set(true)
+
+  for (const policy of response.data) {
+    updatePoliciesStore(policy)
+  }
+  response.data.length && initialized.set(true)
 }
 
 export async function loadPolicy(policyId: string): Promise<Policy> {

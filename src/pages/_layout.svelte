@@ -52,7 +52,7 @@ $: menuItems = [
   {
     url: routes.customerClaims(policyId),
     urlPattern: /(\/claims$)|(\/claims\/)/,
-    icon: 'label',
+    icon: 'assignment',
     label: 'Claims',
     hide: inAdminRole || userIsAnonymous || !policyId,
   },

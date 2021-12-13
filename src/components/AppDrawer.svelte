@@ -5,7 +5,7 @@ import type { UserAppRole } from '../authn/user'
 import RoleAndPolicyMenu from './RoleAndPolicyMenu.svelte'
 import type { Policy } from 'data/policies'
 import { goto } from '@roxi/routify'
-import { Drawer, isAboveMobile } from '@silintl/ui-components'
+import { Drawer } from '@silintl/ui-components'
 import { ROOT } from 'helpers/routes'
 import { onMount } from 'svelte'
 
@@ -13,12 +13,15 @@ export let menuItems: any[]
 export let myPolicies: Policy[]
 export let role: UserAppRole
 
+let drawerEl = {} as any
+let drawerWidth: string
 let toggle = false
-let drawerIsFixed = true
 
-onMount(() => checkDrawerState())
+onMount(() => {
+  drawerEl = document.querySelector('.mdc-drawer')
+})
 
-const checkDrawerState = () => (drawerIsFixed = isAboveMobile() ? true : false)
+$: drawerWidth = `${drawerEl?.offsetWidth}px`
 
 const logoClickHandler = () => $goto(ROOT)
 </script>
@@ -28,8 +31,6 @@ const logoClickHandler = () => $goto(ROOT)
   margin-left: 12px;
 }
 </style>
-
-<svelte:window on:resize={checkDrawerState} />
 
 <Drawer modal hideForPhonesOnly {toggle} {menuItems} title="Covered" class="border-white">
   <span class="pointer" on:click={logoClickHandler} slot="header">
@@ -44,5 +45,5 @@ const logoClickHandler = () => $goto(ROOT)
 
   <slot />
 
-  <AppFooter {drawerIsFixed} />
+  <AppFooter rightMargin={drawerWidth} />
 </Drawer>

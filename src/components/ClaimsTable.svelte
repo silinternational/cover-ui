@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Claim } from '../data/claims'
+import type { Claim } from '../data/claims'
 import { formatFriendlyDate } from 'helpers/date'
 import { formatMoney } from 'helpers/money'
 import { customerClaimDetails } from 'helpers/routes'

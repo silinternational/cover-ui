@@ -1,6 +1,6 @@
 <script lang="ts">
 import { UserAppRole } from '../authn/user'
-import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
+import { MAX_TEXT_AREA_LENGTH as maxlength } from 'components/const'
 import {
   Claim,
   ClaimStatus,

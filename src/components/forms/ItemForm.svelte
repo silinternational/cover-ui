@@ -6,7 +6,7 @@ import MakeAndModelModal from 'MakeAndModelModal.svelte'
 import MoneyInput from '../MoneyInput.svelte'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import SelectAccountablePerson from '../SelectAccountablePerson.svelte'
-import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
+import { MAX_INPUT_LENGTH as maxlength, MAX_TEXT_AREA_LENGTH } from 'components/const'
 import type { AccountablePersonOptions } from 'data/accountablePersons'
 import { ItemCoverageStatus, PolicyItem } from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
@@ -180,7 +180,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
     <Description>This label will appear on your statements.</Description>
   </p>
   <p>
-    <TextArea {maxlength} label="Item description" bind:value={itemDescription} rows="4" />
+    <TextArea maxlength={MAX_TEXT_AREA_LENGTH} label="Item description" bind:value={itemDescription} rows="4" />
     <Description>For personal use.</Description>
   </p>
   <p>

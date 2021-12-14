@@ -6,7 +6,7 @@ import {
   isUnrepairableOrTooExpensive,
   LOSS_REASON_EVACUATION,
 } from '../../business-rules/claim-payout-amount'
-import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
+import { MAX_TEXT_AREA_LENGTH as maxlength } from 'components/const'
 import { claimIncidentTypes, loadClaimIncidentTypes } from 'data/claim-incident-types'
 import { Claim, ClaimItem, PayoutOption } from 'data/claims'
 import type { PolicyItem } from 'data/items'

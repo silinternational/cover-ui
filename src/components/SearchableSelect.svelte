@@ -1,4 +1,5 @@
 <script lang="ts">
+import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import { generateRandomID } from '@silintl/ui-components/random'
 import { createEventDispatcher } from 'svelte'
 
@@ -60,6 +61,7 @@ const onChange = () => options[internalChoice] && dispatch('chosen', options[int
 
 <label class="custom-field" style="--field-padding: {padding};">
   <input
+    {maxlength}
     class="fs-14 {$$props.class}"
     style="width: {width}"
     list={randomId}

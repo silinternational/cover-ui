@@ -1,6 +1,7 @@
 <script lang="ts">
 import user, { attachUserPhoto, updateUser } from '../../authn/user'
 import { Breadcrumb, CountrySelector, FileDropArea, RadioOptions } from 'components'
+import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import { upload } from 'data'
 import { policies } from 'data/policies'
 import { assertEmailAddress } from '../../validation/assertions'
@@ -145,7 +146,7 @@ p {
     />
   </p>
   {#if notification_email === NOTIFICATION_OPTION_CUSTOM}
-    <TextField placeholder={'Custom email'} bind:value={email_override} on:blur={updateCustomEmail} />
+    <TextField {maxlength} label="Custom email" bind:value={email_override} on:blur={updateCustomEmail} />
   {/if}
 
   <p>

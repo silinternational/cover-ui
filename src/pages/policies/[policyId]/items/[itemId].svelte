@@ -1,6 +1,7 @@
 <script lang="ts">
 import user, { UserAppRole } from '../../../../authn/user'
 import { Breadcrumb, ItemDeleteModal, ItemDetails } from 'components'
+import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import { loading } from 'components/progress'
 import { formatDate } from 'components/dates'
 import {
@@ -199,6 +200,7 @@ const onReviseItem = () => {
     >
       <p class="message-box">
         <TextArea
+          {maxlength}
           style="width: 300px"
           rows="4"
           placeholder="A message is required to deny coverage or ask for changes"

@@ -7,7 +7,7 @@ import { onMount } from 'svelte'
 export let label = ''
 export let value = ''
 export let placeholder = ''
-export let maxlength: number = 2048 /* default */
+export let maxlength: number = 255/* default */
 export let autofocus = false
 export let disabled = false
 export let required = false

@@ -165,7 +165,7 @@ const getFormData = () => {
     },
     claimItemData: {
       itemId: item.id,
-      isRepairable: isRepairable ?? null,
+      isRepairable,
       payoutOption: determinePayoutOption(isEvacuation, repairCostIsTooHigh, payoutOption),
       repairEstimateUSD,
       replaceEstimateUSD,
@@ -180,9 +180,10 @@ const setInitialValues = (claim: Claim, claimItem: ClaimItem) => {
   }
   lossReason = claim.incident_type || lossReason
   situationDescription = claim.incident_description || situationDescription
-  if (typeof claimItem.is_repairable === 'boolean') {
-    repairableSelection = claimItem.is_repairable ? 'repairable' : 'not_repairable'
-  }
+  repairableSelection =
+    typeof claimItem.is_repairable !== 'boolean' ||  claimItem.is_repairable
+        ? 'repairable'
+        : 'not_repairable'
 
   payoutOption = claimItem.payout_option || payoutOption
 

@@ -1,7 +1,7 @@
 import { getToken } from '../authn/token'
 import { start, stop } from 'components/progress'
 import { throwError } from '../error'
-import t from '../i18n'
+import { login } from '../authn'
 
 type FetchMethod = 'post' | 'get' | 'put' | 'delete'
 type UploadResponseBody = {
@@ -68,12 +68,10 @@ async function customFetch<T>(method: FetchMethod, uri: string, body: any = unde
 
   // reminder: fetch does not throw exceptions for non-200 responses (https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch)
   if (!response.ok) {
-    if (response.status === 400) {
-      throwError(results?.message, response.status, response.statusText)
-    } else {
-      const statusText = response.status === 401 ? t(response.statusText) : response.statusText
-      throwError(results?.message, response.status, statusText)
+    if (response.status === 401) {
+      login()
     }
+    throwError(results?.message, response.status, response.statusText)
   }
 
   return results

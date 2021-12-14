@@ -7,7 +7,7 @@ import { onMount } from 'svelte'
 export let label = ''
 export let value = ''
 export let placeholder = ''
-export let maxlength: number = 524288 /* default */
+export let maxlength: number = 2048 /* default */
 export let autofocus = false
 export let disabled = false
 export let required = false
@@ -67,6 +67,7 @@ const focus = (node: any) => autofocus && node.focus()
     {maxlength}
     {disabled}
     {placeholder}
+    {required}
   />
   <span class="mdc-notched-outline">
     <span class="mdc-notched-outline__leading" style="width:35px;" />
@@ -78,3 +79,6 @@ const focus = (node: any) => autofocus && node.focus()
     <span class="mdc-notched-outline__trailing" />
   </span>
 </label>
+{#if required && !value}
+  <div class="required">*Required</div>
+{/if}

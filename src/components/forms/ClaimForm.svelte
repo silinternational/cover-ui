@@ -6,6 +6,7 @@ import {
   isUnrepairableOrTooExpensive,
   LOSS_REASON_EVACUATION,
 } from '../../business-rules/claim-payout-amount'
+import { MAX_TEXT_AREA_LENGTH as maxlength } from 'components/const'
 import { claimIncidentTypes, loadClaimIncidentTypes } from 'data/claim-incident-types'
 import { Claim, ClaimItem, PayoutOption } from 'data/claims'
 import type { PolicyItem } from 'data/items'
@@ -181,9 +182,7 @@ const setInitialValues = (claim: Claim, claimItem: ClaimItem) => {
   lossReason = claim.incident_type || lossReason
   situationDescription = claim.incident_description || situationDescription
   repairableSelection =
-    typeof claimItem.is_repairable !== 'boolean' ||  claimItem.is_repairable
-        ? 'repairable'
-        : 'not_repairable'
+    typeof claimItem.is_repairable !== 'boolean' || claimItem.is_repairable ? 'repairable' : 'not_repairable'
 
   payoutOption = claimItem.payout_option || payoutOption
 
@@ -222,7 +221,7 @@ const unSetReplaceEstimate = () => {
     </p>
     <p>
       <span class="header">What happened?</span>
-      <TextArea label="Describe the situation" bind:value={situationDescription} rows="4" />
+      <TextArea {maxlength} label="Describe the situation" bind:value={situationDescription} rows="4" />
     </p>
     {#if shouldAskIfRepairable}
       <div>

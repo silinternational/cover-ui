@@ -1,5 +1,6 @@
 <script lang="ts">
 import { Breadcrumb, Description, SearchableSelect } from 'components'
+import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import { entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { createPolicy } from 'data/policies'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -48,7 +49,7 @@ const validateForm = (formData: any) => {
 
   <p>
     <span class="header">Policy name<span class="required">*</span></span>
-    <TextField autofocus bind:value={policyName} />
+    <TextField {maxlength} autofocus bind:value={policyName} />
   </p>
 
   <p>
@@ -58,17 +59,17 @@ const validateForm = (formData: any) => {
 
   <p>
     <span class="header">Cost center<span class="required">*</span></span>
-    <TextField placeholder="ABCD12" bind:value={costCenter} />
+    <TextField {maxlength} label="ABCD12" bind:value={costCenter} />
   </p>
 
   <p>
     <span class="header">Account<span class="required">*</span></span>
-    <TextField placeholder="12345" bind:value={account} />
+    <TextField {maxlength} label="12345" bind:value={account} />
   </p>
 
   <p>
     <span class="header">Account Detail</span>
-    <TextField placeholder="details" bind:value={accountDetail} />
+    <TextField label="details" {maxlength} bind:value={accountDetail} />
     <Description>Appears in your statements</Description>
   </p>
 

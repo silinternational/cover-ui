@@ -176,6 +176,7 @@ declare module '@silintl/ui-components' {
     value?: string
     placeholder?: string
     rows?: number | string
+    required?: boolean
     maxlength?: number
     autofocus?: boolean
     rtl?: boolean
@@ -189,6 +190,7 @@ declare module '@silintl/ui-components' {
     maxlength?: number
     autofocus?: boolean
     disabled?: boolean
+    required?: boolean
   }
   export class TextField extends SvelteComponentTyped<TextFieldProps> {}
 

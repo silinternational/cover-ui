@@ -180,7 +180,13 @@ const setInitialValues = (user: User, item: PolicyItem) => {
     <Description>This label will appear on your statements.</Description>
   </p>
   <p>
-    <TextArea maxlength={MAX_TEXT_AREA_LENGTH} label="Item description" bind:value={itemDescription} rows="4" />
+    <TextArea
+      maxlength={MAX_TEXT_AREA_LENGTH}
+      required
+      label="Item description"
+      bind:value={itemDescription}
+      rows="4"
+    />
     <Description>For personal use.</Description>
   </p>
   <p>

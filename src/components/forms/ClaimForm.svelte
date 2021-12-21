@@ -221,7 +221,7 @@ const unSetReplaceEstimate = () => {
     </p>
     <p>
       <span class="header">What happened?</span>
-      <TextArea {maxlength} label="Describe the situation" bind:value={situationDescription} rows="4" />
+      <TextArea {maxlength} required label="Describe the situation" bind:value={situationDescription} rows="4" />
     </p>
     {#if shouldAskIfRepairable}
       <div>

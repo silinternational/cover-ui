@@ -176,7 +176,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
     />
   </p>
   <p>
-    <TextField {maxlength} label="Short name" bind:value={name} />
+    <TextField {maxlength} required label="Short name" bind:value={name} />
     <Description>This label will appear on your statements.</Description>
   </p>
   <p>

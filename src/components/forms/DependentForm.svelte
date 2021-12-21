@@ -138,7 +138,7 @@ const onChosen = (event: CustomEvent) => (formData.country = event.detail)
 <div class={$$props.class}>
   <Form on:submit={onSubmit}>
     <p>
-      <TextField {maxlength} label="Person's Name" bind:value={formData.name} class="w-100" autofocus />
+      <TextField {maxlength} required label="Person's Name" bind:value={formData.name} class="w-100" autofocus />
     </p>
     {#if isHouseholdPolicy}
       <p>

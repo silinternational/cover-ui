@@ -246,14 +246,14 @@ p {
   {#if policy.type === PolicyType.Household && isAdmin($roleSelection)}
     <p>
       <span class="header">Household ID<span class="required">*</span></span>
-      <TextField {maxlength} bind:value={householdId} on:blur={updateHouseholdId} />
+      <TextField {maxlength} required bind:value={householdId} on:blur={updateHouseholdId} />
     </p>
   {/if}
 
   {#if policy.type === PolicyType.Team}
     <p>
       <span class="header">Policy name<span class="required">*</span></span>
-      <TextField {maxlength} bind:value={policyName} on:blur={updatePolicyName} />
+      <TextField {maxlength} required bind:value={policyName} on:blur={updatePolicyName} />
       <Description>Appears in your statements</Description>
     </p>
 
@@ -270,12 +270,12 @@ p {
     </p>
     <p>
       <span class="header">Cost center<span class="required">*</span></span>
-      <TextField {maxlength} bind:value={costCenter} on:blur={updateCostCenter} />
+      <TextField {maxlength} required bind:value={costCenter} on:blur={updateCostCenter} />
     </p>
 
     <p>
       <span class="header">Account<span class="required">*</span></span>
-      <TextField {maxlength} bind:value={account} on:blur={updateAccount} />
+      <TextField {maxlength} required bind:value={account} on:blur={updateAccount} />
     </p>
 
     <p>

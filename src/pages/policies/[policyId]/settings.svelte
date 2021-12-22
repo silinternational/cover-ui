@@ -245,20 +245,20 @@ p {
   <Breadcrumb links={breadcrumbLinks} />
   {#if policy.type === PolicyType.Household && isAdmin($roleSelection)}
     <p>
-      <span class="header">Household ID<span class="required">*</span></span>
-      <TextField {maxlength} bind:value={householdId} on:blur={updateHouseholdId} />
+      <span class="header">Household ID<span class="required-input">*</span></span>
+      <TextField {maxlength} required bind:value={householdId} on:blur={updateHouseholdId} />
     </p>
   {/if}
 
   {#if policy.type === PolicyType.Team}
     <p>
-      <span class="header">Policy name<span class="required">*</span></span>
-      <TextField {maxlength} bind:value={policyName} on:blur={updatePolicyName} />
+      <span class="header">Policy name<span class="required-input">*</span></span>
+      <TextField {maxlength} required bind:value={policyName} on:blur={updatePolicyName} />
       <Description>Appears in your statements</Description>
     </p>
 
     <p>
-      <span class="header">Affiliation<span class="required">*</span></span>
+      <span class="header">Affiliation<span class="required-input">*</span></span>
       <SearchableSelect
         options={entityOptions}
         choice={$entityCodes.find((code) => code.code === entityCode)?.name || ''}
@@ -269,13 +269,13 @@ p {
       />
     </p>
     <p>
-      <span class="header">Cost center<span class="required">*</span></span>
-      <TextField {maxlength} bind:value={costCenter} on:blur={updateCostCenter} />
+      <span class="header">Cost center<span class="required-input">*</span></span>
+      <TextField {maxlength} required bind:value={costCenter} on:blur={updateCostCenter} />
     </p>
 
     <p>
-      <span class="header">Account<span class="required">*</span></span>
-      <TextField {maxlength} bind:value={account} on:blur={updateAccount} />
+      <span class="header">Account<span class="required-input">*</span></span>
+      <TextField {maxlength} required bind:value={account} on:blur={updateAccount} />
     </p>
 
     <p>

@@ -42,6 +42,6 @@ p {
   margin-bottom: 1rem;
 }
 
-.required {
+.required-input {
   color: var(--mdc-theme-status-error);
 }

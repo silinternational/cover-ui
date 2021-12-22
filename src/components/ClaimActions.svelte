@@ -98,7 +98,7 @@ const onDeny = () => dispatch('deny', message)
   {#if statusesAvaitingAdmin.includes(status)}
     <div class="container">
       <div class="text-input">
-        <TextField {maxlength} class="w-100" label="Send a message" bind:value={message} />
+        <TextField {maxlength} required class="w-100" label="Send a message" bind:value={message} />
         <Description>A message is required to deny or ask for changes.</Description>
       </div>
       <div class="left-buttons">

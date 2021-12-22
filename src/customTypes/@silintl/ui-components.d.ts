@@ -142,6 +142,16 @@ declare module '@silintl/ui-components' {
   }
   export class Menu extends SvelteComponentTyped<MenuProps> {}
 
+  interface MoneyInputProps extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
+    label?: string
+    value?: string
+    placeholder?: string
+    autofocus?: boolean
+    disabled?: boolean
+    required?: boolean
+  }
+  export class MoneyInput extends SvelteComponentTyped<MoneyInputProps> {}
+
   export namespace Progress {
     type CircularProps = svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']>
     export class Circular extends SvelteComponentTyped<CircularProps> {}
@@ -176,6 +186,7 @@ declare module '@silintl/ui-components' {
     value?: string
     placeholder?: string
     rows?: number | string
+    required?: boolean
     maxlength?: number
     autofocus?: boolean
     rtl?: boolean
@@ -189,6 +200,7 @@ declare module '@silintl/ui-components' {
     maxlength?: number
     autofocus?: boolean
     disabled?: boolean
+    required?: boolean
   }
   export class TextField extends SvelteComponentTyped<TextFieldProps> {}
 

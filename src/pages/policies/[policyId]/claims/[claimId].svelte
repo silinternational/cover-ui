@@ -10,7 +10,6 @@ import {
   ConvertCurrencyLink,
   FileDropArea,
   FilePreview,
-  MoneyInput,
   Row,
 } from 'components'
 import { formatDate } from 'components/dates'
@@ -44,7 +43,7 @@ import { formatPageTitle } from 'helpers/pageTitle'
 import { assertHas } from '../../../../validation/assertions'
 import { onMount } from 'svelte'
 import { goto, metatags } from '@roxi/routify'
-import { Button, Page, setNotice } from '@silintl/ui-components'
+import { Button, MoneyInput, Page, setNotice } from '@silintl/ui-components'
 import { formatDistanceToNow } from 'date-fns'
 
 export let claimId: string

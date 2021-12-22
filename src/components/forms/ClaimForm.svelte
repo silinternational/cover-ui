@@ -13,10 +13,9 @@ import type { PolicyItem } from 'data/items'
 import DateInput from 'DateInput.svelte'
 import Description from 'Description.svelte'
 import ConvertCurrencyLink from 'ConvertCurrencyLink.svelte'
-import MoneyInput from 'MoneyInput.svelte'
 import RadioOptions from 'RadioOptions.svelte'
 import { assertHas } from '../../validation/assertions'
-import { Button, Form, TextArea } from '@silintl/ui-components'
+import { Button, Form, MoneyInput, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher, onMount } from 'svelte'
 
 export let claim = {} as Claim
@@ -221,7 +220,7 @@ const unSetReplaceEstimate = () => {
     </p>
     <p>
       <span class="header">What happened?</span>
-      <TextArea {maxlength} label="Describe the situation" bind:value={situationDescription} rows="4" />
+      <TextArea {maxlength} required label="Describe the situation" bind:value={situationDescription} rows="4" />
     </p>
     {#if shouldAskIfRepairable}
       <div>

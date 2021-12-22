@@ -3,7 +3,6 @@ import user, { User } from '../../authn/user'
 import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
 import Description from '../Description.svelte'
 import MakeAndModelModal from 'MakeAndModelModal.svelte'
-import MoneyInput from '../MoneyInput.svelte'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import SelectAccountablePerson from '../SelectAccountablePerson.svelte'
 import { MAX_INPUT_LENGTH as maxlength, MAX_TEXT_AREA_LENGTH } from 'components/const'
@@ -11,7 +10,7 @@ import type { AccountablePersonOptions } from 'data/accountablePersons'
 import { ItemCoverageStatus, PolicyItem } from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
 import { assertHas } from '../../validation/assertions'
-import { Button, Form, Select, TextArea, TextField } from '@silintl/ui-components'
+import { Button, Form, MoneyInput, Select, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let item = {} as PolicyItem
@@ -176,11 +175,17 @@ const setInitialValues = (user: User, item: PolicyItem) => {
     />
   </p>
   <p>
-    <TextField {maxlength} label="Short name" bind:value={name} />
+    <TextField {maxlength} required label="Short name" bind:value={name} />
     <Description>This label will appear on your statements.</Description>
   </p>
   <p>
-    <TextArea maxlength={MAX_TEXT_AREA_LENGTH} label="Item description" bind:value={itemDescription} rows="4" />
+    <TextArea
+      maxlength={MAX_TEXT_AREA_LENGTH}
+      required
+      label="Item description"
+      bind:value={itemDescription}
+      rows="4"
+    />
     <Description>For personal use.</Description>
   </p>
   <p>
@@ -208,7 +213,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
     </Description>
   </p>
   <p>
-    <MoneyInput label="Market value (USD)" bind:value={marketValueUSD} disabled={marketValueIsDisabled} />
+    <MoneyInput label="Market value (USD)" bind:value={marketValueUSD} disabled={marketValueIsDisabled} required />
     <Description>
       <ConvertCurrencyLink />
     </Description>

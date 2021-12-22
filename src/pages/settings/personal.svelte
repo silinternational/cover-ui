@@ -150,7 +150,7 @@ p {
   {/if}
 
   <p>
-    <span class="header">Primary Location<span class="required">*</span></span>
+    <span class="header">Primary Location<span class="required-input">*</span></span>
     <CountrySelector on:chosen={updateCountry} {country} />
   </p>
 

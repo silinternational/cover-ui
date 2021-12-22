@@ -48,22 +48,22 @@ const validateForm = (formData: any) => {
   <Breadcrumb />
 
   <p>
-    <span class="header">Policy name<span class="required">*</span></span>
+    <span class="header">Policy name<span class="required-input">*</span></span>
     <TextField {maxlength} required autofocus bind:value={policyName} />
   </p>
 
   <p>
-    <span class="header">Entity code<span class="required">*</span></span>
+    <span class="header">Entity code<span class="required-input">*</span></span>
     <SearchableSelect options={entityOptions} choice={entityCodeName} on:chosen={(e) => (entityCode = e.detail)} />
   </p>
 
   <p>
-    <span class="header">Cost center<span class="required">*</span></span>
+    <span class="header">Cost center<span class="required-input">*</span></span>
     <TextField {maxlength} required label="ABCD12" bind:value={costCenter} />
   </p>
 
   <p>
-    <span class="header">Account<span class="required">*</span></span>
+    <span class="header">Account<span class="required-input">*</span></span>
     <TextField {maxlength} required label="12345" bind:value={account} />
   </p>
 

@@ -2,6 +2,7 @@
 import user, { isAdmin } from '../../../authn/user'
 import { throwError } from '../../../error'
 import { Breadcrumb, Description, SearchableSelect, Modal, DependentForm } from 'components'
+import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import type { DependentFormData } from 'components/forms/DependentForm.svelte'
 import {
   addDependent,
@@ -244,20 +245,20 @@ p {
   <Breadcrumb links={breadcrumbLinks} />
   {#if policy.type === PolicyType.Household && isAdmin($roleSelection)}
     <p>
-      <span class="header">Household ID<span class="required">*</span></span>
-      <TextField placeholder={'1234567'} bind:value={householdId} on:blur={updateHouseholdId} />
+      <span class="header">Household ID<span class="required-input">*</span></span>
+      <TextField {maxlength} required bind:value={householdId} on:blur={updateHouseholdId} />
     </p>
   {/if}
 
   {#if policy.type === PolicyType.Team}
     <p>
-      <span class="header">Policy name<span class="required">*</span></span>
-      <TextField bind:value={policyName} on:blur={updatePolicyName} />
+      <span class="header">Policy name<span class="required-input">*</span></span>
+      <TextField {maxlength} required bind:value={policyName} on:blur={updatePolicyName} />
       <Description>Appears in your statements</Description>
     </p>
 
     <p>
-      <span class="header">Affiliation<span class="required">*</span></span>
+      <span class="header">Affiliation<span class="required-input">*</span></span>
       <SearchableSelect
         options={entityOptions}
         choice={$entityCodes.find((code) => code.code === entityCode)?.name || ''}
@@ -268,18 +269,18 @@ p {
       />
     </p>
     <p>
-      <span class="header">Cost center<span class="required">*</span></span>
-      <TextField placeholder={'1234567'} bind:value={costCenter} on:blur={updateCostCenter} />
+      <span class="header">Cost center<span class="required-input">*</span></span>
+      <TextField {maxlength} required bind:value={costCenter} on:blur={updateCostCenter} />
     </p>
 
     <p>
-      <span class="header">Account<span class="required">*</span></span>
-      <TextField placeholder="12345" bind:value={account} on:blur={updateAccount} />
+      <span class="header">Account<span class="required-input">*</span></span>
+      <TextField {maxlength} required bind:value={account} on:blur={updateAccount} />
     </p>
 
     <p>
       <span class="header">Account Detail</span>
-      <TextField placeholder="details" bind:value={accountDetail} on:blur={updateAccountDetail} />
+      <TextField {maxlength} bind:value={accountDetail} on:blur={updateAccountDetail} />
     </p>
   {/if}
 

@@ -30,11 +30,16 @@ const logoClickHandler = () => $goto(ROOT)
 .role-and-policy-menu {
   margin-left: 12px;
 }
+.logo {
+  width: 10rem;
+  display: block;
+  margin: 0 auto;
+}
 </style>
 
 <Drawer modal hideForPhonesOnly {toggle} {menuItems} title="Covered" class="border-white">
   <span class="pointer" on:click={logoClickHandler} slot="header">
-    <img class="w-100" src="/logo.svg" alt="Cover" />
+    <img class="logo" src="/logo.svg" alt="Cover" />
   </span>
 
   <AppHeader on:toggleDrawer={() => (toggle = !toggle)} />

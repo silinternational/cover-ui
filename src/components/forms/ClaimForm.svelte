@@ -6,16 +6,16 @@ import {
   isUnrepairableOrTooExpensive,
   LOSS_REASON_EVACUATION,
 } from '../../business-rules/claim-payout-amount'
+import { MAX_TEXT_AREA_LENGTH as maxlength } from 'components/const'
 import { claimIncidentTypes, loadClaimIncidentTypes } from 'data/claim-incident-types'
 import { Claim, ClaimItem, PayoutOption } from 'data/claims'
 import type { PolicyItem } from 'data/items'
 import DateInput from 'DateInput.svelte'
 import Description from 'Description.svelte'
 import ConvertCurrencyLink from 'ConvertCurrencyLink.svelte'
-import MoneyInput from 'MoneyInput.svelte'
 import RadioOptions from 'RadioOptions.svelte'
 import { assertHas } from '../../validation/assertions'
-import { Button, Form, TextArea } from '@silintl/ui-components'
+import { Button, Form, MoneyInput, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher, onMount } from 'svelte'
 
 export let claim = {} as Claim
@@ -165,7 +165,7 @@ const getFormData = () => {
     },
     claimItemData: {
       itemId: item.id,
-      isRepairable: isRepairable ?? null,
+      isRepairable,
       payoutOption: determinePayoutOption(isEvacuation, repairCostIsTooHigh, payoutOption),
       repairEstimateUSD,
       replaceEstimateUSD,
@@ -180,9 +180,8 @@ const setInitialValues = (claim: Claim, claimItem: ClaimItem) => {
   }
   lossReason = claim.incident_type || lossReason
   situationDescription = claim.incident_description || situationDescription
-  if (typeof claimItem.is_repairable === 'boolean') {
-    repairableSelection = claimItem.is_repairable ? 'repairable' : 'not_repairable'
-  }
+  repairableSelection =
+    typeof claimItem.is_repairable !== 'boolean' || claimItem.is_repairable ? 'repairable' : 'not_repairable'
 
   payoutOption = claimItem.payout_option || payoutOption
 
@@ -221,7 +220,7 @@ const unSetReplaceEstimate = () => {
     </p>
     <p>
       <span class="header">What happened?</span>
-      <TextArea label="Describe the situation" bind:value={situationDescription} rows="4" />
+      <TextArea {maxlength} required label="Describe the situation" bind:value={situationDescription} rows="4" />
     </p>
     {#if shouldAskIfRepairable}
       <div>
@@ -231,7 +230,7 @@ const unSetReplaceEstimate = () => {
 
     {#if isRepairable}
       <p>
-        <MoneyInput label="Repair estimate (USD)" bind:value={repairEstimateUSD} />
+        <MoneyInput minValue={'0'} label="Repair estimate (USD)" bind:value={repairEstimateUSD} />
         <Description>
           How much will it probably cost to be repaired?
           <br />
@@ -240,7 +239,7 @@ const unSetReplaceEstimate = () => {
       </p>
       <p>
         <!-- If it's repairable, position this BEFORE the "Payout options" prompt. -->
-        <MoneyInput label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
+        <MoneyInput minValue={'0'} label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
         <Description>
           <ConvertCurrencyLink />
         </Description>
@@ -254,7 +253,7 @@ const unSetReplaceEstimate = () => {
       </div>
       {#if payoutOption === PayoutOption.Replacement}
         <p>
-          <MoneyInput label="Replacement estimate (USD)" bind:value={replaceEstimateUSD} />
+          <MoneyInput minValue={'0'} label="Replacement estimate (USD)" bind:value={replaceEstimateUSD} />
           <Description>
             How much will it probably cost to replace?
             <br />
@@ -267,7 +266,7 @@ const unSetReplaceEstimate = () => {
     {#if isRepairable === false && payoutOption === PayoutOption.FMV}
       <p>
         <!-- If we know it's not repairable, position this AFTER the "Payout options" prompt. -->
-        <MoneyInput label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
+        <MoneyInput minValue={'0'} label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
         <Description>
           <ConvertCurrencyLink />
         </Description>

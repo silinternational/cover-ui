@@ -1,5 +1,6 @@
 <script lang="ts">
 import { UserAppRole } from '../authn/user'
+import { MAX_TEXT_AREA_LENGTH as maxlength } from 'components/const'
 import {
   Claim,
   ClaimStatus,
@@ -97,7 +98,7 @@ const onDeny = () => dispatch('deny', message)
   {#if statusesAvaitingAdmin.includes(status)}
     <div class="container">
       <div class="text-input">
-        <TextField class="w-100" label="Send a message" bind:value={message} />
+        <TextField {maxlength} required class="w-100" label="Send a message" bind:value={message} />
         <Description>A message is required to deny or ask for changes.</Description>
       </div>
       <div class="left-buttons">

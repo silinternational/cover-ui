@@ -10,7 +10,6 @@ import {
   ConvertCurrencyLink,
   FileDropArea,
   FilePreview,
-  MoneyInput,
   Row,
 } from 'components'
 import { formatDate } from 'components/dates'
@@ -44,7 +43,7 @@ import { formatPageTitle } from 'helpers/pageTitle'
 import { assertHas } from '../../../../validation/assertions'
 import { onMount } from 'svelte'
 import { goto, metatags } from '@roxi/routify'
-import { Button, Page, setNotice } from '@silintl/ui-components'
+import { Button, MoneyInput, Page, setNotice } from '@silintl/ui-components'
 import { formatDistanceToNow } from 'date-fns'
 
 export let claimId: string
@@ -330,7 +329,7 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
 
       {#if isMemberOfPolicy}
         {#if needsReceipt}
-          <MoneyInput bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onMoneyInputBlur} />
+          <MoneyInput minValue={'0'} bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onMoneyInputBlur} />
 
           <p class="label ml-1 mt-6px">
             <ConvertCurrencyLink />

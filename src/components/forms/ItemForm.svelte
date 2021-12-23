@@ -3,14 +3,14 @@ import user, { User } from '../../authn/user'
 import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
 import Description from '../Description.svelte'
 import MakeAndModelModal from 'MakeAndModelModal.svelte'
-import MoneyInput from '../MoneyInput.svelte'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import SelectAccountablePerson from '../SelectAccountablePerson.svelte'
+import { MAX_INPUT_LENGTH as maxlength, MAX_TEXT_AREA_LENGTH } from 'components/const'
 import type { AccountablePersonOptions } from 'data/accountablePersons'
 import { ItemCoverageStatus, PolicyItem } from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
 import { assertHas } from '../../validation/assertions'
-import { Button, Form, Select, TextArea, TextField } from '@silintl/ui-components'
+import { Button, Form, MoneyInput, Select, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let item = {} as PolicyItem
@@ -175,23 +175,29 @@ const setInitialValues = (user: User, item: PolicyItem) => {
     />
   </p>
   <p>
-    <TextField label="Short name" bind:value={name} />
+    <TextField {maxlength} required label="Short name" bind:value={name} />
     <Description>This label will appear on your statements.</Description>
   </p>
   <p>
-    <TextArea label="Item description" bind:value={itemDescription} rows="4" />
+    <TextArea
+      maxlength={MAX_TEXT_AREA_LENGTH}
+      required
+      label="Item description"
+      bind:value={itemDescription}
+      rows="4"
+    />
     <Description>For personal use.</Description>
   </p>
   <p>
-    <TextField label="Unique identifier" bind:value={uniqueIdentifier} />
+    <TextField {maxlength} label="Unique identifier" bind:value={uniqueIdentifier} />
     <Description>Optional. Serial number, IMEI, service tag, VIN</Description>
   </p>
   <p>
-    <TextField label="Make" bind:value={make} />
+    <TextField {maxlength} label="Make" bind:value={make} />
     <Description>Required for mobile items.</Description>
   </p>
   <p>
-    <TextField label="Model" bind:value={model} />
+    <TextField {maxlength} label="Model" bind:value={model} />
     <Description>Required for mobile items.</Description>
   </p>
   <p>
@@ -207,7 +213,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
     </Description>
   </p>
   <p>
-    <MoneyInput label="Market value (USD)" bind:value={marketValueUSD} disabled={marketValueIsDisabled} />
+    <MoneyInput minValue={'0'} label="Market value (USD)" bind:value={marketValueUSD} disabled={marketValueIsDisabled} required />
     <Description>
       <ConvertCurrencyLink />
     </Description>

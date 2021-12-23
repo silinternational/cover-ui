@@ -149,6 +149,9 @@ declare module '@silintl/ui-components' {
     autofocus?: boolean
     disabled?: boolean
     required?: boolean
+    minValue?: string
+    maxValue?: string
+    step?: string
   }
   export class MoneyInput extends SvelteComponentTyped<MoneyInputProps> {}
 

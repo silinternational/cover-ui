@@ -11,6 +11,14 @@ export enum ItemCoverageStatus {
   Revision = 'Revision',
   Inactive = 'Inactive',
 }
+
+export const editableCoverageStatuses = [
+  ItemCoverageStatus.Approved,
+  ItemCoverageStatus.Draft,
+  ItemCoverageStatus.Pending,
+  ItemCoverageStatus.Revision,
+]
+
 export const incompleteItemCoverageStatuses = [
   ItemCoverageStatus.Draft,
   ItemCoverageStatus.Pending,
@@ -76,9 +84,6 @@ export type UpdatePolicyItemRequestBody = {
   category_id: string
   country: string
   coverage_amount: number
-  coverage_end_date: string /*Date*/
-  coverage_start_date: string /*Date*/
-  coverage_status: ItemCoverageStatus
   description: string
   in_storage: boolean
   make: string
@@ -139,7 +144,7 @@ export async function addItem(policyId: string, itemData: any): Promise<PolicyIt
     in_storage: itemData.inStorage,
     make: itemData.make,
     model: itemData.model,
-    name: itemData.shortName,
+    name: itemData.name,
     serial_number: itemData.uniqueIdentifier,
   }
 
@@ -195,13 +200,12 @@ export async function reviseItem(itemId: string, status_reason: string): Promise
  * @param {string} itemId -- The UUID for the applicable policy item
  * @return {Object}
  */
-export async function submitItem(policyId: string, itemId: string): Promise<void> {
+export async function submitItem(itemId: string): Promise<void> {
   const urlPath = `items/${itemId}/submit`
 
-  // TODO: update a store with this response data instead of doing a full reload
   const response = await CREATE<PolicyItem>(urlPath)
 
-  await loadItems(policyId)
+  updateStoreItem(response)
 }
 
 /**
@@ -224,14 +228,12 @@ export async function updateItem(policyId: string, itemId: string, itemData: any
     category_id: itemData.categoryId,
     country: itemData.country,
     coverage_amount: Number(itemData.marketValueUSD) * 100,
-    coverage_end_date: itemData.coverageEndDate || null, // BE blows up on an empty string
-    coverage_start_date: itemData.coverageStartDate,
-    coverage_status: itemData.coverageStatus,
     description: itemData.itemDescription,
     in_storage: itemData.inStorage,
     make: itemData.make,
     model: itemData.model,
-    name: itemData.shortName,
+    name: itemData.name,
+    risk_category_id: itemData.riskCategoryId,
     serial_number: itemData.uniqueIdentifier,
   }
   const updatedItem = await UPDATE<PolicyItem>(urlPath, parsedItemData)
@@ -258,7 +260,7 @@ export async function updateItem(policyId: string, itemId: string, itemData: any
 export async function deleteItem(policyId: string, itemId: string): Promise<any> {
   const urlPath = `items/${itemId}`
 
-  // TODO: Check the contenst of the delete response before removing the item from the store
+  // TODO: Check the contents of the delete response before removing the item from the store
   const response = await DELETE(urlPath)
 
   itemsByPolicyId.update((data) => {
@@ -278,4 +280,8 @@ function updateStoreItem(updatedItem: PolicyItem) {
     data[updatedItem.policy_id] = items
     return data
   })
+}
+
+export const itemIsActive = (item: PolicyItem): boolean => {
+  return item.coverage_status == ItemCoverageStatus.Approved
 }

@@ -1,11 +1,13 @@
 <script lang="ts">
+import { ClaimsTable } from 'components'
+import { claimIsOpen } from 'data/claims'
 import { getNameOfPolicy, loadPolicy, Policy, PolicyType, selectedPolicy } from 'data/policies'
-import { loadItems, selectedPolicyItems } from 'data/items'
+import { itemIsActive, loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
 import { formatDate } from 'components/dates'
 import { isLoadingById, loading } from 'components/progress'
 import { formatFriendlyDate } from 'helpers/date'
 import { formatMoney } from 'helpers/money'
-import { customerClaimDetails, itemDetails } from 'helpers/routes'
+import { itemDetails, settingsPolicy } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { metatags } from '@roxi/routify'
 import { Datatable, Page } from '@silintl/ui-components'
@@ -23,13 +25,27 @@ $: policy = $selectedPolicy
 $: members = policy.members || []
 
 $: policyId && loadItems(policyId)
-$: items = $selectedPolicyItems
-$: claims = policy.claims || []
+// sort items so inactive is last
+$: items = $selectedPolicyItems.sort((a, b) =>
+  a.coverage_status === b.coverage_status ? 0 : a.coverage_status > b.coverage_status ? 1 : -1
+)
+$: activeItems = items.filter(itemIsActive)
+$: claims = policy?.claims || []
+$: openClaimCount = claims.filter(claimIsOpen).length
 $: policyName = getNameOfPolicy(policy)
 $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))
+$: coverage = formatMoney(activeItems.reduce((sum, item) => sum + item.coverage_amount, 0))
+$: premium = formatMoney(activeItems.reduce((sum, item) => sum + item.annual_premium, 0))
 </script>
 
 <style>
+.details {
+  display: flex;
+}
+.details table:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+}
 td,
 th {
   padding: 0.25ex;
@@ -38,47 +54,69 @@ th {
 th {
   text-align: left;
 }
+.subtext {
+  font-weight: normal;
+  font-size: small;
+  padding-left: 0.5rem;
+}
+.bottom-padding {
+  padding: 2rem;
+}
 </style>
 
 <Page>
   <h3>Policy</h3>
-  <table>
-    <tr>
-      <th>Type</th>
-      <td>{policy.type}</td>
-    </tr>
-    {#if policy.type === PolicyType.Team}
+  <div class="details">
+    <table>
       <tr>
-        <th>Name</th>
-        <td>{getNameOfPolicy(policy)}</td>
+        <th>Type</th>
+        <td>{policy.type}</td>
+      </tr>
+      {#if policy.type === PolicyType.Team}
+        <tr>
+          <th>Name</th>
+          <td>{getNameOfPolicy(policy)}</td>
+        </tr>
+        <tr>
+          <th>Account</th>
+          <td>{policy.account || '-'}</td>
+        </tr>
+        <tr>
+          <th>Account Detail</th>
+          <td>{policy.account_detail || '-'}</td>
+        </tr>
+        <tr>
+          <th>Cost Center</th>
+          <td>{policy.cost_center || '-'}</td>
+        </tr>
+        <tr>
+          <th>Entity Code</th>
+          <td>{policy.entity_code?.code || '-'}</td>
+        </tr>
+      {:else if policy.type === PolicyType.Household}
+        <tr>
+          <th>Household ID</th>
+          <td>{policy.household_id || '-'}</td>
+        </tr>
+      {/if}
+      <tr>
+        <th>Updated</th>
+        <td>{formatFriendlyDate(policy.updated_at)}</td>
+      </tr>
+    </table>
+    <table>
+      <tr>
+        <th>Coverage</th><td>{coverage}</td>
       </tr>
       <tr>
-        <th>Account</th>
-        <td>{policy.account || '-'}</td>
+        <th>Premium</th><td>{premium}/yr (2%)</td>
       </tr>
-      <tr>
-        <th>Account Detail</th>
-        <td>{policy.account_detail || '-'}</td>
-      </tr>
-      <tr>
-        <th>Cost Center</th>
-        <td>{policy.cost_center || '-'}</td>
-      </tr>
-      <tr>
-        <th>Entity Code</th>
-        <td>{policy.entity_code?.code || '-'}</td>
-      </tr>
-    {:else if policy.type === PolicyType.Household}
-      <tr>
-        <th>Household ID</th>
-        <td>{policy.household_id || '-'}</td>
-      </tr>
-    {/if}
-    <tr>
-      <th>Updated</th>
-      <td>{formatFriendlyDate(policy.updated_at)}</td>
-    </tr>
-  </table>
+    </table>
+  </div>
+
+  <div class="mt-1">
+    <a class="mdc-theme--primary mt-2" href={settingsPolicy(policyId)}>Policy Settings</a>
+  </div>
 
   <h4>Members</h4>
   <Datatable>
@@ -98,13 +136,14 @@ th {
     </Datatable.Data>
   </Datatable>
 
-  <h4>Items</h4>
+  <h4>Items <span class="subtext">({activeItems?.length} active)</span></h4>
   {#if $loading && isLoadingById(`policies/${policyId}/items`)}
     Loading items...
   {:else}
     <Datatable>
       <Datatable.Header>
         <Datatable.Header.Item>Item</Datatable.Header.Item>
+        <Datatable.Header.Item>Status</Datatable.Header.Item>
         <Datatable.Header.Item>Assigned To</Datatable.Header.Item>
         <Datatable.Header.Item numeric>Covered Value</Datatable.Header.Item>
         <Datatable.Header.Item numeric>Premium</Datatable.Header.Item>
@@ -114,9 +153,9 @@ th {
         {#each items as item (item.id)}
           <Datatable.Data.Row>
             <Datatable.Data.Row.Item
-              ><a href={itemDetails(policyId, item.id)}>{item.name || ''}</a> ({item.coverage_status ||
-                ''})</Datatable.Data.Row.Item
+              ><a href={itemDetails(policyId, item.id)}>{item.name || ''}</a></Datatable.Data.Row.Item
             >
+            <Datatable.Data.Row.Item>{item.coverage_status || ''}</Datatable.Data.Row.Item>
             <Datatable.Data.Row.Item>{item.accountable_person?.name || ''}</Datatable.Data.Row.Item>
             <Datatable.Data.Row.Item numeric>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
             <Datatable.Data.Row.Item numeric>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
@@ -127,54 +166,11 @@ th {
     </Datatable>
   {/if}
 
-  <h4>Claims</h4>
+  <h4>Claims <span class="subtext">({openClaimCount} open)</span></h4>
   {#if $loading && isLoadingById(`policies/${policyId}/claims`)}
     Loading claims...
   {:else}
-    <Datatable>
-      <Datatable.Header>
-        <Datatable.Header.Item>Reference #</Datatable.Header.Item>
-        <Datatable.Header.Item>Incident Date</Datatable.Header.Item>
-        <Datatable.Header.Item>Status</Datatable.Header.Item>
-        <Datatable.Header.Item>Repairable</Datatable.Header.Item>
-        <Datatable.Header.Item>Payout Option</Datatable.Header.Item>
-        <Datatable.Header.Item numeric>Repair</Datatable.Header.Item>
-        <Datatable.Header.Item numeric>Replacement</Datatable.Header.Item>
-        <Datatable.Header.Item numeric>FMV</Datatable.Header.Item>
-      </Datatable.Header>
-      <Datatable.Data>
-        {#each claims as claim (claim.id)}
-          {#each claim.claim_items as claimItem (claimItem.id)}
-            <Datatable.Data.Row>
-              <Datatable.Data.Row.Item>
-                <a href={customerClaimDetails(policyId, claim.id)}>{claim.reference_number || ''}</a>
-                ({claim.status})
-              </Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item>{formatFriendlyDate(claim.incident_date)}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item>{claimItem.status || ''}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item>{claimItem.is_repairable ? 'Yes' : 'No'}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item>{claimItem.payout_option || ''}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item numeric>{formatMoney(claimItem.repair_estimate)}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item numeric>{formatMoney(claimItem.replace_estimate)}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item numeric>{formatMoney(claimItem.fmv)}</Datatable.Data.Row.Item>
-            </Datatable.Data.Row>
-          {:else}
-            <Datatable.Data.Row>
-              <Datatable.Data.Row.Item>
-                <a href={customerClaimDetails(policyId, claim.id)}>{claim.reference_number || ''}</a>
-                ({claim.status})
-              </Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item>{formatFriendlyDate(claim.incident_date)}</Datatable.Data.Row.Item>
-            </Datatable.Data.Row>
-          {/each}
-        {:else}
-          <Datatable.Data.Row>
-            <Datatable.Data.Row.Item colspan={8}>
-              <i>None</i>
-            </Datatable.Data.Row.Item>
-          </Datatable.Data.Row>
-        {/each}
-      </Datatable.Data>
-    </Datatable>
+    <ClaimsTable {claims} {policyId} />
   {/if}
+  <div class="bottom-padding" />
 </Page>

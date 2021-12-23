@@ -1,12 +1,15 @@
 <script lang="ts">
 import { UserAppRole } from '../authn/user'
+import { MAX_TEXT_AREA_LENGTH as maxlength } from 'components/const'
 import {
   Claim,
   ClaimStatus,
   editableStatuses,
   PayoutOption,
+  statusesAvaitingAdmin,
   statusesAwaitingSignator,
   statusesAwaitingSteward,
+  ReceiptType,
 } from 'data/claims'
 import { roleSelection } from 'data/role-policy-selection'
 import Description from './Description.svelte'
@@ -19,7 +22,7 @@ export let noFilesUploaded: boolean
 export let needsFile: boolean
 export let isMemberOfPolicy: boolean
 export let isAdmin: boolean
-export let receiptType: string
+export let receiptType: ReceiptType
 export let payoutOption: PayoutOption
 
 const dispatch = createEventDispatcher()
@@ -28,21 +31,21 @@ let message = ''
 let status: ClaimStatus
 $: status = claim.status
 
-$: approveButtonLabel = receiptType === 'Replacement' ? 'replace' : 'repair'
+$: approveButtonLabel = receiptType === ReceiptType.repair ? ReceiptType.repair : 'replace'
 
 let action: string
 let actionLabel: string
-$: isFMVorEvacuation = payoutOption === 'FMV' || payoutOption === 'FixedFraction'
+$: isFMVorEvacuation = payoutOption === PayoutOption.FMV || payoutOption === PayoutOption.FixedFraction
 $: switch (status) {
-  case 'Review1':
+  case ClaimStatus.Review1:
     action = isFMVorEvacuation ? 'approve' : 'preapprove'
     actionLabel = isFMVorEvacuation ? 'approve payout' : `okay to ${approveButtonLabel}`
     break
-  case 'Review2':
+  case ClaimStatus.Review2:
     action = 'approve'
     actionLabel = 'approve payout'
     break
-  case 'Review3':
+  case ClaimStatus.Review3:
     action = 'approve'
     actionLabel = 'give final approval'
     break
@@ -51,7 +54,7 @@ $: switch (status) {
 }
 
 $: isEditable = editableStatuses.includes(status)
-$: showSubmit = status === 'Draft' && needsFile
+$: showSubmit = status === ClaimStatus.Draft && needsFile
 $: showApprovalButton =
   (statusesAwaitingSteward.includes(status) && $roleSelection === UserAppRole.Steward) ||
   (statusesAwaitingSignator.includes(status) && $roleSelection === UserAppRole.Signator)
@@ -92,20 +95,20 @@ const onDeny = () => dispatch('deny', message)
 </style>
 
 {#if isAdmin}
-  {#if ['Review1', 'Review2', 'Review3'].includes(status)}
+  {#if statusesAvaitingAdmin.includes(status)}
     <div class="container">
       <div class="text-input">
-        <TextField class="w-100" label="Send a message" bind:value={message} />
+        <TextField {maxlength} required class="w-100" label="Send a message" bind:value={message} />
         <Description>A message is required to deny or ask for changes.</Description>
       </div>
       <div class="left-buttons">
         <Button on:click={onDeny} disabled={!message} outlined>deny</Button>
       </div>
       <div class="right-buttons">
-        {#if ['Review1', 'Review3'].includes(status)}
+        {#if [ClaimStatus.Review1, ClaimStatus.Review3].includes(status)}
           <Button on:click={onAskForChanges} disabled={!message} outlined>ask for changes</Button>
         {/if}
-        {#if ['Review2', 'Review3'].includes(status) && !isFMVorEvacuation}
+        {#if [ClaimStatus.Review2, ClaimStatus.Review3].includes(status) && !isFMVorEvacuation}
           <Button class="ml-1" on:click={onFixReceipt} disabled={!message} outlined>request a new receipt</Button>
         {/if}
       </div>

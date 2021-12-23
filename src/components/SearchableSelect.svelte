@@ -1,4 +1,5 @@
 <script lang="ts">
+import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import { generateRandomID } from '@silintl/ui-components/random'
 import { createEventDispatcher } from 'svelte'
 
@@ -10,9 +11,11 @@ export let width = '232px'
 
 let randomId = generateRandomID('dataList-')
 
+$: internalChoice = choice
+
 const dispatch = createEventDispatcher()
 
-const onChange = () => options[choice] && dispatch('chosen', options[choice])
+const onChange = () => options[internalChoice] && dispatch('chosen', options[internalChoice])
 </script>
 
 <style>
@@ -58,14 +61,18 @@ const onChange = () => options[choice] && dispatch('chosen', options[choice])
 
 <label class="custom-field" style="--field-padding: {padding};">
   <input
+    {maxlength}
     class="fs-14 {$$props.class}"
     style="width: {width}"
     list={randomId}
     placeholder="&nbsp;"
-    bind:value={choice}
+    bind:value={internalChoice}
     on:change={onChange}
-    on:blur={() => dispatch('check', choice)}
-    on:focus={() => (choice = '')}
+    on:blur={() => {
+      dispatch('check', internalChoice)
+      internalChoice = choice
+    }}
+    on:focus={() => (internalChoice = '')}
   />
   <span class="placeholder">{placeholder}</span>
 </label>

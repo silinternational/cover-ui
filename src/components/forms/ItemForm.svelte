@@ -3,22 +3,24 @@ import user, { User } from '../../authn/user'
 import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
 import Description from '../Description.svelte'
 import MakeAndModelModal from 'MakeAndModelModal.svelte'
-import MoneyInput from '../MoneyInput.svelte'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import SelectAccountablePerson from '../SelectAccountablePerson.svelte'
+import { MAX_INPUT_LENGTH as maxlength, MAX_TEXT_AREA_LENGTH } from 'components/const'
 import type { AccountablePersonOptions } from 'data/accountablePersons'
-import type { ItemCoverageStatus, PolicyItem } from 'data/items'
+import { ItemCoverageStatus, PolicyItem } from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
 import { assertHas } from '../../validation/assertions'
-import { Button, Form, Select, TextArea, TextField } from '@silintl/ui-components'
+import { Button, Form, MoneyInput, Select, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let item = {} as PolicyItem
 export let policyId: string
 
+let applyBtnLabel = ''
 let formData = {} as any
 let open = false
 let makeModelIsOpen = false
+let selectedAccountablePersonId: string
 
 const dispatch = createEventDispatcher<{ submit: any; 'save-for-later': any; delete: any }>()
 
@@ -34,7 +36,8 @@ let itemDescription = ''
 let inStorage = false
 let make = ''
 let model = ''
-let shortName = ''
+let riskCategoryId = ''
+let name = ''
 let uniqueIdentifier = ''
 
 // Set initial values based on the provided item data.
@@ -43,9 +46,11 @@ $: setInitialValues($user, item)
 let initialCategoryId: string
 let today = new Date()
 
-$: selectedAccountablePersonId = item?.accountable_person?.id || $user.id
 $: country = item?.accountable_person?.country || country
 $: !$catItemsInitialized && loadCategories()
+$: itemIsDraft = item.coverage_status === ItemCoverageStatus.Draft
+$: marketValueIsDisabled = !!item.id && !itemIsDraft
+$: applyBtnLabel = !item.coverage_status || itemIsDraft ? 'get approval' : 'save changes'
 
 const onAccountablePersonChange = (event: CustomEvent<AccountablePersonOptions>) => {
   accountablePersonId = event.detail?.id
@@ -68,7 +73,8 @@ const getFormData = () => {
     inStorage,
     make,
     model,
-    shortName,
+    name,
+    riskCategoryId,
     uniqueIdentifier,
   }
 }
@@ -86,7 +92,7 @@ const onCategorySelectPopulated = () => {
 const validateOnSave = (formData: any) => {
   assertHas(formData.accountablePersonId, 'Please Assign an Accountable Person')
   assertHas(formData.categoryId, 'Please select a category')
-  assertHas(formData.shortName, 'Please specify a short name')
+  assertHas(formData.name, 'Please specify a short name')
 
   return true
 }
@@ -99,7 +105,12 @@ const validate = (formData: any) => {
   return true
 }
 
-const areMakeAndModelRequired = () => $categories.find((category) => category.id === categoryId)?.require_make_model
+const areMakeAndModelRequired = () => {
+  return (
+    item.coverage_status !== ItemCoverageStatus.Approved &&
+    $categories.find((category) => category.id === categoryId)?.require_make_model
+  )
+}
 
 const onSubmit = (event: Event) => {
   formData = getFormData()
@@ -147,7 +158,8 @@ const setInitialValues = (user: User, item: PolicyItem) => {
   inStorage = typeof item.in_storage === 'boolean' ? item.in_storage : false
   make = item.make || make
   model = item.model || model
-  shortName = item.name || shortName
+  riskCategoryId = item.risk_category?.id || riskCategoryId
+  name = item.name || name
   uniqueIdentifier = item.serial_number || uniqueIdentifier
 }
 </script>
@@ -163,23 +175,29 @@ const setInitialValues = (user: User, item: PolicyItem) => {
     />
   </p>
   <p>
-    <TextField label="Short name" bind:value={shortName} />
+    <TextField {maxlength} required label="Short name" bind:value={name} />
     <Description>This label will appear on your statements.</Description>
   </p>
   <p>
-    <TextArea label="Item description" bind:value={itemDescription} rows="4" />
+    <TextArea
+      maxlength={MAX_TEXT_AREA_LENGTH}
+      required
+      label="Item description"
+      bind:value={itemDescription}
+      rows="4"
+    />
     <Description>For personal use.</Description>
   </p>
   <p>
-    <TextField label="Unique identifier" bind:value={uniqueIdentifier} />
+    <TextField {maxlength} label="Unique identifier" bind:value={uniqueIdentifier} />
     <Description>Optional. Serial number, IMEI, service tag, VIN</Description>
   </p>
   <p>
-    <TextField label="Make" bind:value={make} />
+    <TextField {maxlength} label="Make" bind:value={make} />
     <Description>Required for mobile items.</Description>
   </p>
   <p>
-    <TextField label="Model" bind:value={model} />
+    <TextField {maxlength} label="Model" bind:value={model} />
     <Description>Required for mobile items.</Description>
   </p>
   <p>
@@ -195,18 +213,18 @@ const setInitialValues = (user: User, item: PolicyItem) => {
     </Description>
   </p>
   <p>
-    <MoneyInput label="Market value (USD)" bind:value={marketValueUSD} />
+    <MoneyInput label="Market value (USD)" bind:value={marketValueUSD} disabled={marketValueIsDisabled} required />
     <Description>
       <ConvertCurrencyLink />
     </Description>
   </p>
   <p>
     <Button outlined on:click={saveForLater}>Save for later</Button>
-    {#if item.coverage_status === 'Draft'}
+    {#if itemIsDraft}
       <Button outlined on:click={onDelete}>Delete</Button>
       <ItemDeleteModal {open} {item} on:closed={handleDialog} />
     {/if}
-    <Button raised>Get approval</Button>
+    <Button raised>{applyBtnLabel}</Button>
     <MakeAndModelModal open={makeModelIsOpen} on:closed={onMakeModelClosed} />
   </p>
 </Form>

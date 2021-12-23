@@ -2,7 +2,7 @@
 import Banner from './Banner.svelte'
 import ItemBanner from './banners/ItemBanner.svelte'
 import MessageBanner from './banners/MessageBanner.svelte'
-import type { PolicyItem, ItemCoverageStatus } from 'data/items'
+import { PolicyItem, ItemCoverageStatus } from 'data/items'
 import { getPolicyById, loadPolicy, policies, Policy, PolicyType } from 'data/policies'
 import { formatMoney } from 'helpers/money'
 import { formatDate } from './dates'
@@ -22,7 +22,7 @@ $: $policies && (policy = getPolicyById(policyId))
 
 $: statusText = getItemStatusText(item)
 $: status = (item.coverage_status || '') as ItemCoverageStatus
-$: showRevisionMessage = item.status_reason && status === 'Revision'
+$: showRevisionMessage = item.status_reason && status === ItemCoverageStatus.Revision
 $: startDate = formatDate(item.coverage_start_date)
 $: endDate = formatDate(item.coverage_end_date)
 $: commonDetails = {

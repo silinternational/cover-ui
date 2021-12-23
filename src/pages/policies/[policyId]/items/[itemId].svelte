@@ -1,12 +1,14 @@
 <script lang="ts">
 import user, { UserAppRole } from '../../../../authn/user'
 import { Breadcrumb, ItemDeleteModal, ItemDetails } from 'components'
+import { MAX_TEXT_AREA_LENGTH as maxlength } from 'components/const'
 import { loading } from 'components/progress'
 import { formatDate } from 'components/dates'
 import {
   approveItem,
   deleteItem,
   denyItem,
+  editableCoverageStatuses,
   ItemCoverageStatus,
   loadItems,
   PolicyItem,
@@ -42,15 +44,16 @@ $: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
 $: itemName = item.name || ''
 $: status = (item.coverage_status || '') as ItemCoverageStatus
 $: isMemberOfPolicy = memberBelongsToPolicy($user.id, $policies, item.policy_id)
-$: status === 'Draft' && isMemberOfPolicy && editItemRedirect()
+$: status === ItemCoverageStatus.Draft && isMemberOfPolicy && editItemRedirect()
 
 $: policyId && item.id && loadPolicyItemHistory(policyId, item.id)
 $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
 $: policyItemHistory = $policyHistoryByItemId[item.id]
 $: hasHistory = policyItemHistory && policyItemHistory.length > 0
 
-$: allowRemoveCovereage = (!['Inactive', 'Denied'].includes(status) && isMemberOfPolicy) as boolean
-$: canEdit = ['Draft', 'Pending', 'Revision'].includes(status) && isMemberOfPolicy
+$: allowRemoveCovereage = (![ItemCoverageStatus.Inactive, ItemCoverageStatus.Denied].includes(status) &&
+  isMemberOfPolicy) as boolean
+$: canEdit = editableCoverageStatuses.includes(status) && isMemberOfPolicy
 
 // Dynamic breadcrumbs data:
 $: policyName = getNameOfPolicy(policy)
@@ -152,11 +155,11 @@ const onReviseItem = () => {
     <ItemDetails {item} {policyId} {isAdmin} />
 
     <br />
-    {#if status === 'Approved' && isMemberOfPolicy}
+    {#if status === ItemCoverageStatus.Approved && isMemberOfPolicy}
       <div class="m-1">
         <Button class="mdc-theme--secondary-background" on:click={goToNewClaim} raised>File Claim</Button>
       </div>
-    {:else if status === 'Pending' && isAdmin}
+    {:else if status === ItemCoverageStatus.Pending && isAdmin}
       <div>
         <Button class="mdc-theme--secondary-background" on:click={onDenyItem} raised>Deny Item Coverage</Button>
         <Button class="m-1 mdc-theme--primary-variant" on:click={onReviseItem} raised>Ask for Changes</Button>
@@ -197,6 +200,7 @@ const onReviseItem = () => {
     >
       <p class="message-box">
         <TextArea
+          {maxlength}
           style="width: 300px"
           rows="4"
           placeholder="A message is required to deny coverage or ask for changes"

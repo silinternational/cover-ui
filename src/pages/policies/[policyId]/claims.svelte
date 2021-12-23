@@ -1,6 +1,6 @@
 <script lang="ts">
 import { UserAppRole } from '../../../authn/user'
-import { ClaimCards, Row, Breadcrumb } from 'components'
+import { Breadcrumb, ClaimCards, ClaimsTable, Row } from 'components'
 import { Claim, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import { loadItems } from 'data/items'
 import { getNameOfPolicy, selectedPolicy } from 'data/policies'
@@ -9,7 +9,7 @@ import { customerClaims, customerClaimDetails, POLICIES, policyDetails } from 'h
 import { formatPageTitle } from 'helpers/pageTitle'
 import { items } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
-import { Button, Page } from '@silintl/ui-components'
+import { Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 export let policyId: string
@@ -44,9 +44,10 @@ const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(ev
   <Row cols={'12'}>
     {#if $selectedPolicyClaims.length}
       <ClaimCards {isAdmin} claims={$selectedPolicyClaims} on:goto-claim={onGotoClaim} />
+      <ClaimsTable claims={$selectedPolicyClaims} {policyId} />
     {:else}
-      <p class="text-align-center">You don't have any claims in this policy</p>
-      <p class="text-align-center">
+      <p class="m-0-auto text-align-center">You don't have any claims in this policy</p>
+      <p class="m-0-auto text-align-center">
         <a class="m-1 mdc-theme--primary" href={items(policyId)}>Pick an item to file a claim</a>
       </p>
     {/if}

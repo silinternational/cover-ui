@@ -1,7 +1,7 @@
 <script lang="ts">
 import { CardsGrid, ItemsTable, Row } from 'components'
 import { isLoadingPolicyItems, loading } from 'components/progress'
-import { deleteItem, loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
+import { deleteItem, ItemCoverageStatus, loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
 import { getNameOfPolicy, selectedPolicy } from 'data/policies'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import * as routes from 'helpers/routes'
@@ -11,8 +11,8 @@ import { Button, Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 $: policyId = $selectedPolicyId
-$: activeItems = $selectedPolicyItems.filter((item) => item.coverage_status !== 'Inactive')
-$: inactiveItems = $selectedPolicyItems.filter((item) => item.coverage_status === 'Inactive')
+$: activeItems = $selectedPolicyItems.filter((item) => item.coverage_status !== ItemCoverageStatus.Inactive)
+$: inactiveItems = $selectedPolicyItems.filter((item) => item.coverage_status === ItemCoverageStatus.Inactive)
 
 onMount(() => {
   loadItems(policyId)
@@ -63,8 +63,8 @@ const onGotoItem = (event: CustomEvent<string>) => $goto(event.detail)
     {:else if $loading && isLoadingPolicyItems(policyId)}
       Loading items...
     {:else}
-      <p class="text-align-center">You don't have any items in this policy</p>
-      <p class="text-align-center">
+      <p class="m-0-auto text-align-center">You don't have any items in this policy</p>
+      <p class="m-0-auto text-align-center">
         <Button class="m-1" raised prependIcon="add_circle" url={routes.itemsNew(policyId)}>Add Item</Button>
       </p>
     {/if}

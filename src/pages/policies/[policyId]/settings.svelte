@@ -1,7 +1,8 @@
 <script lang="ts">
-import user from '../../../authn/user'
+import user, { isAdmin } from '../../../authn/user'
 import { throwError } from '../../../error'
 import { Breadcrumb, Description, SearchableSelect, Modal, DependentForm } from 'components'
+import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import type { DependentFormData } from 'components/forms/DependentForm.svelte'
 import {
   addDependent,
@@ -13,8 +14,8 @@ import {
 import { entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { policies, updatePolicy, Policy, PolicyType, loadPolicy } from 'data/policies'
 import { invitePolicyMember, loadMembersOfPolicy, PolicyMember, selectedPolicyMembers } from 'data/policy-members'
-import { selectedPolicyId } from 'data/role-policy-selection'
-import { settingsPolicy, SETTINGS_PERSONAL } from 'helpers/routes'
+import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
+import { POLICIES, policyDetails, settingsPolicy, SETTINGS_PERSONAL } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
 import { Button, TextField, IconButton, Page, setNotice, Tooltip } from '@silintl/ui-components'
@@ -38,7 +39,14 @@ let modalData: PolicyDependent
 let showAddDependentModal = false
 let modalTitle = 'Add Person'
 
-let breadcrumbLinks = [{ name: 'Policy Settings', url: settingsPolicy(policyId) }]
+$: breadcrumbLinks = isAdmin($roleSelection)
+  ? [
+      { name: 'Policies', url: POLICIES },
+      { name: policy.name, url: policyDetails(policyId) },
+      { name: 'Policy Settings', url: settingsPolicy(policyId) },
+    ]
+  : [{ name: 'Policy Settings', url: settingsPolicy(policyId) }]
+
 metatags.title = formatPageTitle('Policy Settings')
 
 $: if (policyId) {
@@ -235,22 +243,22 @@ p {
 
 <Page>
   <Breadcrumb links={breadcrumbLinks} />
-  {#if policy.type === PolicyType.Household}
+  {#if policy.type === PolicyType.Household && isAdmin($roleSelection)}
     <p>
-      <span class="header">Household ID<span class="required">*</span></span>
-      <TextField placeholder={'1234567'} bind:value={householdId} on:blur={updateHouseholdId} />
+      <span class="header">Household ID<span class="required-input">*</span></span>
+      <TextField {maxlength} required bind:value={householdId} on:blur={updateHouseholdId} />
     </p>
   {/if}
 
   {#if policy.type === PolicyType.Team}
     <p>
-      <span class="header">Policy name<span class="required">*</span></span>
-      <TextField bind:value={policyName} on:blur={updatePolicyName} />
+      <span class="header">Policy name<span class="required-input">*</span></span>
+      <TextField {maxlength} required bind:value={policyName} on:blur={updatePolicyName} />
       <Description>Appears in your statements</Description>
     </p>
 
     <p>
-      <span class="header">Affiliation<span class="required">*</span></span>
+      <span class="header">Affiliation<span class="required-input">*</span></span>
       <SearchableSelect
         options={entityOptions}
         choice={$entityCodes.find((code) => code.code === entityCode)?.name || ''}
@@ -261,18 +269,18 @@ p {
       />
     </p>
     <p>
-      <span class="header">Cost center<span class="required">*</span></span>
-      <TextField placeholder={'1234567'} bind:value={costCenter} on:blur={updateCostCenter} />
+      <span class="header">Cost center<span class="required-input">*</span></span>
+      <TextField {maxlength} required bind:value={costCenter} on:blur={updateCostCenter} />
     </p>
 
     <p>
-      <span class="header">Account<span class="required">*</span></span>
-      <TextField placeholder="12345" bind:value={account} on:blur={updateAccount} />
+      <span class="header">Account<span class="required-input">*</span></span>
+      <TextField {maxlength} required bind:value={account} on:blur={updateAccount} />
     </p>
 
     <p>
       <span class="header">Account Detail</span>
-      <TextField placeholder="details" bind:value={accountDetail} on:blur={updateAccountDetail} />
+      <TextField {maxlength} bind:value={accountDetail} on:blur={updateAccountDetail} />
     </p>
   {/if}
 
@@ -283,13 +291,13 @@ p {
     {#each policyMembers as policyMember}
       <li class="accountable-people-list-item">
         <span>
-          {policyMember.first_name}
-          {policyMember.last_name}
+          {policyMember.first_name || ''}
+          {policyMember.last_name || ''}
           {isYou(policyMember) ? '(you)' : ''}
           <br />
-          <small>{policyMember.email}</small>
+          <small>{policyMember.email || ''}</small>
           <br />
-          <small>{policyMember.country}</small>
+          <small>{policyMember.country || ''}</small>
         </span>
         <span class="edit-button">
           {#if isYou(policyMember)}
@@ -312,13 +320,13 @@ p {
     {#each dependents as dependent}
       <li class="accountable-people-list-item">
         <span>
-          {dependent.name}
+          {dependent.name || ''}
           {#if isHouseholdPolicy}
             <br />
-            <small>Dependent ({dependent.relationship})</small>
+            <small>Dependent ({dependent.relationship || '-'})</small>
           {/if}
           <br />
-          <small>{dependent.country}</small>
+          <small>{dependent.country || ''}</small>
         </span>
         <span class="edit-button">
           <Tooltip.Wrapper ariaDescribedBy={'edit-person-' + dependent.id}>

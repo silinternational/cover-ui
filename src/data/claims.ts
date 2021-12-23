@@ -5,7 +5,27 @@ import type { PolicyItem } from './items'
 import { derived, writable } from 'svelte/store'
 import { selectedPolicyId } from './role-policy-selection'
 
-export type PayoutOption = 'Repair' | 'Replacement' | 'FMV' | 'FixedFraction'
+export enum PayoutOption {
+  Repair = 'Repair',
+  Replacement = 'Replacement',
+  FMV = 'FMV',
+  FixedFraction = 'FixedFraction',
+}
+export enum ReceiptType {
+  repair = 'repair',
+  replacement = 'replacement',
+}
+export enum ClaimStatus {
+  Draft = 'Draft',
+  Review1 = 'Review1',
+  Review2 = 'Review2',
+  Review3 = 'Review3',
+  Revision = 'Revision',
+  Receipt = 'Receipt',
+  Approved = 'Approved',
+  Paid = 'Paid',
+  Denied = 'Denied',
+}
 export type ClaimItemStatus =
   | 'Draft'
   | 'Review1'
@@ -17,16 +37,6 @@ export type ClaimItemStatus =
   | 'Paid'
   | 'Denied'
 export type ClaimIncidentTypeName = string // dynamically defined by the claim-incident-types endpoint
-export type ClaimStatus =
-  | 'Draft'
-  | 'Review1'
-  | 'Review2'
-  | 'Review3'
-  | 'Revision'
-  | 'Receipt'
-  | 'Approved'
-  | 'Paid'
-  | 'Denied'
 export type ClaimFilePurpose = 'Receipt' | 'Evidence of FMV' | 'Repair Estimate'
 
 export type ClaimFile = {
@@ -49,10 +59,11 @@ export type ClaimFile = {
 
 export type ClaimItem = {
   claim_id: string
+  coverage_amount: number /*cents*/
   created_at: string /*Date*/
   fmv: number
   id: string
-  is_repairable: boolean
+  is_repairable: boolean | null
   item: PolicyItem
   item_id: string
   payout_amount: number
@@ -149,7 +160,14 @@ export const selectedPolicyClaims = derived([claims, selectedPolicyId], ([$claim
 })
 export const initialized = writable<boolean>(false)
 
-export const editableStatuses: ClaimStatus[] = ['Draft', 'Review1', 'Review2', 'Review3', 'Revision', 'Receipt']
+export const editableStatuses: ClaimStatus[] = [
+  ClaimStatus.Draft,
+  ClaimStatus.Review1,
+  ClaimStatus.Review2,
+  ClaimStatus.Review3,
+  ClaimStatus.Revision,
+  ClaimStatus.Receipt,
+]
 export const incompleteClaimItemStatuses: ClaimItemStatus[] = [
   'Draft',
   'Review1',
@@ -158,8 +176,9 @@ export const incompleteClaimItemStatuses: ClaimItemStatus[] = [
   'Revision',
   'Receipt',
 ]
-export const statusesAwaitingSteward: ClaimStatus[] = ['Review1', 'Review2']
-export const statusesAwaitingSignator: ClaimStatus[] = ['Review3']
+export const statusesAwaitingSteward: ClaimStatus[] = [ClaimStatus.Review1, ClaimStatus.Review2]
+export const statusesAwaitingSignator: ClaimStatus[] = [ClaimStatus.Review3]
+export const statusesAvaitingAdmin: ClaimStatus[] = [...statusesAwaitingSteward, ...statusesAwaitingSignator]
 
 /**
  * Update a claim in our local list (store) of claims.
@@ -420,4 +439,8 @@ export const getClaimById = async (claimId: string): Promise<Claim> => {
   updateClaimsStore(response)
 
   return response
+}
+
+export const claimIsOpen = (claim: Claim): boolean => {
+  return incompleteClaimItemStatuses.includes(claim.status)
 }

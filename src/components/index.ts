@@ -7,6 +7,7 @@ import ClaimActions from './ClaimActions.svelte'
 import ClaimCard from './ClaimCard.svelte'
 import ClaimCards from './ClaimCards.svelte'
 import ClaimForm from './forms/ClaimForm.svelte'
+import ClaimsTable from './ClaimsTable.svelte'
 import ConvertCurrencyLink from './ConvertCurrencyLink.svelte'
 import CountrySelector from './CountrySelector.svelte'
 import DateInput from './DateInput.svelte'
@@ -20,7 +21,6 @@ import ItemDetails from './ItemDetails.svelte'
 import ItemForm from './forms/ItemForm.svelte'
 import ItemsTable from './ItemsTable.svelte'
 import Modal from './mdc/Modal.svelte'
-import MoneyInput from './MoneyInput.svelte'
 import NoHouseholdIdModal from './NoHouseholdIdModal.svelte'
 import RadioOptions from './RadioOptions.svelte'
 import RecentActivityTable from './RecentActivityTable.svelte'
@@ -38,6 +38,7 @@ export {
   Breadcrumb,
   ClaimActions,
   ClaimForm,
+  ClaimsTable,
   ConvertCurrencyLink,
   CountrySelector,
   DateInput,
@@ -51,7 +52,6 @@ export {
   ItemForm,
   ItemsTable,
   Modal,
-  MoneyInput,
   NoHouseholdIdModal,
   RadioOptions,
   CardsGrid,

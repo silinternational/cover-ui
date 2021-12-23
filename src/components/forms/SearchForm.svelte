@@ -1,4 +1,5 @@
 <script lang="ts">
+import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import { debounce } from 'lodash-es'
 import { createEventDispatcher } from 'svelte'
 import { Form, TextField } from '@silintl/ui-components'
@@ -15,5 +16,5 @@ const onKeydown = debounce(() => dispatch('search', searchFieldContents), 500)
 
 <Form>
   Search:
-  <TextField bind:value={searchFieldContents} on:keydown={onKeydown} />
+  <TextField {maxlength} bind:value={searchFieldContents} on:keydown={onKeydown} />
 </Form>

@@ -4,7 +4,15 @@ import { Breadcrumb, ItemBanner, ItemForm } from 'components'
 import { loading } from 'components/progress'
 import { loadDependents } from 'data/dependents'
 import { loadMembersOfPolicy } from 'data/policy-members'
-import { deleteItem, loadItems, PolicyItem, selectedPolicyItems, submitItem, updateItem } from 'data/items'
+import {
+  deleteItem,
+  ItemCoverageStatus,
+  loadItems,
+  PolicyItem,
+  selectedPolicyItems,
+  submitItem,
+  updateItem,
+} from 'data/items'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { HOME, items as itemsRoute, itemDetails, itemEdit } from 'helpers/routes'
@@ -36,7 +44,14 @@ $: itemName && (metatags.title = formatPageTitle(`Items > ${itemName} > Edit`))
 
 const onApply = async (event: CustomEvent) => {
   await updateItem(policyId, itemId, event.detail)
-  isCheckingOut = true
+  if (item.coverage_status === ItemCoverageStatus.Draft) {
+    isCheckingOut = true
+  } else {
+    if (item.coverage_status === ItemCoverageStatus.Revision) {
+      await submitItem(itemId)
+    }
+    $goto(itemDetails(policyId, itemId))
+  }
 }
 
 const onSaveForLater = async (event: CustomEvent) => {
@@ -53,7 +68,7 @@ const onDelete = async () => {
 
 const onAgreeAndPay = async (event: CustomEvent<string>) => {
   const itemId = event.detail
-  await submitItem(policyId, itemId)
+  await submitItem(itemId)
   $goto(itemDetails(policyId, itemId))
 }
 
@@ -74,7 +89,7 @@ const onEdit = () => {
   <!-- @todo Handle situations where the user isn't allowed to edit this item (if any). -->
   <Page>
     <Breadcrumb links={breadcrumbLinks} />
-    <ItemBanner itemStatus="Draft" class="my-2" />
+    <ItemBanner itemStatus={item.coverage_status} class="my-2" />
     <ItemForm {item} {policyId} on:submit={onApply} on:save-for-later={onSaveForLater} on:delete={onDelete} />
   </Page>
 {/if}

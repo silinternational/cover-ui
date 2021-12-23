@@ -1,6 +1,7 @@
 <script lang="ts">
 import user, { attachUserPhoto, updateUser } from '../../authn/user'
 import { Breadcrumb, CountrySelector, FileDropArea, RadioOptions } from 'components'
+import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import { upload } from 'data'
 import { policies } from 'data/policies'
 import { assertEmailAddress } from '../../validation/assertions'
@@ -14,19 +15,27 @@ import 'croppie/croppie.css'
 const NOTIFICATION_OPTION_DEFAULT = 'default_email'
 const NOTIFICATION_OPTION_CUSTOM = 'custom_email'
 
+let email_override: string
+let notification_email: string
 let uploading = false
-let notification_email = $user.email_override ? NOTIFICATION_OPTION_CUSTOM : NOTIFICATION_OPTION_DEFAULT
-let email_override = $user.email_override || ''
-let country = $user.country || ''
 let croppie: Croppie
 let croppieContainer: HTMLDivElement
 let breadcrumbLinks = [{ name: 'Personal Settings', url: SETTINGS_PERSONAL }]
 metatags.title = formatPageTitle('Personal Settings')
 
+$: country = $user.country || ''
+$: $user.id && setEmail()
 $: notificationOptions = [
   { label: 'Default email: ' + $user.email, value: NOTIFICATION_OPTION_DEFAULT },
   { label: 'Custom email', value: NOTIFICATION_OPTION_CUSTOM },
 ]
+
+const setEmail = () => {
+  if ($user.email_override !== $user.email) {
+    email_override = $user.email_override || ''
+  }
+  notification_email = email_override ? NOTIFICATION_OPTION_CUSTOM : NOTIFICATION_OPTION_DEFAULT
+}
 
 const updateCustomEmail = async () => {
   assertEmailAddress(email_override, 'Please enter a valid email address')
@@ -36,6 +45,16 @@ const updateCustomEmail = async () => {
     country,
   })
   setNotice('Your notification email has been saved')
+}
+
+const updateEmailSelection = async () => {
+  if (notification_email === NOTIFICATION_OPTION_DEFAULT) {
+    email_override = ''
+    await updateUser({
+      email_override: $user.email,
+      country,
+    })
+  }
 }
 
 const updateCountry = async (event: CustomEvent) => {
@@ -119,14 +138,19 @@ p {
 
   <p>
     <span class="header">Notification email</span>
-    <RadioOptions name="notificationEmail" options={notificationOptions} bind:value={notification_email} />
+    <RadioOptions
+      name="notificationEmail"
+      options={notificationOptions}
+      bind:value={notification_email}
+      on:change={updateEmailSelection}
+    />
   </p>
   {#if notification_email === NOTIFICATION_OPTION_CUSTOM}
-    <TextField placeholder={'Custom email'} bind:value={email_override} on:blur={updateCustomEmail} />
+    <TextField {maxlength} label="Custom email" bind:value={email_override} on:blur={updateCustomEmail} />
   {/if}
 
   <p>
-    <span class="header">Primary Location<span class="required">*</span></span>
+    <span class="header">Primary Location<span class="required-input">*</span></span>
     <CountrySelector on:chosen={updateCountry} {country} />
   </p>
 

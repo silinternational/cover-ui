@@ -2,7 +2,7 @@
 import ClaimCard from './ClaimCard.svelte'
 import ItemCard from './ItemCard.svelte'
 import { Claim, ClaimItem, incompleteClaimItemStatuses, isClaimItem } from 'data/claims'
-import { incompleteItemCoverageStatuses, PolicyItem } from 'data/items'
+import { incompleteItemCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/items'
 import { isRecentClaim, RecentChange } from 'data/recent-activity'
 
 type CardItem = { data: ClaimItem | PolicyItem; claim?: Claim }
@@ -15,7 +15,7 @@ export let isAdmin: boolean = false
 $: cardItems = recentChanges.length ? parseRecentChanges(recentChanges) : parseClaimsAndPolicyItems(claims, policyItems)
 
 const coverageIsEnding = (item: PolicyItem): boolean => {
-  return item.coverage_status === 'Approved' && item.coverage_end_date
+  return item.coverage_status === ItemCoverageStatus.Approved && !!item.coverage_end_date
 }
 
 const isIncomplete = (card: CardItem) => {

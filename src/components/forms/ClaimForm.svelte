@@ -5,21 +5,17 @@ import {
   isRepairCostTooHigh,
   isUnrepairableOrTooExpensive,
   LOSS_REASON_EVACUATION,
-  PAYOUT_OPTION_FIXED_FRACTION,
-  PAYOUT_OPTION_FMV,
-  PAYOUT_OPTION_REPAIR,
-  PAYOUT_OPTION_REPLACE,
 } from '../../business-rules/claim-payout-amount'
+import { MAX_TEXT_AREA_LENGTH as maxlength } from 'components/const'
 import { claimIncidentTypes, loadClaimIncidentTypes } from 'data/claim-incident-types'
-import type { Claim, ClaimItem, PayoutOption } from 'data/claims'
+import { Claim, ClaimItem, PayoutOption } from 'data/claims'
 import type { PolicyItem } from 'data/items'
 import DateInput from 'DateInput.svelte'
 import Description from 'Description.svelte'
 import ConvertCurrencyLink from 'ConvertCurrencyLink.svelte'
-import MoneyInput from 'MoneyInput.svelte'
 import RadioOptions from 'RadioOptions.svelte'
 import { assertHas } from '../../validation/assertions'
-import { Button, Form, TextArea } from '@silintl/ui-components'
+import { Button, Form, MoneyInput, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher, onMount } from 'svelte'
 
 export let claim = {} as Claim
@@ -41,11 +37,11 @@ const repairableOptions = [
 const payoutOptions = [
   {
     label: 'Replace and get reimbursed later',
-    value: PAYOUT_OPTION_REPLACE,
+    value: PayoutOption.Replacement,
   },
   {
     label: 'Get fair market value (no replacement)',
-    value: PAYOUT_OPTION_FMV,
+    value: PayoutOption.FMV,
   },
 ]
 
@@ -91,15 +87,21 @@ $: unrepairableOrTooExpensive = isUnrepairableOrTooExpensive(isRepairable, repai
 $: shouldAskReplaceOrFMV = !isEvacuation && unrepairableOrTooExpensive === true
 $: shouldAskIfRepairable = !!(potentiallyRepairable && lossReason)
 $: shouldAskForFMV = isFairMarketValueNeeded(isRepairable, payoutOption)
-$: payoutOption !== PAYOUT_OPTION_REPLACE && unSetReplaceEstimate()
+$: payoutOption !== PayoutOption.Replacement && unSetReplaceEstimate()
 $: !shouldAskReplaceOrFMV && unSetPayoutOption()
 $: !shouldAskIfRepairable && unSetRepairableSelection()
 $: !shouldAskForFMV && unSetFairMarketValue()
 $: !isRepairable && unSetRepairEstimate()
-$: needsEvidence = !unrepairableOrTooExpensive || payoutOption === PAYOUT_OPTION_FMV
+$: needsEvidence = !unrepairableOrTooExpensive || payoutOption === PayoutOption.FMV
 $: needsPayoutOption = !(isRepairable || isEvacuation) || repairCostIsTooHigh
-$: canContinueToEvidence =
-  (repairEstimateUSD > 0 && fairMarketValueUSD > 0) || (fairMarketValueUSD > 0 && !isRepairable)
+$: canContinueToEvidence = (!!repairEstimateUSD && !!fairMarketValueUSD) || (!!fairMarketValueUSD && !isRepairable)
+$: saveButtonIsDisabled = !situationDescription || !lossReason
+$: submitIsDisabled =
+  saveButtonIsDisabled ||
+  (potentiallyRepairable && !repairableSelection) ||
+  (isRepairable && (!repairEstimateUSD || !fairMarketValueUSD)) ||
+  (needsPayoutOption && !payoutOption) ||
+  (payoutOption === PayoutOption.Replacement && !replaceEstimateUSD)
 
 // Calculate dynamic options for radio-button prompts.
 $: lossReasonOptions = $claimIncidentTypes.map(({ name, description }) => ({ label: name, value: name, description }))
@@ -123,11 +125,11 @@ const determinePayoutOption = (
   selectedPayoutOption?: PayoutOption
 ) => {
   if (isEvacuation) {
-    return PAYOUT_OPTION_FIXED_FRACTION
+    return PayoutOption.FixedFraction
   }
   if (repairCostIsTooHigh === false) {
     // ... not merely falsy, like `null` or `undefined`
-    return PAYOUT_OPTION_REPAIR
+    return PayoutOption.Repair
   }
   return selectedPayoutOption
 }
@@ -145,13 +147,12 @@ const validateForm = () => {
 const onSubmitClaim = (event: Event) => {
   event.preventDefault()
   validateForm()
-  if (payoutOption === PAYOUT_OPTION_REPLACE) assertHas(replaceEstimateUSD, 'Please enter a replacement estimate')
+  if (payoutOption === PayoutOption.Replacement) assertHas(replaceEstimateUSD, 'Please enter a replacement estimate')
   dispatch('submit', getFormData())
 }
 
 const onSaveForLater = (event: Event) => {
   event.preventDefault()
-  validateForm()
   dispatch('save-for-later', getFormData())
 }
 
@@ -179,9 +180,8 @@ const setInitialValues = (claim: Claim, claimItem: ClaimItem) => {
   }
   lossReason = claim.incident_type || lossReason
   situationDescription = claim.incident_description || situationDescription
-  if (claimItem.is_repairable !== undefined) {
-    repairableSelection = claimItem.is_repairable ? 'repairable' : 'not_repairable'
-  }
+  repairableSelection =
+    typeof claimItem.is_repairable !== 'boolean' || claimItem.is_repairable ? 'repairable' : 'not_repairable'
 
   payoutOption = claimItem.payout_option || payoutOption
 
@@ -220,7 +220,7 @@ const unSetReplaceEstimate = () => {
     </p>
     <p>
       <span class="header">What happened?</span>
-      <TextArea label="Describe the situation" bind:value={situationDescription} rows="4" />
+      <TextArea {maxlength} required label="Describe the situation" bind:value={situationDescription} rows="4" />
     </p>
     {#if shouldAskIfRepairable}
       <div>
@@ -251,7 +251,7 @@ const unSetReplaceEstimate = () => {
         <span class="header">Payout options</span>
         <RadioOptions name="payoutOption" options={payoutOptions} bind:value={payoutOption} />
       </div>
-      {#if payoutOption === PAYOUT_OPTION_REPLACE}
+      {#if payoutOption === PayoutOption.Replacement}
         <p>
           <MoneyInput label="Replacement estimate (USD)" bind:value={replaceEstimateUSD} />
           <Description>
@@ -263,7 +263,7 @@ const unSetReplaceEstimate = () => {
       {/if}
     {/if}
 
-    {#if isRepairable === false && payoutOption === PAYOUT_OPTION_FMV}
+    {#if isRepairable === false && payoutOption === PayoutOption.FMV}
       <p>
         <!-- If we know it's not repairable, position this AFTER the "Payout options" prompt. -->
         <MoneyInput label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
@@ -282,15 +282,11 @@ const unSetReplaceEstimate = () => {
     {/if}
     <!--TODO: add evacuation amount when items is done (covered_value*(2/3))-->
     <p>
+      <Button on:click={onSaveForLater} disabled={saveButtonIsDisabled} outlined>Save For Later</Button>
       {#if needsEvidence}
-        {#if canContinueToEvidence}
-          <Button on:click={onSaveForLater} raised>Continue</Button>
-        {:else}
-          <Button on:click={onSaveForLater} outlined>Save For Later</Button>
-        {/if}
+        <Button on:click={onSaveForLater} disabled={!canContinueToEvidence} raised>Continue</Button>
       {:else}
-        <Button on:click={onSaveForLater} outlined>Save For Later</Button>
-        <Button on:click={onSubmitClaim} raised>Submit Claim</Button>
+        <Button on:click={onSubmitClaim} disabled={submitIsDisabled} raised>Submit Claim</Button>
       {/if}
     </p>
   </Form>

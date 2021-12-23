@@ -1,8 +1,9 @@
-<script>
+<script lang="ts">
+import type { ReceiptType } from 'data/claims'
 import Banner from '../Banner.svelte'
 
-export let state
-export let receiptType = ''
+export let state: any
+export let receiptType = '' as ReceiptType
 
 $: bgColor = state.bgColor || ''
 $: color = state.color || ''

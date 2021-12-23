@@ -14,6 +14,11 @@ p {
   max-width: 80ch;
 }
 
+/* TODO move this to ui-components */
+.m-0-auto {
+  margin: 0 auto !important;
+}
+
 .max-content-width {
   width: max-content;
 }
@@ -37,6 +42,6 @@ p {
   margin-bottom: 1rem;
 }
 
-.required {
+.required-input {
   color: var(--mdc-theme-status-error);
 }

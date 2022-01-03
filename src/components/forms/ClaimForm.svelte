@@ -23,7 +23,7 @@ export let item = {} as PolicyItem
 
 const dispatch = createEventDispatcher()
 
-const todayDateString = new Date().toISOString().split('T')[0]
+const todayDateString = new Date().toISOString()
 const repairableOptions = [
   {
     label: 'Repairable',
@@ -46,7 +46,7 @@ const payoutOptions = [
 ]
 
 // Set default form values.
-let lostDate = todayDateString
+let lostDate = todayDateString.split('T')[0]
 let lossReason: string
 let situationDescription = ''
 let isRepairable: boolean | undefined
@@ -157,9 +157,10 @@ const onSaveForLater = (event: Event) => {
 }
 
 const getFormData = () => {
+  const date = lostDate === todayDateString.split('T')[0] ? todayDateString : lostDate
   return {
     claimData: {
-      lostDate,
+      lostDate: date,
       lossReason,
       situationDescription,
     },

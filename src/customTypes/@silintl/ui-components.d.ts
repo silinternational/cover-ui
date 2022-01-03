@@ -144,7 +144,7 @@ declare module '@silintl/ui-components' {
 
   interface MoneyInputProps extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
     label?: string
-    value?: string | number
+    value?: number
     placeholder?: string
     autofocus?: boolean
     disabled?: boolean

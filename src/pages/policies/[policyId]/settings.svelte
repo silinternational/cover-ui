@@ -176,7 +176,12 @@ const onRemoveModal = (event: CustomEvent<string>) => {
 }
 const onSubmitModal = async (event: CustomEvent<DependentFormData>) => {
   let { id, name, relationship, country, childBirthYear, permissions, email, message } = event.detail
-  if (id) {
+
+  console.log('permissions ',permissions)
+  if (permissions === 'can-edit') {
+    // TODO: Figure out if we've already sent an invite or not
+    await invitePolicyMember(policyId, name, email, message)
+  } else if (id) {
     await updateDependent(policyId, id, {
       name,
       relationship,
@@ -190,11 +195,6 @@ const onSubmitModal = async (event: CustomEvent<DependentFormData>) => {
       country,
       childBirthYear,
     })
-  }
-
-  if (permissions === 'can-edit') {
-    // TODO: Figure out if we've already sent an invite or not
-    await invitePolicyMember(policyId, name, email, message)
   }
 
   showAddDependentModal = false

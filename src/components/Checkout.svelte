@@ -1,7 +1,7 @@
 <script lang="ts">
-import { formatDate, getYear } from 'components/dates'
 import type { PolicyItem } from 'data/items'
 import { selectedPolicy } from 'data/policies'
+import { formatDate, getYear } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { CUSTOMER_HOME, TERMS_OF_SERVICE } from 'helpers/routes'
 import ItemDeleteModal from 'ItemDeleteModal.svelte'

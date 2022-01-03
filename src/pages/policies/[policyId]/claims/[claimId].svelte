@@ -12,7 +12,6 @@ import {
   FilePreview,
   Row,
 } from 'components'
-import { getJustDateFromUTCDateString } from 'components/dates'
 import { loading } from 'components/progress'
 import { upload } from 'data'
 import {
@@ -37,6 +36,7 @@ import {
 import { loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
 import { getNameOfPolicy, getPolicyById, loadPolicy, memberBelongsToPolicy, policies, Policy } from 'data/policies'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
+import { getJustDateFromUTCDateString } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { customerClaimEdit, customerClaims, customerClaimDetails, POLICIES, policyDetails } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'

@@ -2,10 +2,9 @@
 import { ClaimsTable } from 'components'
 import { claimIsOpen } from 'data/claims'
 import { getNameOfPolicy, loadPolicy, Policy, PolicyType, selectedPolicy } from 'data/policies'
-import { itemIsActive, loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
-import { formatDate } from 'components/dates'
+import { itemIsActive, loadItems, selectedPolicyItems } from 'data/items'
 import { isLoadingById, loading } from 'components/progress'
-import { formatFriendlyDate } from 'helpers/date'
+import { formatDate, getJustDateFromUTCDateString } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { itemDetails, settingsPolicy } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -101,7 +100,7 @@ th {
       {/if}
       <tr>
         <th>Updated</th>
-        <td>{formatFriendlyDate(policy.updated_at)}</td>
+        <td>{getJustDateFromUTCDateString(policy.updated_at)}</td>
       </tr>
     </table>
     <table>
@@ -130,7 +129,7 @@ th {
         <Datatable.Data.Row>
           <Datatable.Data.Row.Item>{member.first_name || ''} {member.last_name || ''}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{member.email || ''}</Datatable.Data.Row.Item>
-          <Datatable.Data.Row.Item>{formatFriendlyDate(member.last_login_utc)}</Datatable.Data.Row.Item>
+          <Datatable.Data.Row.Item>{getJustDateFromUTCDateString(member.last_login_utc)}</Datatable.Data.Row.Item>
         </Datatable.Data.Row>
       {/each}
     </Datatable.Data>

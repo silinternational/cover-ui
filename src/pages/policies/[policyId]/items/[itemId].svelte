@@ -3,7 +3,6 @@ import user, { UserAppRole } from '../../../../authn/user'
 import { Breadcrumb, ItemDeleteModal, ItemDetails } from 'components'
 import { MAX_TEXT_AREA_LENGTH as maxlength } from 'components/const'
 import { loading } from 'components/progress'
-import { formatDate } from 'components/dates'
 import {
   approveItem,
   deleteItem,
@@ -17,8 +16,9 @@ import {
 } from 'data/items'
 import { getNameOfPolicy, loadPolicy, memberBelongsToPolicy, policies, Policy } from 'data/policies'
 import { loadPolicyItemHistory, policyHistoryByItemId } from 'data/policy-history'
-import { items as itemsRoute, itemDetails, itemEdit, itemNewClaim, POLICIES, policyDetails } from 'helpers/routes'
+import { formatDate } from 'helpers/dates'
 import { formatPageTitle } from 'helpers/pageTitle'
+import { items as itemsRoute, itemDetails, itemEdit, itemNewClaim, POLICIES, policyDetails } from 'helpers/routes'
 import { goto, metatags, redirect } from '@roxi/routify'
 import { Button, Page, Datatable, Dialog, TextArea, setNotice } from '@silintl/ui-components'
 import { onMount } from 'svelte'

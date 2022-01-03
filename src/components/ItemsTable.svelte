@@ -1,7 +1,7 @@
 <script lang="ts">
 import ItemDeleteModal from './ItemDeleteModal.svelte'
 import { ItemCoverageStatus, PolicyItem } from 'data/items'
-import { formatDate, getJustDateFromUTCDateString } from 'helpers/dates'
+import { formatDate, formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { itemDetails, itemEdit } from 'helpers/routes'
 import { createEventDispatcher } from 'svelte'
@@ -114,7 +114,7 @@ const getStatusClass = (status: string) =>
         <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}>
           {#if item.coverage_status === ItemCoverageStatus.Approved && item.coverage_end_date}
-            Covered through {getJustDateFromUTCDateString(item.coverage_end_date)}
+            Covered through {formatFriendlyDate(item.coverage_end_date)}
           {:else}
             {item.coverage_status || ''}
           {/if}

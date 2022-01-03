@@ -1,7 +1,14 @@
-export const formatDate = (dateString: string): string => {
+export const formatFriendlyDate = (dateTimeString: string): string =>
+  new Date(dateTimeString).toDateString() !== 'Invalid Date'
+    ? formatDate(dateTimeString.split('T')[0], { month: 'numeric', day: 'numeric', year: 'numeric' })
+    : ''
+
+export const formatDate = (
+  dateString: string,
+  options: Intl.DateTimeFormatOptions | undefined = { month: 'long', day: 'numeric', year: 'numeric' }
+): string => {
   if (dateString) {
     const date = new Date(dateString)
-    const options: Intl.DateTimeFormatOptions = { month: 'long', day: 'numeric', year: 'numeric' }
 
     // When the dateString does not contain a time portion, treat it as a UTC date
     if (dateString.indexOf('T') === -1) {
@@ -20,6 +27,3 @@ export const getYear = (dateString: string): string => {
   }
   return ''
 }
-
-export const getJustDateFromUTCDateString = (datestring: string): string | void =>
-  new Date(datestring).toDateString() !== 'Invalid Date' ? formatDate(datestring.split('T')[0]) : ''

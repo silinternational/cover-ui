@@ -1,8 +1,7 @@
 <script lang="ts">
 import ItemDeleteModal from './ItemDeleteModal.svelte'
-import { formatDate } from 'components/dates'
 import { ItemCoverageStatus, PolicyItem } from 'data/items'
-import { formatFriendlyDate } from 'helpers/date'
+import { formatDate, formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { itemDetails, itemEdit } from 'helpers/routes'
 import { createEventDispatcher } from 'svelte'

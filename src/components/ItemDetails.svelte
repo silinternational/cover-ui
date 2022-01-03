@@ -5,7 +5,7 @@ import MessageBanner from './banners/MessageBanner.svelte'
 import { PolicyItem, ItemCoverageStatus } from 'data/items'
 import { getPolicyById, loadPolicy, policies, Policy, PolicyType } from 'data/policies'
 import { formatMoney } from 'helpers/money'
-import { formatDate } from './dates'
+import { formatDate } from '../helpers/dates'
 import { formatDistanceToNow } from 'date-fns'
 import { onMount } from 'svelte'
 

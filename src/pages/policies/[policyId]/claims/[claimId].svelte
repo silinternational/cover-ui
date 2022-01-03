@@ -12,7 +12,6 @@ import {
   FilePreview,
   Row,
 } from 'components'
-import { formatDate } from 'components/dates'
 import { loading } from 'components/progress'
 import { upload } from 'data'
 import {
@@ -37,6 +36,7 @@ import {
 import { loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
 import { getNameOfPolicy, getPolicyById, loadPolicy, memberBelongsToPolicy, policies, Policy } from 'data/policies'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
+import { formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { customerClaimEdit, customerClaims, customerClaimDetails, POLICIES, policyDetails } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -80,7 +80,7 @@ $: isMemberOfPolicy = memberBelongsToPolicy($user.id, $policies, policyId)
 $: $policies && (policy = getPolicyById(policyId))
 $: householdId = policy.household_id ? policy.household_id : ''
 
-$: incidentDate = formatDate(claim.incident_date)
+$: incidentDate = formatFriendlyDate(claim.incident_date)
 $: claimStatus = (claim.status || '') as ClaimStatus
 $: payoutOption = claimItem.payout_option
 $: showRevisionMessage = claim.status_reason && claimStatus === ClaimStatus.Revision

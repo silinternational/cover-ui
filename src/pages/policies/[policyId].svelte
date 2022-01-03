@@ -2,7 +2,7 @@
 import { ClaimsTable } from 'components'
 import { claimIsOpen } from 'data/claims'
 import { getNameOfPolicy, loadPolicy, Policy, PolicyType, selectedPolicy } from 'data/policies'
-import { itemIsActive, loadItems, selectedPolicyItems } from 'data/items'
+import { itemIsApproved, itemIsActive, loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
 import { isLoadingById, loading } from 'components/progress'
 import { formatDate, formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
@@ -25,16 +25,16 @@ $: members = policy.members || []
 
 $: policyId && loadItems(policyId)
 // sort items so inactive is last
-$: items = $selectedPolicyItems.sort((a, b) =>
+$: items = $selectedPolicyItems.filter(itemIsActive).sort((a, b) =>
   a.coverage_status === b.coverage_status ? 0 : a.coverage_status > b.coverage_status ? 1 : -1
 )
-$: activeItems = items.filter(itemIsActive)
+$: approvedItems = items.filter(itemIsApproved)
 $: claims = policy?.claims || []
 $: openClaimCount = claims.filter(claimIsOpen).length
 $: policyName = getNameOfPolicy(policy)
 $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))
-$: coverage = formatMoney(activeItems.reduce((sum, item) => sum + item.coverage_amount, 0))
-$: premium = formatMoney(activeItems.reduce((sum, item) => sum + item.annual_premium, 0))
+$: coverage = formatMoney(approvedItems.reduce((sum, item) => sum + item.coverage_amount, 0))
+$: premium = formatMoney(approvedItems.reduce((sum, item) => sum + item.annual_premium, 0))
 </script>
 
 <style>
@@ -135,7 +135,7 @@ th {
     </Datatable.Data>
   </Datatable>
 
-  <h4>Items <span class="subtext">({activeItems?.length} active)</span></h4>
+  <h4>Items <span class="subtext">({approvedItems?.length} covered)</span></h4>
   {#if $loading && isLoadingById(`policies/${policyId}/items`)}
     Loading items...
   {:else}

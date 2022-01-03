@@ -231,7 +231,7 @@ const unSetReplaceEstimate = () => {
 
     {#if isRepairable}
       <p>
-        <MoneyInput label="Repair estimate (USD)" bind:value={repairEstimateUSD} />
+        <MoneyInput minValue={'0'} label="Repair estimate (USD)" bind:value={repairEstimateUSD} />
         <Description>
           How much will it probably cost to be repaired?
           <br />
@@ -240,7 +240,7 @@ const unSetReplaceEstimate = () => {
       </p>
       <p>
         <!-- If it's repairable, position this BEFORE the "Payout options" prompt. -->
-        <MoneyInput label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
+        <MoneyInput minValue={'0'} label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
         <Description>
           <ConvertCurrencyLink />
         </Description>
@@ -254,7 +254,7 @@ const unSetReplaceEstimate = () => {
       </div>
       {#if payoutOption === PayoutOption.Replacement}
         <p>
-          <MoneyInput label="Replacement estimate (USD)" bind:value={replaceEstimateUSD} />
+          <MoneyInput minValue={'0'} label="Replacement estimate (USD)" bind:value={replaceEstimateUSD} />
           <Description>
             How much will it probably cost to replace?
             <br />
@@ -267,7 +267,7 @@ const unSetReplaceEstimate = () => {
     {#if isRepairable === false && payoutOption === PayoutOption.FMV}
       <p>
         <!-- If we know it's not repairable, position this AFTER the "Payout options" prompt. -->
-        <MoneyInput label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
+        <MoneyInput minValue={'0'} label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
         <Description>
           <ConvertCurrencyLink />
         </Description>

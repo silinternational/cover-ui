@@ -213,7 +213,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
     </Description>
   </p>
   <p>
-    <MoneyInput label="Market value (USD)" bind:value={marketValueUSD} disabled={marketValueIsDisabled} required />
+    <MoneyInput minValue={'0'} label="Market value (USD)" bind:value={marketValueUSD} disabled={marketValueIsDisabled} required />
     <Description>
       <ConvertCurrencyLink />
     </Description>

@@ -26,7 +26,7 @@ $: members = policy.members || []
 
 $: policyId && loadItems(policyId)
 // sort items so inactive is last
-$: items = $selectedPolicyItems.sort((a, b) =>
+$: items = $selectedPolicyItems.filter(itemIsActive).sort((a, b) =>
   a.coverage_status === b.coverage_status ? 0 : a.coverage_status > b.coverage_status ? 1 : -1
 )
 $: activeItems = items.filter(itemIsActive)

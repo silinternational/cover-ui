@@ -290,4 +290,6 @@ export const itemIsApproved = (item: PolicyItem): boolean => {
   return item.coverage_status === ItemCoverageStatus.Approved
 }
 
+export const itemIsInactive = (item: PolicyItem): boolean => {
+  return item.coverage_status === ItemCoverageStatus.Inactive
 }

@@ -20,3 +20,6 @@ export const getYear = (dateString: string): string => {
   }
   return ''
 }
+
+export const getJustDateFromUTCDateString = (datestring: string): string | void =>
+  new Date(datestring).toDateString() !== 'Invalid Date' ? formatDate(datestring.split('T')[0]) : ''

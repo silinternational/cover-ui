@@ -1,6 +1,6 @@
 <script lang="ts">
 import type { Claim } from '../data/claims'
-import { formatFriendlyDate } from 'helpers/date'
+import { getJustDateFromUTCDateString } from './dates'
 import { formatMoney } from 'helpers/money'
 import { customerClaimDetails } from 'helpers/routes'
 import { Datatable } from '@silintl/ui-components'
@@ -32,7 +32,7 @@ export let title = ''
             <a href={customerClaimDetails(policyId, claim.id)}>{claim.reference_number || ''}</a>
             ({claim.status})
           </Datatable.Data.Row.Item>
-          <Datatable.Data.Row.Item>{formatFriendlyDate(claim.incident_date)}</Datatable.Data.Row.Item>
+          <Datatable.Data.Row.Item>{getJustDateFromUTCDateString(claim.incident_date)}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{claimItem.status || ''}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{claimItem.is_repairable ? 'Yes' : 'No'}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{claimItem.payout_option || ''}</Datatable.Data.Row.Item>
@@ -46,7 +46,7 @@ export let title = ''
             <a href={customerClaimDetails(policyId, claim.id)}>{claim.reference_number || ''}</a>
             ({claim.status})
           </Datatable.Data.Row.Item>
-          <Datatable.Data.Row.Item>{formatFriendlyDate(claim.incident_date)}</Datatable.Data.Row.Item>
+          <Datatable.Data.Row.Item>{getJustDateFromUTCDateString(claim.incident_date)}</Datatable.Data.Row.Item>
         </Datatable.Data.Row>
       {/each}
     {:else}

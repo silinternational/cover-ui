@@ -12,7 +12,7 @@ import {
   FilePreview,
   Row,
 } from 'components'
-import { formatDate } from 'components/dates'
+import { getJustDateFromUTCDateString } from 'components/dates'
 import { loading } from 'components/progress'
 import { upload } from 'data'
 import {
@@ -80,7 +80,7 @@ $: isMemberOfPolicy = memberBelongsToPolicy($user.id, $policies, policyId)
 $: $policies && (policy = getPolicyById(policyId))
 $: householdId = policy.household_id ? policy.household_id : ''
 
-$: incidentDate = formatDate(claim.incident_date)
+$: incidentDate = getJustDateFromUTCDateString(claim.incident_date)
 $: claimStatus = (claim.status || '') as ClaimStatus
 $: payoutOption = claimItem.payout_option
 $: showRevisionMessage = claim.status_reason && claimStatus === ClaimStatus.Revision

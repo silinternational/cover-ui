@@ -70,9 +70,6 @@ async function customFetch<T>(method: FetchMethod, uri: string, body: any = unde
   // reminder: fetch does not throw exceptions for non-200 responses (https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch)
   if (!response.ok) {
     if (response.status === 401) {
-      clearApp()
-      clearToken()
-
       await login()
     }
     throwError(results?.message, response.status, response.statusText)

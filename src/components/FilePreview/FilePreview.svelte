@@ -1,10 +1,10 @@
 <script lang="ts">
 import Banner from '../components/Banner.svelte'
 import type { ClaimFile } from 'data/claims'
-import { formatDate } from '../dates'
+import { formatDate } from '../../helpers/dates'
 import { createEventDispatcher } from 'svelte'
 import { flip } from 'svelte/animate'
-import { Button, Progress } from '@silintl/ui-components'
+import { Progress } from '@silintl/ui-components'
 
 export let previews = [] as ClaimFile[]
 export let uploading: boolean = false

@@ -1,6 +1,6 @@
 <script lang="ts">
 import type { Claim } from '../data/claims'
-import { formatFriendlyDate } from 'helpers/date'
+import { formatFriendlyDate } from '../helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { customerClaimDetails } from 'helpers/routes'
 import { Datatable } from '@silintl/ui-components'

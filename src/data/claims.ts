@@ -101,7 +101,7 @@ export type Claim = {
 }
 
 export type CreateClaimRequestBody = {
-  incident_date: Date
+  incident_date: string
   incident_description: string
   incident_type: ClaimIncidentTypeName
 }
@@ -209,9 +209,9 @@ const updateClaimsStore = (changedClaim: Claim) => {
  */
 export async function createClaim(item: PolicyItem, claimData: any): Promise<Claim> {
   const urlPath = `policies/${item.policy_id}/claims`
-
+  const date = new Date(claimData.lostDate).toISOString()
   const parsedClaim: CreateClaimRequestBody = {
-    incident_date: new Date(claimData.lostDate),
+    incident_date: date,
     incident_description: claimData.situationDescription,
     incident_type: claimData.lossReason,
   }

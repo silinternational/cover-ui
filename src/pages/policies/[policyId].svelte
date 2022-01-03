@@ -2,7 +2,7 @@
 import { ClaimsTable } from 'components'
 import { claimIsOpen } from 'data/claims'
 import { getNameOfPolicy, loadPolicy, Policy, PolicyType, selectedPolicy } from 'data/policies'
-import { itemIsApproved, itemIsActive, loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
+import { itemIsApproved, itemIsActive, loadItems, selectedPolicyItems } from 'data/items'
 import { isLoadingById, loading } from 'components/progress'
 import { formatDate, formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'

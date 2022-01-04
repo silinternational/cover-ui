@@ -4,6 +4,7 @@ import type { Claim } from './claims'
 import { CREATE, GET, UPDATE } from './index'
 import type { PolicyMember } from './policy-members'
 import { selectedPolicyId } from './role-policy-selection'
+import type { PaginatedData } from './types/PaginatedData'
 import qs from 'qs'
 
 export type Policy = {
@@ -44,7 +45,13 @@ export type UpdatePolicyRequestBody = {
   name?: string
 }
 
+type GetPoliciesResponseBody = {
+  data: Policy[]
+  meta: PaginatedData
+}
+
 export const policies = writable<Policy[]>([])
+export const policyListMetadata = writable<PaginatedData>({} as PaginatedData)
 export const selectedPolicy = derived([policies, selectedPolicyId], ([$policies, $selectedPolicyId]) => {
   return $policies.find((p) => p.id === $selectedPolicyId) || ({} as Policy)
 })
@@ -55,7 +62,19 @@ export const initialized = writable<boolean>(false)
  *
  * @param {Policy} changedPolicy
  */
-const updatePoliciesStore = (changedPolicy: Policy) => {
+const updatePoliciesStore = (changedPolicies: Policy[], metadata: PaginatedData) => {
+  for (const policy of changedPolicies) {
+    updatePolicyStore(policy)
+  }
+  policyListMetadata.set(metadata)
+}
+
+/**
+ * Update a policy in our local list (store) of policies.
+ *
+ * @param {Policy} changedPolicy
+ */
+const updatePolicyStore = (changedPolicy: Policy) => {
   policies.update((policies) => {
     const i = policies.findIndex((policy) => policy.id === changedPolicy.id)
     if (i === -1) {
@@ -82,7 +101,7 @@ const updatePoliciesStore = (changedPolicy: Policy) => {
 export async function updatePolicy(id: string, policyData: UpdatePolicyRequestBody): Promise<void> {
   const updatedPolicy = await UPDATE<Policy>(`policies/${id}`, policyData)
 
-  updatePoliciesStore(updatedPolicy)
+  updatePolicyStore(updatedPolicy)
   updateUserPolicyStore(updatedPolicy)
 }
 
@@ -101,7 +120,7 @@ export async function createPolicy(policyFormData: any): Promise<Policy> {
     name: policyFormData.policyName,
   }
   const createdPolicy = await CREATE<Policy>('policies', parsedPolicyData)
-  updatePoliciesStore(createdPolicy)
+  updatePolicyStore(createdPolicy)
   loadUser(true) // Don't wait, just refresh user's policies in the background.
   return createdPolicy
 }
@@ -129,28 +148,26 @@ export const getNameOfPolicy = (policy: Policy): string => {
 }
 
 //claims or members/dependents fields from this endpoint are deprecated
-export async function loadPolicies(limit = 20): Promise<void> {
-  const queryString = qs.stringify({ limit })
-  const response = await GET<{ data: Policy[]; meta: any }>(`policies?${queryString}`)
+export async function loadPolicies(page = 1, limit = 20): Promise<void> {
+  const queryString = qs.stringify({ limit, page })
+  const response = await GET<GetPoliciesResponseBody>(`policies?${queryString}`)
 
-  for (const policy of response.data) {
-    updatePoliciesStore(policy)
-  }
+  updatePoliciesStore(response.data, response.meta)
   response.data.length && initialized.set(true)
 }
 
 export async function loadPolicy(policyId: string): Promise<Policy> {
   const response = await GET<Policy>(`policies/${policyId}`)
 
-  updatePoliciesStore(response)
+  updatePolicyStore(response)
 
   return response
 }
 
-export async function searchPoliciesFor(searchText: string, limit = 50): Promise<Policy[]> {
-  const queryString = qs.stringify({ search: searchText, limit })
-  const response = await GET<{ data: Policy[]; meta: any }>(`policies?${queryString}`)
-  return response.data
+export async function searchPoliciesFor(searchText: string, page = 1, limit = 20): Promise<GetPoliciesResponseBody> {
+  const queryString = qs.stringify({ search: searchText, page, limit })
+  const response = await GET<GetPoliciesResponseBody>(`policies?${queryString}`)
+  return response
 }
 
 export const getPolicyById = (policyId: string): Policy => {

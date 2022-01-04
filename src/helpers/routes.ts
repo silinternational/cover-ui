@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import qs from 'qs'
 
 export const ROOT = '/'
 export const HOME = '/home'
@@ -7,7 +6,7 @@ export const LOGOUT = '/logout'
 
 export const ADMIN_HOME = '/admin/home'
 export const ADMIN_POLICIES = '/admin/policies'
-export const adminPolicySearch = (search: string) => `/admin/policies?${qs.stringify({ search })}`
+export const adminPolicySearch = (query: string) => `/admin/policies?${query}`
 
 export const CHAT = '/chat'
 

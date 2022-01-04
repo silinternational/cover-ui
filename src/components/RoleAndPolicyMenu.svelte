@@ -1,5 +1,5 @@
 <script lang="ts">
-import { UserAppRole } from '../authn/user'
+import { UserAppRole } from 'data/user'
 import { getNameOfPolicy, Policy, PolicyType } from 'data/policies'
 import { roleSelection, recordRoleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { POLICY_NEW_TEAM } from 'helpers/routes'

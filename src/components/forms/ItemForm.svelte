@@ -1,5 +1,5 @@
 <script lang="ts">
-import user, { User } from '../../authn/user'
+import user, { User } from 'data/user'
 import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
 import Description from '../Description.svelte'
 import MakeAndModelModal from 'MakeAndModelModal.svelte'

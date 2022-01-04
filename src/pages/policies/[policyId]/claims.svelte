@@ -1,5 +1,5 @@
 <script lang="ts">
-import { UserAppRole } from '../../../authn/user'
+import { UserAppRole } from 'data/user'
 import { Breadcrumb, ClaimCards, ClaimsTable, Row } from 'components'
 import { Claim, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import { loadItems } from 'data/items'

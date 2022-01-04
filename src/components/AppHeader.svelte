@@ -3,7 +3,7 @@ import * as routes from 'helpers/routes'
 import Progress from './progress/Progress.svelte'
 import { Badge, IconButton, isAboveMobile, Menu, MenuItem } from '@silintl/ui-components'
 import { createEventDispatcher, onMount } from 'svelte'
-import user from '../authn/user'
+import user from 'data/user'
 
 const menuItems: MenuItem[] = [
   {

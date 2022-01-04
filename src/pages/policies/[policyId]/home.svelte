@@ -1,5 +1,5 @@
 <script lang="ts">
-import { isAdmin } from '../../../authn/user'
+import { isAdmin } from 'data/user'
 import { CardsGrid, ItemsTable, Row } from 'components'
 import { isLoadingPolicyItems, loading } from 'components/progress'
 import { Claim, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'

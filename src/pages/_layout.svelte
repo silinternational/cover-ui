@@ -1,5 +1,5 @@
 <script lang="ts">
-import user, { getDefaultPolicyId, isAdmin } from '../authn/user'
+import user, { getDefaultPolicyId, isAdmin } from 'data/user'
 import { AppDrawer } from 'components'
 import { initialized as policiesInitialized, loadPolicies } from 'data/policies'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'

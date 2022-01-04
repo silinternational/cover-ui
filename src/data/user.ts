@@ -1,6 +1,7 @@
 import { get, writable } from 'svelte/store'
 import { CREATE, GET, UPDATE } from 'data'
 import { Policy, PolicyType } from 'data/policies'
+import { onClear } from 'data/storage'
 
 export enum UserAppRole {
   Customer = 'Customer',
@@ -59,6 +60,7 @@ export async function loadUser(forceReload?: boolean): Promise<void> {
   if (!alreadyLoadedUser || forceReload) {
     const userData = await GET<User>('users/me')
     user.set(userData)
+    onClear(() => user.set({} as User))
   }
 }
 
@@ -70,10 +72,6 @@ export async function updateUser(data: UpdatedUserBody): Promise<void> {
 export async function attachUserPhoto(fileId: string): Promise<void> {
   const updatedUser = await CREATE<User>(`users/me/files`, { file_id: fileId })
   user.set(updatedUser)
-}
-
-export const clear = (): void => {
-  user.set({} as User)
 }
 
 export const isUserSteward = (userRole: UserAppRole): boolean => userRole === UserAppRole.Steward

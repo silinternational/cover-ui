@@ -1,5 +1,5 @@
 import { CREATE, GET, UPDATE } from '.'
-import { UserAppRole } from '../authn/user'
+import { UserAppRole } from './user'
 import { convertToCents } from 'helpers/money'
 import type { PolicyItem } from './items'
 import { derived, writable } from 'svelte/store'

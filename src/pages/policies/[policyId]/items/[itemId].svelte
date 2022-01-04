@@ -1,5 +1,5 @@
 <script lang="ts">
-import user, { UserAppRole } from '../../../../authn/user'
+import user, { UserAppRole } from 'data/user'
 import { Breadcrumb, ItemDeleteModal, ItemDetails } from 'components'
 import { MAX_TEXT_AREA_LENGTH as maxlength } from 'components/const'
 import { loading } from 'components/progress'

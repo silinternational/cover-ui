@@ -1,5 +1,5 @@
 <script lang="ts">
-import user, { UserAppRole } from '../../../../authn/user'
+import user, { UserAppRole } from 'data/user'
 import { getFilePurpose, getUploadLabel, isEvidenceNeeded } from '../../../../business-rules/claim-payout-amount'
 import {
   Banner,

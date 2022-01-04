@@ -11,8 +11,6 @@ export const adminPolicySearch = (search: string) => `/admin/policies?${qs.strin
 
 export const CHAT = '/chat'
 
-export const CUSTOMER_HOME = '/customer/home'
-
 export const CLAIMS = '/claims'
 export const customerClaims = (policyId: string) => `/policies/${policyId}/claims`
 export const customerClaimsNew = (policyId: string) => `/policies/${policyId}/claims/new`
@@ -32,7 +30,6 @@ export const itemRemoveCoverage = (policyId: string, itemId: string) =>
 
 export const POLICIES = '/admin/policies'
 export const policyDetails = (policyId: string) => `/policies/${policyId}`
-export const policyHome = (policyId: string) => `/policies/${policyId}/home`
 export const POLICY_NEW_TEAM = '/policies/new'
 
 export const SETTINGS = '/settings'

@@ -1,14 +1,24 @@
 <script lang="ts">
-import { UserAppRole } from '../authn/user'
-import { ADMIN_HOME, CUSTOMER_HOME } from 'helpers/routes'
+import user, { getDefaultPolicyId, User, UserAppRole } from '../authn/user'
+import { selectedPolicyId } from '../data/role-policy-selection'
+import { ADMIN_HOME, policyDetails } from 'helpers/routes'
 import { redirect } from '@roxi/routify'
 import { roleSelection } from 'data/role-policy-selection'
 
 $: sendToRoleHome($roleSelection)
+
+const redirectToAppropriatePolicy = (user: User, selectedPolicyId: string): void => {
+  if (selectedPolicyId) {
+    $redirect(policyDetails(selectedPolicyId))
+  } else if (user.policies?.length > 0) {
+    $redirect(policyDetails(getDefaultPolicyId(user)))
+  }
+}
+
 const sendToRoleHome = (appRole: string) => {
   switch (appRole) {
     case UserAppRole.Customer:
-      $redirect(CUSTOMER_HOME)
+      $redirect(redirectToAppropriatePolicy($user, $selectedPolicyId))
       break
     case UserAppRole.Steward:
     case UserAppRole.Signator:
@@ -19,7 +29,7 @@ const sendToRoleHome = (appRole: string) => {
       break
     default:
       console.error('Unknown role:', appRole)
-      $redirect(CUSTOMER_HOME)
+      $redirect(policyDetails(getDefaultPolicyId($user)))
       break
   }
 }

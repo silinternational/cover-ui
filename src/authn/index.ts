@@ -1,7 +1,7 @@
-import { clear as clearToken, getSeed, getToken } from './token'
-import { clear as clearUser } from './user'
 import { CREATE as POST } from 'data'
+import { clearApp } from 'data/storage'
 import { throwError } from '../error'
+import { clear as clearToken, getSeed, getToken } from './token'
 
 export type AuthLoginResponse = {
   RedirectURL: string
@@ -22,7 +22,7 @@ export const login = async (inviteCode = ''): Promise<void> => {
 
 export const logout = async (): Promise<void> => {
   const logoutUrl = `${process.env.API_HOST}/auth/logout?token=${encodeURIComponent(getToken())}`
+  clearApp()
   clearToken()
-  clearUser()
   location.replace(logoutUrl)
 }

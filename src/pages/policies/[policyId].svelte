@@ -1,14 +1,16 @@
 <script lang="ts">
-import { ClaimsTable } from 'components'
-import { claimIsOpen } from 'data/claims'
-import { getNameOfPolicy, loadPolicy, Policy, PolicyType, selectedPolicy } from 'data/policies'
-import { itemIsApproved, itemIsActive, loadItems, selectedPolicyItems } from 'data/items'
+import { isAdmin } from 'data/user'
+import { CardsGrid, ClaimsTable, Row } from 'components'
 import { isLoadingById, loading } from 'components/progress'
+import { Claim, claimIsOpen, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
+import { itemIsApproved, itemIsActive, loadItems, selectedPolicyItems, PolicyItem } from 'data/items'
+import { getNameOfPolicy, loadPolicy, Policy, PolicyType, selectedPolicy } from 'data/policies'
+import { roleSelection } from 'data/role-policy-selection'
 import { formatDate, formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
-import { itemDetails, settingsPolicy } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
-import { metatags } from '@roxi/routify'
+import { customerClaimDetails, itemDetails, settingsPolicy } from 'helpers/routes'
+import { goto, metatags } from '@roxi/routify'
 import { Datatable, Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
@@ -18,6 +20,8 @@ let policy = {} as Policy
 
 onMount(async () => {
   policy = await loadPolicy(policyId)
+  loadItems(policyId)
+  loadClaimsByPolicyId(policyId)
 })
 $: policy = $selectedPolicy
 
@@ -35,6 +39,12 @@ $: policyName = getNameOfPolicy(policy)
 $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))
 $: coverage = formatMoney(approvedItems.reduce((sum, item) => sum + item.coverage_amount, 0))
 $: premium = formatMoney(approvedItems.reduce((sum, item) => sum + item.annual_premium, 0))
+
+const onGotoClaim = (event: CustomEvent<Claim>) =>
+  $goto(customerClaimDetails(event.detail.policy_id, event.detail.id))
+
+const onGotoPolicyItem = (event: CustomEvent<PolicyItem>) =>
+  $goto(itemDetails(event.detail.policy_id, event.detail.id))
 </script>
 
 <style>
@@ -64,7 +74,17 @@ th {
 </style>
 
 <Page>
-  <h3>Policy</h3>
+  <Row cols={'12'}>
+    <CardsGrid
+      isAdmin={isAdmin($roleSelection)}
+      claims={$selectedPolicyClaims}
+      policyItems={items}
+      on:goto-claim={onGotoClaim}
+      on:goto-item={onGotoPolicyItem}
+    />
+  </Row>
+
+  <h3>{getNameOfPolicy($selectedPolicy)} Policy</h3>
   <div class="details">
     <table>
       <tr>

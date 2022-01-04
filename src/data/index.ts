@@ -1,7 +1,7 @@
-import { login } from '../authn'
-import { clear as clearToken, getToken } from '../authn/token'
+import { getToken } from '../authn/token'
 import { start, stop } from 'components/progress'
 import { throwError } from '../error'
+import { HOME } from 'helpers/routes'
 import { clearApp } from './storage'
 
 type FetchMethod = 'post' | 'get' | 'put' | 'delete'
@@ -70,7 +70,11 @@ async function customFetch<T>(method: FetchMethod, uri: string, body: any = unde
   // reminder: fetch does not throw exceptions for non-200 responses (https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch)
   if (!response.ok) {
     if (response.status === 401) {
-      await login()
+      clearApp()
+
+      if (location.pathname !== HOME) {
+        location.replace(`${location.origin}${HOME}`)
+      }
     }
     throwError(results?.message, response.status, response.statusText)
   }

@@ -7,14 +7,6 @@ import { roleSelection } from 'data/role-policy-selection'
 
 $: sendToRoleHome($roleSelection)
 
-const redirectToAppropriatePolicy = (user: User, selectedPolicyId: string): void => {
-  if (selectedPolicyId) {
-    $redirect(policyDetails(selectedPolicyId))
-  } else if (user.policies?.length > 0) {
-    $redirect(policyDetails(getDefaultPolicyId(user)))
-  }
-}
-
 const sendToRoleHome = (appRole: string) => {
   switch (appRole) {
     case UserAppRole.Customer:
@@ -31,6 +23,14 @@ const sendToRoleHome = (appRole: string) => {
       console.error('Unknown role:', appRole)
       $redirect(policyDetails(getDefaultPolicyId($user)))
       break
+  }
+}
+
+const redirectToAppropriatePolicy = (user: User, selectedPolicyId: string): void => {
+  if (selectedPolicyId) {
+    $redirect(policyDetails(selectedPolicyId))
+  } else if (user.policies?.length > 0) {
+    $redirect(policyDetails(getDefaultPolicyId(user)))
   }
 }
 </script>

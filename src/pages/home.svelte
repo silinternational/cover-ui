@@ -1,5 +1,5 @@
 <script lang="ts">
-import { UserAppRole } from '../authn/user'
+import { UserAppRole } from 'data/user'
 import { ADMIN_HOME, CUSTOMER_HOME } from 'helpers/routes'
 import { redirect } from '@roxi/routify'
 import { roleSelection } from 'data/role-policy-selection'

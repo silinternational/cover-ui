@@ -1,4 +1,4 @@
-import type { UserAppRole } from '../authn/user'
+import type { UserAppRole } from './user'
 import { readable, writable } from 'svelte/store'
 import { route } from '@roxi/routify'
 

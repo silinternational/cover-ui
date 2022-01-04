@@ -1,5 +1,5 @@
 <script lang="ts">
-import user, { isAdmin } from '../../../authn/user'
+import user, { isAdmin } from 'data/user'
 import { throwError } from '../../../error'
 import { Breadcrumb, Description, SearchableSelect, Modal, DependentForm } from 'components'
 import { MAX_INPUT_LENGTH as maxlength } from 'components/const'

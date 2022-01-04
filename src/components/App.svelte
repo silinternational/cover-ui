@@ -1,6 +1,6 @@
 <script lang="ts">
 import { login } from '../authn'
-import user, { isCustomer, loadUser } from '../authn/user'
+import user, { isCustomer, loadUser } from 'data/user'
 import type { CustomError } from '../error'
 import './mdc/_index.scss'
 import t from '../i18n'

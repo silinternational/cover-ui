@@ -1,4 +1,4 @@
-import { loadUser, updateUserPolicyStore } from '../authn/user'
+import { loadUser, updateUserPolicyStore } from './user'
 import { derived, get, writable } from 'svelte/store'
 import type { Claim } from './claims'
 import { CREATE, GET, UPDATE } from './index'

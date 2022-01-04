@@ -1,7 +1,7 @@
 <script lang="ts">
 import AppFooter from './AppFooter.svelte'
 import AppHeader from './AppHeader.svelte'
-import type { UserAppRole } from '../authn/user'
+import type { UserAppRole } from 'data/user'
 import RoleAndPolicyMenu from './RoleAndPolicyMenu.svelte'
 import type { Policy } from 'data/policies'
 import { goto } from '@roxi/routify'

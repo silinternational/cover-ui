@@ -1,5 +1,5 @@
 <script lang="ts">
-import user, { getDefaultPolicyId, User } from '../../authn/user'
+import user, { getDefaultPolicyId, User } from 'data/user'
 import type { Policy } from 'data/policies'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import { policyHome } from 'helpers/routes'

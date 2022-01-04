@@ -1,6 +1,6 @@
 <script lang="ts">
 import { logout } from '../authn'
-import user from '../authn/user'
+import user from 'data/user'
 import { Page } from '@silintl/ui-components'
 
 $: stillLoggedIn = !!$user.id

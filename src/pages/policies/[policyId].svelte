@@ -9,7 +9,7 @@ import { roleSelection } from 'data/role-policy-selection'
 import { formatDate, formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { formatPageTitle } from 'helpers/pageTitle'
-import { customerClaimDetails, itemDetails, items as gotoItems, settingsPolicy } from 'helpers/routes'
+import { customerClaimDetails, itemDetails, items as itemsRoute, settingsPolicy } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
 import { Button, Datatable, isAboveTablet, Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
@@ -31,18 +31,16 @@ $: members = policy.members || []
 
 $: policyId && loadItems(policyId)
 // sort items so inactive is last
-$: items = $selectedPolicyItems.filter(itemIsActive).sort((a, b) =>
-  a.coverage_status === b.coverage_status ? 0 : a.coverage_status > b.coverage_status ? 1 : -1
-)
-$: itemsForTable = showAllItems ? $selectedPolicyItems : items.slice(0, 15)
+$: items = $selectedPolicyItems
+$: itemsForTable = showAllItems? $selectedPolicyItems : items.slice(0, 15)
 $: allItemsBtnDisabled = itemsForTable.length >= $selectedPolicyItems.length
 $: approvedItems = items.filter(itemIsApproved)
 
-$: claims = $selectedPolicyClaims.filter(isRecent)
-$: claimsForTable = showAllClaims ? $selectedPolicyClaims : claims.slice(0, 15)
-$: claimsForGrid = isAboveTablet() ? claims.slice(0, 4) : claims.slice(0, 3)
+$: recentClaims = $selectedPolicyClaims.filter(isRecent)
+$: claimsForTable = showAllClaims ? $selectedPolicyClaims : recentClaims.slice(0, 15)
+$: claimsForGrid = isAboveTablet() ? recentClaims.slice(0, 4) : recentClaims.slice(0, 3)
 $: allClaimsBtnDisabled = claimsForTable.length >= $selectedPolicyClaims.length
-$: openClaimCount = claims.filter(claimIsOpen).length
+$: openClaimCount = recentClaims.filter(claimIsOpen).length
 
 $: policyName = getNameOfPolicy(policy)
 $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))
@@ -217,7 +215,7 @@ th {
     </Datatable>
     <div class="text-align-center">
       <p class="item-footer">Showing {itemsForTable.length} out of {$selectedPolicyItems.length} items</p>
-      <Button url={gotoItems(policyId)}>View {$selectedPolicyItems.length - itemsForTable.length} more items…</Button>
+      <Button url={itemsRoute(policyId)}>View {$selectedPolicyItems.length - itemsForTable.length} more items…</Button>
     </div>
   {/if}
   <div class="bottom-padding" />

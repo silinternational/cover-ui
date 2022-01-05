@@ -22,6 +22,7 @@ import ItemForm from './forms/ItemForm.svelte'
 import ItemsTable from './ItemsTable.svelte'
 import Modal from './mdc/Modal.svelte'
 import NoHouseholdIdModal from './NoHouseholdIdModal.svelte'
+import Paginator from './Paginator.svelte'
 import RadioOptions from './RadioOptions.svelte'
 import RecentActivityTable from './RecentActivityTable.svelte'
 import Row from './mdc/Row.svelte'
@@ -53,6 +54,7 @@ export {
   ItemsTable,
   Modal,
   NoHouseholdIdModal,
+  Paginator,
   RadioOptions,
   CardsGrid,
   ClaimCard,

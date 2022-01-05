@@ -115,13 +115,11 @@ export const getClaimState = (status: ClaimStatus | SecondaryClaimStatus, role: 
       console.error('No such state (for claim status):', status, Object.keys(signatorClaimStates))
 
     return signatorClaimStates[status] || ({} as State)
-  } else if (role === UserAppRole.Customer) {
+  } else {
     claimStates[status] === undefined &&
       console.error('No such state (for claim status):', status, Object.keys(claimStates))
 
     return claimStates[status] || ({} as State)
-  } else {
-    console.error('No such role:', role)
   }
 }
 

@@ -34,7 +34,7 @@ $: policyId && loadItems(policyId)
 $: items = $selectedPolicyItems.filter(itemIsActive).sort((a, b) =>
   a.coverage_status === b.coverage_status ? 0 : a.coverage_status > b.coverage_status ? 1 : -1
 )
-$: itemsForTable = showAllItems? $selectedPolicyItems : items.slice(0, 15)
+$: itemsForTable = showAllItems ? $selectedPolicyItems : items.slice(0, 15)
 $: allItemsBtnDisabled = itemsForTable.length >= $selectedPolicyItems.length
 $: approvedItems = items.filter(itemIsApproved)
 

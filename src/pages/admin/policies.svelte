@@ -1,6 +1,7 @@
 <script lang="ts">
 import { Paginator, SearchForm } from 'components'
 import { getNameOfPolicy, Policy, PolicyType, searchPoliciesFor } from 'data/policies'
+import type { PaginatedData } from 'data/types/PaginatedData'
 import type { PolicyMember } from 'data/policy-members'
 import { urlQuery } from 'data/query-string'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -9,10 +10,9 @@ import { goto, metatags } from '@roxi/routify'
 import { Datatable, Page } from '@silintl/ui-components'
 import qs from 'qs'
 import { onMount } from 'svelte'
-import type { PaginatedData } from 'data/types/PaginatedData'
 
 let matchingPolicies: Policy[] = []
-let pageData: PaginatedData = {} as PaginatedData
+let pageData = {} as PaginatedData
 let searchText = ''
 
 metatags.title = formatPageTitle('Policies')

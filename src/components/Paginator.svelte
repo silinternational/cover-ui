@@ -1,9 +1,9 @@
 <script lang="ts">
-import { IconButton, Select } from '@silintl/ui-components'
 import type { PaginatedData } from 'data/types/PaginatedData'
+import { IconButton, Select } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
-type SelectOption = { id: string; name: string | number }
+type SelectOption = { id: string; name: number }
 
 const dispatch = createEventDispatcher<{ paginate: { page: number; limit: number } }>()
 
@@ -17,26 +17,31 @@ $: limitSelectOptions = limitOptions.map((o) => ({ id: 'limit-' + o, name: o } a
 const onClickFirst = () => {
   dispatch('paginate', { page: 1, limit: pageData.per_page })
 }
+
 const onClickLast = () => {
   dispatch('paginate', { page: pageData.total_pages, limit: pageData.per_page })
 }
+
 const onClickPrevious = () => {
   if (pageData.page > 1) {
     dispatch('paginate', { page: pageData.page - 1, limit: pageData.per_page })
   }
 }
+
 const onClickNext = () => {
   if (pageData.page < pageData.total_pages) {
     dispatch('paginate', { page: pageData.page + 1, limit: pageData.per_page })
   }
 }
+
 const onSetLimitDefault = () => {
   if (!limitSelection && limitSelectOptions?.length > 0) limitSelection = limitSelectOptions[0].id
 }
+
 const onLimitChange = (event: CustomEvent<SelectOption>) => {
   if (event.detail.name) {
-    // re-jigger the page number such that the current slice of data (at least the first item) is in the newly selected page
     let itemsPerPage = Number(event.detail.name)
+    // re-jigger the page number such that the current slice of data (at least the first item) is in the newly selected page
     let newPage = Math.floor(pageData.offset / itemsPerPage) + 1
     dispatch('paginate', { page: newPage, limit: itemsPerPage })
   }

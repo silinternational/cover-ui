@@ -5,8 +5,7 @@ import { Page } from '@silintl/ui-components'
 </script>
 
 <style>
-ol,
-ul {
+ol {
   line-height: 1.5;
 }
 table {

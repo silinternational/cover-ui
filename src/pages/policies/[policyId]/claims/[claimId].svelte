@@ -280,9 +280,9 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
       </div>
     </Row>
     <Row cols="9">
-      <ClaimBanner {claimStatus} {receiptType} {isAdmin}>{statusText}</ClaimBanner>
+      <ClaimBanner {claimStatus} roleSelection={$roleSelection} {receiptType}>{statusText}</ClaimBanner>
       {#if needsFile}
-        <ClaimBanner claimStatus={`${claimStatus}Secondary`} {isAdmin} class="mt-4px">
+        <ClaimBanner claimStatus={`${claimStatus}Secondary`} roleSelection={$roleSelection} class="mt-4px">
           Upload {uploadLabel} to get reimbursed.
         </ClaimBanner>
       {/if}

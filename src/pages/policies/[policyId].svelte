@@ -9,14 +9,16 @@ import { roleSelection } from 'data/role-policy-selection'
 import { formatDate, formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { formatPageTitle } from 'helpers/pageTitle'
-import { customerClaimDetails, itemDetails, settingsPolicy } from 'helpers/routes'
+import { customerClaimDetails, itemDetails, items as itemsRoute, settingsPolicy } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
-import { Datatable, Page } from '@silintl/ui-components'
+import { Button, Datatable, isAboveTablet, Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 export let policyId: string
 
 let policy = {} as Policy
+let showAllItems = false
+let showAllClaims = false
 
 onMount(async () => {
   policy = await loadPolicy(policyId)
@@ -29,16 +31,28 @@ $: members = policy.members || []
 
 $: policyId && loadItems(policyId)
 // sort items so inactive is last
-$: items = $selectedPolicyItems.filter(itemIsActive).sort((a, b) =>
-  a.coverage_status === b.coverage_status ? 0 : a.coverage_status > b.coverage_status ? 1 : -1
-)
+$: items = $selectedPolicyItems.filter(itemIsActive)
+$: itemsForTable = showAllItems? $selectedPolicyItems : items.slice(0, 15)
+$: allItemsBtnDisabled = itemsForTable.length >= $selectedPolicyItems.length
 $: approvedItems = items.filter(itemIsApproved)
-$: claims = policy?.claims || []
-$: openClaimCount = claims.filter(claimIsOpen).length
+
+$: recentClaims = $selectedPolicyClaims.filter(isRecent)
+$: claimsForTable = showAllClaims ? $selectedPolicyClaims : recentClaims.slice(0, 15)
+$: claimsForGrid = isAboveTablet() ? recentClaims.slice(0, 4) : recentClaims.slice(0, 3)
+$: allClaimsBtnDisabled = claimsForTable.length >= $selectedPolicyClaims.length
+$: openClaimCount = recentClaims.filter(claimIsOpen).length
+
 $: policyName = getNameOfPolicy(policy)
 $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))
 $: coverage = formatMoney(approvedItems.reduce((sum, item) => sum + item.coverage_amount, 0))
 $: premium = formatMoney(approvedItems.reduce((sum, item) => sum + item.annual_premium, 0))
+
+const isRecent = (claim: Claim) => {
+  const incidentDate = new Date(claim.incident_date)
+  const today = new Date()
+  const aMonthAgo = today.setMonth(today.getMonth() - 1)
+  return Number(incidentDate) >= Number(aMonthAgo)
+}
 
 const onGotoClaim = (event: CustomEvent<Claim>) =>
   $goto(customerClaimDetails(event.detail.policy_id, event.detail.id))
@@ -71,13 +85,17 @@ th {
 .bottom-padding {
   padding: 2rem;
 }
+.item-footer {
+  margin: 1rem auto 0 auto;
+  font-size: 11px;
+}
 </style>
 
 <Page>
   <Row cols={'12'}>
     <CardsGrid
       isAdmin={isAdmin($roleSelection)}
-      claims={$selectedPolicyClaims}
+      claims={claimsForGrid}
       policyItems={items}
       on:goto-claim={onGotoClaim}
       on:goto-item={onGotoPolicyItem}
@@ -133,11 +151,10 @@ th {
     </table>
   </div>
 
-  <div class="mt-1">
-    <a class="mdc-theme--primary mt-2" href={settingsPolicy(policyId)}>Policy Settings</a>
+  <div class="flex justify-between align-items-center">
+    <h4>Members</h4>
+    <Button url={settingsPolicy(policyId)}>Policy Settings</Button>
   </div>
-
-  <h4>Members</h4>
   <Datatable>
     <Datatable.Header>
       <Datatable.Header.Item>Name</Datatable.Header.Item>
@@ -155,7 +172,20 @@ th {
     </Datatable.Data>
   </Datatable>
 
-  <h4>Items <span class="subtext">({approvedItems?.length} covered)</span></h4>
+  <div class="flex justify-between align-items-center">
+    <h4>Claims <span class="subtext">({openClaimCount} open)</span></h4>
+    <Button disabled={allClaimsBtnDisabled} on:click={() => showAllClaims = true}>All Claims…</Button>
+  </div>
+  {#if $loading && isLoadingById(`policies/${policyId}/claims`)}
+    Loading claims...
+  {:else}
+    <ClaimsTable claims={claimsForTable} {policyId} />
+  {/if}
+
+  <div class="flex justify-between align-items-center">
+    <h4>Items <span class="subtext">({approvedItems?.length} covered)</span></h4>
+    <Button disabled={allItemsBtnDisabled} on:click={() => showAllItems = true}>All Items…</Button>
+  </div>
   {#if $loading && isLoadingById(`policies/${policyId}/items`)}
     Loading items...
   {:else}
@@ -169,7 +199,7 @@ th {
         <Datatable.Header.Item>Recent Activity</Datatable.Header.Item>
       </Datatable.Header>
       <Datatable.Data>
-        {#each items as item (item.id)}
+        {#each itemsForTable as item (item.id)}
           <Datatable.Data.Row>
             <Datatable.Data.Row.Item
               ><a href={itemDetails(policyId, item.id)}>{item.name || ''}</a></Datatable.Data.Row.Item
@@ -183,13 +213,10 @@ th {
         {/each}
       </Datatable.Data>
     </Datatable>
-  {/if}
-
-  <h4>Claims <span class="subtext">({openClaimCount} open)</span></h4>
-  {#if $loading && isLoadingById(`policies/${policyId}/claims`)}
-    Loading claims...
-  {:else}
-    <ClaimsTable {claims} {policyId} />
+    <div class="text-align-center">
+      <p class="item-footer">Showing {itemsForTable.length} out of {$selectedPolicyItems.length} items</p>
+      <Button url={itemsRoute(policyId)}>View {$selectedPolicyItems.length - itemsForTable.length} more items…</Button>
+    </div>
   {/if}
   <div class="bottom-padding" />
 </Page>

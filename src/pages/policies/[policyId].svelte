@@ -31,7 +31,7 @@ $: members = policy.members || []
 
 $: policyId && loadItems(policyId)
 // sort items so inactive is last
-$: items = $selectedPolicyItems
+$: items = $selectedPolicyItems.filter(itemIsActive)
 $: itemsForTable = showAllItems? $selectedPolicyItems : items.slice(0, 15)
 $: allItemsBtnDisabled = itemsForTable.length >= $selectedPolicyItems.length
 $: approvedItems = items.filter(itemIsApproved)

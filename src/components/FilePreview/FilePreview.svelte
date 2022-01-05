@@ -8,7 +8,6 @@ import { Progress } from '@silintl/ui-components'
 
 export let previews = [] as ClaimFile[]
 export let uploading: boolean = false
-export let isMemberOfPolicy: boolean = false
 
 let selectedId: string = ''
 

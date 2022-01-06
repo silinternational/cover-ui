@@ -29,7 +29,6 @@ import Row from './mdc/Row.svelte'
 import ClaimBanner from './banners/ClaimBanner.svelte'
 import SearchForm from './forms/SearchForm.svelte'
 import StatusBanner from './banners/StatusBanner.svelte'
-import SuperButton from './mdc/SuperButton.svelte'
 import SuperMenu from './mdc/SuperMenu.svelte'
 import MessageBanner from './banners/MessageBanner.svelte'
 import SearchableSelect from './SearchableSelect.svelte'
@@ -63,7 +62,6 @@ export {
   ClaimCards,
   RecentActivityTable,
   Row,
-  SuperButton,
   SuperMenu,
   ClaimBanner,
   SearchableSelect,

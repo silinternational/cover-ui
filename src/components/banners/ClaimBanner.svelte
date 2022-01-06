@@ -5,8 +5,8 @@ import type { ClaimStatus, ReceiptType } from 'data/claims'
 import type { UserAppRole } from 'data/user'
 
 export let claimStatus: ClaimStatus | SecondaryClaimStatus
-export let receiptType: ReceiptType
-export let roleSelection: UserAppRole
+export let receiptType: ReceiptType | undefined = undefined
+export let roleSelection: UserAppRole | undefined = undefined
 
 $: state = (claimStatus && getClaimState(claimStatus, roleSelection)) || ({} as State)
 </script>

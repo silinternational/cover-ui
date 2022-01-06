@@ -104,7 +104,10 @@ export const adminItemStates: { [stateName: string]: State } = {
   Pending: { ...needsReview, title: 'Needs item coverage review' },
 }
 
-export const getClaimState = (status: ClaimStatus | SecondaryClaimStatus, role: UserAppRole): State | undefined => {
+export const getClaimState = (
+  status: ClaimStatus | SecondaryClaimStatus,
+  role: UserAppRole | undefined
+): State | undefined => {
   if (role === UserAppRole.Steward) {
     stewardClaimStates[status] === undefined &&
       console.error('No such state (for claim status):', status, Object.keys(stewardClaimStates))

@@ -1,0 +1,90 @@
+<!-- https://github.com/material-components/material-components-web/tree/master/packages/mdc-menu -->
+<script lang="ts">
+import { MDCMenu } from '@material/menu'
+import { goto } from '@roxi/routify'
+import { onMount } from 'svelte'
+import type { MenuItem } from './types'
+
+// TODO:
+
+export let menuItems: MenuItem[] = []
+export let menuOpen = false
+
+let menu = {} as MDCMenu
+let element = {} as Element
+
+$: currentUrl = window.location.pathname
+$: menu.open = menuOpen
+
+onMount(() => {
+  menu = new MDCMenu(element)
+
+  // menu.setDefaultFocusState() //TODO figure out how to use this method and set focus
+
+  return () => menu.destroy()
+})
+
+const isMenuItemActive = (currentUrl: string, menuItemUrl?: string) => currentUrl === menuItemUrl
+const handleItemClick = (url?: string, action?: VoidFunction) => {
+  if (url) {
+    $goto(url)
+  } else if (typeof action === 'function') {
+    action()
+  }
+}
+const handleItemKeydown = (e: KeyboardEvent, url?: string, action?: VoidFunction) =>
+  (e.code == 'Space' || e.code == 'Enter') && handleItemClick(url, action)
+const closeMenuHandler = () => {
+  if (!menu.open) {
+    //checks to make sure the click wasn't opening the menu or on the menu
+    menuOpen = false
+  }
+}
+</script>
+
+<style>
+.mdc-list-item__subtitle {
+  color: #5f6368;
+}
+i {
+  color: #5f6368;
+}
+</style>
+
+<!-- mdc-menu doesn't have a method to let us know when it closes so this listens for clicks -->
+<svelte:body on:click={closeMenuHandler} />
+<div id="toolbar" class="toolbar mdc-menu-surface--anchor">
+  <div class="mdc-menu mdc-menu-surface {$$props.class}" bind:this={element}>
+    <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical" tabindex="-1">
+      {#each menuItems as { icon, label, url, subtitle, action }, i}
+        <!-- svelte-ignore a11y-invalid-attribute -->
+        {#if subtitle}
+          <li class="mdc-list-item" role="separator">
+            <span class="mdc-list-item__subtitle">{subtitle}</span>
+          </li>
+        {:else}
+          <li
+            on:click|preventDefault={() => handleItemClick(url, action)}
+            on:keydown|preventDefault={(e) => handleItemKeydown(e, url, action)}
+            role="menuitem"
+            class="mdc-list-item"
+            class:mdc-list-item--activated={isMenuItemActive(currentUrl, url)}
+            aria-current={isMenuItemActive(currentUrl, url) ? 'page' : null}
+            tabindex={i === 0 ? 0 : undefined}
+            on:blur={closeMenuHandler}
+          >
+            <span class="mdc-list-item__ripple" />
+            {#if icon}
+              <span class="mdc-list-item__graphic mdc-menu__selection-group-icon">
+                <i class="material-icons" aria-hidden="true">{icon}</i>
+              </span>
+            {/if}
+            {#if label}
+              <span class="mdc-list-item__text">{label}</span>
+            {/if}
+          </li>
+        {/if}
+      {/each}
+    </ul>
+  </div>
+</div>

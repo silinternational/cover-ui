@@ -4,17 +4,73 @@ import { ItemCoverageStatus, PolicyItem } from 'data/items'
 import { formatDate, formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { itemDetails, itemEdit } from 'helpers/routes'
+import { sortByNum, sortByString } from 'helpers/sort'
 import { createEventDispatcher } from 'svelte'
 import { Datatable, Menu, MenuItem } from '@silintl/ui-components'
+
+type Column = {
+  title: string,
+  headerId: string,
+  numeric?: boolean,
+  isDate?: boolean,
+  path: string,
+}
 
 export let items = [] as PolicyItem[]
 export let policyId: string
 export let title: string = ''
 
+const columns: Column[] = [
+  {
+    title: 'Item',
+    headerId: 'name',
+    path: 'name',
+  },
+  {
+    title: 'Status',
+    headerId: 'status',
+    path: 'coverage_status',
+  },
+  {
+    title: 'Assigned To',
+    headerId: 'assigned_to',
+    path: 'assigned_to',
+  },
+  {
+    title: 'Location',
+    headerId: 'location',
+    path: 'location',
+  },
+  {
+    title: 'Covered Value',
+    headerId: 'covered_value',
+    numeric: true,
+    path: 'coverage_amount',
+  },
+  {
+    title: 'Premium',
+    headerId: 'premium',
+    numeric: true,
+    path: 'prorated_annual_premium',
+  },
+  {
+    title: 'Recent Activity',
+    headerId: 'recent_activity',
+    isDate: true,
+    path: 'updated_at',
+  },
+]
+
+let headerId = 'name'
+let ascending = true
+let currentColumn = columns[0]
+
 let currentItem = {} as PolicyItem
 let goToItemDetails = true
 let modalOpen = false
 let shownMenus: { [name: string]: boolean } = {}
+
+$: shallowSortedItemsArray = currentColumn?.numeric ? sortByNum(currentColumn?.path, items, ascending) : sortByString(currentColumn?.path, items, ascending)
 
 const dispatch = createEventDispatcher()
 
@@ -71,6 +127,12 @@ const redirectAndSetCurrentItem = (item: PolicyItem) => {
 
 const getStatusClass = (status: string) =>
   status === ItemCoverageStatus.Draft ? 'mdc-theme--primary mdc-bold-font' : ''
+
+const sorted = (event: CustomEvent) => {
+  ascending = event.detail.sortValue === 'ascending'
+  headerId = event.detail.columnId || ''
+  currentColumn = columns.find(column => column.headerId === headerId) || columns[0]
+}
 </script>
 
 <style>
@@ -97,19 +159,15 @@ const getStatusClass = (status: string) =>
 {#if title}
   <h3>{title}</h3>
 {/if}
-<Datatable>
+<Datatable on:sorted={sorted}>
   <Datatable.Header>
     <!--TODO: make the amount of columns shown be dependent on the device size-->
-    <Datatable.Header.Item>Item</Datatable.Header.Item>
-    <Datatable.Header.Item>Status</Datatable.Header.Item>
-    <Datatable.Header.Item>Assigned To</Datatable.Header.Item>
-    <Datatable.Header.Item>Location</Datatable.Header.Item>
-    <Datatable.Header.Item numeric>Covered Value</Datatable.Header.Item>
-    <Datatable.Header.Item numeric>Premium</Datatable.Header.Item>
-    <Datatable.Header.Item>Recent Activity</Datatable.Header.Item>
+        {#each columns as column}
+            <Datatable.Header.Item numeric={column.numeric} columnID={column.headerId} sortable>{column.title}</Datatable.Header.Item>
+        {/each}
   </Datatable.Header>
   <Datatable.Data>
-    {#each items as item (item.id)}
+    {#each shallowSortedItemsArray as item (item.id)}
       <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} clickable>
         <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}>

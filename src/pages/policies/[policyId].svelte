@@ -1,12 +1,12 @@
 <script lang="ts">
 import { isAdmin } from 'data/user'
-import { CardsGrid, ClaimsTable, Row } from 'components'
+import { CardsGrid, ClaimsTable, ItemsTable, Row } from 'components'
 import { isLoadingById, loading } from 'components/progress'
 import { Claim, claimIsOpen, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import { itemIsApproved, itemIsActive, loadItems, selectedPolicyItems, PolicyItem } from 'data/items'
 import { getNameOfPolicy, loadPolicy, Policy, PolicyType, selectedPolicy } from 'data/policies'
 import { roleSelection } from 'data/role-policy-selection'
-import { formatDate, formatFriendlyDate } from 'helpers/dates'
+import { formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { customerClaimDetails, itemDetails, items as itemsRoute, settingsPolicy } from 'helpers/routes'
@@ -189,30 +189,7 @@ th {
   {#if $loading && isLoadingById(`policies/${policyId}/items`)}
     Loading items...
   {:else}
-    <Datatable>
-      <Datatable.Header>
-        <Datatable.Header.Item>Item</Datatable.Header.Item>
-        <Datatable.Header.Item>Status</Datatable.Header.Item>
-        <Datatable.Header.Item>Assigned To</Datatable.Header.Item>
-        <Datatable.Header.Item numeric>Covered Value</Datatable.Header.Item>
-        <Datatable.Header.Item numeric>Premium</Datatable.Header.Item>
-        <Datatable.Header.Item>Recent Activity</Datatable.Header.Item>
-      </Datatable.Header>
-      <Datatable.Data>
-        {#each itemsForTable as item (item.id)}
-          <Datatable.Data.Row>
-            <Datatable.Data.Row.Item
-              ><a href={itemDetails(policyId, item.id)}>{item.name || ''}</a></Datatable.Data.Row.Item
-            >
-            <Datatable.Data.Row.Item>{item.coverage_status || ''}</Datatable.Data.Row.Item>
-            <Datatable.Data.Row.Item>{item.accountable_person?.name || ''}</Datatable.Data.Row.Item>
-            <Datatable.Data.Row.Item numeric>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
-            <Datatable.Data.Row.Item numeric>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
-            <Datatable.Data.Row.Item>{formatDate(item.updated_at)}</Datatable.Data.Row.Item>
-          </Datatable.Data.Row>
-        {/each}
-      </Datatable.Data>
-    </Datatable>
+    <ItemsTable items={itemsForTable} {policyId}/>
     <div class="text-align-center">
       <p class="item-footer">Showing {itemsForTable.length} out of {$selectedPolicyItems.length} items</p>
       <Button url={itemsRoute(policyId)}>View {$selectedPolicyItems.length - itemsForTable.length} more items…</Button>

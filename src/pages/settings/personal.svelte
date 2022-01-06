@@ -1,5 +1,5 @@
 <script lang="ts">
-import user, { attachUserPhoto, updateUser } from '../../authn/user'
+import user, { attachUserPhoto, updateUser } from 'data/user'
 import { Breadcrumb, CountrySelector, FileDropArea, RadioOptions } from 'components'
 import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import { upload } from 'data'

@@ -1,5 +1,5 @@
 <script lang="ts">
-import user, { getDefaultPolicyId, isAdmin } from '../authn/user'
+import user, { getDefaultPolicyId, isAdmin } from 'data/user'
 import { AppDrawer } from 'components'
 import { initialized as policiesInitialized, loadPolicies } from 'data/policies'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
@@ -28,7 +28,7 @@ $: menuItems = [
     urlPattern: /\/home$/,
     icon: 'home',
     label: 'Home',
-    hide: userIsAnonymous,
+    hide: !inAdminRole,
   },
   {
     url: routes.POLICIES,
@@ -39,7 +39,7 @@ $: menuItems = [
   {
     url: routes.policyDetails(policyId),
     icon: 'description',
-    label: 'Policy Details',
+    label: 'Policy',
     hide: inAdminRole || userIsAnonymous || !policyId,
   },
   {
@@ -113,7 +113,7 @@ const goToCustomerView = (event: CustomEvent) => {
     const claimOrItemIdObj = $params.claimId ? { claimId: $params.claimId } : { itemId: $params.itemId }
     gotoPath(event.detail, claimOrItemIdObj)
   } else {
-    $goto(routes.policyHome(event.detail))
+    $goto(routes.policyDetails(event.detail))
   }
 }
 const goToAdminView = (event: CustomEvent) => {

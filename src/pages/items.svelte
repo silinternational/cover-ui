@@ -1,5 +1,5 @@
 <script lang="ts">
-import user, { getDefaultPolicyId, isAdmin, User } from '../authn/user'
+import user, { getDefaultPolicyId, isAdmin, User } from 'data/user'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { ADMIN_HOME, items } from 'helpers/routes'
 import { redirect } from '@roxi/routify'

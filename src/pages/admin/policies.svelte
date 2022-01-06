@@ -1,25 +1,52 @@
 <script lang="ts">
-import { SearchForm } from 'components'
+import { Paginator, SearchForm } from 'components'
 import { getNameOfPolicy, Policy, PolicyType, searchPoliciesFor } from 'data/policies'
+import type { PaginatedData } from 'data/types/PaginatedData'
 import type { PolicyMember } from 'data/policy-members'
 import { urlQuery } from 'data/query-string'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { ADMIN_POLICIES, adminPolicySearch, policyDetails } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
 import { Datatable, Page } from '@silintl/ui-components'
+import qs from 'qs'
+import { onMount } from 'svelte'
 
 let matchingPolicies: Policy[] = []
+let pageData = {} as PaginatedData
 let searchText = ''
 
 metatags.title = formatPageTitle('Policies')
 
-$: searchText = $urlQuery.search || ''
-$: searchPoliciesFor(searchText).then((result) => (matchingPolicies = result))
+onMount(() => search())
 
+$: searchText = $urlQuery.search || ''
+$: pageData.page = Number($urlQuery.page) || 1
+$: pageData.per_page = Number($urlQuery.limit) || 20
+$: limitSelection = 'limit-' + pageData.per_page
+
+const search = () => {
+  searchPoliciesFor(searchText, pageData.page, pageData.per_page).then((result) => {
+    matchingPolicies = result.data
+    pageData = result.meta
+
+    $goto(adminPolicySearch(qs.stringify({ search: searchText, page: pageData.page, limit: pageData.per_page })))
+  })
+}
 const getNameOfMember = (member: PolicyMember) => member.first_name + ' ' + member.last_name
 
-const onSearch = (event: CustomEvent) => {
-  $goto(event.detail ? adminPolicySearch(event.detail) : ADMIN_POLICIES)
+const onSearch = (event: CustomEvent<string>) => {
+  if (!event.detail) {
+    $goto(ADMIN_POLICIES)
+  } else {
+    searchText = event.detail
+    pageData.page = 1
+    search()
+  }
+}
+const onPaginate = (event: CustomEvent<{ page: number; limit: number }>) => {
+  pageData.page = event.detail.page
+  pageData.per_page = event.detail.limit
+  search()
 }
 </script>
 
@@ -83,4 +110,5 @@ const onSearch = (event: CustomEvent) => {
       {/each}
     </Datatable.Data>
   </Datatable>
+  <Paginator {pageData} thingName="policies" on:paginate={onPaginate} {limitSelection} />
 </Page>

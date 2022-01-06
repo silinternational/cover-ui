@@ -1,5 +1,5 @@
 <script lang="ts">
-import user, { User } from '../authn/user'
+import user, { User } from 'data/user'
 import { onMount } from 'svelte'
 
 onMount(() => {

@@ -1,5 +1,5 @@
 <script lang="ts">
-import user, { UserAppRole } from '../../../../authn/user'
+import user, { UserAppRole } from 'data/user'
 import { getFilePurpose, getUploadLabel, isEvidenceNeeded } from '../../../../business-rules/claim-payout-amount'
 import {
   Banner,
@@ -280,9 +280,9 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
       </div>
     </Row>
     <Row cols="9">
-      <ClaimBanner {claimStatus} {receiptType} {isAdmin}>{statusText}</ClaimBanner>
+      <ClaimBanner {claimStatus} roleSelection={$roleSelection} {receiptType}>{statusText}</ClaimBanner>
       {#if needsFile}
-        <ClaimBanner claimStatus={`${claimStatus}Secondary`} {isAdmin} class="mt-4px">
+        <ClaimBanner claimStatus={`${claimStatus}Secondary`} roleSelection={$roleSelection} class="mt-4px">
           Upload {uploadLabel} to get reimbursed.
         </ClaimBanner>
       {/if}
@@ -347,7 +347,7 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
         <img class="receipt" src={previewFile.file?.url} alt="document" on:error={onImgError} />
       {/if}
 
-      <FilePreview class="pointer w-50" previews={claimFiles} {isMemberOfPolicy} on:preview={onPreview} />
+      <FilePreview class="pointer w-50" previews={claimFiles} on:preview={onPreview} />
 
       {#if showUploadButton}
         <Button raised disabled={noFilesUploaded} on:click={onSubmit}>{uploadLabelForButton}</Button>

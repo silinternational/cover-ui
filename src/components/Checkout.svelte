@@ -3,7 +3,7 @@ import type { PolicyItem } from 'data/items'
 import { selectedPolicy } from 'data/policies'
 import { formatDate, getYear } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
-import { CUSTOMER_HOME, TERMS_OF_SERVICE } from 'helpers/routes'
+import { HOME, TERMS_OF_SERVICE } from 'helpers/routes'
 import ItemDeleteModal from 'ItemDeleteModal.svelte'
 import ItemDetails from 'ItemDetails.svelte'
 import { goto } from '@roxi/routify'
@@ -56,7 +56,7 @@ const handleDialog = (event: CustomEvent<string>) => {
   <ItemDeleteModal {open} {item} on:closed={handleDialog} />
 
   <div>
-    <Button outlined on:click={$goto(CUSTOMER_HOME)}>Save for later</Button>
+    <Button outlined on:click={$goto(HOME)}>Save for later</Button>
     <Button raised on:click={() => dispatch('edit')}>Edit Item</Button>
   </div>
 </div>

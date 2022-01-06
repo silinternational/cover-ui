@@ -4,6 +4,7 @@ import ClaimBanner from './banners/ClaimBanner.svelte'
 import ClaimCardBanner from './ClaimCardBanner.svelte'
 import { Claim, ClaimItem, ClaimStatus, PayoutOption, ReceiptType } from 'data/claims'
 import type { PolicyItem } from 'data/items'
+import { roleSelection } from 'data/role-policy-selection'
 import { getClaimState, SecondaryClaimStatus, State } from 'data/states'
 import { Card, Button } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
@@ -18,7 +19,7 @@ const dispatch = createEventDispatcher<{ 'goto-claim': Claim }>()
 $: item = claimItem.item || ({} as PolicyItem)
 $: wasUpdated = differenceInSeconds(Date.parse(claimItem.updated_at), Date.parse(claimItem.created_at)) > 1
 $: changedText = formatDistanceToNow(Date.parse(claimItem.updated_at), { addSuffix: true })
-$: state = getClaimState(claim.status, isAdmin) || ({} as State)
+$: state = getClaimState(claim.status, $roleSelection) || ({} as State)
 $: statusReason = claim.status_reason || ('' as string)
 $: showRevisionMessage = (statusReason && [ClaimStatus.Revision, ClaimStatus.Receipt].includes(claim.status)) as boolean
 $: payoutOption = claimItem.payout_option

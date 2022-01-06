@@ -1,5 +1,6 @@
 import type { ClaimStatus } from './claims'
 import type { ItemCoverageStatus } from './items'
+import { UserAppRole } from './user'
 
 export type State = {
   icon: string
@@ -73,15 +74,22 @@ export const claimStates: { [stateName: string]: State } = {
   },
 }
 
-export const adminClaimStates: { [stateName: string]: State } = {
+export const stewardClaimStates: { [stateName: string]: State } = {
   ...claimStates,
   Review1: needsReview,
   Review2: { ...needsReview, title: 'Needs receipt review' },
-  Review3: { ...needsReview, title: 'Needs final claim review' },
+  Review3: { ...pending, title: 'Needs final claim review' },
   Revision: { ...pending, title: 'Awaiting changes' },
   Receipt: { ...pending, icon: 'check_circle', title: 'Approved' },
   ReceiptSecondary: { ...pending, title: 'Awaiting changes' },
   Approved: { ...pending, title: 'Approved for payout', icon: 'paid' },
+}
+
+export const signatorClaimStates: { [stateName: string]: State } = {
+  ...stewardClaimStates,
+  Review1: { ...pending, title: 'Needs claim review' },
+  Review2: { ...pending, title: 'Needs receipt review' },
+  Review3: { ...needsReview, title: 'Needs final claim review' },
 }
 
 export const itemStates: { [stateName: string]: State } = {
@@ -96,12 +104,17 @@ export const adminItemStates: { [stateName: string]: State } = {
   Pending: { ...needsReview, title: 'Needs item coverage review' },
 }
 
-export const getClaimState = (status: ClaimStatus | SecondaryClaimStatus, isAdmin = false): State => {
-  if (isAdmin) {
-    adminClaimStates[status] === undefined &&
-      console.error('No such state (for claim status):', status, Object.keys(adminClaimStates))
+export const getClaimState = (status: ClaimStatus | SecondaryClaimStatus, role: UserAppRole): State => {
+  if (role === UserAppRole.Steward) {
+    stewardClaimStates[status] === undefined &&
+      console.error('No such state (for claim status):', status, Object.keys(stewardClaimStates))
 
-    return adminClaimStates[status] || ({} as State)
+    return stewardClaimStates[status] || ({} as State)
+  } else if (role === UserAppRole.Signator) {
+    signatorClaimStates[status] === undefined &&
+      console.error('No such state (for claim status):', status, Object.keys(signatorClaimStates))
+
+    return signatorClaimStates[status] || ({} as State)
   } else {
     claimStates[status] === undefined &&
       console.error('No such state (for claim status):', status, Object.keys(claimStates))

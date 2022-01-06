@@ -96,7 +96,7 @@ th {
     <CardsGrid
       isAdmin={isAdmin($roleSelection)}
       claims={claimsForGrid}
-      policyItems={items}
+      policyItems={items.slice(0, 3)}
       on:goto-claim={onGotoClaim}
       on:goto-item={onGotoPolicyItem}
     />

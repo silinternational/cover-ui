@@ -1,13 +1,16 @@
 <script lang="ts">
-import { ItemsTable, Row } from 'components'
+import { ItemsTable, Row, SearchForm } from 'components'
 import { isLoadingPolicyItems, loading } from 'components/progress'
-import {deleteItem, loadItems, selectedPolicyItems} from 'data/items'
+import {deleteItem, loadItems, PolicyItem, selectedPolicyItems} from 'data/items'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import * as routes from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
 import { Button, Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
+
+let searchText = ''
+let filteredItems = $selectedPolicyItems
 
 $: policyId = $selectedPolicyId
 
@@ -16,6 +19,9 @@ onMount(() => {
 })
 
 $: metatags.title = formatPageTitle('Home')
+$: filteredItems = $selectedPolicyItems.filter(
+    item => item.name.toLowerCase().includes(searchText.toLowerCase())
+  )
 
 const onDelete = async (event: CustomEvent<any>) => {
   const itemId = event.detail
@@ -27,14 +33,23 @@ const onDelete = async (event: CustomEvent<any>) => {
 }
 
 const onGotoItem = (event: CustomEvent<string>) => $goto(event.detail)
+
+const onSearch = (event: CustomEvent<string>) => {
+  if (!event.detail) {
+    filteredItems = $selectedPolicyItems
+  } else {
+    searchText = event.detail
+  }
+}
 </script>
 
 <Page layout="grid">
   <Row cols={'12'}>
+      <SearchForm initial={searchText} on:search={onSearch} />
     {#if $loading && isLoadingPolicyItems(policyId)}
       Loading items...
-    {:else if $selectedPolicyItems.length > 0}
-      <ItemsTable items={$selectedPolicyItems} {policyId} title="Items" on:delete={onDelete} on:gotoItem={onGotoItem} />
+    {:else if filteredItems.length > 0}
+      <ItemsTable items={filteredItems} {policyId} title="Items" on:delete={onDelete} on:gotoItem={onGotoItem} />
     {:else}
       <p class="m-0-auto text-align-center">You don't have any items in this policy</p>
       <p class="m-0-auto text-align-center">

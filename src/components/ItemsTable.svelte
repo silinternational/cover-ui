@@ -68,7 +68,7 @@ let goToItemDetails = true
 let modalOpen = false
 let shownMenus: { [name: string]: boolean } = {}
 
-$: shallowSortedItemsArray = currentColumn.numeric ? sortByNum(currentColumn.path, items, ascending) : sortByString(currentColumn.path, items, ascending)
+$: sortedItemsArray = currentColumn.numeric ? sortByNum(currentColumn.path, items, ascending) : sortByString(currentColumn.path, items, ascending)
 
 const dispatch = createEventDispatcher()
 
@@ -165,7 +165,7 @@ const onSorted = (event: CustomEvent) => {
     {/each}
   </Datatable.Header>
   <Datatable.Data>
-    {#each shallowSortedItemsArray as item (item.id)}
+    {#each sortedItemsArray as item (item.id)}
       <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} clickable>
         <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}>

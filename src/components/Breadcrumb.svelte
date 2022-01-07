@@ -3,7 +3,7 @@ import { HOME } from 'helpers/routes'
 import { goto, url } from '@roxi/routify'
 
 export let links: { url?: string; name?: string }[] = []
-export let hasHome = true
+export let hasHome = false
 
 let urls: { url: string; name: string }[] = []
 

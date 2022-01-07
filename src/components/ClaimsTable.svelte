@@ -67,7 +67,7 @@ let headerId = 'reference'
 let ascending = true
 let currentColumn = columns[0]
 
-$: shallowSortedClaimsArray = currentColumn.numeric ? sortByNum(currentColumn.path, claims, ascending) : sortByString(currentColumn.path, claims, ascending)
+$: sortedClaimsArray = currentColumn.numeric ? sortByNum(currentColumn.path, claims, ascending) : sortByString(currentColumn.path, claims, ascending)
 
 const onSorted = (event: CustomEvent) => {
   ascending = event.detail.sortValue === 'ascending'
@@ -86,7 +86,7 @@ const onSorted = (event: CustomEvent) => {
     {/each}
   </Datatable.Header>
   <Datatable.Data>
-    {#each shallowSortedClaimsArray as claim (claim.id)}
+    {#each sortedClaimsArray as claim (claim.id)}
       {#each claim.claim_items as claimItem (claimItem.id)}
         <Datatable.Data.Row>
           <Datatable.Data.Row.Item>

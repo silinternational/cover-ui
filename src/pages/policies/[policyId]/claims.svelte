@@ -1,5 +1,5 @@
 <script lang="ts">
-import { isAdmin } from 'data/user'
+import { isAdmin as checkIsAdmin } from 'data/user'
 import { Breadcrumb, ClaimCards, ClaimsTable, Row } from 'components'
 import { Claim, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import { loadItems } from 'data/items'
@@ -14,16 +14,17 @@ import { onMount } from 'svelte'
 
 export let policyId: string
 $: policy = $selectedPolicy
+$: isAdmin = checkIsAdmin($roleSelection)
 
 $: policyName = getNameOfPolicy(policy)
-$: adminBreadcrumbs = isAdmin($roleSelection)
+$: adminBreadcrumbs = isAdmin
   ? [
       { name: 'Policies', url: POLICIES },
       { name: policyName, url: policyDetails(policyId) },
     ]
   : []
 
-$: breadcrumbLinks = [...adminBreadcrumbs, { name: 'Claims', url: customerClaims(policyId) }]
+$: breadcrumbLinks = [...adminBreadcrumbs, { name: 'Claims', url: customerClaims(policyId), icon: 'assignment' }]
 $: metatags.title = formatPageTitle('Claims')
 
 onMount(() => {
@@ -35,7 +36,7 @@ const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(ev
 </script>
 
 <Page layout="grid">
-  {#if isAdmin($roleSelection)}
+  {#if isAdmin}
     <Breadcrumb links={breadcrumbLinks} />
   {/if}
   <!-- <Row cols={'12'}>

@@ -63,7 +63,7 @@ $: adminBreadcrumbs = isAdmin
       { name: policyName, url: policyDetails(policyId) },
     ]
   : []
-const itemsBreadcrumb = { name: 'Items', url: itemsRoute(policyId) }
+const itemsBreadcrumb = { name: 'Items', url: itemsRoute(policyId), icon: 'beach_access'   }
 $: thisItemBreadcrumb = { name: itemName || 'This item', url: itemDetails(policyId, itemId) }
 $: breadcrumbLinks = [...adminBreadcrumbs, itemsBreadcrumb, thisItemBreadcrumb]
 $: itemName && (metatags.title = formatPageTitle(`Items > ${itemName}`))

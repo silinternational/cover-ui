@@ -1,11 +1,11 @@
 <script lang="ts">
 import { HOME } from 'helpers/routes'
-import { goto, url } from '@roxi/routify'
+import { url } from '@roxi/routify'
 
-export let links: { url?: string; name?: string }[] = []
+export let links: { url?: string; name?: string, icon?: string }[] = []
 export let hasHome = false
 
-let urls: { url: string; name: string }[] = []
+let urls: { url: string; name: string, icon?: string }[] = []
 
 $: if (links.length === 0) {
   let path = $url().split('/')
@@ -25,7 +25,7 @@ $: if (links.length === 0) {
   urls = []
   links.forEach((val) => {
     if (val.url && val.name) {
-      urls = [...urls, { url: val.url, name: val.name }]
+      urls = [...urls, { url: val.url, name: val.name, icon: val?.icon }]
     }
   })
 }
@@ -38,6 +38,7 @@ a {
 }
 .breadcrumb-icon {
   margin: 0 3px;
+  color: var(--mdc-theme-text-icon-on-background, rgba(0, 0, 0, 0.38));
 }
 .breadcrumb-home {
   display: inherit;
@@ -48,20 +49,25 @@ a {
 <div class="flex text-align-center align-items-center {$$props.class}">
   <!-- svelte-ignore a11y-invalid-attribute -->
   {#if hasHome}
-    <a href={HOME} class="capitalize"
-      ><i class="material-icons mdc-list-item__graphic money-icon breadcrumb-icon breadcrumb-home" aria-hidden="true"
-        >home</i
-      ></a
-    ><!--
-  --><i class="material-icons mdc-list-item__graphic money-icon breadcrumb-icon" aria-hidden="true"
-      >chevron_right</i
-    >
+    <a href={HOME} class="capitalize">
+      <i class="material-icons breadcrumb-icon breadcrumb-home" aria-hidden="true">
+        home
+      </i>
+    </a>
+    <i class="material-icons breadcrumb-icon" aria-hidden="true">
+      chevron_right
+    </i>
   {/if}
   {#each urls as val, i}
     <!-- svelte-ignore a11y-invalid-attribute -->
-    <a on:click={() => $goto(val.url)} href="" class="capitalize">{val.name}</a><!--
-    -->{#if urls.length - 1 != i}
-      <i class="material-icons mdc-list-item__graphic money-icon breadcrumb-icon" aria-hidden="true">chevron_right</i>
+    {#if val.icon}
+      <i class="material-icons breadcrumb-icon" aria-hidden="true">
+        {val.icon}
+      </i>
     {/if}
+      <a href={val.url} class="capitalize">{val.name}</a>
+      {#if urls.length - 1 != i}
+        <i class="material-icons breadcrumb-icon" aria-hidden="true">chevron_right</i>
+      {/if}
   {/each}
 </div>

@@ -115,7 +115,7 @@ $: adminBreadcrumbs = isAdmin
     ]
   : []
 
-const claimsBreadcrumb = { name: 'Claims', url: customerClaims(policyId) }
+const claimsBreadcrumb = { name: 'Claims', url: customerClaims(policyId), icon: 'assignment' }
 $: thisClaimBreadcrumb = { name: claimName || 'This item', url: customerClaimDetails(policyId, claimId) }
 $: breadcrumbLinks = [...adminBreadcrumbs, claimsBreadcrumb, thisClaimBreadcrumb]
 $: claimName && (metatags.title = formatPageTitle(`Claims > ${claimName}`))

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { UserAppRole } from 'data/user'
+import { isAdmin } from 'data/user'
 import { Breadcrumb, ClaimCards, ClaimsTable, Row } from 'components'
 import { Claim, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import { loadItems } from 'data/items'
@@ -16,8 +16,7 @@ export let policyId: string
 $: policy = $selectedPolicy
 
 $: policyName = getNameOfPolicy(policy)
-$: isAdmin = $roleSelection !== UserAppRole.Customer
-$: adminBreadcrumbs = isAdmin
+$: adminBreadcrumbs = isAdmin($roleSelection)
   ? [
       { name: 'Policies', url: POLICIES },
       { name: policyName, url: policyDetails(policyId) },
@@ -36,7 +35,9 @@ const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(ev
 </script>
 
 <Page layout="grid">
-  <Breadcrumb links={breadcrumbLinks} />
+  {#if isAdmin($roleSelection)}
+    <Breadcrumb links={breadcrumbLinks} />
+  {/if}
   <!-- <Row cols={'12'}>
     <Button raised url={customerClaimsNew(policyId)}>New claim</Button>
   </Row> -->

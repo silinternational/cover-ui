@@ -189,7 +189,7 @@ th {
   {#if $loading && isLoadingById(`policies/${policyId}/items`)}
     Loading items...
   {:else}
-    <ItemsTable items={itemsForTable} {policyId}/>
+    <ItemsTable items={itemsForTable} {policyId} on:gotoItem={(e) => $goto(e.detail)}/>
     <div class="text-align-center">
       <p class="item-footer">Showing {itemsForTable.length} out of {$selectedPolicyItems.length} items</p>
       <Button url={itemsRoute(policyId)}>View {$selectedPolicyItems.length - itemsForTable.length} more items…</Button>

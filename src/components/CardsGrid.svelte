@@ -11,6 +11,7 @@ export let recentChanges: RecentChange[] = []
 export let claims: Claim[] = []
 export let policyItems: PolicyItem[] = []
 export let isAdmin: boolean = false
+export let cardLimit: number = 4
 
 $: cardItems = recentChanges.length ? parseRecentChanges(recentChanges) : parseClaimsAndPolicyItems(claims, policyItems)
 
@@ -73,7 +74,7 @@ const parseClaimsAndPolicyItems = (claims: Claim[], policyItems: PolicyItem[]): 
 </style>
 
 <div class="flex justify-start flex-wrap {$$props.class}">
-  {#each cardItems as cardItem (cardItem.data.id)}
+  {#each cardItems.slice(0, cardLimit) as cardItem (cardItem.data.id)}
     <div class="card">
       {#if isClaimItem(cardItem.data)}
         <ClaimCard claim={cardItem.claim} claimItem={cardItem.data} {isAdmin} on:goto-claim />

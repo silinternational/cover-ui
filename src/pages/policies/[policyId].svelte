@@ -11,7 +11,7 @@ import { formatMoney } from 'helpers/money'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { customerClaimDetails, itemDetails, items as itemsRoute, settingsPolicy } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
-import { Button, Datatable, isAboveTablet, Page } from '@silintl/ui-components'
+import { Button, Datatable, isAboveMobile, isAboveTablet, Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 export let policyId: string
@@ -38,7 +38,6 @@ $: approvedItems = items.filter(itemIsApproved)
 
 $: recentClaims = $selectedPolicyClaims.filter(isRecent)
 $: claimsForTable = showAllClaims ? $selectedPolicyClaims : recentClaims.slice(0, 15)
-$: claimsForGrid = isAboveTablet() ? recentClaims.slice(0, 4) : recentClaims.slice(0, 3)
 $: allClaimsBtnDisabled = claimsForTable.length >= $selectedPolicyClaims.length
 $: openClaimCount = recentClaims.filter(claimIsOpen).length
 
@@ -95,8 +94,9 @@ th {
   <Row cols={'12'}>
     <CardsGrid
       isAdmin={isAdmin($roleSelection)}
-      claims={claimsForGrid}
-      policyItems={items.slice(0, 3)}
+      claims={recentClaims}
+      policyItems={items}
+      cardLimit={isAboveTablet() ? 4 : isAboveMobile() ? 2 : 1}
       on:goto-claim={onGotoClaim}
       on:goto-item={onGotoPolicyItem}
     />

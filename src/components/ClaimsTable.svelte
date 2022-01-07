@@ -3,29 +3,90 @@ import type { Claim } from '../data/claims'
 import { formatFriendlyDate } from '../helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { customerClaimDetails } from 'helpers/routes'
+import { sortByNum, sortByString } from 'helpers/sort'
 import { Datatable } from '@silintl/ui-components'
+
+type Column = {
+  title: string,
+  headerId: string,
+  numeric?: boolean,
+  path: string,
+}
 
 export let claims = [] as Claim[]
 export let policyId: string
 export let title = ''
+
+const columns: Column[] = [
+  {
+    title: 'Reference #',
+    headerId: 'reference',
+    path: 'reference_number',
+  },
+  {
+    title: 'Incident Date',
+    headerId: 'incident_date',
+    path: 'incident_date',
+  },
+  {
+    title: 'Status',
+    headerId: 'status',
+    path: 'status',
+  },
+  {
+    title: 'Repairable',
+    headerId: 'repairable',
+    path: 'claim_items.0.is_repairable',
+  },
+  {
+    title: 'Payout Option',
+    headerId: 'payout_option',
+    path: 'claim_items.0.payout_option',
+  },
+  {
+    title: 'Repair',
+    headerId: 'repair',
+    numeric: true,
+    path: 'claim_items.0.repair_estimate',
+  },
+  {
+    title: 'Replacement',
+    headerId: 'replacement',
+    numeric: true,
+    path: 'claim_items.0.replace_estimate',
+  },
+  {
+    title: 'FMV',
+    headerId: 'fmv',
+    numeric: true,
+    path: 'claim_items.0.fmv',
+  },
+]
+
+let headerId = 'reference'
+let ascending = true
+let currentColumn = columns[0]
+
+$: shallowSortedClaimsArray = currentColumn.numeric ? sortByNum(currentColumn.path, claims, ascending) : sortByString(currentColumn.path, claims, ascending)
+
+const onSorted = (event: CustomEvent) => {
+  ascending = event.detail.sortValue === 'ascending'
+  headerId = event.detail.columnId || ''
+  currentColumn = columns.find(column => column.headerId === headerId) || columns[0]
+}
 </script>
 
 {#if title}
   <h3>{title}</h3>
 {/if}
-<Datatable>
+<Datatable on:sorted={onSorted}>
   <Datatable.Header>
-    <Datatable.Header.Item>Reference #</Datatable.Header.Item>
-    <Datatable.Header.Item>Incident Date</Datatable.Header.Item>
-    <Datatable.Header.Item>Status</Datatable.Header.Item>
-    <Datatable.Header.Item>Repairable</Datatable.Header.Item>
-    <Datatable.Header.Item>Payout Option</Datatable.Header.Item>
-    <Datatable.Header.Item numeric>Repair</Datatable.Header.Item>
-    <Datatable.Header.Item numeric>Replacement</Datatable.Header.Item>
-    <Datatable.Header.Item numeric>FMV</Datatable.Header.Item>
+    {#each columns as column}
+      <Datatable.Header.Item numeric={column.numeric} columnID={column.headerId} sortable>{column.title}</Datatable.Header.Item>
+    {/each}
   </Datatable.Header>
   <Datatable.Data>
-    {#each claims as claim (claim.id)}
+    {#each shallowSortedClaimsArray as claim (claim.id)}
       {#each claim.claim_items as claimItem (claimItem.id)}
         <Datatable.Data.Row>
           <Datatable.Data.Row.Item>

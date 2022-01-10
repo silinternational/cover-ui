@@ -1,4 +1,4 @@
-import { CREATE, GET, UPDATE } from '.'
+import { CREATE, DELETE, GET, UPDATE } from '.'
 import { UserAppRole } from './user'
 import { convertToCents } from 'helpers/money'
 import type { PolicyItem } from './items'
@@ -345,6 +345,16 @@ export async function claimsFileAttach(claimId: string, fileId: string, purpose:
 
   // TODO: update a store with this response data
   const response = await CREATE<ClaimsFileAttachResponseBody>(`claims/${claimId}/files`, data as any)
+}
+
+export async function claimFilesDelete(claimId: string, claimFileId: string): Promise<void> {
+  await DELETE(`claim-files/${claimFileId}`)
+
+  claims.update((claims) => {
+    const i = claims.findIndex((claim) => claim.id === claimId)
+    claims[i].claim_files = claims[i].claim_files.filter((claimFile) => claimFile.id !== claimFileId)
+    return claims
+  })
 }
 
 export async function submitClaim(claimId: string): Promise<void> {

@@ -32,6 +32,7 @@ import {
   fixReceipt,
   ClaimFilePurpose,
   ReceiptType,
+  claimFilesDelete,
 } from 'data/claims'
 import { loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
 import { getNameOfPolicy, getPolicyById, loadPolicy, memberBelongsToPolicy, policies, Policy } from 'data/policies'
@@ -206,12 +207,11 @@ async function onUpload(event: CustomEvent<FormData>) {
   }
 }
 
-//TODO use endpoint when avialable
-// function onDeleted(event: CustomEvent<string>) {
-//   const id = event.detail
+function onDeleted(event: CustomEvent<string>) {
+  const id = event.detail
 
-//   console.log('deleting file: ' + id)
-// }
+  claimFilesDelete(claimId, id)
+}
 
 const getClaimStatusText = (claim: Claim, item: ClaimItem) => {
   const updatedAtStr = item.updated_at ? formatDistanceToNow(Date.parse(item.updated_at), { addSuffix: true }) : ''
@@ -352,7 +352,7 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
         <img class="receipt" src={previewFile.file?.url} alt="document" on:error={onImgError} />
       {/if}
 
-      <FilePreview class="pointer w-50" previews={claimFiles} on:preview={onPreview} />
+      <FilePreview class="pointer w-50" allowDelete={needsRevision} previews={claimFiles} on:preview={onPreview} on:deleted={onDeleted} />
 
       {#if showUploadButton}
         <Button raised disabled={noFilesUploaded} on:click={onSubmit}>{uploadLabelForButton}</Button>

@@ -1,22 +1,18 @@
 <script lang="ts">
 import { ItemsTable, Row, SearchForm } from 'components'
 import { isLoadingPolicyItems, loading } from 'components/progress'
-import {deleteItem, loadItems, PolicyItem, selectedPolicyItems} from 'data/items'
+import {deleteItem, loadItems, selectedPolicyItems} from 'data/items'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import * as routes from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
 import { Button, Page } from '@silintl/ui-components'
-import { onMount } from 'svelte'
 
 let searchText = ''
 let filteredItems = $selectedPolicyItems
 
 $: policyId = $selectedPolicyId
-
-onMount(() => {
-  loadItems(policyId)
-})
+$: policyId && loadItems(policyId)
 
 $: metatags.title = formatPageTitle('Home')
 $: filteredItems = $selectedPolicyItems.filter(

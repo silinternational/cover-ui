@@ -13,7 +13,7 @@ import { Page } from '@silintl/ui-components'
 export let policyId: string
 
 $: policy = $selectedPolicy
-$: policy && loadClaimsByPolicyId(policyId)
+$: policyId && loadClaimsByPolicyId(policyId)
 $: isAdmin = checkIsAdmin($roleSelection)
 
 $: policyName = getNameOfPolicy(policy)

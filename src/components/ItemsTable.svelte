@@ -75,19 +75,19 @@ const dispatch = createEventDispatcher()
 const getMenuItems = (item: PolicyItem) => {
   const menuItems: MenuItem[] = [
     {
-      label: 'View Details',
+      label: 'view item',
       url: itemDetails(policyId, item.id),
     },
   ]
   if (item.coverage_status !== ItemCoverageStatus.Inactive) {
     menuItems.push({
-      label: item.coverage_status === ItemCoverageStatus.Draft ? 'Delete' : 'Remove Coverage',
+      label: item.coverage_status === ItemCoverageStatus.Draft ? 'delete' : 'end coverage',
       action: handleDeleteClick,
     })
   }
   if (editableCoverageStatuses.includes(item.coverage_status)) {
     menuItems.push({
-      label: 'Edit',
+      label: 'edit item',
       url: itemEdit(policyId, item.id),
     })
   }

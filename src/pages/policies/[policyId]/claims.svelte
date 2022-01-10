@@ -2,7 +2,6 @@
 import { isAdmin as checkIsAdmin } from 'data/user'
 import { Breadcrumb, ClaimCards, ClaimsTable, Row } from 'components'
 import { Claim, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
-import { loadItems } from 'data/items'
 import { getNameOfPolicy, selectedPolicy } from 'data/policies'
 import { roleSelection } from 'data/role-policy-selection'
 import { customerClaims, customerClaimDetails, POLICIES, policyDetails } from 'helpers/routes'
@@ -10,10 +9,11 @@ import { formatPageTitle } from 'helpers/pageTitle'
 import { items } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
-import { onMount } from 'svelte'
 
 export let policyId: string
+
 $: policy = $selectedPolicy
+$: policyId && loadClaimsByPolicyId(policyId)
 $: isAdmin = checkIsAdmin($roleSelection)
 
 $: policyName = getNameOfPolicy(policy)
@@ -26,11 +26,6 @@ $: adminBreadcrumbs = isAdmin
 
 $: breadcrumbLinks = [...adminBreadcrumbs, { name: 'Claims', url: customerClaims(policyId), icon: 'assignment' }]
 $: metatags.title = formatPageTitle('Claims')
-
-onMount(() => {
-  loadItems(policyId)
-  loadClaimsByPolicyId(policyId)
-})
 
 const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(event.detail.policy_id, event.detail.id))
 </script>

@@ -91,6 +91,7 @@ $: showSecondaryBanner = needsFile && isCustomer($roleSelection)
 
 $: needsReceipt = claimStatus === ClaimStatus.Receipt
 $: needsFile = needsReceipt || needsRevision || isEvidenceNeeded(claimItem, claimStatus)
+$: allowDelete = needsRevision || [ClaimStatus.Receipt, ClaimStatus.Draft].includes(claimStatus)
 
 $: needsRepairReceipt = needsReceipt && payoutOption === PayoutOption.Repair
 $: needsReplaceReceipt = needsReceipt && payoutOption === PayoutOption.Replacement
@@ -352,7 +353,7 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
         <img class="receipt" src={previewFile.file?.url} alt="document" on:error={onImgError} />
       {/if}
 
-      <FilePreview class="pointer w-50" allowDelete={needsRevision} previews={claimFiles} on:preview={onPreview} on:deleted={onDeleted} />
+      <FilePreview class="pointer w-50" {allowDelete} previews={claimFiles} on:preview={onPreview} on:deleted={onDeleted} />
 
       {#if showUploadButton}
         <Button raised disabled={noFilesUploaded} on:click={onSubmit}>{uploadLabelForButton}</Button>

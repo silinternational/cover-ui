@@ -17,7 +17,7 @@ export let role: UserAppRole
 
 const addTeamPolicyEntry: MenuItem = {
   icon: 'add',
-  label: 'Add team policy',
+  label: 'add team policy',
   url: POLICY_NEW_TEAM,
 }
 const dispatch = createEventDispatcher()
@@ -58,18 +58,18 @@ const getTeamPolicyEntries = (policies: Policy[]): MenuItem[] => {
       action: () => selectUserPolicy(policy.id),
     }
   })
-  return [{ subtitle: 'Team Policies' }, ...policyItems]
+  return [{ subtitle: 'team policies' }, ...policyItems]
 }
 
 const getHouseholdEntries = (policies: Policy[]): MenuItem[] => {
   const policyItems = policies.map((policy): MenuItem => {
     return {
       icon: HOUSEHOLD_POLICY_ICON,
-      label: 'Household', // TODO: Replace with name, when available
+      label: 'household', // TODO: Replace with name, when available
       action: () => selectUserPolicy(policy.id),
     }
   })
-  return [{ subtitle: 'Personal Policies' }, ...policyItems]
+  return [{ subtitle: 'personal policies' }, ...policyItems]
 }
 
 const selectRole = (role: UserAppRole) => {
@@ -80,12 +80,12 @@ const selectRole = (role: UserAppRole) => {
 const getEntriesForRole = (role: UserAppRole): MenuItem[] => {
   const specialEntriesByRole: { [role: string]: MenuItem[] } = {
     Signator: [
-      { subtitle: 'Admin' },
-      { icon: ADMIN_ICON, label: 'Signator', action: () => selectRole(UserAppRole.Signator) },
+      { subtitle: 'admin' },
+      { icon: ADMIN_ICON, label: 'signator', action: () => selectRole(UserAppRole.Signator) },
     ],
     Steward: [
-      { subtitle: 'Admin' },
-      { icon: ADMIN_ICON, label: 'Steward', action: () => selectRole(UserAppRole.Steward) },
+      { subtitle: 'admin' },
+      { icon: ADMIN_ICON, label: 'steward', action: () => selectRole(UserAppRole.Steward) },
     ],
   }
   return specialEntriesByRole[role] || []
@@ -109,7 +109,7 @@ const getButtonText = (userAppRoleSelection: UserAppRole, policyIdSelection: str
     return getNameOfPolicy(policy)
   }
 
-  return 'Household'
+  return 'household'
 }
 
 const getButtonIcon = (userAppRoleSelection: UserAppRole, policyIdSelection: string, myPolicies: Policy[]) => {
@@ -130,7 +130,7 @@ const getButtonLabel = (userAppRoleSelection: UserAppRole, policyIdSelection: st
     return ''
   }
 
-  return 'Show Policy'
+  return 'show policy'
 }
 
 const isTeamPolicy = (policy: Policy): boolean => policy.type === PolicyType.Team

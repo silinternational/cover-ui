@@ -29,6 +29,6 @@
   font-weight: var(--mdc-typography-bold-font-weight);
 }
 
-.mdc-list-item__text {
+.mdc-list-item__text, .mdc-list-item__subtitle {
   text-transform: capitalize;
 }

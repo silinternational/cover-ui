@@ -4,8 +4,9 @@ import type { ClaimFile } from 'data/claims'
 import { formatDate } from '../../helpers/dates'
 import { createEventDispatcher } from 'svelte'
 import { flip } from 'svelte/animate'
-import { Progress } from '@silintl/ui-components'
+import { Button, Progress } from '@silintl/ui-components'
 
+export let allowDelete: boolean = false
 export let previews = [] as ClaimFile[]
 export let uploading: boolean = false
 
@@ -32,13 +33,12 @@ const onClick = (id: string) => {
   dispatch('preview', id)
 }
 
-//Todo bring back delete for 1.1
-// function onDelete(event: CustomEvent, id: string) {
-//   event.preventDefault()
-//   event.stopPropagation()
+function onDelete(event: CustomEvent, id: string) {
+  event.preventDefault()
+  event.stopPropagation()
 
-//   dispatch('deleted', id)
-// }
+  dispatch('deleted', id)
+}
 </script>
 
 <style>
@@ -65,7 +65,9 @@ const onClick = (id: string) => {
         <p class="white my-0">{preview.file.name}</p>
         <p class="white my-0">{formatDate(preview.created_at)}</p>
       </div>
-      {#if preview.purpose}
+      {#if allowDelete}
+        <Button class="delete-button" raised on:click={(evt) => onDelete(evt, preview.id)}>Delete</Button>
+      {:else if preview.purpose}
         <Banner class="mdc-bold-font" color="hsla(213, 8%, 46%, 1)" background="hsla(213, 22%, 94%, 1)"
           >{preview.purpose}</Banner
         >

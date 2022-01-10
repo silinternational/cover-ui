@@ -85,6 +85,8 @@ $: claimStatus = (claim.status || '') as ClaimStatus
 $: payoutOption = claimItem.payout_option
 $: needsRevision = claimStatus === ClaimStatus.Revision
 $: showRevisionMessage = claim.status_reason && needsRevision
+$: showPrimaryBanner = !(needsRevision && isCustomer($roleSelection))
+$: showSecondaryBanner = needsFile && isCustomer($roleSelection)
 
 $: needsReceipt = claimStatus === ClaimStatus.Receipt
 $: needsFile = needsReceipt || needsRevision || isEvidenceNeeded(claimItem, claimStatus)
@@ -281,8 +283,10 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
       </div>
     </Row>
     <Row cols="9">
-      <ClaimBanner {claimStatus} roleSelection={$roleSelection} {receiptType}>{statusText}</ClaimBanner>
-      {#if needsFile && isCustomer($roleSelection)}
+      {#if showPrimaryBanner}
+        <ClaimBanner {claimStatus} roleSelection={$roleSelection} {receiptType}>{statusText}</ClaimBanner>
+      {/if}
+      {#if showSecondaryBanner}
         <ClaimBanner claimStatus={`${claimStatus}Secondary`} roleSelection={$roleSelection} class="mt-4px">
           Upload {uploadLabel} to get reimbursed.
         </ClaimBanner>

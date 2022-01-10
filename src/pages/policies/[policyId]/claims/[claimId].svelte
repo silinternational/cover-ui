@@ -1,5 +1,5 @@
 <script lang="ts">
-import user, { UserAppRole } from 'data/user'
+import user, { isCustomer, UserAppRole } from 'data/user'
 import { getFilePurpose, getUploadLabel, isEvidenceNeeded } from '../../../../business-rules/claim-payout-amount'
 import {
   Banner,
@@ -83,10 +83,11 @@ $: householdId = policy.household_id ? policy.household_id : ''
 $: incidentDate = formatFriendlyDate(claim.incident_date)
 $: claimStatus = (claim.status || '') as ClaimStatus
 $: payoutOption = claimItem.payout_option
-$: showRevisionMessage = claim.status_reason && claimStatus === ClaimStatus.Revision
+$: needsRevision = claimStatus === ClaimStatus.Revision
+$: showRevisionMessage = claim.status_reason && needsRevision
 
 $: needsReceipt = claimStatus === ClaimStatus.Receipt
-$: needsFile = needsReceipt || isEvidenceNeeded(claimItem, claimStatus)
+$: needsFile = needsReceipt || needsRevision || isEvidenceNeeded(claimItem, claimStatus)
 
 $: needsRepairReceipt = needsReceipt && payoutOption === PayoutOption.Repair
 $: needsReplaceReceipt = needsReceipt && payoutOption === PayoutOption.Replacement
@@ -281,7 +282,7 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
     </Row>
     <Row cols="9">
       <ClaimBanner {claimStatus} roleSelection={$roleSelection} {receiptType}>{statusText}</ClaimBanner>
-      {#if needsFile}
+      {#if needsFile && isCustomer($roleSelection)}
         <ClaimBanner claimStatus={`${claimStatus}Secondary`} roleSelection={$roleSelection} class="mt-4px">
           Upload {uploadLabel} to get reimbursed.
         </ClaimBanner>

@@ -1,5 +1,5 @@
 <script lang="ts">
-import user, { UserAppRole } from 'data/user'
+import user, { isCustomer, UserAppRole } from 'data/user'
 import { getFilePurpose, getUploadLabel, isEvidenceNeeded } from '../../../../business-rules/claim-payout-amount'
 import {
   Banner,
@@ -32,6 +32,7 @@ import {
   fixReceipt,
   ClaimFilePurpose,
   ReceiptType,
+  claimFilesDelete,
 } from 'data/claims'
 import { loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
 import { getNameOfPolicy, getPolicyById, loadPolicy, memberBelongsToPolicy, policies, Policy } from 'data/policies'
@@ -83,10 +84,14 @@ $: householdId = policy.household_id ? policy.household_id : ''
 $: incidentDate = formatFriendlyDate(claim.incident_date)
 $: claimStatus = (claim.status || '') as ClaimStatus
 $: payoutOption = claimItem.payout_option
-$: showRevisionMessage = claim.status_reason && claimStatus === ClaimStatus.Revision
+$: needsRevision = claimStatus === ClaimStatus.Revision
+$: showRevisionMessage = claim.status_reason && needsRevision
+$: showPrimaryBanner = !(needsRevision && isCustomer($roleSelection))
+$: showSecondaryBanner = needsFile && isCustomer($roleSelection)
 
 $: needsReceipt = claimStatus === ClaimStatus.Receipt
-$: needsFile = needsReceipt || isEvidenceNeeded(claimItem, claimStatus)
+$: needsFile = needsReceipt || needsRevision || isEvidenceNeeded(claimItem, claimStatus)
+$: allowDelete = needsRevision || [ClaimStatus.Receipt, ClaimStatus.Draft].includes(claimStatus)
 
 $: needsRepairReceipt = needsReceipt && payoutOption === PayoutOption.Repair
 $: needsReplaceReceipt = needsReceipt && payoutOption === PayoutOption.Replacement
@@ -203,12 +208,11 @@ async function onUpload(event: CustomEvent<FormData>) {
   }
 }
 
-//TODO use endpoint when avialable
-// function onDeleted(event: CustomEvent<string>) {
-//   const id = event.detail
+function onDeleted(event: CustomEvent<string>) {
+  const id = event.detail
 
-//   console.log('deleting file: ' + id)
-// }
+  claimFilesDelete(claimId, id)
+}
 
 const getClaimStatusText = (claim: Claim, item: ClaimItem) => {
   const updatedAtStr = item.updated_at ? formatDistanceToNow(Date.parse(item.updated_at), { addSuffix: true }) : ''
@@ -280,8 +284,10 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
       </div>
     </Row>
     <Row cols="9">
-      <ClaimBanner {claimStatus} roleSelection={$roleSelection} {receiptType}>{statusText}</ClaimBanner>
-      {#if needsFile}
+      {#if showPrimaryBanner}
+        <ClaimBanner {claimStatus} roleSelection={$roleSelection} {receiptType}>{statusText}</ClaimBanner>
+      {/if}
+      {#if showSecondaryBanner}
         <ClaimBanner claimStatus={`${claimStatus}Secondary`} roleSelection={$roleSelection} class="mt-4px">
           Upload {uploadLabel} to get reimbursed.
         </ClaimBanner>
@@ -347,7 +353,7 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
         <img class="receipt" src={previewFile.file?.url} alt="document" on:error={onImgError} />
       {/if}
 
-      <FilePreview class="pointer w-50" previews={claimFiles} on:preview={onPreview} />
+      <FilePreview class="pointer w-50" {allowDelete} previews={claimFiles} on:preview={onPreview} on:deleted={onDeleted} />
 
       {#if showUploadButton}
         <Button raised disabled={noFilesUploaded} on:click={onSubmit}>{uploadLabelForButton}</Button>

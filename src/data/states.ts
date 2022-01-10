@@ -67,6 +67,7 @@ export const claimStates: { [stateName: string]: State } = {
   Review2: pendingClaim,
   Review3: { ...pendingClaim, title: 'Awaiting review 3/3' },
   ReceiptSecondary: warning,
+  RevisionSecondary: warning,
   Receipt: { ...approved, icon: 'done' },
   Paid: {
     ...approved,

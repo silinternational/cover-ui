@@ -1,22 +1,27 @@
 <script lang="ts">
+import SuperMenu from './mdc/SuperMenu.svelte'
+import type { MenuItem } from './mdc/types'
 import { UserAppRole } from 'data/user'
 import { getNameOfPolicy, Policy, PolicyType } from 'data/policies'
 import { roleSelection, recordRoleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { POLICY_NEW_TEAM } from 'helpers/routes'
-import { Button, Menu, MenuItem } from '@silintl/ui-components'
+import { Button } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
+
+const ADMIN_ICON = 'gavel'
+const HOUSEHOLD_POLICY_ICON = 'family_restroom'
+const TEAM_POLICY_ICON = 'business'
 
 export let myPolicies: Policy[]
 export let role: UserAppRole
 
 const addTeamPolicyEntry: MenuItem = {
   icon: 'add',
-  label: 'Add team policy',
+  label: 'add team policy',
   url: POLICY_NEW_TEAM,
 }
 const dispatch = createEventDispatcher()
 
-let buttonText: string
 let teamPolicyEntries: MenuItem[]
 let householdPolicyEntries: MenuItem[]
 let menuIsOpen = false
@@ -30,13 +35,15 @@ $: myHouseholdPolicies = myPolicies.filter(isHouseholdPolicy)
 
 $: setInitialRoleSelection(role)
 
+$: buttonLabel = getButtonLabel($roleSelection, $selectedPolicyId, myPolicies)
 $: buttonText = getButtonText($roleSelection, $selectedPolicyId, myPolicies)
+$: buttonIcon = getButtonIcon($roleSelection, $selectedPolicyId, myPolicies)
 
 $: roleEntries = getEntriesForRole(role)
 $: teamPolicyEntries = getTeamPolicyEntries(myTeamPolicies)
 $: householdPolicyEntries = getHouseholdEntries(myHouseholdPolicies)
 
-$: menuItems = [...roleEntries, ...teamPolicyEntries, addTeamPolicyEntry, ...householdPolicyEntries]
+$: menuItems = [...roleEntries, ...householdPolicyEntries, ...teamPolicyEntries, addTeamPolicyEntry]
 
 const selectUserPolicy = (policyId: string) => {
   recordRoleSelection(UserAppRole.Customer)
@@ -44,23 +51,25 @@ const selectUserPolicy = (policyId: string) => {
 }
 
 const getTeamPolicyEntries = (policies: Policy[]): MenuItem[] => {
-  return policies.map((policy: Policy): MenuItem => {
+  const policyItems = policies.map((policy: Policy): MenuItem => {
     return {
-      icon: 'work',
+      icon: TEAM_POLICY_ICON,
       label: getNameOfPolicy(policy),
       action: () => selectUserPolicy(policy.id),
     }
   })
+  return [{ subtitle: 'team policies' }, ...policyItems]
 }
 
 const getHouseholdEntries = (policies: Policy[]): MenuItem[] => {
-  return policies.map((policy: Policy): MenuItem => {
+  const policyItems = policies.map((policy): MenuItem => {
     return {
-      icon: 'family_restroom',
-      label: 'Household', // TODO: Replace with name, when available
+      icon: HOUSEHOLD_POLICY_ICON,
+      label: 'household', // TODO: Replace with name, when available
       action: () => selectUserPolicy(policy.id),
     }
   })
+  return [{ subtitle: 'personal policy' }, ...policyItems]
 }
 
 const selectRole = (role: UserAppRole) => {
@@ -70,8 +79,14 @@ const selectRole = (role: UserAppRole) => {
 
 const getEntriesForRole = (role: UserAppRole): MenuItem[] => {
   const specialEntriesByRole: { [role: string]: MenuItem[] } = {
-    Signator: [{ icon: 'gavel', label: 'Signator', action: () => selectRole(UserAppRole.Signator) }],
-    Steward: [{ icon: 'gavel', label: 'Steward', action: () => selectRole(UserAppRole.Steward) }],
+    Signator: [
+      { subtitle: 'admin' },
+      { icon: ADMIN_ICON, label: 'signator', action: () => selectRole(UserAppRole.Signator) },
+    ],
+    Steward: [
+      { subtitle: 'admin' },
+      { icon: ADMIN_ICON, label: 'steward', action: () => selectRole(UserAppRole.Steward) },
+    ],
   }
   return specialEntriesByRole[role] || []
 }
@@ -94,7 +109,28 @@ const getButtonText = (userAppRoleSelection: UserAppRole, policyIdSelection: str
     return getNameOfPolicy(policy)
   }
 
-  return 'Household'
+  return 'household'
+}
+
+const getButtonIcon = (userAppRoleSelection: UserAppRole, policyIdSelection: string, myPolicies: Policy[]) => {
+  if (userAppRoleSelection !== UserAppRole.Customer) {
+    return ADMIN_ICON
+  }
+
+  const policy = myPolicies.find((policy) => policy.id === policyIdSelection)
+  if (policy && isTeamPolicy(policy)) {
+    return TEAM_POLICY_ICON
+  }
+
+  return HOUSEHOLD_POLICY_ICON
+}
+
+const getButtonLabel = (userAppRoleSelection: UserAppRole, policyIdSelection: string, myPolicies: Policy[]) => {
+  if (userAppRoleSelection !== UserAppRole.Customer) {
+    return ''
+  }
+
+  return 'show policy'
 }
 
 const isTeamPolicy = (policy: Policy): boolean => policy.type === PolicyType.Team
@@ -108,7 +144,13 @@ const toggleRoleAndPolicyMenu = () => (menuIsOpen = !menuIsOpen)
 }
 </style>
 
-<Button class="w-100" appendIcon="arrow_drop_down" on:click={toggleRoleAndPolicyMenu}>{buttonText || ''}</Button>
+<Button
+  class="w-100"
+  label={buttonLabel}
+  prependIcon={buttonIcon}
+  appendIcon="arrow_drop_down"
+  on:click={toggleRoleAndPolicyMenu}>{buttonText || ''}</Button
+>
 <div id="role-and-policy-menu-options-container">
-  <Menu bind:menuOpen={menuIsOpen} {menuItems} />
+  <SuperMenu bind:menuOpen={menuIsOpen} {menuItems} />
 </div>

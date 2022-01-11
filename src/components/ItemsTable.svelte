@@ -1,6 +1,6 @@
 <script lang="ts">
 import ItemDeleteModal from './ItemDeleteModal.svelte'
-import { ItemCoverageStatus, PolicyItem } from 'data/items'
+import { editableCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/items'
 import { formatDate, formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { itemDetails, itemEdit } from 'helpers/routes'
@@ -12,7 +12,6 @@ type Column = {
   title: string,
   headerId: string,
   numeric?: boolean,
-  isDate?: boolean,
   path: string,
 }
 
@@ -23,7 +22,7 @@ export let title: string = ''
 const columns: Column[] = [
   {
     title: 'Item',
-    headerId: 'name',
+    headerId: 'item',
     path: 'name',
   },
   {
@@ -34,12 +33,12 @@ const columns: Column[] = [
   {
     title: 'Assigned To',
     headerId: 'assigned_to',
-    path: 'assigned_to',
+    path: 'accountable_person',
   },
   {
     title: 'Location',
     headerId: 'location',
-    path: 'location',
+    path: 'accountable_person.country',
   },
   {
     title: 'Covered Value',
@@ -56,7 +55,6 @@ const columns: Column[] = [
   {
     title: 'Recent Activity',
     headerId: 'recent_activity',
-    isDate: true,
     path: 'updated_at',
   },
 ]
@@ -70,26 +68,26 @@ let goToItemDetails = true
 let modalOpen = false
 let shownMenus: { [name: string]: boolean } = {}
 
-$: shallowSortedItemsArray = currentColumn?.numeric ? sortByNum(currentColumn?.path, items, ascending) : sortByString(currentColumn?.path, items, ascending)
+$: sortedItemsArray = currentColumn.numeric ? sortByNum(currentColumn.path, items, ascending) : sortByString(currentColumn.path, items, ascending)
 
 const dispatch = createEventDispatcher()
 
 const getMenuItems = (item: PolicyItem) => {
   const menuItems: MenuItem[] = [
     {
-      label: 'View Details',
+      label: 'view item',
       url: itemDetails(policyId, item.id),
     },
   ]
   if (item.coverage_status !== ItemCoverageStatus.Inactive) {
     menuItems.push({
-      label: item.coverage_status === ItemCoverageStatus.Draft ? 'Delete' : 'Remove Coverage',
+      label: item.coverage_status === ItemCoverageStatus.Draft ? 'delete' : 'end coverage',
       action: handleDeleteClick,
     })
   }
-  if ([ItemCoverageStatus.Draft, ItemCoverageStatus.Pending].includes(item.coverage_status)) {
+  if (editableCoverageStatuses.includes(item.coverage_status)) {
     menuItems.push({
-      label: 'Edit',
+      label: 'edit item',
       url: itemEdit(policyId, item.id),
     })
   }
@@ -128,7 +126,7 @@ const redirectAndSetCurrentItem = (item: PolicyItem) => {
 const getStatusClass = (status: string) =>
   status === ItemCoverageStatus.Draft ? 'mdc-theme--primary mdc-bold-font' : ''
 
-const sorted = (event: CustomEvent) => {
+const onSorted = (event: CustomEvent) => {
   ascending = event.detail.sortValue === 'ascending'
   headerId = event.detail.columnId || ''
   currentColumn = columns.find(column => column.headerId === headerId) || columns[0]
@@ -159,15 +157,15 @@ const sorted = (event: CustomEvent) => {
 {#if title}
   <h3>{title}</h3>
 {/if}
-<Datatable on:sorted={sorted}>
+<Datatable on:sorted={onSorted}>
   <Datatable.Header>
     <!--TODO: make the amount of columns shown be dependent on the device size-->
-        {#each columns as column}
-            <Datatable.Header.Item numeric={column.numeric} columnID={column.headerId} sortable>{column.title}</Datatable.Header.Item>
-        {/each}
+    {#each columns as column}
+      <Datatable.Header.Item numeric={column.numeric} columnID={column.headerId} sortable>{column.title}</Datatable.Header.Item>
+    {/each}
   </Datatable.Header>
   <Datatable.Data>
-    {#each shallowSortedItemsArray as item (item.id)}
+    {#each sortedItemsArray as item (item.id)}
       <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} clickable>
         <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}>

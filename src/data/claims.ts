@@ -82,6 +82,10 @@ export function isClaimItem(obj: any): obj is ClaimItem {
   return (obj as ClaimItem)?.claim_id !== undefined
 }
 
+export function isClaim(obj: any): obj is Claim {
+  return (obj as Claim)?.claim_items?.length !== undefined
+}
+
 export type Claim = {
   claim_files: ClaimFile[]
   claim_items: ClaimItem[]

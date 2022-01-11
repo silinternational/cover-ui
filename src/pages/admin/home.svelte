@@ -19,8 +19,8 @@ onMount(() => {
 })
 
 const recentChangesFilter = (change: RecentChange): boolean => {
-  const item: Claim | PolicyItem = isRecentClaim(change) ? change.Claim : change.Item
-  return isClaim(item) ? claimNeedsAction(item) : itemNeedsAction(item)
+  const claimOrItem: Claim | PolicyItem = isRecentClaim(change) ? change.Claim : change.Item
+  return isClaim(claimOrItem) ? claimNeedsAction(claimOrItem) : itemNeedsAction(claimOrItem)
 }
 
 const itemNeedsAction = (item: PolicyItem): boolean => item.coverage_status === ItemCoverageStatus.Pending

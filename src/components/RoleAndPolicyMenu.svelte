@@ -69,7 +69,7 @@ const getHouseholdEntries = (policies: Policy[]): MenuItem[] => {
       action: () => selectUserPolicy(policy.id),
     }
   })
-  return [{ subtitle: 'personal policies' }, ...policyItems]
+  return [{ subtitle: 'personal policy' }, ...policyItems]
 }
 
 const selectRole = (role: UserAppRole) => {

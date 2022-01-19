@@ -27,7 +27,7 @@ $: startDate = formatDate(item.coverage_start_date)
 $: endDate = formatDate(item.coverage_end_date)
 $: commonDetails = {
   'Assigned To': item?.accountable_person?.name,
-  Location: item.accountable_person?.country || item.country || '-',
+  Location: item.accountable_person?.country || item.country,
 }
 $: householdId = {
   'Household ID': policy?.household_id,
@@ -99,7 +99,7 @@ const getItemStatusText = (item: PolicyItem) => {
         {#each Object.entries(sidebarDetail) as [title, value], i}
           <div class="sidebar-item">
             <div class="title"><b>{title}</b></div>
-            <div class="value">{value}</div>
+            <div class="value">{value || '-'}</div>
           </div>
         {/each}
       </div>
@@ -120,7 +120,7 @@ const getItemStatusText = (item: PolicyItem) => {
       {#if title && value && value !== ' '}
         <div class="body-item">
           <div class="title"><b>{title}</b></div>
-          <div class="value break-word">{value}</div>
+          <div class="value break-word">{value || '-'}</div>
         </div>
       {/if}
     {/each}
@@ -132,7 +132,7 @@ const getItemStatusText = (item: PolicyItem) => {
     <div class="coverage-dates">
       <div class="start-date">
         <b>Coverage starts</b>
-        <div class="value">{startDate}</div>
+        <div class="value">{startDate || '-'}</div>
       </div>
       <div class="end-date">
         <b>Coverage ends</b>

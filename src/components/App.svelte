@@ -2,6 +2,7 @@
 import { login } from '../authn'
 import user, { isCustomer, loadUser } from 'data/user'
 import type { CustomError } from '../error'
+import { LOGGEDOUT, LOGOUT, PRIVACY_POLICY, TERMS_OF_SERVICE } from 'helpers/routes'
 import './mdc/_index.scss'
 import t from '../i18n'
 import FreshdeskWidget from './FreshdeskWidget.svelte'
@@ -22,7 +23,7 @@ const queryHandler = {
   stringify,
 }
 
-const publicRoutes = ['/invite/:uuid', '/privacy', '/terms']
+const publicRoutes = ['/invite/:uuid', PRIVACY_POLICY, TERMS_OF_SERVICE, LOGGEDOUT, LOGOUT]
 
 const authenticateUser = async () => {
   loadUser().catch((error: CustomError) => {

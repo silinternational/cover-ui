@@ -2,10 +2,13 @@ import { CREATE as POST } from 'data'
 import { clearApp } from 'data/storage'
 import { throwError } from '../error'
 import { clear as clearToken, getSeed, getToken } from './token'
+import { writable } from 'svelte/store'
 
 export type AuthLoginResponse = {
   RedirectURL: string
 }
+
+export const showApp = writable(false)
 
 export const login = async (inviteCode = ''): Promise<void> => {
   let url = `auth/login/?client-id=${getSeed()}`

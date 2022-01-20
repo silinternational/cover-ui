@@ -1,5 +1,5 @@
 <script lang="ts">
-import { login } from '../authn'
+import { login, showApp } from '../authn'
 import user, { isCustomer, loadUser } from 'data/user'
 import type { CustomError } from '../error'
 import { LOGGEDOUT, LOGOUT, PRIVACY_POLICY, TERMS_OF_SERVICE } from 'helpers/routes'
@@ -26,16 +26,22 @@ const queryHandler = {
 const publicRoutes = ['/invite/:uuid', PRIVACY_POLICY, TERMS_OF_SERVICE, LOGGEDOUT, LOGOUT]
 
 const authenticateUser = async () => {
-  loadUser().catch((error: CustomError) => {
-    if (error.status === 401) {
-      login()
-    }
-  })
+  loadUser()
+    .catch((error: CustomError) => {
+      if (error.status === 401) {
+        login()
+      }
+    })
+    .then(() => {
+      if ($user.policies?.length > 0) $showApp = true
+    })
 }
 
 $afterPageLoad((page: { path: string }) => {
   if (!publicRoutes.includes(page.path)) {
     authenticateUser()
+  } else {
+    $showApp = true
   }
 })
 </script>

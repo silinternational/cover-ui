@@ -5,12 +5,13 @@ import Description from '../Description.svelte'
 import MakeAndModelModal from 'MakeAndModelModal.svelte'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import SelectAccountablePerson from '../SelectAccountablePerson.svelte'
-import { MAX_INPUT_LENGTH as maxlength, MAX_TEXT_AREA_LENGTH } from 'components/const'
+import { MAX_TEXT_AREA_LENGTH } from 'components/const'
 import type { AccountablePersonOptions } from 'data/accountablePersons'
 import { ItemCoverageStatus, PolicyItem } from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
+import TextFieldWithLabelAndDescription from '../TextFieldWithLabelAndDescription.svelte'
 import { assertHas } from '../../validation/assertions'
-import { Button, Form, MoneyInput, Select, TextArea, TextField } from '@silintl/ui-components'
+import { Button, Form, MoneyInput, Select, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let item = {} as PolicyItem
@@ -184,24 +185,29 @@ const setInitialValues = (user: User, item: PolicyItem) => {
     />
   </p>
   <p>
-    <span class="label">Brand</span>
-    <TextField {maxlength} bind:value={make} />
-    <Description>For example, "Apple"</Description>
+    <TextFieldWithLabelAndDescription label="Brand" description={'For example, "Apple"'} bind:value={make} />
   </p>
   <p>
-    <span class="label">Model</span>
-    <TextField {maxlength} bind:value={model} />
-    <Description>For example, “iPhone 10 Max 64 GB” or “A1921”</Description>
+    <TextFieldWithLabelAndDescription
+      label="Model"
+      description="For example, “iPhone 10 Max 64 GB” or “A1921”"
+      bind:value={model}
+    />
   </p>
   <p>
-    <span class="label"> Unique identifier </span>
-    <TextField {maxlength} bind:value={uniqueIdentifier} />
-    <Description>Optional. Serial number, IMEI, service tag, VIN</Description>
+    <TextFieldWithLabelAndDescription
+      label="Unique identifier"
+      description="Optional. Serial number, IMEI, service tag, VIN"
+      bind:value={uniqueIdentifier}
+    />
   </p>
   <p>
-    <span class="label">Short name<span class="error">*</span></span>
-    <TextField {maxlength} required bind:value={name} />
-    <Description>This label will appear on your statements.</Description>
+    <TextFieldWithLabelAndDescription
+      label="Short name"
+      description="This label will appear on your statements."
+      required
+      bind:value={name}
+    />
   </p>
   <p>
     <span class="label">Notes</span>

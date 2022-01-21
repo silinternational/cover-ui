@@ -51,7 +51,7 @@ const onAccountablePersonChange = (event: CustomEvent<AccountablePersonOptions>)
   if (person.id === 'new') {
     modalOpen = true
   } else {
-    dispatch('change', event.detail)
+    dispatch('change', person)
   }
 }
 
@@ -64,6 +64,7 @@ const onModalFormSubmit = async (event: CustomEvent) => {
     const dependent = await addDependent(policyId, depData)
     selectedID = dependent.id
     showSelectBox = true
+    dispatch('change', { id: selectedID, name: dependent.name })
   } else {
     selectedID = accountablePersons[0]?.id
   }
@@ -87,7 +88,7 @@ const onModalFormCancel = (event: CustomEvent) => {
 {#if showSelectBox}
   {#if accountablePersonsHasBeenPopulated}
     <Select
-      label="Assigned To"
+      label="Input"
       on:change={onAccountablePersonChange}
       on:populated
       options={accountablePersons}

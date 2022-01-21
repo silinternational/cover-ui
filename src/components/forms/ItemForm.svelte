@@ -146,7 +146,7 @@ const onMakeModelClosed = (event: CustomEvent<string>) => {
 }
 
 const setInitialValues = (user: User, item: PolicyItem) => {
-  accountablePersonId = user.id
+  accountablePersonId = item.accountable_person?.id || user.id
   categoryId = item.category?.id || categoryId
   country = item.country || country
   marketValueUSD = Number.isInteger(item.coverage_amount) ? String(item.coverage_amount / 100) : ''

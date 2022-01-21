@@ -87,7 +87,7 @@ const onModalFormCancel = (event: CustomEvent) => {
 {#if showSelectBox}
   {#if accountablePersonsHasBeenPopulated}
     <Select
-      label="Assigned To"
+      label="Input"
       on:change={onAccountablePersonChange}
       on:populated
       options={accountablePersons}

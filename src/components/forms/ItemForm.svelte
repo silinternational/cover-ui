@@ -5,12 +5,13 @@ import Description from '../Description.svelte'
 import MakeAndModelModal from 'MakeAndModelModal.svelte'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import SelectAccountablePerson from '../SelectAccountablePerson.svelte'
-import { MAX_INPUT_LENGTH as maxlength, MAX_TEXT_AREA_LENGTH } from 'components/const'
+import { MAX_TEXT_AREA_LENGTH } from 'components/const'
 import type { AccountablePersonOptions } from 'data/accountablePersons'
 import { ItemCoverageStatus, PolicyItem } from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
+import TextFieldWithLabelAndDescription from '../TextFieldWithLabelAndDescription.svelte'
 import { assertHas } from '../../validation/assertions'
-import { Button, Form, MoneyInput, Select, TextArea, TextField } from '@silintl/ui-components'
+import { Button, Form, MoneyInput, Select, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let item = {} as PolicyItem
@@ -50,7 +51,7 @@ $: country = item?.accountable_person?.country || country
 $: !$catItemsInitialized && loadCategories()
 $: itemIsDraft = item.coverage_status === ItemCoverageStatus.Draft
 $: marketValueIsDisabled = !!item.id && !itemIsDraft
-$: applyBtnLabel = !item.coverage_status || itemIsDraft ? 'get approval' : 'save changes'
+$: applyBtnLabel = !item.coverage_status || itemIsDraft ? 'review and checkout' : 'save changes'
 
 const onAccountablePersonChange = (event: CustomEvent<AccountablePersonOptions>) => {
   accountablePersonId = event.detail?.id
@@ -100,7 +101,6 @@ const validateOnSave = (formData: any) => {
 const validate = (formData: any) => {
   validateOnSave(formData)
   assertHas(formData.marketValueUSD, 'Please specify the market value')
-  assertHas(formData.itemDescription, 'Please add a description')
 
   return true
 }
@@ -147,7 +147,7 @@ const onMakeModelClosed = (event: CustomEvent<string>) => {
 }
 
 const setInitialValues = (user: User, item: PolicyItem) => {
-  accountablePersonId = user.id
+  accountablePersonId = item.accountable_person?.id || user.id
   categoryId = item.category?.id || categoryId
   country = item.country || country
   marketValueUSD = Number.isInteger(item.coverage_amount) ? String(item.coverage_amount / 100) : ''
@@ -164,10 +164,20 @@ const setInitialValues = (user: User, item: PolicyItem) => {
 }
 </script>
 
+<style>
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+</style>
+
 <Form on:submit={onSubmit}>
   <p>
+    <span class="label">
+      Category<span class="error">*</span>
+    </span>
     <Select
-      label="Category"
+      label="Input"
       options={$categories}
       selectedID={initialCategoryId}
       on:change={onSelectCategory}
@@ -175,32 +185,37 @@ const setInitialValues = (user: User, item: PolicyItem) => {
     />
   </p>
   <p>
-    <TextField {maxlength} required label="Short name" bind:value={name} />
-    <Description>This label will appear on your statements.</Description>
+    <TextFieldWithLabelAndDescription label="Brand" description={'For example, "Apple"'} bind:value={make} />
   </p>
   <p>
-    <TextArea
-      maxlength={MAX_TEXT_AREA_LENGTH}
-      required
-      label="Item description"
-      bind:value={itemDescription}
-      rows="4"
+    <TextFieldWithLabelAndDescription
+      label="Model"
+      description="For example, “iPhone 10 Max 64 GB” or “A1921”"
+      bind:value={model}
     />
-    <Description>For personal use.</Description>
   </p>
   <p>
-    <TextField {maxlength} label="Unique identifier" bind:value={uniqueIdentifier} />
-    <Description>Optional. Serial number, IMEI, service tag, VIN</Description>
+    <TextFieldWithLabelAndDescription
+      label="Unique identifier"
+      description="Optional. Serial number, IMEI, service tag, VIN"
+      bind:value={uniqueIdentifier}
+    />
   </p>
   <p>
-    <TextField {maxlength} label="Make" bind:value={make} />
-    <Description>Required for mobile items.</Description>
+    <TextFieldWithLabelAndDescription
+      label="Short name"
+      description="This label will appear on your statements."
+      required
+      bind:value={name}
+    />
   </p>
   <p>
-    <TextField {maxlength} label="Model" bind:value={model} />
-    <Description>Required for mobile items.</Description>
+    <span class="label">Notes</span>
+    <TextArea maxlength={MAX_TEXT_AREA_LENGTH} bind:value={itemDescription} rows="4" />
+    <Description>For your own use</Description>
   </p>
   <p>
+    <span class="label">Accountable Person<span class="error">*</span></span>
     <SelectAccountablePerson
       {policyId}
       selectedID={selectedAccountablePersonId}
@@ -213,7 +228,8 @@ const setInitialValues = (user: User, item: PolicyItem) => {
     </Description>
   </p>
   <p>
-    <MoneyInput minValue={'0'} label="Market value (USD)" bind:value={marketValueUSD} disabled={marketValueIsDisabled} required />
+    <span class="label">Value to cover (USD)<span class="error">*</span></span>
+    <MoneyInput minValue={'0'} bind:value={marketValueUSD} disabled={marketValueIsDisabled} required />
     <Description>
       <ConvertCurrencyLink />
     </Description>

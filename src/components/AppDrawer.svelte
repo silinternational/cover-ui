@@ -1,6 +1,7 @@
 <script lang="ts">
 import AppFooter from './AppFooter.svelte'
 import AppHeader from './AppHeader.svelte'
+import { showApp } from '../authn'
 import type { UserAppRole } from 'data/user'
 import RoleAndPolicyMenu from './RoleAndPolicyMenu.svelte'
 import type { Policy } from 'data/policies'
@@ -37,7 +38,14 @@ const logoClickHandler = () => $goto(ROOT)
 }
 </style>
 
-<Drawer modal hideForPhonesOnly {toggle} {menuItems} title="Covered" class="border-white">
+<Drawer
+  modal
+  hideForPhonesOnly
+  {toggle}
+  {menuItems}
+  title="Covered"
+  class="border-white {$showApp ? 'opacity1' : 'opacity0'}"
+>
   <span class="pointer" on:click={logoClickHandler} slot="header">
     <img class="logo" src="/logo.svg" alt="Cover" />
   </span>
@@ -49,6 +57,7 @@ const logoClickHandler = () => $goto(ROOT)
   </div>
 
   <slot />
-
-  <AppFooter rightMargin={drawerWidth} />
+  {#if $showApp}
+    <AppFooter rightMargin={drawerWidth} />
+  {/if}
 </Drawer>

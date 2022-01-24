@@ -25,6 +25,9 @@ export let dependents: PolicyDependent[] = []
 export let isHouseholdPolicy = true
 
 const dispatch = createEventDispatcher()
+
+let teamOrHousehold: string = isHouseholdPolicy ? 'household' : 'team'
+
 const relationshipOptions = [
   {
     label: 'Spouse',
@@ -44,7 +47,7 @@ const permissionOptions = [
     disabled: false,
   },
   {
-    label: 'Can edit items and claims for team',
+    label: `Can edit items and claims for ${teamOrHousehold}`,
     value: 'can-edit',
     disabled: false,
   },

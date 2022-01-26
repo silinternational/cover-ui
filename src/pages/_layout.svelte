@@ -37,6 +37,12 @@ $: menuItems = [
     hide: !inAdminRole || userIsAnonymous,
   },
   {
+    url: routes.RENEWALS,
+    icon: 'rotate_right',
+    label: 'Renewals',
+    hide: !inAdminRole || userIsAnonymous,
+  },
+  {
     url: routes.policyDetails(policyId),
     icon: 'description',
     label: 'Policy',

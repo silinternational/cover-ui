@@ -43,8 +43,8 @@
 
 <Page>
   <div class="flex justify-between align-items-center">
-    <Button raised on:click={() => onUpdate()}>Update</Button>
-    <Button disabled={!reportFile?.url} on:click={() => onDownload()}>Download</Button>
+    <Button raised on:click={onUpdate}>Update</Button>
+    <Button disabled={!reportFile?.url} on:click={onDownload}>Download</Button>
   </div>
 
   <LedgerList header={`Coverage renewals (${ledgerEntries.length})`} {ledgerEntries} />

@@ -1,9 +1,10 @@
-import { CREATE, DELETE, GET, UPDATE } from '.'
-import { UserAppRole } from './user'
+import { CREATE, DELETE, GET, UPDATE } from 'data'
+import type { CoverFile } from 'data/file'
+import type { PolicyItem } from 'data/items'
+import { selectedPolicyId } from 'data/role-policy-selection'
+import { UserAppRole } from 'data/user'
 import { convertToCents } from 'helpers/money'
-import type { PolicyItem } from './items'
 import { derived, writable } from 'svelte/store'
-import { selectedPolicyId } from './role-policy-selection'
 
 export enum PayoutOption {
   Repair = 'Repair',
@@ -42,15 +43,7 @@ export type ClaimFilePurpose = 'Receipt' | 'Evidence of FMV' | 'Repair Estimate'
 export type ClaimFile = {
   claim_id: string
   created_at: string /*Date*/
-  file: {
-    content_type: string
-    created_by_id: string
-    id: string
-    name: string
-    size: number
-    url: string
-    url_expiration: string /*Date*/
-  }
+  file: CoverFile
   file_id: string
   id: string
   purpose: ClaimFilePurpose

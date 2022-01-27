@@ -29,6 +29,7 @@ export const itemRemoveCoverage = (policyId: string, itemId: string) =>
   `/policies/${policyId}/items/${itemId}/remove-coverage`
 
 export const POLICIES = '/admin/policies'
+export const RENEWALS = '/admin/renewals'
 export const policyDetails = (policyId: string) => `/policies/${policyId}`
 export const POLICY_NEW_TEAM = '/policies/new'
 

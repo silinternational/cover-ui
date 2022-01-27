@@ -1,5 +1,6 @@
 import { get, writable } from 'svelte/store'
 import { CREATE, GET, UPDATE } from 'data'
+import type { CoverFile } from 'data/file'
 import { Policy, PolicyType } from 'data/policies'
 import { onClear } from 'data/storage'
 
@@ -19,15 +20,7 @@ export type User = {
   last_login_utc: string /*Date*/
   last_name: string
   name: string
-  photo_file: {
-    content_type: string
-    created_by_id: string
-    id: string
-    name: string
-    size: number
-    url: string
-    url_expiration: string /*Date*/
-  }
+  photo_file: CoverFile
   photo_file_id: string
   policies: Policy[]
 }

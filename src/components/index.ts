@@ -14,6 +14,7 @@ import DateInput from './DateInput.svelte'
 import DependentForm from './forms/DependentForm.svelte'
 import Description from './Description.svelte'
 import FileDropArea from './FileDropArea'
+import FileLink from './FileLink.svelte'
 import FilePreview from './FilePreview'
 import ItemBanner from './banners/ItemBanner.svelte'
 import ItemDeleteModal from './ItemDeleteModal.svelte'
@@ -47,6 +48,7 @@ export {
   DependentForm,
   Description,
   FileDropArea,
+  FileLink,
   FilePreview,
   ItemBanner,
   ItemDeleteModal,

@@ -1,12 +1,31 @@
 import type { PolicyType } from 'data/policies'
 import type { CoverFile } from 'data/file'
-import { GET, CREATE } from './index'
+import { CREATE, GET, UPDATE } from './index'
 
 export type LedgerReport = {
+  id: string
   file: CoverFile
-  ledger_entries: LedgerEntry[]
+  type: string
+  date: string
+  created_at: string
+  updated_at: string
 }
 
+export type CreateLedgerReportInput = {
+  // Report date, e.g. return the ledger entries prior to the given date. Details vary by the report type.
+  date: string
+  type: LedgerReportType
+}
+
+// Ledger report types:
+// + `monthly` - Return all ledger entries not yet reconciled, up to the beginning of the given date.
+// + `annual` - Return the policy renewal entries for the year of the given date.
+export enum LedgerReportType {
+  annual = 'Annual',
+  monthly = 'Monthly',
+}
+
+// LedgerEntry is not currently in use, but will hold it for future use
 export type LedgerEntry = {
   id: string
   policy_id: string
@@ -29,14 +48,27 @@ export type LedgerEntry = {
   updated_at: string /*Date*/
 }
 
-export async function getPolicyRenewals(): Promise<LedgerReport> {
-  return await GET('ledger?report-type=annual')
+export async function getLedgerReports(): Promise<LedgerReport[]> {
+  return await GET('ledger-reports')
 }
 
-export async function downloadPolicyRenewals(): Promise<any> {
-  return await GET('ledger?report-type=annual')
+export async function getLedgerReportById(id: string): Promise<LedgerReport> {
+  return await GET(`ledger-reports/${id}`)
+}
+
+export async function getPolicyRenewals(): Promise<LedgerReport> {
+  await processPolicyRenewals()
+  return createLedgerReport(LedgerReportType.annual, new Date().toISOString().split('T')[0])
+}
+
+export async function createLedgerReport(reportType: LedgerReportType, date: string): Promise<LedgerReport> {
+  const params: CreateLedgerReportInput = {
+    date: date,
+    type: reportType,
+  }
+  return await CREATE('ledger-reports', params)
 }
 
 export async function processPolicyRenewals(): Promise<void> {
-  return await CREATE('ledger/annual')
+  return await CREATE('ledger-reports/annual')
 }

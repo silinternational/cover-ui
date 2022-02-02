@@ -37,9 +37,9 @@ $: menuItems = [
     hide: !inAdminRole || userIsAnonymous,
   },
   {
-    url: routes.RENEWALS,
-    icon: 'rotate_right',
-    label: 'Renewals',
+    url: routes.REPORTS,
+    icon: 'summarize',
+    label: 'Reports',
     hide: !inAdminRole || userIsAnonymous,
   },
   {

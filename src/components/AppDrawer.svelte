@@ -14,6 +14,8 @@ export let menuItems: any[]
 export let myPolicies: Policy[]
 export let role: UserAppRole
 
+const isNotProduction = process.env.CF_PAGES_BRANCH !== 'main'
+
 let drawerEl = {} as any
 let drawerWidth: string
 let toggle = false
@@ -59,5 +61,9 @@ const logoClickHandler = () => $goto(ROOT)
   <slot />
   {#if $showApp}
     <AppFooter rightMargin={drawerWidth} />
+  {/if}
+
+  {#if isNotProduction}
+    <h3 class="text-align-center mdc-theme--neutral">DEVELOPMENT VERSION, NOT PRODUCTION</h3>
   {/if}
 </Drawer>

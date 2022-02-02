@@ -25,7 +25,7 @@
   const handleDialog = async (event: string) => {
     alertOpen = false
     if (event === 'proceed') {
-      await reconcileLedgerReport(reportId)
+      report = await reconcileLedgerReport(reportId)
     }
   }
 </script>

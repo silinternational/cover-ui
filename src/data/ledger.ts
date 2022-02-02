@@ -71,7 +71,7 @@ export async function createLedgerReport(type: LedgerReportType, date: string): 
   return await CREATE('ledger-reports', params)
 }
 
-export async function reconcileLedgerReport(reportId: string): Promise<void> {
+export async function reconcileLedgerReport(reportId: string): Promise<LedgerReport> {
   return await UPDATE(`ledger-reports/${reportId}`)
 }
 

@@ -61,10 +61,10 @@ export async function getPolicyRenewals(): Promise<LedgerReport> {
   return createLedgerReport(LedgerReportType.annual, new Date().toISOString().split('T')[0])
 }
 
-export async function createLedgerReport(reportType: LedgerReportType, date: string): Promise<LedgerReport> {
+export async function createLedgerReport(type: LedgerReportType, date: string): Promise<LedgerReport> {
   const params: CreateLedgerReportInput = {
-    date: date,
-    type: reportType,
+    date,
+    type,
   }
   return await CREATE('ledger-reports', params)
 }

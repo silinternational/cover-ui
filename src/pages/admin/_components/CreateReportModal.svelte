@@ -1,13 +1,12 @@
 <script lang="ts">
-  import {Button, Form, Select} from '@silintl/ui-components'
-  import {CreateLedgerReportInput, LedgerReportType} from 'data/ledger'
-  import {createEventDispatcher} from 'svelte'
-  import DateInput from '../../../components/DateInput.svelte'
-  import Modal from '../../../components/mdc/Modal.svelte'
+  import { DateInput, Modal } from 'components'
+  import { CreateLedgerReportInput, LedgerReportType } from 'data/ledger'
+  import { Button, Form, Select } from '@silintl/ui-components'
+  import { createEventDispatcher } from 'svelte'
 
   export let modalOpen = false
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher<{ 'submit': CreateLedgerReportInput; 'cancel': void }>()
 
   const onSubmit = () => dispatch('submit', formData)
 
@@ -39,11 +38,8 @@
 </script>
 
 <style>
-  .float-right {
-    float: right;
-  }
-
   .form-button {
+    float: right;
     margin: 0.5rem;
   }
 </style>
@@ -66,10 +62,10 @@
           <span class="mdc-bold-font">Report Date</span>
           <DateInput bind:value={formData.date} />
         </p>
-        <div class="float-right form-button">
+        <div class="form-button">
           <Button raised>Create Report</Button>
         </div>
-        <div class="float-right form-button">
+        <div class="form-button">
           <Button on:click={onCancel}>Cancel</Button>
         </div>
       </Form>

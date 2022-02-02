@@ -6,7 +6,7 @@ import type { PolicyMember } from 'data/policy-members'
 import { urlQuery } from 'data/query-string'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { ADMIN_POLICIES, adminPolicySearch, policyDetails } from 'helpers/routes'
-import { goto, metatags } from '@roxi/routify'
+import { goto, metatags, redirect } from '@roxi/routify'
 import { Datatable, Page } from '@silintl/ui-components'
 import qs from 'qs'
 import { onMount } from 'svelte'
@@ -29,7 +29,7 @@ const search = () => {
     matchingPolicies = result.data
     pageData = result.meta
 
-    $goto(adminPolicySearch(qs.stringify({ search: searchText, page: pageData.page, limit: pageData.per_page })))
+    $redirect(adminPolicySearch(qs.stringify({ search: searchText, page: pageData.page, limit: pageData.per_page })))
   })
 }
 const getNameOfMember = (member: PolicyMember) => member.first_name + ' ' + member.last_name

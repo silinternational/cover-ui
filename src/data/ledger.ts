@@ -7,6 +7,8 @@ export type LedgerReport = {
   file: CoverFile
   type: string
   date: string
+  is_cleared: boolean
+  transaction_count: number
   created_at: string
   updated_at: string
 }
@@ -67,6 +69,10 @@ export async function createLedgerReport(type: LedgerReportType, date: string): 
     type,
   }
   return await CREATE('ledger-reports', params)
+}
+
+export async function reconcileLedgerReport(reportId: string): Promise<void> {
+  return await UPDATE(`ledger-reports/${reportId}`)
 }
 
 export async function processPolicyRenewals(): Promise<void> {

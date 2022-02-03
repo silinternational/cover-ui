@@ -19,7 +19,7 @@ export async function CREATE<T>(uri: string, body: any = undefined): Promise<T> 
 export async function GET<T>(uri: string): Promise<T> {
   return await customFetch<T>('get', uri)
 }
-export async function UPDATE<T>(uri: string, body: unknown): Promise<T> {
+export async function UPDATE<T>(uri: string, body: any = undefined): Promise<T> {
   return await customFetch<T>('put', uri, body)
 }
 export async function DELETE<T>(uri: string): Promise<T> {

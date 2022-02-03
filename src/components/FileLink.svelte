@@ -1,20 +1,14 @@
 <script type="ts">
   import type { CoverFile } from 'data/file'
-  import { onMount } from 'svelte'
 
   export let file: CoverFile
 
-  onMount(() => {
-    setTimeout(onTimeout, new Date(file.url_expiration) - new Date())
-  })
+  let expired
 
-  let expired = new Date(file.url_expiration) < new Date()
-  const onTimeout = () => {
-    expired = true
-  }
-
-  $: url = !expired && file.url || null
+  $: url = !expired && file?.url || undefined
   $: filename = file?.name || '-'
+  $: expiration = file?.url_expiration && new Date(file.url_expiration)
+  $: expiration && setTimeout(() => expired = true, expiration - new Date())
 </script>
 
 <a href={url}>{filename}</a>

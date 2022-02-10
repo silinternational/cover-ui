@@ -145,7 +145,8 @@ const toggleRoleAndPolicyMenu = () => (menuIsOpen = !menuIsOpen)
 
 .role-label {
   position: relative;
-  top: 7px;
+  top: 10px;
+  line-height: 20px;
   background: white;
   z-index: 1;
   width: max-content;
@@ -153,6 +154,7 @@ const toggleRoleAndPolicyMenu = () => (menuIsOpen = !menuIsOpen)
   padding-right: 2px;
   margin-left: 0.5rem;
   border-radius: 4px;
+  font-weight: 600;
 }
 </style>
 

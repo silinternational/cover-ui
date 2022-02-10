@@ -1,8 +1,10 @@
 <script lang="ts">
   import CreateReportModal from './_components/CreateReportModal.svelte'
   import { FileLink } from 'components'
-  import { createLedgerReport, getLedgerReports, LedgerReport, LedgerReportType } from 'data/ledger'
+  import { createLedgerReport, getLedgerReports, LedgerReport } from 'data/ledger'
   import { formatDateAndTime, formatFriendlyDate } from 'helpers/dates'
+  import { reportDetails } from 'helpers/routes'
+  import { goto } from '@roxi/routify'
   import { onMount } from 'svelte'
   import { Button, Datatable, Page } from '@silintl/ui-components'
 
@@ -38,7 +40,7 @@
     </Datatable.Header>
     <Datatable.Data>
       {#each ledgerReports as report (report.id)}
-        <Datatable.Data.Row>
+        <Datatable.Data.Row on:click={() => $goto(reportDetails(report.id))} clickable>
           <Datatable.Data.Row.Item>{report.type || ''}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{formatFriendlyDate(report.date)}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{formatDateAndTime(report.created_at)}</Datatable.Data.Row.Item>

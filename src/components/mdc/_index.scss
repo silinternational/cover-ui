@@ -1,2 +1,5 @@
 @use './theme';
 @use './typography';
+@use '@silintl/ui-components/components/mdc/Button' with (
+  $radius: 6px
+);

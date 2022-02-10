@@ -84,6 +84,8 @@ const onSubmit = async (event: CustomEvent) => {
       </p>
     {/if}
 
+    <h2>New Claim</h2>
+
     <ClaimForm {item} on:save-for-later={onSaveForLater} on:submit={onSubmit} />
   {/if}
 </Page>

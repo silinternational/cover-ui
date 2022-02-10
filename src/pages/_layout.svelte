@@ -78,7 +78,6 @@ $: menuItems = [
     urlPattern: /(\/settings$)|(\/settings\/)/,
     icon: 'settings',
     label: 'Policy Settings',
-    tooltip: 'Policy Settings',
     hide: inAdminRole || userIsAnonymous || !policyId,
   },
   {

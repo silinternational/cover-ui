@@ -208,7 +208,15 @@ const unSetReplaceEstimate = () => {
 }
 </script>
 
+<style>
+.item-name {
+  margin-bottom: 0.5rem;
+}
+</style>
+
 <div class="w-50">
+  <div class="item-name">{item.name}</div>
+  <div>Covered value: ${item.coverage_amount}</div>
   <Form>
     <p>
       <span class="header">Date lost or damaged</span>

@@ -142,10 +142,25 @@ const toggleRoleAndPolicyMenu = () => (menuIsOpen = !menuIsOpen)
 #role-and-policy-menu-options-container {
   position: absolute;
 }
+
+.role-label {
+  position: relative;
+  top: 7px;
+  background: white;
+  z-index: 1;
+  width: max-content;
+  padding-left: 2px;
+  padding-right: 2px;
+  margin-left: 0.5rem;
+  border-radius: 4px;
+}
 </style>
 
+<div class="role-label capitalize mdc-theme--primary fs-12">show policy</div>
+
 <Button
-  class="w-100"
+  class="w-90"
+  outlined
   label={buttonLabel}
   prependIcon={buttonIcon}
   appendIcon="arrow_drop_down"

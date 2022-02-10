@@ -13,6 +13,7 @@ import type { PolicyItem } from 'data/items'
 import DateInput from 'DateInput.svelte'
 import Description from 'Description.svelte'
 import ConvertCurrencyLink from 'ConvertCurrencyLink.svelte'
+import { formatMoney } from 'helpers/money'
 import RadioOptions from 'RadioOptions.svelte'
 import { assertHas } from '../../validation/assertions'
 import { Button, Form, MoneyInput, TextArea } from '@silintl/ui-components'
@@ -216,7 +217,7 @@ const unSetReplaceEstimate = () => {
 
 <div class="w-50">
   <div class="item-name">{item.name}</div>
-  <div>Covered value: ${item.coverage_amount}</div>
+  <div>Covered value: {formatMoney(item.coverage_amount)}</div>
   <Form>
     <p>
       <span class="header">Date lost or damaged</span>

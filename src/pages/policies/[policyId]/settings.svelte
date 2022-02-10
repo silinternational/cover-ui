@@ -110,13 +110,9 @@ const updateHouseholdId = async () => {
 const updateCostCenter = async () => {
   costCenter = costCenter.replaceAll(' ', '')
   if (costCenter !== policy.cost_center) {
-    if (isIdValid(costCenter)) {
-      await callUpdatePolicy()
+    await callUpdatePolicy()
 
-      setNotice('Your cost center has been saved')
-    } else {
-      setNotice('Please enter a valid cost center')
-    }
+    setNotice('Your cost center has been saved')
   }
 }
 

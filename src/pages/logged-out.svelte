@@ -1,6 +1,7 @@
 <script lang="ts">
 import { logout } from '../authn'
 import user from 'data/user'
+import { params } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 
 $: stillLoggedIn = !!$user.id
@@ -11,10 +12,14 @@ $: if (stillLoggedIn) {
 
 <Page>
   <p>
-    {#if stillLoggedIn}
-      It looks like you're still logged in. Logging you out...
+    {#if $params.appError}
+      There was an unexpected problem while processing your login. Please contact Cover support for assistance.
     {:else}
-      You have successfully logged out.
+      {#if stillLoggedIn}
+        It looks like you're still logged in. Logging you out...
+      {:else}
+        You have successfully logged out.
+      {/if}
     {/if}
   </p>
 </Page>

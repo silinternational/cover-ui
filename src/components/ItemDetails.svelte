@@ -82,7 +82,7 @@ const getItemStatusText = (item: PolicyItem) => {
   margin-top: 1em;
   display: flex;
 }
-.start-date div {
+.start-date {
   margin-right: 2em;
 }
 .banners {
@@ -132,7 +132,7 @@ const getItemStatusText = (item: PolicyItem) => {
     <div class="coverage-dates">
       <div class="start-date">
         <b>Coverage starts</b>
-        <div class="value">{startDate || '-'}</div>
+        <div class="value">{startDate || '—'}</div>
       </div>
       <div class="end-date">
         <b>Coverage ends</b>

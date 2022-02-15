@@ -1,3 +1,5 @@
+import { day } from 'components/const'
+
 export const formatFriendlyDate = (dateTimeString: string): string =>
   new Date(dateTimeString).toDateString() !== 'Invalid Date'
     ? formatDate(dateTimeString.split('T')[0], { month: 'numeric', day: 'numeric', year: 'numeric' })
@@ -10,6 +12,10 @@ export const formatDate = (
   if (dateString) {
     const date = new Date(dateString)
 
+    if (Math.abs(date.getTime()) < day) {
+      // if the date is within a day of the epoch assume it is the epoch since local timestring could be used
+      return ''
+    }
     // When the dateString does not contain a time portion, treat it as a UTC date
     if (dateString.indexOf('T') === -1) {
       options.timeZone = 'UTC'
@@ -34,7 +40,10 @@ export const formatDateAndTime = (
 ): string => {
   if (dateString) {
     const date = new Date(dateString)
-
+    if (Math.abs(date.getTime()) < day) {
+      // if the date is within a day of the epoch assume it is the epoch since local timestring could be used
+      return ''
+    }
     // When the dateString does not contain a time portion, treat it as a UTC date
     if (dateString.indexOf('T') === -1) {
       options.timeZone = 'UTC'

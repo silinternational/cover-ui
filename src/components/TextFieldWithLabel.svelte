@@ -1,6 +1,5 @@
 <script lang="ts">
 import { MAX_INPUT_LENGTH as maxlength } from './const'
-import Description from './Description.svelte'
 import { TextField } from '@silintl/ui-components'
 
 export let description: string = ''
@@ -24,7 +23,4 @@ export let value: string = ''
     {/if}
   </span>
 {/if}
-<TextField {required} {maxlength} bind:value />
-{#if description}
-  <Description>{description}</Description>
-{/if}
+<TextField {required} {description} {maxlength} bind:value />

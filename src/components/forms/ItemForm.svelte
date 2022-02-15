@@ -9,7 +9,7 @@ import { MAX_TEXT_AREA_LENGTH } from 'components/const'
 import type { AccountablePersonOptions } from 'data/accountablePersons'
 import { ItemCoverageStatus, PolicyItem } from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
-import TextFieldWithLabelAndDescription from '../TextFieldWithLabelAndDescription.svelte'
+import TextFieldWithLabel from '../TextFieldWithLabel.svelte'
 import { assertHas } from '../../validation/assertions'
 import { Button, Form, MoneyInput, Select, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
@@ -185,24 +185,20 @@ const setInitialValues = (user: User, item: PolicyItem) => {
     />
   </p>
   <p>
-    <TextFieldWithLabelAndDescription label="Brand" description={'For example, "Apple"'} bind:value={make} />
+    <TextFieldWithLabel label="Brand" description={'For example, "Apple"'} bind:value={make} />
   </p>
   <p>
-    <TextFieldWithLabelAndDescription
-      label="Model"
-      description="For example, “iPhone 10 Max 64 GB” or “A1921”"
-      bind:value={model}
-    />
+    <TextFieldWithLabel label="Model" description="For example, “iPhone 10 Max 64 GB” or “A1921”" bind:value={model} />
   </p>
   <p>
-    <TextFieldWithLabelAndDescription
+    <TextFieldWithLabel
       label="Unique identifier"
       description="Optional. Serial number, IMEI, service tag, VIN"
       bind:value={uniqueIdentifier}
     />
   </p>
   <p>
-    <TextFieldWithLabelAndDescription
+    <TextFieldWithLabel
       label="Short name"
       description="This label will appear on your statements."
       required
@@ -211,8 +207,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
   </p>
   <p>
     <span class="label">Notes</span>
-    <TextArea maxlength={MAX_TEXT_AREA_LENGTH} bind:value={itemDescription} rows="4" />
-    <Description>For your own use</Description>
+    <TextArea maxlength={MAX_TEXT_AREA_LENGTH} description="For your own use" bind:value={itemDescription} rows="4" />
   </p>
   <p>
     <span class="label">Accountable Person<span class="error">*</span></span>

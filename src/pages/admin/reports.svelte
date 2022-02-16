@@ -28,7 +28,7 @@ async function createReport(e: CustomEvent) {
   <div class="flex justify-between align-items-center">
     <h4>Reports</h4>
     <Button on:click={() => (modalOpen = true)}>Create</Button>
-    <CreateReportModal {modalOpen} on:submit={createReport} />
+    <CreateReportModal {modalOpen} on:submit={createReport} on:cancel={() => (modalOpen = false)} />
   </div>
 
   <Datatable>

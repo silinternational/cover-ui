@@ -1,50 +1,54 @@
 <script lang="ts">
-  import { FileLink, Modal } from 'components'
-  import { getLedgerReportById, reconcileLedgerReport } from 'data/ledger'
-  import { formatDateAndTime, formatFriendlyDate } from 'helpers/dates'
-  import { Button, Dialog, Page } from '@silintl/ui-components'
-  import { onMount } from 'svelte'
+import { FileLink, Modal } from 'components'
+import { getLedgerReportById, LedgerReport, reconcileLedgerReport } from 'data/ledger'
+import { formatDateAndTime, formatFriendlyDate } from 'helpers/dates'
+import { Button, Dialog, Page } from '@silintl/ui-components'
+import { onMount } from 'svelte'
 
-  export let reportId = ''
+export let reportId = ''
 
-  onMount(async () => {
-    report = await getLedgerReportById(reportId)
-  })
+onMount(async () => {
+  report = await getLedgerReportById(reportId)
+})
 
-  export let alertOpen = false
+export let alertOpen = false
 
-  let report = {}
-  let title = 'Are you sure?'
-  let message = 'This will permanently mark all transactions in the report as cleared!'
+let report = {} as LedgerReport
+let title = 'Are you sure?'
+let message = 'This will permanently mark all transactions in the report as cleared!'
 
-  const buttons: Dialog.AlertButton[] = [
-    { label: 'Go Back', action: 'cancel', class: 'mdc-button--raised' },
-    { label: 'Proceed', action: 'proceed', class: 'mdc-dialog__button' },
-  ]
+const buttons: Dialog.AlertButton[] = [
+  { label: 'Go Back', action: 'cancel', class: 'mdc-button--raised' },
+  { label: 'Proceed', action: 'proceed', class: 'mdc-dialog__button' },
+]
 
-  const handleDialog = async (event: string) => {
-    alertOpen = false
-    if (event === 'proceed') {
-      report = await reconcileLedgerReport(reportId)
-    }
+const handleDialog = async (event: string) => {
+  alertOpen = false
+  if (event === 'proceed') {
+    report = await reconcileLedgerReport(reportId)
   }
+}
 </script>
 
 <style>
-  td,
-  th {
-    padding: 0.25ex;
-  }
+td,
+th {
+  padding: 0.25ex;
+}
 
-  th {
-    text-align: left;
-  }
+th {
+  text-align: left;
+}
 </style>
 
 <Page>
   <div class="flex justify-between align-items-center">
     <h4>{report.type} Report</h4>
-    <Button on:click={() => { alertOpen = true }}>Reconcile</Button>
+    <Button
+      on:click={() => {
+        alertOpen = true
+      }}>Reconcile</Button
+    >
 
     <Dialog.Alert open={alertOpen} {buttons} defaultAction="cancel" {title} on:chosen={(e) => handleDialog(e.detail)}>
       {message}
@@ -63,7 +67,7 @@
       </tr>
       <tr>
         <th>File</th>
-        <td><FileLink file={report.file}/></td>
+        <td><FileLink file={report.file} /></td>
       </tr>
       <tr>
         <th>Cleared</th>

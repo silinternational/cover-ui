@@ -6,7 +6,6 @@ import { LOGGEDOUT, LOGOUT, PRIVACY_POLICY, TERMS_OF_SERVICE } from 'helpers/rou
 import './mdc/_index.scss'
 import t from '../i18n'
 import FreshdeskWidget from './FreshdeskWidget.svelte'
-import { parse, stringify } from 'qs'
 import { afterPageLoad, Router } from '@roxi/routify'
 import { routes } from '../../.routify/routes'
 import { Snackbar } from '@silintl/ui-components'
@@ -15,12 +14,6 @@ import { Snackbar } from '@silintl/ui-components'
 $: if (!($user.policies?.length > 0) && isCustomer($user.app_role)) {
   //TODO remove this when fixed on the backend
   setTimeout(() => loadUser(true), 5000)
-}
-
-// added because of this:  https://github.com/sveltech/routify/issues/201
-const queryHandler = {
-  parse: (params: string) => parse(params, { ignoreQueryPrefix: true }),
-  stringify,
 }
 
 const publicRoutes = ['/invite/:uuid', PRIVACY_POLICY, TERMS_OF_SERVICE, LOGGEDOUT, LOGOUT]
@@ -50,7 +43,7 @@ $afterPageLoad((page: { path: string }) => {
   <title>{t('appname')}</title>
 </svelte:head>
 
-<Router {routes} config={{ queryHandler }} />
+<Router {routes} />
 
 <Snackbar />
 

@@ -152,6 +152,7 @@ declare module '@silintl/ui-components' {
     minValue?: string
     maxValue?: string
     step?: string
+    description?: string
   }
   export class MoneyInput extends SvelteComponentTyped<MoneyInputProps> {}
 
@@ -193,6 +194,7 @@ declare module '@silintl/ui-components' {
     maxlength?: number
     autofocus?: boolean
     rtl?: boolean
+    description?: string
   }
   export class TextArea extends SvelteComponentTyped<TextAreaProps> {}
 
@@ -204,6 +206,7 @@ declare module '@silintl/ui-components' {
     autofocus?: boolean
     disabled?: boolean
     required?: boolean
+    description?: string
   }
   export class TextField extends SvelteComponentTyped<TextFieldProps> {}
 

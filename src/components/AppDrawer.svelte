@@ -8,6 +8,7 @@ import type { Policy } from 'data/policies'
 import { goto } from '@roxi/routify'
 import { Drawer } from '@silintl/ui-components'
 import { ROOT } from 'helpers/routes'
+import Watermark from './Watermark.svelte'
 import { onMount } from 'svelte'
 
 export let menuItems: any[]
@@ -64,6 +65,6 @@ const logoClickHandler = () => $goto(ROOT)
   {/if}
 
   {#if isNotProduction}
-    <h3 class="text-align-center mdc-theme--neutral">DEVELOPMENT VERSION, NOT PRODUCTION</h3>
+    <Watermark text="DEVELOPMENT VERSION" />
   {/if}
 </Drawer>

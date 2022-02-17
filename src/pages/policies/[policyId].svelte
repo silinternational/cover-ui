@@ -1,12 +1,10 @@
 <script lang="ts">
-import CreateReportModal from '../admin/_components/CreateReportModal.svelte'
 import { CardsGrid, ClaimsTable, ItemsTable, Row } from 'components'
-import { day } from 'components/const'
+import CustomerReportModal from '../components/CustomerReportModal.svelte'
 import { isLoadingById, loading } from 'components/progress'
-import { Claim, claimIsOpen, ClaimStatus, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
+import { Claim, claimIsOpen, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import { deleteItem, itemIsApproved, itemIsActive, loadItems, selectedPolicyItems, PolicyItem } from 'data/items'
 import { getNameOfPolicy, loadPolicy, Policy, PolicyType, selectedPolicy } from 'data/policies'
-import { LedgerReportType } from 'data/ledger'
 import { roleSelection } from 'data/role-policy-selection'
 import { isAdmin } from 'data/user'
 import { formatFriendlyDate } from 'helpers/dates'
@@ -23,8 +21,6 @@ let policy = {} as Policy
 let showAllItems = false
 let showAllClaims = false
 let modalOpen = false
-let reportDate: Date
-let reportType: LedgerReportType
 
 onMount(async () => {
   policy = await loadPolicy(policyId)
@@ -71,42 +67,6 @@ const onDelete = async (event: CustomEvent<any>) => {
   // Depending on if the item was a draft or approved it will either be deleted or updated
   // Just reload the list for now since the delete endpoint doesn't yet tell us what happened
   loadItems(policyId)
-}
-
-const claimIsApproved = (claim: Claim) => claim.status === ClaimStatus.Approved
-
-const claimIsWithinTimeframe = (claim: Claim) => {
-  const incidentDate = new Date(claim.incident_date)
-  const timeframe = reportType === LedgerReportType.monthly ? day * 30 : day * 365
-  return Number(reportDate) - Number(incidentDate) <= timeframe
-}
-
-function createReport(e: CustomEvent) {
-  reportType = e.detail.type
-  reportDate = new Date(e.detail.date)
-  const claimPayouts = $selectedPolicyClaims
-    .filter(claimIsApproved)
-    .filter(claimIsWithinTimeframe)
-    .map((claim) => [claim.reference_number, claim.total_payout / 100])
-  const premiums = $selectedPolicyItems
-    .filter(itemIsApproved)
-    .map((item) => [item.name, (item.prorated_annual_premium || item.annual_premium) / -100]) //this is limited to current premiums as the UI doens't see payment dates
-  const transactions = [...claimPayouts, ...premiums]
-  const total = Number(transactions.reduce((sum, [, amount]) => sum + amount, 0)).toFixed(2)
-  const csvHeader = `data:text/csv;charset=utf-8,Cover Customer ${reportType} Report,${e.detail.date},\n`
-  const accountHeader =
-    policy.type === PolicyType.Team
-      ? `Policy Name,Account Number,Cost Center,Entity Code,\n${policyName},${policy.account},${policy.cost_center},${entityCode}`
-      : `Policy Name,Household ID\n${policyName},${policy.household_id}`
-  const csvContent: string =
-    csvHeader +
-    accountHeader +
-    `,\nClaim or Item, Credit/Debit,\n` +
-    transactions.map((e: any) => e.join(',')).join('\n') +
-    `,\nTotal,${total}`
-  const encodedUri = encodeURI(csvContent)
-  window.open(encodedUri)
-  modalOpen = false
 }
 </script>
 
@@ -244,7 +204,7 @@ th {
   {/if}
 
   <Button on:click={() => (modalOpen = true)}>download a report</Button>
-  <CreateReportModal {modalOpen} on:submit={createReport} on:cancel={() => (modalOpen = false)} />
+  <CustomerReportModal {policy} {modalOpen} on:cancel={() => (modalOpen = false)} />
 
   <div class="p-2" />
 </Page>

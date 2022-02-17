@@ -105,6 +105,7 @@ declare module '@silintl/ui-components' {
     miniMenu?: boolean
     modal?: boolean
     toggle?: boolean
+    currentUrl?: string
   }
   export class Drawer extends SvelteComponentTyped<DrawerProps> {}
 

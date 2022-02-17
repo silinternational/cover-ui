@@ -5,7 +5,7 @@ import { showApp } from '../authn'
 import type { UserAppRole } from 'data/user'
 import RoleAndPolicyMenu from './RoleAndPolicyMenu.svelte'
 import type { Policy } from 'data/policies'
-import { goto } from '@roxi/routify'
+import { beforeUrlChange, goto } from '@roxi/routify'
 import { Drawer } from '@silintl/ui-components'
 import { ROOT } from 'helpers/routes'
 import Watermark from './Watermark.svelte'
@@ -26,6 +26,12 @@ onMount(() => {
 })
 
 $: drawerWidth = `${drawerEl?.offsetWidth || 0}px`
+$: currentUrl = window.location.pathname
+
+$beforeUrlChange((event, route, { url }) => {
+  currentUrl = url
+  return true
+})
 
 const logoClickHandler = () => $goto(ROOT)
 </script>
@@ -42,6 +48,7 @@ const logoClickHandler = () => $goto(ROOT)
 </style>
 
 <Drawer
+  {currentUrl}
   modal
   hideForPhonesOnly
   {toggle}

@@ -34,6 +34,7 @@ function createReport(e: CustomEvent) {
     .filter(itemIsApproved)
     .map((item) => [item.name, (item.prorated_annual_premium || item.annual_premium) / -100]) //this is limited to current premiums as the UI doens't see payment dates
   const transactions = [...claimPayouts, ...premiums]
+  transactions.forEach((t) => (t[0] = `"${t[0]}"`))
   const total = Number(transactions.reduce((sum, [, amount]) => sum + amount, 0)).toFixed(2)
   const csvHeader = `data:text/csv;charset=utf-8,Cover Customer ${reportType} Report,${e.detail.date},\n`
   const accountHeader =

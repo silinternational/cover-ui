@@ -1,7 +1,7 @@
 <script lang="ts">
 import CreateReportModal from '../admin/_components/CreateReportModal.svelte'
 import { CardsGrid, ClaimsTable, ItemsTable, Row } from 'components'
-import { month, year } from 'components/const'
+import { day } from 'components/const'
 import { isLoadingById, loading } from 'components/progress'
 import { Claim, claimIsOpen, ClaimStatus, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import { deleteItem, itemIsApproved, itemIsActive, loadItems, selectedPolicyItems, PolicyItem } from 'data/items'
@@ -77,7 +77,7 @@ const claimIsApproved = (claim: Claim) => claim.status === ClaimStatus.Approved
 
 const claimIsWithinTimeframe = (claim: Claim) => {
   const incidentDate = new Date(claim.incident_date)
-  const timeframe = reportType === LedgerReportType.monthly ? month : year
+  const timeframe = reportType === LedgerReportType.monthly ? day * 30 : day * 365
   return Number(reportDate) - Number(incidentDate) <= timeframe
 }
 

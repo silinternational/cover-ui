@@ -122,6 +122,8 @@ declare module '@silintl/ui-components' {
   interface IconButtonProps extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
     icon?: any
     ariaLabel?: any
+    url?: any
+    disabled?: any
   }
   export class IconButton extends SvelteComponentTyped<IconButtonProps> {}
 

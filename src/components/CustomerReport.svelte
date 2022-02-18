@@ -7,9 +7,12 @@ import { Button } from '@silintl/ui-components'
 
 export let policy: Policy
 
+let anchorEl = {} as HTMLAnchorElement
+let encodedUri: string
+let fileName: string
+let modalOpen = false
 let reportDates: { start: string; end: string }
 let reportType: string
-let modalOpen = false
 
 $: claimOrItemHeader = reportType === 'Debit' ? 'Item' : 'Claim Number'
 const claimIsApproved = (claim: Claim) => claim.status === ClaimStatus.Approved
@@ -22,6 +25,7 @@ const claimIsWithinTimeframe = (claim: Claim) => {
 function createReport(e: CustomEvent) {
   reportType = e.detail.type
   reportDates = e.detail.dates
+  fileName = `Cover_${reportType}_Report_${reportDates.start}_${reportDates.end}.csv`
   const claimPayouts = $selectedPolicyClaims
     .filter(claimIsApproved)
     .filter(claimIsWithinTimeframe)
@@ -36,18 +40,23 @@ function createReport(e: CustomEvent) {
   const accountHeader =
     policy.type === PolicyType.Team
       ? `Policy Name,Account Number,Cost Center,Entity Code,\n${policy.name},${policy.account},${policy.cost_center},${policy.entity_code?.code}`
-      : `Policy Name,Household ID\n${policy.name},${policy.household_id}`
+      : `Policy Name,Household ID,\n${policy.name},${policy.household_id}`
   const csvContent: string =
     csvHeader +
     accountHeader +
     `,\n${claimOrItemHeader}, ${reportType},\n` +
     transactions.map((e: any) => e.join(',')).join('\n') +
     `,\nTotal,${total}`
-  const encodedUri = encodeURI(csvContent)
-  window.open(encodedUri)
+  encodedUri = encodeURI(csvContent)
+  if (anchorEl.download) {
+    anchorEl.click()
+  } else {
+    window.open(encodedUri)
+  }
   modalOpen = false
 }
 </script>
 
 <Button on:click={() => (modalOpen = true)}>download a report</Button>
 <CreateCustomerReportModal {modalOpen} on:submit={createReport} on:cancel={() => (modalOpen = false)} />
+<a href={encodedUri} download={fileName} bind:this={anchorEl}><div /></a>

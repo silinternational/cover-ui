@@ -105,6 +105,7 @@ declare module '@silintl/ui-components' {
     miniMenu?: boolean
     modal?: boolean
     toggle?: boolean
+    currentUrl?: string
   }
   export class Drawer extends SvelteComponentTyped<DrawerProps> {}
 
@@ -121,6 +122,8 @@ declare module '@silintl/ui-components' {
   interface IconButtonProps extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
     icon?: any
     ariaLabel?: any
+    url?: any
+    disabled?: any
   }
   export class IconButton extends SvelteComponentTyped<IconButtonProps> {}
 

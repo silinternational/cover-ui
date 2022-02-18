@@ -1,11 +1,10 @@
 <script lang="ts">
 import DependentForm from './forms/DependentForm.svelte'
-import Modal from './mdc/Modal.svelte'
 import { AccountablePersonOptions, selectedAccountablePersonOptions } from 'data/accountablePersons'
 import { addDependent, dependentsByPolicyId, initialized, PolicyDependent } from 'data/dependents'
 import { policies, Policy, PolicyType } from 'data/policies'
 import { membersByPolicyId, PolicyMember, selectedPolicyMembers } from 'data/policy-members'
-import { Select } from '@silintl/ui-components'
+import { Dialog, Select } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let policyId: string
@@ -97,7 +96,7 @@ const onModalFormCancel = (event: CustomEvent) => {
   {/if}
 {/if}
 
-<Modal
+<Dialog.Alert
   open={modalOpen}
   buttons={[]}
   defaultAction="cancel"
@@ -115,4 +114,4 @@ const onModalFormCancel = (event: CustomEvent) => {
       on:cancel={onModalFormCancel}
     />
   {/if}
-</Modal>
+</Dialog.Alert>

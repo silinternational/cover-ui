@@ -5,6 +5,11 @@ import { createEventDispatcher } from 'svelte'
 
 export let modalOpen = false
 
+const today = new Date()
+
+let end = today.toISOString().split('T')[0]
+let start = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate()).toISOString().split('T')[0]
+
 const dispatch = createEventDispatcher<{ submit: any; cancel: void }>()
 
 const onSubmit = () => dispatch('submit', formData)
@@ -26,7 +31,7 @@ const onSelectType = (event: any) => {
 }
 
 const formData: { dates: { start: string; end: string }; type: string } = {
-  dates: { start: new Date().toISOString().split('T')[0], end: new Date().toISOString().split('T')[0] },
+  dates: { start, end },
   type: 'Debits',
 }
 

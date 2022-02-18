@@ -1,6 +1,6 @@
 <script lang="ts">
 import { CardsGrid, ClaimsTable, ItemsTable, Row } from 'components'
-import CustomerReportModal from '../components/CustomerReportModal.svelte'
+import CustomerReport from '../components/CustomerReport.svelte'
 import { isLoadingById, loading } from 'components/progress'
 import { Claim, claimIsOpen, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import { deleteItem, itemIsApproved, itemIsActive, loadItems, selectedPolicyItems, PolicyItem } from 'data/items'
@@ -202,7 +202,7 @@ th {
     </div>
   {/if}
 
-  <CustomerReportModal {policy} />
+  <CustomerReport {policy} />
 
   <div class="p-2" />
 </Page>

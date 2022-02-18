@@ -20,7 +20,6 @@ export let policyId: string
 let policy = {} as Policy
 let showAllItems = false
 let showAllClaims = false
-let modalOpen = false
 
 onMount(async () => {
   policy = await loadPolicy(policyId)
@@ -203,8 +202,7 @@ th {
     </div>
   {/if}
 
-  <Button on:click={() => (modalOpen = true)}>download a report</Button>
-  <CustomerReportModal {policy} {modalOpen} on:cancel={() => (modalOpen = false)} />
+  <CustomerReportModal {policy} />
 
   <div class="p-2" />
 </Page>

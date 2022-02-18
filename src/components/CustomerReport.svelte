@@ -32,7 +32,7 @@ function createReport(e: CustomEvent) {
   const transactions = reportType === 'Debits' ? premiums : claimPayouts
   transactions.forEach((t) => (t[0] = `"${t[0]}"`))
   const total = Number(transactions.reduce((sum, [, amount]) => sum + amount, 0)).toFixed(2)
-  const csvHeader = `data:text/csv;charset=utf-8,Cover Customer ${reportType} Report,${e.detail.dates.start}-${e.detail.dates.end},\n`
+  const csvHeader = `data:text/csv;charset=utf-8,Cover Customer ${reportType} Report,${e.detail.dates.start} to ${e.detail.dates.end},\n`
   const accountHeader =
     policy.type === PolicyType.Team
       ? `Policy Name,Account Number,Cost Center,Entity Code,\n${policy.name},${policy.account},${policy.cost_center},${policy.entity_code?.code}`

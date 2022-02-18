@@ -28,7 +28,7 @@ onMount(() => {
 $: drawerWidth = `${drawerEl?.offsetWidth || 0}px`
 $: currentUrl = window.location.pathname
 
-$beforeUrlChange((event, route, { url }) => {
+$beforeUrlChange((event: CustomEvent, route: string, { url }: { url: string }) => {
   currentUrl = url
   return true
 })

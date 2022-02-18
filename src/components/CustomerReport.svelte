@@ -22,25 +22,44 @@ const claimIsWithinTimeframe = (claim: Claim) => {
   return Date.parse(reportDates.end) - Date.parse(claim.incident_date) <= timeframe
 }
 
+const getAccountHeader = (polciy: Policy) => {
+  return policy.type === PolicyType.Team
+    ? `Policy Name,Account Number,Cost Center,Entity Code,\n${policy.name},${policy.account},${policy.cost_center},${policy.entity_code?.code}`
+    : `Policy Name,Household ID,\n${policy.name},${policy.household_id}`
+}
+
+const getClaimPayouts = () => {
+  return $selectedPolicyClaims
+    .filter(claimIsApproved)
+    .filter(claimIsWithinTimeframe)
+    .map((claim) => [claim.reference_number, claim.total_payout / 100])
+}
+
+const getPremiums = () => {
+  return $selectedPolicyItems
+    .filter(itemIsApproved)
+    .map((item) => [item.name, (item.prorated_annual_premium || item.annual_premium) / -100]) //this is limited to current premiums as the UI doens't see payment dates
+}
+
+const downloadCSV = () => {
+  if (anchorEl.download) {
+    anchorEl.click()
+  } else {
+    window.open(encodedUri)
+  }
+}
+
 function createReport(e: CustomEvent) {
   reportType = e.detail.type
   reportDates = e.detail.dates
   fileName = `Cover_${reportType}_Report_${reportDates.start}_${reportDates.end}.csv`
-  const claimPayouts = $selectedPolicyClaims
-    .filter(claimIsApproved)
-    .filter(claimIsWithinTimeframe)
-    .map((claim) => [claim.reference_number, claim.total_payout / 100])
-  const premiums = $selectedPolicyItems
-    .filter(itemIsApproved)
-    .map((item) => [item.name, (item.prorated_annual_premium || item.annual_premium) / -100]) //this is limited to current premiums as the UI doens't see payment dates
+  const claimPayouts = getClaimPayouts()
+  const premiums = getPremiums()
   const transactions = reportType === 'Debits' ? premiums : claimPayouts
   transactions.forEach((t) => (t[0] = `"${t[0]}"`))
   const total = Number(transactions.reduce((sum, [, amount]) => sum + amount, 0)).toFixed(2)
   const csvHeader = `data:text/csv;charset=utf-8,Cover Customer ${reportType} Report,${e.detail.dates.start} to ${e.detail.dates.end},\n`
-  const accountHeader =
-    policy.type === PolicyType.Team
-      ? `Policy Name,Account Number,Cost Center,Entity Code,\n${policy.name},${policy.account},${policy.cost_center},${policy.entity_code?.code}`
-      : `Policy Name,Household ID,\n${policy.name},${policy.household_id}`
+  const accountHeader = getAccountHeader(policy)
   const csvContent: string =
     csvHeader +
     accountHeader +
@@ -48,11 +67,7 @@ function createReport(e: CustomEvent) {
     transactions.map((e: any) => e.join(',')).join('\n') +
     `,\nTotal,${total}`
   encodedUri = encodeURI(csvContent)
-  if (anchorEl.download) {
-    anchorEl.click()
-  } else {
-    window.open(encodedUri)
-  }
+  downloadCSV()
   modalOpen = false
 }
 </script>

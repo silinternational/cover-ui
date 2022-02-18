@@ -5,7 +5,7 @@ import { showApp } from '../authn'
 import type { UserAppRole } from 'data/user'
 import RoleAndPolicyMenu from './RoleAndPolicyMenu.svelte'
 import type { Policy } from 'data/policies'
-import { beforeUrlChange, goto } from '@roxi/routify'
+import { beforeUrlChange, goto, url } from '@roxi/routify'
 import { Drawer } from '@silintl/ui-components'
 import { ROOT } from 'helpers/routes'
 import Watermark from './Watermark.svelte'
@@ -20,13 +20,14 @@ const isNotProduction = process.env.CF_PAGES_BRANCH !== 'main'
 let drawerEl = {} as any
 let drawerWidth: string
 let toggle = false
+let currentUrl: string
 
 onMount(() => {
   drawerEl = document.querySelector('.mdc-drawer')
+  currentUrl = $url()
 })
 
 $: drawerWidth = `${drawerEl?.offsetWidth || 0}px`
-$: currentUrl = window.location.pathname
 
 $beforeUrlChange((event: CustomEvent, route: string, { url }: { url: string }) => {
   currentUrl = url

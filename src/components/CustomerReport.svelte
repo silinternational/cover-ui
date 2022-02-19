@@ -14,7 +14,7 @@ let modalOpen = false
 let reportDates: { start: string; end: string }
 let reportType: string
 
-$: claimOrItemHeader = reportType === 'Debit' ? 'Item' : 'Claim Number'
+$: claimOrItemHeader = reportType === 'Premium' ? 'Item' : 'Claim Number'
 const claimIsApproved = (claim: Claim) => claim.status === ClaimStatus.Approved
 
 const claimIsWithinTimeframe = (claim: Claim) => {
@@ -55,7 +55,7 @@ function createReport(e: CustomEvent) {
   fileName = `Cover_${reportType}_Report_${reportDates.start}_${reportDates.end}.csv`
   const claimPayouts = getClaimPayouts()
   const premiums = getPremiums()
-  const transactions = reportType === 'Debits' ? premiums : claimPayouts
+  const transactions = reportType === 'Premium' ? premiums : claimPayouts
   transactions.forEach((t) => (t[0] = `"${t[0]}"`))
   const total = Number(transactions.reduce((sum, [, amount]) => sum + amount, 0)).toFixed(2)
   const csvHeader = `data:text/csv;charset=utf-8,Cover Customer ${reportType} Report,${e.detail.dates.start} to ${e.detail.dates.end},\n`

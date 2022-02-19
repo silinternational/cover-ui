@@ -32,17 +32,17 @@ const onSelectType = (event: any) => {
 
 const formData: { dates: { start: string; end: string }; type: string } = {
   dates: { start, end },
-  type: 'Debits',
+  type: 'Premium',
 }
 
 const reportOptions = [
   {
-    id: 'Debits',
-    name: 'Debits',
+    id: 'Premium',
+    name: 'Premium',
   },
   {
-    id: 'Credits',
-    name: 'Credits',
+    id: 'Claim',
+    name: 'Claim',
   },
 ]
 </script>
@@ -67,9 +67,9 @@ const reportOptions = [
       <Form on:submit={onSubmit}>
         <p>
           <span class="mdc-bold-font">Report Type</span>
-          <Select label="Input" options={reportOptions} selectedID="Debits" on:change={onSelectType} />
+          <Select label="Input" options={reportOptions} selectedID="Premium" on:change={onSelectType} />
         </p>
-        {#if formData.type === 'Credits'}
+        {#if formData.type === 'Claim'}
           <p>
             <span class="mdc-bold-font">Report Start Date</span>
             <DateInput bind:value={formData.dates.start} />

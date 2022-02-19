@@ -1,11 +1,12 @@
 <script lang="ts">
-import { isAdmin } from 'data/user'
 import { CardsGrid, ClaimsTable, ItemsTable, Row } from 'components'
+import CustomerReport from '../components/CustomerReport.svelte'
 import { isLoadingById, loading } from 'components/progress'
 import { Claim, claimIsOpen, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import { deleteItem, itemIsApproved, itemIsActive, loadItems, selectedPolicyItems, PolicyItem } from 'data/items'
 import { getNameOfPolicy, loadPolicy, Policy, PolicyType, selectedPolicy } from 'data/policies'
 import { roleSelection } from 'data/role-policy-selection'
+import { isAdmin } from 'data/user'
 import { formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -32,7 +33,7 @@ $: members = policy.members || []
 $: policyId && loadItems(policyId)
 // sort items so inactive is last
 $: items = $selectedPolicyItems.filter(itemIsActive)
-$: itemsForTable = showAllItems? $selectedPolicyItems : items.slice(0, 15)
+$: itemsForTable = showAllItems ? $selectedPolicyItems : items.slice(0, 15)
 $: allItemsBtnDisabled = itemsForTable.length >= $selectedPolicyItems.length
 $: approvedItems = items.filter(itemIsApproved)
 
@@ -45,6 +46,7 @@ $: policyName = getNameOfPolicy(policy)
 $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))
 $: coverage = formatMoney(approvedItems.reduce((sum, item) => sum + item.coverage_amount, 0))
 $: premium = formatMoney(approvedItems.reduce((sum, item) => sum + item.annual_premium, 0))
+$: entityCode = policy.entity_code?.code
 
 const isRecent = (claim: Claim) => {
   const incidentDate = new Date(claim.incident_date)
@@ -53,12 +55,9 @@ const isRecent = (claim: Claim) => {
   return Number(incidentDate) >= Number(aMonthAgo)
 }
 
-const onGotoClaim = (event: CustomEvent<Claim>) =>
-  $goto(customerClaimDetails(event.detail.policy_id, event.detail.id))
+const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(event.detail.policy_id, event.detail.id))
 
-const onGotoPolicyItem = (event: CustomEvent<PolicyItem>) =>
-  $goto(itemDetails(event.detail.policy_id, event.detail.id))
-
+const onGotoPolicyItem = (event: CustomEvent<PolicyItem>) => $goto(itemDetails(event.detail.policy_id, event.detail.id))
 
 const onDelete = async (event: CustomEvent<any>) => {
   const itemId = event.detail
@@ -90,9 +89,6 @@ th {
   font-weight: normal;
   font-size: small;
   padding-left: 0.5rem;
-}
-.bottom-padding {
-  padding: 2rem;
 }
 .item-footer {
   margin: 1rem auto 0 auto;
@@ -138,7 +134,7 @@ th {
         </tr>
         <tr>
           <th>Entity Code</th>
-          <td>{policy.entity_code?.code || '-'}</td>
+          <td>{entityCode || '-'}</td>
         </tr>
       {:else if policy.type === PolicyType.Household}
         <tr>
@@ -184,7 +180,7 @@ th {
 
   <div class="flex justify-between align-items-center">
     <h4>Claims <span class="subtext">({openClaimCount} open)</span></h4>
-    <Button disabled={allClaimsBtnDisabled} on:click={() => showAllClaims = true}>All Claims…</Button>
+    <Button disabled={allClaimsBtnDisabled} on:click={() => (showAllClaims = true)}>All Claims…</Button>
   </div>
   {#if $loading && isLoadingById(`policies/${policyId}/claims`)}
     Loading claims...
@@ -194,16 +190,19 @@ th {
 
   <div class="flex justify-between align-items-center">
     <h4>Items <span class="subtext">({approvedItems?.length} covered)</span></h4>
-    <Button disabled={allItemsBtnDisabled} on:click={() => showAllItems = true}>All Items…</Button>
+    <Button disabled={allItemsBtnDisabled} on:click={() => (showAllItems = true)}>All Items…</Button>
   </div>
   {#if $loading && isLoadingById(`policies/${policyId}/items`)}
     Loading items...
   {:else}
-    <ItemsTable items={itemsForTable} {policyId} on:delete={onDelete} on:gotoItem={(e) => $goto(e.detail)}/>
+    <ItemsTable items={itemsForTable} {policyId} on:delete={onDelete} on:gotoItem={(e) => $goto(e.detail)} />
     <div class="text-align-center">
       <p class="item-footer">Showing {itemsForTable.length} out of {$selectedPolicyItems.length} items</p>
       <Button url={itemsRoute(policyId)}>View {$selectedPolicyItems.length - itemsForTable.length} more items…</Button>
     </div>
   {/if}
-  <div class="bottom-padding" />
+
+  <CustomerReport {policy} />
+
+  <div class="p-2" />
 </Page>

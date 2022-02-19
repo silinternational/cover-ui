@@ -1,12 +1,16 @@
 <script lang="ts">
 import { DateInput, Modal } from 'components'
-import { CreateLedgerReportInput, LedgerReportType } from 'data/ledger'
 import { Button, Form, Select } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let modalOpen = false
 
-const dispatch = createEventDispatcher<{ submit: CreateLedgerReportInput; cancel: void }>()
+const today = new Date()
+
+let end = today.toISOString().split('T')[0]
+let start = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate()).toISOString().split('T')[0]
+
+const dispatch = createEventDispatcher<{ submit: any; cancel: void }>()
 
 const onSubmit = () => dispatch('submit', formData)
 
@@ -26,19 +30,19 @@ const onSelectType = (event: any) => {
   formData.type = event.detail?.id
 }
 
-const formData: CreateLedgerReportInput = {
-  date: new Date().toISOString().split('T')[0],
-  type: LedgerReportType.monthly,
+const formData: { dates: { start: string; end: string }; type: string } = {
+  dates: { start, end },
+  type: 'Premium',
 }
 
-const reportTypes = [
+const reportOptions = [
   {
-    id: LedgerReportType.monthly,
-    name: LedgerReportType.monthly,
+    id: 'Premium',
+    name: 'Premium',
   },
   {
-    id: LedgerReportType.annual,
-    name: LedgerReportType.annual,
+    id: 'Claim',
+    name: 'Claim',
   },
 ]
 </script>
@@ -51,6 +55,7 @@ const reportTypes = [
 </style>
 
 <Modal
+  class="mh-275px"
   open={modalOpen}
   buttons={[]}
   defaultAction="cancel"
@@ -63,12 +68,18 @@ const reportTypes = [
       <Form on:submit={onSubmit}>
         <p>
           <span class="mdc-bold-font">Report Type</span>
-          <Select label="Input" options={reportTypes} selectedID="Monthly" on:change={onSelectType} />
+          <Select label="Input" options={reportOptions} selectedID="Premium" on:change={onSelectType} />
         </p>
-        <p>
-          <span class="mdc-bold-font">Report Date</span>
-          <DateInput bind:value={formData.date} />
-        </p>
+        {#if formData.type === 'Claim'}
+          <p>
+            <span class="mdc-bold-font">Report Start Date</span>
+            <DateInput bind:value={formData.dates.start} />
+          </p>
+          <p>
+            <span class="mdc-bold-font">Report End Date</span>
+            <DateInput bind:value={formData.dates.end} />
+          </p>
+        {/if}
         <div class="form-button">
           <Button raised>Create Report</Button>
         </div>

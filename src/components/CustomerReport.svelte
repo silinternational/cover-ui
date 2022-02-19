@@ -65,7 +65,8 @@ function createReport(e: CustomEvent) {
     accountHeader +
     `,\n${claimOrItemHeader}, ${reportType},\n` +
     transactions.map((e: any) => e.join(',')).join('\n') +
-    `,\nTotal,${total}`
+    `,\nTotal,${total}` +
+    '\nThis report may contain data that is not finalized\n or may be different than your final statement.'
   encodedUri = encodeURI(csvContent)
   downloadCSV()
   modalOpen = false

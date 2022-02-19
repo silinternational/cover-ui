@@ -55,6 +55,7 @@ const reportOptions = [
 </style>
 
 <Modal
+  class="mh-275px"
   open={modalOpen}
   buttons={[]}
   defaultAction="cancel"

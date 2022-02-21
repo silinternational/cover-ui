@@ -21,7 +21,7 @@ const claimIsWithinTimeframe = (claim: Claim) => {
   return Date.parse(reportDates.end) - Date.parse(claim.incident_date) <= timeframe
 }
 
-const getAccountHeader = (polciy: Policy) => {
+const getAccountHeader = (policy: Policy) => {
   return policy.type === PolicyType.Team
     ? `Policy Name,Account Number,Cost Center,Entity Code,\n${policy.name},${policy.account},${policy.cost_center},${policy.entity_code?.code}`
     : `Policy Name,Household ID,\n${policy.name},${policy.household_id}`

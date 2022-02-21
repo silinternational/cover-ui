@@ -30,7 +30,7 @@ const getAccountHeader = (policy: Policy) => {
 const getClaimPayouts = () => {
   return $selectedPolicyClaims
     .filter(claimIsWithinTimeframe)
-    .map((claim) => [claim.reference_number, claim.total_payout / 100, claim.status])
+    .map((claim) => [claim.reference_number, claim.total_payout / 100, claim.status, claim.payment_date.split('T')[0]])
 }
 
 const getPremiums = () => {
@@ -58,7 +58,7 @@ function createReport(e: CustomEvent) {
   const total = Number(transactions.reduce((sum, [, amount]) => sum + amount, 0)).toFixed(2)
   const csvHeader = `data:text/csv;charset=utf-8,Cover Customer ${reportType} Report,${e.detail.dates.start} to ${e.detail.dates.end},\n`
   const accountHeader = getAccountHeader(policy)
-  const claimOrItemHeader = reportType === 'Premium' ? 'Item,Premium' : 'Claim Number,Amount,Status'
+  const claimOrItemHeader = reportType === 'Premium' ? 'Item,Premium' : 'Claim Number,Amount,Status,Payment Date'
   const csvContent: string =
     csvHeader +
     accountHeader +

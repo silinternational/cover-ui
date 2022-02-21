@@ -30,21 +30,22 @@ const onSelectType = (event: any) => {
   formData.type = event.detail?.id
 }
 
-const formData: { dates: { start: string; end: string }; type: string } = {
-  dates: { start, end },
-  type: 'Premium',
-}
-
 const reportOptions = [
-  {
-    id: 'Premium',
-    name: 'Premium',
-  },
+  // TODO: Make premium report closely match the accounting record (See Trello for details)
+  // {
+  //   id: 'Premium',
+  //   name: 'Premium',
+  // },
   {
     id: 'Claim',
     name: 'Claim',
   },
 ]
+
+const formData: { dates: { start: string; end: string }; type: string } = {
+  dates: { start, end },
+  type: reportOptions[0]?.id || '',
+}
 </script>
 
 <style>
@@ -68,7 +69,7 @@ const reportOptions = [
       <Form on:submit={onSubmit}>
         <p>
           <span class="mdc-bold-font">Report Type</span>
-          <Select label="Input" options={reportOptions} selectedID="Premium" on:change={onSelectType} />
+          <Select label="Input" options={reportOptions} selectedID={reportOptions[0]?.id} on:change={onSelectType} />
         </p>
         {#if formData.type === 'Claim'}
           <p>

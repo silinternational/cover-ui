@@ -5,9 +5,10 @@ import { showApp } from '../authn'
 import type { UserAppRole } from 'data/user'
 import RoleAndPolicyMenu from './RoleAndPolicyMenu.svelte'
 import type { Policy } from 'data/policies'
-import { goto } from '@roxi/routify'
+import { beforeUrlChange, goto, url } from '@roxi/routify'
 import { Drawer } from '@silintl/ui-components'
 import { ROOT } from 'helpers/routes'
+import Watermark from './Watermark.svelte'
 import { onMount } from 'svelte'
 
 export let menuItems: any[]
@@ -19,12 +20,19 @@ const isNotProduction = process.env.CF_PAGES_BRANCH !== 'main'
 let drawerEl = {} as any
 let drawerWidth: string
 let toggle = false
+let currentUrl: string
 
 onMount(() => {
   drawerEl = document.querySelector('.mdc-drawer')
+  currentUrl = $url()
 })
 
 $: drawerWidth = `${drawerEl?.offsetWidth || 0}px`
+
+$beforeUrlChange((event: CustomEvent, route: string, { url }: { url: string }) => {
+  currentUrl = url
+  return true
+})
 
 const logoClickHandler = () => $goto(ROOT)
 </script>
@@ -41,6 +49,7 @@ const logoClickHandler = () => $goto(ROOT)
 </style>
 
 <Drawer
+  {currentUrl}
   modal
   hideForPhonesOnly
   {toggle}
@@ -64,6 +73,6 @@ const logoClickHandler = () => $goto(ROOT)
   {/if}
 
   {#if isNotProduction}
-    <h3 class="text-align-center mdc-theme--neutral">DEVELOPMENT VERSION, NOT PRODUCTION</h3>
+    <Watermark text="DEVELOPMENT VERSION" />
   {/if}
 </Drawer>

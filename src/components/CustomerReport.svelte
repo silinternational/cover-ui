@@ -29,9 +29,8 @@ const getAccountHeader = (polciy: Policy) => {
 
 const getClaimPayouts = () => {
   return $selectedPolicyClaims
-    .filter(claimIsApproved)
     .filter(claimIsWithinTimeframe)
-    .map((claim) => [claim.reference_number, claim.total_payout / 100])
+    .map((claim) => [claim.reference_number, claim.total_payout / 100, claim.status])
 }
 
 const getPremiums = () => {
@@ -50,7 +49,6 @@ const downloadCSV = () => {
 
 function createReport(e: CustomEvent) {
   reportType = e.detail.type
-  const claimOrItemHeader = reportType === 'Premium' ? 'Item' : 'Claim Number'
   reportDates = e.detail.dates
   fileName = `Cover_${reportType}_Report_${reportDates.start}_${reportDates.end}.csv`
   const claimPayouts = getClaimPayouts()
@@ -60,10 +58,11 @@ function createReport(e: CustomEvent) {
   const total = Number(transactions.reduce((sum, [, amount]) => sum + amount, 0)).toFixed(2)
   const csvHeader = `data:text/csv;charset=utf-8,Cover Customer ${reportType} Report,${e.detail.dates.start} to ${e.detail.dates.end},\n`
   const accountHeader = getAccountHeader(policy)
+  const claimOrItemHeader = reportType === 'Premium' ? 'Item,Premium' : 'Claim Number,Amount,Status'
   const csvContent: string =
     csvHeader +
     accountHeader +
-    `,\n${claimOrItemHeader}, ${reportType},\n` +
+    `,\n${claimOrItemHeader},\n` +
     transactions.map((e: any) => e.join(',')).join('\n') +
     `,\nTotal,${total}` +
     '\nThis report may contain data that is not finalized\n or may be different than your final statement.'

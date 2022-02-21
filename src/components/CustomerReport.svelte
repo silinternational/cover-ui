@@ -14,7 +14,6 @@ let modalOpen = false
 let reportDates: { start: string; end: string }
 let reportType: string
 
-$: claimOrItemHeader = reportType === 'Premium' ? 'Item' : 'Claim Number'
 const claimIsApproved = (claim: Claim) => claim.status === ClaimStatus.Approved
 
 const claimIsWithinTimeframe = (claim: Claim) => {
@@ -51,6 +50,7 @@ const downloadCSV = () => {
 
 function createReport(e: CustomEvent) {
   reportType = e.detail.type
+  const claimOrItemHeader = reportType === 'Premium' ? 'Item' : 'Claim Number'
   reportDates = e.detail.dates
   fileName = `Cover_${reportType}_Report_${reportDates.start}_${reportDates.end}.csv`
   const claimPayouts = getClaimPayouts()

@@ -72,7 +72,7 @@ const columns: Column[] = [
 
 let headerId = 'name'
 let ascending = true
-let currentColumn = columns[1]
+let currentColumn = columns[0]
 
 let currentItem = {} as PolicyItem
 let goToItemDetails = true
@@ -152,7 +152,7 @@ const getStatusClass = (status: string) =>
 const onSorted = (event: CustomEvent) => {
   ascending = event.detail.sortValue === 'ascending'
   headerId = event.detail.columnId || ''
-  currentColumn = columns.find((column) => column.headerId === headerId) || columns[1]
+  currentColumn = columns.find((column) => column.headerId === headerId) || columns[0]
 }
 </script>
 

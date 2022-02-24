@@ -1,5 +1,7 @@
 <script lang="ts">
-import ItemDeleteModal from './ItemDeleteModal.svelte'
+import ItemDeleteModal from '../ItemDeleteModal.svelte'
+import DatatableCheckbox from './DatatableCheckbox.svelte'
+import DatatableCheckboxHeader from './DatatableCheckboxHeader.svelte'
 import { editableCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/items'
 import { formatDate, formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
@@ -7,12 +9,14 @@ import { itemDetails, itemEdit } from 'helpers/routes'
 import { sortByNum, sortByString } from 'helpers/sort'
 import { createEventDispatcher } from 'svelte'
 import { Datatable, Menu, MenuItem } from '@silintl/ui-components'
+import BatchItemDeleteModal from '../components/BatchItemDeleteModal.svelte'
 
 type Column = {
-  title: string,
-  headerId: string,
-  numeric?: boolean,
-  path: string,
+  title: string
+  headerId: string
+  numeric?: boolean
+  path: string
+  sortable?: boolean
 }
 
 export let items = [] as PolicyItem[]
@@ -24,51 +28,60 @@ const columns: Column[] = [
     title: 'Item',
     headerId: 'item',
     path: 'name',
+    sortable: true,
   },
   {
     title: 'Status',
     headerId: 'status',
     path: 'coverage_status',
+    sortable: true,
   },
   {
     title: 'Assigned To',
     headerId: 'assigned_to',
-    path: 'accountable_person',
+    path: 'accountable_person.name',
+    sortable: true,
   },
   {
     title: 'Location',
     headerId: 'location',
     path: 'accountable_person.country',
+    sortable: true,
   },
   {
     title: 'Covered Value',
     headerId: 'covered_value',
     numeric: true,
     path: 'coverage_amount',
+    sortable: true,
   },
   {
     title: 'Premium',
     headerId: 'premium',
     numeric: true,
     path: 'prorated_annual_premium',
+    sortable: true,
   },
   {
     title: 'Recent Activity',
     headerId: 'recent_activity',
     path: 'updated_at',
+    sortable: true,
   },
 ]
 
 let headerId = 'name'
 let ascending = true
-let currentColumn = columns[0]
+let currentColumn = columns[1]
 
 let currentItem = {} as PolicyItem
 let goToItemDetails = true
 let modalOpen = false
 let shownMenus: { [name: string]: boolean } = {}
 
-$: sortedItemsArray = currentColumn.numeric ? sortByNum(currentColumn.path, items, ascending) : sortByString(currentColumn.path, items, ascending)
+$: sortedItemsArray = currentColumn?.numeric
+  ? sortByNum(currentColumn.path, items, ascending)
+  : sortByString(currentColumn.path, items, ascending)
 
 const dispatch = createEventDispatcher()
 
@@ -106,6 +119,16 @@ const handleModalDialog = async (event: CustomEvent<string>) => {
   }
 }
 
+const handleChange = (itemId: string) => {
+  dispatch('change', itemId)
+}
+
+const handleClosed = (e: CustomEvent) => {
+  if (e.detail === 'delete') {
+    dispatch('batchDelete')
+  }
+}
+
 const handleMoreVertClick = (id: string) => {
   goToItemDetails = false
   shownMenus[id] = shownMenus[id] !== true
@@ -129,7 +152,7 @@ const getStatusClass = (status: string) =>
 const onSorted = (event: CustomEvent) => {
   ascending = event.detail.sortValue === 'ascending'
   headerId = event.detail.columnId || ''
-  currentColumn = columns.find(column => column.headerId === headerId) || columns[0]
+  currentColumn = columns.find((column) => column.headerId === headerId) || columns[1]
 }
 </script>
 
@@ -154,19 +177,25 @@ const onSorted = (event: CustomEvent) => {
 }
 </style>
 
+<BatchItemDeleteModal on:closed={handleClosed} />
+
 {#if title}
   <h3>{title}</h3>
 {/if}
 <Datatable on:sorted={onSorted}>
   <Datatable.Header>
+    <DatatableCheckboxHeader />
     <!--TODO: make the amount of columns shown be dependent on the device size-->
     {#each columns as column}
-      <Datatable.Header.Item numeric={column.numeric} columnID={column.headerId} sortable>{column.title}</Datatable.Header.Item>
+      <Datatable.Header.Item numeric={column.numeric} columnID={column.headerId} sortable={column.sortable}
+        >{column.title}</Datatable.Header.Item
+      >
     {/each}
   </Datatable.Header>
   <Datatable.Data>
     {#each sortedItemsArray as item (item.id)}
       <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} clickable>
+        <DatatableCheckbox on:click={() => (goToItemDetails = false)} on:change={() => handleChange(item.id)} />
         <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}>
           {#if item.coverage_status === ItemCoverageStatus.Approved && item.coverage_end_date}

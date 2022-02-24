@@ -80,7 +80,7 @@ let goToItemDetails = true
 let modalOpen = false
 let shownMenus: { [name: string]: boolean } = {}
 
-$: sortedItemsArray = currentColumn?.numeric
+$: sortedItemsArray = currentColumn.numeric
   ? sortByNum(currentColumn.path, items, ascending)
   : sortByString(currentColumn.path, items, ascending)
 

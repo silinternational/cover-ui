@@ -22,6 +22,7 @@ type Column = {
 export let items = [] as PolicyItem[]
 export let policyId: string
 export let title: string = ''
+export let batchActionDisabled = true
 
 const columns: Column[] = [
   {
@@ -177,13 +178,14 @@ const onSorted = (event: CustomEvent) => {
 }
 </style>
 
-<BatchItemDeleteModal on:closed={handleClosed} />
+<BatchItemDeleteModal disabled={batchActionDisabled} on:closed={handleClosed} />
 
 {#if title}
   <h3>{title}</h3>
 {/if}
 <Datatable on:sorted={onSorted}>
   <Datatable.Header>
+    <!-- TODO: programmatically check which boxes are ticked using getSelectedRowIds() in ui-components using DatatableHeader -->
     <DatatableCheckboxHeader />
     <!--TODO: make the amount of columns shown be dependent on the device size-->
     {#each columns as column}

@@ -56,6 +56,7 @@ const handleChange = (e: CustomEvent<string>) => {
       <ItemsTable
         items={filteredItems}
         {policyId}
+        batchActionDisabled={checkedItemIds.length === 0}
         title="Items"
         on:delete={onDelete}
         on:gotoItem={onGotoItem}

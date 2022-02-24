@@ -3,6 +3,7 @@ import { Button, Dialog } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let openModal = false
+export let disabled = false
 
 const dispatch = createEventDispatcher<{ closed: string }>()
 
@@ -19,7 +20,7 @@ const handleDialog = (choice: string) => {
 }
 </script>
 
-<Button on:click={() => (openModal = true)}>Delete Selected Items</Button>
+<Button {disabled} on:click={() => (openModal = true)}>Delete Selected Items</Button>
 
 <Dialog.Alert
   open={openModal}

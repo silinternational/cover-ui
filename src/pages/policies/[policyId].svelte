@@ -216,6 +216,7 @@ th {
     <ItemsTable
       items={itemsForTable}
       {policyId}
+      batchActionDisabled={checkedItemIds.length === 0}
       on:delete={onDelete}
       on:gotoItem={(e) => $goto(e.detail)}
       on:change={handleChange}

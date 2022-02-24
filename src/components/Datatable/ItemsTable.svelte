@@ -1,5 +1,5 @@
 <script lang="ts">
-import ItemDeleteModal from '../ItemDeleteModal.svelte'
+import BatchItemDeleteModal from '../components/BatchItemDeleteModal.svelte'
 import DatatableCheckbox from './DatatableCheckbox.svelte'
 import DatatableCheckboxHeader from './DatatableCheckboxHeader.svelte'
 import { editableCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/items'
@@ -7,9 +7,9 @@ import { formatDate, formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { itemDetails, itemEdit } from 'helpers/routes'
 import { sortByNum, sortByString } from 'helpers/sort'
+import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import { createEventDispatcher } from 'svelte'
 import { Datatable, Menu, MenuItem } from '@silintl/ui-components'
-import BatchItemDeleteModal from '../components/BatchItemDeleteModal.svelte'
 
 type Column = {
   title: string
@@ -189,9 +189,9 @@ const onSorted = (event: CustomEvent) => {
     <DatatableCheckboxHeader />
     <!--TODO: make the amount of columns shown be dependent on the device size-->
     {#each columns as column}
-      <Datatable.Header.Item numeric={column.numeric} columnID={column.headerId} sortable={column.sortable}
-        >{column.title}</Datatable.Header.Item
-      >
+      <Datatable.Header.Item numeric={column.numeric} columnID={column.headerId} sortable={column.sortable}>
+        {column.title}
+      </Datatable.Header.Item>
     {/each}
   </Datatable.Header>
   <Datatable.Data>

@@ -1,7 +1,7 @@
 <script lang="ts">
-import { DateInput, Modal } from 'components'
+import { DateInput } from 'components'
 import { CreateLedgerReportInput, LedgerReportType } from 'data/ledger'
-import { Button, Form, Select } from '@silintl/ui-components'
+import { Button, Dialog, Form, Select } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let modalOpen = false
@@ -50,7 +50,7 @@ const reportTypes = [
 }
 </style>
 
-<Modal
+<Dialog.Alert
   open={modalOpen}
   buttons={[]}
   defaultAction="cancel"
@@ -78,4 +78,4 @@ const reportTypes = [
       </Form>
     </div>
   {/if}
-</Modal>
+</Dialog.Alert>

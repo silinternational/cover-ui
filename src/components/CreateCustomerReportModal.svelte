@@ -1,6 +1,6 @@
 <script lang="ts">
-import { DateInput, Modal } from 'components'
-import { Button, Form, Select } from '@silintl/ui-components'
+import { DateInput } from 'components'
+import { Button, Dialog, Form, Select } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let modalOpen = false
@@ -55,7 +55,7 @@ const formData: { dates: { start: string; end: string }; type: string } = {
 }
 </style>
 
-<Modal
+<Dialog.Alert
   class="mh-275px"
   open={modalOpen}
   buttons={[]}
@@ -90,4 +90,4 @@ const formData: { dates: { start: string; end: string }; type: string } = {
       </Form>
     </div>
   {/if}
-</Modal>
+</Dialog.Alert>

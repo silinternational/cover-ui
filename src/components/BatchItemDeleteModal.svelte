@@ -8,11 +8,9 @@ export let disabled = false
 const dispatch = createEventDispatcher<{ closed: string }>()
 
 const buttons: Dialog.AlertButton[] = [
-  { label: 'Yes, Delete', action: 'delete', class: 'error-button' },
+  { label: 'yes, delete', action: 'delete', class: 'error-button' },
   { label: 'cancel', action: 'cancel', class: 'mdc-dialog__button' },
 ]
-
-$: message = `Are you sure you would like to delete the selected items?`
 
 const handleDialog = (choice: string) => {
   openModal = false
@@ -20,7 +18,7 @@ const handleDialog = (choice: string) => {
 }
 </script>
 
-<Button {disabled} on:click={() => (openModal = true)}>Delete Selected Items</Button>
+<Button {disabled} on:click={() => (openModal = true)}>delete selected items</Button>
 
 <Dialog.Alert
   open={openModal}
@@ -28,5 +26,6 @@ const handleDialog = (choice: string) => {
   defaultAction="cancel"
   title={'Delete/Remove Coverage'}
   on:chosen={(e) => handleDialog(e.detail)}
-  on:closed={handleDialog}>{message}</Dialog.Alert
+  on:closed={handleDialog}
+  >Are you sure you would like to remove coverage or delete the selected items (coverage ends at a later date)?</Dialog.Alert
 >

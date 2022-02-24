@@ -283,7 +283,7 @@ function updateStoreItem(updatedItem: PolicyItem) {
 }
 
 export const deleteItems = (itemsIdArray: string[], policyId: string): void => {
-  itemsIdArray.forEach((id) => deleteItem(policyId, id))
+  itemsIdArray?.forEach((id) => deleteItem(policyId, id))
 }
 
 export const itemIsActive = (item: PolicyItem): boolean => {

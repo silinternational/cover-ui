@@ -1,7 +1,7 @@
 <script lang="ts">
 import { ItemsTable, Row, SearchForm } from 'components'
 import { isLoadingPolicyItems, loading } from 'components/progress'
-import {deleteItem, loadItems, selectedPolicyItems} from 'data/items'
+import { deleteItem, deleteItems, loadItems, selectedPolicyItems } from 'data/items'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import * as routes from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -10,14 +10,13 @@ import { Button, Page } from '@silintl/ui-components'
 
 let searchText = ''
 let filteredItems = $selectedPolicyItems
+let checkedItemIds: string[] = []
 
 $: policyId = $selectedPolicyId
 $: policyId && loadItems(policyId)
 
 $: metatags.title = formatPageTitle('Home')
-$: filteredItems = $selectedPolicyItems.filter(
-    item => item.name.toLowerCase().includes(searchText.toLowerCase())
-  )
+$: filteredItems = $selectedPolicyItems.filter((item) => item.name.toLowerCase().includes(searchText.toLowerCase()))
 
 const onDelete = async (event: CustomEvent<any>) => {
   const itemId = event.detail
@@ -37,15 +36,32 @@ const onSearch = (event: CustomEvent<string>) => {
     searchText = event.detail
   }
 }
+
+const handleChange = (e: CustomEvent<string>) => {
+  const itemId = e.detail
+  if (checkedItemIds.includes(itemId)) {
+    checkedItemIds = checkedItemIds.filter((id) => id !== itemId)
+  } else {
+    checkedItemIds = [...checkedItemIds, itemId]
+  }
+}
 </script>
 
 <Page layout="grid">
   <Row cols={'12'}>
-      <SearchForm initial={searchText} on:search={onSearch} />
+    <SearchForm initial={searchText} on:search={onSearch} />
     {#if $loading && isLoadingPolicyItems(policyId)}
       Loading items...
     {:else if filteredItems.length > 0}
-      <ItemsTable items={filteredItems} {policyId} title="Items" on:delete={onDelete} on:gotoItem={onGotoItem} />
+      <ItemsTable
+        items={filteredItems}
+        {policyId}
+        title="Items"
+        on:delete={onDelete}
+        on:gotoItem={onGotoItem}
+        on:change={handleChange}
+        on:batchDelete={() => deleteItems(checkedItemIds, policyId)}
+      />
     {:else}
       <p class="m-0-auto text-align-center">You don't have any items in this policy</p>
       <p class="m-0-auto text-align-center">

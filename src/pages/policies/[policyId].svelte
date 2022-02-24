@@ -3,7 +3,15 @@ import { CardsGrid, ClaimsTable, ItemsTable, Row } from 'components'
 import CustomerReport from '../components/CustomerReport.svelte'
 import { isLoadingById, loading } from 'components/progress'
 import { Claim, claimIsOpen, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
-import { deleteItem, itemIsApproved, itemIsActive, loadItems, selectedPolicyItems, PolicyItem } from 'data/items'
+import {
+  deleteItem,
+  itemIsApproved,
+  itemIsActive,
+  loadItems,
+  selectedPolicyItems,
+  PolicyItem,
+  deleteItems,
+} from 'data/items'
 import { getNameOfPolicy, loadPolicy, Policy, PolicyType, selectedPolicy } from 'data/policies'
 import { roleSelection } from 'data/role-policy-selection'
 import { isAdmin } from 'data/user'
@@ -20,6 +28,7 @@ export let policyId: string
 let policy = {} as Policy
 let showAllItems = false
 let showAllClaims = false
+let checkedItemIds: string[] = []
 
 onMount(async () => {
   policy = await loadPolicy(policyId)
@@ -66,6 +75,15 @@ const onDelete = async (event: CustomEvent<any>) => {
   // Depending on if the item was a draft or approved it will either be deleted or updated
   // Just reload the list for now since the delete endpoint doesn't yet tell us what happened
   loadItems(policyId)
+}
+
+const handleChange = (e: CustomEvent<string>) => {
+  const itemId = e.detail
+  if (checkedItemIds.includes(itemId)) {
+    checkedItemIds = checkedItemIds.filter((id) => id !== itemId)
+  } else {
+    checkedItemIds = [...checkedItemIds, itemId]
+  }
 }
 </script>
 
@@ -195,7 +213,14 @@ th {
   {#if $loading && isLoadingById(`policies/${policyId}/items`)}
     Loading items...
   {:else}
-    <ItemsTable items={itemsForTable} {policyId} on:delete={onDelete} on:gotoItem={(e) => $goto(e.detail)} />
+    <ItemsTable
+      items={itemsForTable}
+      {policyId}
+      on:delete={onDelete}
+      on:gotoItem={(e) => $goto(e.detail)}
+      on:change={handleChange}
+      on:batchDelete={() => deleteItems(checkedItemIds, policyId)}
+    />
     <div class="text-align-center">
       <p class="item-footer">Showing {itemsForTable.length} out of {$selectedPolicyItems.length} items</p>
       <Button url={itemsRoute(policyId)}>View {$selectedPolicyItems.length - itemsForTable.length} more items…</Button>

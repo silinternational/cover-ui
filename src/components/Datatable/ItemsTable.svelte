@@ -1,5 +1,5 @@
 <script lang="ts">
-import BatchItemDeleteModal from '../components/BatchItemDeleteModal.svelte'
+import BatchItemDelete from '../components/BatchItemDelete.svelte'
 import DatatableCheckbox from './DatatableCheckbox.svelte'
 import DatatableCheckboxHeader from './DatatableCheckboxHeader.svelte'
 import { editableCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/items'
@@ -178,7 +178,7 @@ const onSorted = (event: CustomEvent) => {
 }
 </style>
 
-<BatchItemDeleteModal disabled={batchActionDisabled} on:closed={handleClosed} />
+<BatchItemDelete disabled={batchActionDisabled} on:closed={handleClosed} />
 
 {#if title}
   <h3>{title}</h3>
@@ -197,7 +197,11 @@ const onSorted = (event: CustomEvent) => {
   <Datatable.Data>
     {#each sortedItemsArray as item (item.id)}
       <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} clickable>
-        <DatatableCheckbox on:click={() => (goToItemDetails = false)} on:change={() => handleChange(item.id)} />
+        <DatatableCheckbox
+          disabled={item.coverage_end_date}
+          on:click={() => (goToItemDetails = false)}
+          on:change={() => handleChange(item.id)}
+        />
         <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}>
           {#if item.coverage_status === ItemCoverageStatus.Approved && item.coverage_end_date}

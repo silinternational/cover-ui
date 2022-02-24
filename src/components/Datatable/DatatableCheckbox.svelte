@@ -4,7 +4,7 @@ import { createEventDispatcher } from 'svelte'
 
 export let disabled = false
 
-let checked
+let checked = false
 
 const inputID = generateRandomID('checkbox-')
 

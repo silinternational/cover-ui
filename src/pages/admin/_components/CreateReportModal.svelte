@@ -16,6 +16,12 @@ const onCancel = (event: Event) => {
   modalOpen = false
 }
 
+//resets modalOpen in the parent when the modal is closed without submitting
+const handleDialog = () => {
+  modalOpen = false
+  dispatch('cancel')
+}
+
 const onSelectType = (event: any) => {
   formData.type = event.detail?.id
 }
@@ -44,7 +50,14 @@ const reportTypes = [
 }
 </style>
 
-<Dialog.Alert open={modalOpen} buttons={[]} defaultAction="cancel" title="Create Report" titleIcon="summarize">
+<Dialog.Alert
+  open={modalOpen}
+  buttons={[]}
+  defaultAction="cancel"
+  title="Create Report"
+  titleIcon="summarize"
+  on:closed={handleDialog}
+>
   {#if modalOpen}
     <div class="w-100">
       <Form on:submit={onSubmit}>

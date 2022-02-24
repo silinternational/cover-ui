@@ -18,7 +18,7 @@ const handleDialog = (choice: string) => {
 }
 </script>
 
-<Button {disabled} on:click={() => (openModal = true)}>delete selected items</Button>
+<Button {disabled} on:click={() => (openModal = true)}>end coverage</Button>
 
 <Dialog.Alert
   open={openModal}

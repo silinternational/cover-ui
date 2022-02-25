@@ -18,7 +18,7 @@ export function assertIsLessThan(value: any, high: any, errorMessage: string): v
   }
 }
 
-export function assertIsLessOrEqual(value: any, high: any, errorMessage: string): void {
+export function assertIsLessOrEqual(value: number | string, high: number | string, errorMessage: string): void {
   if (value > high) {
     throwError(errorMessage)
   }

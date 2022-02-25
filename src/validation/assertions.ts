@@ -18,6 +18,12 @@ export function assertIsLessThan(value: any, high: any, errorMessage: string): v
   }
 }
 
+export function assertIsLessOrEqual(value: any, high: any, errorMessage: string): void {
+  if (value > high) {
+    throwError(errorMessage)
+  }
+}
+
 export function assertBetween(value: any, low: any, high: any, errorMessage: string): void {
   if (value > high || value < low) {
     throwError(errorMessage)

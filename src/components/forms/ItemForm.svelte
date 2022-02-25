@@ -1,5 +1,5 @@
 <script lang="ts">
-import user, { User } from 'data/user'
+import user, { isAdmin, User } from 'data/user'
 import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
 import Description from '../Description.svelte'
 import MakeAndModelModal from 'MakeAndModelModal.svelte'
@@ -10,9 +10,9 @@ import type { AccountablePersonOptions } from 'data/accountablePersons'
 import { ItemCoverageStatus, PolicyItem } from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
 import TextFieldWithLabel from '../TextFieldWithLabel.svelte'
-import { assertHas } from '../../validation/assertions'
 import { Button, Form, MoneyInput, Select, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
+import { assertHas, assertIsLessOrEqual } from '../../validation/assertions'
 
 export let item = {} as PolicyItem
 export let policyId: string
@@ -50,7 +50,7 @@ let today = new Date()
 $: country = item?.accountable_person?.country || country
 $: !$catItemsInitialized && loadCategories()
 $: itemIsDraft = item.coverage_status === ItemCoverageStatus.Draft
-$: marketValueIsDisabled = !!item.id && !itemIsDraft
+$: marketValueIsDisabled = !!item.id && !itemIsDraft && !isAdmin
 $: applyBtnLabel = !item.coverage_status || itemIsDraft ? 'review and checkout' : 'save changes'
 
 const onAccountablePersonChange = (event: CustomEvent<AccountablePersonOptions>) => {
@@ -101,7 +101,7 @@ const validateOnSave = (formData: any) => {
 const validate = (formData: any) => {
   validateOnSave(formData)
   assertHas(formData.marketValueUSD, 'Please specify the market value')
-
+  assertIsLessOrEqual(formData.marketValueUSD * 100, item.coverage_amount, 'Coverage amount cannot be increased')
   return true
 }
 

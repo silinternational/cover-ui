@@ -10,6 +10,7 @@ import ClaimForm from './forms/ClaimForm.svelte'
 import ClaimsTable from './ClaimsTable.svelte'
 import ConvertCurrencyLink from './ConvertCurrencyLink.svelte'
 import CountrySelector from './CountrySelector.svelte'
+import ItemsTable from './Datatable/ItemsTable.svelte'
 import DateInput from './DateInput.svelte'
 import DependentForm from './forms/DependentForm.svelte'
 import Description from './Description.svelte'
@@ -20,8 +21,6 @@ import ItemBanner from './banners/ItemBanner.svelte'
 import ItemDeleteModal from './ItemDeleteModal.svelte'
 import ItemDetails from './ItemDetails.svelte'
 import ItemForm from './forms/ItemForm.svelte'
-import ItemsTable from './ItemsTable.svelte'
-import Modal from './mdc/Modal.svelte'
 import NoHouseholdIdModal from './NoHouseholdIdModal.svelte'
 import Paginator from './Paginator.svelte'
 import RadioOptions from './RadioOptions.svelte'
@@ -30,7 +29,6 @@ import Row from './mdc/Row.svelte'
 import ClaimBanner from './banners/ClaimBanner.svelte'
 import SearchForm from './forms/SearchForm.svelte'
 import StatusBanner from './banners/StatusBanner.svelte'
-import SuperMenu from './mdc/SuperMenu.svelte'
 import MessageBanner from './banners/MessageBanner.svelte'
 import SearchableSelect from './SearchableSelect.svelte'
 
@@ -55,7 +53,6 @@ export {
   ItemDetails,
   ItemForm,
   ItemsTable,
-  Modal,
   NoHouseholdIdModal,
   Paginator,
   RadioOptions,
@@ -64,7 +61,6 @@ export {
   ClaimCards,
   RecentActivityTable,
   Row,
-  SuperMenu,
   ClaimBanner,
   SearchableSelect,
   SearchForm,

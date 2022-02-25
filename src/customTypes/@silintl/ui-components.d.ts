@@ -81,6 +81,7 @@ declare module '@silintl/ui-components' {
     interface AlertProps extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
       open?: boolean
       title?: string
+      titleIcon?: string
       defaultAction?: string
       buttons?: AlertButton[]
     }
@@ -135,9 +136,10 @@ declare module '@silintl/ui-components' {
 
   type MenuItem = {
     icon?: string
-    label: string
+    label?: string
     url?: string
-    action?: () => void
+    action?: VoidFunction
+    subtitle?: string
   }
   interface MenuProps extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
     menuItems?: MenuItem[]

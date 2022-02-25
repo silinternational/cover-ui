@@ -1,7 +1,7 @@
 <script lang="ts">
 import user, { isAdmin } from 'data/user'
 import { throwError } from '../../../error'
-import { Breadcrumb, Description, SearchableSelect, Modal, DependentForm } from 'components'
+import { Breadcrumb, Description, SearchableSelect, DependentForm } from 'components'
 import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import type { DependentFormData } from 'components/forms/DependentForm.svelte'
 import {
@@ -18,7 +18,7 @@ import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { POLICIES, policyDetails, settingsPolicy, SETTINGS_PERSONAL } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
-import { Button, TextField, IconButton, Page, setNotice, Tooltip } from '@silintl/ui-components'
+import { Button, TextField, IconButton, Page, setNotice, Tooltip, Dialog } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 const policyData = {} as Policy
@@ -154,7 +154,7 @@ const callUpdatePolicy = async () => {
 }
 
 const onAddDependent = () => {
-  modalData = {}
+  modalData = {} as PolicyDependent
   modalTitle = isHouseholdPolicy ? 'Add Child or Spouse' : 'Add Person'
   showAddDependentModal = true
 }
@@ -337,7 +337,7 @@ p {
     >{isHouseholdPolicy ? 'Add dependent' : 'Add person'}</Button
   >
 
-  <Modal
+  <Dialog.Alert
     open={showAddDependentModal}
     buttons={[]}
     defaultAction="cancel"
@@ -356,5 +356,5 @@ p {
         on:remove={onRemoveModal}
       />
     {/if}
-  </Modal>
+  </Dialog.Alert>
 </Page>

@@ -1,11 +1,10 @@
 <script lang="ts">
-import SuperMenu from './mdc/SuperMenu.svelte'
 import type { MenuItem } from './mdc/types'
 import { UserAppRole } from 'data/user'
 import { getNameOfPolicy, Policy, PolicyType } from 'data/policies'
 import { roleSelection, recordRoleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { POLICY_NEW_TEAM } from 'helpers/routes'
-import { Button } from '@silintl/ui-components'
+import { Button, Menu } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 const ADMIN_ICON = 'gavel'
@@ -169,5 +168,5 @@ const toggleRoleAndPolicyMenu = () => (menuIsOpen = !menuIsOpen)
   on:click={toggleRoleAndPolicyMenu}>{buttonText || ''}</Button
 >
 <div id="role-and-policy-menu-options-container">
-  <SuperMenu bind:menuOpen={menuIsOpen} {menuItems} />
+  <Menu bind:menuOpen={menuIsOpen} {menuItems} />
 </div>

@@ -1,4 +1,4 @@
-<script type="ts">
+<script lang="ts">
 export let text: string = 'Watermark'
 export let rowHeight: number = 250
 export let colsWidth: number = 400

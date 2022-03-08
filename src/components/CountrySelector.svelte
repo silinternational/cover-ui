@@ -1,4 +1,4 @@
-<script type="ts">
+<script lang="ts">
 import SearchableSelect from './SearchableSelect.svelte'
 import { countries, Country } from 'data/countries'
 import { setNotice } from '@silintl/ui-components'

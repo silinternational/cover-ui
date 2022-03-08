@@ -1,4 +1,4 @@
-<script type="ts">
+<script lang="ts">
 import CreateCustomerReportModal from './CreateCustomerReportModal.svelte'
 import { Claim, ClaimStatus, selectedPolicyClaims } from 'data/claims'
 import { itemIsApproved, selectedPolicyItems } from 'data/items'

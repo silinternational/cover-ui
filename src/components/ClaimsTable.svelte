@@ -43,23 +43,29 @@ const columns: Column[] = [
     headerId: 'payout_option',
     path: 'claim_items.0.payout_option',
   },
+  // {
+  //   title: 'Repair',
+  //   headerId: 'repair',
+  //   numeric: true,
+  //   path: 'claim_items.0.repair_estimate',
+  // },
+  // {
+  //   title: 'Replacement',
+  //   headerId: 'replacement',
+  //   numeric: true,
+  //   path: 'claim_items.0.replace_estimate',
+  // },
+  // {
+  //   title: 'FMV',
+  //   headerId: 'fmv',
+  //   numeric: true,
+  //   path: 'claim_items.0.fmv',
+  // },
   {
-    title: 'Repair',
-    headerId: 'repair',
+    title: 'Payout Amount',
+    headerId: 'payout_amount',
     numeric: true,
-    path: 'claim_items.0.repair_estimate',
-  },
-  {
-    title: 'Replacement',
-    headerId: 'replacement',
-    numeric: true,
-    path: 'claim_items.0.replace_estimate',
-  },
-  {
-    title: 'FMV',
-    headerId: 'fmv',
-    numeric: true,
-    path: 'claim_items.0.fmv',
+    path: 'claim_items.0.payout_amount',
   },
 ]
 
@@ -101,13 +107,14 @@ const onSorted = (event: CustomEvent) => {
           <Datatable.Data.Row.Item>{claimItem.status || ''}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{claimItem.is_repairable ? 'Yes' : 'No'}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{claimItem.payout_option || ''}</Datatable.Data.Row.Item>
-          <Datatable.Data.Row.Item numeric>
+          <!-- <Datatable.Data.Row.Item numeric>
             {formatMoney(claimItem.repair_actual || claimItem.repair_estimate)}
           </Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item numeric>
             {formatMoney(claimItem.replace_actual || claimItem.replace_estimate)}
           </Datatable.Data.Row.Item>
-          <Datatable.Data.Row.Item numeric>{formatMoney(claimItem.fmv)}</Datatable.Data.Row.Item>
+          <Datatable.Data.Row.Item numeric>{formatMoney(claimItem.fmv)}</Datatable.Data.Row.Item> -->
+          <Datatable.Data.Row.Item numeric>{formatMoney(claimItem.payout_amount)}</Datatable.Data.Row.Item>
         </Datatable.Data.Row>
       {:else}
         <Datatable.Data.Row>

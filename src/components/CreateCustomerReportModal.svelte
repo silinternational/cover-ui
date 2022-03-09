@@ -2,13 +2,12 @@
 import { DateInput } from 'components'
 import { Button, Dialog, Form, Select } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
+import { LedgerReportType } from 'data/ledger'
 
 export let modalOpen = false
 
 const today = new Date()
-
-let end = today.toISOString().split('T')[0]
-let start = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate()).toISOString().split('T')[0]
+let dateString = today.toISOString().split('T')[0]
 
 const dispatch = createEventDispatcher<{ submit: any; cancel: void }>()
 
@@ -31,19 +30,18 @@ const onSelectType = (event: any) => {
 }
 
 const reportOptions = [
-  // TODO: Make premium report closely match the accounting record (See Trello for details)
-  // {
-  //   id: 'Premium',
-  //   name: 'Premium',
-  // },
   {
-    id: 'Claim',
-    name: 'Claim',
+    id: LedgerReportType.monthly,
+    name: LedgerReportType.monthly,
+  },
+  {
+    id: LedgerReportType.annual,
+    name: LedgerReportType.annual,
   },
 ]
 
-const formData: { dates: { start: string; end: string }; type: string } = {
-  dates: { start, end },
+const formData: { date: { month: number; year: number }; type: string } = {
+  date: { month: new Date(dateString).getUTCMonth(), year: new Date(dateString).getUTCFullYear() },
   type: reportOptions[0]?.id || '',
 }
 </script>
@@ -71,16 +69,10 @@ const formData: { dates: { start: string; end: string }; type: string } = {
           <span class="mdc-bold-font">Report Type</span>
           <Select label="Input" options={reportOptions} selectedID={reportOptions[0]?.id} on:change={onSelectType} />
         </p>
-        {#if formData.type === 'Claim'}
-          <p>
-            <span class="mdc-bold-font">Report Start Date</span>
-            <DateInput bind:value={formData.dates.start} />
-          </p>
-          <p>
-            <span class="mdc-bold-font">Report End Date</span>
-            <DateInput bind:value={formData.dates.end} />
-          </p>
-        {/if}
+        <p>
+          <span class="mdc-bold-font">Date</span>
+          <DateInput bind:value={dateString} />
+        </p>
         <div class="form-button">
           <Button raised>Create Report</Button>
         </div>

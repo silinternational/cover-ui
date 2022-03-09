@@ -71,6 +71,20 @@ export async function createLedgerReport(type: LedgerReportType, date: string): 
   return await CREATE('ledger-reports', params)
 }
 
+export async function createPolicyLedgerReport(
+  policyId: string,
+  type: LedgerReportType,
+  month: number,
+  year: number
+): Promise<LedgerReport> {
+  const params = {
+    type,
+    month,
+    year,
+  }
+  return await CREATE(`policies/${policyId}/ledger-reports`, params)
+}
+
 export async function reconcileLedgerReport(reportId: string): Promise<LedgerReport> {
   return await UPDATE(`ledger-reports/${reportId}`)
 }

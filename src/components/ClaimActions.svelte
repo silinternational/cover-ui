@@ -122,7 +122,8 @@ const onDeny = () => dispatch('deny', message)
 {/if}
 {#if isMemberOfPolicy}
   {#if isEditable}
-    <Button on:click={on('edit')} outlined>Edit claim</Button>
+    <Button raised on:click={on('edit')}>edit claim</Button>
+    <Button outlined on:click={on('delete')}><span class="material-icons">delete</span></Button>
   {/if}
 
   {#if showSubmit}

@@ -398,9 +398,9 @@ export async function updateClaimItem(claimId: string, claimItemId: string, clai
  * @export
  * @param {Number} itemId
  */
-export function deleteClaim(itemId: string): void {
-  // TODO: Implement when deleteClaim API is added
-  claims.update((currClaims) => currClaims.filter((clm) => clm.id !== itemId))
+export const deleteClaim = async (claimId: string): Promise<void> => {
+  await DELETE(`claims/${claimId}`)
+  claims.update((currClaims) => currClaims.filter((clm) => clm.id !== claimId))
 }
 
 export function clear(): void {

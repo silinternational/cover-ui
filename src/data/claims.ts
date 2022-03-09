@@ -194,9 +194,6 @@ const updateClaimsStore = (changedClaim: Claim) => {
   })
 }
 
-// TODO: add backend endpoints when they get finished
-// TODO: uncomment when backend has claims endpoints
-
 /**
  * Create a new claim for an existing item
  *
@@ -364,7 +361,6 @@ export async function submitClaim(claimId: string): Promise<void> {
  *
  * @description a function to update a claimItem
  * @export
- * @param {Number} itemId
  */
 export async function updateClaimItem(claimId: string, claimItemId: string, claimItemData: any): Promise<void> {
   const parsedData: UpdateClaimItemRequestBody = {
@@ -396,7 +392,6 @@ export async function updateClaimItem(claimId: string, claimItemId: string, clai
  *
  * @description a function to delete a claim
  * @export
- * @param {Number} itemId
  */
 export const deleteClaim = async (claimId: string): Promise<void> => {
   await DELETE(`claims/${claimId}`)

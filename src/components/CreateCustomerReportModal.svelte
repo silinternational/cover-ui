@@ -42,7 +42,7 @@ const reportOptions = [
 
 const formData: { date: { month: number; year: number }; type: string } = {
   date: { month: new Date(dateString).getUTCMonth(), year: new Date(dateString).getUTCFullYear() },
-  type: reportOptions[0]?.id || '',
+  type: LedgerReportType.monthly,
 }
 </script>
 

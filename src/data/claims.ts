@@ -85,6 +85,7 @@ export type Claim = {
   incident_date: string /*Date*/
   incident_description: string
   incident_type: ClaimIncidentTypeName
+  is_removable: boolean
   id: string
   payment_date: string /*Date*/
   policy_id: string

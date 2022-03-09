@@ -62,7 +62,7 @@ const columns: Column[] = [
   //   path: 'claim_items.0.fmv',
   // },
   {
-    title: 'Payout Amount',
+    title: 'Maximum Payout',
     headerId: 'payout_amount',
     numeric: true,
     path: 'claim_items.0.payout_amount',

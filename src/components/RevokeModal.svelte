@@ -16,9 +16,12 @@ const buttonsForDraft: Dialog.AlertButton[] = [
   { label: 'Delete', action: 'delete', class: 'error-button' },
 ]
 
+let disabled: boolean = true
+
 $: status = claim.status
 $: buttons = status === ClaimStatus.Draft ? buttonsForDraft : buttonsForSubmitted
 $: title = status === ClaimStatus.Draft ? 'Delete' : 'Revoke and Keep as Draft'
+$: disabled = !claim.is_removable //if this is null or undefined disabled will be true
 $: message =
   status === ClaimStatus.Draft
     ? `Permanently delete your claim? You can’t undo this.`
@@ -37,6 +40,7 @@ const handleDialog = (choice: string) => {
   {buttons}
   defaultAction="cancel"
   {title}
+  {disabled}
   on:chosen={(e) => handleDialog(e.detail)}
   on:closed={handleDialog}>{message}</Dialog.Alert
 >

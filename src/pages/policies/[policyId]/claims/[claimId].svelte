@@ -156,7 +156,7 @@ const onSubmit = async () => {
   await submitClaim(claimId)
   setNotice(didNeedFile ? `Added replacement cost and ${oldUploadLabel}` : 'Submitted changes')
 }
-const onClosed = async (e: CustomEvent): Promise<void> => {
+const onRevoke = async (e: CustomEvent): Promise<void> => {
   if (e.detail === 'delete') {
     await deleteClaim(claimId)
     setNotice('Deleted Claim')
@@ -395,5 +395,5 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
     </Row>
   {/if}
 
-  <RevokeModal {claim} open={revokeModalOpen} on:closed={onClosed} />
+  <RevokeModal {claim} open={revokeModalOpen} on:closed={onRevoke} />
 </Page>

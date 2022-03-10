@@ -6,10 +6,12 @@ import { LedgerReportType } from 'data/ledger'
 
 export let modalOpen = false
 
+type FormData = { date: { month: number; year: number }; type: string }
+
 const today = new Date()
 let dateString = today.toISOString().split('T')[0]
 
-const dispatch = createEventDispatcher<{ submit: any; cancel: void }>()
+const dispatch = createEventDispatcher<{ submit: FormData; cancel: void }>()
 
 const onSubmit = () => dispatch('submit', formData)
 
@@ -40,10 +42,10 @@ const reportOptions = [
   },
 ]
 
-const formData: { date: { month: number; year: number }; type: string } = {
-  date: { month: new Date(dateString).getUTCMonth(), year: new Date(dateString).getUTCFullYear() },
+$: formData = {
+  date: { month: new Date(dateString).getUTCMonth() + 1, year: new Date(dateString).getUTCFullYear() },
   type: LedgerReportType.monthly,
-}
+} as FormData
 </script>
 
 <style>

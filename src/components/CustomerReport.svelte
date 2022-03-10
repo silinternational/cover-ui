@@ -10,10 +10,9 @@ let modalOpen = false
 
 async function createReport(e: CustomEvent) {
   const reportType: LedgerReportType = e.detail.type
-  const reportMonth: number = e.detail.date.month
-  const reportYear: number = e.detail.date.year
+  const { month, year } = e.detail.date
 
-  await createPolicyLedgerReport(policy.id, reportType, reportMonth, reportYear)
+  await createPolicyLedgerReport(policy.id, reportType, month, year)
   modalOpen = false
 }
 </script>

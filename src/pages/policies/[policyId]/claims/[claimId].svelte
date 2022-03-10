@@ -11,6 +11,7 @@ import {
   FileDropArea,
   FilePreview,
   Row,
+  RevokeModal,
 } from 'components'
 import { loading } from 'components/progress'
 import { upload } from 'data'
@@ -33,6 +34,8 @@ import {
   ClaimFilePurpose,
   ReceiptType,
   claimFilesDelete,
+  deleteClaim,
+  updateClaim,
 } from 'data/claims'
 import { loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
 import { getNameOfPolicy, getPolicyById, loadPolicy, memberBelongsToPolicy, policies, Policy } from 'data/policies'
@@ -60,6 +63,7 @@ let householdId: string = ''
 let claimName: string
 let policy = {} as Policy
 let claim = {} as Claim
+let revokeModalOpen: boolean = false
 
 onMount(() => {
   getClaimById(claimId)
@@ -151,6 +155,23 @@ const onSubmit = async () => {
   const oldUploadLabel = uploadLabel
   await submitClaim(claimId)
   setNotice(didNeedFile ? `Added replacement cost and ${oldUploadLabel}` : 'Submitted changes')
+}
+const onRevoke = async (e: CustomEvent): Promise<void> => {
+  if (e.detail === 'delete') {
+    await deleteClaim(claimId)
+    setNotice('Deleted Claim')
+    $goto(customerClaims(policyId))
+  } else if (e.detail === 'update') {
+    const updatedClaimData = {
+      lostDate: claim.incident_date,
+      lossReason: claim.incident_type,
+      situationDescription: claim.incident_description,
+    }
+    await updateClaim(claimId, updatedClaimData)
+    setNotice('Revoked Claim')
+    $goto(customerClaimDetails(policyId, claimId))
+  }
+  revokeModalOpen = false
 }
 
 const setInitialValues = (claimItem: ClaimItem) => {
@@ -330,12 +351,18 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
           on:preapprove={onPreapprove}
           on:approve={onApprove}
           on:submit={onSubmit}
+          on:delete={() => (revokeModalOpen = true)}
         />
       </p>
 
       {#if isMemberOfPolicy}
         {#if needsReceipt}
-          <MoneyInput minValue={'0'} bind:value={repairOrReplacementCost} label={moneyFormLabel} on:blur={onMoneyInputBlur} />
+          <MoneyInput
+            minValue={'0'}
+            bind:value={repairOrReplacementCost}
+            label={moneyFormLabel}
+            on:blur={onMoneyInputBlur}
+          />
 
           <p class="label ml-1 mt-6px">
             <ConvertCurrencyLink />
@@ -353,7 +380,13 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
         <img class="receipt" src={previewFile.file?.url} alt="document" on:error={onImgError} />
       {/if}
 
-      <FilePreview class="pointer w-50" {allowDelete} previews={claimFiles} on:preview={onPreview} on:deleted={onDeleted} />
+      <FilePreview
+        class="pointer w-50"
+        {allowDelete}
+        previews={claimFiles}
+        on:preview={onPreview}
+        on:deleted={onDeleted}
+      />
 
       {#if showUploadButton}
         <Button raised disabled={noFilesUploaded} on:click={onSubmit}>{uploadLabelForButton}</Button>
@@ -361,4 +394,6 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
       <br />
     </Row>
   {/if}
+
+  <RevokeModal {claim} open={revokeModalOpen} on:closed={onRevoke} />
 </Page>

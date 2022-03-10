@@ -31,6 +31,7 @@ import SearchForm from './forms/SearchForm.svelte'
 import StatusBanner from './banners/StatusBanner.svelte'
 import MessageBanner from './banners/MessageBanner.svelte'
 import SearchableSelect from './SearchableSelect.svelte'
+import RevokeModal from './RevokeModal.svelte'
 
 export {
   AppDrawer,
@@ -66,4 +67,5 @@ export {
   SearchForm,
   StatusBanner,
   MessageBanner,
+  RevokeModal,
 }

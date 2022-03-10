@@ -85,6 +85,7 @@ export type Claim = {
   incident_date: string /*Date*/
   incident_description: string
   incident_type: ClaimIncidentTypeName
+  is_removable: boolean
   id: string
   payment_date: string /*Date*/
   policy_id: string
@@ -193,9 +194,6 @@ const updateClaimsStore = (changedClaim: Claim) => {
     return claims
   })
 }
-
-// TODO: add backend endpoints when they get finished
-// TODO: uncomment when backend has claims endpoints
 
 /**
  * Create a new claim for an existing item
@@ -364,7 +362,6 @@ export async function submitClaim(claimId: string): Promise<void> {
  *
  * @description a function to update a claimItem
  * @export
- * @param {Number} itemId
  */
 export async function updateClaimItem(claimId: string, claimItemId: string, claimItemData: any): Promise<void> {
   const parsedData: UpdateClaimItemRequestBody = {
@@ -396,11 +393,10 @@ export async function updateClaimItem(claimId: string, claimItemId: string, clai
  *
  * @description a function to delete a claim
  * @export
- * @param {Number} itemId
  */
-export function deleteClaim(itemId: string): void {
-  // TODO: Implement when deleteClaim API is added
-  claims.update((currClaims) => currClaims.filter((clm) => clm.id !== itemId))
+export const deleteClaim = async (claimId: string): Promise<void> => {
+  await DELETE(`claims/${claimId}`)
+  claims.update((currClaims) => currClaims.filter((clm) => clm.id !== claimId))
 }
 
 export function clear(): void {

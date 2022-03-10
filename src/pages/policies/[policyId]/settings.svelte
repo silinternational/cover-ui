@@ -12,7 +12,7 @@ import {
   updateDependent,
 } from 'data/dependents'
 import { entityCodes, loadEntityCodes } from 'data/entityCodes'
-import { policies, updatePolicy, Policy, PolicyType, loadPolicy } from 'data/policies'
+import { updatePolicy, Policy, PolicyType, loadPolicy, selectedPolicy } from 'data/policies'
 import { invitePolicyMember, loadMembersOfPolicy, PolicyMember, selectedPolicyMembers } from 'data/policy-members'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { POLICIES, policyDetails, settingsPolicy, SETTINGS_PERSONAL } from 'helpers/routes'
@@ -60,7 +60,8 @@ $: $entityCodes.forEach((code) => {
 })
 $: dependents = $selectedPolicyDependents
 $: policyMembers = $selectedPolicyMembers
-$: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
+$: policy = $selectedPolicy
+$: invites = $selectedPolicy.invites || []
 
 $: setInitialValues(policy)
 
@@ -333,6 +334,22 @@ p {
       </li>
     {/each}
   </ul>
+
+  <p>
+    <span class="header">Invites</span>
+  </p>
+  <ul class="accountable-people-list">
+    {#each invites as invite}
+      <li class="accountable-people-list-item">
+        <span>
+          {invite.name || ''}
+          <br />
+          <small>{invite.email || ''}</small>
+        </span>
+      </li>
+    {/each}
+  </ul>
+
   <Button prependIcon="add" on:click={onAddDependent} outlined
     >{isHouseholdPolicy ? 'Add dependent' : 'Add person'}</Button
   >

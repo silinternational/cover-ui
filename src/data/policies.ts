@@ -17,10 +17,17 @@ export type Policy = {
   entity_code: any /*EntityCode*/
   household_id: string
   id: string
+  invites?: PolicyInvite[]
   members?: PolicyMember[]
   name: string
   type: PolicyType
   updated_at: string /*Date*/
+}
+
+export type PolicyInvite = {
+  email: string
+  email_sent_at?: string /*Date*/
+  name: string
 }
 
 export enum PolicyType {
@@ -80,11 +87,13 @@ const updatePolicyStore = (changedPolicy: Policy) => {
     if (i === -1) {
       policies.push(changedPolicy)
     } else {
-      // the policies returned from the get policies list never include claims on them
+      // the policies returned from the get policies list never include claims, dependents or invites on them
       // if the value is 'null' then keep the last claims
       policies[i] = {
         ...changedPolicy,
         claims: changedPolicy.claims == null ? policies[i].claims : changedPolicy.claims,
+        invites: changedPolicy.invites == null ? policies[i].invites : changedPolicy.invites,
+        dependents: changedPolicy.dependents == null ? policies[i].dependents : changedPolicy.dependents,
       }
     }
     return policies

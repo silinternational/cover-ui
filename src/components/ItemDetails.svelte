@@ -122,7 +122,7 @@ const getAssingee = (i: number, array: any[]) => array[i - 1][assignedTo]
                 titleIcon="info"
                 on:closed={() => (showInfoBox[i] = false)}
               >
-                {#if !getAssingee(i, sidebarDetailsArray)}
+                {#if getAssingee(i, sidebarDetailsArray)}
                   <p>
                     Locations are associated with people, not items. {getAssingee(i, sidebarDetailsArray) ||
                       'The assigned person'} doesn’t have a location, so neither does the item.

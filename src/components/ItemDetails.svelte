@@ -4,10 +4,13 @@ import ItemBanner from './banners/ItemBanner.svelte'
 import MessageBanner from './banners/MessageBanner.svelte'
 import { PolicyItem, ItemCoverageStatus } from 'data/items'
 import { getPolicyById, loadPolicy, policies, Policy, PolicyType } from 'data/policies'
+import user from 'data/user'
 import { formatMoney } from 'helpers/money'
+import { Card, IconButton } from '@silintl/ui-components'
 import { formatDate } from '../helpers/dates'
 import { formatDistanceToNow } from 'date-fns'
 import { onMount } from 'svelte'
+import { itemEdit, settingsPolicy, SETTINGS_PERSONAL } from 'helpers/routes'
 
 export let item: PolicyItem
 export let isCheckingOut: boolean = false
@@ -15,6 +18,9 @@ export let policyId: string
 export let isAdmin: boolean
 
 let policy: Policy
+
+const showInfoBox: boolean[] = []
+const assignedTo = 'Assigned To'
 
 onMount(() => loadPolicy(policyId))
 
@@ -26,7 +32,7 @@ $: showRevisionMessage = item.status_reason && status === ItemCoverageStatus.Rev
 $: startDate = formatDate(item.coverage_start_date)
 $: endDate = formatDate(item.coverage_end_date)
 $: commonDetails = {
-  'Assigned To': item?.accountable_person?.name,
+  [assignedTo]: item?.accountable_person?.name,
   Location: item.accountable_person?.country || item.country,
 }
 $: householdId = {
@@ -58,6 +64,9 @@ const getItemStatusText = (item: PolicyItem) => {
 
   return statusChangeStr + updatedAtStr
 }
+
+const toggleModal = (i: number) => (showInfoBox[i] = !showInfoBox[i])
+const getAssingee = (i: number, array: any[]) => array[i - 1][assignedTo]
 </script>
 
 <style>
@@ -88,6 +97,11 @@ const getItemStatusText = (item: PolicyItem) => {
 .banners {
   margin-bottom: 0.5em;
 }
+div.info-box {
+  position: absolute;
+  max-width: 20rem;
+  z-index: 10;
+}
 </style>
 
 <div class="flex p-1" class:isCheckingOut>
@@ -98,7 +112,39 @@ const getItemStatusText = (item: PolicyItem) => {
       <div class="sidebar-chunk">
         {#each Object.entries(sidebarDetail) as [title, value], i}
           <div class="sidebar-item">
-            <div class="title"><b>{title}</b></div>
+            {#if ['Location'].includes(title) && !value}
+              <div class="title">
+                <div class="flex align-items-center">
+                  <b>{title}</b>
+                  <IconButton class="gray" icon="info" on:click={() => toggleModal(i)} />
+                </div>
+              </div>
+              {#if showInfoBox[i]}
+                <div class="info-box">
+                  <Card>
+                    <h3>Why is this location empty?</h3>
+                    {#if !getAssingee(i, sidebarDetailsArray)}
+                      <p>
+                        Locations are associated with people, not items. {getAssingee(i, sidebarDetailsArray) ||
+                          'The assigned person'} doesn’t have a location, so neither does the item.
+                        <a
+                          href={getAssingee(i, sidebarDetailsArray) === $user.name
+                            ? SETTINGS_PERSONAL
+                            : settingsPolicy(policyId)}>Set a location→</a
+                        >
+                      </p>
+                    {:else}
+                      <p>
+                        Locations are associated with people, not items. This item doesn’t have a person, so it doesn’t
+                        have a location. <a href={itemEdit(policyId, item.id)}> Assign a person→ </a>
+                      </p>
+                    {/if}
+                  </Card>
+                </div>
+              {/if}
+            {:else}
+              <div class="title"><b>{title}</b></div>
+            {/if}
             <div class="value">{value || '-'}</div>
           </div>
         {/each}

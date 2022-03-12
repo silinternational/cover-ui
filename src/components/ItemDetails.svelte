@@ -4,13 +4,12 @@ import ItemBanner from './banners/ItemBanner.svelte'
 import MessageBanner from './banners/MessageBanner.svelte'
 import { PolicyItem, ItemCoverageStatus } from 'data/items'
 import { getPolicyById, loadPolicy, policies, Policy, PolicyType } from 'data/policies'
-import user from 'data/user'
-import { formatMoney } from 'helpers/money'
-import { Dialog, IconButton } from '@silintl/ui-components'
 import { formatDate } from '../helpers/dates'
+import { formatMoney } from 'helpers/money'
+import InfoBoxModal from './InfoBoxModal.svelte'
 import { formatDistanceToNow } from 'date-fns'
+import { IconButton } from '@silintl/ui-components'
 import { onMount } from 'svelte'
-import { itemEdit, settingsPolicy, SETTINGS_PERSONAL } from 'helpers/routes'
 
 export let item: PolicyItem
 export let isCheckingOut: boolean = false
@@ -66,7 +65,6 @@ const getItemStatusText = (item: PolicyItem) => {
 }
 
 const toggleModal = (i: number) => (showInfoBox[i] = !showInfoBox[i])
-const getAssingee = (i: number, array: any[]) => array[i - 1][assignedTo]
 </script>
 
 <style>
@@ -114,31 +112,14 @@ const getAssingee = (i: number, array: any[]) => array[i - 1][assignedTo]
                   <IconButton class="gray" icon="info" on:click={() => toggleModal(i)} />
                 </div>
               </div>
-              <Dialog.Alert
+              <InfoBoxModal
+                {i}
+                {policyId}
+                itemId={item.id}
+                {sidebarDetailsArray}
                 open={showInfoBox[i]}
-                buttons={[]}
-                defaultAction="cancel"
-                title="Why is this location empty?"
-                titleIcon="info"
                 on:closed={() => (showInfoBox[i] = false)}
-              >
-                {#if getAssingee(i, sidebarDetailsArray)}
-                  <p>
-                    Locations are associated with people, not items. {getAssingee(i, sidebarDetailsArray) ||
-                      'The assigned person'} doesn’t have a location, so neither does the item.
-                    <a
-                      href={getAssingee(i, sidebarDetailsArray) === $user.name
-                        ? SETTINGS_PERSONAL
-                        : settingsPolicy(policyId)}>Set a location→</a
-                    >
-                  </p>
-                {:else}
-                  <p>
-                    Locations are associated with people, not items. This item doesn’t have a person, so it doesn’t have
-                    a location. <a href={itemEdit(policyId, item.id)}> Assign a person→ </a>
-                  </p>
-                {/if}
-              </Dialog.Alert>
+              />
             {:else}
               <div class="title"><b>{title}</b></div>
             {/if}

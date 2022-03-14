@@ -84,8 +84,10 @@ const onSorted = (event: CustomEvent) => {
 }
 
 const formatPayout = (claim: Claim, payout: number) => {
-  const money = formatMoney(payout)
-  return claim.status === ClaimStatus.Paid ? money : `est. ${money}`
+  if (payout) {
+    const money = formatMoney(payout)
+    return claim.status === ClaimStatus.Paid ? money : `est. ${money}`
+  } else return '-'
 }
 </script>
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { Claim } from '../data/claims'
+import { Claim, ClaimStatus } from '../data/claims'
 import { formatFriendlyDate } from '../helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { customerClaimDetails } from 'helpers/routes'
@@ -62,7 +62,7 @@ const columns: Column[] = [
   //   path: 'claim_items.0.fmv',
   // },
   {
-    title: 'Maximum Payout',
+    title: 'Payout',
     headerId: 'payout_amount',
     numeric: true,
     path: 'claim_items.0.payout_amount',
@@ -81,6 +81,11 @@ const onSorted = (event: CustomEvent) => {
   ascending = event.detail.sortValue === 'ascending'
   headerId = event.detail.columnId || ''
   currentColumn = columns.find((column) => column.headerId === headerId) || columns[0]
+}
+
+const formatPayout = (claim: Claim, payout: number) => {
+  const money = formatMoney(payout)
+  return claim.status === ClaimStatus.Paid ? money : `est. ${money}`
 }
 </script>
 
@@ -114,7 +119,7 @@ const onSorted = (event: CustomEvent) => {
             {formatMoney(claimItem.replace_actual || claimItem.replace_estimate)}
           </Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item numeric>{formatMoney(claimItem.fmv)}</Datatable.Data.Row.Item> -->
-          <Datatable.Data.Row.Item numeric>{formatMoney(claimItem.payout_amount)}</Datatable.Data.Row.Item>
+          <Datatable.Data.Row.Item numeric>{formatPayout(claim, claimItem.payout_amount)}</Datatable.Data.Row.Item>
         </Datatable.Data.Row>
       {:else}
         <Datatable.Data.Row>

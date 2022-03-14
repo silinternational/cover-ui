@@ -4,9 +4,11 @@ import ItemBanner from './banners/ItemBanner.svelte'
 import MessageBanner from './banners/MessageBanner.svelte'
 import { PolicyItem, ItemCoverageStatus } from 'data/items'
 import { getPolicyById, loadPolicy, policies, Policy, PolicyType } from 'data/policies'
-import { formatMoney } from 'helpers/money'
 import { formatDate } from '../helpers/dates'
+import { formatMoney } from 'helpers/money'
+import InfoBoxModal from './InfoBoxModal.svelte'
 import { formatDistanceToNow } from 'date-fns'
+import { IconButton } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 export let item: PolicyItem
@@ -15,6 +17,9 @@ export let policyId: string
 export let isAdmin: boolean
 
 let policy: Policy
+
+const showInfoBox: boolean[] = []
+const assignedTo = 'Assigned To'
 
 onMount(() => loadPolicy(policyId))
 
@@ -26,7 +31,7 @@ $: showRevisionMessage = item.status_reason && status === ItemCoverageStatus.Rev
 $: startDate = formatDate(item.coverage_start_date)
 $: endDate = formatDate(item.coverage_end_date)
 $: commonDetails = {
-  'Assigned To': item?.accountable_person?.name,
+  [assignedTo]: item?.accountable_person?.name,
   Location: item.accountable_person?.country || item.country,
 }
 $: householdId = {
@@ -58,6 +63,8 @@ const getItemStatusText = (item: PolicyItem) => {
 
   return statusChangeStr + updatedAtStr
 }
+
+const toggleModal = (i: number) => (showInfoBox[i] = !showInfoBox[i])
 </script>
 
 <style>
@@ -98,7 +105,24 @@ const getItemStatusText = (item: PolicyItem) => {
       <div class="sidebar-chunk">
         {#each Object.entries(sidebarDetail) as [title, value], i}
           <div class="sidebar-item">
-            <div class="title"><b>{title}</b></div>
+            {#if ['Location'].includes(title) && !value}
+              <div class="title">
+                <div class="flex align-items-center">
+                  <b>{title}</b>
+                  <IconButton class="gray" icon="info" on:click={() => toggleModal(i)} />
+                </div>
+              </div>
+              <InfoBoxModal
+                {i}
+                {policyId}
+                itemId={item.id}
+                {sidebarDetailsArray}
+                open={showInfoBox[i]}
+                on:closed={() => (showInfoBox[i] = false)}
+              />
+            {:else}
+              <div class="title"><b>{title}</b></div>
+            {/if}
             <div class="value">{value || '-'}</div>
           </div>
         {/each}

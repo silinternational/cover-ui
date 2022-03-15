@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Breadcrumb, CountrySelector, FileDropArea, RadioOptions } from 'components'
+import { Breadcrumb, CountrySelector, FileDropArea, RadioOptions, RemoveProfilePicModal } from 'components'
 import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import { upload } from 'data'
 import { policies } from 'data/policies'
@@ -22,6 +22,7 @@ let croppie: Croppie
 let croppieContainer: HTMLDivElement
 let breadcrumbLinks = [{ name: 'Personal Settings', url: SETTINGS_PERSONAL }]
 let croppieIsHidden = true
+let open = false
 
 metatags.title = formatPageTitle('Personal Settings')
 
@@ -124,9 +125,13 @@ async function onUpload() {
   }
 }
 
-function onDelete() {
-  deleteUserPhoto()
-  setNotice('Your profile photo has been deleted')
+function onDelete(e: CustomEvent) {
+  if (e.detail === 'remove') {
+    deleteUserPhoto()
+
+    setNotice('Your profile photo has been deleted')
+  }
+  open = false
 }
 </script>
 
@@ -190,10 +195,12 @@ p {
   </div>
 
   {#if $user.photo_file_id}
-    <Button on:click={onDelete}>remove profile picture</Button>
+    <Button on:click={() => (open = true)}>remove profile picture</Button>
   {/if}
 
   {#if !croppieIsHidden}
     <Button raised on:click={onUpload}>Save</Button>
   {/if}
+
+  <RemoveProfilePicModal {open} on:closed={onDelete} />
 </Page>

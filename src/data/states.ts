@@ -24,6 +24,12 @@ export const needsReview: State = {
   title: 'Needs claim review',
 }
 
+export const needsReceipt: State = {
+  ...needsReview,
+  icon: 'error',
+  title: 'Needs receipt',
+}
+
 export const pending: State = {
   icon: 'watch_later',
   color: '--mdc-theme-neutral-variant',
@@ -66,7 +72,7 @@ export const claimStates: { [stateName: string]: State } = {
   Review1: pendingClaim,
   Review2: pendingClaim,
   Review3: { ...pendingClaim, title: 'Awaiting review 3/3' },
-  ReceiptSecondary: warning,
+  ReceiptSecondary: needsReceipt,
   RevisionSecondary: warning,
   Receipt: { ...approved, icon: 'done' },
   Paid: {

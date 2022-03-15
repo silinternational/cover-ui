@@ -1,5 +1,5 @@
 <script lang="ts">
-import { FileLink, Modal } from 'components'
+import { FileLink } from 'components'
 import { getLedgerReportById, LedgerReport, reconcileLedgerReport } from 'data/ledger'
 import { formatDateAndTime, formatFriendlyDate } from 'helpers/dates'
 import { Button, Dialog, Page } from '@silintl/ui-components'

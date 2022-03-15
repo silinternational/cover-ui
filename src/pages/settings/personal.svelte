@@ -3,7 +3,7 @@ import { Breadcrumb, CountrySelector, FileDropArea, RadioOptions } from 'compone
 import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import { upload } from 'data'
 import { policies } from 'data/policies'
-import user, { attachUserPhoto, updateUser } from 'data/user'
+import user, { attachUserPhoto, deleteUserPhoto, updateUser } from 'data/user'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { SETTINGS_PERSONAL } from 'helpers/routes'
 import { assertEmailAddress } from '../../validation/assertions'
@@ -123,6 +123,11 @@ async function onUpload() {
     }
   }
 }
+
+function onDelete() {
+  deleteUserPhoto()
+  setNotice('Your profile photo has been deleted')
+}
 </script>
 
 <style>
@@ -183,6 +188,10 @@ p {
   <div class="photo-preview" class:croppieIsHidden>
     <div bind:this={croppieContainer} />
   </div>
+
+  {#if $user.photo_file_id}
+    <Button on:click={onDelete}>remove profile picture</Button>
+  {/if}
 
   {#if !croppieIsHidden}
     <Button raised on:click={onUpload}>Save</Button>

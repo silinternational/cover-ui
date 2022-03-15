@@ -1,8 +1,8 @@
 <script lang="ts">
 type RadioOption = {
   label: string
-  value: string
-  disabled: boolean
+  value?: string
+  disabled?: boolean
   description?: string
 }
 export let options: RadioOption[] = []
@@ -10,7 +10,7 @@ export let options: RadioOption[] = []
 export let name: string
 export let value: string | undefined
 
-const onInput = (event) => {
+const onInput = (event: any) => {
   value = event?.target?.value
 }
 const isSelected = (option: RadioOption) => option.value === value

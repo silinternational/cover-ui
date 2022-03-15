@@ -1,5 +1,5 @@
 import { get, writable } from 'svelte/store'
-import { CREATE, GET, UPDATE } from 'data'
+import { CREATE, DELETE, GET, UPDATE } from 'data'
 import type { CoverFile } from 'data/file'
 import { Policy, PolicyType } from 'data/policies'
 import { onClear } from 'data/storage'
@@ -20,8 +20,8 @@ export type User = {
   last_login_utc: string /*Date*/
   last_name: string
   name: string
-  photo_file: CoverFile
-  photo_file_id: string
+  photo_file?: CoverFile
+  photo_file_id?: string
   policies: Policy[]
 }
 
@@ -65,6 +65,13 @@ export async function updateUser(data: UpdatedUserBody): Promise<void> {
 export async function attachUserPhoto(fileId: string): Promise<void> {
   const updatedUser = await CREATE<User>(`users/me/files`, { file_id: fileId })
   user.set(updatedUser)
+}
+
+export async function deleteUserPhoto(): Promise<void> {
+  await DELETE(`users/me/files`)
+  user.update((user) => {
+    return { ...user, photo_file: undefined, photo_file_id: undefined }
+  })
 }
 
 export const isUserSteward = (userRole: UserAppRole): boolean => userRole === UserAppRole.Steward

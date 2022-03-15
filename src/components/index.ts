@@ -31,6 +31,7 @@ import SearchForm from './forms/SearchForm.svelte'
 import StatusBanner from './banners/StatusBanner.svelte'
 import MessageBanner from './banners/MessageBanner.svelte'
 import SearchableSelect from './SearchableSelect.svelte'
+import RemoveProfilePicModal from './RemoveProfilePicModal.svelte'
 import RevokeModal from './RevokeModal.svelte'
 
 export {
@@ -67,5 +68,6 @@ export {
   SearchForm,
   StatusBanner,
   MessageBanner,
+  RemoveProfilePicModal,
   RevokeModal,
 }

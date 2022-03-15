@@ -1,16 +1,16 @@
 <script lang="ts">
-import user, { attachUserPhoto, updateUser } from 'data/user'
-import { Breadcrumb, CountrySelector, FileDropArea, RadioOptions } from 'components'
+import { Breadcrumb, CountrySelector, FileDropArea, RadioOptions, RemoveProfilePicModal } from 'components'
 import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import { upload } from 'data'
 import { policies } from 'data/policies'
-import { assertEmailAddress } from '../../validation/assertions'
+import user, { attachUserPhoto, deleteUserPhoto, updateUser } from 'data/user'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { SETTINGS_PERSONAL } from 'helpers/routes'
-import { metatags } from '@roxi/routify'
-import { Button, Checkbox, TextField, Page, setNotice } from '@silintl/ui-components'
+import { assertEmailAddress } from '../../validation/assertions'
 import Croppie from 'croppie'
 import 'croppie/croppie.css'
+import { metatags } from '@roxi/routify'
+import { Button, Checkbox, TextField, Page, setNotice } from '@silintl/ui-components'
 
 const NOTIFICATION_OPTION_DEFAULT = 'default_email'
 const NOTIFICATION_OPTION_CUSTOM = 'custom_email'
@@ -21,6 +21,9 @@ let uploading = false
 let croppie: Croppie
 let croppieContainer: HTMLDivElement
 let breadcrumbLinks = [{ name: 'Personal Settings', url: SETTINGS_PERSONAL }]
+let croppieIsHidden = true
+let open = false
+
 metatags.title = formatPageTitle('Personal Settings')
 
 $: country = $user.country || ''
@@ -75,6 +78,7 @@ const handleUnchecked = (policyId: string) => {
 }
 
 async function onFileSelect(event: CustomEvent<FormData>) {
+  croppieIsHidden = false
   croppie =
     croppie ||
     new Croppie(croppieContainer, {
@@ -87,7 +91,7 @@ async function onFileSelect(event: CustomEvent<FormData>) {
     let reader = new FileReader()
     reader.onload = (e) => {
       croppie.bind({
-        url: e.target.result as string,
+        url: e.target?.result as string,
       })
     }
 
@@ -116,14 +120,27 @@ async function onUpload() {
       setNotice('There was an error uploading your profile photo')
     } finally {
       uploading = false
+      croppieIsHidden = true
     }
   }
+}
+
+function onDelete(e: CustomEvent) {
+  if (e.detail === 'remove') {
+    deleteUserPhoto()
+
+    setNotice('Your profile photo has been deleted')
+  }
+  open = false
 }
 </script>
 
 <style>
 p {
   margin-top: 2rem;
+}
+.croppieIsHidden {
+  display: none;
 }
 
 .photo-preview {
@@ -173,10 +190,17 @@ p {
     <FileDropArea mimeType="image/*" class="w-50 mt-10px" raised {uploading} on:upload={onFileSelect} />
   </p>
 
-  <div class="photo-preview">
+  <div class="photo-preview" class:croppieIsHidden>
     <div bind:this={croppieContainer} />
   </div>
-  {#if croppie}
+
+  {#if $user.photo_file_id}
+    <Button on:click={() => (open = true)}>remove profile picture</Button>
+  {/if}
+
+  {#if !croppieIsHidden}
     <Button raised on:click={onUpload}>Save</Button>
   {/if}
+
+  <RemoveProfilePicModal {open} on:closed={onDelete} />
 </Page>

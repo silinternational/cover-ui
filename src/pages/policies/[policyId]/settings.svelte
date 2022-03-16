@@ -175,8 +175,9 @@ const onSubmitModal = async (event: CustomEvent<DependentFormData>) => {
   let { id, name, relationship, country, childBirthYear, permissions, email, message } = event.detail
 
   if (permissions === 'can-edit') {
-    // TODO: Figure out if we've already sent an invite or not
-    await invitePolicyMember(policyId, name, email, message)
+    invites.every((el) => el.email !== email)
+      ? await invitePolicyMember(policyId, name, email, message)
+      : setNotice('You have already sent an invite to this person')
   } else if (id) {
     await updateDependent(policyId, id, {
       name,

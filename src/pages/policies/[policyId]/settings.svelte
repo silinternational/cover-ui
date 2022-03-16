@@ -171,13 +171,15 @@ const onRemoveModal = (event: CustomEvent<string>) => {
   throwError('Removeing a policy member is not yet supported')
   showAddDependentModal = false
 }
+const hasNotBeenInvited = (email: string): boolean =>
+  [...invites, ...policyMembers, $user].every((el) => el.email !== email)
 const onSubmitModal = async (event: CustomEvent<DependentFormData>) => {
   let { id, name, relationship, country, childBirthYear, permissions, email, message } = event.detail
 
   if (permissions === 'can-edit') {
-    invites.every((el) => el.email !== email)
+    hasNotBeenInvited(email)
       ? await invitePolicyMember(policyId, name, email, message)
-      : setNotice('You have already sent an invite to this person')
+      : setNotice('This person is a member of this policy or has already been invited')
   } else if (id) {
     await updateDependent(policyId, id, {
       name,

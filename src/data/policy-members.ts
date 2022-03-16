@@ -1,6 +1,7 @@
 import { GET, CREATE as POST } from './index'
-import { derived, writable } from 'svelte/store'
+import { loadPolicy } from './policies'
 import { selectedPolicyId } from './role-policy-selection'
+import { derived, writable } from 'svelte/store'
 
 export type PolicyMember = {
   email: string
@@ -47,9 +48,10 @@ export async function invitePolicyMember(
 ): Promise<void> {
   const urlPath = `policies/${policyId}/members`
 
-  const response = await POST<void>(urlPath, {
+  await POST<void>(urlPath, {
     email,
     name,
     inviter_message: message,
   })
+  loadPolicy(policyId)
 }

@@ -180,7 +180,7 @@ const onSubmitModal = async (event: CustomEvent<DependentFormData>) => {
   if (permissions === 'can-edit') {
     hasNotBeenInvited(email)
       ? await invitePolicyMember(policyId, name, email, message)
-      : setNotice('This person is a member of this policy or has already been invited')
+      : setNotice(`This person is a member of your ${policy.type.toLowerCase()} policy or has already been invited`)
   } else if (id) {
     await updateDependent(policyId, id, {
       name,

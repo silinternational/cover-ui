@@ -1,16 +1,8 @@
 import { GET, CREATE as POST } from './index'
-import { derived, writable } from 'svelte/store'
+import { loadPolicy } from './policies'
 import { selectedPolicyId } from './role-policy-selection'
-
-export type PolicyMember = {
-  email: string
-  email_override: string
-  first_name: string
-  id: string
-  last_login_utc: string /*Date*/
-  last_name: string
-  country: string
-}
+import type { PolicyMember } from './types/policy-members'
+import { derived, writable } from 'svelte/store'
 
 export const membersByPolicyId = writable<{ [policyId: string]: PolicyMember[] }>({})
 export const selectedPolicyMembers = derived(
@@ -47,9 +39,10 @@ export async function invitePolicyMember(
 ): Promise<void> {
   const urlPath = `policies/${policyId}/members`
 
-  const response = await POST<void>(urlPath, {
+  await POST<void>(urlPath, {
     email,
     name,
     inviter_message: message,
   })
+  loadPolicy(policyId)
 }

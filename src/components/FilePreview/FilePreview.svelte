@@ -1,37 +1,17 @@
 <script lang="ts">
 import Banner from '../components/Banner.svelte'
-import type { ClaimFile } from 'data/claims'
 import { formatDate } from '../../helpers/dates'
+import { Button } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
-import { flip } from 'svelte/animate'
-import { Button, Progress } from '@silintl/ui-components'
 
-export let allowDelete: boolean = false
-export let previews = [] as ClaimFile[]
-export let uploading: boolean = false
-
-let selectedId: string = ''
+export let allowDelete = false
+export let label = ''
+export let date = ''
+export let id = ''
+export let purpose = ''
+export let btnLabel = 'delete'
 
 const dispatch = createEventDispatcher()
-
-const isSelected = {} as any
-
-$: isSelected[selectedId] = true
-$: selectedId && setOthersFalse(selectedId)
-
-const setOthersFalse = (id: string) => {
-  for (const key of Object.keys(isSelected)) {
-    if (key != id) {
-      isSelected[key] = false
-    }
-  }
-}
-
-const onClick = (id: string) => {
-  selectedId = id
-
-  dispatch('preview', id)
-}
 
 function onDelete(event: CustomEvent, id: string) {
   event.preventDefault()
@@ -44,37 +24,21 @@ function onDelete(event: CustomEvent, id: string) {
 <style>
 .preview {
   background-color: hsla(213, 26%, 23%, 1);
+  width: 340px;
 }
 .preview:hover {
   background-color: hsla(213, 26%, 23%, 0.8);
 }
-.selected {
-  background-color: hsla(213, 26%, 23%, 0.6);
-}
 </style>
 
-<div class="mt-10px py-10px {$$props.class}">
-  {#each previews as preview (preview.id)}
-    <div
-      on:click|preventDefault={() => onClick(preview.id)}
-      animate:flip={{ duration: 500 }}
-      class:selected={isSelected[preview.id]}
-      class="preview flex justify-between align-items-center br-8px p-10px mb-1"
-    >
-      <div>
-        <p class="white my-0">{preview.file.name}</p>
-        <p class="white my-0">{formatDate(preview.created_at)}</p>
-      </div>
-      {#if allowDelete}
-        <Button class="delete-button" raised on:click={(evt) => onDelete(evt, preview.id)}>Delete</Button>
-      {:else if preview.purpose}
-        <Banner class="mdc-bold-font" color="hsla(213, 8%, 46%, 1)" background="hsla(213, 22%, 94%, 1)"
-          >{preview.purpose}</Banner
-        >
-      {/if}
-    </div>
-  {/each}
-  {#if uploading}
-    <Progress.Circular />
+<div class="preview flex justify-between align-items-center br-8px p-10px mb-1 {$$props.class}" on:click>
+  <div>
+    <p class="white my-0">{label}</p>
+    <p class="white my-0">{formatDate(date)}</p>
+  </div>
+  {#if allowDelete}
+    <Button class="delete-button" raised on:click={(evt) => onDelete(evt, id)}>{btnLabel}</Button>
+  {:else if purpose}
+    <Banner class="mdc-bold-font" color="hsla(213, 8%, 46%, 1)" background="hsla(213, 22%, 94%, 1)">{purpose}</Banner>
   {/if}
 </div>

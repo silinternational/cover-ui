@@ -9,7 +9,7 @@ import {
   MessageBanner,
   ConvertCurrencyLink,
   FileDropArea,
-  FilePreview,
+  FilePreviews,
   Row,
   RevokeModal,
 } from 'components'
@@ -380,7 +380,7 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
         <img class="receipt" src={previewFile.file?.url} alt="document" on:error={onImgError} />
       {/if}
 
-      <FilePreview
+      <FilePreviews
         class="pointer w-50"
         {allowDelete}
         previews={claimFiles}

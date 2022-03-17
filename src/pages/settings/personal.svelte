@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Breadcrumb, CountrySelector, FileDropArea, RadioOptions, RemoveProfilePicModal } from 'components'
+import { Breadcrumb, CountrySelector, FileDropArea, FilePreview, RadioOptions, RemoveProfilePicModal } from 'components'
 import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import { upload } from 'data'
 import { policies } from 'data/policies'
@@ -133,6 +133,10 @@ function onDelete(e: CustomEvent) {
   }
   open = false
 }
+
+function openPhoto() {
+  window.open($user.photo_file?.url, '_blank')
+}
 </script>
 
 <style>
@@ -194,8 +198,13 @@ p {
     <div bind:this={croppieContainer} />
   </div>
 
-  {#if $user.photo_file_id}
-    <Button on:click={() => (open = true)}>remove profile picture</Button>
+  {#if $user.photo_file?.id}
+    <FilePreview
+      label="Profile Picture — {($user.photo_file?.size / 1000).toFixed(2)}kb"
+      allowDelete
+      on:deleted={() => (open = true)}
+      on:click={openPhoto}
+    />
   {/if}
 
   {#if !croppieIsHidden}

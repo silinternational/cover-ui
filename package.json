@@ -7,7 +7,7 @@
     "build:prod": "rollup -c",
     "check": "npx svelte-check",
     "clean": "run-p -l clean:build clean:deps",
-    "clean:build": "rimraf dist/bundle* dist/service-worker* dist/workbox*",
+    "clean:build": "rimraf dist/bundle* dist/workbox*",
     "clean:deps": "npm prune",
     "format": "prettier --write ./src/**/*.{js,ts,svelte}",
     "lint": "eslint ./src/**/*.{js,ts,svelte}",

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { CardsGrid, ClaimsTable, ItemsTable, Row } from 'components'
+import { Breadcrumb, CardsGrid, ClaimsTable, ItemsTable, Row } from 'components'
 import CustomerReport from '../components/CustomerReport.svelte'
 import { isLoadingById, loading } from 'components/progress'
 import { Claim, claimIsOpen, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
@@ -18,7 +18,14 @@ import { isAdmin } from 'data/user'
 import { formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { formatPageTitle } from 'helpers/pageTitle'
-import { customerClaimDetails, itemDetails, items as itemsRoute, settingsPolicy } from 'helpers/routes'
+import {
+  customerClaimDetails,
+  itemDetails,
+  items as itemsRoute,
+  POLICIES,
+  policyDetails,
+  settingsPolicy,
+} from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
 import { Button, Datatable, isAboveMobile, isAboveTablet, Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
@@ -56,6 +63,13 @@ $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))
 $: coverage = formatMoney(approvedItems.reduce((sum, item) => sum + item.coverage_amount, 0))
 $: premium = formatMoney(approvedItems.reduce((sum, item) => sum + item.annual_premium, 0))
 $: entityCode = policy.entity_code?.code
+
+// Dynamic breadcrumbs data:
+$: userIsAdmin = isAdmin($roleSelection)
+$: adminBreadcrumbs = [
+  { name: 'Policies', url: POLICIES },
+  { name: policyName, url: policyDetails(policyId) },
+]
 
 const isRecent = (claim: Claim) => {
   const incidentDate = new Date(claim.incident_date)
@@ -115,9 +129,13 @@ th {
 </style>
 
 <Page>
+  {#if userIsAdmin}
+    <Breadcrumb links={adminBreadcrumbs} />
+  {/if}
+
   <Row cols={'12'}>
     <CardsGrid
-      isAdmin={isAdmin($roleSelection)}
+      isAdmin={userIsAdmin}
       claims={recentClaims}
       policyItems={items}
       cardLimit={isAboveTablet() ? 4 : isAboveMobile() ? 2 : 1}

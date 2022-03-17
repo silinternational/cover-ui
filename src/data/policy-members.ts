@@ -1,17 +1,8 @@
 import { GET, CREATE as POST } from './index'
 import { loadPolicy } from './policies'
 import { selectedPolicyId } from './role-policy-selection'
+import type { PolicyMember } from './types/policy-members'
 import { derived, writable } from 'svelte/store'
-
-export type PolicyMember = {
-  email: string
-  email_override: string
-  first_name: string
-  id: string
-  last_login_utc: string /*Date*/
-  last_name: string
-  country: string
-}
 
 export const membersByPolicyId = writable<{ [policyId: string]: PolicyMember[] }>({})
 export const selectedPolicyMembers = derived(

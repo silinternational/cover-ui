@@ -96,8 +96,6 @@ const setInitialRoleSelection = (actualRole: UserAppRole) => {
   }
 }
 
-// TODO: Long policy names cause the dropdown and menu to expand in an unexpected way
-// Either truncate it or do something more clever
 const getButtonText = (userAppRoleSelection: UserAppRole, policyIdSelection: string, myPolicies: Policy[]) => {
   if (userAppRoleSelection !== UserAppRole.Customer) {
     return userAppRoleSelection

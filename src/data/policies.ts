@@ -156,6 +156,12 @@ export const getNameOfPolicy = (policy: Policy): string => {
   return policyName.trim()
 }
 
+export const getTruncatedNameOfPolicy = (policy: Policy, maxlength = 16): string => {
+  const name = getNameOfPolicy(policy)
+
+  return name.length > maxlength ? `${name.slice(0, maxlength)}...` : name
+}
+
 //claims or members/dependents fields from this endpoint are deprecated
 export async function loadPolicies(page = 1, limit = 20): Promise<void> {
   const queryString = qs.stringify({ limit, page })

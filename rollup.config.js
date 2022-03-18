@@ -23,8 +23,8 @@ export default {
 	},
 	plugins: [
 		svelte({
-			// enable run-time checks when not in production
 			compilerOptions: {
+				// enable run-time checks when not in production
 				dev: !production, //Todo address warning: [rollup-plugin-svelte] Unknown "dev" option. Please use "compilerOptions" for any Svelte compiler configuration.
 			},
 			emitCss: true, // give component style to postcss() for processing

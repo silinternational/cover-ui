@@ -13,8 +13,9 @@ import {
 } from 'data/dependents'
 import { entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { updatePolicy, Policy, PolicyType, loadPolicy, selectedPolicy } from 'data/policies'
-import { invitePolicyMember, loadMembersOfPolicy, PolicyMember, selectedPolicyMembers } from 'data/policy-members'
+import { invitePolicyMember, loadMembersOfPolicy, selectedPolicyMembers } from 'data/policy-members'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
+import type { PolicyMember } from 'data/types/policy-members'
 import { POLICIES, policyDetails, settingsPolicy, SETTINGS_PERSONAL } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
@@ -171,12 +172,15 @@ const onRemoveModal = (event: CustomEvent<string>) => {
   throwError('Removeing a policy member is not yet supported')
   showAddDependentModal = false
 }
+const hasNotBeenInvited = (email: string): boolean =>
+  [...invites, ...policyMembers, $user].every((el) => el.email !== email)
 const onSubmitModal = async (event: CustomEvent<DependentFormData>) => {
   let { id, name, relationship, country, childBirthYear, permissions, email, message } = event.detail
 
   if (permissions === 'can-edit') {
-    // TODO: Figure out if we've already sent an invite or not
-    await invitePolicyMember(policyId, name, email, message)
+    hasNotBeenInvited(email)
+      ? await invitePolicyMember(policyId, name, email, message)
+      : setNotice(`This person is a member of your ${policy.type.toLowerCase()} policy or has already been invited`)
   } else if (id) {
     await updateDependent(policyId, id, {
       name,

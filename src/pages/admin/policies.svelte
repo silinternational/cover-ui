@@ -2,7 +2,7 @@
 import { Paginator, SearchForm } from 'components'
 import { getNameOfPolicy, Policy, PolicyType, searchPoliciesFor } from 'data/policies'
 import type { PaginatedData } from 'data/types/PaginatedData'
-import type { PolicyMember } from 'data/policy-members'
+import type { PolicyMember } from 'data/types/policy-members'
 import { urlQuery } from 'data/query-string'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { ADMIN_POLICIES, adminPolicySearch, policyDetails } from 'helpers/routes'

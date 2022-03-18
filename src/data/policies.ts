@@ -2,9 +2,9 @@ import { loadUser, updateUserPolicyStore } from './user'
 import { derived, get, writable } from 'svelte/store'
 import type { Claim } from './claims'
 import { CREATE, GET, UPDATE } from './index'
-import type { PolicyMember } from './policy-members'
 import { selectedPolicyId } from './role-policy-selection'
 import type { PaginatedData } from './types/PaginatedData'
+import type { PolicyMember } from './types/policy-members'
 import qs from 'qs'
 
 export type Policy = {

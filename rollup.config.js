@@ -25,7 +25,7 @@ export default {
 		svelte({
 			compilerOptions: {
 				// enable run-time checks when not in production
-				dev: !production, //Todo address warning: [rollup-plugin-svelte] Unknown "dev" option. Please use "compilerOptions" for any Svelte compiler configuration.
+				dev: !production,
 			},
 			emitCss: true, // give component style to postcss() for processing
 			preprocess: autoPreprocess(),

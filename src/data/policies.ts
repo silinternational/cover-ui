@@ -179,6 +179,12 @@ export async function searchPoliciesFor(searchText: string, page = 1, limit = 20
   return response
 }
 
+export async function createPolicyStrike(id: string, description: string): Promise<any> {
+  const url = `policies/${id}/strikes`
+  const response = await CREATE(url, { description })
+  return response
+}
+
 export const getPolicyById = (policyId: string): Policy => {
   const policy = get(policies).find((policy) => policy.id === policyId) || ({} as Policy)
   return policy

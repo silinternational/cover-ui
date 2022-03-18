@@ -24,7 +24,9 @@ export default {
 	plugins: [
 		svelte({
 			// enable run-time checks when not in production
-			dev: !production, //Todo address warning: [rollup-plugin-svelte] Unknown "dev" option. Please use "compilerOptions" for any Svelte compiler configuration.
+			compilerOptions: {
+				dev: !production, //Todo address warning: [rollup-plugin-svelte] Unknown "dev" option. Please use "compilerOptions" for any Svelte compiler configuration.
+			},
 			emitCss: true, // give component style to postcss() for processing
 			preprocess: autoPreprocess(),
 		}),
@@ -66,6 +68,19 @@ export default {
 
 		//           minify     auto-refresh browser on changes
 		production ? terser() : livereload('dist'),
+
+		// https://developers.google.com/web/tools/workbox/reference-docs/latest/module-workbox-build#.generateSW
+		// generateSW({
+		// 	additionalManifestEntries: [
+		// 		'https://fonts.googleapis.com/icon?family=Material+Icons&display=swap', // request for this generated in `components/mdc/index.js`
+		// 		'https://fonts.gstatic.com/s/materialicons/v53/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2', // this response might need to be tweaked periodically for the lastest version
+		// 	],
+		// 	globDirectory: 'dist',
+		// 	globPatterns: ['**/*.{css,html,js,json,png}'],
+		// 	navigateFallback: 'index.html',
+		// 	offlineGoogleAnalytics: true,
+		// 	swDest: 'dist/service-worker.js',
+		// }),
 	],
 	watch: {
 		clearScreen: false,

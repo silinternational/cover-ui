@@ -1,4 +1,4 @@
-import { GET } from '.'
+import { GET } from '..'
 import { writable } from 'svelte/store'
 
 export type ClaimIncidentType = {

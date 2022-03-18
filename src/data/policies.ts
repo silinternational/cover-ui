@@ -5,7 +5,10 @@ import { CREATE, GET, UPDATE } from './index'
 import { selectedPolicyId } from './role-policy-selection'
 import type { PaginatedData } from './types/PaginatedData'
 import type { PolicyMember } from './types/policy-members'
+import { PolicyType } from './types/policy-types-enum'
 import qs from 'qs'
+
+export { PolicyType }
 
 export type Policy = {
   account: string
@@ -28,11 +31,6 @@ export type PolicyInvite = {
   email: string
   email_sent_at?: string /*Date*/
   name: string
-}
-
-export enum PolicyType {
-  Household = 'Household',
-  Team = 'Team',
 }
 
 export type CreatePolicyRequestBody = {

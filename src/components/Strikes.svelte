@@ -22,14 +22,22 @@ const addStrike = () => {
 }
 </script>
 
-{#if userIsAdmin}
+{#if strikes.length || userIsAdmin}
   <h4>Strikes</h4>
-  <Form class="mb-2">
+  {#if !userIsAdmin}
     <p>
-      <TextArea {maxlength} label="Add a Strike to this policy" rows="4" bind:value={strikeDescription} />
-      <Button disabled={!strikeDescription} on:click={addStrike}>add a strike</Button>
+      <!-- TODO: Add strike rules to terms when finalized -->
+      This policy has been given a strike for suspicious or potentially abusive behavior. Each strike increases the deductible
+      by 20%. Each strike lasts 2 years. Multiple strikes can be on a policy at a time.
     </p>
-  </Form>
+  {:else}
+    <Form class="mb-2">
+      <p>
+        <TextArea {maxlength} label="Add a Strike to this policy" rows="4" bind:value={strikeDescription} />
+        <Button disabled={!strikeDescription} on:click={addStrike}>add a strike</Button>
+      </p>
+    </Form>
+  {/if}
   <Datatable>
     <HeaderRow>
       <HeaderItem>Date Created</HeaderItem>

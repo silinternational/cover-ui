@@ -21,6 +21,7 @@ export type Policy = {
   members?: PolicyMember[]
   name: string
   type: PolicyType
+  strikes: Strike[]
   updated_at: string /*Date*/
 }
 
@@ -33,6 +34,14 @@ export type PolicyInvite = {
 export enum PolicyType {
   Household = 'Household',
   Team = 'Team',
+}
+
+export type Strike = {
+  created_at: string
+  description: string
+  id: string
+  policy_id: string
+  updated_at: string
 }
 
 export type CreatePolicyRequestBody = {
@@ -181,8 +190,9 @@ export async function searchPoliciesFor(searchText: string, page = 1, limit = 20
 
 export async function createPolicyStrike(id: string, description: string): Promise<any> {
   const url = `policies/${id}/strikes`
-  const response = await CREATE(url, { description })
-  return response
+  const response: Strike[] = await CREATE(url, { description })
+  const changedPolicy = { ...get(selectedPolicy), strikes: response }
+  updatePolicyStore(changedPolicy)
 }
 
 export const getPolicyById = (policyId: string): Policy => {

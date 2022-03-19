@@ -19,6 +19,7 @@ $: strikes = policy.strikes || ([] as Strike[])
 
 const addStrike = () => {
   createPolicyStrike(policy.id, strikeDescription)
+  strikeDescription = ''
 }
 </script>
 

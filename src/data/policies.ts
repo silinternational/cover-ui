@@ -191,7 +191,7 @@ export async function searchPoliciesFor(searchText: string, page = 1, limit = 20
 export async function createPolicyStrike(id: string, description: string): Promise<any> {
   const url = `policies/${id}/strikes`
   const response: Strike[] = await CREATE(url, { description })
-  const changedPolicy = { ...get(selectedPolicy), strikes: response }
+  const changedPolicy = { ...getPolicyById(id), strikes: response }
   updatePolicyStore(changedPolicy)
 }
 

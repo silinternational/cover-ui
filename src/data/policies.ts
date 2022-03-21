@@ -5,7 +5,10 @@ import { CREATE, GET, UPDATE } from './index'
 import { selectedPolicyId } from './role-policy-selection'
 import type { PaginatedData } from './types/PaginatedData'
 import type { PolicyMember } from './types/policy-members'
+import { PolicyType } from './types/policy-types-enum'
 import qs from 'qs'
+
+export { PolicyType }
 
 export type Policy = {
   account: string
@@ -29,11 +32,6 @@ export type PolicyInvite = {
   email: string
   email_sent_at?: string /*Date*/
   name: string
-}
-
-export enum PolicyType {
-  Household = 'Household',
-  Team = 'Team',
 }
 
 export type Strike = {
@@ -163,6 +161,12 @@ export const getNameOfPolicy = (policy: Policy): string => {
     }
   }
   return policyName.trim()
+}
+
+export const getTruncatedNameOfPolicy = (policy: Policy, maxlength = 16): string => {
+  const name = getNameOfPolicy(policy)
+
+  return name.length > maxlength ? `${name.slice(0, maxlength)}...` : name
 }
 
 //claims or members/dependents fields from this endpoint are deprecated

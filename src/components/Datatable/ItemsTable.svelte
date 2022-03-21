@@ -135,7 +135,6 @@ const handleMoreVertClick = (id: string) => {
   shownMenus[id] = shownMenus[id] !== true
 }
 
-// TODO: Change this to dispatch events, leaving URL changes to the actual page.
 const redirectAndSetCurrentItem = (item: PolicyItem) => {
   currentItem = item
 

@@ -24,6 +24,7 @@ export type Policy = {
   members?: PolicyMember[]
   name: string
   type: PolicyType
+  strikes: Strike[]
   updated_at: string /*Date*/
 }
 
@@ -31,6 +32,14 @@ export type PolicyInvite = {
   email: string
   email_sent_at?: string /*Date*/
   name: string
+}
+
+export type Strike = {
+  created_at: string
+  description: string
+  id: string
+  policy_id: string
+  updated_at: string
 }
 
 export type CreatePolicyRequestBody = {
@@ -181,6 +190,13 @@ export async function searchPoliciesFor(searchText: string, page = 1, limit = 20
   const queryString = qs.stringify({ search: searchText, page, limit })
   const response = await GET<GetPoliciesResponseBody>(`policies?${queryString}`)
   return response
+}
+
+export async function createPolicyStrike(id: string, description: string): Promise<any> {
+  const url = `policies/${id}/strikes`
+  const response: Strike[] = await CREATE(url, { description })
+  const changedPolicy = { ...getPolicyById(id), strikes: response }
+  updatePolicyStore(changedPolicy)
 }
 
 export const getPolicyById = (policyId: string): Policy => {

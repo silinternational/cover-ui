@@ -34,6 +34,7 @@ import MessageBanner from './banners/MessageBanner.svelte'
 import SearchableSelect from './SearchableSelect.svelte'
 import RemoveProfilePicModal from './RemoveProfilePicModal.svelte'
 import RevokeModal from './RevokeModal.svelte'
+import Strikes from './Strikes.svelte'
 
 export {
   AppDrawer,
@@ -72,4 +73,5 @@ export {
   MessageBanner,
   RemoveProfilePicModal,
   RevokeModal,
+  Strikes,
 }

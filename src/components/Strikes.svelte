@@ -8,6 +8,7 @@ export let userIsAdmin = false
 export let policy = {} as Policy
 
 let strikeDescription = ''
+let showStrikeForm = false
 
 const HeaderRow = Datatable.Header
 const HeaderItem = Datatable.Header.Item
@@ -32,12 +33,17 @@ const addStrike = () => {
       by 20%. Each strike lasts 2 years. Multiple strikes can be on a policy at a time.
     </p>
   {:else}
-    <Form class="mb-2">
-      <p>
-        <TextArea {maxlength} label="Add a Strike to this policy" rows="4" bind:value={strikeDescription} />
-        <Button disabled={!strikeDescription} on:click={addStrike}>add a strike</Button>
-      </p>
-    </Form>
+    <Button class="mb-1" on:click={() => (showStrikeForm = !showStrikeForm)}>
+      {showStrikeForm ? 'hide' : 'add a strike'}
+    </Button>
+    {#if showStrikeForm}
+      <Form class="mb-2">
+        <p>
+          <TextArea {maxlength} label="Add a Strike to this policy" rows="4" bind:value={strikeDescription} />
+          <Button disabled={!strikeDescription} on:click={addStrike}>submit</Button>
+        </p>
+      </Form>
+    {/if}
   {/if}
   <Datatable>
     <HeaderRow>

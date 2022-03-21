@@ -1,11 +1,11 @@
 <script lang="ts">
 import user, { isAdmin } from 'data/user'
-import { throwError } from '../../../error'
 import { Breadcrumb, Description, SearchableSelect, DependentForm } from 'components'
 import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import type { DependentFormData } from 'components/forms/DependentForm.svelte'
 import {
   addDependent,
+  deleteDependent,
   loadDependents,
   PolicyDependent,
   selectedPolicyDependents,
@@ -168,8 +168,7 @@ const onCancelModal = (event: CustomEvent) => {
   showAddDependentModal = false
 }
 const onRemoveModal = (event: CustomEvent<string>) => {
-  // TODO: Remove policy member with id from event.detail
-  throwError('Removeing a policy member is not yet supported')
+  deleteDependent(policyId, event.detail)
   showAddDependentModal = false
 }
 const hasNotBeenInvited = (email: string): boolean =>

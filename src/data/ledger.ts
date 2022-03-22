@@ -1,6 +1,7 @@
 import type { PolicyType } from 'data/policies'
 import type { CoverFile } from 'data/file'
 import { CREATE, GET, UPDATE } from './index'
+import { writable } from 'svelte/store'
 
 export type LedgerReport = {
   id: string
@@ -71,6 +72,8 @@ export async function createLedgerReport(type: LedgerReportType, date: string): 
   return await CREATE('ledger-reports', params)
 }
 
+export const policyLedgerReports = writable<LedgerReport[]>([])
+
 export async function createPolicyLedgerReport(
   policyId: string,
   type: LedgerReportType,
@@ -82,7 +85,11 @@ export async function createPolicyLedgerReport(
     month,
     year,
   }
-  return await CREATE(`policies/${policyId}/ledger-reports`, params)
+  const response: LedgerReport = await CREATE(`policies/${policyId}/ledger-reports`, params)
+  if (response.id) {
+    policyLedgerReports.update((reports) => [...reports, response])
+  }
+  return response
 }
 
 export async function reconcileLedgerReport(reportId: string): Promise<LedgerReport> {

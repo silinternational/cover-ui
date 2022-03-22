@@ -20,7 +20,9 @@ $: ledgerReports = $policyLedgerReports
 
 async function getUsersReports() {
   const allReports = await getLedgerReports()
-  return allReports.filter((report) => report.file?.created_by_id === $user.id)
+  return allReports.filter(
+    (report) => report.file?.created_by_id === $user.id && report.file?.name.includes('riskman_policy')
+  )
 }
 
 async function createReport(e: CustomEvent) {

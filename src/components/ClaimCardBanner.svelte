@@ -14,13 +14,6 @@ $: icon = state.icon || ''
 $: title = state.title === 'Approved' && receiptType ? `${state.title} for ${receiptType}` : state.title
 </script>
 
-<style>
-.banner {
-  margin-bottom: 2rem;
-  padding: 1rem;
-}
-</style>
-
 <Banner class={$$props.class} background="var({bgColor})" color="var({color})">
   <span class="material-icons" style="color: var({color});">{icon}</span>
 

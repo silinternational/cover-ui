@@ -13,7 +13,7 @@ onMount(() => {
   dependentIsOnItems = isDependentOnItemsByPolicyId(dependentId, policyId)
 })
 
-const title = 'Remove dependent'
+const title = 'Remove Dependent'
 const buttonsWithoutItems: Dialog.AlertButton[] = [
   { label: 'cancel', action: 'cancel', class: 'mdc-dialog__button' },
   { label: 'Remove', action: 'remove', class: 'error-button' },

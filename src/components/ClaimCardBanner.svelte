@@ -1,6 +1,7 @@
 <script lang="ts">
 import type { ReceiptType } from 'data/claims'
 import type { State } from 'data/states'
+import Banner from './Banner.svelte'
 
 export let state = {} as State
 export let statusReason = '' as string
@@ -20,10 +21,7 @@ $: title = state.title === 'Approved' && receiptType ? `${state.title} for ${rec
 }
 </style>
 
-<div
-  class="flex justify-start align-items-center black pl-50px banner {$$props.class}"
-  style="background: var({bgColor});"
->
+<Banner class={$$props.class} background="var({bgColor})" color="var({color})">
   <span class="material-icons" style="color: var({color});">{icon}</span>
 
   <div class="mdc-theme--primary pl-10px">
@@ -34,4 +32,4 @@ $: title = state.title === 'Approved' && receiptType ? `${state.title} for ${rec
       <div class="multi-line-truncate fs-14" style="color: var({color});">{statusReason}</div>
     {/if}
   </div>
-</div>
+</Banner>

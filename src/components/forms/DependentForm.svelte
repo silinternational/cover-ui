@@ -14,19 +14,32 @@ export type DependentFormData = {
 <script lang="ts">
 import RadioOptions from '../RadioOptions.svelte'
 import CountrySelector from '../components/CountrySelector.svelte'
+import RemoveDependentModal from '../components/RemoveDependentModal.svelte'
 import { MAX_INPUT_LENGTH as maxlength, MAX_TEXT_AREA_LENGTH } from 'components/const'
 import type { PolicyDependent } from 'data/dependents'
+import { ITEMS } from 'helpers/routes'
 import { assertEmailAddress, assertHas, assertIsLessThan, assertUnique } from '../../validation/assertions'
 import { Button, Form, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
+import { goto } from '@roxi/routify'
 
-export let dependent: PolicyDependent = {}
+export let dependent = {} as PolicyDependent
 export let dependents: PolicyDependent[] = []
 export let isHouseholdPolicy = true
-
-const dispatch = createEventDispatcher()
+export let policyId: string = ''
 
 let teamOrHousehold: string = isHouseholdPolicy ? 'household' : 'team'
+let removeModalIsOpen: boolean = false
+let formData: DependentFormData = {
+  id: dependent.id,
+  name: dependent.name || '',
+  country: dependent.country || '',
+  relationship: dependent.relationship || '',
+  childBirthYear: dependent.child_birth_year || undefined,
+  permissions: 'no-login',
+  email: '',
+  message: '',
+}
 
 const relationshipOptions = [
   {
@@ -53,17 +66,6 @@ const permissionOptions = [
   },
 ]
 
-let formData: DependentFormData = {
-  id: dependent.id,
-  name: dependent.name || '',
-  country: dependent.country || '',
-  relationship: dependent.relationship || '',
-  childBirthYear: dependent.child_birth_year || undefined,
-  permissions: 'no-login',
-  email: '',
-  message: '',
-}
-
 $: alreadyHasSpouse = !!dependents
   .filter((dep) => dep.id !== dependent.id)
   .find((dependent) => dependent.relationship === 'Spouse')
@@ -78,6 +80,8 @@ $: if (formData.relationship === 'Child') {
   permissionOptions[0].disabled = false
   permissionOptions[1].disabled = false
 }
+
+const dispatch = createEventDispatcher()
 
 const validate = (isChild: boolean) => {
   assertHas(formData.name, 'Please specify a name')
@@ -102,9 +106,14 @@ const onCancel = (event: Event) => {
   event.preventDefault()
   dispatch('cancel')
 }
+const onClickRemove = (event: Event) => {
+  event.preventDefault()
+  removeModalIsOpen = true
+}
 const onRemove = (event: Event) => {
   event.preventDefault()
   dispatch('remove', formData.id)
+  removeModalIsOpen = false
 }
 const onSubmit = () => {
   if (isHouseholdPolicy) {
@@ -191,8 +200,18 @@ const onChosen = (event: CustomEvent) => (formData.country = event.detail)
     </div>
     {#if formData.id !== undefined}
       <div class="float-left form-button">
-        <Button on:click={onRemove} outlined class="mdc-theme--error">Remove</Button>
+        <Button on:click={onClickRemove} outlined class="mdc-theme--error">Remove</Button>
       </div>
     {/if}
   </Form>
+
+  <RemoveDependentModal
+    dependentId={dependent.id}
+    {policyId}
+    open={removeModalIsOpen}
+    on:remove={onRemove}
+    on:gotoItems={() => $goto(ITEMS)}
+    on:cancel={() => (removeModalIsOpen = false)}
+    on:closed={() => (removeModalIsOpen = false)}
+  />
 </div>

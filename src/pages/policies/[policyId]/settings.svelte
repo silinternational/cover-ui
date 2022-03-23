@@ -12,6 +12,7 @@ import {
   updateDependent,
 } from 'data/dependents'
 import { entityCodes, loadEntityCodes } from 'data/entityCodes'
+import { loadItems } from 'data/items'
 import { updatePolicy, Policy, PolicyType, loadPolicy, selectedPolicy } from 'data/policies'
 import { invitePolicyMember, loadMembersOfPolicy, selectedPolicyMembers } from 'data/policy-members'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
@@ -54,6 +55,7 @@ $: if (policyId) {
   loadPolicy(policyId)
   loadDependents(policyId)
   loadMembersOfPolicy(policyId)
+  loadItems(policyId) //needed by DependentForm
 }
 
 $: $entityCodes.forEach((code) => {
@@ -371,6 +373,7 @@ p {
         dependent={modalData}
         {dependents}
         {isHouseholdPolicy}
+        {policyId}
         on:submit={onSubmitModal}
         on:cancel={onCancelModal}
         on:remove={onRemoveModal}

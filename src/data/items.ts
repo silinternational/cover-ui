@@ -273,7 +273,7 @@ export async function deleteItem(policyId: string, itemId: string): Promise<any>
 export const itemBelongsToPolicy = (policyId: string, item: PolicyItem): boolean => item.policy_id === policyId
 
 export const isDependentOnItemsByPolicyId = (dependentId: string, policyId: string): boolean => {
-  return get(itemsByPolicyId)[policyId]?.every((item) => item.accountable_person?.id === dependentId)
+  return get(itemsByPolicyId)[policyId]?.some((item) => item.accountable_person?.id === dependentId)
 }
 
 function updateStoreItem(updatedItem: PolicyItem) {

@@ -28,9 +28,8 @@ const addStrike = () => {
   <h4>Strikes</h4>
   {#if !userIsAdmin}
     <p>
-      <!-- TODO: Add strike rules to terms when finalized -->
-      This policy has been given a strike for suspicious or potentially abusive behavior. Each strike increases the deductible
-      by 20%. Each strike lasts 2 years. Multiple strikes can be on a policy at a time.
+      This policy has been given a strike for suspicious or potentially abusive behavior. Each strike increases the
+      deductible by 20%. Each strike lasts 2 years. Multiple strikes can be on a policy at a time.
     </p>
   {:else}
     <Button class="mb-1" on:click={() => (showStrikeForm = !showStrikeForm)}>

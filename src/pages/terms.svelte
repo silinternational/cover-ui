@@ -40,6 +40,7 @@ td > p {
   <p><a href="#responsibilities-of-cover-administrators">Responsibilities of Cover Administrators</a></p>
   <p><a href="#payment">Payment</a></p>
   <p><a href="#cancellation-and-termination">Cancellation and Termination</a></p>
+  <p><a href="#deductibles">Deductibles</a></p>
   <p><a href="#limitations-of-coverage">Limitations of Coverage</a></p>
   <p><a href="#disclaimer-of-warranties">Disclaimer of Warranties</a></p>
   <p><a href="#limitation-of-liability">Limitation of Liability</a></p>
@@ -306,6 +307,11 @@ td > p {
     responsibility of the Customer to remove coverage using the Cover website. If canceled, coverage will terminate at
     the end of the requested month. When possible, coverage for the remaining (full) months will be issued to the
     Customer's household account or departmental cost center.
+  </p>
+  <h2 id="deductibles">Deductibles</h2>
+  <p>
+    The deductible is 5% of the covered item listed on the policy. However, management reserves the right to increase
+    the deductible for above normal claims activity.
   </p>
   <h2 id="limitations-of-coverage">Limitations of Coverage</h2>
   <p>

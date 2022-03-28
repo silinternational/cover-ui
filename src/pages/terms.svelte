@@ -40,7 +40,7 @@ td > p {
   <p><a href="#responsibilities-of-cover-administrators">Responsibilities of Cover Administrators</a></p>
   <p><a href="#payment">Payment</a></p>
   <p><a href="#cancellation-and-termination">Cancellation and Termination</a></p>
-  <p><a href="#strikes-and-deductibles">Strikes and Deductibles</a></p>
+  <p><a href="#deductibles">Deductibles</a></p>
   <p><a href="#limitations-of-coverage">Limitations of Coverage</a></p>
   <p><a href="#disclaimer-of-warranties">Disclaimer of Warranties</a></p>
   <p><a href="#limitation-of-liability">Limitation of Liability</a></p>
@@ -308,11 +308,10 @@ td > p {
     the end of the requested month. When possible, coverage for the remaining (full) months will be issued to the
     Customer's household account or departmental cost center.
   </p>
-  <h2 id="strikes-and-deductibles">Strikes and Deductibles</h2>
+  <h2 id="deductibles">Deductibles</h2>
   <p>
-    The normal deductible on a claim is 5% of the covered value of an item on a policy. If a steward suspects a customer
-    of potentially abusive behavior, they can manually give the customer a strike. Each strike increases the deductible
-    by 20%. Each strike lasts 2 years. Multiple strikes can be on a policy at a time.
+    The deductible is 5% of the covered item listed on the policy. However, management reserves the right to increase
+    the deductible for above normal claims activity.
   </p>
   <h2 id="limitations-of-coverage">Limitations of Coverage</h2>
   <p>

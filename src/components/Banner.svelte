@@ -7,11 +7,12 @@ export let background = 'var(--mdc-theme-primary)'
 <style>
 .banner {
   border-radius: 4px;
+  padding: 0.5rem;
 }
 </style>
 
 <div
-  class="banner flex align-items-center p-8px {$$props.class}"
+  class="banner flex align-items-center {$$props.class}"
   style="color: {color}; border: {border}; background-color: {background};"
 >
   <slot />

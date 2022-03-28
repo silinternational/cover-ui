@@ -59,7 +59,7 @@ const gotoClaim = () => dispatch('goto-claim', claim)
 
 <Card noPadding class="py-0 h-100 {$$props.class}">
   <ClaimCardBanner
-    class={showNeedsFileBanner ? 'mb-0 pb-4px pt-6px' : 'mb-2'}
+    class={showNeedsFileBanner ? 'mb-0 pb-4px pt-6px' : 'mb-2 p-1'}
     {statusReason}
     {state}
     {receiptType}

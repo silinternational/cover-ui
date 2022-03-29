@@ -22,6 +22,8 @@ async function createReport(e: CustomEvent) {
   await createLedgerReport(e.detail.type, e.detail.date)
   await loadReports()
 }
+// TODO: remove this filter when BE filters out policy reports
+const isAdminReport = (report: LedgerReport) => !report.file?.name.includes('policy')
 </script>
 
 <Page>
@@ -39,7 +41,8 @@ async function createReport(e: CustomEvent) {
       <Datatable.Header.Item>File</Datatable.Header.Item>
     </Datatable.Header>
     <Datatable.Data>
-      {#each ledgerReports as report (report.id)}
+      <!-- TODO: remove this filter when BE filters out policy reports -->
+      {#each ledgerReports.filter(isAdminReport) as report (report.id)}
         <Datatable.Data.Row on:click={() => $goto(reportDetails(report.id))} clickable>
           <Datatable.Data.Row.Item>{report.type || ''}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{formatFriendlyDate(report.date)}</Datatable.Data.Row.Item>

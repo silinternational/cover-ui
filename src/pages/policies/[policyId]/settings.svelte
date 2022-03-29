@@ -1,17 +1,18 @@
 <script lang="ts">
 import user, { isAdmin } from 'data/user'
-import { throwError } from '../../../error'
 import { Breadcrumb, Description, SearchableSelect, DependentForm } from 'components'
 import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import type { DependentFormData } from 'components/forms/DependentForm.svelte'
 import {
   addDependent,
+  deleteDependent,
   loadDependents,
   PolicyDependent,
   selectedPolicyDependents,
   updateDependent,
 } from 'data/dependents'
 import { entityCodes, loadEntityCodes } from 'data/entityCodes'
+import { loadItems } from 'data/items'
 import { updatePolicy, Policy, PolicyType, loadPolicy, selectedPolicy } from 'data/policies'
 import { invitePolicyMember, loadMembersOfPolicy, selectedPolicyMembers } from 'data/policy-members'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
@@ -54,6 +55,7 @@ $: if (policyId) {
   loadPolicy(policyId)
   loadDependents(policyId)
   loadMembersOfPolicy(policyId)
+  loadItems(policyId) //needed by DependentForm
 }
 
 $: $entityCodes.forEach((code) => {
@@ -168,8 +170,7 @@ const onCancelModal = (event: CustomEvent) => {
   showAddDependentModal = false
 }
 const onRemoveModal = (event: CustomEvent<string>) => {
-  // TODO: Remove policy member with id from event.detail
-  throwError('Removeing a policy member is not yet supported')
+  deleteDependent(policyId, event.detail)
   showAddDependentModal = false
 }
 const hasNotBeenInvited = (email: string): boolean =>
@@ -372,6 +373,7 @@ p {
         dependent={modalData}
         {dependents}
         {isHouseholdPolicy}
+        {policyId}
         on:submit={onSubmitModal}
         on:cancel={onCancelModal}
         on:remove={onRemoveModal}

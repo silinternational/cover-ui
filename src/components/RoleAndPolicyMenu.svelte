@@ -1,7 +1,7 @@
 <script lang="ts">
 import type { MenuItem } from './mdc/types'
 import { UserAppRole } from 'data/user'
-import { getNameOfPolicy, Policy, PolicyType } from 'data/policies'
+import { getTruncatedNameOfPolicy, Policy, PolicyType } from 'data/policies'
 import { roleSelection, recordRoleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { POLICY_NEW_TEAM } from 'helpers/routes'
 import { Button, Menu } from '@silintl/ui-components'
@@ -53,7 +53,7 @@ const getTeamPolicyEntries = (policies: Policy[]): MenuItem[] => {
   const policyItems = policies.map((policy: Policy): MenuItem => {
     return {
       icon: TEAM_POLICY_ICON,
-      label: getNameOfPolicy(policy),
+      label: getTruncatedNameOfPolicy(policy, 18),
       action: () => selectUserPolicy(policy.id),
     }
   })
@@ -96,8 +96,6 @@ const setInitialRoleSelection = (actualRole: UserAppRole) => {
   }
 }
 
-// TODO: Long policy names cause the dropdown and menu to expand in an unexpected way
-// Either truncate it or do something more clever
 const getButtonText = (userAppRoleSelection: UserAppRole, policyIdSelection: string, myPolicies: Policy[]) => {
   if (userAppRoleSelection !== UserAppRole.Customer) {
     return userAppRoleSelection
@@ -105,7 +103,7 @@ const getButtonText = (userAppRoleSelection: UserAppRole, policyIdSelection: str
 
   const policy = myPolicies.find((policy) => policy.id === policyIdSelection)
   if (policy && isTeamPolicy(policy)) {
-    return getNameOfPolicy(policy)
+    return getTruncatedNameOfPolicy(policy)
   }
 
   return 'household'

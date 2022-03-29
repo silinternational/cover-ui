@@ -1,27 +1,41 @@
 <script lang="ts">
 import CreateCustomerReportModal from './CreateCustomerReportModal.svelte'
 import type { Policy } from 'data/policies'
-import { createPolicyLedgerReport, LedgerReport, LedgerReportType } from 'data/ledger'
+import { createPolicyLedgerReport, getLedgerReports, LedgerReportType, policyLedgerReports } from 'data/ledger'
+import user from 'data/user'
 import { formatDateAndTime, formatFriendlyDate } from 'helpers/dates'
 import FileLink from './FileLink.svelte'
-import { Button, Datatable } from '@silintl/ui-components'
+import { Button, Datatable, setNotice } from '@silintl/ui-components'
+import { onMount } from 'svelte'
 
 export let policy: Policy
 
-let ledgerReports: LedgerReport[] = []
 let modalOpen = false
+
+onMount(async () => {
+  $policyLedgerReports = await getUsersReports()
+})
+
+$: ledgerReports = $policyLedgerReports
+
+async function getUsersReports() {
+  const allReports = await getLedgerReports()
+  return allReports.filter((report) => report.file?.created_by_id === $user.id && report.file?.name.includes('policy'))
+}
 
 async function createReport(e: CustomEvent) {
   const reportType: LedgerReportType = e.detail.type
   const { month, year } = e.detail.date
 
   const report = await createPolicyLedgerReport(policy.id, reportType, month, year)
-  ledgerReports = [...ledgerReports, report]
+  if (!report.id) {
+    setNotice('No transactions found for this date, please try a different month or year.')
+  }
   modalOpen = false
 }
 </script>
 
-<Button on:click={() => (modalOpen = true)}>create a report</Button>
+<Button class="mb-1" on:click={() => (modalOpen = true)}>create a report</Button>
 <CreateCustomerReportModal {modalOpen} on:submit={createReport} on:cancel={() => (modalOpen = false)} />
 
 {#if ledgerReports.length > 0}

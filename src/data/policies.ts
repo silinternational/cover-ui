@@ -5,7 +5,10 @@ import { CREATE, GET, UPDATE } from './index'
 import { selectedPolicyId } from './role-policy-selection'
 import type { PaginatedData } from './types/PaginatedData'
 import type { PolicyMember } from './types/policy-members'
+import { PolicyType } from './types/policy-types-enum'
 import qs from 'qs'
+
+export { PolicyType }
 
 export type Policy = {
   account: string
@@ -21,6 +24,7 @@ export type Policy = {
   members?: PolicyMember[]
   name: string
   type: PolicyType
+  strikes: Strike[]
   updated_at: string /*Date*/
 }
 
@@ -30,9 +34,12 @@ export type PolicyInvite = {
   name: string
 }
 
-export enum PolicyType {
-  Household = 'Household',
-  Team = 'Team',
+export type Strike = {
+  created_at: string
+  description: string
+  id: string
+  policy_id: string
+  updated_at: string
 }
 
 export type CreatePolicyRequestBody = {
@@ -156,6 +163,12 @@ export const getNameOfPolicy = (policy: Policy): string => {
   return policyName.trim()
 }
 
+export const getTruncatedNameOfPolicy = (policy: Policy, maxlength = 16): string => {
+  const name = getNameOfPolicy(policy)
+
+  return name.length > maxlength ? `${name.slice(0, maxlength)}...` : name
+}
+
 //claims or members/dependents fields from this endpoint are deprecated
 export async function loadPolicies(page = 1, limit = 20): Promise<void> {
   const queryString = qs.stringify({ limit, page })
@@ -177,6 +190,13 @@ export async function searchPoliciesFor(searchText: string, page = 1, limit = 20
   const queryString = qs.stringify({ search: searchText, page, limit })
   const response = await GET<GetPoliciesResponseBody>(`policies?${queryString}`)
   return response
+}
+
+export async function createPolicyStrike(id: string, description: string): Promise<any> {
+  const url = `policies/${id}/strikes`
+  const response: Strike[] = await CREATE(url, { description })
+  const changedPolicy = { ...getPolicyById(id), strikes: response }
+  updatePolicyStore(changedPolicy)
 }
 
 export const getPolicyById = (policyId: string): Policy => {

@@ -2,7 +2,7 @@
 import BatchItemDelete from '../components/BatchItemDelete.svelte'
 import DatatableCheckbox from './DatatableCheckbox.svelte'
 import DatatableCheckboxHeader from './DatatableCheckboxHeader.svelte'
-import { editableCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/items'
+import { AccountablePerson, editableCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/items'
 import { formatDate, formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { itemDetails, itemEdit } from 'helpers/routes'
@@ -149,10 +149,20 @@ const redirectAndSetCurrentItem = (item: PolicyItem) => {
 const getStatusClass = (status: string) =>
   status === ItemCoverageStatus.Draft ? 'mdc-theme--primary mdc-bold-font' : ''
 
+const setAccountablePersonCountryIfNoneExists = () => {
+  if (currentColumn.headerId === 'location') {
+    items.forEach((item) => {
+      !item.accountable_person && (item.accountable_person = {} as AccountablePerson)
+      item.accountable_person.country = item.country || ''
+    })
+  }
+}
+
 const onSorted = (event: CustomEvent) => {
   ascending = event.detail.sortValue === 'ascending'
   headerId = event.detail.columnId || ''
   currentColumn = columns.find((column) => column.headerId === headerId) || columns[0]
+  setAccountablePersonCountryIfNoneExists()
 }
 </script>
 

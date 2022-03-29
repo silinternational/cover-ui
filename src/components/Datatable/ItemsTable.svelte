@@ -153,7 +153,7 @@ const setAccountablePersonCountryIfNoneExists = () => {
   if (currentColumn.headerId === 'location') {
     items.forEach((item) => {
       !item.accountable_person && (item.accountable_person = {} as AccountablePerson)
-      item.accountable_person.country = item.country || ''
+      !item.accountable_person.country && (item.accountable_person.country = item.country || '')
     })
   }
 }

@@ -357,12 +357,8 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
 
       {#if isMemberOfPolicy}
         {#if needsReceipt}
-          <MoneyInput
-            minValue={'0'}
-            bind:value={repairOrReplacementCost}
-            label={moneyFormLabel}
-            on:blur={onMoneyInputBlur}
-          />
+          <span class="d-block mb-half">{moneyFormLabel}</span>
+          <MoneyInput minValue={'0'} bind:value={repairOrReplacementCost} on:blur={onMoneyInputBlur} />
 
           <p class="label ml-1 mt-6px">
             <ConvertCurrencyLink />

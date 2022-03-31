@@ -1,7 +1,13 @@
 <script lang="ts">
 import CreateCustomerReportModal from './CreateCustomerReportModal.svelte'
 import type { Policy } from 'data/policies'
-import { createPolicyLedgerReport, getLedgerReports, LedgerReportType, policyLedgerReports } from 'data/ledger'
+import {
+  createPolicyLedgerReport,
+  getLedgerReportById,
+  getLedgerReports,
+  LedgerReportType,
+  policyLedgerReports,
+} from 'data/ledger'
 import user from 'data/user'
 import { formatDateAndTime, formatFriendlyDate } from 'helpers/dates'
 import FileLink from './FileLink.svelte'
@@ -21,6 +27,16 @@ $: ledgerReports = $policyLedgerReports
 async function getUsersReports() {
   const allReports = await getLedgerReports()
   return allReports.filter((report) => report.file?.created_by_id === $user.id && report.file?.name.includes('policy'))
+}
+
+async function getReportAndUpdateReports(reportId: string) {
+  const report = await getLedgerReportById(reportId)
+  const index = $policyLedgerReports.findIndex((report) => report.id === reportId)
+  if (index !== -1) {
+    $policyLedgerReports[index] = report
+  } else {
+    $policyLedgerReports = [...$policyLedgerReports, report]
+  }
 }
 
 async function createReport(e: CustomEvent) {
@@ -52,7 +68,9 @@ async function createReport(e: CustomEvent) {
           <Datatable.Data.Row.Item>{report.type || ''}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{formatFriendlyDate(report.date)}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{formatDateAndTime(report.created_at)}</Datatable.Data.Row.Item>
-          <Datatable.Data.Row.Item><FileLink file={report.file} /></Datatable.Data.Row.Item>
+          <Datatable.Data.Row.Item>
+            <FileLink on:expired={() => getReportAndUpdateReports(report.id)} file={report.file} />
+          </Datatable.Data.Row.Item>
         </Datatable.Data.Row>
       {/each}
     </Datatable.Data>

@@ -16,7 +16,7 @@ import ConvertCurrencyLink from 'ConvertCurrencyLink.svelte'
 import { formatMoney } from 'helpers/money'
 import RadioOptions from 'RadioOptions.svelte'
 import { assertHas } from '../../validation/assertions'
-import { Button, Form, MoneyInput, TextArea } from '@silintl/ui-components'
+import { Button, Form, MoneyInput, TextArea, Tooltip } from '@silintl/ui-components'
 import { createEventDispatcher, onMount } from 'svelte'
 
 export let claim = {} as Claim
@@ -43,6 +43,8 @@ const payoutOptions = [
   {
     label: 'Get fair market value (no replacement)',
     value: PayoutOption.FMV,
+    description:
+      'Fair Market Value: FMV is the price that a given item of "like kind and quality" would reasonably sell for within your marketplace.',
   },
 ]
 
@@ -209,11 +211,7 @@ const unSetReplaceEstimate = () => {
 }
 </script>
 
-<style>
-.item-name {
-  margin-bottom: 0.5rem;
-}
-</style>
+<style></style>
 
 <div class="w-50">
   <div class="item-name">{item.name}</div>
@@ -249,7 +247,14 @@ const unSetReplaceEstimate = () => {
       </p>
       <p>
         <!-- If it's repairable, position this BEFORE the "Payout options" prompt. -->
-        <MoneyInput minValue={'0'} label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
+        <Tooltip.Wrapper ariaDescribedBy="fmv1">
+          <MoneyInput minValue={'0'} label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
+        </Tooltip.Wrapper>
+
+        <Tooltip tooltipID="fmv1" positionX="start">
+          Fair Market Value: FMV is the price that a given item of "like kind and quality" would reasonably sell for
+          within your marketplace.
+        </Tooltip>
         <Description>
           <ConvertCurrencyLink />
         </Description>

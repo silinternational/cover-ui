@@ -42,7 +42,7 @@ onMount(async () => {
   loadItems(policyId)
   loadClaimsByPolicyId(policyId)
 })
-$: policy = $selectedPolicy
+$: $selectedPolicy.id !== policyId && loadPolicy($selectedPolicy.id) //since loadPolicies doesn't hydrate ledger_reports
 
 $: members = policy.members || []
 

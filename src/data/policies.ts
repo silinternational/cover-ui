@@ -103,6 +103,8 @@ const updatePolicyStore = (changedPolicy: Policy) => {
         claims: changedPolicy.claims == null ? policies[i].claims : changedPolicy.claims,
         invites: changedPolicy.invites == null ? policies[i].invites : changedPolicy.invites,
         dependents: changedPolicy.dependents == null ? policies[i].dependents : changedPolicy.dependents,
+        ledger_reports:
+          changedPolicy.ledger_reports == null ? policies[i].ledger_reports : changedPolicy.ledger_reports,
       }
     }
     return policies

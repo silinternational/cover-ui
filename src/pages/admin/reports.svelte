@@ -21,8 +21,6 @@ async function createReport(e: CustomEvent) {
 function getReport(reportId: string) {
   getLedgerReportById(reportId)
 }
-// TODO: remove this filter when BE filters out policy reports
-const isAdminReport = (report: LedgerReport) => !report.file?.name.includes('policy')
 </script>
 
 <Page>
@@ -40,8 +38,7 @@ const isAdminReport = (report: LedgerReport) => !report.file?.name.includes('pol
       <Datatable.Header.Item>File</Datatable.Header.Item>
     </Datatable.Header>
     <Datatable.Data>
-      <!-- TODO: remove this filter when BE filters out policy reports -->
-      {#each $LedgerReports.filter(isAdminReport) as report (report.id)}
+      {#each $LedgerReports as report (report.id)}
         <Datatable.Data.Row on:click={() => $goto(reportDetails(report.id))} clickable>
           <Datatable.Data.Row.Item>{report.type || ''}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{formatFriendlyDate(report.date)}</Datatable.Data.Row.Item>

@@ -2,6 +2,7 @@ import { loadUser, updateUserPolicyStore } from './user'
 import { derived, get, writable } from 'svelte/store'
 import type { Claim } from './claims'
 import { CREATE, GET, UPDATE } from './index'
+import type { LedgerReport } from './ledger'
 import { selectedPolicyId } from './role-policy-selection'
 import type { PaginatedData } from './types/PaginatedData'
 import type { PolicyMember } from './types/policy-members'
@@ -21,6 +22,7 @@ export type Policy = {
   household_id: string
   id: string
   invites?: PolicyInvite[]
+  ledger_reports: LedgerReport[]
   members?: PolicyMember[]
   name: string
   type: PolicyType

@@ -10,13 +10,11 @@ export let policy: Policy
 
 let modalOpen = false
 
-//TODO get policyr reports when available from api
-
-$: ledgerReports = $policyLedgerReports
+$: $policyLedgerReports = policy.ledger_reports || []
 
 async function getReportAndUpdateReports(reportId: string) {
   const report = await getLedgerReportById(reportId)
-  const index = $policyLedgerReports.findIndex((report) => report.id === reportId)
+  const index = $policyLedgerReports.findIndex((r) => r.id === report.id)
   if (index !== -1) {
     $policyLedgerReports[index] = report
   } else {
@@ -39,7 +37,7 @@ async function createReport(e: CustomEvent) {
 <Button class="mb-1" on:click={() => (modalOpen = true)}>create a report</Button>
 <CreateCustomerReportModal {modalOpen} on:submit={createReport} on:cancel={() => (modalOpen = false)} />
 
-{#if ledgerReports.length > 0}
+{#if $policyLedgerReports.length > 0}
   <Datatable>
     <Datatable.Header>
       <Datatable.Header.Item>Report Type</Datatable.Header.Item>
@@ -48,7 +46,7 @@ async function createReport(e: CustomEvent) {
       <Datatable.Header.Item>File</Datatable.Header.Item>
     </Datatable.Header>
     <Datatable.Data>
-      {#each ledgerReports as report (report.id)}
+      {#each $policyLedgerReports as report (report.id)}
         <Datatable.Data.Row>
           <Datatable.Data.Row.Item>{report.type || ''}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{formatFriendlyDate(report.date)}</Datatable.Data.Row.Item>

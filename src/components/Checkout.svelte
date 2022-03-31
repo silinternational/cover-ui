@@ -10,13 +10,13 @@ import { goto } from '@roxi/routify'
 import { Button, Checkbox } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
-export let item: PolicyItem
+export let item = {} as PolicyItem
 export let policyId: string
 
 let open: boolean = false
 let checked: boolean = false
 
-$: itemId = item?.id
+$: itemId = item.id
 
 $: policy = $selectedPolicy
 $: householdId = policy.household_id || ''

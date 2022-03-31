@@ -24,6 +24,8 @@ export let item = {} as PolicyItem
 
 const dispatch = createEventDispatcher()
 
+const fmvExplanation =
+  'Fair Market Value: FMV is the price that a given item of "like kind and quality" would reasonably sell for within your marketplace.'
 const todayDateString = new Date().toISOString()
 const repairableOptions = [
   {
@@ -43,8 +45,7 @@ const payoutOptions = [
   {
     label: 'Get fair market value (no replacement)',
     value: PayoutOption.FMV,
-    description:
-      'Fair Market Value: FMV is the price that a given item of "like kind and quality" would reasonably sell for within your marketplace.',
+    description: fmvExplanation,
   },
 ]
 
@@ -252,8 +253,7 @@ const unSetReplaceEstimate = () => {
         </Tooltip.Wrapper>
 
         <Tooltip tooltipID="fmv1" positionX="start">
-          Fair Market Value: FMV is the price that a given item of "like kind and quality" would reasonably sell for
-          within your marketplace.
+          {fmvExplanation}
         </Tooltip>
         <Description>
           <ConvertCurrencyLink />

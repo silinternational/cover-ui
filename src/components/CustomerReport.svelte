@@ -1,33 +1,18 @@
 <script lang="ts">
 import CreateCustomerReportModal from './CreateCustomerReportModal.svelte'
 import type { Policy } from 'data/policies'
-import {
-  createPolicyLedgerReport,
-  getLedgerReportById,
-  getLedgerReports,
-  LedgerReportType,
-  policyLedgerReports,
-} from 'data/ledger'
-import user from 'data/user'
+import { createPolicyLedgerReport, getLedgerReportById, LedgerReportType, policyLedgerReports } from 'data/ledger'
 import { formatDateAndTime, formatFriendlyDate } from 'helpers/dates'
 import FileLink from './FileLink.svelte'
 import { Button, Datatable, setNotice } from '@silintl/ui-components'
-import { onMount } from 'svelte'
 
 export let policy: Policy
 
 let modalOpen = false
 
-onMount(async () => {
-  $policyLedgerReports = await getUsersReports()
-})
+//TODO get policyr reports when available from api
 
 $: ledgerReports = $policyLedgerReports
-
-async function getUsersReports() {
-  const allReports = await getLedgerReports()
-  return allReports.filter((report) => report.file?.created_by_id === $user.id && report.file?.name.includes('policy'))
-}
 
 async function getReportAndUpdateReports(reportId: string) {
   const report = await getLedgerReportById(reportId)

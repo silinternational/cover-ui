@@ -50,13 +50,30 @@ export type LedgerEntry = {
   created_at: string /*Date*/
   updated_at: string /*Date*/
 }
+export const LedgerReports = writable<LedgerReport[]>([])
+
+function updateLedgerReports(report: LedgerReport) {
+  LedgerReports.update((reports) => {
+    const index = reports.findIndex((r) => r.id === report.id)
+    if (index < 0) {
+      reports.push(report)
+    } else {
+      reports[index] = report
+    }
+    return reports
+  })
+}
 
 export async function getLedgerReports(): Promise<LedgerReport[]> {
-  return await GET('ledger-reports')
+  const result: LedgerReport[] = await GET('ledger-reports')
+  LedgerReports.set(result)
+  return result
 }
 
 export async function getLedgerReportById(id: string): Promise<LedgerReport> {
-  return await GET(`ledger-reports/${id}`)
+  const result: LedgerReport = await GET(`ledger-reports/${id}`)
+  updateLedgerReports(result)
+  return result
 }
 
 export async function getPolicyRenewals(): Promise<LedgerReport> {
@@ -69,7 +86,9 @@ export async function createLedgerReport(type: LedgerReportType, date: string): 
     date,
     type,
   }
-  return await CREATE('ledger-reports', params)
+  const result: LedgerReport = await CREATE('ledger-reports', params)
+  updateLedgerReports(result)
+  return result
 }
 
 export const policyLedgerReports = writable<LedgerReport[]>([])

@@ -26,7 +26,7 @@ const authenticateUser = async () => {
       }
     })
     .then(() => {
-      if ($user.policies?.length > 0) $showApp = true
+      if ($user.id) $showApp = true
     })
 }
 
@@ -44,7 +44,7 @@ $afterPageLoad((page: { path: string }) => {
 </svelte:head>
 
 <Router {routes} />
-
-<Snackbar />
-
+{#if $showApp}
+  <Snackbar />
+{/if}
 <FreshdeskWidget />

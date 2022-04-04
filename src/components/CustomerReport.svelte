@@ -12,16 +12,6 @@ let modalOpen = false
 
 $: $policyLedgerReports = policy.ledger_reports || []
 
-async function getReportAndUpdateReports(reportId: string) {
-  const report = await getLedgerReportById(reportId)
-  const index = $policyLedgerReports.findIndex((r) => r.id === report.id)
-  if (index !== -1) {
-    $policyLedgerReports[index] = report
-  } else {
-    $policyLedgerReports = [...$policyLedgerReports, report]
-  }
-}
-
 async function createReport(e: CustomEvent) {
   const reportType: LedgerReportType = e.detail.type
   const { month, year } = e.detail.date
@@ -52,7 +42,7 @@ async function createReport(e: CustomEvent) {
           <Datatable.Data.Row.Item>{formatFriendlyDate(report.date)}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{formatDateAndTime(report.created_at)}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>
-            <FileLink on:expired={() => getReportAndUpdateReports(report.id)} file={report.file} />
+            <FileLink on:expired={() => getLedgerReportById(report.id, true)} file={report.file} />
           </Datatable.Data.Row.Item>
         </Datatable.Data.Row>
       {/each}

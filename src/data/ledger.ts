@@ -64,15 +64,27 @@ function updateLedgerReports(report: LedgerReport) {
   })
 }
 
+function updatePolicyLedgerReports(report: LedgerReport) {
+  policyLedgerReports.update((reports) => {
+    const index = reports.findIndex((r) => r.id === report.id)
+    if (index < 0) {
+      reports.push(report)
+    } else {
+      reports[index] = report
+    }
+    return reports
+  })
+}
+
 export async function getLedgerReports(): Promise<LedgerReport[]> {
   const result: LedgerReport[] = await GET('ledger-reports')
   LedgerReports.set(result)
   return result
 }
 
-export async function getLedgerReportById(id: string): Promise<LedgerReport> {
+export async function getLedgerReportById(id: string, isPolicyReport = false): Promise<LedgerReport> {
   const result: LedgerReport = await GET(`ledger-reports/${id}`)
-  updateLedgerReports(result)
+  isPolicyReport ? updatePolicyLedgerReports(result) : updateLedgerReports(result)
   return result
 }
 

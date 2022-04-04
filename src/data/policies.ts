@@ -96,7 +96,7 @@ const updatePolicyStore = (changedPolicy: Policy) => {
     if (i === -1) {
       policies.push(changedPolicy)
     } else {
-      // the policies returned from the get policies list never include claims, dependents or invites on them
+      // the policies returned from the get policies list never include claims, dependents, ledger_reports or invites on them
       // if the value is 'null' then keep the last claims
       policies[i] = {
         ...changedPolicy,

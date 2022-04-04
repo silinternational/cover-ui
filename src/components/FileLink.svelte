@@ -4,7 +4,7 @@ import { createEventDispatcher } from 'svelte'
 
 export let file: CoverFile
 
-let expired: boolean
+let expired: boolean = false
 
 const dispatch = createEventDispatcher<{ expired: string }>()
 

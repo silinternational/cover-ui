@@ -72,8 +72,10 @@ const handleDialog = (event: CustomEvent<string>) => {
 
 <div class="flex align-items-center p-1">
   <div>
-    Pay {formatMoney(item.prorated_annual_premium)} for the remainder of {year} from {org} account {accountOrhouseholdId}.
-    Auto-renew and pay {formatMoney(item.annual_premium)} on {renewDate}.
+    Pay {item.prorated_annual_premium > 100 ? formatMoney(item.prorated_annual_premium) : '$1.00'} for the remainder of
+    {year} from {org} account {accountOrhouseholdId}. Auto-renew and pay {item.annual_premium > 100
+      ? formatMoney(item.annual_premium)
+      : '$1.00'} on {renewDate}.
   </div>
   <Button class="ml-1" disabled={!checked} raised on:click={onAgreeAndPay}>Agree and Pay</Button>
 </div>

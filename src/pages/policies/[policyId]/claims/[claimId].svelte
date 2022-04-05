@@ -94,7 +94,7 @@ $: showPrimaryBanner = !(needsRevision && isCustomer($roleSelection))
 $: showSecondaryBanner = needsFile && isCustomer($roleSelection)
 
 $: needsReceipt = claimStatus === ClaimStatus.Receipt
-$: needsFile = needsReceipt || needsRevision || isEvidenceNeeded(claimItem, claimStatus)
+$: needsFile = needsReceipt || isEvidenceNeeded(claimItem, claimStatus)
 $: allowDelete = needsRevision || [ClaimStatus.Receipt, ClaimStatus.Draft].includes(claimStatus)
 
 $: needsRepairReceipt = needsReceipt && payoutOption === PayoutOption.Repair

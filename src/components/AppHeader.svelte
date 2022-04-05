@@ -35,7 +35,7 @@ onMount(() => showOrHideDrawerButton())
 const avatarError = () => (showImage = false)
 const toggleMenu = () => (menuOpen = !menuOpen)
 const showOrHideDrawerButton = () => (isAboveMobile() ? (showDrawerButton = false) : (showDrawerButton = true))
-const toggleDrawerHandler = () => dispatch('toggleDrawer') //TODO toggle drawer
+const toggleDrawerHandler = () => dispatch('toggleDrawer')
 </script>
 
 <style>

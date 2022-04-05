@@ -1,7 +1,8 @@
 import { get, writable } from 'svelte/store'
 import { CREATE, DELETE, GET, UPDATE } from 'data'
 import type { CoverFile } from 'data/file'
-import { Policy, PolicyType } from 'data/policies'
+import type { Policy } from 'data/policies'
+import { PolicyType } from './types/policy-types-enum'
 import { onClear } from 'data/storage'
 
 export enum UserAppRole {

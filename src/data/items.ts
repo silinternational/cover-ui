@@ -1,6 +1,6 @@
 import { CREATE, DELETE, GET, UPDATE } from '.'
 import { throwError } from '../error'
-import { derived, writable } from 'svelte/store'
+import { derived, get, writable } from 'svelte/store'
 import { selectedPolicyId } from './role-policy-selection'
 
 export enum ItemCoverageStatus {
@@ -271,6 +271,10 @@ export async function deleteItem(policyId: string, itemId: string): Promise<any>
 }
 
 export const itemBelongsToPolicy = (policyId: string, item: PolicyItem): boolean => item.policy_id === policyId
+
+export const isDependentOnItemsByPolicyId = (dependentId: string, policyId: string): boolean => {
+  return get(itemsByPolicyId)[policyId]?.some((item) => item.accountable_person?.id === dependentId)
+}
 
 function updateStoreItem(updatedItem: PolicyItem) {
   itemsByPolicyId.update((data) => {

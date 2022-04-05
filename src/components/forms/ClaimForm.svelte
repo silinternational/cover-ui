@@ -7,7 +7,7 @@ import {
   LOSS_REASON_EVACUATION,
 } from '../../business-rules/claim-payout-amount'
 import { MAX_TEXT_AREA_LENGTH as maxlength } from 'components/const'
-import { claimIncidentTypes, loadClaimIncidentTypes } from 'data/claim-incident-types'
+import { claimIncidentTypes, loadClaimIncidentTypes } from 'data/types/claim-incident-types'
 import { Claim, ClaimItem, PayoutOption } from 'data/claims'
 import type { PolicyItem } from 'data/items'
 import DateInput from 'DateInput.svelte'

@@ -16,8 +16,9 @@ import ConvertCurrencyLink from 'ConvertCurrencyLink.svelte'
 import { formatMoney } from 'helpers/money'
 import RadioOptions from 'RadioOptions.svelte'
 import { assertHas } from '../../validation/assertions'
-import { Button, Form, MoneyInput, TextArea, Tooltip } from '@silintl/ui-components'
+import { Button, Form, IconButton, MoneyInput, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher, onMount } from 'svelte'
+import InfoModal from 'components/InfoModal.svelte'
 
 export let claim = {} as Claim
 export let item = {} as PolicyItem
@@ -49,6 +50,7 @@ const payoutOptions = [
   },
 ]
 
+let fmvModalOpen = false
 // Set default form values.
 let lostDate = todayDateString.split('T')[0]
 let lossReason: string
@@ -248,13 +250,8 @@ const unSetReplaceEstimate = () => {
       </p>
       <p>
         <!-- If it's repairable, position this BEFORE the "Payout options" prompt. -->
-        <Tooltip.Wrapper ariaDescribedBy="fmv1">
-          <MoneyInput minValue={'0'} label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
-        </Tooltip.Wrapper>
-
-        <Tooltip tooltipID="fmv1" positionX="start">
-          {fmvExplanation}
-        </Tooltip>
+        <MoneyInput minValue={'0'} label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
+        <IconButton icon="info" on:click={() => (fmvModalOpen = true)} />
         <Description>
           <ConvertCurrencyLink />
         </Description>
@@ -305,4 +302,6 @@ const unSetReplaceEstimate = () => {
       {/if}
     </p>
   </Form>
+
+  <InfoModal content={fmvExplanation} title="Fair Market Value" open={fmvModalOpen} />
 </div>

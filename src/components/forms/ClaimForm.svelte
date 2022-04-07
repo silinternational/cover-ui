@@ -7,6 +7,7 @@ import {
   LOSS_REASON_EVACUATION,
 } from '../../business-rules/claim-payout-amount'
 import { MAX_TEXT_AREA_LENGTH as maxlength } from 'components/const'
+import InfoModal from '../InfoModal.svelte'
 import { claimIncidentTypes, loadClaimIncidentTypes } from 'data/types/claim-incident-types'
 import { Claim, ClaimItem, PayoutOption } from 'data/claims'
 import type { PolicyItem } from 'data/items'
@@ -18,7 +19,6 @@ import RadioOptions from 'RadioOptions.svelte'
 import { assertHas } from '../../validation/assertions'
 import { Button, Form, IconButton, MoneyInput, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher, onMount } from 'svelte'
-import InfoModal from 'components/InfoModal.svelte'
 
 export let claim = {} as Claim
 export let item = {} as PolicyItem

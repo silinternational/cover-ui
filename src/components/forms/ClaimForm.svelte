@@ -250,8 +250,12 @@ const unSetReplaceEstimate = () => {
       </p>
       <p>
         <!-- If it's repairable, position this BEFORE the "Payout options" prompt. -->
-        <MoneyInput minValue={'0'} label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
-        <IconButton icon="info" on:click={() => (fmvModalOpen = true)} />
+        <span class="flex justify-start">
+          <div>
+            <MoneyInput minValue={'0'} label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
+          </div>
+          <IconButton class="gray mt-4px" icon="info" on:click={() => (fmvModalOpen = true)} />
+        </span>
         <Description>
           <ConvertCurrencyLink />
         </Description>
@@ -303,5 +307,5 @@ const unSetReplaceEstimate = () => {
     </p>
   </Form>
 
-  <InfoModal content={fmvExplanation} title="Fair Market Value" open={fmvModalOpen} />
+  <InfoModal content={fmvExplanation} title="Fair Market Value" on:closed={() => (fmvModalOpen =false)} open={fmvModalOpen} />
 </div>

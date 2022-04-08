@@ -46,7 +46,6 @@ const payoutOptions = [
   {
     label: 'Get fair market value (no replacement)',
     value: PayoutOption.FMV,
-    description: fmvExplanation,
   },
 ]
 
@@ -282,7 +281,12 @@ const unSetReplaceEstimate = () => {
     {#if isRepairable === false && payoutOption === PayoutOption.FMV}
       <p>
         <!-- If we know it's not repairable, position this AFTER the "Payout options" prompt. -->
-        <MoneyInput minValue={'0'} label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
+        <span class="flex justify-start">
+          <div>
+            <MoneyInput minValue={'0'} label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
+          </div>
+          <IconButton class="gray mt-4px" icon="info" on:click={() => (fmvModalOpen = true)} />
+        </span>
         <Description>
           <ConvertCurrencyLink />
         </Description>

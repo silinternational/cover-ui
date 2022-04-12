@@ -36,6 +36,7 @@ let policy = {} as Policy
 let showAllItems = false
 let showAllClaims = false
 let checkedItemIds: string[] = []
+let showApprovedOnly = false
 
 onMount(async () => {
   policy = await loadPolicy(policyId)
@@ -48,7 +49,7 @@ $: members = policy.members || []
 
 $: policyId && loadItems(policyId)
 // sort items so inactive is last
-$: items = $selectedPolicyItems.filter(itemIsActive)
+$: items = $selectedPolicyItems.filter(showApprovedOnly ? itemIsApproved : itemIsActive)
 $: itemsForTable = showAllItems ? $selectedPolicyItems : items.slice(0, 15)
 $: allItemsBtnDisabled = itemsForTable.length >= $selectedPolicyItems.length
 $: approvedItems = items.filter(itemIsApproved)
@@ -226,7 +227,9 @@ th {
 
   <div class="flex justify-between align-items-center">
     <h4>Items <span class="subtext">({approvedItems?.length} covered)</span></h4>
-    <Button disabled={allItemsBtnDisabled} on:click={() => (showAllItems = true)}>All Items…</Button>
+    <Button disabled={allItemsBtnDisabled} on:click={() => (showAllItems = true, showApprovedOnly = false)}>all items…</Button>
+
+    <Button on:click={() => (showApprovedOnly = !showApprovedOnly, showAllItems = false)}>toggle approved only</Button>
   </div>
   {#if $loading && isLoadingById(`policies/${policyId}/items`)}
     Loading items...

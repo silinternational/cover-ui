@@ -100,6 +100,15 @@ const handleChange = (e: CustomEvent<string>) => {
     checkedItemIds = [...checkedItemIds, itemId]
   }
 }
+
+const stopFilteringItems = () => {
+  showAllItems = true
+  showApprovedOnly = false
+}
+const toggelApprovedItemsFilter = () => {
+  showApprovedOnly = !showApprovedOnly
+  showAllItems = false
+}
 </script>
 
 <style>
@@ -227,9 +236,8 @@ th {
 
   <div class="flex justify-between align-items-center">
     <h4>Items <span class="subtext">({approvedItems?.length} covered)</span></h4>
-    <Button disabled={allItemsBtnDisabled} on:click={() => (showAllItems = true, showApprovedOnly = false)}>all items…</Button>
-
-    <Button on:click={() => (showApprovedOnly = !showApprovedOnly, showAllItems = false)}>toggle approved only</Button>
+    <Button disabled={allItemsBtnDisabled} on:click={stopFilteringItems}>all items…</Button>
+    <Button on:click={toggelApprovedItemsFilter}>toggle approved only</Button>
   </div>
   {#if $loading && isLoadingById(`policies/${policyId}/items`)}
     Loading items...

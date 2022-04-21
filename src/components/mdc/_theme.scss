@@ -3,29 +3,29 @@
 @include theme.core-styles;
 
 :root {
-  --mdc-theme-primary: #005cb9;
-  --mdc-theme-primary-variant: #5885b3;
-  --mdc-theme-primary-header-bg: #eef2fa;
-  --mdc-theme-secondary: #ffb619;
-  --mdc-theme-error: #c30000;
-  --mdc-theme-neutral: #6d7580;
-  --mdc-theme-neutral-variant: #394452;
+  --mdc-theme-primary: hsla(210, 100%, 36%, 1);
+  --mdc-theme-primary-variant: hsla(210, 37%, 52%, 1);
+  --mdc-theme-primary-header-bg: hsla(220, 54%, 95%, 1);
+  --mdc-theme-secondary: hsla(40, 100%, 54%, 1);
+  --mdc-theme-error: hsla(0, 100%, 38%, 1);
+  --mdc-theme-neutral: hsla(214, 8%, 46%, 1);
+  --mdc-theme-neutral-variant: hsla(213, 17%, 27%, 1);
   --mdc-theme-neutral-bg: hsla(213, 22%, 94%, 1);
   --mdc-theme-neutral-9: hsla(213, 29%, 97%, 1);
   --mdc-theme-neutral-action: hsla(214, 11%, 37%, 1);
-  --progress-bar-color: #005cb9;
-  --mdc-theme-status-warning: #b95000;
-  --mdc-theme-status-warning-bg: #fff4ec;
-  --mdc-theme-status-error: #da1414;
-  --mdc-theme-status-error-bg: #feefef;
-  --mdc-theme-status-info: #2e5aac;
-  --mdc-theme-status-info-bg: #eef2fa;
+  --progress-bar-color: hsla(210, 100%, 36%, 1);
+  --mdc-theme-status-warning: hsla(25, 100%, 36%, 1);
+  --mdc-theme-status-warning-bg: hsla(25, 100%, 96%, 1);
+  --mdc-theme-status-error: hsla(0, 83%, 46%, 1);
+  --mdc-theme-status-error-bg: hsla(0, 88%, 96%, 1);
+  --mdc-theme-status-info: hsla(219, 57%, 42%, 1);
+  --mdc-theme-status-info-bg: hsla(220, 54%, 95%, 1);
   --mdc-theme-status-success: hsla(134, 52%, 32%, 1);
   --mdc-theme-status-success-bg: hsla(135, 50%, 95%, 1);
-  --mdc-required-input: #6d7580;
-  --mdc-button-outline-color: #005cb9;
-  --mdc-list-item__subtitle: #5f6368;
-  --mdc-menu-icon-color: #5f6368;
+  --mdc-required-input: hsla(214, 8%, 46%, 1);
+  --mdc-button-outline-color: hsla(210, 100%, 36%, 1);
+  --mdc-list-item__subtitle: hsla(213, 4%, 39%, 1);
+  --mdc-menu-icon-color: hsla(213, 4%, 39%, 1);
 }
 
 .mdc-theme--primary {

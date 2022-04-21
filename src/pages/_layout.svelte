@@ -1,10 +1,11 @@
 <script lang="ts">
-import user, { getDefaultPolicyId, isAdmin } from 'data/user'
+import user, { getDefaultPolicyId, isAdmin, isCustomer } from 'data/user'
 import { AppDrawer } from 'components'
 import { initialized as policiesInitialized, loadPolicies } from 'data/policies'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import * as routes from 'helpers/routes'
 import { goto, params, route } from '@roxi/routify'
+import { Page } from '@silintl/ui-components'
 import { afterUpdate } from 'svelte'
 
 let userIsAnonymous: boolean
@@ -20,6 +21,7 @@ $: myPolicies = $user?.policies || []
 $: policyId = $selectedPolicyId || getDefaultPolicyId($user)
 $: inAdminRole = isAdmin($roleSelection)
 $: urlIsClaimOrItem = $params.claimId || $params.itemId
+$: customerIsOnAdminView = $route.path.includes('admin') && isCustomer($user.app_role)
 
 $: menuItems = [
   {},
@@ -136,5 +138,14 @@ const goToAdminView = (event: CustomEvent) => {
 </script>
 
 <AppDrawer {menuItems} {myPolicies} role={$user.app_role} on:policy={goToCustomerView} on:role={goToAdminView}>
-  <slot />
+  {#if customerIsOnAdminView}
+    <Page>
+      <p class="m-0-auto">
+        You are not authorized to view this page.
+        <a class="mdc-theme--primary" href={routes.HOME}>Go home</a>
+      </p>
+    </Page>
+  {:else}
+    <slot />
+  {/if}
 </AppDrawer>

@@ -1,12 +1,11 @@
 <script lang="ts">
-import { Breadcrumb, CardsGrid, ClaimsTable, ItemsTable, Row, Strikes } from 'components'
-import CustomerReport from '../components/CustomerReport.svelte'
+import { Breadcrumb, CardsGrid, ClaimsTable, ItemsTable, Row, Strikes, CustomerReport } from 'components'
 import { isLoadingById, loading } from 'components/progress'
 import { Claim, claimIsOpen, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import {
   deleteItem,
   itemIsApproved,
-  itemIsActive,
+  itemIsNotInactive,
   loadItems,
   selectedPolicyItems,
   PolicyItem,
@@ -36,7 +35,7 @@ let policy = {} as Policy
 let showAllItems = false
 let showAllClaims = false
 let checkedItemIds: string[] = []
-let showApprovedOnly = false
+let showApprovedOnly = true
 
 onMount(async () => {
   policy = await loadPolicy(policyId)
@@ -49,9 +48,8 @@ $: members = policy.members || []
 
 $: policyId && loadItems(policyId)
 // sort items so inactive is last
-$: items = $selectedPolicyItems.filter(showApprovedOnly ? itemIsApproved : itemIsActive)
+$: items = $selectedPolicyItems.filter(showApprovedOnly ? itemIsApproved : itemIsNotInactive)
 $: itemsForTable = showAllItems ? $selectedPolicyItems : items.slice(0, 15)
-$: allItemsBtnDisabled = itemsForTable.length >= $selectedPolicyItems.length
 $: approvedItems = items.filter(itemIsApproved)
 
 $: recentClaims = $selectedPolicyClaims.filter(isRecent)
@@ -101,13 +99,9 @@ const handleChange = (e: CustomEvent<string>) => {
   }
 }
 
-const stopFilteringItems = () => {
-  showAllItems = true
-  showApprovedOnly = false
-}
-const toggelApprovedItemsFilter = () => {
+const toggleAllItems = () => {
+  showAllItems = !showAllItems
   showApprovedOnly = !showApprovedOnly
-  showAllItems = false
 }
 </script>
 
@@ -236,8 +230,7 @@ th {
 
   <div class="flex justify-between align-items-center">
     <h4>Items <span class="subtext">({approvedItems?.length} covered)</span></h4>
-    <Button disabled={allItemsBtnDisabled} on:click={stopFilteringItems}>all items…</Button>
-    <Button on:click={toggelApprovedItemsFilter}>toggle approved only</Button>
+    <Button on:click={toggleAllItems}>{showAllItems ? 'Active items...' : 'all items…'}</Button>
   </div>
   {#if $loading && isLoadingById(`policies/${policyId}/items`)}
     Loading items...

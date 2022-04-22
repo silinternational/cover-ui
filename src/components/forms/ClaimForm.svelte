@@ -230,7 +230,7 @@ const unSetReplaceEstimate = () => {
     </p>
     <p>
       <span class="header">What happened?</span>
-      <TextArea {maxlength} required label="Describe the situation" bind:value={situationDescription} rows="4" />
+      <TextArea {maxlength} required description="Describe the situation" bind:value={situationDescription} rows="4" />
     </p>
     {#if shouldAskIfRepairable}
       <div>
@@ -240,7 +240,8 @@ const unSetReplaceEstimate = () => {
 
     {#if isRepairable}
       <p>
-        <MoneyInput minValue={'0'} label="Repair estimate (USD)" bind:value={repairEstimateUSD} />
+        <span class="d-block mb-half">Repair estimate (USD)</span>
+        <MoneyInput minValue={'0'} bind:value={repairEstimateUSD} />
         <Description>
           How much will it probably cost to be repaired?
           <br />
@@ -249,9 +250,10 @@ const unSetReplaceEstimate = () => {
       </p>
       <p>
         <!-- If it's repairable, position this BEFORE the "Payout options" prompt. -->
-        <span class="flex justify-start">
+        <span class="flex justify-start align-items-center">
           <div>
-            <MoneyInput minValue={'0'} label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
+            <span class="d-block mb-half">Fair market value (USD)</span>
+            <MoneyInput minValue={'0'} bind:value={fairMarketValueUSD} />
           </div>
           <IconButton class="gray mt-4px" icon="info" on:click={() => (fmvModalOpen = true)} />
         </span>
@@ -268,7 +270,8 @@ const unSetReplaceEstimate = () => {
       </div>
       {#if payoutOption === PayoutOption.Replacement}
         <p>
-          <MoneyInput minValue={'0'} label="Replacement estimate (USD)" bind:value={replaceEstimateUSD} />
+          <span class="d-block mb-half">Replacement estimate (USD)</span>
+          <MoneyInput minValue={'0'} bind:value={replaceEstimateUSD} />
           <Description>
             How much will it probably cost to replace?
             <br />
@@ -281,9 +284,10 @@ const unSetReplaceEstimate = () => {
     {#if isRepairable === false && payoutOption === PayoutOption.FMV}
       <p>
         <!-- If we know it's not repairable, position this AFTER the "Payout options" prompt. -->
-        <span class="flex justify-start">
+        <span class="flex justify-start align-items-center">
           <div>
-            <MoneyInput minValue={'0'} label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
+            <span class="d-block mb-half">Fair market value (USD)</span>
+            <MoneyInput minValue={'0'} bind:value={fairMarketValueUSD} />
           </div>
           <IconButton class="gray mt-4px" icon="info" on:click={() => (fmvModalOpen = true)} />
         </span>
@@ -311,5 +315,10 @@ const unSetReplaceEstimate = () => {
     </p>
   </Form>
 
-  <InfoModal content={fmvExplanation} title="Fair Market Value" on:closed={() => (fmvModalOpen =false)} open={fmvModalOpen} />
+  <InfoModal
+    content={fmvExplanation}
+    title="Fair Market Value"
+    on:closed={() => (fmvModalOpen = false)}
+    open={fmvModalOpen}
+  />
 </div>

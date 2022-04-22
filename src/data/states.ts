@@ -14,7 +14,7 @@ export const approved: State = {
   icon: 'paid',
   color: '--mdc-theme-status-success',
   bgColor: '--mdc-theme-status-success-bg',
-  title: 'Approved',
+  title: 'Active',
 }
 
 export const needsReview: State = {

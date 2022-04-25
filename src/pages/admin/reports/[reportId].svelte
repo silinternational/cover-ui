@@ -7,9 +7,7 @@ import { onMount } from 'svelte'
 
 export let reportId = ''
 
-onMount(async () => {
-  report = await getLedgerReportById(reportId)
-})
+onMount(getReport)
 
 export let alertOpen = false
 
@@ -27,6 +25,10 @@ const handleDialog = async (event: string) => {
   if (event === 'proceed') {
     report = await reconcileLedgerReport(reportId)
   }
+}
+
+async function getReport() {
+  report = await getLedgerReportById(reportId)
 }
 </script>
 
@@ -67,7 +69,7 @@ th {
       </tr>
       <tr>
         <th>File</th>
-        <td><FileLink file={report.file} /></td>
+        <td><FileLink on:expired={getReport} file={report.file} /></td>
       </tr>
       <tr>
         <th>Cleared</th>

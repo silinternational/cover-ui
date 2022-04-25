@@ -38,7 +38,7 @@ const onCreatePolicy = async () => {
 }
 const validateForm = (formData: any) => {
   assertHas(formData.policyName, 'Please provide a policy name')
-  assertHas(formData.entityCode, 'Please provide an entity code')
+  assertHas(formData.entityCode, 'Please select a valid entity code')
   assertHas(formData.costCenter, 'Please provide a cost center')
   assertHas(formData.account, 'Please provide an account number')
 }

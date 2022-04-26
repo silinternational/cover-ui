@@ -1,5 +1,5 @@
 <script lang="ts">
-import BatchItemDelete from '../components/BatchItemDelete.svelte'
+import BatchItemDelete from '../../components/BatchItemDelete.svelte'
 import DatatableCheckbox from './DatatableCheckbox.svelte'
 import DatatableCheckboxHeader from './DatatableCheckboxHeader.svelte'
 import { AccountablePerson, editableCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/items'
@@ -10,6 +10,7 @@ import { sortByNum, sortByString } from 'helpers/sort'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import { createEventDispatcher } from 'svelte'
 import { Datatable, Menu, MenuItem } from '@silintl/ui-components'
+import { getItemState } from 'data/states'
 
 type Column = {
   title: string
@@ -216,7 +217,7 @@ const onSorted = (event: CustomEvent) => {
           {#if item.coverage_status === ItemCoverageStatus.Approved && item.coverage_end_date}
             Covered through {formatFriendlyDate(item.coverage_end_date)}
           {:else}
-            {item.coverage_status || ''}
+            {getItemState(item.coverage_status)?.title || ''}
           {/if}
         </Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item>{item.accountable_person?.name || ''}</Datatable.Data.Row.Item>

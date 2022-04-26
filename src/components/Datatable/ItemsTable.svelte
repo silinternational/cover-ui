@@ -1,5 +1,5 @@
 <script lang="ts">
-import BatchItemDelete from '../components/BatchItemDelete.svelte'
+import BatchItemDelete from '../../components/BatchItemDelete.svelte'
 import DatatableCheckbox from './DatatableCheckbox.svelte'
 import DatatableCheckboxHeader from './DatatableCheckboxHeader.svelte'
 import { AccountablePerson, editableCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/items'

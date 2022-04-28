@@ -5,7 +5,7 @@ import { addItem, loadItems, PolicyItem } from 'data/items'
 import { PolicyType, selectedPolicy, updatePolicy } from 'data/policies'
 import { loadMembersOfPolicy } from 'data/policy-members'
 import { formatPageTitle } from 'helpers/pageTitle'
-import { HOME, items as itemsRoute, itemsCheckout, itemsNew } from 'helpers/routes'
+import { HOME, items as itemsRoute, itemsCheckout, itemEdit, itemsNew } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
 import { Page, setNotice } from '@silintl/ui-components'
 import { onMount } from 'svelte'
@@ -37,9 +37,9 @@ const onApply = async (event: CustomEvent) => {
 }
 
 const onSaveForLater = async (event: CustomEvent) => {
-  await addItem(policyId, event.detail)
+  item = await addItem(policyId, event.detail)
 
-  $goto(HOME)
+  event.detail.isAutoSaving ? $goto(itemEdit(policyId, item.id)) : $goto(HOME)
 }
 
 const onClosed = async (event: CustomEvent<any>) => {

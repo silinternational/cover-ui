@@ -10,9 +10,10 @@ import type { AccountablePersonOptions } from 'data/accountablePersons'
 import { ItemCoverageStatus, PolicyItem } from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
 import TextFieldWithLabel from '../TextFieldWithLabel.svelte'
+import { assertHas, assertIsLessOrEqual } from '../../validation/assertions'
+import { debounce } from 'lodash-es'
 import { Button, Form, MoneyInput, Select, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
-import { assertHas, assertIsLessOrEqual } from '../../validation/assertions'
 
 export let item = {} as PolicyItem
 export let policyId: string
@@ -52,6 +53,14 @@ $: !$catItemsInitialized && loadCategories()
 $: itemIsDraft = item.coverage_status === ItemCoverageStatus.Draft
 $: marketValueIsDisabled = !!item.id && !itemIsDraft && !isAdmin
 $: applyBtnLabel = !item.coverage_status || itemIsDraft ? 'review and checkout' : 'save changes'
+$: make,
+  model,
+  itemDescription,
+  uniqueIdentifier,
+  marketValueUSD,
+  accountablePersonId && categoryId && name && debouncedSave()
+
+const debouncedSave = debounce(() => saveForLater(undefined, true), 4000)
 
 const onAccountablePersonChange = (event: CustomEvent<AccountablePersonOptions>) => {
   accountablePersonId = event.detail?.id
@@ -122,11 +131,11 @@ const onSubmit = (event: Event) => {
   }
 }
 
-const saveForLater = (event: Event) => {
+const saveForLater = (event?: Event, isAutoSaving = false) => {
   const formData = getFormData()
   validateOnSave(formData)
-  dispatch('save-for-later', formData)
-  event.preventDefault()
+  dispatch('save-for-later', { ...formData, isAutoSaving })
+  event?.preventDefault()
 }
 
 const onDelete = (event: Event) => {

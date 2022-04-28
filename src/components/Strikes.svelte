@@ -25,20 +25,26 @@ const addStrike = () => {
 </script>
 
 {#if strikes.length || userIsAdmin}
-  <h4>Strikes</h4>
+  <h4>Deductible Adjustment</h4>
   {#if !userIsAdmin}
     <p>
-      This policy has been given a strike for suspicious or potentially abusive behavior. Each strike increases the
-      deductible by 20%. Each strike lasts 2 years. Multiple strikes can be on a policy at a time.
+      This policy has been given a deductible adjustment for suspicious or potentially abusive behavior. Each deductible
+      adjustment increases the deductible by 20%. Each deductible adjustment lasts 2 years. Multiple deductible
+      adjustments can be on a policy at a time.
     </p>
   {:else}
     <Button class="mb-1" on:click={() => (showStrikeForm = !showStrikeForm)}>
-      {showStrikeForm ? 'hide' : 'add a strike'}
+      {showStrikeForm ? 'hide' : 'add a deductible adjustment'}
     </Button>
     {#if showStrikeForm}
       <Form class="mb-2">
         <p>
-          <TextArea {maxlength} label="Add a Strike to this policy" rows="4" bind:value={strikeDescription} />
+          <TextArea
+            {maxlength}
+            label="Add a deductible adjustment to this policy"
+            rows="4"
+            bind:value={strikeDescription}
+          />
           <Button disabled={!strikeDescription} on:click={addStrike}>submit</Button>
         </p>
       </Form>

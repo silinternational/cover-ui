@@ -1,4 +1,4 @@
-<script type="ts">
+<script lang="ts">
 import { Button, Dialog } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 

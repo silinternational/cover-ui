@@ -40,3 +40,7 @@ p {
 .mh-275px {
   min-height: 275px;
 }
+
+.mdc-data-table__table-container {
+  overflow-y: hidden;
+}

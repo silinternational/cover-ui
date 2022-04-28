@@ -1,8 +1,8 @@
 <script lang="ts">
-import BatchItemDelete from '../components/BatchItemDelete.svelte'
+import BatchItemDelete from '../../components/BatchItemDelete.svelte'
 import DatatableCheckbox from './DatatableCheckbox.svelte'
 import DatatableCheckboxHeader from './DatatableCheckboxHeader.svelte'
-import { editableCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/items'
+import { AccountablePerson, editableCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/items'
 import { formatDate, formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { itemDetails, itemEdit } from 'helpers/routes'
@@ -10,6 +10,7 @@ import { sortByNum, sortByString } from 'helpers/sort'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import { createEventDispatcher } from 'svelte'
 import { Datatable, Menu, MenuItem } from '@silintl/ui-components'
+import { getItemState } from 'data/states'
 
 type Column = {
   title: string
@@ -149,10 +150,20 @@ const redirectAndSetCurrentItem = (item: PolicyItem) => {
 const getStatusClass = (status: string) =>
   status === ItemCoverageStatus.Draft ? 'mdc-theme--primary mdc-bold-font' : ''
 
+const setAccountablePersonCountryIfNoneExists = () => {
+  if (currentColumn.headerId === 'location') {
+    items.forEach((item) => {
+      !item.accountable_person && (item.accountable_person = {} as AccountablePerson)
+      !item.accountable_person.country && (item.accountable_person.country = item.country || '')
+    })
+  }
+}
+
 const onSorted = (event: CustomEvent) => {
   ascending = event.detail.sortValue === 'ascending'
   headerId = event.detail.columnId || ''
   currentColumn = columns.find((column) => column.headerId === headerId) || columns[0]
+  setAccountablePersonCountryIfNoneExists()
 }
 </script>
 
@@ -206,7 +217,7 @@ const onSorted = (event: CustomEvent) => {
           {#if item.coverage_status === ItemCoverageStatus.Approved && item.coverage_end_date}
             Covered through {formatFriendlyDate(item.coverage_end_date)}
           {:else}
-            {item.coverage_status || ''}
+            {getItemState(item.coverage_status)?.title || ''}
           {/if}
         </Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item>{item.accountable_person?.name || ''}</Datatable.Data.Row.Item>

@@ -6,12 +6,12 @@ import { loading } from './index'
 
 <style>
 .progress {
-  top: -5px;
+  top: 3rem;
 }
 </style>
 
 {#if $loading}
-  <div class="progress w-100 relative">
+  <div class="progress w-100 absolute">
     <Progress.Linear indeterminate />
   </div>
 {/if}

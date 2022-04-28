@@ -7,6 +7,7 @@ import {
   LOSS_REASON_EVACUATION,
 } from '../../business-rules/claim-payout-amount'
 import { MAX_TEXT_AREA_LENGTH as maxlength } from 'components/const'
+import InfoModal from '../InfoModal.svelte'
 import { claimIncidentTypes, loadClaimIncidentTypes } from 'data/types/claim-incident-types'
 import { Claim, ClaimItem, PayoutOption } from 'data/claims'
 import type { PolicyItem } from 'data/items'
@@ -16,7 +17,7 @@ import ConvertCurrencyLink from 'ConvertCurrencyLink.svelte'
 import { formatMoney } from 'helpers/money'
 import RadioOptions from 'RadioOptions.svelte'
 import { assertHas } from '../../validation/assertions'
-import { Button, Form, MoneyInput, TextArea } from '@silintl/ui-components'
+import { Button, Form, IconButton, MoneyInput, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher, onMount } from 'svelte'
 
 export let claim = {} as Claim
@@ -24,6 +25,8 @@ export let item = {} as PolicyItem
 
 const dispatch = createEventDispatcher()
 
+const fmvExplanation =
+  'Fair Market Value: FMV is the price that a given item of "like kind and quality" would reasonably sell for within your marketplace.'
 const todayDateString = new Date().toISOString()
 const repairableOptions = [
   {
@@ -46,6 +49,7 @@ const payoutOptions = [
   },
 ]
 
+let fmvModalOpen = false
 // Set default form values.
 let lostDate = todayDateString.split('T')[0]
 let lossReason: string
@@ -209,11 +213,7 @@ const unSetReplaceEstimate = () => {
 }
 </script>
 
-<style>
-.item-name {
-  margin-bottom: 0.5rem;
-}
-</style>
+<style></style>
 
 <div class="w-50">
   <div class="item-name">{item.name}</div>
@@ -230,7 +230,7 @@ const unSetReplaceEstimate = () => {
     </p>
     <p>
       <span class="header">What happened?</span>
-      <TextArea {maxlength} required label="Describe the situation" bind:value={situationDescription} rows="4" />
+      <TextArea {maxlength} required description="Describe the situation" bind:value={situationDescription} rows="4" />
     </p>
     {#if shouldAskIfRepairable}
       <div>
@@ -240,7 +240,8 @@ const unSetReplaceEstimate = () => {
 
     {#if isRepairable}
       <p>
-        <MoneyInput minValue={'0'} label="Repair estimate (USD)" bind:value={repairEstimateUSD} />
+        <span class="d-block mb-half">Repair estimate (USD)</span>
+        <MoneyInput minValue={'0'} bind:value={repairEstimateUSD} />
         <Description>
           How much will it probably cost to be repaired?
           <br />
@@ -249,7 +250,13 @@ const unSetReplaceEstimate = () => {
       </p>
       <p>
         <!-- If it's repairable, position this BEFORE the "Payout options" prompt. -->
-        <MoneyInput minValue={'0'} label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
+        <span class="flex justify-start align-items-center">
+          <div>
+            <span class="d-block mb-half">Fair market value (USD)</span>
+            <MoneyInput minValue={'0'} bind:value={fairMarketValueUSD} />
+          </div>
+          <IconButton class="gray mt-4px" icon="info" on:click={() => (fmvModalOpen = true)} />
+        </span>
         <Description>
           <ConvertCurrencyLink />
         </Description>
@@ -263,7 +270,8 @@ const unSetReplaceEstimate = () => {
       </div>
       {#if payoutOption === PayoutOption.Replacement}
         <p>
-          <MoneyInput minValue={'0'} label="Replacement estimate (USD)" bind:value={replaceEstimateUSD} />
+          <span class="d-block mb-half">Replacement estimate (USD)</span>
+          <MoneyInput minValue={'0'} bind:value={replaceEstimateUSD} />
           <Description>
             How much will it probably cost to replace?
             <br />
@@ -276,7 +284,13 @@ const unSetReplaceEstimate = () => {
     {#if isRepairable === false && payoutOption === PayoutOption.FMV}
       <p>
         <!-- If we know it's not repairable, position this AFTER the "Payout options" prompt. -->
-        <MoneyInput minValue={'0'} label="Fair market value (USD)" bind:value={fairMarketValueUSD} />
+        <span class="flex justify-start align-items-center">
+          <div>
+            <span class="d-block mb-half">Fair market value (USD)</span>
+            <MoneyInput minValue={'0'} bind:value={fairMarketValueUSD} />
+          </div>
+          <IconButton class="gray mt-4px" icon="info" on:click={() => (fmvModalOpen = true)} />
+        </span>
         <Description>
           <ConvertCurrencyLink />
         </Description>
@@ -300,4 +314,11 @@ const unSetReplaceEstimate = () => {
       {/if}
     </p>
   </Form>
+
+  <InfoModal
+    content={fmvExplanation}
+    title="Fair Market Value"
+    on:closed={() => (fmvModalOpen = false)}
+    open={fmvModalOpen}
+  />
 </div>

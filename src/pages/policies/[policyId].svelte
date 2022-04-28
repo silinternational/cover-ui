@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Breadcrumb, CardsGrid, ClaimsTable, ItemsTable, Row, Strikes } from 'components'
-import CustomerReport from '../components/CustomerReport.svelte'
+import CustomerReport from '../../components/CustomerReport.svelte'
 import { isLoadingById, loading } from 'components/progress'
 import { Claim, claimIsOpen, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import {
@@ -37,12 +37,13 @@ let showAllItems = false
 let showAllClaims = false
 let checkedItemIds: string[] = []
 
-onMount(async () => {
-  policy = await loadPolicy(policyId)
+onMount(() => {
+  loadPolicy(policyId)
   loadItems(policyId)
   loadClaimsByPolicyId(policyId)
 })
 $: policy = $selectedPolicy
+$: $selectedPolicy.id !== policyId && loadPolicy($selectedPolicy.id)
 
 $: members = policy.members || []
 

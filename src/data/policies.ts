@@ -2,6 +2,7 @@ import { loadUser, updateUserPolicyStore } from './user'
 import { derived, get, writable } from 'svelte/store'
 import type { Claim } from './claims'
 import { CREATE, GET, UPDATE } from './index'
+import type { LedgerReport } from './ledger'
 import { selectedPolicyId } from './role-policy-selection'
 import type { PaginatedData } from './types/PaginatedData'
 import type { PolicyMember } from './types/policy-members'
@@ -21,6 +22,7 @@ export type Policy = {
   household_id: string
   id: string
   invites?: PolicyInvite[]
+  ledger_reports: LedgerReport[]
   members?: PolicyMember[]
   name: string
   type: PolicyType
@@ -94,13 +96,15 @@ const updatePolicyStore = (changedPolicy: Policy) => {
     if (i === -1) {
       policies.push(changedPolicy)
     } else {
-      // the policies returned from the get policies list never include claims, dependents or invites on them
+      // the policies returned from the get policies list never include claims, dependents, ledger_reports or invites on them
       // if the value is 'null' then keep the last claims
       policies[i] = {
         ...changedPolicy,
         claims: changedPolicy.claims == null ? policies[i].claims : changedPolicy.claims,
         invites: changedPolicy.invites == null ? policies[i].invites : changedPolicy.invites,
         dependents: changedPolicy.dependents == null ? policies[i].dependents : changedPolicy.dependents,
+        ledger_reports:
+          changedPolicy.ledger_reports == null ? policies[i].ledger_reports : changedPolicy.ledger_reports,
       }
     }
     return policies

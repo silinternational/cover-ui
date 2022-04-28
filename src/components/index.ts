@@ -18,6 +18,7 @@ import FileDropArea from './FileDropArea'
 import FileLink from './FileLink.svelte'
 import { FilePreview } from './FilePreview'
 import FilePreviews from './FilePreview'
+import InfoModal from './InfoModal.svelte'
 import ItemBanner from './banners/ItemBanner.svelte'
 import ItemDeleteModal from './ItemDeleteModal.svelte'
 import ItemDetails from './ItemDetails.svelte'
@@ -54,6 +55,7 @@ export {
   FileLink,
   FilePreview,
   FilePreviews,
+  InfoModal,
   ItemBanner,
   ItemDeleteModal,
   ItemDetails,

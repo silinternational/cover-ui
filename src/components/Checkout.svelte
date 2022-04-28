@@ -48,6 +48,10 @@ const handleDialog = (event: CustomEvent<string>) => {
   padding: 4px;
   border-radius: 8px 8px 0 0;
 }
+
+.agreement {
+  padding: 1rem 20% 1rem 1rem;
+}
 </style>
 
 <h2>Review Coverage and Checkout</h2>
@@ -70,7 +74,7 @@ const handleDialog = (event: CustomEvent<string>) => {
   >
 </div>
 
-<div class="flex align-items-center p-1">
+<div class="agreement flex align-items-center">
   <div>
     Pay {formatMoney(item.prorated_annual_premium)} for the remainder of {year} from {org} account {accountOrhouseholdId}.
     Auto-renew and pay {formatMoney(item.annual_premium)} on {renewDate}.

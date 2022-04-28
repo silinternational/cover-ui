@@ -45,10 +45,9 @@ export const isUnrepairableOrTooExpensive = (
 }
 
 export const isEvidenceNeeded = (claimItem: ClaimItem, claimStatus: ClaimStatus): boolean => {
-  const willNeedEvidence = claimItem.fmv > 0 || claimItem.repair_estimate > 0
-  const repairCostIsNotTooHigh = !isRepairCostTooHigh(claimItem.repair_estimate, claimItem.fmv)
+  const willNeedEvidence = [PayoutOption.FMV, PayoutOption.Repair].includes(claimItem.payout_option)
   const canProvideEvidenceNow = [ClaimStatus.Draft].includes(claimStatus)
-  return willNeedEvidence && repairCostIsNotTooHigh && canProvideEvidenceNow
+  return willNeedEvidence && canProvideEvidenceNow
 }
 
 export const getFilePurpose = (claimItem: ClaimItem, needsReceipt: boolean): ClaimFilePurpose | '' => {

@@ -27,6 +27,11 @@ $: startDate = formatDate(item?.coverage_start_date)
 $: year = getYear(startDate)
 $: renewYear = Number(year) + 1
 $: renewDate = formatDate(`${renewYear}-01-01`)
+$: proratedMessage = `Pay ${formatMoney(item.prorated_annual_premium)} for the remainder of ${year} from ${org} account
+    ${accountOrhouseholdId}. Auto-renew and pay ${formatMoney(item.annual_premium)} on ${renewDate}.`
+$: noPaymentMessage = `No payment needed right now. Auto-renew for ${formatMoney(item.annual_premium)} on ${renewDate}, paid from ${org}
+     account ${accountOrhouseholdId}.`
+$: checkoutMessage = item.prorated_annual_premium > 100 ? proratedMessage : noPaymentMessage
 
 const dispatch = createEventDispatcher<{ agreeAndPay: string; delete: string; edit: string }>()
 
@@ -72,10 +77,7 @@ const handleDialog = (event: CustomEvent<string>) => {
 
 <div class="flex align-items-center p-1">
   <div>
-    Pay {item.prorated_annual_premium > 100 ? formatMoney(item.prorated_annual_premium) : '$1.00'} for the remainder of
-    {year} from {org} account {accountOrhouseholdId}. Auto-renew and pay {item.annual_premium > 100
-      ? formatMoney(item.annual_premium)
-      : '$1.00'} on {renewDate}.
+    {checkoutMessage}
   </div>
   <Button class="ml-1" disabled={!checked} raised on:click={onAgreeAndPay}>Agree and Pay</Button>
 </div>

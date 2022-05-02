@@ -37,12 +37,13 @@ let showAllClaims = false
 let checkedItemIds: string[] = []
 let showApprovedOnly = true
 
-onMount(async () => {
-  policy = await loadPolicy(policyId)
+onMount(() => {
+  loadPolicy(policyId)
   loadItems(policyId)
   loadClaimsByPolicyId(policyId)
 })
 $: policy = $selectedPolicy
+$: $selectedPolicy.id !== policyId && loadPolicy($selectedPolicy.id)
 
 $: members = policy.members || []
 

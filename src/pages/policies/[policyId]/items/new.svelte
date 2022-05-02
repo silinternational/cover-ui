@@ -6,7 +6,7 @@ import { addItem, deleteItem, loadItems, PolicyItem, submitItem } from 'data/ite
 import { PolicyType, selectedPolicy, updatePolicy } from 'data/policies'
 import { loadMembersOfPolicy } from 'data/policy-members'
 import { formatPageTitle } from 'helpers/pageTitle'
-import { HOME, items as itemsRoute, itemDetails, itemsNew } from 'helpers/routes'
+import { HOME, items as itemsRoute, itemDetails, itemsNew, itemEdit } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
 import { Page, setNotice } from '@silintl/ui-components'
 import { onMount } from 'svelte'
@@ -56,7 +56,7 @@ const onDelete = async (event: CustomEvent<string>) => {
 }
 
 const onEdit = () => {
-  isCheckingOut = false
+  $goto(itemEdit(policyId, item.id))
 }
 
 const onClosed = async (event: CustomEvent<any>) => {

@@ -35,7 +35,7 @@ const handleDialog = (e: CustomEvent) => {
 
 <Dialog.Alert {open} {buttons} defaultAction="cancel" {title} on:closed={handleDialog} on:chosen={handleDialog}>
   {policyMember.first_name} is accountable for {numberOfItemsDependentIsOn}
-  {numberOfItemsDependentIsOn > 1 ? 'items' : 'item'}.
+  {numberOfItemsDependentIsOn === 1 ? 'item' : 'items'}.
 
   {message}
 </Dialog.Alert>

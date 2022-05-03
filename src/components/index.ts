@@ -10,6 +10,7 @@ import ClaimForm from './forms/ClaimForm.svelte'
 import ClaimsTable from './ClaimsTable.svelte'
 import ConvertCurrencyLink from './ConvertCurrencyLink.svelte'
 import CountrySelector from './CountrySelector.svelte'
+import CustomerReport from './CustomerReport.svelte'
 import ItemsTable from './Datatable/ItemsTable.svelte'
 import DateInput from './DateInput.svelte'
 import DependentForm from './forms/DependentForm.svelte'
@@ -67,6 +68,7 @@ export {
   CardsGrid,
   ClaimCard,
   ClaimCards,
+  CustomerReport,
   RecentActivityTable,
   Row,
   ClaimBanner,

@@ -206,7 +206,7 @@ const onChosen = (event: CustomEvent) => (formData.country = event.detail)
   </Form>
 
   <RemoveDependentModal
-    dependentId={dependent.id}
+    {dependent}
     {policyId}
     open={removeModalIsOpen}
     on:remove={onRemove}

@@ -273,7 +273,7 @@ export async function deleteItem(policyId: string, itemId: string): Promise<any>
 export const itemBelongsToPolicy = (policyId: string, item: PolicyItem): boolean => item.policy_id === policyId
 
 export const howManyItemsAccountablePersonIsOn = (dependentId: string, policyId: string): number => {
-  return get(itemsByPolicyId)[policyId]?.filter((item) => item.accountable_person?.id === dependentId)?.length
+  return get(itemsByPolicyId)[policyId]?.filter((item) => item.accountable_person?.id === dependentId).length
 }
 
 function updateStoreItem(updatedItem: PolicyItem) {

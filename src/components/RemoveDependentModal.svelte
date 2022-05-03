@@ -1,17 +1,16 @@
 <script lang="ts">
+import type { PolicyDependent } from 'data/dependents'
 import { howManyItemsAccountablePersonIsOn } from 'data/items'
-import { createEventDispatcher, onMount } from 'svelte'
 import { Dialog } from '@silintl/ui-components'
+import { createEventDispatcher } from 'svelte'
 
 export let open: boolean = false
-export let dependentId: string
+export let dependent = {} as PolicyDependent
 export let policyId: string = ''
 
-let dependentIsOnItems: boolean = false
+let numberOfItemsDependentIsOn = 0
 
-onMount(() => {
-  dependentIsOnItems = !!howManyItemsAccountablePersonIsOn(dependentId, policyId)
-})
+$: numberOfItemsDependentIsOn = howManyItemsAccountablePersonIsOn(dependent.id, policyId)
 
 const title = 'Remove Dependent'
 const buttonsWithoutItems: Dialog.AlertButton[] = [
@@ -22,8 +21,8 @@ const buttonsWithItems: Dialog.AlertButton[] = [
   { label: 'cancel', action: 'cancel', class: 'mdc-dialog__button' },
   { label: 'Items', action: 'gotoItems', class: 'error-button' },
 ]
-$: buttons = dependentIsOnItems ? buttonsWithItems : buttonsWithoutItems
-$: message = dependentIsOnItems
+$: buttons = !!numberOfItemsDependentIsOn ? buttonsWithItems : buttonsWithoutItems
+$: message = !!numberOfItemsDependentIsOn
   ? `Please remove this dependent from all items before removing.`
   : `Permanently remove this dependent?`
 
@@ -35,5 +34,8 @@ const handleDialog = (e: CustomEvent) => {
 </script>
 
 <Dialog.Alert {open} {buttons} defaultAction="cancel" {title} on:closed={handleDialog} on:chosen={handleDialog}>
+  {dependent.name} is accountable for {numberOfItemsDependentIsOn}
+  {numberOfItemsDependentIsOn === 1 ? 'item' : 'items'}.
+
   {message}
 </Dialog.Alert>

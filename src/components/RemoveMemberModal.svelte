@@ -8,7 +8,7 @@ export let open: boolean = false
 export let policyMember = {} as PolicyMember
 export let policyId: string = ''
 
-let numberOfItemsDependentIsOn: number
+let numberOfItemsDependentIsOn = 0
 
 $: numberOfItemsDependentIsOn = howManyItemsAccountablePersonIsOn(policyMember.id, policyId)
 
@@ -21,8 +21,8 @@ const buttonsWithItems: Dialog.AlertButton[] = [
   { label: 'cancel', action: 'cancel', class: 'mdc-dialog__button' },
   { label: 'Items', action: 'gotoItems', class: 'error-button' },
 ]
-$: buttons = numberOfItemsDependentIsOn ? buttonsWithItems : buttonsWithoutItems
-$: message = numberOfItemsDependentIsOn
+$: buttons = !!numberOfItemsDependentIsOn ? buttonsWithItems : buttonsWithoutItems
+$: message = !!numberOfItemsDependentIsOn
   ? `Please remove this person from all items before removing.`
   : `Permanently remove this person?`
 

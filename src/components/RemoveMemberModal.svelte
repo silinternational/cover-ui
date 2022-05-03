@@ -1,19 +1,18 @@
 <script lang="ts">
 import { howManyItemsAccountablePersonIsOn } from 'data/items'
-import { createEventDispatcher, onMount } from 'svelte'
 import { Dialog } from '@silintl/ui-components'
+import type { PolicyMember } from 'data/types/policy-members'
+import { createEventDispatcher } from 'svelte'
 
 export let open: boolean = false
-export let dependentId: string
+export let policyMember = {} as PolicyMember
 export let policyId: string = ''
 
-let dependentIsOnItems: boolean = false
+let numberOfItemsDependentIsOn: number
 
-onMount(() => {
-  dependentIsOnItems = !!howManyItemsAccountablePersonIsOn(dependentId, policyId)
-})
+$: numberOfItemsDependentIsOn = howManyItemsAccountablePersonIsOn(policyMember.id, policyId)
 
-const title = 'Remove Dependent'
+const title = 'Remove Person'
 const buttonsWithoutItems: Dialog.AlertButton[] = [
   { label: 'cancel', action: 'cancel', class: 'mdc-dialog__button' },
   { label: 'Remove', action: 'remove', class: 'error-button' },
@@ -22,10 +21,10 @@ const buttonsWithItems: Dialog.AlertButton[] = [
   { label: 'cancel', action: 'cancel', class: 'mdc-dialog__button' },
   { label: 'Items', action: 'gotoItems', class: 'error-button' },
 ]
-$: buttons = dependentIsOnItems ? buttonsWithItems : buttonsWithoutItems
-$: message = dependentIsOnItems
-  ? `Please remove this dependent from all items before removing.`
-  : `Permanently remove this dependent?`
+$: buttons = numberOfItemsDependentIsOn ? buttonsWithItems : buttonsWithoutItems
+$: message = numberOfItemsDependentIsOn
+  ? `Please remove this person from all items before removing.`
+  : `Permanently remove this person?`
 
 const dispatch = createEventDispatcher<{ remove: string; cancel: string; gotoItems: string; closed: string }>()
 
@@ -35,5 +34,8 @@ const handleDialog = (e: CustomEvent) => {
 </script>
 
 <Dialog.Alert {open} {buttons} defaultAction="cancel" {title} on:closed={handleDialog} on:chosen={handleDialog}>
+  {policyMember.first_name} is accountable for {numberOfItemsDependentIsOn}
+  {numberOfItemsDependentIsOn > 1 ? 'items' : 'item'}.
+
   {message}
 </Dialog.Alert>

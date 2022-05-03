@@ -1,4 +1,4 @@
-import { GET, CREATE as POST } from './index'
+import { GET, CREATE as POST, DELETE } from './index'
 import { loadPolicy } from './policies'
 import { selectedPolicyId } from './role-policy-selection'
 import type { PolicyMember } from './types/policy-members'
@@ -45,4 +45,19 @@ export async function invitePolicyMember(
     inviter_message: message,
   })
   loadPolicy(policyId)
+}
+export async function deletePolicyMember(policyMemberId: string): Promise<void> {
+  await DELETE<void>(`policy-members/${policyMemberId}`)
+
+  membersByPolicyId.update((data) => {
+    const entries = Object.entries(data)
+    const entryWithMemberToDelete = entries.find((entry) => entry[1].find((member) => member.id === policyMemberId))
+    const policyId = entryWithMemberToDelete?.[0]
+    const memberToDelete = entryWithMemberToDelete?.[1].find((member) => member.id === policyMemberId)
+    const memberId = memberToDelete?.id
+    if (policyId) {
+      data[policyId] = data[policyId].filter((member) => member.id !== memberId)
+    }
+    return data
+  })
 }

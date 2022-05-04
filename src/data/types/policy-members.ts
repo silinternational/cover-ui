@@ -6,4 +6,5 @@ export type PolicyMember = {
   last_login_utc: string /*Date*/
   last_name: string
   country: string
+  policy_user_id: string
 }

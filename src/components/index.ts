@@ -36,6 +36,7 @@ import MessageBanner from './banners/MessageBanner.svelte'
 import SearchableSelect from './SearchableSelect.svelte'
 import RemoveProfilePicModal from './RemoveProfilePicModal.svelte'
 import RemoveDependentModal from './RemoveDependentModal.svelte'
+import RemoveMemberModal from './RemoveMemberModal.svelte'
 import RevokeModal from './RevokeModal.svelte'
 import Strikes from './Strikes.svelte'
 
@@ -78,6 +79,7 @@ export {
   MessageBanner,
   RemoveProfilePicModal,
   RemoveDependentModal,
+  RemoveMemberModal,
   RevokeModal,
   Strikes,
 }

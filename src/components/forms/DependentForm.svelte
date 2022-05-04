@@ -13,8 +13,8 @@ export type DependentFormData = {
 
 <script lang="ts">
 import RadioOptions from '../RadioOptions.svelte'
-import CountrySelector from '../components/CountrySelector.svelte'
-import RemoveDependentModal from '../components/RemoveDependentModal.svelte'
+import CountrySelector from '../CountrySelector.svelte'
+import RemoveDependentModal from '../RemoveDependentModal.svelte'
 import { MAX_INPUT_LENGTH as maxlength, MAX_TEXT_AREA_LENGTH } from 'components/const'
 import type { PolicyDependent } from 'data/dependents'
 import { ITEMS } from 'helpers/routes'
@@ -206,7 +206,7 @@ const onChosen = (event: CustomEvent) => (formData.country = event.detail)
   </Form>
 
   <RemoveDependentModal
-    dependentId={dependent.id}
+    {dependent}
     {policyId}
     open={removeModalIsOpen}
     on:remove={onRemove}

@@ -24,7 +24,7 @@ const buttonsWithItems: Dialog.AlertButton[] = [
 $: buttons = !!numberOfItemsDependentIsOn ? buttonsWithItems : buttonsWithoutItems
 $: message = !!numberOfItemsDependentIsOn
   ? `Please remove this person from all items before removing.`
-  : `Permanently remove this person?`
+  : `Permanently remove this person? This cannot be undone.`
 
 const dispatch = createEventDispatcher<{ remove: string; cancel: string; gotoItems: string; closed: string }>()
 

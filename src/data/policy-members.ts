@@ -51,9 +51,11 @@ export async function deletePolicyMember(policyMemberId: string): Promise<void> 
 
   membersByPolicyId.update((data) => {
     const entries = Object.entries(data)
-    const entryWithMemberToDelete = entries.find((entry) => entry[1].some((member) => member.id === policyMemberId))
+    const entryWithMemberToDelete = entries.find((entry) =>
+      entry[1].some((member) => member.policy_user_id === policyMemberId)
+    )
     const policyId = entryWithMemberToDelete?.[0]
-    const memberToDelete = entryWithMemberToDelete?.[1].find((member) => member.id === policyMemberId)
+    const memberToDelete = entryWithMemberToDelete?.[1].find((member) => member.policy_user_id === policyMemberId)
     const memberId = memberToDelete?.id
     if (policyId) {
       data[policyId] = data[policyId].filter((member) => member.id !== memberId)

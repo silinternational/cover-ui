@@ -12,7 +12,7 @@ import {
   updateDependent,
 } from 'data/dependents'
 import { entityCodes, loadEntityCodes } from 'data/entityCodes'
-import { loadItems } from 'data/items'
+import { getItemsAccountablePersonIsOn, loadItems, updateItem } from 'data/items'
 import { updatePolicy, Policy, PolicyType, loadPolicy, selectedPolicy } from 'data/policies'
 import { deletePolicyMember, invitePolicyMember, loadMembersOfPolicy, selectedPolicyMembers } from 'data/policy-members'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
@@ -212,6 +212,10 @@ const editDependent = (dependent: PolicyDependent) => {
 }
 
 const onRemove = (policyUserId: string) => deletePolicyMember(policyUserId)
+const assignItems = (e: CustomEvent) => {
+  const items = getItemsAccountablePersonIsOn(selectedPolicyMember.id, policyId)
+  items.forEach(item => updateItem(policyId, item.id, { ...item ,accountable_person_id: e.detail}))
+}
 </script>
 
 <style>
@@ -401,5 +405,6 @@ p {
     on:gotoItems={() => $goto(ITEMS)}
     on:cancel={() => (removeModalIsOpen = false)}
     on:closed={() => (removeModalIsOpen = false)}
+    on:assign={assignItems}
   />
 </Page>

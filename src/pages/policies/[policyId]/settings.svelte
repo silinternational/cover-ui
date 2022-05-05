@@ -214,7 +214,20 @@ const editDependent = (dependent: PolicyDependent) => {
 const onRemove = (policyUserId: string) => deletePolicyMember(policyUserId)
 const assignItems = (e: CustomEvent) => {
   const items = getItemsAccountablePersonIsOn(selectedPolicyMember.id, policyId)
-  items.forEach(item => updateItem(policyId, item.id, { ...item ,accountable_person_id: e.detail}))
+  items.forEach(item => {
+    updateItem(policyId, item.id, {
+      categoryId: item.category.id,
+      accountablePersonId: e.detail,
+      marketValueUSD: item.coverage_amount/100,
+      description:item.description,
+      inStorage: item.in_storage,
+      make:item.make,
+      model:item.model,
+      name:item.name,
+      riskCategoryId:item.risk_category.id,
+      uniqueIdentifier:item.serial_number,
+    })
+  })
 }
 </script>
 

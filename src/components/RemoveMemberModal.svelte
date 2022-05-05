@@ -4,14 +4,15 @@ import type { PolicyMember } from 'data/types/policy-members'
 import RadioOptions from './RadioOptions.svelte'
 import { createEventDispatcher } from 'svelte'
 import { Dialog, Select } from '@silintl/ui-components'
-import { AccountablePersonOptions, selectedAccountablePersonOptions } from 'data/accountablePersons';
+import { AccountablePersonOptions, selectedAccountablePersonOptions } from 'data/accountablePersons'
 
 export let open: boolean = false
 export let policyMember = {} as PolicyMember
 export let policyId: string = ''
 
 const options = [
-  {label: 'No one', value: 'no-one'}, {label: 'Accountable person', value: 'accountable-person'}
+  { label: 'No one', value: 'no-one' },
+  { label: 'Accountable person', value: 'accountable-person' },
 ]
 
 let numberOfItemsDependentIsOn = 0
@@ -19,7 +20,7 @@ let radioValue = 'no-one'
 let selectedAccountablePersonOption: AccountablePersonOptions
 
 $: numberOfItemsDependentIsOn = howManyItemsAccountablePersonIsOn(policyMember.id, policyId)
-$: personOptions = $selectedAccountablePersonOptions.filter(o => o.id !== policyMember.id)
+$: personOptions = $selectedAccountablePersonOptions.filter((o) => o.id !== policyMember.id)
 
 const title = 'Remove Person'
 const cancelButton: Dialog.AlertButton[] = [{ label: 'cancel', action: 'cancel', class: 'mdc-dialog__button' }]

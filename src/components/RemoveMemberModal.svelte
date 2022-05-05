@@ -46,8 +46,10 @@ const onSelect = (e: CustomEvent) => {
   {policyMember.first_name} is accountable for {numberOfItemsDependentIsOn}
   {numberOfItemsDependentIsOn === 1 ? 'item' : 'items'}.
 
-  <div class="mdc-typography--headline6 mt-2">Assign items to</div>
-  <RadioOptions name="accountable-person" bind:value={radioValue} {options} />
+  {#if numberOfItemsDependentIsOn > 0}
+    <div class="mdc-typography--headline6 mt-2">Assign items to</div>
+    <RadioOptions name="accountable-person" bind:value={radioValue} {options} />
+  {/if}
 
   {#if radioValue === 'accountable-person' && numberOfItemsDependentIsOn > 0}
     <Select label="Input" options={personOptions} on:change={onSelect} />

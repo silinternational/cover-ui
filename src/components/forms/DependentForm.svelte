@@ -12,12 +12,13 @@ export type DependentFormData = {
 </script>
 
 <script lang="ts">
-import RadioOptions from '../RadioOptions.svelte'
-import CountrySelector from '../CountrySelector.svelte'
-import RemoveDependentModal from '../RemoveDependentModal.svelte'
+import { assignItems } from 'data/items'
 import { MAX_INPUT_LENGTH as maxlength, MAX_TEXT_AREA_LENGTH } from 'components/const'
+import CountrySelector from '../CountrySelector.svelte'
 import type { PolicyDependent } from 'data/dependents'
 import { ITEMS } from 'helpers/routes'
+import RadioOptions from '../RadioOptions.svelte'
+import RemoveDependentModal from '../RemoveDependentModal.svelte'
 import { assertEmailAddress, assertHas, assertIsLessThan, assertUnique } from '../../validation/assertions'
 import { Button, Form, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
@@ -131,6 +132,10 @@ const onSubmit = () => {
 }
 
 const onChosen = (event: CustomEvent) => (formData.country = event.detail)
+
+const onAssign = (e: CustomEvent) => {
+  assignItems(e.detail, policyId, dependent.id)
+}
 </script>
 
 <style>
@@ -213,5 +218,6 @@ const onChosen = (event: CustomEvent) => (formData.country = event.detail)
     on:gotoItems={() => $goto(ITEMS)}
     on:cancel={() => (removeModalIsOpen = false)}
     on:closed={() => (removeModalIsOpen = false)}
+    on:assign(onAssign)
   />
 </div>

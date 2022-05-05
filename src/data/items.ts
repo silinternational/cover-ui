@@ -305,3 +305,21 @@ export const itemIsApproved = (item: PolicyItem): boolean => {
 export const itemIsInactive = (item: PolicyItem): boolean => {
   return item.coverage_status === ItemCoverageStatus.Inactive
 }
+
+export const assignItems = (newMemberId: string, policyId: string, selectedPolicyMemberId: string): void => {
+  const items = getItemsAccountablePersonIsOn(selectedPolicyMemberId, policyId)
+  items.forEach((item) => {
+    updateItem(policyId, item.id, {
+      categoryId: item.category.id,
+      accountablePersonId: newMemberId,
+      marketValueUSD: item.coverage_amount / 100,
+      description: item.description,
+      inStorage: item.in_storage,
+      make: item.make,
+      model: item.model,
+      name: item.name,
+      riskCategoryId: item.risk_category.id,
+      uniqueIdentifier: item.serial_number,
+    })
+  })
+}

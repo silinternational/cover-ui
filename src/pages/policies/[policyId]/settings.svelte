@@ -12,7 +12,7 @@ import {
   updateDependent,
 } from 'data/dependents'
 import { entityCodes, loadEntityCodes } from 'data/entityCodes'
-import { getItemsAccountablePersonIsOn, loadItems, updateItem } from 'data/items'
+import { assignItems, loadItems } from 'data/items'
 import { updatePolicy, Policy, PolicyType, loadPolicy, selectedPolicy } from 'data/policies'
 import { deletePolicyMember, invitePolicyMember, loadMembersOfPolicy, selectedPolicyMembers } from 'data/policy-members'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
@@ -212,22 +212,9 @@ const editDependent = (dependent: PolicyDependent) => {
 }
 
 const onRemove = (policyUserId: string) => deletePolicyMember(policyUserId)
-const assignItems = (e: CustomEvent) => {
-  const items = getItemsAccountablePersonIsOn(selectedPolicyMember.id, policyId)
-  items.forEach(item => {
-    updateItem(policyId, item.id, {
-      categoryId: item.category.id,
-      accountablePersonId: e.detail,
-      marketValueUSD: item.coverage_amount/100,
-      description:item.description,
-      inStorage: item.in_storage,
-      make:item.make,
-      model:item.model,
-      name:item.name,
-      riskCategoryId:item.risk_category.id,
-      uniqueIdentifier:item.serial_number,
-    })
-  })
+
+const onAssign = (e: CustomEvent) => {
+  assignItems(e.detail, policyId, selectedPolicyMember.id)
 }
 </script>
 
@@ -418,6 +405,6 @@ p {
     on:gotoItems={() => $goto(ITEMS)}
     on:cancel={() => (removeModalIsOpen = false)}
     on:closed={() => (removeModalIsOpen = false)}
-    on:assign={assignItems}
+    on:assign={onAssign}
   />
 </Page>

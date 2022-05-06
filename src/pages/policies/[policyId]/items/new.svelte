@@ -39,7 +39,12 @@ const onApply = async (event: CustomEvent) => {
 const onSaveForLater = async (event: CustomEvent) => {
   item = await addItem(policyId, event.detail)
 
-  event.detail.isAutoSaving ? $goto(itemEdit(policyId, item.id)) : $goto(HOME)
+  if (event.detail.isAutoSaving) {
+    //Todo once autosaving can happen on an empty form send the user immediately to edit.
+    // $goto(itemEdit(policyId, item.id))
+  } else {
+    $goto(HOME)
+  }
 }
 
 const onClosed = async (event: CustomEvent<any>) => {

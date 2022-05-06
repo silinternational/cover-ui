@@ -110,7 +110,8 @@ const validateOnSave = (formData: any) => {
 const validate = (formData: any) => {
   validateOnSave(formData)
   assertHas(formData.marketValueUSD, 'Please specify the market value')
-  assertIsLessOrEqual(formData.marketValueUSD * 100, item.coverage_amount, 'Coverage amount cannot be increased')
+  item.coverage_status !== ItemCoverageStatus.Draft &&
+    assertIsLessOrEqual(formData.marketValueUSD * 100, item.coverage_amount, 'Coverage amount cannot be increased')
   return true
 }
 

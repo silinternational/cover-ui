@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Breadcrumb, ItemForm, NoHouseholdIdModal } from 'components'
 import { loadDependents } from 'data/dependents'
-import { addItem, loadItems, PolicyItem } from 'data/items'
+import { addItem, loadItems, PolicyItem, updateItem } from 'data/items'
 import { PolicyType, selectedPolicy, updatePolicy } from 'data/policies'
 import { loadMembersOfPolicy } from 'data/policy-members'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -12,7 +12,7 @@ import { onMount } from 'svelte'
 
 export let policyId: string
 
-let item: PolicyItem
+let item = {} as PolicyItem
 let open = false
 
 onMount(() => {
@@ -37,7 +37,7 @@ const onApply = async (event: CustomEvent) => {
 }
 
 const onSaveForLater = async (event: CustomEvent) => {
-  item = await addItem(policyId, event.detail)
+  item.id ? await updateItem(policyId, item.id, event.detail) : (item = await addItem(policyId, event.detail))
 
   if (event.detail.isAutoSaving) {
     //Todo once autosaving can happen on an empty form send the user immediately to edit.

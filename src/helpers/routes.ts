@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+import qs from 'qs'
 
 export const ROOT = '/'
 export const HOME = '/home'
@@ -22,7 +23,8 @@ export const FAQ = '/faq'
 export const ITEMS = '/items'
 export const items = (policyId: string) => `/policies/${policyId}/items`
 export const itemsNew = (policyId: string) => `/policies/${policyId}/items/new`
-export const itemsNewId = (policyId: string, query: string) => `/policies/${policyId}/items/new?${query}`
+export const itemsNewQs = (policyId: string, query: { itemId: string }) =>
+  `/policies/${policyId}/items/new?${qs.stringify(query)}`
 export const itemsCheckout = (policyId: string, itemId: string) => `/policies/${policyId}/items/${itemId}/checkout`
 export const itemDetails = (policyId: string, itemId: string) => `/policies/${policyId}/items/${itemId}`
 export const itemEdit = (policyId: string, itemId: string) => `/policies/${policyId}/items/${itemId}/edit`

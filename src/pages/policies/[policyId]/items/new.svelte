@@ -3,11 +3,10 @@ import { Breadcrumb, ItemForm, NoHouseholdIdModal } from 'components'
 import { loadDependents } from 'data/dependents'
 import {
   addItem,
-  ItemFormData,
   loadItems,
   NewItemFormData,
   PolicyItem,
-  SaveFormData,
+  UpdateItemFormData,
   selectedPolicyItems,
   updateItem,
 } from 'data/items'
@@ -48,7 +47,7 @@ const onApply = async (event: CustomEvent) => {
 }
 
 const onSaveForLater = async (event: CustomEvent) => {
-  const itemData: SaveFormData = event.detail
+  const itemData: UpdateItemFormData = event.detail
   saveOrAddItem(itemData)
 
   if (!event.detail.isAutoSaving) {
@@ -56,7 +55,7 @@ const onSaveForLater = async (event: CustomEvent) => {
   }
 }
 
-const saveOrAddItem = async (itemData: ItemFormData | NewItemFormData) =>
+const saveOrAddItem = async (itemData: UpdateItemFormData | NewItemFormData) =>
   item.id
     ? await updateItem(policyId, item.id, itemData)
     : (item = await addItem(policyId, itemData as NewItemFormData))

@@ -7,7 +7,7 @@ import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import SelectAccountablePerson from '../SelectAccountablePerson.svelte'
 import { MAX_TEXT_AREA_LENGTH } from 'components/const'
 import type { AccountablePersonOptions } from 'data/accountablePersons'
-import { ItemCoverageStatus, NewItemFormData, PolicyItem, SaveFormData } from 'data/items'
+import { ItemCoverageStatus, NewItemFormData, PolicyItem, UpdateItemFormData } from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
 import TextFieldWithLabel from '../TextFieldWithLabel.svelte'
 import { assertHas, assertIsLessOrEqual } from '../../validation/assertions'
@@ -24,7 +24,7 @@ let open = false
 let makeModelIsOpen = false
 let selectedAccountablePersonId: string
 
-const dispatch = createEventDispatcher<{ submit: NewItemFormData; 'save-for-later': SaveFormData; delete: any }>()
+const dispatch = createEventDispatcher<{ submit: NewItemFormData; 'save-for-later': UpdateItemFormData; delete: any }>()
 
 // Set default values.
 let accountablePersonId = ''

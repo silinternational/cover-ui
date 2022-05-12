@@ -113,7 +113,7 @@ export interface NewItemFormData extends ItemFormData {
   coverageStatus?: ItemCoverageStatus
 }
 
-export interface SaveFormData extends ItemFormData {
+export interface UpdateItemFormData extends ItemFormData {
   isAutoSaving?: boolean
 }
 

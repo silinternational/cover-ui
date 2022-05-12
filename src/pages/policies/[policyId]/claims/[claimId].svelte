@@ -49,7 +49,6 @@ import {
   customerClaimDetails,
   POLICIES,
   policyDetails,
-  itemsNew,
   itemEdit,
 } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'

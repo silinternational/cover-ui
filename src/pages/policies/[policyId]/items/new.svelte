@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Breadcrumb, ItemForm, NoHouseholdIdModal } from 'components'
 import { loadDependents } from 'data/dependents'
-import { addItem, itemsByPolicyId, loadItems, PolicyItem, updateItem } from 'data/items'
+import { addItem, loadItems, PolicyItem, selectedPolicyItems, updateItem } from 'data/items'
 import { PolicyType, selectedPolicy, updatePolicy } from 'data/policies'
 import { loadMembersOfPolicy } from 'data/policy-members'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -19,16 +19,15 @@ let open = false
 onMount(() => {
   loadDependents(policyId)
   loadMembersOfPolicy(policyId)
+  loadItems(policyId)
 })
 
 $: metatags.title = formatPageTitle('Items > New')
 
-$: policyId && loadItems(policyId)
-
 $: item.id && $redirect(itemsNewId(policyId, qs.stringify({ itemId: item.id })))
 $: $selectedPolicy.type === PolicyType.Household && !$selectedPolicy.household_id && (open = true)
 
-$: $params.itemId && (item = $itemsByPolicyId[policyId]?.find((i) => i.id === $params.itemId) || {})
+$: $params.itemId && (item = $selectedPolicyItems.find((i) => i.id === $params.itemId) || {})
 $: breadcrumbLinks = [
   { name: 'Items', url: itemsRoute(policyId) },
   { name: 'New', url: item.id ? itemsNewId(policyId, qs.stringify({ itemId: item.id })) : itemsNew(policyId) },

@@ -25,6 +25,7 @@ import ItemDeleteModal from './ItemDeleteModal.svelte'
 import ItemDetails from './ItemDetails.svelte'
 import ItemForm from './forms/ItemForm.svelte'
 import NoHouseholdIdModal from './NoHouseholdIdModal.svelte'
+import NewCoverageModal from './NewCoverageModal.svelte'
 import Paginator from './Paginator.svelte'
 import RadioOptions from './RadioOptions.svelte'
 import RecentActivityTable from './RecentActivityTable.svelte'
@@ -64,6 +65,7 @@ export {
   ItemForm,
   ItemsTable,
   NoHouseholdIdModal,
+  NewCoverageModal,
   Paginator,
   RadioOptions,
   CardsGrid,

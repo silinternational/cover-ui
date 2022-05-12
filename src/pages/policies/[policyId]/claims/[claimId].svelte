@@ -6,10 +6,11 @@ import {
   Breadcrumb,
   ClaimActions,
   ClaimBanner,
-  MessageBanner,
   ConvertCurrencyLink,
   FileDropArea,
   FilePreviews,
+  MessageBanner,
+  NewCoverageModal,
   Row,
   RevokeModal,
 } from 'components'
@@ -37,12 +38,20 @@ import {
   deleteClaim,
   updateClaim,
 } from 'data/claims'
-import { loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
+import { addItem, loadItems, parseItemForAddItem, PolicyItem, selectedPolicyItems } from 'data/items'
 import { getNameOfPolicy, getPolicyById, loadPolicy, memberBelongsToPolicy, policies, Policy } from 'data/policies'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
-import { customerClaimEdit, customerClaims, customerClaimDetails, POLICIES, policyDetails } from 'helpers/routes'
+import {
+  customerClaimEdit,
+  customerClaims,
+  customerClaimDetails,
+  POLICIES,
+  policyDetails,
+  itemsNew,
+  itemEdit,
+} from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { assertHas } from '../../../../validation/assertions'
 import { onMount } from 'svelte'
@@ -55,15 +64,16 @@ export let policyId = $selectedPolicyId
 
 const updatedClaimItemData = {} as any
 
-let showImg: boolean = false
+let showImg = false
 let repairOrReplacementCost: number
-let uploading: boolean = false
+let uploading = false
 let previewFile = {} as ClaimFile
 let householdId: string = ''
 let claimName: string
 let policy = {} as Policy
 let claim = {} as Claim
-let revokeModalOpen: boolean = false
+let revokeModalOpen = false
+let newCoverageModalOpen = false
 
 onMount(() => {
   getClaimById(claimId)
@@ -225,6 +235,9 @@ async function onUpload(event: CustomEvent<FormData>) {
     await getClaimById(claimId)
   } finally {
     uploading = false
+    if (payoutOption === PayoutOption.Replacement) {
+      newCoverageModalOpen = true
+    }
   }
 }
 
@@ -243,6 +256,12 @@ const getClaimStatusText = (claim: Claim, item: ClaimItem) => {
 
 const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]): boolean => {
   return files.filter((file) => file.purpose === purpose).length > 0
+}
+
+const onReCover = async () => {
+  const newItem = await addItem(policyId, parseItemForAddItem(item))
+
+  $goto(itemEdit(policyId, newItem.id))
 }
 </script>
 
@@ -389,4 +408,10 @@ const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]):
   {/if}
 
   <RevokeModal {claim} open={revokeModalOpen} on:closed={onRevoke} />
+  <NewCoverageModal
+    open={newCoverageModalOpen}
+    on:reCover={onReCover}
+    on:cancel={() => (newCoverageModalOpen = false)}
+    on:closed={() => (newCoverageModalOpen = false)}
+  />
 </Page>

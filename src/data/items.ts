@@ -301,3 +301,20 @@ export const itemIsApproved = (item: PolicyItem): boolean => {
 export const itemIsInactive = (item: PolicyItem): boolean => {
   return item.coverage_status === ItemCoverageStatus.Inactive
 }
+
+export const parseItemForAddItem = (item: PolicyItem): any => {
+  return {
+    accountablePersonId: item.accountable_person.id,
+    categoryId: item.category.id,
+    country: item.country || item.accountable_person.country,
+    marketValueUSD: item.coverage_amount / 100,
+    coverageStartDate: new Date().toISOString().slice(0, 10),
+    description: item.description,
+    inStorage: item.in_storage,
+    make: item.make,
+    model: item.model,
+    name: item.name,
+    riskCategoryId: item.risk_category.id,
+    uniqueIdentifier: item.serial_number,
+  }
+}

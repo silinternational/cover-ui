@@ -31,13 +31,13 @@ onMount(() => {
 
 $: metatags.title = formatPageTitle('Items > New')
 
-$: item.id && $redirect(itemsNewQs(policyId, { itemId: item.id }))
+$: item.id && $redirect(itemsNewQs(policyId, item.id))
 $: $selectedPolicy.type === PolicyType.Household && !$selectedPolicy.household_id && (open = true)
 
 $: $params.itemId && (item = $selectedPolicyItems.find((i) => i.id === $params.itemId) || {})
 $: breadcrumbLinks = [
   { name: 'Items', url: itemsRoute(policyId) },
-  { name: 'New', url: item.id ? itemsNewQs(policyId, { itemId: item.id }) : itemsNew(policyId) },
+  { name: 'New', url: item.id ? itemsNewQs(policyId, item.id) : itemsNew(policyId) },
 ]
 
 const onApply = async (event: CustomEvent) => {

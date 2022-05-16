@@ -76,7 +76,7 @@ async function customFetch<T>(method: FetchMethod, uri: string, body: any = unde
         location.replace(`${location.origin}${HOME}`)
       }
     }
-    throwError(results?.message, response.status, response.statusText)
+    throwError(results?.message, response.status, response.statusText, results?.key)
   }
 
   return results

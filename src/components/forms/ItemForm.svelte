@@ -7,7 +7,7 @@ import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import SelectAccountablePerson from '../SelectAccountablePerson.svelte'
 import { MAX_TEXT_AREA_LENGTH } from 'components/const'
 import type { AccountablePersonOptions } from 'data/accountablePersons'
-import { ItemCoverageStatus, PolicyItem } from 'data/items'
+import { ItemCoverageStatus, PolicyItem, RiskCategoryNames } from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
 import TextFieldWithLabel from '../TextFieldWithLabel.svelte'
 import { assertHas, assertIsLessOrEqual } from '../../validation/assertions'
@@ -59,7 +59,8 @@ $: make,
   uniqueIdentifier,
   marketValueUSD,
   accountablePersonId && categoryId && name && debouncedSave()
-$: selectedCategoryIsStationary = $categories.find((c) => c.id === categoryId)?.risk_category?.name === 'Stationary'
+$: selectedCategoryIsStationary =
+  $categories.find((c) => c.id === categoryId)?.risk_category?.name === RiskCategoryNames.Stationary
 
 const debouncedSave = debounce(() => saveForLater(undefined, true), 4000)
 

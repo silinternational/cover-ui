@@ -33,9 +33,14 @@ export type AccountablePerson = {
 export type RiskCategory = {
   created_at: string /*Date*/
   id: string
-  name: string
+  name: RiskCategoryNames
   policy_max: number
   updated_at: string /*Date*/
+}
+
+export enum RiskCategoryNames {
+  Stationary = 'Stationary',
+  Mobile = 'Mobile',
 }
 
 export type PolicyItem = {

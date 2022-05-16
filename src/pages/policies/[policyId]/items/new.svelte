@@ -55,10 +55,13 @@ const onSaveForLater = async (event: CustomEvent) => {
   }
 }
 
-const saveOrAddItem = async (itemData: UpdateItemFormData | NewItemFormData) =>
-  item.id
-    ? await updateItem(policyId, item.id, itemData)
-    : (item = await addItem(policyId, itemData as NewItemFormData))
+const saveOrAddItem = async (itemData: UpdateItemFormData | NewItemFormData) => {
+  if (item.id) {
+    return updateItem(policyId, item.id, itemData)
+  } else {
+    item = await addItem(policyId, itemData as NewItemFormData)
+  }
+}
 
 const onClosed = async (event: CustomEvent<any>) => {
   const choice = event.detail.choice

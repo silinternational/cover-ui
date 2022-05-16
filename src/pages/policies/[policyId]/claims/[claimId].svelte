@@ -408,6 +408,7 @@ const onReCover = async () => {
 
   <RevokeModal {claim} open={revokeModalOpen} on:closed={onRevoke} />
   <NewCoverageModal
+    itemName={item.name}
     open={newCoverageModalOpen}
     on:reCover={onReCover}
     on:cancel={() => (newCoverageModalOpen = false)}

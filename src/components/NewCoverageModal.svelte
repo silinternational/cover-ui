@@ -3,6 +3,7 @@ import { Dialog } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let open = true
+export let itemName = ''
 
 let title = 'Replacement coverage'
 
@@ -19,5 +20,5 @@ const handleDialog = (e: CustomEvent) => {
 </script>
 
 <Dialog.Alert {open} {buttons} defaultAction="cancel" {title} on:chosen={handleDialog} on:closed={handleDialog}>
-  We’re ending coverage for Saxophone since you’ve replaced it. Would you like to cover its replacement?
+  We’re ending coverage for {itemName} since you’ve replaced it. Would you like to cover its replacement?
 </Dialog.Alert>

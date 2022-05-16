@@ -24,7 +24,11 @@ let open = false
 let makeModelIsOpen = false
 let selectedAccountablePersonId: string
 
-const dispatch = createEventDispatcher<{ submit: NewItemFormData; 'save-for-later': UpdateItemFormData; delete: any }>()
+const dispatch = createEventDispatcher<{
+  submit: NewItemFormData | UpdateItemFormData
+  'save-for-later': UpdateItemFormData
+  delete: any
+}>()
 
 // Set default values.
 let accountablePersonId = ''

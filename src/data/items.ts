@@ -241,7 +241,11 @@ export async function submitItem(itemId: string): Promise<void> {
  * @param {Object} itemData
  * @return {Object}
  */
-export async function updateItem(policyId: string, itemId: string, itemData: ItemFormData): Promise<void> {
+export async function updateItem(
+  policyId: string,
+  itemId: string,
+  itemData: ItemFormData | UpdateItemFormData
+): Promise<void> {
   if (!itemId) {
     throwError('item id not set')
   }

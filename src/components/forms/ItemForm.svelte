@@ -7,12 +7,12 @@ import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import SelectAccountablePerson from '../SelectAccountablePerson.svelte'
 import { MAX_TEXT_AREA_LENGTH } from 'components/const'
 import type { AccountablePersonOptions } from 'data/accountablePersons'
-import { ItemCoverageStatus, PolicyItem } from 'data/items'
+import { ItemCoverageStatus, PolicyItem, RiskCategoryNames } from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
 import TextFieldWithLabel from '../TextFieldWithLabel.svelte'
 import { assertHas, assertIsLessOrEqual } from '../../validation/assertions'
 import { debounce } from 'lodash-es'
-import { Button, Form, MoneyInput, Select, TextArea } from '@silintl/ui-components'
+import { Button, Card, Form, MoneyInput, Select, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let item = {} as PolicyItem
@@ -59,6 +59,8 @@ $: make,
   uniqueIdentifier,
   marketValueUSD,
   accountablePersonId && categoryId && name && debouncedSave()
+$: selectedCategoryIsStationary =
+  $categories.find((c) => c.id === categoryId)?.risk_category?.name === RiskCategoryNames.Stationary
 
 const debouncedSave = debounce(() => saveForLater(undefined, true), 4000)
 
@@ -179,6 +181,15 @@ const setInitialValues = (user: User, item: PolicyItem) => {
   display: block;
   margin-bottom: 0.5rem;
 }
+
+.material-icons {
+  padding-right: 0.5rem;
+  color: var(--mdc-theme-status-info);
+}
+
+.category-info {
+  color: var(--mdc-theme-status-info);
+}
 </style>
 
 <Form on:submit={onSubmit}>
@@ -187,12 +198,24 @@ const setInitialValues = (user: User, item: PolicyItem) => {
       Category<span class="error">*</span>
     </span>
     <Select
+      width="360px"
       label="Input"
       options={$categories}
       selectedID={initialCategoryId}
       on:change={onSelectCategory}
       on:populated={onCategorySelectPopulated}
     />
+    {#if selectedCategoryIsStationary}
+      <Card class="w-360px mt-1" color="var(--mdc-theme-status-info-bg)">
+        <div class="flex justify-start">
+          <div class="material-icons">info</div>
+          <div class="category-info">
+            Coverage for home electronics and appliances is intended for locations that lack access to homeowner’s or
+            renter’s insurance.
+          </div>
+        </div>
+      </Card>
+    {/if}
   </p>
   <p>
     <TextFieldWithLabel label="Brand" description={'For example, "Apple"'} bind:value={make} />

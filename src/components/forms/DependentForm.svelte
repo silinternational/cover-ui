@@ -218,6 +218,6 @@ const onAssign = (e: CustomEvent) => {
     on:gotoItems={() => $goto(ITEMS)}
     on:cancel={() => (removeModalIsOpen = false)}
     on:closed={() => (removeModalIsOpen = false)}
-    on:assign(onAssign)
+    on:assign={onAssign}
   />
 </div>

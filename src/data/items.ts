@@ -246,11 +246,7 @@ export async function submitItem(itemId: string): Promise<void> {
  * @param {Object} itemData
  * @return {Object}
  */
-export async function updateItem(
-  policyId: string,
-  itemId: string,
-  itemData: ItemFormData | UpdateItemFormData
-): Promise<void> {
+export async function updateItem(policyId: string, itemId: string, itemData: UpdateItemFormData): Promise<void> {
   if (!itemId) {
     throwError('item id not set')
   }
@@ -305,8 +301,12 @@ export async function deleteItem(policyId: string, itemId: string): Promise<any>
 
 export const itemBelongsToPolicy = (policyId: string, item: PolicyItem): boolean => item.policy_id === policyId
 
-export const howManyItemsAccountablePersonIsOn = (dependentId: string, policyId: string): number => {
-  return get(itemsByPolicyId)[policyId]?.filter((item) => item.accountable_person?.id === dependentId).length
+export const getItemsAccountablePersonIsOn = (accountablePersonId: string, policyId: string): PolicyItem[] => {
+  return get(itemsByPolicyId)[policyId]?.filter((item) => item.accountable_person?.id === accountablePersonId) || []
+}
+
+export const howManyItemsAccountablePersonIsOn = (accountablePersonId: string, policyId: string): number => {
+  return getItemsAccountablePersonIsOn(accountablePersonId, policyId).length
 }
 
 function updateStoreItem(updatedItem: PolicyItem) {
@@ -335,14 +335,32 @@ export const itemIsInactive = (item: PolicyItem): boolean => {
   return item.coverage_status === ItemCoverageStatus.Inactive
 }
 
-export const parseItemForAddItem = (item: PolicyItem): any => {
+export const assignItems = (newMemberId: string, policyId: string, selectedPolicyMemberId: string): void => {
+  const items = getItemsAccountablePersonIsOn(selectedPolicyMemberId, policyId)
+  items.forEach((item) => {
+    updateItem(policyId, item.id, {
+      categoryId: item.category.id,
+      accountablePersonId: newMemberId,
+      marketValueUSD: item.coverage_amount / 100,
+      itemDescription: item.description,
+      inStorage: item.in_storage,
+      make: item.make,
+      model: item.model,
+      name: item.name,
+      riskCategoryId: item.risk_category.id,
+      uniqueIdentifier: item.serial_number,
+    })
+  })
+}
+
+export const parseItemForAddItem = (item: PolicyItem): NewItemFormData => {
   return {
     accountablePersonId: item.accountable_person.id,
     categoryId: item.category.id,
     country: item.country || item.accountable_person.country,
     marketValueUSD: item.coverage_amount / 100,
     coverageStartDate: new Date().toISOString().slice(0, 10),
-    description: item.description,
+    itemDescription: item.description,
     inStorage: item.in_storage,
     make: item.make,
     model: item.model,

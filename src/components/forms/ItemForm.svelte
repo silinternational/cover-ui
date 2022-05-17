@@ -181,7 +181,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
 </script>
 
 <style>
-.label {
+span.label {
   display: block;
   margin-bottom: 0.5rem;
 }

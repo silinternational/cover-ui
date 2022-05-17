@@ -1,5 +1,6 @@
 import { GET } from '.'
 import { writable } from 'svelte/store'
+import type { RiskCategory } from './items'
 
 export type ItemCategory = {
   created_at: string /*Date*/
@@ -7,7 +8,7 @@ export type ItemCategory = {
   id: string
   name: string
   require_make_model: boolean
-  risk_category: any /*RiskCategory*/
+  risk_category: RiskCategory
   updated_at: string /*Date*/
 }
 

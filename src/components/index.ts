@@ -3,6 +3,7 @@ import AppFooter from './AppFooter.svelte'
 import Banner from './Banner.svelte'
 import Breadcrumb from './Breadcrumb.svelte'
 import CardsGrid from './CardsGrid.svelte'
+import Checkout from './Checkout.svelte'
 import ClaimActions from './ClaimActions.svelte'
 import ClaimCard from './ClaimCard.svelte'
 import ClaimCards from './ClaimCards.svelte'
@@ -25,6 +26,7 @@ import ItemDeleteModal from './ItemDeleteModal.svelte'
 import ItemDetails from './ItemDetails.svelte'
 import ItemForm from './forms/ItemForm.svelte'
 import NoHouseholdIdModal from './NoHouseholdIdModal.svelte'
+import NewCoverageModal from './NewCoverageModal.svelte'
 import Paginator from './Paginator.svelte'
 import RadioOptions from './RadioOptions.svelte'
 import RecentActivityTable from './RecentActivityTable.svelte'
@@ -45,6 +47,7 @@ export {
   AppFooter,
   Banner,
   Breadcrumb,
+  Checkout,
   ClaimActions,
   ClaimForm,
   ClaimsTable,
@@ -64,6 +67,7 @@ export {
   ItemForm,
   ItemsTable,
   NoHouseholdIdModal,
+  NewCoverageModal,
   Paginator,
   RadioOptions,
   CardsGrid,

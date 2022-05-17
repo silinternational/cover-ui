@@ -7,23 +7,28 @@ import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import SelectAccountablePerson from '../SelectAccountablePerson.svelte'
 import { MAX_TEXT_AREA_LENGTH } from 'components/const'
 import type { AccountablePersonOptions } from 'data/accountablePersons'
-import { ItemCoverageStatus, PolicyItem } from 'data/items'
+import { ItemCoverageStatus, NewItemFormData, PolicyItem, RiskCategoryNames, UpdateItemFormData } from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
 import TextFieldWithLabel from '../TextFieldWithLabel.svelte'
-import { Button, Form, MoneyInput, Select, TextArea } from '@silintl/ui-components'
-import { createEventDispatcher } from 'svelte'
 import { assertHas, assertIsLessOrEqual } from '../../validation/assertions'
+import { debounce } from 'lodash-es'
+import { Button, Card, Form, MoneyInput, Select, TextArea } from '@silintl/ui-components'
+import { createEventDispatcher } from 'svelte'
 
 export let item = {} as PolicyItem
 export let policyId: string
 
 let applyBtnLabel = ''
-let formData = {} as any
+let formData = {} as NewItemFormData
 let open = false
 let makeModelIsOpen = false
 let selectedAccountablePersonId: string
 
-const dispatch = createEventDispatcher<{ submit: any; 'save-for-later': any; delete: any }>()
+const dispatch = createEventDispatcher<{
+  submit: NewItemFormData | UpdateItemFormData
+  'save-for-later': UpdateItemFormData
+  delete: any
+}>()
 
 // Set default values.
 let accountablePersonId = ''
@@ -52,6 +57,16 @@ $: !$catItemsInitialized && loadCategories()
 $: itemIsDraft = item.coverage_status === ItemCoverageStatus.Draft
 $: marketValueIsDisabled = !!item.id && !itemIsDraft && !isAdmin
 $: applyBtnLabel = !item.coverage_status || itemIsDraft ? 'review and checkout' : 'save changes'
+$: make,
+  model,
+  itemDescription,
+  uniqueIdentifier,
+  marketValueUSD,
+  accountablePersonId && categoryId && name && debouncedSave()
+$: selectedCategoryIsStationary =
+  $categories.find((c) => c.id === categoryId)?.risk_category?.name === RiskCategoryNames.Stationary
+
+const debouncedSave = debounce(() => saveForLater(undefined, true), 4000)
 
 const onAccountablePersonChange = (event: CustomEvent<AccountablePersonOptions>) => {
   accountablePersonId = event.detail?.id
@@ -61,7 +76,7 @@ const onSelectCategory = (event: any) => {
   categoryId = event.detail?.id
 }
 
-const getFormData = () => {
+const getFormData = (): NewItemFormData => {
   return {
     accountablePersonId,
     categoryId,
@@ -101,7 +116,8 @@ const validateOnSave = (formData: any) => {
 const validate = (formData: any) => {
   validateOnSave(formData)
   assertHas(formData.marketValueUSD, 'Please specify the market value')
-  assertIsLessOrEqual(formData.marketValueUSD * 100, item.coverage_amount, 'Coverage amount cannot be increased')
+  item.coverage_status !== ItemCoverageStatus.Draft &&
+    assertIsLessOrEqual(formData.marketValueUSD * 100, item.coverage_amount, 'Coverage amount cannot be increased')
   return true
 }
 
@@ -122,11 +138,11 @@ const onSubmit = (event: Event) => {
   }
 }
 
-const saveForLater = (event: Event) => {
+const saveForLater = (event?: Event, isAutoSaving = false) => {
   const formData = getFormData()
   validateOnSave(formData)
-  dispatch('save-for-later', formData)
-  event.preventDefault()
+  dispatch('save-for-later', { ...formData, isAutoSaving })
+  event?.preventDefault()
 }
 
 const onDelete = (event: Event) => {
@@ -169,6 +185,15 @@ const setInitialValues = (user: User, item: PolicyItem) => {
   display: block;
   margin-bottom: 0.5rem;
 }
+
+.material-icons {
+  padding-right: 0.5rem;
+  color: var(--mdc-theme-status-info);
+}
+
+.category-info {
+  color: var(--mdc-theme-status-info);
+}
 </style>
 
 <Form on:submit={onSubmit}>
@@ -177,12 +202,24 @@ const setInitialValues = (user: User, item: PolicyItem) => {
       Category<span class="error">*</span>
     </span>
     <Select
+      width="360px"
       label="Input"
       options={$categories}
       selectedID={initialCategoryId}
       on:change={onSelectCategory}
       on:populated={onCategorySelectPopulated}
     />
+    {#if selectedCategoryIsStationary}
+      <Card class="w-360px mt-1" color="var(--mdc-theme-status-info-bg)">
+        <div class="flex justify-start">
+          <div class="material-icons">info</div>
+          <div class="category-info">
+            Coverage for home electronics and appliances is intended for locations that lack access to homeowner’s or
+            renter’s insurance.
+          </div>
+        </div>
+      </Card>
+    {/if}
   </p>
   <p>
     <TextFieldWithLabel label="Brand" description={'For example, "Apple"'} bind:value={make} />

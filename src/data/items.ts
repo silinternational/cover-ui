@@ -71,31 +71,55 @@ export type PolicyItem = {
 export type CreatePolicyItemRequestBody = {
   accountable_person_id: string /*UUID*/
   category_id: string
-  country: string
-  coverage_amount: number
+  country?: string
+  coverage_amount?: number
   coverage_start_date: string /*Date*/
-  coverage_status: ItemCoverageStatus
-  description: string
-  in_storage: boolean
-  make: string
-  model: string
+  coverage_status?: ItemCoverageStatus
+  description?: string
+  in_storage?: boolean
+  make?: string
+  model?: string
   name: string
   risk_category_id?: string
-  serial_number: string
+  serial_number?: string
 }
 
 export type UpdatePolicyItemRequestBody = {
   accountable_person_id: string /*UUID*/
   category_id: string
-  country: string
-  coverage_amount: number
-  description: string
-  in_storage: boolean
-  make: string
-  model: string
+  country?: string
+  coverage_amount?: number
+  description?: string
+  in_storage?: boolean
+  make?: string
+  model?: string
   name: string
   risk_category_id?: string
-  serial_number: string
+  serial_number?: string
+}
+
+export interface ItemFormData {
+  accountablePersonId: string /*UUID*/
+  categoryId: string
+  country?: string
+  marketValueUSD?: number | string
+  itemDescription?: string
+  inStorage?: boolean
+  make?: string
+  model?: string
+  riskCategoryId?: string
+  name: string
+  uniqueIdentifier?: string
+}
+
+export interface NewItemFormData extends ItemFormData {
+  coverageStartDate: string /*Date*/
+  coverageEndDate?: string /*Date*/
+  coverageStatus?: ItemCoverageStatus
+}
+
+export interface UpdateItemFormData extends ItemFormData {
+  isAutoSaving?: boolean
 }
 
 export const itemsByPolicyId = writable<{ [policyId: string]: PolicyItem[] }>({})
@@ -135,7 +159,7 @@ export async function loadItems(policyId: string): Promise<void> {
  * @param {Object} itemData
  * @return {Object}
  */
-export async function addItem(policyId: string, itemData: any): Promise<PolicyItem> {
+export async function addItem(policyId: string, itemData: NewItemFormData): Promise<PolicyItem> {
   const urlPath = `policies/${policyId}/items`
 
   const parsedItemData: CreatePolicyItemRequestBody = {
@@ -222,7 +246,11 @@ export async function submitItem(itemId: string): Promise<void> {
  * @param {Object} itemData
  * @return {Object}
  */
-export async function updateItem(policyId: string, itemId: string, itemData: any): Promise<void> {
+export async function updateItem(
+  policyId: string,
+  itemId: string,
+  itemData: ItemFormData | UpdateItemFormData
+): Promise<void> {
   if (!itemId) {
     throwError('item id not set')
   }

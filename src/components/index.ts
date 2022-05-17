@@ -3,6 +3,7 @@ import AppFooter from './AppFooter.svelte'
 import Banner from './Banner.svelte'
 import Breadcrumb from './Breadcrumb.svelte'
 import CardsGrid from './CardsGrid.svelte'
+import Checkout from './Checkout.svelte'
 import ClaimActions from './ClaimActions.svelte'
 import ClaimCard from './ClaimCard.svelte'
 import ClaimCards from './ClaimCards.svelte'
@@ -46,6 +47,7 @@ export {
   AppFooter,
   Banner,
   Breadcrumb,
+  Checkout,
   ClaimActions,
   ClaimForm,
   ClaimsTable,

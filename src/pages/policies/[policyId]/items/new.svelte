@@ -1,12 +1,20 @@
 <script lang="ts">
 import { Breadcrumb, ItemForm, NoHouseholdIdModal } from 'components'
 import { loadDependents } from 'data/dependents'
-import { addItem, loadItems, PolicyItem, updateItem } from 'data/items'
+import {
+  addItem,
+  loadItems,
+  NewItemFormData,
+  PolicyItem,
+  UpdateItemFormData,
+  selectedPolicyItems,
+  updateItem,
+} from 'data/items'
 import { PolicyType, selectedPolicy, updatePolicy } from 'data/policies'
 import { loadMembersOfPolicy } from 'data/policy-members'
 import { formatPageTitle } from 'helpers/pageTitle'
-import { HOME, items as itemsRoute, itemsCheckout, itemEdit, itemsNew } from 'helpers/routes'
-import { goto, metatags } from '@roxi/routify'
+import { HOME, items as itemsRoute, itemsCheckout, itemsNew, itemsNewQs } from 'helpers/routes'
+import { goto, metatags, params, redirect } from '@roxi/routify'
 import { Page, setNotice } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
@@ -18,32 +26,40 @@ let open = false
 onMount(() => {
   loadDependents(policyId)
   loadMembersOfPolicy(policyId)
+  loadItems(policyId)
 })
 
 $: metatags.title = formatPageTitle('Items > New')
 
-$: policyId && loadItems(policyId)
-
+$: item.id && $redirect(itemsNewQs(policyId, item.id))
 $: $selectedPolicy.type === PolicyType.Household && !$selectedPolicy.household_id && (open = true)
 
+$: $params.itemId && (item = $selectedPolicyItems.find((i) => i.id === $params.itemId) || {})
 $: breadcrumbLinks = [
   { name: 'Items', url: itemsRoute(policyId) },
-  { name: 'New', url: itemsNew(policyId) },
+  { name: 'New', url: item.id ? itemsNewQs(policyId, item.id) : itemsNew(policyId) },
 ]
 
 const onApply = async (event: CustomEvent) => {
-  item = await addItem(policyId, event.detail)
+  const itemData: NewItemFormData = event.detail
+  await saveOrAddItem(itemData)
   $goto(itemsCheckout(policyId, item.id))
 }
 
 const onSaveForLater = async (event: CustomEvent) => {
-  item.id ? await updateItem(policyId, item.id, event.detail) : (item = await addItem(policyId, event.detail))
+  const itemData: UpdateItemFormData = event.detail
+  saveOrAddItem(itemData)
 
-  if (event.detail.isAutoSaving) {
-    //Todo once autosaving can happen on an empty form send the user immediately to edit.
-    // $goto(itemEdit(policyId, item.id))
-  } else {
+  if (!event.detail.isAutoSaving) {
     $goto(HOME)
+  }
+}
+
+const saveOrAddItem = async (itemData: UpdateItemFormData | NewItemFormData) => {
+  if (item.id) {
+    return updateItem(policyId, item.id, itemData)
+  } else {
+    item = await addItem(policyId, itemData as NewItemFormData)
   }
 }
 

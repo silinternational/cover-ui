@@ -12,7 +12,7 @@ import {
   deleteItems,
 } from 'data/items'
 import { getNameOfPolicy, loadPolicy, Policy, PolicyType, selectedPolicy } from 'data/policies'
-import { roleSelection } from 'data/role-policy-selection'
+import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { isAdmin } from 'data/user'
 import { formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
@@ -43,7 +43,7 @@ onMount(() => {
   loadClaimsByPolicyId(policyId)
 })
 $: policy = $selectedPolicy
-$: $selectedPolicy.id !== policyId && loadPolicy($selectedPolicy.id)
+$: $selectedPolicyId !== policyId && loadPolicy($selectedPolicyId)
 
 $: members = policy.members || []
 

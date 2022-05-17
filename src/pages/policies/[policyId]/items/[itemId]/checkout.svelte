@@ -1,10 +1,9 @@
 <script lang="ts">
-import Checkout from 'Checkout.svelte'
+import { Checkout } from 'components'
 import { deleteItem, loadItems, PolicyItem, selectedPolicyItems, submitItem } from 'data/items'
-import { selectedPolicyId } from 'data/role-policy-selection'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { itemDetails, items, itemEdit } from 'helpers/routes'
-import { goto, metatags } from '@roxi/routify'
+import { goto, metatags, params } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
@@ -14,7 +13,7 @@ onMount(() => {
   loadItems(policyId)
 })
 
-$: policyId = $selectedPolicyId
+$: policyId = $params.policyId
 $: item = $selectedPolicyItems.find((i) => i.id === itemId) as PolicyItem
 $: metatags.title = formatPageTitle('Items > Checkout')
 

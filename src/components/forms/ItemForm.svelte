@@ -7,7 +7,7 @@ import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import SelectAccountablePerson from '../SelectAccountablePerson.svelte'
 import { MAX_TEXT_AREA_LENGTH } from 'components/const'
 import type { AccountablePersonOptions } from 'data/accountablePersons'
-import { ItemCoverageStatus, PolicyItem, RiskCategoryNames } from 'data/items'
+import { ItemCoverageStatus, NewItemFormData, PolicyItem, RiskCategoryNames, UpdateItemFormData } from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
 import TextFieldWithLabel from '../TextFieldWithLabel.svelte'
 import { assertHas, assertIsLessOrEqual } from '../../validation/assertions'
@@ -19,12 +19,16 @@ export let item = {} as PolicyItem
 export let policyId: string
 
 let applyBtnLabel = ''
-let formData = {} as any
+let formData = {} as NewItemFormData
 let open = false
 let makeModelIsOpen = false
 let selectedAccountablePersonId: string
 
-const dispatch = createEventDispatcher<{ submit: any; 'save-for-later': any; delete: any }>()
+const dispatch = createEventDispatcher<{
+  submit: NewItemFormData | UpdateItemFormData
+  'save-for-later': UpdateItemFormData
+  delete: any
+}>()
 
 // Set default values.
 let accountablePersonId = ''
@@ -72,7 +76,7 @@ const onSelectCategory = (event: any) => {
   categoryId = event.detail?.id
 }
 
-const getFormData = () => {
+const getFormData = (): NewItemFormData => {
   return {
     accountablePersonId,
     categoryId,

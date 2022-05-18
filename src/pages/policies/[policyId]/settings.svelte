@@ -1,6 +1,6 @@
 <script lang="ts">
 import user, { isAdmin } from 'data/user'
-import { Breadcrumb, Description, SearchableSelect, DependentForm } from 'components'
+import { Breadcrumb, Description, SearchableSelect, DependentForm, RemoveMemberModal } from 'components'
 import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import type { DependentFormData } from 'components/forms/DependentForm.svelte'
 import {
@@ -12,12 +12,12 @@ import {
   updateDependent,
 } from 'data/dependents'
 import { entityCodes, loadEntityCodes } from 'data/entityCodes'
-import { loadItems } from 'data/items'
+import { assignItems, loadItems } from 'data/items'
 import { updatePolicy, Policy, PolicyType, loadPolicy, selectedPolicy } from 'data/policies'
-import { invitePolicyMember, loadMembersOfPolicy, selectedPolicyMembers } from 'data/policy-members'
+import { deletePolicyMember, invitePolicyMember, loadMembersOfPolicy, selectedPolicyMembers } from 'data/policy-members'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import type { PolicyMember } from 'data/types/policy-members'
-import { POLICIES, policyDetails, settingsPolicy, SETTINGS_PERSONAL } from 'helpers/routes'
+import { ITEMS, POLICIES, policyDetails, settingsPolicy, SETTINGS_PERSONAL } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
 import { Button, TextField, IconButton, Page, setNotice, Tooltip, Dialog } from '@silintl/ui-components'
@@ -40,6 +40,8 @@ let placeholder = 'Your entity of affiliation'
 let modalData: PolicyDependent
 let showAddDependentModal = false
 let modalTitle = 'Add Person'
+let removeModalIsOpen = false
+let selectedPolicyMember: PolicyMember
 
 $: breadcrumbLinks = isAdmin($roleSelection)
   ? [
@@ -208,6 +210,12 @@ const editDependent = (dependent: PolicyDependent) => {
   modalData = dependent
   showAddDependentModal = true
 }
+
+const onRemove = (policyUserId: string) => deletePolicyMember(policyUserId)
+
+const onAssign = (e: CustomEvent) => {
+  assignItems(e.detail, policyId, selectedPolicyMember.id)
+}
 </script>
 
 <style>
@@ -314,6 +322,14 @@ p {
             </Tooltip.Wrapper>
 
             <Tooltip tooltipID={'edit-person-' + policyMember.id} positionX="end">Edit Person</Tooltip> -->
+            <IconButton
+              icon="delete"
+              ariaLabel="Delete"
+              on:click={() => {
+                selectedPolicyMember = policyMember
+                removeModalIsOpen = true
+              }}
+            />
           {/if}
         </span>
       </li>
@@ -380,4 +396,15 @@ p {
       />
     {/if}
   </Dialog.Alert>
+
+  <RemoveMemberModal
+    policyMember={selectedPolicyMember}
+    {policyId}
+    open={removeModalIsOpen}
+    on:remove={() => onRemove(selectedPolicyMember.policy_user_id)}
+    on:gotoItems={() => $goto(ITEMS)}
+    on:cancel={() => (removeModalIsOpen = false)}
+    on:closed={() => (removeModalIsOpen = false)}
+    on:assign={onAssign}
+  />
 </Page>

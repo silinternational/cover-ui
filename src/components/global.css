@@ -22,6 +22,10 @@ p {
   min-width: 500px;
 }
 
+.w-360px {
+  width: 360px !important;
+}
+
 .break-word {
   overflow-wrap: break-word;
 }

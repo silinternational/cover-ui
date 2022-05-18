@@ -10,13 +10,13 @@ import { goto } from '@roxi/routify'
 import { Button, Checkbox } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
-export let item: PolicyItem
+export let item = {} as PolicyItem
 export let policyId: string
 
 let open: boolean = false
 let checked: boolean = false
 
-$: itemId = item?.id
+$: itemId = item.id
 
 $: policy = $selectedPolicy
 $: householdId = policy.household_id || ''
@@ -27,6 +27,11 @@ $: startDate = formatDate(item?.coverage_start_date)
 $: year = getYear(startDate)
 $: renewYear = Number(year) + 1
 $: renewDate = formatDate(`${renewYear}-01-01`)
+$: proratedMessage = `Pay ${formatMoney(item.prorated_annual_premium)} for the remainder of ${year} from ${org} account
+    ${accountOrhouseholdId}. Auto-renew and pay ${formatMoney(item.annual_premium)} on ${renewDate}.`
+$: noPaymentMessage = `No payment needed right now. Auto-renew for ${formatMoney(item.annual_premium)} on ${renewDate}, paid from ${org}
+     account ${accountOrhouseholdId}.`
+$: checkoutMessage = item.prorated_annual_premium > 100 ? proratedMessage : noPaymentMessage
 
 const dispatch = createEventDispatcher<{ agreeAndPay: string; delete: string; edit: string }>()
 
@@ -76,8 +81,7 @@ const handleDialog = (event: CustomEvent<string>) => {
 
 <div class="agreement flex align-items-center">
   <div>
-    Pay {formatMoney(item.prorated_annual_premium)} for the remainder of {year} from {org} account {accountOrhouseholdId}.
-    Auto-renew and pay {formatMoney(item.annual_premium)} on {renewDate}.
+    {checkoutMessage}
   </div>
   <Button class="ml-1" disabled={!checked} raised on:click={onAgreeAndPay}>Agree and Pay</Button>
 </div>

@@ -33,9 +33,14 @@ export type AccountablePerson = {
 export type RiskCategory = {
   created_at: string /*Date*/
   id: string
-  name: string
+  name: RiskCategoryNames
   policy_max: number
   updated_at: string /*Date*/
+}
+
+export enum RiskCategoryNames {
+  Stationary = 'Stationary',
+  Mobile = 'Mobile',
 }
 
 export type PolicyItem = {
@@ -66,31 +71,55 @@ export type PolicyItem = {
 export type CreatePolicyItemRequestBody = {
   accountable_person_id: string /*UUID*/
   category_id: string
-  country: string
-  coverage_amount: number
+  country?: string
+  coverage_amount?: number
   coverage_start_date: string /*Date*/
-  coverage_status: ItemCoverageStatus
-  description: string
-  in_storage: boolean
-  make: string
-  model: string
+  coverage_status?: ItemCoverageStatus
+  description?: string
+  in_storage?: boolean
+  make?: string
+  model?: string
   name: string
   risk_category_id?: string
-  serial_number: string
+  serial_number?: string
 }
 
 export type UpdatePolicyItemRequestBody = {
   accountable_person_id: string /*UUID*/
   category_id: string
-  country: string
-  coverage_amount: number
-  description: string
-  in_storage: boolean
-  make: string
-  model: string
+  country?: string
+  coverage_amount?: number
+  description?: string
+  in_storage?: boolean
+  make?: string
+  model?: string
   name: string
   risk_category_id?: string
-  serial_number: string
+  serial_number?: string
+}
+
+export interface ItemFormData {
+  accountablePersonId: string /*UUID*/
+  categoryId: string
+  country?: string
+  marketValueUSD?: number | string
+  itemDescription?: string
+  inStorage?: boolean
+  make?: string
+  model?: string
+  riskCategoryId?: string
+  name: string
+  uniqueIdentifier?: string
+}
+
+export interface NewItemFormData extends ItemFormData {
+  coverageStartDate: string /*Date*/
+  coverageEndDate?: string /*Date*/
+  coverageStatus?: ItemCoverageStatus
+}
+
+export interface UpdateItemFormData extends ItemFormData {
+  isAutoSaving?: boolean
 }
 
 export const itemsByPolicyId = writable<{ [policyId: string]: PolicyItem[] }>({})
@@ -130,7 +159,7 @@ export async function loadItems(policyId: string): Promise<void> {
  * @param {Object} itemData
  * @return {Object}
  */
-export async function addItem(policyId: string, itemData: any): Promise<PolicyItem> {
+export async function addItem(policyId: string, itemData: NewItemFormData): Promise<PolicyItem> {
   const urlPath = `policies/${policyId}/items`
 
   const parsedItemData: CreatePolicyItemRequestBody = {
@@ -217,7 +246,7 @@ export async function submitItem(itemId: string): Promise<void> {
  * @param {Object} itemData
  * @return {Object}
  */
-export async function updateItem(policyId: string, itemId: string, itemData: any): Promise<void> {
+export async function updateItem(policyId: string, itemId: string, itemData: UpdateItemFormData): Promise<void> {
   if (!itemId) {
     throwError('item id not set')
   }
@@ -272,8 +301,12 @@ export async function deleteItem(policyId: string, itemId: string): Promise<any>
 
 export const itemBelongsToPolicy = (policyId: string, item: PolicyItem): boolean => item.policy_id === policyId
 
-export const isDependentOnItemsByPolicyId = (dependentId: string, policyId: string): boolean => {
-  return get(itemsByPolicyId)[policyId]?.some((item) => item.accountable_person?.id === dependentId)
+export const getItemsAccountablePersonIsOn = (accountablePersonId: string, policyId: string): PolicyItem[] => {
+  return get(itemsByPolicyId)[policyId]?.filter((item) => item.accountable_person?.id === accountablePersonId) || []
+}
+
+export const howManyItemsAccountablePersonIsOn = (accountablePersonId: string, policyId: string): number => {
+  return getItemsAccountablePersonIsOn(accountablePersonId, policyId).length
 }
 
 function updateStoreItem(updatedItem: PolicyItem) {
@@ -290,7 +323,7 @@ export const deleteItems = (itemsIdArray: string[], policyId: string): void => {
   itemsIdArray?.forEach((id) => deleteItem(policyId, id))
 }
 
-export const itemIsActive = (item: PolicyItem): boolean => {
+export const itemIsNotInactive = (item: PolicyItem): boolean => {
   return item.coverage_status !== ItemCoverageStatus.Inactive
 }
 
@@ -300,4 +333,39 @@ export const itemIsApproved = (item: PolicyItem): boolean => {
 
 export const itemIsInactive = (item: PolicyItem): boolean => {
   return item.coverage_status === ItemCoverageStatus.Inactive
+}
+
+export const assignItems = (newMemberId: string, policyId: string, selectedPolicyMemberId: string): void => {
+  const items = getItemsAccountablePersonIsOn(selectedPolicyMemberId, policyId)
+  items.forEach((item) => {
+    updateItem(policyId, item.id, {
+      categoryId: item.category.id,
+      accountablePersonId: newMemberId,
+      marketValueUSD: item.coverage_amount / 100,
+      itemDescription: item.description,
+      inStorage: item.in_storage,
+      make: item.make,
+      model: item.model,
+      name: item.name,
+      riskCategoryId: item.risk_category.id,
+      uniqueIdentifier: item.serial_number,
+    })
+  })
+}
+
+export const parseItemForAddItem = (item: PolicyItem): NewItemFormData => {
+  return {
+    accountablePersonId: item.accountable_person.id,
+    categoryId: item.category.id,
+    country: item.country || item.accountable_person.country,
+    marketValueUSD: item.coverage_amount / 100,
+    coverageStartDate: new Date().toISOString().slice(0, 10),
+    itemDescription: item.description,
+    inStorage: item.in_storage,
+    make: item.make,
+    model: item.model,
+    name: item.name,
+    riskCategoryId: item.risk_category.id,
+    uniqueIdentifier: item.serial_number,
+  }
 }

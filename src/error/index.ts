@@ -5,11 +5,12 @@ export type CustomError = {
   message?: string
   status?: number
   statusText?: string
+  key?: string
 }
 
 export const error = writable<CustomError>({})
-export const throwError = (message = '', status = 0, statusText = ''): void => {
-  const error = set({ status, statusText, message })
+export const throwError = (message = '', status = 0, statusText = '', key = ''): void => {
+  const error = set({ status, statusText, message, key })
   if (error.message) {
     setNotice(error.message)
   }
@@ -28,8 +29,9 @@ function set(someError: CustomError): CustomError {
   const status = someError?.status || 0
   const statusText = someError?.statusText || ''
   const message = someError?.message || ''
+  const key = someError?.key || ''
 
-  error.set({ status, statusText, message })
+  error.set({ status, statusText, message, key })
 
-  return { status, statusText, message }
+  return { status, statusText, message, key }
 }

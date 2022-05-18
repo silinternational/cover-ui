@@ -1,19 +1,18 @@
 <script lang="ts">
-import { Breadcrumb, CardsGrid, ClaimsTable, ItemsTable, Row, Strikes } from 'components'
-import CustomerReport from '../components/CustomerReport.svelte'
+import { Breadcrumb, CardsGrid, ClaimsTable, ItemsTable, Row, Strikes, CustomerReport } from 'components'
 import { isLoadingById, loading } from 'components/progress'
 import { Claim, claimIsOpen, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import {
   deleteItem,
   itemIsApproved,
-  itemIsActive,
+  itemIsNotInactive,
   loadItems,
   selectedPolicyItems,
   PolicyItem,
   deleteItems,
 } from 'data/items'
 import { getNameOfPolicy, loadPolicy, Policy, PolicyType, selectedPolicy } from 'data/policies'
-import { roleSelection } from 'data/role-policy-selection'
+import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { isAdmin } from 'data/user'
 import { formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
@@ -36,6 +35,7 @@ let policy = {} as Policy
 let showAllItems = false
 let showAllClaims = false
 let checkedItemIds: string[] = []
+let showApprovedOnly = true
 
 onMount(() => {
   loadPolicy(policyId)
@@ -43,15 +43,14 @@ onMount(() => {
   loadClaimsByPolicyId(policyId)
 })
 $: policy = $selectedPolicy
-$: $selectedPolicy.id !== policyId && loadPolicy($selectedPolicy.id)
+$: $selectedPolicyId !== policyId && loadPolicy($selectedPolicyId)
 
 $: members = policy.members || []
 
 $: policyId && loadItems(policyId)
 // sort items so inactive is last
-$: items = $selectedPolicyItems.filter(itemIsActive)
+$: items = $selectedPolicyItems.filter(showApprovedOnly ? itemIsApproved : itemIsNotInactive)
 $: itemsForTable = showAllItems ? $selectedPolicyItems : items.slice(0, 15)
-$: allItemsBtnDisabled = itemsForTable.length >= $selectedPolicyItems.length
 $: approvedItems = items.filter(itemIsApproved)
 
 $: recentClaims = $selectedPolicyClaims.filter(isRecent)
@@ -99,6 +98,11 @@ const handleChange = (e: CustomEvent<string>) => {
   } else {
     checkedItemIds = [...checkedItemIds, itemId]
   }
+}
+
+const toggleAllItems = () => {
+  showAllItems = !showAllItems
+  showApprovedOnly = !showApprovedOnly
 }
 </script>
 
@@ -227,7 +231,7 @@ th {
 
   <div class="flex justify-between align-items-center">
     <h4>Items <span class="subtext">({approvedItems?.length} covered)</span></h4>
-    <Button disabled={allItemsBtnDisabled} on:click={() => (showAllItems = true)}>All Items…</Button>
+    <Button on:click={toggleAllItems}>{showAllItems ? 'Active items...' : 'all items…'}</Button>
   </div>
   {#if $loading && isLoadingById(`policies/${policyId}/items`)}
     Loading items...

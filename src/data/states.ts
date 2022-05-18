@@ -101,7 +101,7 @@ export const signatorClaimStates: { [stateName: string]: State } = {
 
 export const itemStates: { [stateName: string]: State } = {
   ...commonStates,
-  Approved: approved,
+  Approved: { ...approved, title: 'Active' },
   Inactive: { ...pending, title: 'This item has no coverage', icon: 'umbrella' },
   Pending: { ...pending, title: 'Awaiting item coverage review' },
 }

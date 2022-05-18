@@ -1,13 +1,13 @@
 <script lang="ts">
-import { AccountablePersonOptions, selectedAccountablePersonOptions } from 'data/accountablePersons'
-import type { PolicyDependent } from 'data/dependents'
 import { howManyItemsAccountablePersonIsOn } from 'data/items'
+import type { PolicyMember } from 'data/types/policy-members'
 import RadioOptions from './RadioOptions.svelte'
-import { Dialog, Select } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
+import { Dialog, Select } from '@silintl/ui-components'
+import { AccountablePersonOptions, selectedAccountablePersonOptions } from 'data/accountablePersons'
 
 export let open: boolean = false
-export let dependent = {} as PolicyDependent
+export let policyMember = {} as PolicyMember
 export let policyId: string = ''
 
 const options = [
@@ -19,10 +19,10 @@ let numberOfItemsDependentIsOn = 0
 let radioValue = 'no-one'
 let selectedAccountablePersonOption: AccountablePersonOptions
 
-$: numberOfItemsDependentIsOn = howManyItemsAccountablePersonIsOn(dependent.id, policyId)
-$: personOptions = $selectedAccountablePersonOptions.filter((o) => o.id !== dependent.id)
+$: numberOfItemsDependentIsOn = howManyItemsAccountablePersonIsOn(policyMember.id, policyId)
+$: personOptions = $selectedAccountablePersonOptions.filter((o) => o.id !== policyMember.id)
 
-const title = 'Remove Dependent'
+const title = 'Remove Person'
 const cancelButton: Dialog.AlertButton[] = [{ label: 'cancel', action: 'cancel', class: 'mdc-dialog__button' }]
 const allTheButtons: Dialog.AlertButton[] = [
   ...cancelButton,
@@ -31,7 +31,7 @@ const allTheButtons: Dialog.AlertButton[] = [
 
 $: buttons = selectedAccountablePersonOption || radioValue === 'no-one' ? allTheButtons : cancelButton
 
-const dispatch = createEventDispatcher<{ remove: string; cancel: string; assign: string; closed: string }>()
+const dispatch = createEventDispatcher<{ remove: string; assign: string; cancel: string; closed: string }>()
 
 const handleDialog = (e: CustomEvent) => {
   e.detail ? dispatch(e.detail) : dispatch('closed')
@@ -43,7 +43,7 @@ const onSelect = (e: CustomEvent) => {
 </script>
 
 <Dialog.Alert {open} {buttons} defaultAction="cancel" {title} on:closed={handleDialog} on:chosen={handleDialog}>
-  {dependent.name} is accountable for {numberOfItemsDependentIsOn}
+  {policyMember.first_name} is accountable for {numberOfItemsDependentIsOn}
   {numberOfItemsDependentIsOn === 1 ? 'item' : 'items'}.
 
   {#if numberOfItemsDependentIsOn > 0}
@@ -51,7 +51,7 @@ const onSelect = (e: CustomEvent) => {
     <RadioOptions name="accountable-person" bind:value={radioValue} {options} />
   {/if}
 
-  {#if radioValue === 'accountable-person'}
+  {#if radioValue === 'accountable-person' && numberOfItemsDependentIsOn > 0}
     <Select label="Input" options={personOptions} on:change={onSelect} />
   {/if}
 

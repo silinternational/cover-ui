@@ -1,16 +1,9 @@
 <script lang="ts">
 import { Breadcrumb, CardsGrid, ClaimsTable, ItemsTable, Row, Strikes, CustomerReport } from 'components'
 import { isLoadingById, loading } from 'components/progress'
-import Switch from '../../components/mdc/Switch/Switch.svelte'
+import Switch from '../../components/mdc/Switch'
 import { Claim, claimIsOpen, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
-import {
-  deleteItem,
-  itemIsApproved,
-  loadItems,
-  selectedPolicyItems,
-  PolicyItem,
-  deleteItems,
-} from 'data/items'
+import { deleteItem, itemIsApproved, loadItems, selectedPolicyItems, PolicyItem, deleteItems } from 'data/items'
 import { getNameOfPolicy, loadPolicy, Policy, PolicyType, selectedPolicy } from 'data/policies'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { isAdmin } from 'data/user'
@@ -99,8 +92,8 @@ const handleChange = (e: CustomEvent<string>) => {
   }
 }
 
-const toggleHideInactiveItems = () => {
-  hideInactive = !hideInactive
+const toggleHideInactiveItems = (e: CustomEvent) => {
+  hideInactive = !e.detail
 }
 </script>
 
@@ -230,7 +223,7 @@ th {
   <div class="flex justify-between align-items-center">
     <h4>Items <span class="subtext">({approvedItems?.length} covered)</span></h4>
     <div>
-      Hide Inactive<Switch on:click={toggleHideInactiveItems}/>
+      <Switch on:click={toggleHideInactiveItems} label="Hide Inactive off/on" />
     </div>
   </div>
   {#if $loading && isLoadingById(`policies/${policyId}/items`)}

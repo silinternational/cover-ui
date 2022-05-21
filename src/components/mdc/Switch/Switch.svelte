@@ -1,6 +1,6 @@
 <script>
 import { MDCSwitch } from '@material/switch'
-import { onMount } from 'svelte'
+import { createEventDispatcher, onMount } from 'svelte'
 
 export let label = 'off/on'
 
@@ -12,10 +12,14 @@ onMount(() => {
   }
 })
 
-$: console.log(switchControl.selected)
+const dispatch = createEventDispatcher()
+
+function onClick () {
+  dispatch('click', switchControl.selected)
+}
 </script>
 
-<button on:click id="basic-switch" class="mdc-switch mdc-switch--unselected" type="button" role="switch" aria-checked="false">
+<button on:click={onClick} bind:this={switchControl} id="basic-switch" class="mdc-switch mdc-switch--unselected" type="button" role="switch" aria-checked="false">
   <div class="mdc-switch__track" />
   <div class="mdc-switch__handle-track">
     <div class="mdc-switch__handle">

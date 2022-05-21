@@ -1,11 +1,11 @@
 <script lang="ts">
 import { Breadcrumb, CardsGrid, ClaimsTable, ItemsTable, Row, Strikes, CustomerReport } from 'components'
 import { isLoadingById, loading } from 'components/progress'
+import Switch from '../../components/mdc/Switch/Switch.svelte'
 import { Claim, claimIsOpen, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import {
   deleteItem,
   itemIsApproved,
-  itemIsNotInactive,
   loadItems,
   selectedPolicyItems,
   PolicyItem,
@@ -32,10 +32,9 @@ import { onMount } from 'svelte'
 export let policyId: string
 
 let policy = {} as Policy
-let showAllItems = false
 let showAllClaims = false
 let checkedItemIds: string[] = []
-let showApprovedOnly = true
+let hideInactive = false
 
 onMount(() => {
   loadPolicy(policyId)
@@ -49,8 +48,8 @@ $: members = policy.members || []
 
 $: policyId && loadItems(policyId)
 // sort items so inactive is last
-$: items = $selectedPolicyItems.filter(showApprovedOnly ? itemIsApproved : itemIsNotInactive)
-$: itemsForTable = showAllItems ? $selectedPolicyItems : items.slice(0, 15)
+$: items = $selectedPolicyItems.slice(0, 15)
+$: itemsForTable = hideInactive ? items.filter(itemIsApproved) : items
 $: approvedItems = items.filter(itemIsApproved)
 
 $: recentClaims = $selectedPolicyClaims.filter(isRecent)
@@ -100,9 +99,8 @@ const handleChange = (e: CustomEvent<string>) => {
   }
 }
 
-const toggleAllItems = () => {
-  showAllItems = !showAllItems
-  showApprovedOnly = !showApprovedOnly
+const toggleHideInactiveItems = () => {
+  hideInactive = !hideInactive
 }
 </script>
 
@@ -231,7 +229,9 @@ th {
 
   <div class="flex justify-between align-items-center">
     <h4>Items <span class="subtext">({approvedItems?.length} covered)</span></h4>
-    <Button on:click={toggleAllItems}>{showAllItems ? 'Active items...' : 'all items…'}</Button>
+    <div>
+      Hide Inactive<Switch on:click={toggleHideInactiveItems}/>
+    </div>
   </div>
   {#if $loading && isLoadingById(`policies/${policyId}/items`)}
     Loading items...

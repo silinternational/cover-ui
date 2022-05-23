@@ -41,9 +41,9 @@ $: members = policy.members || []
 
 $: policyId && loadItems(policyId)
 // sort items so inactive is last
-$: items = $selectedPolicyItems.slice(0, 15)
-$: itemsForTable = hideInactive ? items.filter(itemIsApproved) : items
+$: items = $selectedPolicyItems
 $: approvedItems = items.filter(itemIsApproved)
+$: itemsForTable = hideInactive ? approvedItems.slice(0, 15) : items.slice(0, 15)
 
 $: recentClaims = $selectedPolicyClaims.filter(isRecent)
 $: claimsForTable = showAllClaims ? $selectedPolicyClaims : recentClaims.slice(0, 15)
@@ -230,7 +230,7 @@ th {
       {#if isAboveTablet()}
         <Checkbox label="Hide Inactive" on:checked={hideInactiveItems} on:unchecked={showInactiveItems} />
       {:else}
-        <Switch on:selected={hideInactiveItems} on:deselected={showInactiveItems} label="Hide Inactive off/on" />
+        <Switch on:selected={hideInactiveItems} on:deselected={showInactiveItems} label="Hide Inactive" />
       {/if}
     </div>
   </div>
@@ -247,8 +247,8 @@ th {
       on:batchDelete={() => deleteItems(checkedItemIds, policyId)}
     />
     <div class="text-align-center">
-      <p class="item-footer">Showing {itemsForTable.length} out of {$selectedPolicyItems.length} items</p>
-      <Button url={itemsRoute(policyId)}>View {$selectedPolicyItems.length - itemsForTable.length} more items…</Button>
+      <p class="item-footer">Showing {itemsForTable.length} out of {items.length} items</p>
+      <Button url={itemsRoute(policyId)}>View {items.length - itemsForTable.length} more items…</Button>
     </div>
   {/if}
 

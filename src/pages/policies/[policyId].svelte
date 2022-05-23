@@ -19,7 +19,7 @@ import {
   settingsPolicy,
 } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
-import { Button, Datatable, isAboveMobile, isAboveTablet, Page } from '@silintl/ui-components'
+import { Button, Checkbox, Datatable, isAboveMobile, isAboveTablet, Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 export let policyId: string
@@ -92,8 +92,12 @@ const handleChange = (e: CustomEvent<string>) => {
   }
 }
 
-const toggleHideInactiveItems = (e: CustomEvent) => {
-  hideInactive = !e.detail
+const hideInactiveItems = (): void => {
+  hideInactive = true
+}
+
+const showInactiveItems = (): void => {
+  hideInactive = false
 }
 </script>
 
@@ -223,7 +227,11 @@ th {
   <div class="flex justify-between align-items-center">
     <h4>Items <span class="subtext">({approvedItems?.length} covered)</span></h4>
     <div>
-      <Switch on:click={toggleHideInactiveItems} label="Hide Inactive off/on" />
+      {#if isAboveTablet()}
+        <Checkbox label="Hide Inactive" on:checked={hideInactiveItems} on:unchecked={showInactiveItems} />
+      {:else}
+        <Switch on:selected={hideInactiveItems} on:deselected={showInactiveItems} label="Hide Inactive off/on" />
+      {/if}
     </div>
   </div>
   {#if $loading && isLoadingById(`policies/${policyId}/items`)}

@@ -1,25 +1,34 @@
+<!--  https://github.com/material-components/material-components-web/tree/master/packages/mdc-switch -->
 <script>
 import { MDCSwitch } from '@material/switch'
 import { createEventDispatcher, onMount } from 'svelte'
 
 export let label = 'off/on'
 
+let element = {}
 let switchControl = {}
 
 onMount(() => {
-  for (const el of document.querySelectorAll('.mdc-switch')) {
-    switchControl = new MDCSwitch(el)
-  }
+  switchControl = new MDCSwitch(element)
 })
 
 const dispatch = createEventDispatcher()
 
-function onClick () {
-  dispatch('click', switchControl.selected)
+// Used setTimeout because switchControl.selected needs to be updated before dispatching the event
+function onClick() {
+  setTimeout(() => dispatch(switchControl.selected ? 'selected' : 'deselected'))
 }
 </script>
 
-<button on:click={onClick} bind:this={switchControl} id="basic-switch" class="mdc-switch mdc-switch--unselected" type="button" role="switch" aria-checked="false">
+<button
+  on:click={onClick}
+  bind:this={element}
+  id="basic-switch"
+  class="mdc-switch mdc-switch--unselected"
+  type="button"
+  role="switch"
+  aria-checked="false"
+>
   <div class="mdc-switch__track" />
   <div class="mdc-switch__handle-track">
     <div class="mdc-switch__handle">

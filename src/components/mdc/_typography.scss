@@ -16,12 +16,12 @@
   font-weight: var(--mdc-typography-bold-font-weight);
 }
 
-.mdc-drawer .mdc-list .mdc-list-item,
-.mdc-menu .mdc-list .mdc-list-item {
+.mdc-drawer .mdc-deprecated-list .mdc-deprecated-list-item,
+.mdc-menu .mdc-deprecated-list .mdc-deprecated-list-item {
   font-weight: var(--mdc-typography-button-font-weight);
 }
 
-.mdc-select__menu .mdc-list .mdc-list-item {
+.mdc-select__menu .mdc-deprecated-list .mdc-deprecated-list-item {
   font-weight: var(--mdc-typography-select-font-weight);
 }
 
@@ -29,6 +29,6 @@
   font-weight: var(--mdc-typography-bold-font-weight);
 }
 
-.mdc-list-item__text, .mdc-list-item__subtitle {
+.mdc-deprecated-list-item__text, .mdc-deprecated-list-item__subtitle {
   text-transform: capitalize;
 }

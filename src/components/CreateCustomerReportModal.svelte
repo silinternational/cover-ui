@@ -1,5 +1,5 @@
 <script lang="ts">
-import { DateInput } from 'components'
+import DateInput from './DateInput.svelte'
 import { Button, Dialog, Form, Select } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 import { LedgerReportType } from 'data/ledger'

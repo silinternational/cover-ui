@@ -15,59 +15,61 @@ import nodePolyfills from 'rollup-plugin-polyfill-node'
 const production = !process.env.ROLLUP_WATCH
 
 export default {
-	input: 'src/main.ts',
-	output: {
-		file: 'dist/bundle.js',
-		format: 'iife',
-		sourcemap: !production,
-	},
-	plugins: [
-		svelte({
-			// enable run-time checks when not in production
-			dev: !production, //Todo address warning: [rollup-plugin-svelte] Unknown "dev" option. Please use "compilerOptions" for any Svelte compiler configuration.
-			emitCss: true, // give component style to postcss() for processing
-			preprocess: autoPreprocess(),
-		}),
+  input: 'src/main.ts',
+  output: {
+    file: 'dist/bundle.js',
+    format: 'iife',
+    sourcemap: !production,
+  },
+  plugins: [
+    svelte({
+      compilerOptions: {
+        // enable run-time checks when not in production
+        dev: !production,
+      },
+      emitCss: true, // give component style to postcss() for processing
+      preprocess: autoPreprocess(),
+    }),
 
-		typescript({ sourceMap: !production }),
-		nodePolyfills(),
+    typescript({ sourceMap: !production }),
+    nodePolyfills(),
 
-		// If you have external dependencies installed from
-		// npm, you'll most likely need these plugins. In
-		// some cases you'll need additional configuration -
-		// consult the documentation for details:
-		// https://github.com/rollup/plugins/tree/master/packages/commonjs
-		resolve({
-			browser: true,
-			dedupe: ['svelte'],
-		}),
-		includePaths({
-			include: {},
-			paths: ['src/components', 'src/data', 'src/helpers'],
-			external: [],
-			extensions: ['.js', '.ts']
-		}),
-		commonjs(),
+    // If you have external dependencies installed from
+    // npm, you'll most likely need these plugins. In
+    // some cases you'll need additional configuration -
+    // consult the documentation for details:
+    // https://github.com/rollup/plugins/tree/master/packages/commonjs
+    resolve({
+      browser: true,
+      dedupe: ['svelte'],
+    }),
+    includePaths({
+      include: {},
+      paths: ['src/components', 'src/data', 'src/helpers'],
+      external: [],
+      extensions: ['.js', '.ts'],
+    }),
+    commonjs(),
 
-		json(), // adds support for importing json files
-		postcss({
-			extract: true, // create a css file alongside the output.file
-			sourceMap: production,
-			use: {
-				sass: {
-					includePaths: ['node_modules']
-				}
-			},
-		}),
-		routify({
-			dynamicImports: false,
-		}),
-		dotenv(),
+    json(), // adds support for importing json files
+    postcss({
+      extract: true, // create a css file alongside the output.file
+      sourceMap: production,
+      use: {
+        sass: {
+          includePaths: ['node_modules'],
+        },
+      },
+    }),
+    routify({
+      dynamicImports: false,
+    }),
+    dotenv(),
 
-		//           minify     auto-refresh browser on changes
-		production ? terser() : livereload('dist'),
-	],
-	watch: {
-		clearScreen: false,
-	}
+    //           minify     auto-refresh browser on changes
+    production ? terser() : livereload('dist'),
+  ],
+  watch: {
+    clearScreen: false,
+  },
 }

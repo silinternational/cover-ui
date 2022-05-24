@@ -1,16 +1,9 @@
 <script lang="ts">
 import { Breadcrumb, CardsGrid, ClaimsTable, ItemsTable, Row, Strikes, CustomerReport } from 'components'
 import { isLoadingById, loading } from 'components/progress'
+import Switch from '../../components/mdc/Switch'
 import { Claim, claimIsOpen, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
-import {
-  deleteItem,
-  itemIsApproved,
-  itemIsNotInactive,
-  loadItems,
-  selectedPolicyItems,
-  PolicyItem,
-  deleteItems,
-} from 'data/items'
+import { deleteItem, itemIsApproved, loadItems, selectedPolicyItems, PolicyItem, deleteItems } from 'data/items'
 import { getNameOfPolicy, loadPolicy, Policy, PolicyType, selectedPolicy } from 'data/policies'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { isAdmin } from 'data/user'
@@ -26,16 +19,15 @@ import {
   settingsPolicy,
 } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
-import { Button, Datatable, isAboveMobile, isAboveTablet, Page } from '@silintl/ui-components'
+import { Button, Checkbox, Datatable, isAboveMobile, isAboveTablet, Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 export let policyId: string
 
 let policy = {} as Policy
-let showAllItems = false
 let showAllClaims = false
 let checkedItemIds: string[] = []
-let showApprovedOnly = true
+let hideInactive = false
 
 onMount(() => {
   loadPolicy(policyId)
@@ -49,9 +41,9 @@ $: members = policy.members || []
 
 $: policyId && loadItems(policyId)
 // sort items so inactive is last
-$: items = $selectedPolicyItems.filter(showApprovedOnly ? itemIsApproved : itemIsNotInactive)
-$: itemsForTable = showAllItems ? $selectedPolicyItems : items.slice(0, 15)
+$: items = $selectedPolicyItems
 $: approvedItems = items.filter(itemIsApproved)
+$: itemsForTable = hideInactive ? approvedItems.slice(0, 15) : items.slice(0, 15)
 
 $: recentClaims = $selectedPolicyClaims.filter(isRecent)
 $: claimsForTable = showAllClaims ? $selectedPolicyClaims : recentClaims.slice(0, 15)
@@ -100,9 +92,12 @@ const handleChange = (e: CustomEvent<string>) => {
   }
 }
 
-const toggleAllItems = () => {
-  showAllItems = !showAllItems
-  showApprovedOnly = !showApprovedOnly
+const hideInactiveItems = (): void => {
+  hideInactive = true
+}
+
+const showInactiveItems = (): void => {
+  hideInactive = false
 }
 </script>
 
@@ -231,7 +226,13 @@ th {
 
   <div class="flex justify-between align-items-center">
     <h4>Items <span class="subtext">({approvedItems?.length} covered)</span></h4>
-    <Button on:click={toggleAllItems}>{showAllItems ? 'Active items...' : 'all items…'}</Button>
+    <div>
+      {#if isAboveTablet()}
+        <Checkbox label="Hide Inactive" on:checked={hideInactiveItems} on:unchecked={showInactiveItems} />
+      {:else}
+        <Switch on:selected={hideInactiveItems} on:deselected={showInactiveItems} label="Hide Inactive" />
+      {/if}
+    </div>
   </div>
   {#if $loading && isLoadingById(`policies/${policyId}/items`)}
     Loading items...
@@ -246,8 +247,8 @@ th {
       on:batchDelete={() => deleteItems(checkedItemIds, policyId)}
     />
     <div class="text-align-center">
-      <p class="item-footer">Showing {itemsForTable.length} out of {$selectedPolicyItems.length} items</p>
-      <Button url={itemsRoute(policyId)}>View {$selectedPolicyItems.length - itemsForTable.length} more items…</Button>
+      <p class="item-footer">Showing {itemsForTable.length} out of {items.length} items</p>
+      <Button url={itemsRoute(policyId)}>View {items.length - itemsForTable.length} more items…</Button>
     </div>
   {/if}
 

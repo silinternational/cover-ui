@@ -50,8 +50,7 @@ p {
 }
 
 @media print {
-  .drawer {
-    display: none;
+  footer, .drawer {
+    display: none !important;
   }
-
 }

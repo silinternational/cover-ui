@@ -156,41 +156,43 @@ th {
     Loading items...
   {:else}
     <h3>Table</h3>
-    <Datatable>
-      <Datatable.Header>
-        {#each columns as column}
-          <Datatable.Header.Item numeric={column.numeric} columnID={column.headerId} sortable={column.sortable}>
-            {column.title}
-          </Datatable.Header.Item>
-        {/each}
-      </Datatable.Header>
-      <Datatable.Data>
+    <table>
+      <thead>
+        <tr>
+          {#each columns as column}
+            <td>
+              {column.title}
+            </td>
+          {/each}
+        </tr>
+      </thead>
+      <tbody>
         {#each items as item (item.id)}
-          <Datatable.Data.Row>
-            <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
-            <Datatable.Data.Row.Item>
+          <tr>
+            <td>{item.name || ''}</td>
+            <td>
               {#if item.coverage_status === ItemCoverageStatus.Approved && item.coverage_end_date}
                 Covered through {formatFriendlyDate(item.coverage_end_date)}
               {:else}
                 {getItemState(item.coverage_status)?.title || ''}
               {/if}
-            </Datatable.Data.Row.Item>
-            <Datatable.Data.Row.Item>
+            </td>
+            <td>
               {#if item.coverage_status === ItemCoverageStatus.Approved && item.coverage_end_date}
                 Covered through {formatFriendlyDate(item.coverage_end_date)}
               {:else}
                 {getItemState(item.coverage_status)?.title || ''}
               {/if}
-            </Datatable.Data.Row.Item>
-            <Datatable.Data.Row.Item>{item.status_change}</Datatable.Data.Row.Item>
-            <Datatable.Data.Row.Item numeric>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
-            <Datatable.Data.Row.Item>{item.accountable_person?.name || ''}</Datatable.Data.Row.Item>
-            <Datatable.Data.Row.Item>{item.accountable_person?.country || item.country || ''}</Datatable.Data.Row.Item>
-            <Datatable.Data.Row.Item />
-          </Datatable.Data.Row>
+            </td>
+            <td>{item.status_change}</td>
+            <td>{formatMoney(item.coverage_amount)}</td>
+            <td>{item.accountable_person?.name || ''}</td>
+            <td>{item.accountable_person?.country || item.country || ''}</td>
+            <td />
+          </tr>
         {/each}
-      </Datatable.Data>
-    </Datatable>
+      </tbody>
+    </table>
   {/if}
 
   <div class="p-2" />

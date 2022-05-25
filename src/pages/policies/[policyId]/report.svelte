@@ -5,11 +5,11 @@ import { itemIsApproved, loadItems, selectedPolicyItems, ItemCoverageStatus } fr
 import { getNameOfPolicy, loadPolicy, Policy, PolicyType, selectedPolicy } from 'data/policies'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import { getItemState } from 'data/states'
-import { formatDate, formatFriendlyDate } from 'helpers/dates'
+import { formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { metatags } from '@roxi/routify'
-import { Datatable, Page } from '@silintl/ui-components'
+import { Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 import type { Column } from 'components/Datatable/types'
 
@@ -18,39 +18,24 @@ export let policyId: string
 const columns: Column[] = [
   {
     title: 'Short Name',
-    headerId: 'item',
-    sortable: true,
   },
   {
     title: 'Status Before',
-    headerId: 'status',
-    sortable: true,
   },
   {
     title: 'Status After',
-    headerId: 'status',
-    sortable: true,
   },
   {
     title: 'Type',
-    headerId: 'type',
-    sortable: true,
   },
   {
     title: 'Value',
-    headerId: 'covered_value',
-    numeric: true,
-    sortable: true,
   },
   {
     title: 'Assigned To',
-    headerId: 'assigned_to',
-    sortable: true,
   },
   {
     title: 'Location',
-    headerId: 'location',
-    sortable: true,
   },
 ]
 

@@ -1,5 +1,6 @@
 <script lang="ts">
 import BatchItemDelete from '../BatchItemDelete.svelte'
+import { getItemState } from 'data/states'
 import DatatableCheckbox from './DatatableCheckbox.svelte'
 import DatatableCheckboxHeader from './DatatableCheckboxHeader.svelte'
 import { AccountablePerson, editableCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/items'
@@ -8,17 +9,9 @@ import { formatMoney } from 'helpers/money'
 import { itemDetails, itemEdit } from 'helpers/routes'
 import { sortByNum, sortByString } from 'helpers/sort'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
+import type { Column } from './types'
 import { createEventDispatcher } from 'svelte'
 import { Datatable, Menu, MenuItem } from '@silintl/ui-components'
-import { getItemState } from 'data/states'
-
-type Column = {
-  title: string
-  headerId: string
-  numeric?: boolean
-  path: string
-  sortable?: boolean
-}
 
 export let items = [] as PolicyItem[]
 export let policyId: string

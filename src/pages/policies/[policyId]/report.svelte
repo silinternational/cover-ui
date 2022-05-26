@@ -16,27 +16,13 @@ import type { Column } from 'components/Datatable/types'
 export let policyId: string
 
 const columns: Column[] = [
-  {
-    title: 'Short Name',
-  },
-  {
-    title: 'Status Before',
-  },
-  {
-    title: 'Status After',
-  },
-  {
-    title: 'Type',
-  },
-  {
-    title: 'Value',
-  },
-  {
-    title: 'Assigned To',
-  },
-  {
-    title: 'Location',
-  },
+  { title: 'Short Name' },
+  { title: 'Status Before' },
+  { title: 'Status After' },
+  { title: 'Type' },
+  { title: 'Value' },
+  { title: 'Assigned To' },
+  { title: 'Location' },
 ]
 
 let policy = {} as Policy

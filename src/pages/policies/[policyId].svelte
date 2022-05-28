@@ -55,6 +55,8 @@ $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))
 $: coverage = formatMoney(approvedItems.reduce((sum, item) => sum + item.coverage_amount, 0))
 $: premium = formatMoney(approvedItems.reduce((sum, item) => sum + item.annual_premium, 0))
 $: entityCode = policy.entity_code?.code
+$: numberOfItemsNotShown = items.length - itemsForTable.length
+$: gotoItemsBtnLabel = `View ${numberOfItemsNotShown} more items…`
 
 // Dynamic breadcrumbs data:
 $: userIsAdmin = isAdmin($roleSelection)
@@ -248,7 +250,9 @@ th {
     />
     <div class="text-align-center">
       <p class="item-footer">Showing {itemsForTable.length} out of {items.length} items</p>
-      <Button url={itemsRoute(policyId)}>View {items.length - itemsForTable.length} more items…</Button>
+      {#if numberOfItemsNotShown > 0}
+        <Button url={itemsRoute(policyId)}>{gotoItemsBtnLabel}</Button>
+      {/if}
     </div>
   {/if}
 

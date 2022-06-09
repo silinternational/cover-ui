@@ -50,6 +50,30 @@ export type LedgerEntry = {
   created_at: string /*Date*/
   updated_at: string /*Date*/
 }
+
+export type PolicyLedgerEntries = {
+  assigned_to: string
+  date: string //Date
+  item_name: string
+  location: string
+  status_after: string
+  status_before: string
+  type: string
+  value: number
+}
+
+export type PolicyReportData = {
+  coverage_value: number
+  entries: PolicyLedgerEntries[]
+  last_changed: string //date
+  net_transactions: number
+  payout_total: number
+  premium_rate: number
+  premium_total: number
+  report_month: number
+  report_year: number
+}
+
 export const LedgerReports = writable<LedgerReport[]>([])
 
 function updateLedgerReports(report: LedgerReport) {
@@ -88,8 +112,8 @@ export async function getLedgerReportById(id: string, isPolicyReport = false): P
   return result
 }
 
-export async function getLedgerEntriesByPolicyId(id: string, month: string, year: string): Promise<any> {
-  const result: LedgerReport = await GET(`policies/${id}/ledger-reports?month=${month}&year=${year}`)
+export async function getLedgerEntriesByPolicyId(id: string, month: string, year: string): Promise<PolicyReportData> {
+  const result: PolicyReportData = await GET(`policies/${id}/ledger-reports?month=${month}&year=${year}`)
   return result
 }
 

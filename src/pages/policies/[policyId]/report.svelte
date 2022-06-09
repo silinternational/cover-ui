@@ -2,7 +2,7 @@
 import { isLoadingById, loading } from 'components/progress'
 import { loadClaimsByPolicyId } from 'data/claims'
 import { loadItems } from 'data/items'
-import { getLedgerEntriesByPolicyId } from 'data/ledger'
+import { getLedgerEntriesByPolicyId, PolicyReportData } from 'data/ledger'
 import { getNameOfPolicy, loadPolicy, Policy, PolicyType, selectedPolicy } from 'data/policies'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import { formatFriendlyDate } from 'helpers/dates'
@@ -16,39 +16,42 @@ import type { Column } from 'components/Datatable/types'
 export let policyId: string
 
 const columns: Column[] = [
-  { title: 'Short Name' },
+  { title: 'Item' },
   { title: 'Status Before' },
   { title: 'Status After' },
   { title: 'Type' },
-  { title: 'Value' },
+  { title: 'Amount' },
   { title: 'Assigned To' },
   { title: 'Location' },
+  { title: 'Date' },
 ]
 
 let policy = {} as Policy
-let reportData = {}
-let month: ''
-let year = ''
+let reportData = {} as PolicyReportData
+let today = new Date()
+let month = String(today.getMonth() + 1)
+let year = String(today.getFullYear())
 
 onMount(async () => {
   loadPolicy(policyId)
   loadItems(policyId)
   loadClaimsByPolicyId(policyId)
-  reportData = await getLedgerEntriesByPolicyId(policyId, month, year)
+  reportData = (await getLedgerEntriesByPolicyId(policyId, month, year)) || {}
 })
-$: month = $params.month
-$: year = $params.year
+$: month = $params.month || month
+$: year = $params.year || year
 $: policy = $selectedPolicy
 $: $selectedPolicyId !== policyId && loadPolicy($selectedPolicyId)
 
 $: policyId && loadItems(policyId)
-$: entries = reportData.entries
+$: entries = reportData.entries || []
 
 $: policyName = getNameOfPolicy(policy)
 $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))
 $: coverage = formatMoney(reportData.coverage_value)
 $: premium = formatMoney(reportData.premium_total)
 $: entityCode = policy.entity_code?.code
+$: total = entries.reduce((sum, entry) => sum + entry.value, 0)
 </script>
 
 <style>
@@ -91,7 +94,7 @@ th {
         </tr>
         <tr>
           <th>Ledger Label</th>
-          <td>TODO: put some data here</td>
+          <td>{policy.account_detail}</td>
         </tr>
       {:else if policy.type === PolicyType.Household}
         <tr>
@@ -110,7 +113,7 @@ th {
         <th>Coverage Value</th><td>{coverage}</td>
       </tr>
       <tr>
-        <th>Premium Rate</th><td>{reportData.premium_rate}</td>
+        <th>Premium Rate</th><td>{reportData.premium_rate * 100}%</td>
       </tr>
 
       <br />
@@ -127,9 +130,13 @@ th {
     </table>
   </div>
 
-  {#if $loading && isLoadingById(`policies/${policyId}/items`)}
+  <h4>
+    Report for {month}/{year}
+  </h4>
+
+  {#if $loading && isLoadingById(`policies/${policyId}/ledger-reports?month=${month}&year=${year}`)}
     Loading items...
-  {:else}
+  {:else if entries.length > 0}
     <h3>Table</h3>
     <table>
       <thead>
@@ -142,19 +149,28 @@ th {
         </tr>
       </thead>
       <tbody>
-        {#each entries as entry (entry.id)}
+        {#each entries as entry}
           <tr>
             <td>{entry.item_name || ''}</td>
             <td>{entry.status_before}</td>
             <td>{entry.status_after}</td>
+            <td>{entry.type}</td>
             <td>{formatMoney(entry.value)}</td>
             <td>{entry.assigned_to || ''}</td>
             <td>{entry.location || ''}</td>
+            <td>{formatFriendlyDate(entry.date)}</td>
             <td />
           </tr>
         {/each}
+        <tr>
+          <td colspan="4" />
+          <td>Total</td>
+          <td>{total}</td>
+        </tr>
       </tbody>
     </table>
+  {:else}
+    <p>No relevant financial transactions</p>
   {/if}
 
   <div class="p-2" />

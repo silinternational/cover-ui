@@ -88,6 +88,11 @@ export async function getLedgerReportById(id: string, isPolicyReport = false): P
   return result
 }
 
+export async function getLedgerEntriesByPolicyId(id: string, month: string, year: string): Promise<any> {
+  const result: LedgerReport = await GET(`policies/${id}/ledger-reports?month=${month}&year=${year}`)
+  return result
+}
+
 export async function getPolicyRenewals(): Promise<LedgerReport> {
   await processPolicyRenewals()
   return createLedgerReport(LedgerReportType.annual, new Date().toISOString().split('T')[0])

@@ -46,14 +46,16 @@ async function createReport(e: CustomEvent) {
           <Datatable.Data.Row.Item>
             <FileLink on:expired={() => getLedgerReportById(report.id, true)} file={report.file} />
           </Datatable.Data.Row.Item>
-          <Datatable.Data.Row.Item>
-            <a
-              target="_blank"
-              href={policyReportDetails(policy.id, report.date.split('-')[1], report.date.split('-')[0])}
-            >
-              open
-            </a>
-          </Datatable.Data.Row.Item>
+          {#if report.type === LedgerReportType.monthly}
+            <Datatable.Data.Row.Item>
+              <a
+                target="_blank"
+                href={policyReportDetails(policy.id, report.date.split('-')[1], report.date.split('-')[0])}
+              >
+                open
+              </a>
+            </Datatable.Data.Row.Item>
+          {/if}
         </Datatable.Data.Row>
       {/each}
     </Datatable.Data>

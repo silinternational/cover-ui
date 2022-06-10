@@ -1,4 +1,5 @@
 <script lang="ts">
+import type { Column } from 'components/Datatable/types'
 import { isLoadingById, loading } from 'components/progress'
 import { loadClaimsByPolicyId } from 'data/claims'
 import { loadItems } from 'data/items'
@@ -11,7 +12,6 @@ import { formatPageTitle } from 'helpers/pageTitle'
 import { metatags, params } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
-import type { Column } from 'components/Datatable/types'
 
 export let policyId: string
 

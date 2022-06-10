@@ -47,8 +47,6 @@ $: entries = reportData.entries || []
 
 $: policyName = getNameOfPolicy(policy)
 $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))
-$: coverage = formatMoney(reportData.coverage_value)
-$: premium = formatMoney(reportData.premium_total)
 $: entityCode = policy.entity_code?.code
 $: total = entries.reduce((sum, entry) => sum + entry.value, 0)
 </script>
@@ -109,7 +107,7 @@ th {
       <br />
 
       <tr>
-        <th>Coverage Value</th><td>{coverage}</td>
+        <th>Coverage Value</th><td>{formatMoney(reportData.coverage_value)}</td>
       </tr>
       <tr>
         <th>Premium Rate</th><td>{reportData.premium_rate * 100}%</td>
@@ -118,13 +116,13 @@ th {
       <br />
 
       <tr>
-        <th>Premium Total</th><td>{premium}/yr</td>
+        <th>Premium Total</th><td>{formatMoney(reportData.premium_total)}/yr</td>
       </tr>
       <tr>
-        <th>Payout Total</th><td>{reportData.payout_total}</td>
+        <th>Payout Total</th><td>{formatMoney(reportData.payout_total)}</td>
       </tr>
       <tr>
-        <th>Net Transactions</th><td>{reportData.net_transactions}</td>
+        <th>Net Transactions</th><td>{formatMoney(reportData.net_transactions)}</td>
       </tr>
     </table>
   </div>

@@ -17,8 +17,7 @@ export let policyId: string
 
 const columns: Column[] = [
   { title: 'Item' },
-  { title: 'Status Before' },
-  { title: 'Status After' },
+  { title: 'Status', colspan: 3, centered: true },
   { title: 'Type' },
   { title: 'Amount' },
   { title: 'Assigned To' },
@@ -142,7 +141,7 @@ th {
       <thead>
         <tr>
           {#each columns as column}
-            <td>
+            <td colspan={column.colspan} class:text-align-center={column.centered}>
               {column.title}
             </td>
           {/each}
@@ -152,7 +151,8 @@ th {
         {#each entries as entry}
           <tr>
             <td>{entry.item_name || ''}</td>
-            <td>{entry.status_before}</td>
+            <td>{entry.status_before || '-'}</td>
+            <td>-></td>
             <td>{entry.status_after}</td>
             <td>{entry.type}</td>
             <td>{formatMoney(entry.value)}</td>
@@ -165,7 +165,7 @@ th {
         <tr>
           <td colspan="4" />
           <td>Total</td>
-          <td>{total}</td>
+          <td>{formatMoney(total)}</td>
         </tr>
       </tbody>
     </table>

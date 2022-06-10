@@ -4,4 +4,6 @@ export type Column = {
   numeric?: boolean
   path?: string
   sortable?: boolean
+  colspan?: number
+  centered?: boolean
 }

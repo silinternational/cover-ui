@@ -17,7 +17,7 @@ const columns: Column[] = [
   { title: 'Item' },
   { title: 'Status', colspan: 3, centered: true },
   { title: 'Type' },
-  { title: 'Amount' },
+  { title: 'Amount', numeric: true },
   { title: 'Assigned To' },
   { title: 'Location' },
   { title: 'Date' },
@@ -140,7 +140,11 @@ th {
       <thead>
         <tr>
           {#each columns as column}
-            <td colspan={column.colspan} class:text-align-center={column.centered}>
+            <td
+              colspan={column.colspan}
+              class:text-align-center={column.centered}
+              class:text-align-right={column.numeric}
+            >
               {column.title}
             </td>
           {/each}

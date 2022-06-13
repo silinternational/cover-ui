@@ -38,6 +38,8 @@ export const POLICY_NEW_TEAM = '/policies/new'
 
 export const REPORTS = '/admin/reports'
 export const reportDetails = (reportId: string) => `${REPORTS}/${reportId}`
+export const policyReportDetails = (policyId: string, month: string, year: string): string =>
+  `/policies/${policyId}/report?${qs.stringify({ month, year })}`
 
 export const SETTINGS = '/settings'
 export const SETTINGS_PERSONAL = '/settings/personal'

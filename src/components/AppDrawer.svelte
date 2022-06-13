@@ -55,7 +55,7 @@ const logoClickHandler = () => $goto(ROOT)
   {toggle}
   {menuItems}
   title="Covered"
-  class="border-white {$showApp ? 'opacity1' : 'opacity0'}"
+  class="drawer border-white {$showApp ? 'opacity1' : 'opacity0'}"
 >
   <span class="pointer" on:click={logoClickHandler} slot="header">
     <img class="logo" src="/logo.svg" alt="Cover" />

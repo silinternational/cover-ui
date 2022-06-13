@@ -34,7 +34,7 @@ $: myHouseholdPolicies = myPolicies.filter(isHouseholdPolicy)
 
 $: setInitialRoleSelection(role)
 
-$: buttonLabel = getButtonLabel($roleSelection, $selectedPolicyId, myPolicies)
+$: buttonLabel = getButtonLabel($roleSelection)
 $: buttonText = getButtonText($roleSelection, $selectedPolicyId, myPolicies)
 $: buttonIcon = getButtonIcon($roleSelection, $selectedPolicyId, myPolicies)
 
@@ -122,7 +122,7 @@ const getButtonIcon = (userAppRoleSelection: UserAppRole, policyIdSelection: str
   return HOUSEHOLD_POLICY_ICON
 }
 
-const getButtonLabel = (userAppRoleSelection: UserAppRole, policyIdSelection: string, myPolicies: Policy[]) => {
+const getButtonLabel = (userAppRoleSelection: UserAppRole) => {
   if (userAppRoleSelection !== UserAppRole.Customer) {
     return ''
   }

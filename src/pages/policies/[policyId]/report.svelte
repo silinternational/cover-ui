@@ -1,8 +1,6 @@
 <script lang="ts">
 import type { Column } from 'components/Datatable/types'
 import { isLoadingById, loading } from 'components/progress'
-import { loadClaimsByPolicyId } from 'data/claims'
-import { loadItems } from 'data/items'
 import { getLedgerEntriesByPolicyId, PolicyReportData } from 'data/ledger'
 import { getNameOfPolicy, loadPolicy, Policy, PolicyType, selectedPolicy } from 'data/policies'
 import { selectedPolicyId } from 'data/role-policy-selection'
@@ -33,8 +31,6 @@ let year = String(today.getFullYear())
 
 onMount(async () => {
   loadPolicy(policyId)
-  loadItems(policyId)
-  loadClaimsByPolicyId(policyId)
   loadReportData()
 })
 $: policyId, loadReportData()
@@ -43,7 +39,6 @@ $: year = $params.year || year
 $: policy = $selectedPolicy
 $: $selectedPolicyId !== policyId && loadPolicy($selectedPolicyId)
 
-$: policyId && loadItems(policyId)
 $: entries = reportData.entries || []
 
 $: policyName = getNameOfPolicy(policy)
@@ -138,7 +133,7 @@ th {
   </h4>
 
   {#if $loading && isLoadingById(`policies/${policyId}/ledger-reports?month=${month}&year=${year}`)}
-    Loading items...
+    Loading report...
   {:else if entries.length > 0}
     <h3>Table</h3>
     <table>

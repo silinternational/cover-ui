@@ -35,8 +35,9 @@ onMount(async () => {
   loadPolicy(policyId)
   loadItems(policyId)
   loadClaimsByPolicyId(policyId)
-  reportData = (await getLedgerEntriesByPolicyId(policyId, month, year)) || {}
+  loadReportData()
 })
+$: policyId, loadReportData()
 $: month = $params.month || month
 $: year = $params.year || year
 $: policy = $selectedPolicy
@@ -49,6 +50,10 @@ $: policyName = getNameOfPolicy(policy)
 $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))
 $: entityCode = policy.entity_code?.code
 $: total = entries.reduce((sum, entry) => sum + entry.value, 0)
+
+const loadReportData = async () => {
+  reportData = (await getLedgerEntriesByPolicyId(policyId, month, year)) || {}
+}
 </script>
 
 <style>

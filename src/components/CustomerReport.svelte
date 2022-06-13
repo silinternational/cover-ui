@@ -23,6 +23,8 @@ async function createReport(e: CustomEvent) {
   }
   modalOpen = false
 }
+const getMonth = (iso8601Date: string) => iso8601Date.split('-')[1]
+const getYear = (iso8601Date: string) => iso8601Date.split('-')[0]
 </script>
 
 <Button class="mb-1" on:click={() => (modalOpen = true)}>create a report</Button>
@@ -48,10 +50,7 @@ async function createReport(e: CustomEvent) {
           </Datatable.Data.Row.Item>
           {#if report.type === LedgerReportType.monthly}
             <Datatable.Data.Row.Item>
-              <a
-                target="_blank"
-                href={policyReportDetails(policy.id, report.date.split('-')[1], report.date.split('-')[0])}
-              >
+              <a target="_blank" href={policyReportDetails(policy.id, getMonth(report.date), getYear(report.date))}>
                 open
               </a>
             </Datatable.Data.Row.Item>

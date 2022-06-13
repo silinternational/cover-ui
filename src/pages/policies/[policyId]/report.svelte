@@ -67,6 +67,12 @@ th {
 th {
   text-align: left;
 }
+
+@media print {
+  @page {
+    size: landscape;
+  }
+}
 </style>
 
 <Page>
@@ -140,13 +146,13 @@ th {
       <thead>
         <tr>
           {#each columns as column}
-            <td
+            <th
               colspan={column.colspan}
               class:text-align-center={column.centered}
               class:text-align-right={column.numeric}
             >
               {column.title}
-            </td>
+            </th>
           {/each}
         </tr>
       </thead>

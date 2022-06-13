@@ -11,5 +11,5 @@ export const formatMoney = (cents: number): string => {
   }
   const convertToDollars = (cents: number) => '$' + Number(cents / 100).toFixed(2)
 
-  return cents > 0 ? convertToDollars(cents) : `(${convertToDollars(cents * -1)})`
+  return cents >= 0 ? convertToDollars(cents) : `(${convertToDollars(cents * -1)})`
 }

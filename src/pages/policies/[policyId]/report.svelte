@@ -49,6 +49,8 @@ $: policyName = getNameOfPolicy(policy)
 $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))
 $: entityCode = policy.entity_code?.code
 $: total = entries.reduce((sum, entry) => sum + entry.value, 0)
+
+const formatValue = (value: number) => (value > 0 ? formatMoney(value) : `(${formatMoney(value * -1)})`)
 </script>
 
 <style>
@@ -99,10 +101,11 @@ th {
           <td>{policy.household_id || '-'}</td>
         </tr>
       {/if}
-      <tr>
+      <!-- TODO: uncomment when BE finished, hide if 1/1/1 -->
+      <!-- <tr>
         <th>Last changed</th>
         <td>{formatFriendlyDate(reportData.last_changed)}</td>
-      </tr>
+      </tr> -->
 
       <br />
 
@@ -122,7 +125,7 @@ th {
         <th>Payout Total</th><td>{formatMoney(reportData.payout_total)}</td>
       </tr>
       <tr>
-        <th>Net Transactions</th><td>{formatMoney(reportData.net_transactions)}</td>
+        <th>Net Transactions</th><td>{formatValue(reportData.net_transactions)}</td>
       </tr>
     </table>
   </div>
@@ -153,7 +156,7 @@ th {
             <td>-></td>
             <td>{entry.status_after}</td>
             <td>{entry.type}</td>
-            <td>{formatMoney(entry.value)}</td>
+            <td>{formatValue(entry.value)}</td>
             <td>{entry.assigned_to || ''}</td>
             <td>{entry.location || ''}</td>
             <td>{formatFriendlyDate(entry.date)}</td>
@@ -163,7 +166,7 @@ th {
         <tr>
           <td colspan="4" />
           <td>Total</td>
-          <td>{formatMoney(total)}</td>
+          <td>{formatValue(total)}</td>
         </tr>
       </tbody>
     </table>

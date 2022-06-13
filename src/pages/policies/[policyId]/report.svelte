@@ -105,11 +105,10 @@ th {
           <td>{policy.household_id || '-'}</td>
         </tr>
       {/if}
-      <!-- TODO: uncomment when BE finished, hide if 1/1/1 -->
-      <!-- <tr>
+      <tr>
         <th>Last changed</th>
-        <td>{formatFriendlyDate(reportData.last_changed)}</td>
-      </tr> -->
+        <td>{formatFriendlyDate(reportData.last_changed) || '-'}</td>
+      </tr>
 
       <br />
 
@@ -167,7 +166,7 @@ th {
             <td>{formatMoney(entry.value)}</td>
             <td>{entry.assigned_to || ''}</td>
             <td>{entry.location || ''}</td>
-            <td>{formatFriendlyDate(entry.date)}</td>
+            <td>{formatFriendlyDate(entry.date) || '-'}</td>
             <td />
           </tr>
         {/each}

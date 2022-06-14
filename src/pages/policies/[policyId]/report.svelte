@@ -67,6 +67,12 @@ th {
 th {
   text-align: left;
 }
+.centered {
+  text-align: center;
+}
+.numeric {
+  text-align: right;
+}
 
 @media print {
   @page {
@@ -144,13 +150,9 @@ th {
     <table>
       <thead>
         <tr>
-          {#each columns as column}
-            <th
-              colspan={column.colspan}
-              class:text-align-center={column.centered}
-              class:text-align-right={column.numeric}
-            >
-              {column.title}
+          {#each columns as { colspan, centered, numeric, title }}
+            <th {colspan} class:centered class:numeric>
+              {title}
             </th>
           {/each}
         </tr>

@@ -1,9 +1,12 @@
 import { day } from 'components/const'
 
-export const formatFriendlyDate = (dateTimeString: string): string =>
-  new Date(dateTimeString).toDateString() !== 'Invalid Date'
-    ? formatDate(dateTimeString.split('T')[0], { month: 'numeric', day: 'numeric', year: 'numeric' })
-    : ''
+export const formatFriendlyDate = (dateTimeString: string): string => {
+  if (dateTimeString?.includes('0001-01-01') || new Date(dateTimeString).toDateString() === 'Invalid Date') {
+    return ''
+  }
+
+  return formatDate(dateTimeString.split('T')[0], { month: 'numeric', day: 'numeric', year: 'numeric' })
+}
 
 export const formatDate = (
   dateString: string,

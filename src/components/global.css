@@ -48,3 +48,9 @@ p {
 .mdc-data-table__table-container {
   overflow-y: hidden;
 }
+
+@media print {
+  footer, .drawer {
+    display: none !important;
+  }
+}

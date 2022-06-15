@@ -9,5 +9,7 @@ export const formatMoney = (cents: number): string => {
   if (!cents || !Number.isFinite(+cents)) {
     return ''
   }
-  return '$' + Number(cents / 100).toFixed(2)
+  const convertToDollars = (cents: number) => '$' + Number(cents / 100).toFixed(2)
+
+  return cents >= 0 ? convertToDollars(cents) : `(${convertToDollars(cents * -1)})`
 }

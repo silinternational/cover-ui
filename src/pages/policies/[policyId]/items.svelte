@@ -1,7 +1,7 @@
 <script lang="ts">
 import { ItemsTable, Row, SearchForm } from 'components'
 import { isLoadingPolicyItems, loading } from 'components/progress'
-import { deleteItem, deleteItems, loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
+import { cloneItems, deleteItem, deleteItems, loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import * as routes from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -25,6 +25,15 @@ const onDelete = async (event: CustomEvent<any>) => {
   // Depending on if the item was a draft or approved it will either be deleted or updated
   // Just reload the list for now since the delete endpoint doesn't yet tell us what happened
   loadItems(policyId)
+}
+
+const onBatchDelete = () => {
+  deleteItems(checkedItems, policyId)
+}
+
+const onClone = () => {
+  cloneItems(checkedItems, policyId)
+  checkedItems = []
 }
 
 const onGotoItem = (event: CustomEvent<string>) => $goto(event.detail)
@@ -62,7 +71,8 @@ const handleChange = (e: CustomEvent<PolicyItem>) => {
         on:delete={onDelete}
         on:gotoItem={onGotoItem}
         on:change={handleChange}
-        on:batchDelete={() => deleteItems(checkedItems, policyId)}
+        on:batchDelete={onBatchDelete}
+        on:clone={onClone}
       />
     {:else}
       <p class="m-0-auto text-align-center">You don't have any items in this policy</p>

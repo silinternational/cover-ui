@@ -1,4 +1,5 @@
 <script lang="ts">
+import BatchItemClone from '../BatchItemClone.svelte'
 import BatchItemDelete from '../BatchItemDelete.svelte'
 import { getItemState } from 'data/states'
 import DatatableCheckbox from './DatatableCheckbox.svelte'
@@ -9,7 +10,6 @@ import { formatMoney } from 'helpers/money'
 import { itemDetails, itemEdit } from 'helpers/routes'
 import { sortByNum, sortByString } from 'helpers/sort'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
-import ItemCloneModal from '../ItemCloneModal.svelte'
 import type { Column } from './types'
 import { createEventDispatcher } from 'svelte'
 import { Datatable, Menu, MenuItem } from '@silintl/ui-components'
@@ -189,7 +189,7 @@ const onSorted = (event: CustomEvent) => {
 
 <BatchItemDelete disabled={batchActionDisabled} on:closed={handleClosed} />
 
-<ItemCloneModal disabled={batchActionDisabled} {selectedItemNames} on:closed={handleModalDialog} />
+<BatchItemClone disabled={batchActionDisabled} {selectedItemNames} on:closed={handleModalDialog} />
 
 {#if title}
   <h3>{title}</h3>

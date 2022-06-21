@@ -1,7 +1,8 @@
 <script lang="ts">
-import { Dialog } from '@silintl/ui-components'
+import { Button, Dialog } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
+export let disabled = false
 export let open = false
 export let selectedItemNames = [] as string[]
 
@@ -27,6 +28,8 @@ const handleDialog = (choice: string) => {
   dispatch('closed', choice)
 }
 </script>
+
+<Button {disabled} on:click={() => (open = true)}>clone coverage</Button>
 
 <Dialog.Alert
   {open}

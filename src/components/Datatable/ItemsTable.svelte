@@ -12,7 +12,7 @@ import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import ItemCloneModal from '../ItemCloneModal.svelte'
 import type { Column } from './types'
 import { createEventDispatcher } from 'svelte'
-import { Button, Datatable, Menu, MenuItem } from '@silintl/ui-components'
+import { Datatable, Menu, MenuItem } from '@silintl/ui-components'
 
 export let items = [] as PolicyItem[]
 export let checkedItems = [] as PolicyItem[]
@@ -74,7 +74,6 @@ let currentColumn = columns[0]
 let currentItem = {} as PolicyItem
 let goToItemDetails = true
 let DeleteModalOpen = false
-let cloneModalOpen = false
 let shownMenus: { [name: string]: boolean } = {}
 
 $: selectedItemNames = checkedItems.map((item) => item.name)
@@ -117,7 +116,6 @@ const handleModalDialog = async (event: CustomEvent<string>) => {
     dispatch('delete', currentItem.id)
   }
   if (event.detail === 'clone') {
-    cloneModalOpen = false
     dispatch('clone')
   }
 }
@@ -191,7 +189,7 @@ const onSorted = (event: CustomEvent) => {
 
 <BatchItemDelete disabled={batchActionDisabled} on:closed={handleClosed} />
 
-<Button on:click={() => (cloneModalOpen = true)}>clone coverage</Button>
+<ItemCloneModal disabled={batchActionDisabled} {selectedItemNames} on:closed={handleModalDialog} />
 
 {#if title}
   <h3>{title}</h3>
@@ -210,11 +208,7 @@ const onSorted = (event: CustomEvent) => {
   <Datatable.Data>
     {#each sortedItemsArray as item (item.id)}
       <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} clickable>
-        <DatatableCheckbox
-          checked={checkedItems.some((i) => i.id === item.id)}
-          on:click={() => (goToItemDetails = false)}
-          on:change={() => handleChange(item)}
-        />
+        <DatatableCheckbox on:click={() => (goToItemDetails = false)} on:change={() => handleChange(item)} />
         <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}>
           {#if item.coverage_status === ItemCoverageStatus.Approved && item.coverage_end_date}
@@ -245,4 +239,3 @@ const onSorted = (event: CustomEvent) => {
   </Datatable.Data>
 </Datatable>
 <ItemDeleteModal open={DeleteModalOpen} item={currentItem} on:closed={handleModalDialog} />
-<ItemCloneModal open={cloneModalOpen} {selectedItemNames} on:closed={handleModalDialog} />

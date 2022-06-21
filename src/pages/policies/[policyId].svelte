@@ -3,7 +3,15 @@ import { Breadcrumb, CardsGrid, ClaimsTable, ItemsTable, Row, Strikes, CustomerR
 import { isLoadingById, loading } from 'components/progress'
 import Switch from '../../components/mdc/Switch'
 import { Claim, claimIsOpen, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
-import { deleteItem, itemIsApproved, loadItems, selectedPolicyItems, PolicyItem, deleteItems } from 'data/items'
+import {
+  deleteItem,
+  itemIsApproved,
+  loadItems,
+  selectedPolicyItems,
+  PolicyItem,
+  deleteItems,
+  cloneItems,
+} from 'data/items'
 import { getNameOfPolicy, loadPolicy, Policy, PolicyType, selectedPolicy } from 'data/policies'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { isAdmin } from 'data/user'
@@ -26,7 +34,7 @@ export let policyId: string
 
 let policy = {} as Policy
 let showAllClaims = false
-let checkedItemIds: string[] = []
+let checkedItems = [] as PolicyItem[]
 let hideInactive = false
 
 onMount(() => {
@@ -85,12 +93,21 @@ const onDelete = async (event: CustomEvent<any>) => {
   loadItems(policyId)
 }
 
-const handleChange = (e: CustomEvent<string>) => {
-  const itemId = e.detail
-  if (checkedItemIds.includes(itemId)) {
-    checkedItemIds = checkedItemIds.filter((id) => id !== itemId)
+const onBatchDelete = () => {
+  deleteItems(checkedItems, policyId)
+}
+
+const onClone = () => {
+  cloneItems(checkedItems, policyId)
+  checkedItems = []
+}
+
+const handleChange = (e: CustomEvent<PolicyItem>) => {
+  const item: PolicyItem = e.detail
+  if (checkedItems.some((ci) => ci.id === item.id)) {
+    checkedItems = checkedItems.filter((ci) => ci.id !== item.id)
   } else {
-    checkedItemIds = [...checkedItemIds, itemId]
+    checkedItems = [...checkedItems, item]
   }
 }
 
@@ -241,12 +258,14 @@ th {
   {:else}
     <ItemsTable
       items={itemsForTable}
+      {checkedItems}
       {policyId}
-      batchActionDisabled={checkedItemIds.length === 0}
+      batchActionDisabled={checkedItems.length === 0}
       on:delete={onDelete}
       on:gotoItem={(e) => $goto(e.detail)}
       on:change={handleChange}
-      on:batchDelete={() => deleteItems(checkedItemIds, policyId)}
+      on:batchDelete={onBatchDelete}
+      on:clone={onClone}
     />
     <div class="text-align-center">
       <p class="item-footer">Showing {itemsForTable.length} out of {items.length} items</p>

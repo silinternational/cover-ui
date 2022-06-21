@@ -1,7 +1,7 @@
 <script lang="ts">
 import { ItemsTable, Row, SearchForm } from 'components'
 import { isLoadingPolicyItems, loading } from 'components/progress'
-import { deleteItem, deleteItems, loadItems, selectedPolicyItems } from 'data/items'
+import { deleteItem, deleteItems, loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import * as routes from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -10,7 +10,7 @@ import { Button, Page } from '@silintl/ui-components'
 
 let searchText = ''
 let filteredItems = $selectedPolicyItems
-let checkedItemIds: string[] = []
+let checkedItems: PolicyItem[] = []
 
 $: policyId = $selectedPolicyId
 $: policyId && loadItems(policyId)
@@ -37,12 +37,12 @@ const onSearch = (event: CustomEvent<string>) => {
   }
 }
 
-const handleChange = (e: CustomEvent<string>) => {
-  const itemId = e.detail
-  if (checkedItemIds.includes(itemId)) {
-    checkedItemIds = checkedItemIds.filter((id) => id !== itemId)
+const handleChange = (e: CustomEvent<PolicyItem>) => {
+  const item: PolicyItem = e.detail
+  if (checkedItems.some((ci) => ci.id === item.id)) {
+    checkedItems = checkedItems.filter((ci) => ci.id !== item.id)
   } else {
-    checkedItemIds = [...checkedItemIds, itemId]
+    checkedItems = [...checkedItems, item]
   }
 }
 </script>
@@ -54,14 +54,15 @@ const handleChange = (e: CustomEvent<string>) => {
       Loading items...
     {:else if filteredItems.length > 0}
       <ItemsTable
+        {checkedItems}
         items={filteredItems}
         {policyId}
-        batchActionDisabled={checkedItemIds.length === 0}
+        batchActionDisabled={checkedItems.length === 0}
         title="Items"
         on:delete={onDelete}
         on:gotoItem={onGotoItem}
         on:change={handleChange}
-        on:batchDelete={() => deleteItems(checkedItemIds, policyId)}
+        on:batchDelete={() => deleteItems(checkedItems, policyId)}
       />
     {:else}
       <p class="m-0-auto text-align-center">You don't have any items in this policy</p>

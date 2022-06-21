@@ -9,11 +9,13 @@ import { formatMoney } from 'helpers/money'
 import { itemDetails, itemEdit } from 'helpers/routes'
 import { sortByNum, sortByString } from 'helpers/sort'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
+import ItemCloneModal from '../ItemCloneModal.svelte'
 import type { Column } from './types'
 import { createEventDispatcher } from 'svelte'
-import { Datatable, Menu, MenuItem } from '@silintl/ui-components'
+import { Button, Datatable, Menu, MenuItem } from '@silintl/ui-components'
 
 export let items = [] as PolicyItem[]
+export let checkedItems = [] as PolicyItem[]
 export let policyId: string
 export let title: string = ''
 export let batchActionDisabled = true
@@ -71,9 +73,11 @@ let currentColumn = columns[0]
 
 let currentItem = {} as PolicyItem
 let goToItemDetails = true
-let modalOpen = false
+let DeleteModalOpen = false
+let cloneModalOpen = false
 let shownMenus: { [name: string]: boolean } = {}
 
+$: selectedItemNames = checkedItems.map((item) => item.name)
 $: sortedItemsArray = currentColumn.numeric
   ? sortByNum(currentColumn.path, items, ascending)
   : sortByString(currentColumn.path, items, ascending)
@@ -104,18 +108,22 @@ const getMenuItems = (item: PolicyItem) => {
 
 const handleDeleteClick = () => {
   goToItemDetails = false
-  modalOpen = true
+  DeleteModalOpen = true
 }
 
 const handleModalDialog = async (event: CustomEvent<string>) => {
-  modalOpen = false
   if (event.detail === 'remove') {
+    DeleteModalOpen = false
     dispatch('delete', currentItem.id)
+  }
+  if (event.detail === 'clone') {
+    cloneModalOpen = false
+    dispatch('clone')
   }
 }
 
-const handleChange = (itemId: string) => {
-  dispatch('change', itemId)
+const handleChange = (item: PolicyItem) => {
+  dispatch('change', item)
 }
 
 const handleClosed = (e: CustomEvent) => {
@@ -183,6 +191,8 @@ const onSorted = (event: CustomEvent) => {
 
 <BatchItemDelete disabled={batchActionDisabled} on:closed={handleClosed} />
 
+<Button on:click={() => (cloneModalOpen = true)}>clone coverage</Button>
+
 {#if title}
   <h3>{title}</h3>
 {/if}
@@ -201,9 +211,9 @@ const onSorted = (event: CustomEvent) => {
     {#each sortedItemsArray as item (item.id)}
       <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} clickable>
         <DatatableCheckbox
-          disabled={item.coverage_end_date}
+          checked={checkedItems.some((i) => i.id === item.id)}
           on:click={() => (goToItemDetails = false)}
-          on:change={() => handleChange(item.id)}
+          on:change={() => handleChange(item)}
         />
         <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}>
@@ -234,4 +244,5 @@ const onSorted = (event: CustomEvent) => {
     {/each}
   </Datatable.Data>
 </Datatable>
-<ItemDeleteModal open={modalOpen} item={currentItem} on:closed={handleModalDialog} />
+<ItemDeleteModal open={DeleteModalOpen} item={currentItem} on:closed={handleModalDialog} />
+<ItemCloneModal open={cloneModalOpen} {selectedItemNames} on:closed={handleModalDialog} />

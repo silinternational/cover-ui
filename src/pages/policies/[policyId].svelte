@@ -51,7 +51,7 @@ $: policyId && loadItems(policyId)
 // sort items so inactive is last
 $: items = $selectedPolicyItems
 $: approvedItems = items.filter(itemIsApproved)
-$: itemsForTable = hideInactive ? approvedItems.slice(0, 15) : items.slice(0, 15)
+$: itemsForTable = hideInactive ? approvedItems.slice(0, 15) : $selectedPolicyItems.slice(0, 15)
 
 $: recentClaims = $selectedPolicyClaims.filter(isRecent)
 $: claimsForTable = showAllClaims ? $selectedPolicyClaims : recentClaims.slice(0, 15)

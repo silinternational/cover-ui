@@ -29,6 +29,7 @@ const onDelete = async (event: CustomEvent<any>) => {
 
 const onBatchDelete = () => {
   deleteItems(checkedItems, policyId)
+  checkedItems = []
 }
 
 const onClone = () => {

@@ -16,7 +16,7 @@ $: names = selectedItemNames.reduce(
 const dispatch = createEventDispatcher<{ closed: string }>()
 
 const buttons: Dialog.AlertButton[] = [
-  { label: 'Yes, Clone', action: 'clone', class: 'mdc-theme--primary' },
+  { label: 'Yes, Clone', action: 'clone', class: 'mdc-dialog__button' },
   { label: 'cancel', action: 'cancel', class: 'mdc-dialog__button' },
 ]
 

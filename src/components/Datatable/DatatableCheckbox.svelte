@@ -3,7 +3,8 @@ import { generateRandomID } from '@silintl/ui-components/random'
 import { createEventDispatcher } from 'svelte'
 
 export let disabled = false
-export let checked = false
+
+let checked = false
 
 const inputID = generateRandomID('checkbox-')
 

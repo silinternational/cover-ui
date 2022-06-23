@@ -1,4 +1,5 @@
 <script lang="ts">
+import BatchItemClone from '../BatchItemClone.svelte'
 import BatchItemDelete from '../BatchItemDelete.svelte'
 import { getItemState } from 'data/states'
 import DatatableCheckbox from './DatatableCheckbox.svelte'
@@ -14,6 +15,7 @@ import { createEventDispatcher } from 'svelte'
 import { Datatable, Menu, MenuItem } from '@silintl/ui-components'
 
 export let items = [] as PolicyItem[]
+export let checkedItems = [] as PolicyItem[]
 export let policyId: string
 export let title: string = ''
 export let batchActionDisabled = true
@@ -71,9 +73,10 @@ let currentColumn = columns[0]
 
 let currentItem = {} as PolicyItem
 let goToItemDetails = true
-let modalOpen = false
+let DeleteModalOpen = false
 let shownMenus: { [name: string]: boolean } = {}
 
+$: selectedItemNames = checkedItems.map((item) => item.name)
 $: sortedItemsArray = currentColumn.numeric
   ? sortByNum(currentColumn.path, items, ascending)
   : sortByString(currentColumn.path, items, ascending)
@@ -104,23 +107,26 @@ const getMenuItems = (item: PolicyItem) => {
 
 const handleDeleteClick = () => {
   goToItemDetails = false
-  modalOpen = true
+  DeleteModalOpen = true
 }
 
 const handleModalDialog = async (event: CustomEvent<string>) => {
-  modalOpen = false
   if (event.detail === 'remove') {
+    DeleteModalOpen = false
     dispatch('delete', currentItem.id)
   }
 }
 
-const handleChange = (itemId: string) => {
-  dispatch('change', itemId)
+const handleChange = (item: PolicyItem) => {
+  dispatch('change', item)
 }
 
-const handleClosed = (e: CustomEvent) => {
+const handleClosed = (e: CustomEvent<string>) => {
   if (e.detail === 'delete') {
     dispatch('batchDelete')
+  }
+  if (e.detail === 'clone') {
+    dispatch('batchClone')
   }
 }
 
@@ -183,6 +189,8 @@ const onSorted = (event: CustomEvent) => {
 
 <BatchItemDelete disabled={batchActionDisabled} on:closed={handleClosed} />
 
+<BatchItemClone disabled={batchActionDisabled} {selectedItemNames} on:closed={handleClosed} />
+
 {#if title}
   <h3>{title}</h3>
 {/if}
@@ -200,11 +208,7 @@ const onSorted = (event: CustomEvent) => {
   <Datatable.Data>
     {#each sortedItemsArray as item (item.id)}
       <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} clickable>
-        <DatatableCheckbox
-          disabled={item.coverage_end_date}
-          on:click={() => (goToItemDetails = false)}
-          on:change={() => handleChange(item.id)}
-        />
+        <DatatableCheckbox on:click={() => (goToItemDetails = false)} on:change={() => handleChange(item)} />
         <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}>
           {#if item.coverage_status === ItemCoverageStatus.Approved && item.coverage_end_date}
@@ -234,4 +238,4 @@ const onSorted = (event: CustomEvent) => {
     {/each}
   </Datatable.Data>
 </Datatable>
-<ItemDeleteModal open={modalOpen} item={currentItem} on:closed={handleModalDialog} />
+<ItemDeleteModal open={DeleteModalOpen} item={currentItem} on:closed={handleModalDialog} />

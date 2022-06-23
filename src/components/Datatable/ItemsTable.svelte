@@ -115,18 +115,18 @@ const handleModalDialog = async (event: CustomEvent<string>) => {
     DeleteModalOpen = false
     dispatch('delete', currentItem.id)
   }
-  if (event.detail === 'clone') {
-    dispatch('clone')
-  }
 }
 
 const handleChange = (item: PolicyItem) => {
   dispatch('change', item)
 }
 
-const handleClosed = (e: CustomEvent) => {
+const handleClosed = (e: CustomEvent<string>) => {
   if (e.detail === 'delete') {
     dispatch('batchDelete')
+  }
+  if (e.detail === 'clone') {
+    dispatch('batchClone')
   }
 }
 
@@ -189,7 +189,7 @@ const onSorted = (event: CustomEvent) => {
 
 <BatchItemDelete disabled={batchActionDisabled} on:closed={handleClosed} />
 
-<BatchItemClone disabled={batchActionDisabled} {selectedItemNames} on:closed={handleModalDialog} />
+<BatchItemClone disabled={batchActionDisabled} {selectedItemNames} on:closed={handleClosed} />
 
 {#if title}
   <h3>{title}</h3>

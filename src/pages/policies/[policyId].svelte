@@ -98,7 +98,7 @@ const onBatchDelete = () => {
   checkedItems = []
 }
 
-const onClone = () => {
+const onBatchClone = () => {
   cloneItems(checkedItems, policyId)
   checkedItems = []
 }
@@ -266,7 +266,7 @@ th {
       on:gotoItem={(e) => $goto(e.detail)}
       on:change={handleChange}
       on:batchDelete={onBatchDelete}
-      on:clone={onClone}
+      on:batchClone={onBatchClone}
     />
     <div class="text-align-center">
       <p class="item-footer">Showing {itemsForTable.length} out of {items.length} items</p>

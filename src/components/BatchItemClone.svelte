@@ -13,7 +13,7 @@ $: names = selectedItemNames.reduce(
   ''
 )
 
-const dispatch = createEventDispatcher<{ closed: string }>()
+const dispatch = createEventDispatcher<{ closed: 'clone' | 'cancel' }>()
 
 const buttons: Dialog.AlertButton[] = [
   { label: 'Yes, Clone', action: 'clone', class: 'mdc-dialog__button' },
@@ -23,7 +23,7 @@ const buttons: Dialog.AlertButton[] = [
 $: title = 'Clone Coverage'
 $: message = `Are you sure you would like to clone coverage for ${names}?`
 
-const handleDialog = (choice: string) => {
+const handleDialog = (choice: 'clone' | 'cancel') => {
   open = false
   dispatch('closed', choice)
 }

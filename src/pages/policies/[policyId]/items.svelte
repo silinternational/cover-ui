@@ -32,7 +32,7 @@ const onBatchDelete = () => {
   checkedItems = []
 }
 
-const onClone = () => {
+const onBatchClone = () => {
   cloneItems(checkedItems, policyId)
   checkedItems = []
 }
@@ -73,7 +73,7 @@ const handleChange = (e: CustomEvent<PolicyItem>) => {
         on:gotoItem={onGotoItem}
         on:change={handleChange}
         on:batchDelete={onBatchDelete}
-        on:clone={onClone}
+        on:batchClone={onBatchClone}
       />
     {:else}
       <p class="m-0-auto text-align-center">You don't have any items in this policy</p>

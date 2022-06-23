@@ -1,7 +1,6 @@
 <script lang="ts">
 import { Breadcrumb, CardsGrid, ClaimsTable, ItemsTable, Row, Strikes, CustomerReport } from 'components'
 import { isLoadingById, loading } from 'components/progress'
-import Switch from '../../components/mdc/Switch'
 import { Claim, claimIsOpen, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import {
   deleteItem,
@@ -27,7 +26,7 @@ import {
   settingsPolicy,
 } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
-import { Button, Checkbox, Datatable, isAboveMobile, isAboveTablet, Page } from '@silintl/ui-components'
+import { Button, Checkbox, Datatable, isAboveMobile, isAboveTablet, Page, Switch } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 export let policyId: string

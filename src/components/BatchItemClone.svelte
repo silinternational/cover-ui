@@ -8,10 +8,11 @@ export let selectedItemNames = [] as string[]
 
 let names: string
 
-$: names = selectedItemNames.reduce(
-  (sum, curr, i) => (i === 0 ? curr : sum + (i === selectedItemNames.length - 1 ? ' and ' : ', ') + curr),
-  ''
-)
+$: names = selectedItemNames.reduce((sum: string, curr: string, i: number, arr: any[]): string => {
+  const midChunk = i === arr.length - 1 ? ' and ' : ', '
+  const chunk = sum + midChunk + curr
+  return i === 0 ? curr : chunk
+}, '')
 
 const dispatch = createEventDispatcher<{ closed: 'clone' | 'cancel' }>()
 

@@ -4,6 +4,7 @@ import { createEventDispatcher } from 'svelte'
 
 export let openModal = false
 export let disabled = false
+export let allCheckedItemsAreDraft = false
 
 const dispatch = createEventDispatcher<{ closed: string }>()
 
@@ -12,13 +13,15 @@ const buttons: Dialog.AlertButton[] = [
   { label: 'cancel', action: 'cancel', class: 'mdc-dialog__button' },
 ]
 
+$: buttonLabel = allCheckedItemsAreDraft ? 'delete' : 'end coverage'
+
 const handleDialog = (choice: string) => {
   openModal = false
   dispatch('closed', choice)
 }
 </script>
 
-<Button {disabled} on:click={() => (openModal = true)}>end coverage</Button>
+<Button {disabled} on:click={() => (openModal = true)}>{buttonLabel}</Button>
 
 <Dialog.Alert
   open={openModal}

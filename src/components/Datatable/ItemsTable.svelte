@@ -80,6 +80,8 @@ $: selectedItemNames = checkedItems.map((item) => item.name)
 $: sortedItemsArray = currentColumn.numeric
   ? sortByNum(currentColumn.path, items, ascending)
   : sortByString(currentColumn.path, items, ascending)
+$: allCheckedItemsAreDraft =
+  checkedItems.length > 0 && checkedItems.every((item) => item.coverage_status === ItemCoverageStatus.Draft)
 
 const dispatch = createEventDispatcher()
 
@@ -187,7 +189,7 @@ const onSorted = (event: CustomEvent) => {
 }
 </style>
 
-<BatchItemDelete disabled={batchActionDisabled} on:closed={handleClosed} />
+<BatchItemDelete disabled={batchActionDisabled} {allCheckedItemsAreDraft} on:closed={handleClosed} />
 
 <BatchItemClone disabled={batchActionDisabled} {selectedItemNames} on:closed={handleClosed} />
 

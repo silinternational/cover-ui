@@ -319,8 +319,13 @@ function updateStoreItem(updatedItem: PolicyItem) {
   })
 }
 
-export const deleteItems = (itemsIdArray: string[], policyId: string): void => {
-  itemsIdArray?.forEach((id) => deleteItem(policyId, id))
+export const cloneItems = (itemsArray: PolicyItem[], policyId: string): void => {
+  itemsArray?.forEach((item) => addItem(policyId, parseItemForAddItem(item)))
+  itemsArray = []
+}
+
+export const deleteItems = (itemsArray: PolicyItem[], policyId: string): void => {
+  itemsArray?.forEach((item) => deleteItem(policyId, item.id))
 }
 
 export const itemIsNotInactive = (item: PolicyItem): boolean => {

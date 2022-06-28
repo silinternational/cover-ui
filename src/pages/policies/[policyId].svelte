@@ -1,9 +1,16 @@
 <script lang="ts">
 import { Breadcrumb, CardsGrid, ClaimsTable, ItemsTable, Row, Strikes, CustomerReport } from 'components'
 import { isLoadingById, loading } from 'components/progress'
-import Switch from '../../components/mdc/Switch'
 import { Claim, claimIsOpen, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
-import { deleteItem, itemIsApproved, loadItems, selectedPolicyItems, PolicyItem, deleteItems } from 'data/items'
+import {
+  deleteItem,
+  itemIsApproved,
+  loadItems,
+  selectedPolicyItems,
+  PolicyItem,
+  deleteItems,
+  cloneItems,
+} from 'data/items'
 import { getNameOfPolicy, loadPolicy, Policy, PolicyType, selectedPolicy } from 'data/policies'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { isAdmin } from 'data/user'
@@ -19,14 +26,14 @@ import {
   settingsPolicy,
 } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
-import { Button, Checkbox, Datatable, isAboveMobile, isAboveTablet, Page } from '@silintl/ui-components'
+import { Button, Checkbox, Datatable, isAboveMobile, isAboveTablet, Page, Switch } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 export let policyId: string
 
 let policy = {} as Policy
 let showAllClaims = false
-let checkedItemIds: string[] = []
+let checkedItems = [] as PolicyItem[]
 let hideInactive = false
 
 onMount(() => {
@@ -43,7 +50,7 @@ $: policyId && loadItems(policyId)
 // sort items so inactive is last
 $: items = $selectedPolicyItems
 $: approvedItems = items.filter(itemIsApproved)
-$: itemsForTable = hideInactive ? approvedItems.slice(0, 15) : items.slice(0, 15)
+$: itemsForTable = hideInactive ? approvedItems.slice(0, 15) : $selectedPolicyItems.slice(0, 15)
 
 $: recentClaims = $selectedPolicyClaims.filter(isRecent)
 $: claimsForTable = showAllClaims ? $selectedPolicyClaims : recentClaims.slice(0, 15)
@@ -85,12 +92,22 @@ const onDelete = async (event: CustomEvent<any>) => {
   loadItems(policyId)
 }
 
-const handleChange = (e: CustomEvent<string>) => {
-  const itemId = e.detail
-  if (checkedItemIds.includes(itemId)) {
-    checkedItemIds = checkedItemIds.filter((id) => id !== itemId)
+const onBatchDelete = () => {
+  deleteItems(checkedItems, policyId)
+  checkedItems = []
+}
+
+const onBatchClone = () => {
+  cloneItems(checkedItems, policyId)
+  checkedItems = []
+}
+
+const handleChange = (e: CustomEvent<PolicyItem>) => {
+  const item: PolicyItem = e.detail
+  if (checkedItems.some((ci) => ci.id === item.id)) {
+    checkedItems = checkedItems.filter((ci) => ci.id !== item.id)
   } else {
-    checkedItemIds = [...checkedItemIds, itemId]
+    checkedItems = [...checkedItems, item]
   }
 }
 
@@ -241,12 +258,14 @@ th {
   {:else}
     <ItemsTable
       items={itemsForTable}
+      {checkedItems}
       {policyId}
-      batchActionDisabled={checkedItemIds.length === 0}
+      batchActionDisabled={checkedItems.length === 0}
       on:delete={onDelete}
       on:gotoItem={(e) => $goto(e.detail)}
       on:change={handleChange}
-      on:batchDelete={() => deleteItems(checkedItemIds, policyId)}
+      on:batchDelete={onBatchDelete}
+      on:batchClone={onBatchClone}
     />
     <div class="text-align-center">
       <p class="item-footer">Showing {itemsForTable.length} out of {items.length} items</p>

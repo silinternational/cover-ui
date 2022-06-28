@@ -180,6 +180,13 @@ declare module '@silintl/ui-components' {
   }
   export class Select extends SvelteComponentTyped<SelectProps> {}
 
+  interface SwitchProps extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
+    label?: string
+    disabled?: boolean
+    selected?: boolean
+  }
+  export class Switch extends SvelteComponentTyped<SwitchProps> {}
+
   interface SnackbarProps extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
     // no exported members
   }

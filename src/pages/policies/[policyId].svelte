@@ -33,7 +33,6 @@ export let policyId: string
 
 let policy = {} as Policy
 let showAllClaims = false
-let checkedItems = [] as PolicyItem[]
 let hideInactive = false
 
 onMount(() => {
@@ -92,23 +91,12 @@ const onDelete = async (event: CustomEvent<any>) => {
   loadItems(policyId)
 }
 
-const onBatchDelete = () => {
-  deleteItems(checkedItems, policyId)
-  checkedItems = []
+const onBatchDelete = (e: CustomEvent<PolicyItem[]>) => {
+  deleteItems(e.detail, policyId)
 }
 
-const onBatchClone = () => {
-  cloneItems(checkedItems, policyId)
-  checkedItems = []
-}
-
-const handleChange = (e: CustomEvent<PolicyItem>) => {
-  const item: PolicyItem = e.detail
-  if (checkedItems.some((ci) => ci.id === item.id)) {
-    checkedItems = checkedItems.filter((ci) => ci.id !== item.id)
-  } else {
-    checkedItems = [...checkedItems, item]
-  }
+const onBatchClone = (e: CustomEvent<PolicyItem[]>) => {
+  cloneItems(e.detail, policyId)
 }
 
 const hideInactiveItems = (): void => {
@@ -258,12 +246,9 @@ th {
   {:else}
     <ItemsTable
       items={itemsForTable}
-      {checkedItems}
       {policyId}
-      batchActionDisabled={checkedItems.length === 0}
       on:delete={onDelete}
       on:gotoItem={(e) => $goto(e.detail)}
-      on:change={handleChange}
       on:batchDelete={onBatchDelete}
       on:batchClone={onBatchClone}
     />

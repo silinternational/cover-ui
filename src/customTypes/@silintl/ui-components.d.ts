@@ -35,6 +35,7 @@ declare module '@silintl/ui-components' {
   }
   export class Checkbox extends SvelteComponentTyped<CheckboxProps> {}
 
+  //Datatable
   interface DatatableProps extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
     label?: string
   }
@@ -44,6 +45,11 @@ declare module '@silintl/ui-components' {
     type HeaderProps = svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']>
     export class Header extends SvelteComponentTyped<HeaderProps> {}
 
+    interface DatatableCheckboxProps extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
+      disabled?: boolean
+    }
+    export class Checkbox extends SvelteComponentTyped<DatatableCheckboxProps> {}
+
     export namespace Header {
       interface ItemProps extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
         numeric?: boolean
@@ -51,6 +57,7 @@ declare module '@silintl/ui-components' {
         sortable?: boolean
       }
       export class Item extends SvelteComponentTyped<ItemProps> {}
+      export class Checkbox extends SvelteComponentTyped<HeaderProps> {}
     }
 
     type DataProps = svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']>

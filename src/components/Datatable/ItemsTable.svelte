@@ -2,8 +2,6 @@
 import BatchItemClone from '../BatchItemClone.svelte'
 import BatchItemDelete from '../BatchItemDelete.svelte'
 import { getItemState } from 'data/states'
-import DatatableCheckbox from './DatatableCheckbox.svelte'
-import DatatableCheckboxHeader from './DatatableCheckboxHeader.svelte'
 import { AccountablePerson, editableCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/items'
 import { formatDate, formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
@@ -15,10 +13,8 @@ import { createEventDispatcher } from 'svelte'
 import { Datatable, Menu, MenuItem } from '@silintl/ui-components'
 
 export let items = [] as PolicyItem[]
-export let checkedItems = [] as PolicyItem[]
 export let policyId: string
 export let title: string = ''
-export let batchActionDisabled = true
 
 const columns: Column[] = [
   {
@@ -71,6 +67,7 @@ let headerId = 'name'
 let ascending = true
 let currentColumn = columns[0]
 
+let checkedItems = [] as PolicyItem[]
 let currentItem = {} as PolicyItem
 let goToItemDetails = true
 let DeleteModalOpen = false
@@ -82,6 +79,7 @@ $: sortedItemsArray = currentColumn.numeric
   : sortByString(currentColumn.path, items, ascending)
 $: allCheckedItemsAreDraft =
   checkedItems.length > 0 && checkedItems.every((item) => item.coverage_status === ItemCoverageStatus.Draft)
+$: batchActionDisabled = checkedItems.length === 0
 
 const dispatch = createEventDispatcher()
 
@@ -119,16 +117,14 @@ const handleModalDialog = async (event: CustomEvent<string>) => {
   }
 }
 
-const handleChange = (item: PolicyItem) => {
-  dispatch('change', item)
-}
-
 const handleClosed = (e: CustomEvent<string>) => {
   if (e.detail === 'delete') {
-    dispatch('batchDelete')
+    dispatch('batchDelete', checkedItems)
+    checkedItems = []
   }
   if (e.detail === 'clone') {
-    dispatch('batchClone')
+    dispatch('batchClone', checkedItems)
+    checkedItems = []
   }
 }
 
@@ -166,6 +162,23 @@ const onSorted = (event: CustomEvent) => {
   currentColumn = columns.find((column) => column.headerId === headerId) || columns[0]
   setAccountablePersonCountryIfNoneExists()
 }
+
+const onSelectedAll = () => {
+  checkedItems = [...items]
+}
+
+const onUnSelectedAll = () => {
+  checkedItems = []
+}
+
+const onRowSelectionChanged = (event: CustomEvent) => {
+  const { rowIndex, selected } = event.detail
+  if (selected) {
+    checkedItems = [...checkedItems, items[rowIndex]]
+  } else {
+    checkedItems = checkedItems.filter((item) => item.id !== items[rowIndex].id)
+  }
+}
 </script>
 
 <style>
@@ -196,10 +209,14 @@ const onSorted = (event: CustomEvent) => {
 {#if title}
   <h3>{title}</h3>
 {/if}
-<Datatable on:sorted={onSorted}>
+<Datatable
+  on:sorted={onSorted}
+  on:selectedAll={onSelectedAll}
+  on:unselectedAll={onUnSelectedAll}
+  on:rowSelectionChanged={onRowSelectionChanged}
+>
   <Datatable.Header>
-    <!-- TODO: programmatically check which boxes are ticked using getSelectedRowIds() in ui-components using DatatableHeader -->
-    <DatatableCheckboxHeader />
+    <Datatable.Header.Checkbox />
     <!--TODO: make the amount of columns shown be dependent on the device size-->
     {#each columns as column}
       <Datatable.Header.Item numeric={column.numeric} columnID={column.headerId} sortable={column.sortable}>
@@ -210,7 +227,7 @@ const onSorted = (event: CustomEvent) => {
   <Datatable.Data>
     {#each sortedItemsArray as item (item.id)}
       <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} clickable>
-        <DatatableCheckbox on:click={() => (goToItemDetails = false)} on:change={() => handleChange(item)} />
+        <Datatable.Checkbox on:click={() => (goToItemDetails = false)} />
         <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}>
           {#if item.coverage_status === ItemCoverageStatus.Approved && item.coverage_end_date}

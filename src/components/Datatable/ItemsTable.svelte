@@ -63,6 +63,7 @@ const columns: Column[] = [
   },
 ]
 
+let checkboxIsMountedArray = [] as boolean[]
 let headerId = 'name'
 let ascending = true
 let currentColumn = columns[0]
@@ -179,6 +180,8 @@ const onRowSelectionChanged = (event: CustomEvent) => {
     checkedItems = checkedItems.filter((item) => item.id !== items[rowIndex].id)
   }
 }
+
+const registerNewCheckbox = () => (checkboxIsMountedArray = [...checkboxIsMountedArray, true])
 </script>
 
 <style>
@@ -210,6 +213,7 @@ const onRowSelectionChanged = (event: CustomEvent) => {
   <h3>{title}</h3>
 {/if}
 <Datatable
+  {checkboxIsMountedArray}
   on:sorted={onSorted}
   on:selectedAll={onSelectedAll}
   on:unselectedAll={onUnSelectedAll}
@@ -227,7 +231,7 @@ const onRowSelectionChanged = (event: CustomEvent) => {
   <Datatable.Data>
     {#each sortedItemsArray as item (item.id)}
       <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} clickable>
-        <Datatable.Checkbox on:click={() => (goToItemDetails = false)} />
+        <Datatable.Checkbox on:click={() => (goToItemDetails = false)} on:mounted={registerNewCheckbox} />
         <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}>
           {#if item.coverage_status === ItemCoverageStatus.Approved && item.coverage_end_date}

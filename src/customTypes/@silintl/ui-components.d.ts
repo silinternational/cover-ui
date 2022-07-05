@@ -38,6 +38,7 @@ declare module '@silintl/ui-components' {
   //Datatable
   interface DatatableProps extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
     label?: string
+    numberOfCheckboxes?: number
   }
   export class Datatable extends SvelteComponentTyped<DatatableProps> {}
 
@@ -47,6 +48,7 @@ declare module '@silintl/ui-components' {
 
     interface DatatableCheckboxProps extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
       disabled?: boolean
+      rowId?: string
     }
     export class Checkbox extends SvelteComponentTyped<DatatableCheckboxProps> {}
 

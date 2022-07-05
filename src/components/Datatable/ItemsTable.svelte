@@ -63,7 +63,7 @@ const columns: Column[] = [
   },
 ]
 
-let checkboxIsMountedArray = [] as boolean[]
+let numberOfCheckboxes = 0
 let headerId = 'name'
 let ascending = true
 let currentColumn = columns[0]
@@ -181,7 +181,9 @@ const onRowSelectionChanged = (event: CustomEvent) => {
   }
 }
 
-const registerNewCheckbox = () => (checkboxIsMountedArray = [...checkboxIsMountedArray, true])
+const registerNewCheckbox = () => {
+  numberOfCheckboxes++
+}
 </script>
 
 <style>
@@ -213,7 +215,7 @@ const registerNewCheckbox = () => (checkboxIsMountedArray = [...checkboxIsMounte
   <h3>{title}</h3>
 {/if}
 <Datatable
-  {checkboxIsMountedArray}
+  {numberOfCheckboxes}
   on:sorted={onSorted}
   on:selectedAll={onSelectedAll}
   on:unselectedAll={onUnSelectedAll}
@@ -230,8 +232,8 @@ const registerNewCheckbox = () => (checkboxIsMountedArray = [...checkboxIsMounte
   </Datatable.Header>
   <Datatable.Data>
     {#each sortedItemsArray as item (item.id)}
-      <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} clickable>
-        <Datatable.Checkbox on:click={() => (goToItemDetails = false)} on:mounted={registerNewCheckbox} />
+      <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} let:rowId clickable>
+        <Datatable.Checkbox {rowId} on:click={() => (goToItemDetails = false)} on:mounted={registerNewCheckbox} />
         <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}>
           {#if item.coverage_status === ItemCoverageStatus.Approved && item.coverage_end_date}

@@ -24,7 +24,7 @@
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@rollup/plugin-typescript": "^8.3.3",
     "@roxi/routify": "^2.18.8",
-    "@silintl/ui-components": "^6.1.1",
+    "@silintl/ui-components": "^6.2.0",
     "@tsconfig/svelte": "^2.0.1",
     "@types/croppie": "^2.6.1",
     "@types/gtag.js": "^0.0.10",

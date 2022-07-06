@@ -12,6 +12,8 @@ $: numberOfRows = Math.ceil(innerHeight / rowHeight) || 0
 $: numberOfCols = Math.ceil(innerWidth / colsWidth) || 0
 $: if (numberOfRows > 1) rows = [...Array(numberOfRows).keys()]
 $: if (numberOfCols > 1) columns = [...Array(numberOfCols).keys()]
+
+const getPixelString = (num1: number, num2: number): string => `${num1 * num2}px`
 </script>
 
 <style>
@@ -27,7 +29,11 @@ $: if (numberOfCols > 1) columns = [...Array(numberOfCols).keys()]
 
 {#each columns as column}
   {#each rows as row}
-    <h3 class="watermark mdc-theme--neutral" style="top: {row * rowHeight}px; left: {column * colsWidth}px;">
+    <h3
+      class="watermark mdc-theme--neutral"
+      style:top={getPixelString(row, rowHeight)}
+      style:left={getPixelString(column, colsWidth)}
+    >
       {text}
     </h3>
   {/each}

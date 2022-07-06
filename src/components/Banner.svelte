@@ -13,7 +13,9 @@ export let background = 'var(--mdc-theme-primary)'
 
 <div
   class="banner flex align-items-center {$$props.class}"
-  style="color: {color}; border: {border}; background-color: {background};"
+  style:color
+  style:border
+  style:background-color={background}
 >
   <slot />
 </div>

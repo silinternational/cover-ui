@@ -29,6 +29,6 @@ const focus = (node) => autofocus && node.focus()
 }
 </style>
 
-<label class="{$$props.class} custom-field" style="--field-padding: {padding};" {disabled}>
-  <input type="date" class="fs-14" style="width: {width}" bind:value on:blur use:focus {disabled} />
+<label class="{$$props.class} custom-field" style:--field-padding={padding} {disabled}>
+  <input type="date" class="fs-14" style:width bind:value on:blur use:focus {disabled} />
 </label>

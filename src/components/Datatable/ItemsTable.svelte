@@ -121,11 +121,9 @@ const handleModalDialog = async (event: CustomEvent<string>) => {
 const handleClosed = (e: CustomEvent<string>) => {
   if (e.detail === 'delete') {
     dispatch('batchDelete', checkedItems)
-    checkedItems = []
   }
   if (e.detail === 'clone') {
     dispatch('batchClone', checkedItems)
-    checkedItems = []
   }
 }
 

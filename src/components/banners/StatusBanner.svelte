@@ -5,7 +5,7 @@ import Banner from '../Banner.svelte'
 export let state: any
 export let receiptType = '' as ReceiptType
 
-$: bgColor = state.bgColor || ''
+$: background = `var(${state.bgColor})` || ''
 $: color = `var(${state.color})` || ''
 $: icon = state.icon || ''
 $: title = state.title === 'Approved' && receiptType ? `${state.title} for ${receiptType}` : state.title
@@ -17,7 +17,7 @@ i.material-icons {
 }
 </style>
 
-<Banner background="var({bgColor})" {color} class={$$props.class}>
+<Banner {background} {color} class={$$props.class}>
   <i class="material-icons" style:color aria-hidden="true">{icon}</i>
   <div class="d-block">
     <div class="mdc-typography--headline6" style:color>{title}</div>

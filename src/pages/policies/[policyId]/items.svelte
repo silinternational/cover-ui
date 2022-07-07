@@ -10,7 +10,6 @@ import { Button, Page } from '@silintl/ui-components'
 
 let searchText = ''
 let filteredItems = $selectedPolicyItems
-let checkedItems: PolicyItem[] = []
 
 $: policyId = $selectedPolicyId
 $: policyId && loadItems(policyId)
@@ -27,14 +26,12 @@ const onDelete = async (event: CustomEvent<any>) => {
   loadItems(policyId)
 }
 
-const onBatchDelete = () => {
-  deleteItems(checkedItems, policyId)
-  checkedItems = []
+const onBatchDelete = (e: CustomEvent<PolicyItem[]>) => {
+  deleteItems(e.detail, policyId)
 }
 
-const onBatchClone = () => {
-  cloneItems(checkedItems, policyId)
-  checkedItems = []
+const onBatchClone = (e: CustomEvent<PolicyItem[]>) => {
+  cloneItems(e.detail, policyId)
 }
 
 const onGotoItem = (event: CustomEvent<string>) => $goto(event.detail)
@@ -46,15 +43,6 @@ const onSearch = (event: CustomEvent<string>) => {
     searchText = event.detail
   }
 }
-
-const handleChange = (e: CustomEvent<PolicyItem>) => {
-  const item: PolicyItem = e.detail
-  if (checkedItems.some((ci) => ci.id === item.id)) {
-    checkedItems = checkedItems.filter((ci) => ci.id !== item.id)
-  } else {
-    checkedItems = [...checkedItems, item]
-  }
-}
 </script>
 
 <Page layout="grid">
@@ -64,14 +52,11 @@ const handleChange = (e: CustomEvent<PolicyItem>) => {
       Loading items...
     {:else if filteredItems.length > 0}
       <ItemsTable
-        {checkedItems}
         items={filteredItems}
         {policyId}
-        batchActionDisabled={checkedItems.length === 0}
         title="Items"
         on:delete={onDelete}
         on:gotoItem={onGotoItem}
-        on:change={handleChange}
         on:batchDelete={onBatchDelete}
         on:batchClone={onBatchClone}
       />

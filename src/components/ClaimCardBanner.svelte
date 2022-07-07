@@ -8,21 +8,21 @@ export let statusReason = '' as string
 export let receiptType = '' as ReceiptType
 export let showRevisionMessage: boolean = false
 
-$: bgColor = state.bgColor || ''
-$: color = state.color || ''
+$: background = `var(${state.bgColor})` || ''
+$: color = `var(${state.color})` || ''
 $: icon = state.icon || ''
 $: title = state.title === 'Approved' && receiptType ? `${state.title} for ${receiptType}` : state.title
 </script>
 
-<Banner class={$$props.class} background="var({bgColor})" color="var({color})">
-  <span class="material-icons" style="color: var({color});">{icon}</span>
+<Banner class={$$props.class} {background} {color}>
+  <span class="material-icons" style:color>{icon}</span>
 
   <div class="mdc-theme--primary pl-10px">
-    <div class="mdc-typography--headline6 multi-line-truncate content" style="color: var({color});">
+    <div class="mdc-typography--headline6 multi-line-truncate content" style:color>
       {title}
     </div>
     {#if showRevisionMessage}
-      <div class="multi-line-truncate fs-14" style="color: var({color});">{statusReason}</div>
+      <div class="multi-line-truncate fs-14" style:color>{statusReason}</div>
     {/if}
   </div>
 </Banner>

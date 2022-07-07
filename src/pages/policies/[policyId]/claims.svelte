@@ -1,6 +1,7 @@
 <script lang="ts">
 import { isAdmin as checkIsAdmin } from 'data/user'
 import { Breadcrumb, ClaimCards, ClaimsTable, Row } from 'components'
+import { loading } from 'components/progress'
 import { Claim, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import { getNameOfPolicy, selectedPolicy } from 'data/policies'
 import { roleSelection } from 'data/role-policy-selection'
@@ -42,6 +43,8 @@ const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(ev
     {#if $selectedPolicyClaims.length}
       <ClaimCards {isAdmin} claims={$selectedPolicyClaims} on:goto-claim={onGotoClaim} />
       <ClaimsTable claims={$selectedPolicyClaims} {policyId} />
+    {:else if $loading}
+      ...Loading claims
     {:else}
       <p class="m-0-auto text-align-center">You don't have any claims in this policy</p>
       <p class="m-0-auto text-align-center">

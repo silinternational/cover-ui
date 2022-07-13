@@ -227,6 +227,10 @@ const assertItemsHaveNoOpenClaims = (items: PolicyItem[]): void => {
   position: absolute;
   right: 235px;
 }
+
+.red {
+  color: var(--mdc-theme-status-error);
+}
 </style>
 
 <BatchItemDelete disabled={batchDeleteDisabled} {allCheckedItemsAreDraft} on:closed={handleClosed} />
@@ -259,7 +263,7 @@ const assertItemsHaveNoOpenClaims = (items: PolicyItem[]): void => {
         <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}>
           {#if item.coverage_status === ItemCoverageStatus.Approved && item.coverage_end_date}
-            Covered through {formatFriendlyDate(item.coverage_end_date)}
+            <div class="red">Covered through {formatFriendlyDate(item.coverage_end_date)}</div>
           {:else}
             {getItemState(item.coverage_status)?.title || ''}
           {/if}

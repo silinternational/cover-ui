@@ -87,7 +87,7 @@ $: batchActionDisabled = checkedItems.length === 0
 $: batchDeleteDisabled =
   batchActionDisabled ||
   checkedItems.some((item) => item.coverage_end_date || item.coverage_status === ItemCoverageStatus.Inactive)
-$: items && uncheckItemsNotShown()
+$: items && (checkedItems = returnFilteredCheckedItems())
 
 const dispatch = createEventDispatcher()
 
@@ -191,9 +191,7 @@ const registerNewCheckbox = () => {
   numberOfCheckboxes++
 }
 
-const uncheckItemsNotShown = () => {
-  checkedItems = checkedItems.filter((item) => items.includes(item))
-}
+const returnFilteredCheckedItems = () => checkedItems.filter((ci) => items.some((i) => i.id === ci.id))
 
 const assertItemsHaveNoOpenClaims = (items: PolicyItem[]): void => {
   const checkClaimItemsForItemAndOpenClaim = (claimItems: ClaimItem[], item: PolicyItem) => {

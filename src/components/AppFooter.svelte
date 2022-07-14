@@ -17,7 +17,7 @@ a {
 }
 </style>
 
-<footer style="--right-margin: {rightMargin}">
+<footer style:--right-margin={rightMargin}>
   <a class="pr-1" href={TERMS_OF_SERVICE}>Terms of Service</a>
   <a href={PRIVACY_POLICY}>Privacy Policy</a>
 </footer>

@@ -59,11 +59,11 @@ const onChange = () => options[internalChoice] && dispatch('chosen', options[int
 }
 </style>
 
-<label class="custom-field" style="--field-padding: {padding};">
+<label class="custom-field" style:--field-padding={padding}>
   <input
     {maxlength}
     class="fs-14 {$$props.class}"
-    style="width: {width}"
+    style:width
     list={randomId}
     placeholder="&nbsp;"
     bind:value={internalChoice}

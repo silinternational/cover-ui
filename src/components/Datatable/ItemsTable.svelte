@@ -1,9 +1,11 @@
 <script lang="ts">
 import BatchItemClone from '../BatchItemClone.svelte'
 import BatchItemDelete from '../BatchItemDelete.svelte'
+import { ClaimItem, incompleteClaimItemStatuses, selectedPolicyClaims } from 'data/claims'
 import { getItemState } from 'data/states'
 import { AccountablePerson, editableCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/items'
 import { formatDate, formatFriendlyDate } from 'helpers/dates'
+import { throwError } from '../../error'
 import { formatMoney } from 'helpers/money'
 import { itemDetails, itemEdit } from 'helpers/routes'
 import { sortByNum, sortByString } from 'helpers/sort'
@@ -11,6 +13,7 @@ import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import type { Column } from './types'
 import { createEventDispatcher } from 'svelte'
 import { Datatable, Menu, MenuItem } from '@silintl/ui-components'
+import { capitalize } from 'lodash-es'
 
 export let items = [] as PolicyItem[]
 export let policyId: string
@@ -81,6 +84,10 @@ $: sortedItemsArray = currentColumn.numeric
 $: allCheckedItemsAreDraft =
   checkedItems.length > 0 && checkedItems.every((item) => item.coverage_status === ItemCoverageStatus.Draft)
 $: batchActionDisabled = checkedItems.length === 0
+$: batchDeleteDisabled =
+  batchActionDisabled ||
+  checkedItems.some((item) => item.coverage_end_date || item.coverage_status === ItemCoverageStatus.Inactive)
+$: items && (checkedItems = returnFilteredCheckedItems())
 
 const dispatch = createEventDispatcher()
 
@@ -120,12 +127,11 @@ const handleModalDialog = async (event: CustomEvent<string>) => {
 
 const handleClosed = (e: CustomEvent<string>) => {
   if (e.detail === 'delete') {
+    assertItemsHaveNoOpenClaims(checkedItems)
     dispatch('batchDelete', checkedItems)
-    checkedItems = []
   }
   if (e.detail === 'clone') {
     dispatch('batchClone', checkedItems)
-    checkedItems = []
   }
 }
 
@@ -184,6 +190,22 @@ const onRowSelectionChanged = (event: CustomEvent) => {
 const registerNewCheckbox = () => {
   numberOfCheckboxes++
 }
+
+const returnFilteredCheckedItems = () => checkedItems.filter((ci) => items.some((i) => i.id === ci.id))
+
+const assertItemsHaveNoOpenClaims = (items: PolicyItem[]): void => {
+  const checkClaimItemsForItemAndOpenClaim = (claimItems: ClaimItem[], item: PolicyItem) => {
+    const hasOpenClaim = claimItems.some(
+      (claimItem) => claimItem.item_id === item.id && incompleteClaimItemStatuses.includes(claimItem.status)
+    )
+    if (hasOpenClaim) {
+      throwError(`${capitalize(item.name)} has an open claim, you cannot end coverage until it is resolved.`)
+    }
+  }
+  $selectedPolicyClaims.forEach((claim) => {
+    items.forEach((item) => checkClaimItemsForItemAndOpenClaim(claim.claim_items, item))
+  })
+}
 </script>
 
 <style>
@@ -205,9 +227,13 @@ const registerNewCheckbox = () => {
   position: absolute;
   right: 235px;
 }
+
+.red {
+  color: var(--mdc-theme-status-error);
+}
 </style>
 
-<BatchItemDelete disabled={batchActionDisabled} {allCheckedItemsAreDraft} on:closed={handleClosed} />
+<BatchItemDelete disabled={batchDeleteDisabled} {allCheckedItemsAreDraft} on:closed={handleClosed} />
 
 <BatchItemClone disabled={batchActionDisabled} {selectedItemNames} on:closed={handleClosed} />
 
@@ -237,7 +263,7 @@ const registerNewCheckbox = () => {
         <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}>
           {#if item.coverage_status === ItemCoverageStatus.Approved && item.coverage_end_date}
-            Covered through {formatFriendlyDate(item.coverage_end_date)}
+            <div class="red">Covered through {formatFriendlyDate(item.coverage_end_date)}</div>
           {:else}
             {getItemState(item.coverage_status)?.title || ''}
           {/if}

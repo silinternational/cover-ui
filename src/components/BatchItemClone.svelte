@@ -30,7 +30,7 @@ const handleDialog = (choice: 'clone' | 'cancel') => {
 }
 </script>
 
-<Button {disabled} on:click={() => (open = true)}>clone coverage</Button>
+<Button class="mb-1" {disabled} on:click={() => (open = true)}>clone coverage</Button>
 
 <Dialog.Alert
   {open}

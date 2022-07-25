@@ -58,8 +58,6 @@ const onAccountablePersonChange = (event: CustomEvent<AccountablePersonOptions>)
 const onModalFormSubmit = async (event: CustomEvent) => {
   if (event.type === 'submit') {
     const depData = event.detail
-    // TODO: Figure out why adding items to this select box causes it to throw MDC errors
-    // For now it can be resolve by "turning it off and on again"
     showSelectBox = false
     const dependent = await addDependent(policyId, depData)
     selectedID = dependent.id

@@ -10,7 +10,7 @@ $: sendToRoleHome($roleSelection)
 const sendToRoleHome = (appRole: string) => {
   switch (appRole) {
     case UserAppRole.Customer:
-      $redirect(redirectToAppropriatePolicy($user, $selectedPolicyId))
+      redirectToAppropriatePolicy($user, $selectedPolicyId)
       break
     case UserAppRole.Steward:
     case UserAppRole.Signator:

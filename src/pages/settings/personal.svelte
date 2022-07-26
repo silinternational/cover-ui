@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Breadcrumb, CountrySelector, FileDropArea, FilePreview, RadioOptions, RemoveProfilePicModal } from 'components'
+import { Breadcrumb, CountrySelector, FilePreview, RadioOptions, RemoveProfilePicModal } from 'components'
 import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import { upload } from 'data'
 import { policies } from 'data/policies'
@@ -10,7 +10,7 @@ import { assertEmailAddress } from '../../validation/assertions'
 import Croppie from 'croppie'
 import 'croppie/croppie.css'
 import { metatags } from '@roxi/routify'
-import { Button, Checkbox, TextField, Page, setNotice } from '@silintl/ui-components'
+import { Button, Checkbox, FileDropArea, TextField, Page, setNotice } from '@silintl/ui-components'
 
 const NOTIFICATION_OPTION_DEFAULT = 'default_email'
 const NOTIFICATION_OPTION_CUSTOM = 'custom_email'

@@ -7,7 +7,6 @@ import {
   ClaimActions,
   ClaimBanner,
   ConvertCurrencyLink,
-  FileDropArea,
   FilePreviews,
   MessageBanner,
   NewCoverageModal,
@@ -55,7 +54,7 @@ import { formatPageTitle } from 'helpers/pageTitle'
 import { assertHas } from '../../../../validation/assertions'
 import { onMount } from 'svelte'
 import { goto, metatags } from '@roxi/routify'
-import { Button, MoneyInput, Page, setNotice } from '@silintl/ui-components'
+import { Button, FileDropArea, MoneyInput, Page, setNotice } from '@silintl/ui-components'
 import { formatDistanceToNow } from 'date-fns'
 
 export let claimId: string

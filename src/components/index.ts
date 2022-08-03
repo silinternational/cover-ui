@@ -16,7 +16,6 @@ import ItemsTable from './Datatable/ItemsTable.svelte'
 import DateInput from './DateInput.svelte'
 import DependentForm from './forms/DependentForm.svelte'
 import Description from './Description.svelte'
-import FileDropArea from './FileDropArea'
 import FileLink from './FileLink.svelte'
 import { FilePreview } from './FilePreview'
 import FilePreviews from './FilePreview'
@@ -56,7 +55,6 @@ export {
   DateInput,
   DependentForm,
   Description,
-  FileDropArea,
   FileLink,
   FilePreview,
   FilePreviews,

@@ -69,7 +69,7 @@ const columns: Column[] = [
 let numberOfCheckboxes = 0
 let headerId = 'name'
 let ascending = true
-let currentColumn = columns[0]
+let currentColumn = columns[1]
 
 let checkedItems = [] as PolicyItem[]
 let currentItem = {} as PolicyItem

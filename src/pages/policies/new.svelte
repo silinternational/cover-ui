@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Breadcrumb, Description, SearchableSelect } from 'components'
+import { Breadcrumb, Description } from 'components'
 import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import { entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { createPolicy } from 'data/policies'
@@ -7,7 +7,7 @@ import { formatPageTitle } from 'helpers/pageTitle'
 import { policyDetails } from 'helpers/routes'
 import { assertHas } from '../../validation/assertions'
 import { goto, metatags } from '@roxi/routify'
-import { Button, TextField, Page } from '@silintl/ui-components'
+import { Button, SearchableSelect, TextField, Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 let account = ''

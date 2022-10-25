@@ -1,6 +1,7 @@
 import { GET, UPDATE } from '.'
 import { writable } from 'svelte/store'
 
+// deprecated
 export type EntityCode = {
   code: string
   id: string

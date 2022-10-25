@@ -3,7 +3,7 @@ import { Breadcrumb, TextFieldWithLabel } from 'components'
 import { Entity, getEntity, updateEntity } from 'data/entityCodes'
 import { entityDetails } from 'helpers/routes'
 import { onMount } from 'svelte'
-import { Button, Page } from '@silintl/ui-components'
+import { Button, Page, setNotice } from '@silintl/ui-components'
 
 export let entityId: string
 
@@ -17,10 +17,11 @@ $: breadcrumbLinks = [
   { name: 'Entities', url: '/admin/entities' },
   { name: entity.name, url: entityDetails(entityId) },
 ]
-$: console.log('entity', entity)
 
 const onSave = async () => {
   entity = await updateEntity(entity)
+
+  setNotice('Entity updated successfully')
 }
 </script>
 

@@ -1,21 +1,21 @@
 <script lang="ts">
 import { Breadcrumb, TextFieldWithLabel } from 'components'
-import { Entity, getEntity, updateEntity } from 'data/entityCodes'
+import { EntityCode, entityCodes, getEntity, updateEntity } from 'data/entityCodes'
 import { entityDetails } from 'helpers/routes'
 import { onMount } from 'svelte'
 import { Button, Page, setNotice } from '@silintl/ui-components'
 
 export let entityId: string
 
-let entity = {} as Entity
+let entity = {} as EntityCode
 
 onMount(async () => {
-  entity = await getEntity(entityId)
+  entity = $entityCodes.find((e) => (e.id = entityId)) || (await getEntity(entityId))
 })
 
 $: breadcrumbLinks = [
   { name: 'Entities', url: '/admin/entities' },
-  { name: entity.name, url: entityDetails(entityId) },
+  { name: entity.code, url: entityDetails(entityId) },
 ]
 
 const onSave = async () => {
@@ -30,9 +30,9 @@ const onSave = async () => {
 
   {#if entity.id}
     <div class="my-1">
-      <TextFieldWithLabel label="name" bind:value={entity.name} />
+      <h4>Code: {entity.code}</h4>
 
-      <TextFieldWithLabel label="Code" bind:value={entity.code} />
+      <TextFieldWithLabel label="name" bind:value={entity.name} />
 
       <TextFieldWithLabel label="Income Account" bind:value={entity.income_account} />
 

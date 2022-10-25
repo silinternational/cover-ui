@@ -1,14 +1,7 @@
 import { GET, UPDATE } from '.'
 import { writable } from 'svelte/store'
 
-// deprecated
 export type EntityCode = {
-  code: string
-  id: string
-  name: string
-}
-
-export type Entity = {
   id: string
   name: string
   code: string
@@ -19,27 +12,20 @@ export type Entity = {
 
 export const entityCodes = writable<EntityCode[]>([])
 
-//deprecated endpoint
-export async function loadEntityCodes(): Promise<void> {
-  const urlPath = 'config/entity-codes'
-
-  const results = await GET<EntityCode[]>(urlPath)
+export const loadEntityCodes = async (): Promise<EntityCode[]> => {
+  const results = await GET<EntityCode[]>('entity-codes')
 
   entityCodes.set(results)
-}
-
-export const getEntities = async (): Promise<Entity[]> => {
-  const results = await GET<Entity[]>('entity-codes')
 
   return results
 }
 
-export const getEntity = async (id: string): Promise<Entity> => {
-  const results = await GET<Entity>(`entity-codes/${id}`)
+export const getEntity = async (id: string): Promise<EntityCode> => {
+  const results = await GET<EntityCode>(`entity-codes/${id}`)
   return results
 }
 
-export const updateEntity = async (entity: Entity): Promise<Entity> => {
+export const updateEntity = async (entity: EntityCode): Promise<EntityCode> => {
   const urlPath = `entity-codes/${entity.id}`
 
   const body = {
@@ -49,7 +35,13 @@ export const updateEntity = async (entity: Entity): Promise<Entity> => {
     parent_entity: entity.parent_entity,
   }
 
-  const results = await UPDATE<Entity>(urlPath, body)
+  const results = await UPDATE<EntityCode>(urlPath, body)
+
+  entityCodes.update((data) => {
+    const index = data.findIndex((d) => d.id === entity.id)
+    data[index] = results
+    return data
+  })
 
   return results
 }

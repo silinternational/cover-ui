@@ -12,12 +12,10 @@ export type EntityCode = {
 
 export const entityCodes = writable<EntityCode[]>([])
 
-export const loadEntityCodes = async (): Promise<EntityCode[]> => {
+export const loadEntityCodes = async (): Promise<void> => {
   const results = await GET<EntityCode[]>('entity-codes')
 
   entityCodes.set(results)
-
-  return results
 }
 
 export const getEntity = async (id: string): Promise<EntityCode> => {

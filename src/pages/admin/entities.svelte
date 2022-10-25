@@ -1,22 +1,18 @@
 <script lang="ts">
-import { EntityCode, loadEntityCodes } from 'data/entityCodes'
+import { entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { entityDetails } from 'helpers/routes'
 import { goto } from '@roxi/routify'
 import { onMount } from 'svelte'
 import { Datatable, Page } from '@silintl/ui-components'
 
-let entities = [] as EntityCode[]
-
-onMount(async () => {
-  entities = await loadEntityCodes() //Todo: use the store when bug is fixed: multiple keys
-})
+onMount(() => $entityCodes.length || loadEntityCodes())
 </script>
 
 <Page>
   <div class="flex justify-between align-items-center">
     <h4>Entities</h4>
   </div>
-  {#if entities.length}
+  {#if $entityCodes.length}
     <Datatable>
       <Datatable.Header>
         <Datatable.Header.Item>Name</Datatable.Header.Item>
@@ -26,7 +22,7 @@ onMount(async () => {
         <Datatable.Header.Item>Parent Entity</Datatable.Header.Item>
       </Datatable.Header>
       <Datatable.Data>
-        {#each entities as entityCode (entityCode.id)}
+        {#each $entityCodes as entityCode (entityCode.id)}
           <Datatable.Data.Row on:click={() => $goto(entityDetails(entityCode.id))} clickable>
             <Datatable.Data.Row.Item>{entityCode.name}</Datatable.Data.Row.Item>
             <Datatable.Data.Row.Item>{entityCode.code}</Datatable.Data.Row.Item>

@@ -45,6 +45,12 @@ $: menuItems = [
     hide: !inAdminRole || userIsAnonymous,
   },
   {
+    url: routes.ENTITIES,
+    icon: 'domain',
+    label: 'Entities',
+    hide: !inAdminRole || userIsAnonymous,
+  },
+  {
     url: routes.policyDetails(policyId),
     icon: 'description',
     label: 'Policy',

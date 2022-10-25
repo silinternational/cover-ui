@@ -10,7 +10,7 @@ export let entityId: string
 let entity = {} as EntityCode
 
 onMount(async () => {
-  entity = $entityCodes.find((e) => (e.id = entityId)) || (await getEntity(entityId))
+  entity = $entityCodes.find((e) => e.id === entityId) || (await getEntity(entityId))
 })
 
 $: breadcrumbLinks = [

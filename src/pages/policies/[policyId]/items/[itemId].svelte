@@ -167,7 +167,8 @@ const onReviseItem = () => {
       </div>
     {/if}
 
-    {#if 0 && hasHistory}
+    <!-- TODO: finish or remove this -->
+    {#if hasHistory}
       <h3>History</h3>
       <Datatable>
         <Datatable.Header>

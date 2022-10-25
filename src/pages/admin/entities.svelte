@@ -1,5 +1,5 @@
 <script lang="ts">
-import { EntityCode, entityCodes, loadEntityCodes } from 'data/entityCodes'
+import { EntityCode, loadEntityCodes } from 'data/entityCodes'
 import { entityDetails } from 'helpers/routes'
 import { goto } from '@roxi/routify'
 import { onMount } from 'svelte'
@@ -16,7 +16,7 @@ onMount(async () => {
   <div class="flex justify-between align-items-center">
     <h4>Entities</h4>
   </div>
-  {#if $entityCodes.length}
+  {#if entities.length}
     <Datatable>
       <Datatable.Header>
         <Datatable.Header.Item>Name</Datatable.Header.Item>
@@ -26,7 +26,7 @@ onMount(async () => {
         <Datatable.Header.Item>Parent Entity</Datatable.Header.Item>
       </Datatable.Header>
       <Datatable.Data>
-        {#each $entityCodes as entityCode (entityCode.id)}
+        {#each entities as entityCode (entityCode.id)}
           <Datatable.Data.Row on:click={() => $goto(entityDetails(entityCode.id))} clickable>
             <Datatable.Data.Row.Item>{entityCode.name}</Datatable.Data.Row.Item>
             <Datatable.Data.Row.Item>{entityCode.code}</Datatable.Data.Row.Item>

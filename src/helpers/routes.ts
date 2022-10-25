@@ -10,6 +10,9 @@ export const ADMIN_HOME = '/admin/home'
 export const ADMIN_POLICIES = '/admin/policies'
 export const adminPolicySearch = (query: string) => `/admin/policies?${query}`
 
+export const ENTITIES = '/admin/entities'
+export const entityDetails = (entityId: string) => `/admin/entities/${entityId}`
+
 export const CHAT = '/chat'
 
 export const CLAIMS = '/claims'

@@ -22,6 +22,7 @@ $: policyId = $selectedPolicyId || getDefaultPolicyId($user)
 $: inAdminRole = isAdmin($roleSelection)
 $: urlIsClaimOrItem = $params.claimId || $params.itemId
 $: customerIsOnAdminView = $route.path.includes('admin') && isCustomer($user.app_role)
+$: userNotAdmin = !inAdminRole || userIsAnonymous
 
 $: menuItems = [
   {},
@@ -36,19 +37,19 @@ $: menuItems = [
     url: routes.POLICIES,
     icon: 'description',
     label: 'Policies',
-    hide: !inAdminRole || userIsAnonymous,
+    hide: userNotAdmin,
   },
   {
     url: routes.REPORTS,
     icon: 'summarize',
     label: 'Reports',
-    hide: !inAdminRole || userIsAnonymous,
+    hide: userNotAdmin,
   },
   {
     url: routes.ENTITIES,
     icon: 'domain',
     label: 'Entities',
-    hide: !inAdminRole || userIsAnonymous,
+    hide: userNotAdmin,
   },
   {
     url: routes.policyDetails(policyId),

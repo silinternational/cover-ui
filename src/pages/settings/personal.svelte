@@ -2,7 +2,6 @@
 import { Breadcrumb, CountrySelector, FilePreview, RadioOptions, RemoveProfilePicModal } from 'components'
 import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import { upload } from 'data'
-import { policies } from 'data/policies'
 import user, { attachUserPhoto, deleteUserPhoto, updateUser } from 'data/user'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { SETTINGS_PERSONAL } from 'helpers/routes'
@@ -10,7 +9,7 @@ import { assertEmailAddress } from '../../validation/assertions'
 import Croppie from 'croppie'
 import 'croppie/croppie.css'
 import { metatags } from '@roxi/routify'
-import { Button, Checkbox, FileDropArea, TextField, Page, setNotice } from '@silintl/ui-components'
+import { Button, FileDropArea, TextField, Page, setNotice } from '@silintl/ui-components'
 
 const NOTIFICATION_OPTION_DEFAULT = 'default_email'
 const NOTIFICATION_OPTION_CUSTOM = 'custom_email'
@@ -67,14 +66,6 @@ const updateCountry = async (event: CustomEvent) => {
     country,
   })
   setNotice('Your country has been saved')
-}
-
-const handleChecked = (policyId: string) => {
-  setNotice('Notification option has been saved')
-}
-
-const handleUnchecked = (policyId: string) => {
-  setNotice('Notification option has been saved')
 }
 
 async function onFileSelect(event: CustomEvent<FormData>) {
@@ -174,20 +165,6 @@ p {
     <span class="header">Primary Location<span class="required-input">*</span></span>
     <CountrySelector on:chosen={updateCountry} {country} />
   </p>
-
-  {#if 0}
-    <p>
-      <span class="header">Receive notification emails for</span>
-      {#each $policies as policy (policy.id)}
-        <Checkbox
-          label={policy.type}
-          checked
-          on:checked={() => handleChecked(policy.id)}
-          on:unchecked={() => handleUnchecked(policy.id)}
-        />
-      {/each}
-    </p>
-  {/if}
 
   <p>
     <span class="header">Profile picture</span>

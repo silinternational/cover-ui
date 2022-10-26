@@ -21,7 +21,7 @@ onMount(() => $entityCodes.length || loadEntityCodes())
 
 $: metatags.title = formatPageTitle('New Team Policy')
 $: $entityCodes.forEach((code) => {
-  entityOptions[`${code.name} - ${code.code}`] = code.code
+  entityOptions[`${code.code} - ${code.name}`] = code.code
 })
 $: entityCodeName = $entityCodes.find((code) => code.code === entityCode)?.name || ''
 const onCreatePolicy = async () => {

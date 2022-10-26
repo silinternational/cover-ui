@@ -70,7 +70,7 @@ $: if (policyId) {
 }
 
 $: $entityCodes.forEach((code) => {
-  entityOptions[`${code.name} - ${code.code}`] = code.code
+  entityOptions[`${code.code} - ${code.name}`] = code.code
 })
 $: dependents = $selectedPolicyDependents
 $: policyMembers = $selectedPolicyMembers

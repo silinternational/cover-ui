@@ -11,7 +11,7 @@ import {
   selectedPolicyDependents,
   updateDependent,
 } from 'data/dependents'
-import { entityCodes, loadEntityCodes } from 'data/entityCodes'
+import { EntityCode, entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { assignItems, loadItems } from 'data/items'
 import { updatePolicy, Policy, PolicyType, loadPolicy, selectedPolicy } from 'data/policies'
 import { deletePolicyMember, invitePolicyMember, loadMembersOfPolicy, selectedPolicyMembers } from 'data/policy-members'
@@ -225,6 +225,13 @@ const onRemove = (policyUserId: string) => deletePolicyMember(policyUserId)
 const onAssign = (e: CustomEvent) => {
   assignItems(e.detail, policyId, selectedPolicyMember.id)
 }
+
+const getEntityChoice = (entityCode: string) => {
+  const currentEntity = $entityCodes.find((code) => code.code === entityCode)
+  const name = currentEntity?.name
+  const code = currentEntity?.code
+  return name && code ? `${code} - ${name}` : ''
+}
 </script>
 
 <style>
@@ -279,7 +286,7 @@ p {
       <span class="header">Affiliation<span class="required-input">*</span></span>
       <SearchableSelect
         options={entityOptions}
-        choice={$entityCodes.find((code) => code.code === entityCode)?.name || ''}
+        choice={getEntityChoice(entityCode)}
         {placeholder}
         padding={'16px'}
         on:chosen={updateEntityCode}

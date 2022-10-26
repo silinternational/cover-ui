@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Breadcrumb, Description, SearchableSelect } from 'components'
+import { Breadcrumb, Description } from 'components'
 import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import { entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { createPolicy } from 'data/policies'
@@ -7,7 +7,7 @@ import { formatPageTitle } from 'helpers/pageTitle'
 import { policyDetails } from 'helpers/routes'
 import { assertHas } from '../../validation/assertions'
 import { goto, metatags } from '@roxi/routify'
-import { Button, TextField, Page } from '@silintl/ui-components'
+import { Button, SearchableSelect, TextField, Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 let account = ''
@@ -21,9 +21,10 @@ onMount(() => $entityCodes.length || loadEntityCodes())
 
 $: metatags.title = formatPageTitle('New Team Policy')
 $: $entityCodes.forEach((code) => {
-  entityOptions[code.name] = code.code
+  entityOptions[`${code.code} - ${code.name}`] = code.code
 })
-$: entityCodeName = $entityCodes.find((code) => code.code === entityCode)?.name || ''
+$: entityCodeName = getEntityChoice(entityCode)
+
 const onCreatePolicy = async () => {
   const formData = {
     account,
@@ -41,6 +42,13 @@ const validateForm = (formData: any) => {
   assertHas(formData.entityCode, 'Please select a valid entity code')
   assertHas(formData.costCenter, 'Please provide a cost center')
   assertHas(formData.account, 'Please provide an account number')
+}
+
+const getEntityChoice = (entityCode: string) => {
+  const currentEntity = $entityCodes.find((code) => code.code === entityCode)
+  const name = currentEntity?.name
+  const code = currentEntity?.code
+  return name && code ? `${code} - ${name}` : ''
 }
 </script>
 

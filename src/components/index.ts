@@ -34,12 +34,12 @@ import ClaimBanner from './banners/ClaimBanner.svelte'
 import SearchForm from './forms/SearchForm.svelte'
 import StatusBanner from './banners/StatusBanner.svelte'
 import MessageBanner from './banners/MessageBanner.svelte'
-import SearchableSelect from './SearchableSelect.svelte'
 import RemoveProfilePicModal from './RemoveProfilePicModal.svelte'
 import RemoveDependentModal from './RemoveDependentModal.svelte'
 import RemoveMemberModal from './RemoveMemberModal.svelte'
 import RevokeModal from './RevokeModal.svelte'
 import Strikes from './Strikes.svelte'
+import TextFieldWithLabel from './TextFieldWithLabel.svelte'
 
 export {
   AppDrawer,
@@ -75,7 +75,6 @@ export {
   RecentActivityTable,
   Row,
   ClaimBanner,
-  SearchableSelect,
   SearchForm,
   StatusBanner,
   MessageBanner,
@@ -84,4 +83,5 @@ export {
   RemoveMemberModal,
   RevokeModal,
   Strikes,
+  TextFieldWithLabel,
 }

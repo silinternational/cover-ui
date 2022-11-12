@@ -12,8 +12,8 @@ import { sortByNum, sortByString } from 'helpers/sort'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import type { Column } from './types'
 import { createEventDispatcher } from 'svelte'
-import { Datatable, Menu, MenuItem } from '@silintl/ui-components'
-import { capitalize } from 'lodash-es'
+import { Button, Datatable, Menu, MenuItem, setNotice } from '@silintl/ui-components'
+import { capitalize, random } from 'lodash-es'
 
 export let items = [] as PolicyItem[]
 export let policyId: string
@@ -25,6 +25,13 @@ const columns: Column[] = [
     headerId: 'item',
     path: 'name',
     sortable: true,
+  },
+  {
+    title: 'Serial Number',
+    headerId: 'serial_number',
+    path: 'serial_number',
+    sortable: true,
+    hidden: true,
   },
   {
     title: 'Status',
@@ -65,6 +72,7 @@ const columns: Column[] = [
     sortable: true,
   },
 ]
+const itemsTableId = random(1000000, 9999999).toString()
 
 let numberOfCheckboxes = 0
 let headerId = 'name'
@@ -76,6 +84,7 @@ let currentItem = {} as PolicyItem
 let goToItemDetails = true
 let DeleteModalOpen = false
 let shownMenus: { [name: string]: boolean } = {}
+let showSerialNumber = false
 
 $: selectedItemNames = checkedItems.map((item) => item.name)
 $: sortedItemsArray = currentColumn.numeric
@@ -90,6 +99,29 @@ $: batchDeleteDisabled =
 $: items && (checkedItems = returnFilteredCheckedItems())
 
 const dispatch = createEventDispatcher()
+
+async function copy() {
+  const tableContents = document.querySelector(`.items-table-${itemsTableId}`)?.innerHTML
+
+  try {
+    const data = [new ClipboardItem({ 'text/html': tableContents }), new ClipboardItem({ 'text/plain': tableContents })]
+
+    await navigator.clipboard.write(data)
+  } catch {
+    document.addEventListener('copy', handleCopy)
+    document.execCommand('copy')
+    document.removeEventListener('copy', handleCopy)
+
+    function handleCopy(event) {
+      event.clipboardData.setData('text/html', tableContents)
+      event.clipboardData.setData('text/plain', tableContents)
+
+      event.preventDefault()
+    }
+  } finally {
+    setNotice('Copied to clipboard')
+  }
+}
 
 const getMenuItems = (item: PolicyItem) => {
   const menuItems: MenuItem[] = [
@@ -206,6 +238,11 @@ const assertItemsHaveNoOpenClaims = (items: PolicyItem[]): void => {
     items.forEach((item) => checkClaimItemsForItemAndOpenClaim(claim.claim_items, item))
   })
 }
+
+const toggleShowSerialNumber = () => {
+  columns[1].hidden = !columns[1].hidden
+  showSerialNumber = !showSerialNumber
+}
 </script>
 
 <style>
@@ -237,10 +274,15 @@ const assertItemsHaveNoOpenClaims = (items: PolicyItem[]): void => {
 
 <BatchItemClone disabled={batchActionDisabled} {selectedItemNames} on:closed={handleClosed} />
 
+<Button class="mb-1" on:click={toggleShowSerialNumber}>
+  {showSerialNumber ? 'hide serial #' : 'show serial #'}
+</Button>
+
 {#if title}
   <h3>{title}</h3>
 {/if}
 <Datatable
+  class={`items-table-${itemsTableId}`}
   {numberOfCheckboxes}
   on:sorted={onSorted}
   on:selectedAll={onSelectedAll}
@@ -251,9 +293,11 @@ const assertItemsHaveNoOpenClaims = (items: PolicyItem[]): void => {
     <Datatable.Header.Checkbox />
     <!--TODO: make the amount of columns shown be dependent on the device size-->
     {#each columns as column}
-      <Datatable.Header.Item numeric={column.numeric} columnID={column.headerId} sortable={column.sortable}>
-        {column.title}
-      </Datatable.Header.Item>
+      {#if !column.hidden}
+        <Datatable.Header.Item numeric={column.numeric} columnID={column.headerId} sortable={column.sortable}>
+          {column.title}
+        </Datatable.Header.Item>
+      {/if}
     {/each}
   </Datatable.Header>
   <Datatable.Data>
@@ -261,6 +305,9 @@ const assertItemsHaveNoOpenClaims = (items: PolicyItem[]): void => {
       <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} let:rowId clickable>
         <Datatable.Checkbox {rowId} on:click={() => (goToItemDetails = false)} on:mounted={registerNewCheckbox} />
         <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
+        {#if showSerialNumber}
+          <Datatable.Data.Row.Item>{item.serial_number || ''}</Datatable.Data.Row.Item>
+        {/if}
         <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}>
           {#if item.coverage_status === ItemCoverageStatus.Approved && item.coverage_end_date}
             <div class="red">Covered through {formatFriendlyDate(item.coverage_end_date)}</div>
@@ -289,4 +336,6 @@ const assertItemsHaveNoOpenClaims = (items: PolicyItem[]): void => {
     {/each}
   </Datatable.Data>
 </Datatable>
+<Button on:click={copy}>Copy Table contents</Button>
+
 <ItemDeleteModal open={DeleteModalOpen} item={currentItem} on:closed={handleModalDialog} />

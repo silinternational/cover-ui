@@ -1,6 +1,7 @@
 <script lang="ts">
 import BatchItemClone from '../BatchItemClone.svelte'
 import BatchItemDelete from '../BatchItemDelete.svelte'
+import CopyTableButton from './CopyTableButton.svelte'
 import { ClaimItem, incompleteClaimItemStatuses, selectedPolicyClaims } from 'data/claims'
 import { getItemState } from 'data/states'
 import { AccountablePerson, editableCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/items'
@@ -11,9 +12,9 @@ import { itemDetails, itemEdit } from 'helpers/routes'
 import { sortByNum, sortByString } from 'helpers/sort'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import type { Column } from './types'
-import { createEventDispatcher } from 'svelte'
-import { Button, Datatable, Menu, MenuItem, setNotice } from '@silintl/ui-components'
 import { capitalize, random } from 'lodash-es'
+import { createEventDispatcher } from 'svelte'
+import { Button, Datatable, Menu, MenuItem } from '@silintl/ui-components'
 
 export let items = [] as PolicyItem[]
 export let policyId: string
@@ -72,7 +73,7 @@ const columns: Column[] = [
     sortable: true,
   },
 ]
-const itemsTableId = random(1000000, 9999999).toString()
+const itemsTableId = `items-table-${random(1000000, 9999999).toString()}`
 
 let numberOfCheckboxes = 0
 let headerId = 'name'
@@ -88,8 +89,8 @@ let showSerialNumber = false
 
 $: selectedItemNames = checkedItems.map((item) => item.name)
 $: sortedItemsArray = currentColumn.numeric
-  ? sortByNum(currentColumn.path, items, ascending)
-  : sortByString(currentColumn.path, items, ascending)
+  ? sortByNum(currentColumn.path as string, items, ascending)
+  : sortByString(currentColumn.path as string, items, ascending)
 $: allCheckedItemsAreDraft =
   checkedItems.length > 0 && checkedItems.every((item) => item.coverage_status === ItemCoverageStatus.Draft)
 $: batchActionDisabled = checkedItems.length === 0
@@ -99,29 +100,6 @@ $: batchDeleteDisabled =
 $: items && (checkedItems = returnFilteredCheckedItems())
 
 const dispatch = createEventDispatcher()
-
-async function copy() {
-  const tableContents = document.querySelector(`.items-table-${itemsTableId}`)?.innerHTML
-
-  try {
-    const data = [new ClipboardItem({ 'text/html': tableContents }), new ClipboardItem({ 'text/plain': tableContents })]
-
-    await navigator.clipboard.write(data)
-  } catch {
-    document.addEventListener('copy', handleCopy)
-    document.execCommand('copy')
-    document.removeEventListener('copy', handleCopy)
-
-    function handleCopy(event) {
-      event.clipboardData.setData('text/html', tableContents)
-      event.clipboardData.setData('text/plain', tableContents)
-
-      event.preventDefault()
-    }
-  } finally {
-    setNotice('Copied to clipboard')
-  }
-}
 
 const getMenuItems = (item: PolicyItem) => {
   const menuItems: MenuItem[] = [
@@ -282,7 +260,7 @@ const toggleShowSerialNumber = () => {
   <h3>{title}</h3>
 {/if}
 <Datatable
-  class={`items-table-${itemsTableId}`}
+  class={itemsTableId}
   {numberOfCheckboxes}
   on:sorted={onSorted}
   on:selectedAll={onSelectedAll}
@@ -336,6 +314,7 @@ const toggleShowSerialNumber = () => {
     {/each}
   </Datatable.Data>
 </Datatable>
-<Button on:click={copy}>Copy Table contents</Button>
+
+<CopyTableButton tableId={itemsTableId} />
 
 <ItemDeleteModal open={DeleteModalOpen} item={currentItem} on:closed={handleModalDialog} />

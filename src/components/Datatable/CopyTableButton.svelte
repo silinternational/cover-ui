@@ -4,13 +4,26 @@ import { Button, setNotice } from '@silintl/ui-components'
 export let tableId: string
 
 async function copy() {
-  const tableContents = document.getElementsByClassName(tableId)[0]?.innerHTML
-  if (tableContents) {
+  const tableContentsClone = document.getElementsByClassName(tableId)[0].cloneNode(true)
+  const hiddenElement = document.createElement('div')
+  hiddenElement.style.display = 'none'
+  document.body.appendChild(hiddenElement)
+  hiddenElement.appendChild(tableContentsClone)
+
+  const elementClassNamesToRemove = ['.home-table-more-vert', '.mdc-data-table__sort-icon-button', '.item-menu']
+  elementClassNamesToRemove.forEach((className) => {
+    const elements = hiddenElement?.querySelectorAll(className)
+    if (elements) {
+      for (let i = 0; i < elements.length; i++) {
+        elements[i].remove()
+      }
+    }
+  })
+  const html = hiddenElement.innerHTML
+
+  if (html) {
     try {
-      const data = [
-        new ClipboardItem({ 'text/html': tableContents }),
-        new ClipboardItem({ 'text/plain': tableContents }),
-      ]
+      const data = [new ClipboardItem({ 'text/html': html }), new ClipboardItem({ 'text/plain': html })]
 
       await navigator.clipboard.write(data)
     } catch {
@@ -19,8 +32,8 @@ async function copy() {
       document.removeEventListener('copy', handleCopy)
 
       function handleCopy(event: any) {
-        event.clipboardData.setData('text/html', tableContents)
-        event.clipboardData.setData('text/plain', tableContents)
+        event.clipboardData.setData('text/html', html)
+        event.clipboardData.setData('text/plain', html)
 
         event.preventDefault()
       }
@@ -30,6 +43,7 @@ async function copy() {
   } else {
     setNotice('There was a problem copying the table, you can highlight the table and copy it manually')
   }
+  hiddenElement.remove()
 }
 </script>
 

@@ -10,13 +10,13 @@ async function copy() {
   document.body.appendChild(hiddenElement)
   hiddenElement.appendChild(tableContentsClone)
 
-  const elementClassNamesToRemove = [
+  const elementByClassNameToRemove = [
     '.home-table-more-vert',
     '.mdc-data-table__sort-icon-button',
     '.item-menu',
     '.mdc-data-table__cell--checkbox',
   ]
-  elementClassNamesToRemove.forEach((className) => {
+  elementByClassNameToRemove.forEach((className) => {
     const elements = hiddenElement?.querySelectorAll(className)
     if (elements) {
       for (let i = 0; i < elements.length; i++) {

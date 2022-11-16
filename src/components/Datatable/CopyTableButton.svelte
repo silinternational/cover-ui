@@ -16,11 +16,7 @@ async function copy() {
   ]
   elementByClassNameToRemove.forEach((className) => {
     const elements = hiddenElement?.querySelectorAll(className)
-    if (elements) {
-      for (let i = 0; i < elements.length; i++) {
-        elements[i].remove()
-      }
-    }
+    elements.forEach((el) => el.remove())
   })
   const html = hiddenElement.innerHTML
 

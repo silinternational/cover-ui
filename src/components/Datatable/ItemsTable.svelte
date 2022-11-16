@@ -12,9 +12,10 @@ import { itemDetails, itemEdit } from 'helpers/routes'
 import { sortByNum, sortByString } from 'helpers/sort'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import type { Column } from './types'
-import { capitalize, random } from 'lodash-es'
+import { capitalize } from 'lodash-es'
 import { createEventDispatcher } from 'svelte'
 import { Checkbox, Datatable, Menu, MenuItem } from '@silintl/ui-components'
+import { generateRandomID } from '@silintl/ui-components/random'
 
 export let items = [] as PolicyItem[]
 export let policyId: string
@@ -87,7 +88,7 @@ const columns: Column[] = [
     sortable: true,
   },
 ]
-const itemsTableId = `items-table-${random(1000000, 9999999).toString()}`
+const itemsTableId = generateRandomID('items-table-')
 
 let numberOfCheckboxes = 0
 let headerId = 'name'

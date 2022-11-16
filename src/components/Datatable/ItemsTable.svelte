@@ -14,7 +14,7 @@ import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import type { Column } from './types'
 import { capitalize, random } from 'lodash-es'
 import { createEventDispatcher } from 'svelte'
-import { Button, Datatable, Menu, MenuItem } from '@silintl/ui-components'
+import { Checkbox, Datatable, Menu, MenuItem } from '@silintl/ui-components'
 
 export let items = [] as PolicyItem[]
 export let policyId: string
@@ -31,6 +31,20 @@ const columns: Column[] = [
     title: 'Serial Number',
     headerId: 'serial_number',
     path: 'serial_number',
+    sortable: true,
+    hidden: true,
+  },
+  {
+    title: 'Make',
+    headerId: 'Make',
+    path: 'Make',
+    sortable: true,
+    hidden: true,
+  },
+  {
+    title: 'Model',
+    headerId: 'model',
+    path: 'model',
     sortable: true,
     hidden: true,
   },
@@ -85,7 +99,7 @@ let currentItem = {} as PolicyItem
 let goToItemDetails = true
 let DeleteModalOpen = false
 let shownMenus: { [name: string]: boolean } = {}
-let showSerialNumber = false
+let showSnMakeAndModel = false
 
 $: selectedItemNames = checkedItems.map((item) => item.name)
 $: sortedItemsArray = currentColumn.numeric
@@ -217,9 +231,9 @@ const assertItemsHaveNoOpenClaims = (items: PolicyItem[]): void => {
   })
 }
 
-const toggleShowSerialNumber = () => {
-  columns[1].hidden = !columns[1].hidden
-  showSerialNumber = !showSerialNumber
+const toggleShowSnMakeAndModel = () => {
+  ;[1, 2, 3].forEach((i) => (columns[i].hidden = !columns[i].hidden))
+  showSnMakeAndModel = !showSnMakeAndModel
 }
 </script>
 
@@ -252,9 +266,8 @@ const toggleShowSerialNumber = () => {
 
 <BatchItemClone disabled={batchActionDisabled} {selectedItemNames} on:closed={handleClosed} />
 
-<Button class="mb-1" on:click={toggleShowSerialNumber}>
-  {showSerialNumber ? 'hide serial #' : 'show serial #'}
-</Button>
+<Checkbox class="mb-1" on:checked={toggleShowSnMakeAndModel} on:unchecked={toggleShowSnMakeAndModel} />Show S/N, Make
+and Model
 
 {#if title}
   <h3>{title}</h3>
@@ -283,8 +296,10 @@ const toggleShowSerialNumber = () => {
       <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} let:rowId clickable>
         <Datatable.Checkbox {rowId} on:click={() => (goToItemDetails = false)} on:mounted={registerNewCheckbox} />
         <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
-        {#if showSerialNumber}
+        {#if showSnMakeAndModel}
           <Datatable.Data.Row.Item>{item.serial_number || ''}</Datatable.Data.Row.Item>
+          <Datatable.Data.Row.Item>{item.make || ''}</Datatable.Data.Row.Item>
+          <Datatable.Data.Row.Item>{item.model || ''}</Datatable.Data.Row.Item>
         {/if}
         <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}>
           {#if item.coverage_status === ItemCoverageStatus.Approved && item.coverage_end_date}

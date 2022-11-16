@@ -6,8 +6,6 @@ export let tableId: string
 async function copy() {
   const tableContentsClone = document.getElementsByClassName(tableId)[0].cloneNode(true)
   const hiddenElement = document.createElement('div')
-  hiddenElement.style.display = 'none'
-  document.body.appendChild(hiddenElement)
   hiddenElement.appendChild(tableContentsClone)
 
   const elementByClassNameToRemove = [

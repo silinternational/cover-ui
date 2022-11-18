@@ -332,6 +332,6 @@ and Model
   </Datatable.Data>
 </Datatable>
 
-<CopyTableButton {tableIdClass} />
+<CopyTableButton {uniqueTableClass} />
 
 <ItemDeleteModal open={DeleteModalOpen} item={currentItem} on:closed={handleModalDialog} />

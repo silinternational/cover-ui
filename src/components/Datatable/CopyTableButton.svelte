@@ -2,10 +2,10 @@
 import { copyToClipboard } from '../../helpers/clipboard'
 import { Button, setNotice } from '@silintl/ui-components'
 
-export let tableIdClass: string
+export let uniqueTableClass: string
 
 async function copy() {
-  const tableContentsClone = document.getElementsByClassName(tableIdClass)[0].cloneNode(true)
+  const tableContentsClone = document.getElementsByClassName(uniqueTableClass)[0].cloneNode(true)
   const hiddenElement = document.createElement('div')
   hiddenElement.appendChild(tableContentsClone)
 

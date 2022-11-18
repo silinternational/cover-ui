@@ -21,6 +21,7 @@ export let items = [] as PolicyItem[]
 export let policyId: string
 export let title: string = ''
 
+const columnIndicesToToggle = [1, 2, 3]
 const columns: Column[] = [
   {
     title: 'Item',
@@ -88,7 +89,7 @@ const columns: Column[] = [
     sortable: true,
   },
 ]
-const itemsTableId = generateRandomID('items-table-')
+const tableIdClass = generateRandomID('items-table-')
 
 let numberOfCheckboxes = 0
 let headerId = 'name'
@@ -100,7 +101,7 @@ let currentItem = {} as PolicyItem
 let goToItemDetails = true
 let DeleteModalOpen = false
 let shownMenus: { [name: string]: boolean } = {}
-let showSnMakeAndModel = false
+let snMakeAndModelAreVisible = false
 
 $: selectedItemNames = checkedItems.map((item) => item.name)
 $: sortedItemsArray = currentColumn.numeric
@@ -233,8 +234,8 @@ const assertItemsHaveNoOpenClaims = (items: PolicyItem[]): void => {
 }
 
 const toggleShowSnMakeAndModel = () => {
-  ;[1, 2, 3].forEach((i) => (columns[i].hidden = !columns[i].hidden))
-  showSnMakeAndModel = !showSnMakeAndModel
+  columnIndicesToToggle.forEach((i) => (columns[i].hidden = !columns[i].hidden))
+  snMakeAndModelAreVisible = !snMakeAndModelAreVisible
 }
 </script>
 
@@ -274,7 +275,7 @@ and Model
   <h3>{title}</h3>
 {/if}
 <Datatable
-  class={itemsTableId}
+  class={tableIdClass}
   {numberOfCheckboxes}
   on:sorted={onSorted}
   on:selectedAll={onSelectedAll}
@@ -297,7 +298,7 @@ and Model
       <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} let:rowId clickable>
         <Datatable.Checkbox {rowId} on:click={() => (goToItemDetails = false)} on:mounted={registerNewCheckbox} />
         <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
-        {#if showSnMakeAndModel}
+        {#if snMakeAndModelAreVisible}
           <Datatable.Data.Row.Item>{item.serial_number || ''}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{item.make || ''}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{item.model || ''}</Datatable.Data.Row.Item>
@@ -331,6 +332,6 @@ and Model
   </Datatable.Data>
 </Datatable>
 
-<CopyTableButton tableId={itemsTableId} />
+<CopyTableButton {tableIdClass} />
 
 <ItemDeleteModal open={DeleteModalOpen} item={currentItem} on:closed={handleModalDialog} />

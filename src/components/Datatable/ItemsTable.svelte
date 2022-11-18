@@ -89,7 +89,7 @@ const columns: Column[] = [
     sortable: true,
   },
 ]
-const tableIdClass = generateRandomID('items-table-')
+const uniqueTableClass = generateRandomID('items-table-')
 
 let numberOfCheckboxes = 0
 let headerId = 'name'
@@ -275,7 +275,7 @@ and Model
   <h3>{title}</h3>
 {/if}
 <Datatable
-  class={tableIdClass}
+  class={uniqueTableClass}
   {numberOfCheckboxes}
   on:sorted={onSorted}
   on:selectedAll={onSelectedAll}

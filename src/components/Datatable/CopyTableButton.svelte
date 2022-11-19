@@ -14,6 +14,7 @@ async function copy() {
     '.mdc-data-table__sort-icon-button',
     '.item-menu',
     '.mdc-data-table__cell--checkbox',
+    '.mdc-data-table__header-cell--checkbox',
   ]
 
   elementByClassNameToRemove.forEach((className) => {

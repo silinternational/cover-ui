@@ -1,6 +1,7 @@
 <script lang="ts">
 import BatchItemClone from '../BatchItemClone.svelte'
 import BatchItemDelete from '../BatchItemDelete.svelte'
+import CopyTableButton from './CopyTableButton.svelte'
 import { ClaimItem, incompleteClaimItemStatuses, selectedPolicyClaims } from 'data/claims'
 import { getItemState } from 'data/states'
 import { AccountablePerson, editableCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/items'
@@ -11,20 +12,43 @@ import { itemDetails, itemEdit } from 'helpers/routes'
 import { sortByNum, sortByString } from 'helpers/sort'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import type { Column } from './types'
-import { createEventDispatcher } from 'svelte'
-import { Datatable, Menu, MenuItem } from '@silintl/ui-components'
 import { capitalize } from 'lodash-es'
+import { createEventDispatcher } from 'svelte'
+import { Checkbox, Datatable, Menu, MenuItem } from '@silintl/ui-components'
+import { generateRandomID } from '@silintl/ui-components/random'
 
 export let items = [] as PolicyItem[]
 export let policyId: string
 export let title: string = ''
 
+const columnIndicesToToggle = [1, 2, 3]
 const columns: Column[] = [
   {
     title: 'Item',
     headerId: 'item',
     path: 'name',
     sortable: true,
+  },
+  {
+    title: 'Serial Number',
+    headerId: 'serial_number',
+    path: 'serial_number',
+    sortable: true,
+    hidden: true,
+  },
+  {
+    title: 'Make',
+    headerId: 'Make',
+    path: 'Make',
+    sortable: true,
+    hidden: true,
+  },
+  {
+    title: 'Model',
+    headerId: 'model',
+    path: 'model',
+    sortable: true,
+    hidden: true,
   },
   {
     title: 'Status',
@@ -65,6 +89,7 @@ const columns: Column[] = [
     sortable: true,
   },
 ]
+const uniqueTableClass = generateRandomID('items-table-')
 
 let numberOfCheckboxes = 0
 let headerId = 'name'
@@ -76,11 +101,12 @@ let currentItem = {} as PolicyItem
 let goToItemDetails = true
 let DeleteModalOpen = false
 let shownMenus: { [name: string]: boolean } = {}
+let snMakeAndModelAreVisible = false
 
 $: selectedItemNames = checkedItems.map((item) => item.name)
 $: sortedItemsArray = currentColumn.numeric
-  ? sortByNum(currentColumn.path, items, ascending)
-  : sortByString(currentColumn.path, items, ascending)
+  ? sortByNum(currentColumn.path as string, items, ascending)
+  : sortByString(currentColumn.path as string, items, ascending)
 $: allCheckedItemsAreDraft =
   checkedItems.length > 0 && checkedItems.every((item) => item.coverage_status === ItemCoverageStatus.Draft)
 $: batchActionDisabled = checkedItems.length === 0
@@ -206,6 +232,11 @@ const assertItemsHaveNoOpenClaims = (items: PolicyItem[]): void => {
     items.forEach((item) => checkClaimItemsForItemAndOpenClaim(claim.claim_items, item))
   })
 }
+
+const toggleShowSnMakeAndModel = () => {
+  columnIndicesToToggle.forEach((i) => (columns[i].hidden = !columns[i].hidden))
+  snMakeAndModelAreVisible = !snMakeAndModelAreVisible
+}
 </script>
 
 <style>
@@ -237,10 +268,14 @@ const assertItemsHaveNoOpenClaims = (items: PolicyItem[]): void => {
 
 <BatchItemClone disabled={batchActionDisabled} {selectedItemNames} on:closed={handleClosed} />
 
+<Checkbox class="mb-1" on:checked={toggleShowSnMakeAndModel} on:unchecked={toggleShowSnMakeAndModel} />Show S/N, Make
+and Model
+
 {#if title}
   <h3>{title}</h3>
 {/if}
 <Datatable
+  class={uniqueTableClass}
   {numberOfCheckboxes}
   on:sorted={onSorted}
   on:selectedAll={onSelectedAll}
@@ -251,9 +286,11 @@ const assertItemsHaveNoOpenClaims = (items: PolicyItem[]): void => {
     <Datatable.Header.Checkbox />
     <!--TODO: make the amount of columns shown be dependent on the device size-->
     {#each columns as column}
-      <Datatable.Header.Item numeric={column.numeric} columnID={column.headerId} sortable={column.sortable}>
-        {column.title}
-      </Datatable.Header.Item>
+      {#if !column.hidden}
+        <Datatable.Header.Item numeric={column.numeric} columnID={column.headerId} sortable={column.sortable}>
+          {column.title}
+        </Datatable.Header.Item>
+      {/if}
     {/each}
   </Datatable.Header>
   <Datatable.Data>
@@ -261,6 +298,11 @@ const assertItemsHaveNoOpenClaims = (items: PolicyItem[]): void => {
       <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} let:rowId clickable>
         <Datatable.Checkbox {rowId} on:click={() => (goToItemDetails = false)} on:mounted={registerNewCheckbox} />
         <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
+        {#if snMakeAndModelAreVisible}
+          <Datatable.Data.Row.Item>{item.serial_number || ''}</Datatable.Data.Row.Item>
+          <Datatable.Data.Row.Item>{item.make || ''}</Datatable.Data.Row.Item>
+          <Datatable.Data.Row.Item>{item.model || ''}</Datatable.Data.Row.Item>
+        {/if}
         <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}>
           {#if item.coverage_status === ItemCoverageStatus.Approved && item.coverage_end_date}
             <div class="red">Covered through {formatFriendlyDate(item.coverage_end_date)}</div>
@@ -289,4 +331,7 @@ const assertItemsHaveNoOpenClaims = (items: PolicyItem[]): void => {
     {/each}
   </Datatable.Data>
 </Datatable>
+
+<CopyTableButton {uniqueTableClass} />
+
 <ItemDeleteModal open={DeleteModalOpen} item={currentItem} on:closed={handleModalDialog} />

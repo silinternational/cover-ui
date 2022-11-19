@@ -6,4 +6,5 @@ export type Column = {
   sortable?: boolean
   colspan?: number
   centered?: boolean
+  hidden?: boolean
 }

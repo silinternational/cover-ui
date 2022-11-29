@@ -2,7 +2,7 @@
 import { Button, Dialog } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
-export let disabled = false
+export let isDisabled = false
 export let open = false
 export let selectedItemNames = [] as string[]
 
@@ -30,7 +30,7 @@ const handleDialog = (choice: 'clone' | 'cancel') => {
 }
 </script>
 
-<Button class="mb-1" {disabled} on:click={() => (open = true)}>clone coverage</Button>
+<Button class="mb-1" disabled={isDisabled} on:click={() => (open = true)}>clone coverage</Button>
 
 <Dialog.Alert
   {open}

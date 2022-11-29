@@ -4,12 +4,16 @@ import type { Policy } from 'data/policies'
 import { createPolicyLedgerReport, getLedgerReportById, LedgerReportType, policyLedgerReports } from 'data/ledger'
 import { formatDateAndTime, formatFriendlyDate } from 'helpers/dates'
 import { policyReportDetails } from 'helpers/routes'
+import InfoModal from './InfoModal.svelte'
 import FileLink from './FileLink.svelte'
 import { Button, Datatable, setNotice } from '@silintl/ui-components'
 
 export let policy: Policy
 
 let modalOpen = false
+let content =
+  'You can create a report of all financial transactions for the specified month or year if any exist. The report can then be downloaded as a CSV file.'
+let title = 'Creating a Report'
 
 $: $policyLedgerReports = policy.ledger_reports || []
 
@@ -29,6 +33,8 @@ const getYear = (iso8601Date: string) => iso8601Date.split('-')[0]
 
 <Button class="mb-1" on:click={() => (modalOpen = true)}>create a report</Button>
 <CreateCustomerReportModal {modalOpen} on:submit={createReport} on:cancel={() => (modalOpen = false)} />
+
+<InfoModal {content} {title} />
 
 {#if $policyLedgerReports.length > 0}
   <Datatable>

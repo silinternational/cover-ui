@@ -99,7 +99,7 @@ let currentColumn = columns[1]
 let checkedItems = [] as PolicyItem[]
 let currentItem = {} as PolicyItem
 let goToItemDetails = true
-let DeleteModalOpen = false
+let DeleteModalIsOpen = false
 let shownMenus: { [name: string]: boolean } = {}
 let snMakeAndModelAreVisible = false
 
@@ -109,9 +109,9 @@ $: sortedItemsArray = currentColumn.numeric
   : sortByString(currentColumn.path as string, items, ascending)
 $: allCheckedItemsAreDraft =
   checkedItems.length > 0 && checkedItems.every((item) => item.coverage_status === ItemCoverageStatus.Draft)
-$: batchActionDisabled = checkedItems.length === 0
-$: batchDeleteDisabled =
-  batchActionDisabled ||
+$: batchActionIsDisabled = checkedItems.length === 0
+$: batchDeleteIsDisabled =
+  batchActionIsDisabled ||
   checkedItems.some((item) => item.coverage_end_date || item.coverage_status === ItemCoverageStatus.Inactive)
 $: items && (checkedItems = returnFilteredCheckedItems())
 
@@ -141,12 +141,12 @@ const getMenuItems = (item: PolicyItem) => {
 
 const handleDeleteClick = () => {
   goToItemDetails = false
-  DeleteModalOpen = true
+  DeleteModalIsOpen = true
 }
 
 const handleModalDialog = async (event: CustomEvent<string>) => {
   if (event.detail === 'remove') {
-    DeleteModalOpen = false
+    DeleteModalIsOpen = false
     dispatch('delete', currentItem.id)
   }
 }
@@ -264,9 +264,9 @@ const toggleShowSnMakeAndModel = () => {
 }
 </style>
 
-<BatchItemDelete disabled={batchDeleteDisabled} {allCheckedItemsAreDraft} on:closed={handleClosed} />
+<BatchItemDelete isDisabled={batchDeleteIsDisabled} {allCheckedItemsAreDraft} on:closed={handleClosed} />
 
-<BatchItemClone disabled={batchActionDisabled} {selectedItemNames} on:closed={handleClosed} />
+<BatchItemClone isDisabled={batchActionIsDisabled} {selectedItemNames} on:closed={handleClosed} />
 
 <Checkbox class="mb-1" on:checked={toggleShowSnMakeAndModel} on:unchecked={toggleShowSnMakeAndModel} />Show S/N, Make
 and Model
@@ -334,4 +334,4 @@ and Model
 
 <CopyTableButton {uniqueTableClass} />
 
-<ItemDeleteModal open={DeleteModalOpen} item={currentItem} on:closed={handleModalDialog} />
+<ItemDeleteModal open={DeleteModalIsOpen} item={currentItem} on:closed={handleModalDialog} />

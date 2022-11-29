@@ -6,7 +6,7 @@ import { Button, setNotice } from '@silintl/ui-components'
 export let uniqueTableClass: string
 
 let content =
-  'You can past the contents of this table into a spreadsheet program like Excel or Google Sheets by pressing Ctrl+V (Windows) or Cmd+V (Mac).'
+  'You can paste the contents of this table into a spreadsheet program like Excel or Google Sheets by pressing Ctrl+V (Windows) or Cmd+V (Mac).'
 let title = 'Copy Table Contents'
 
 async function copy() {

@@ -99,7 +99,7 @@ let currentColumn = columns[1]
 let checkedItems = [] as PolicyItem[]
 let currentItem = {} as PolicyItem
 let goToItemDetails = true
-let DeleteModalIsOpen = false
+let deleteModalIsOpen = false
 let shownMenus: { [name: string]: boolean } = {}
 let snMakeAndModelAreVisible = false
 
@@ -141,12 +141,12 @@ const getMenuItems = (item: PolicyItem) => {
 
 const handleDeleteClick = () => {
   goToItemDetails = false
-  DeleteModalIsOpen = true
+  deleteModalIsOpen = true
 }
 
 const handleModalDialog = async (event: CustomEvent<string>) => {
   if (event.detail === 'remove') {
-    DeleteModalIsOpen = false
+    deleteModalIsOpen = false
     dispatch('delete', currentItem.id)
   }
 }
@@ -334,4 +334,4 @@ and Model
 
 <CopyTableButton {uniqueTableClass} />
 
-<ItemDeleteModal open={DeleteModalIsOpen} item={currentItem} on:closed={handleModalDialog} />
+<ItemDeleteModal open={deleteModalIsOpen} item={currentItem} on:closed={handleModalDialog} />

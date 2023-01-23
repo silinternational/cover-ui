@@ -4,11 +4,16 @@ import { entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { entityDetails } from 'helpers/routes'
 import { goto } from '@roxi/routify'
 import { onMount } from 'svelte'
-import { Datatable, Page } from '@silintl/ui-components'
+import { Datatable, Page, setNotice } from '@silintl/ui-components'
 
 onMount(() => $entityCodes.length || loadEntityCodes())
 
-const onSubmit = (event: CustomEvent) => console.log(event.detail) //TODO: use endpoint
+const onSubmit = (event: CustomEvent) => {
+  //TODO: use endpoint
+  console.log(event.detail)
+
+  setNotice('Sorry, feature is not supported yet')
+}
 </script>
 
 <Page>

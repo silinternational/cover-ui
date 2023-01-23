@@ -15,12 +15,10 @@ import {
   selectedPolicyItems,
 } from 'data/items'
 import { getNameOfPolicy, loadPolicy, memberBelongsToPolicy, policies, Policy } from 'data/policies'
-import { loadPolicyItemHistory, policyHistoryByItemId } from 'data/policy-history'
-import { formatDate } from 'helpers/dates'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { items as itemsRoute, itemDetails, itemEdit, itemNewClaim, POLICIES, policyDetails } from 'helpers/routes'
 import { goto, metatags, redirect } from '@roxi/routify'
-import { Button, Page, Datatable, Dialog, TextArea, setNotice } from '@silintl/ui-components'
+import { Button, Page, Dialog, TextArea, setNotice } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 
@@ -46,10 +44,7 @@ $: status = (item.coverage_status || '') as ItemCoverageStatus
 $: isMemberOfPolicy = memberBelongsToPolicy($user.id, $policies, item.policy_id)
 $: status === ItemCoverageStatus.Draft && isMemberOfPolicy && editItemRedirect()
 
-$: policyId && item.id && loadPolicyItemHistory(policyId, item.id)
 $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
-$: policyItemHistory = $policyHistoryByItemId[item.id]
-$: hasHistory = policyItemHistory && policyItemHistory.length > 0
 
 $: allowRemoveCovereage = (![ItemCoverageStatus.Inactive, ItemCoverageStatus.Denied].includes(status) &&
   isMemberOfPolicy) as boolean
@@ -165,30 +160,6 @@ const onReviseItem = () => {
         <Button class="m-1 mdc-theme--primary-variant" on:click={onReviseItem} raised>Ask for Changes</Button>
         <Button class="mdc-theme--primary-background" on:click={onApproveItem} raised>Approve Item Coverage</Button>
       </div>
-    {/if}
-
-    <!-- TODO: finish or remove this -->
-    {#if hasHistory}
-      <h3>History</h3>
-      <Datatable>
-        <Datatable.Header>
-          <Datatable.Header.Item>Person</Datatable.Header.Item>
-          <Datatable.Header.Item>Action</Datatable.Header.Item>
-          <Datatable.Header.Item>Date</Datatable.Header.Item>
-        </Datatable.Header>
-        <Datatable.Data>
-          {#each policyItemHistory as itemHistory}
-            <Datatable.Data.Row>
-              <Datatable.Data.Row.Item>{itemHistory.user_id}</Datatable.Data.Row.Item>
-              <Datatable.Data.Row.Item
-                >{itemHistory.action}
-                {itemHistory.field_name} from '{itemHistory.old_value}' to '{itemHistory.new_value}'</Datatable.Data.Row.Item
-              >
-              <Datatable.Data.Row.Item>{formatDate(itemHistory.updated_at)}</Datatable.Data.Row.Item>
-            </Datatable.Data.Row>
-          {/each}
-        </Datatable.Data>
-      </Datatable>
     {/if}
 
     <Dialog.Alert

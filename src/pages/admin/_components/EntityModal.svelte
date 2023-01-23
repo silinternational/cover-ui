@@ -29,9 +29,9 @@ const onSubmit = () => {
 <Dialog.Alert {open} buttons={[]} defaultAction="cancel" {title} titleIcon="info" on:closed={() => (open = false)}>
   <Form on:submit={onSubmit}>
     <div class="my-1">
-      <TextFieldWithLabel required label="code" bind:value={formData.code} />
+      <TextFieldWithLabel required label="Code" bind:value={formData.code} />
 
-      <TextFieldWithLabel required label="name" bind:value={formData.name} />
+      <TextFieldWithLabel required label="Name" bind:value={formData.name} />
 
       <TextFieldWithLabel required label="Income Account" bind:value={formData.income_account} />
 

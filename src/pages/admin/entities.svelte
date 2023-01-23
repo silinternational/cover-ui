@@ -1,4 +1,5 @@
 <script lang="ts">
+import EntityModal from './_components/EntityModal.svelte'
 import { entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { entityDetails } from 'helpers/routes'
 import { goto } from '@roxi/routify'
@@ -6,6 +7,8 @@ import { onMount } from 'svelte'
 import { Datatable, Page } from '@silintl/ui-components'
 
 onMount(() => $entityCodes.length || loadEntityCodes())
+
+const onSubmit = (event: CustomEvent) => console.log(event.detail) //TODO: use endpoint
 </script>
 
 <Page>
@@ -36,4 +39,6 @@ onMount(() => $entityCodes.length || loadEntityCodes())
   {:else}
     <p>Loading...</p>
   {/if}
+
+  <EntityModal on:submit={onSubmit} />
 </Page>

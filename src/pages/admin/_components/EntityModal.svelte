@@ -17,7 +17,14 @@ const onSubmit = () => {
 }
 </script>
 
-<Button raised on:click={() => (open = true)}>add an entity</Button>
+<style>
+.form-button {
+  float: right;
+  margin: 0.5rem;
+}
+</style>
+
+<Button class={'mt-1'} raised on:click={() => (open = true)}>add an entity</Button>
 
 <Dialog.Alert {open} buttons={[]} defaultAction="cancel" {title} titleIcon="info" on:closed={() => (open = false)}>
   <Form on:submit={onSubmit}>

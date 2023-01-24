@@ -1,6 +1,6 @@
 <script lang="ts">
 import EntityModal from './_components/EntityModal.svelte'
-import { entityCodes, loadEntityCodes } from 'data/entityCodes'
+import { createEntity, entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { entityDetails } from 'helpers/routes'
 import { goto } from '@roxi/routify'
 import { onMount } from 'svelte'
@@ -8,11 +8,15 @@ import { Datatable, Page, setNotice } from '@silintl/ui-components'
 
 onMount(() => $entityCodes.length || loadEntityCodes())
 
-const onSubmit = (event: CustomEvent) => {
-  //TODO: use endpoint
-  console.log(event.detail)
+const onSubmit = async (event: CustomEvent) => {
+  const duplicate = $entityCodes.find((entity) => entity.code === event.detail.code)
+  if (duplicate) {
+    setNotice(`Entity code ${duplicate.code} already exists`)
+    return
+  }
+  const entity = await createEntity(event.detail)
 
-  setNotice('Sorry, feature is not supported yet')
+  setNotice(`Succesfully created entity ${entity.name}`)
 }
 </script>
 

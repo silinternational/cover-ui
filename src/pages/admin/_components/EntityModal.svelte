@@ -11,8 +11,9 @@ const dispatch = createEventDispatcher()
 
 let open = false
 
-const onSubmit = () => {
+const onSubmit = (event: any) => {
   dispatch('submit', formData)
+  event.target.reset()
   open = false
 }
 </script>

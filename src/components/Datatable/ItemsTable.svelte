@@ -14,7 +14,7 @@ import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import type { Column } from './types'
 import { capitalize } from 'lodash-es'
 import { createEventDispatcher } from 'svelte'
-import { Checkbox, Datatable, Menu, MenuItem } from '@silintl/ui-components'
+import { Checkbox, Datatable, IconButton, Menu, MenuItem } from '@silintl/ui-components'
 import { generateRandomID } from '@silintl/ui-components/random'
 
 export let items = [] as PolicyItem[]
@@ -240,20 +240,6 @@ const toggleShowSnMakeAndModel = () => {
 </script>
 
 <style>
-/* TODO: make this more accurate when design is finialized */
-
-.home-table-more-vert {
-  width: 30px;
-  height: 30px;
-  margin-top: 12px;
-  color: #858c94;
-  cursor: pointer;
-}
-
-.home-table-more-vert:hover {
-  color: #6e7377;
-}
-
 .item-menu {
   position: absolute;
   right: 235px;
@@ -316,13 +302,7 @@ and Model
         <Datatable.Data.Row.Item numeric>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item>{formatDate(item.updated_at)}</Datatable.Data.Row.Item>
         <Datatable.Data.Row.Item>
-          <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <svg class="home-table-more-vert" viewBox="0 0 30 30" on:click={() => handleMoreVertClick(item.id)}>
-            <path
-              fill="currentColor"
-              d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z"
-            />
-          </svg>
+          <IconButton icon="more_vert" on:click={() => handleMoreVertClick(item.id)} />
           <div class="item-menu">
             <Menu bind:menuOpen={shownMenus[item.id]} menuItems={getMenuItems(item)} />
           </div>

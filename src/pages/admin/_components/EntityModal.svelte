@@ -11,8 +11,9 @@ const dispatch = createEventDispatcher()
 
 let open = false
 
-const onSubmit = () => {
+const onSubmit = (event: any) => {
   dispatch('submit', formData)
+  event.target.reset()
   open = false
 }
 </script>
@@ -24,7 +25,7 @@ const onSubmit = () => {
 }
 </style>
 
-<Button class={'mt-1'} raised on:click={() => (open = true)}>add an entity</Button>
+<Button class={'mb-1'} raised on:click={() => (open = true)}>add an entity</Button>
 
 <Dialog.Alert {open} buttons={[]} defaultAction="cancel" {title} titleIcon="info" on:closed={() => (open = false)}>
   <Form on:submit={onSubmit}>

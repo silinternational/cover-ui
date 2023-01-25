@@ -24,6 +24,7 @@ const onSubmit = async (event: CustomEvent) => {
   <div class="flex justify-between align-items-center">
     <h4>Entities</h4>
   </div>
+  <EntityModal on:submit={onSubmit} />
   {#if $entityCodes.length}
     <Datatable>
       <Datatable.Header>
@@ -48,6 +49,4 @@ const onSubmit = async (event: CustomEvent) => {
   {:else}
     <p>Loading...</p>
   {/if}
-
-  <EntityModal on:submit={onSubmit} />
 </Page>

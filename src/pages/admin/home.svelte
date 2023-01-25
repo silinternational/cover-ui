@@ -6,12 +6,15 @@ import { ItemCoverageStatus, PolicyItem } from 'data/items'
 import { roleSelection } from 'data/role-policy-selection'
 import { isRecentClaim, loadRecentActivity, RecentChange, recentChanges } from 'data/recent-activity'
 import { isUserSteward } from 'data/user'
+import { formatPageTitle } from 'helpers/pageTitle'
 import { customerClaimDetails, itemDetails } from 'helpers/routes'
-import { goto } from '@roxi/routify'
+import { goto, metatags } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 $: filteredChanges = $roleSelection && $recentChanges.filter(recentChangesFilter)
+
+metatags.title = formatPageTitle('Admin > Home')
 
 onMount(() => {
   // TODO: recent activity does not include old items (those over 1 week) that are still unresolved.
@@ -24,8 +27,10 @@ const recentChangesFilter = (change: RecentChange): boolean => {
 }
 
 const itemNeedsAction = (item: PolicyItem): boolean => item.coverage_status === ItemCoverageStatus.Pending
-const claimNeedsAction = (claim: Claim): boolean => isUserSteward($roleSelection) ?
-    statusesAwaitingSteward.includes(claim.status) : statusesAwaitingSignator.includes(claim.status)
+const claimNeedsAction = (claim: Claim): boolean =>
+  isUserSteward($roleSelection)
+    ? statusesAwaitingSteward.includes(claim.status)
+    : statusesAwaitingSignator.includes(claim.status)
 
 const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(event.detail.policy_id, event.detail.id))
 const onGotoPolicyItem = (event: CustomEvent<PolicyItem>) => $goto(itemDetails(event.detail.policy_id, event.detail.id))

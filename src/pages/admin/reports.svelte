@@ -3,12 +3,15 @@ import CreateReportModal from './_components/CreateReportModal.svelte'
 import { FileLink } from 'components'
 import { createLedgerReport, getLedgerReportById, getLedgerReports, LedgerReport, LedgerReports } from 'data/ledger'
 import { formatDateAndTime, formatFriendlyDate } from 'helpers/dates'
+import { formatPageTitle } from 'helpers/pageTitle'
 import { reportDetails } from 'helpers/routes'
-import { goto } from '@roxi/routify'
+import { goto, metatags } from '@roxi/routify'
 import { onMount } from 'svelte'
 import { Button, Datatable, Page } from '@silintl/ui-components'
 
 let modalOpen = false
+
+metatags.title = formatPageTitle('Admin > Reports')
 
 onMount(getLedgerReports)
 

@@ -15,7 +15,7 @@ let matchingPolicies: Policy[] = []
 let pageData = {} as PaginatedData
 let searchText = ''
 
-metatags.title = formatPageTitle('Policies')
+metatags.title = formatPageTitle('Admin > Policies')
 
 onMount(() => search())
 

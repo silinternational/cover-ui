@@ -1,11 +1,23 @@
 <script lang="ts">
-import { entityCodes, loadEntityCodes } from 'data/entityCodes'
+import EntityModal from './_components/EntityModal.svelte'
+import { createEntity, entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { entityDetails } from 'helpers/routes'
 import { goto } from '@roxi/routify'
 import { onMount } from 'svelte'
-import { Datatable, Page } from '@silintl/ui-components'
+import { Datatable, Page, setNotice } from '@silintl/ui-components'
 
 onMount(() => $entityCodes.length || loadEntityCodes())
+
+const onSubmit = async (event: CustomEvent) => {
+  const duplicate = $entityCodes.find((entity) => entity.code === event.detail.code)
+  if (duplicate) {
+    setNotice(`Entity code ${duplicate.code} already exists`)
+    return
+  }
+  const entity = await createEntity(event.detail)
+
+  setNotice(`Succesfully created entity ${entity.name}`)
+}
 </script>
 
 <Page>
@@ -36,4 +48,6 @@ onMount(() => $entityCodes.length || loadEntityCodes())
   {:else}
     <p>Loading...</p>
   {/if}
+
+  <EntityModal on:submit={onSubmit} />
 </Page>

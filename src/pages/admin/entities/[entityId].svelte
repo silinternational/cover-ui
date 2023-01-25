@@ -32,7 +32,7 @@ const onSave = async () => {
     <div class="my-1">
       <h4>Code: {entity.code}</h4>
 
-      <TextFieldWithLabel label="name" bind:value={entity.name} />
+      <TextFieldWithLabel label="Name" bind:value={entity.name} />
 
       <TextFieldWithLabel label="Income Account" bind:value={entity.income_account} />
 

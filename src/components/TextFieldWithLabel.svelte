@@ -23,4 +23,4 @@ export let value: string = ''
     {/if}
   </span>
 {/if}
-<TextField {required} {description} {maxlength} bind:value />
+<TextField class="mw-300" {required} {description} {maxlength} bind:value />

@@ -1,10 +1,13 @@
 <script lang="ts">
 import EntityModal from './_components/EntityModal.svelte'
 import { createEntity, entityCodes, loadEntityCodes } from 'data/entityCodes'
+import { formatPageTitle } from 'helpers/pageTitle'
 import { entityDetails } from 'helpers/routes'
-import { goto } from '@roxi/routify'
+import { goto, metatags } from '@roxi/routify'
 import { onMount } from 'svelte'
 import { Datatable, Page, setNotice } from '@silintl/ui-components'
+
+metatags.title = formatPageTitle('Admin > Entities')
 
 onMount(() => $entityCodes.length || loadEntityCodes())
 

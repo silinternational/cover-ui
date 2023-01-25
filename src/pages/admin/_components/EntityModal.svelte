@@ -30,18 +30,24 @@ const onSubmit = (event: any) => {
 <Dialog.Alert {open} buttons={[]} defaultAction="cancel" {title} titleIcon="info" on:closed={() => (open = false)}>
   <Form on:submit={onSubmit}>
     <div class="my-1">
-      <TextFieldWithLabel required label="Code" bind:value={formData.code} />
-
-      <TextFieldWithLabel required label="Name" bind:value={formData.name} />
-
-      <TextFieldWithLabel required label="Income Account" bind:value={formData.income_account} />
-
-      <TextFieldWithLabel label="Parent Entity" bind:value={formData.parent_entity} />
-
-      <label>
-        <input type="checkbox" bind:checked={formData.active} />
-        Active
-      </label>
+      <p>
+        <TextFieldWithLabel required label="Code" bind:value={formData.code} />
+      </p>
+      <p>
+        <TextFieldWithLabel required label="Name" bind:value={formData.name} />
+      </p>
+      <p>
+        <TextFieldWithLabel required label="Income Account" bind:value={formData.income_account} />
+      </p>
+      <p>
+        <TextFieldWithLabel label="Parent Entity" bind:value={formData.parent_entity} />
+      </p>
+      <p>
+        <label>
+          <input type="checkbox" bind:checked={formData.active} />
+          Active
+        </label>
+      </p>
     </div>
     <div class="form-button">
       <Button raised>Create Entity</Button>

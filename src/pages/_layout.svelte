@@ -117,8 +117,6 @@ $: menuItems = [
 ]
 const isCustomerOnOwnPolicy = (policyId: string) => policyId === $selectedPolicyId
 
-const gotoPath = (policyId: string, claimOrItemIdObj = {}) => $goto($route.path, { policyId, ...claimOrItemIdObj })
-
 const goToCustomerView = (event: CustomEvent) => {
   if (isCustomerOnOwnPolicy(event.detail)) {
     return

@@ -121,22 +121,20 @@ const isCustomerOnOwnPolicy = (policyId: string) => policyId === $selectedPolicy
 const gotoPath = (policyId: string, claimOrItemIdObj = {}) => $goto($route.path, { policyId, ...claimOrItemIdObj })
 
 const goToCustomerView = (event: CustomEvent) => {
+  policyId = event.detail
   if (!urlIsClaimOrItem && $params.policyId) {
-    policyId = event.detail
     if ($route.path.includes('items')) {
       $goto(routes.items(policyId))
-      return
     } else if ($route.path.includes('claims')) {
       $goto(routes.customerClaims(policyId))
-      return
     } else {
       gotoPath(policyId)
     }
-  } else if (urlIsClaimOrItem && isCustomerOnOwnPolicy(event.detail)) {
+  } else if (urlIsClaimOrItem && isCustomerOnOwnPolicy($params.policyId)) {
     const claimOrItemIdObj = $params.claimId ? { claimId: $params.claimId } : { itemId: $params.itemId }
-    gotoPath(event.detail, claimOrItemIdObj)
+    gotoPath(policyId, claimOrItemIdObj)
   } else {
-    $goto(routes.policyDetails(event.detail))
+    $goto(routes.policyDetails(policyId))
   }
 }
 const goToAdminView = (event: CustomEvent) => {
@@ -148,12 +146,11 @@ const goToAdminView = (event: CustomEvent) => {
       parameters.itemId = $params.itemId
     } else if ($route.path.includes('items')) {
       $goto(routes.items($params.policyId))
-      return
     } else if ($route.path.includes('claims')) {
       $goto(routes.customerClaims($params.policyId))
-      return
+    } else {
+      gotoPath($selectedPolicyId, parameters)
     }
-    gotoPath($selectedPolicyId, parameters)
   } else {
     $goto(routes.ADMIN_HOME)
   }

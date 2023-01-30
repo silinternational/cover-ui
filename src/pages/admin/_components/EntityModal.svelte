@@ -53,7 +53,7 @@ const onSubmit = (event: any) => {
       <Button raised>Create Entity</Button>
     </div>
     <div class="form-button">
-      <Button on:click={() => (open = false)}>Cancel</Button>
+      <Button on:click|preventDefault={() => (open = false)}>Cancel</Button>
     </div>
   </Form>
 </Dialog.Alert>

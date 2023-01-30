@@ -20,7 +20,6 @@ $: $policiesInitialized || ($user.policies?.length > 0 && loadPolicies())
 $: myPolicies = $user?.policies || []
 $: policyId = $selectedPolicyId || getDefaultPolicyId($user)
 $: inAdminRole = isAdmin($roleSelection)
-$: urlIsClaimOrItem = $params.claimId || $params.itemId
 $: customerIsOnAdminView = $route.path.includes('admin') && isCustomer($user.app_role)
 $: userNotAdmin = !inAdminRole || userIsAnonymous
 
@@ -118,26 +117,16 @@ $: menuItems = [
 ]
 const isCustomerOnOwnPolicy = (policyId: string) => policyId === $selectedPolicyId
 
-const gotoPath = (policyId: string, claimOrItemIdObj = {}) => $goto($route.path, { policyId, ...claimOrItemIdObj })
-
 const goToCustomerView = (event: CustomEvent) => {
-  if (!urlIsClaimOrItem && $params.policyId) {
-    gotoPath(event.detail)
-  } else if (urlIsClaimOrItem && isCustomerOnOwnPolicy(event.detail)) {
-    const claimOrItemIdObj = $params.claimId ? { claimId: $params.claimId } : { itemId: $params.itemId }
-    gotoPath(event.detail, claimOrItemIdObj)
+  if (isCustomerOnOwnPolicy(event.detail)) {
+    return
   } else {
     $goto(routes.policyDetails(event.detail))
   }
 }
-const goToAdminView = (event: CustomEvent) => {
+const goToAdminView = () => {
   if ($params.policyId) {
-    const parameters: any = $params.claimId
-      ? { claimId: $params.claimId }
-      : $params.itemId
-      ? { itemId: $params.itemId }
-      : {}
-    gotoPath($selectedPolicyId, parameters)
+    return
   } else {
     $goto(routes.ADMIN_HOME)
   }

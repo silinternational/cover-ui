@@ -1,17 +1,33 @@
 <script lang="ts">
-import { entityCodes, loadEntityCodes } from 'data/entityCodes'
+import EntityModal from './_components/EntityModal.svelte'
+import { createEntity, entityCodes, loadEntityCodes } from 'data/entityCodes'
+import { formatPageTitle } from 'helpers/pageTitle'
 import { entityDetails } from 'helpers/routes'
-import { goto } from '@roxi/routify'
+import { goto, metatags } from '@roxi/routify'
 import { onMount } from 'svelte'
-import { Datatable, Page } from '@silintl/ui-components'
+import { Datatable, Page, setNotice } from '@silintl/ui-components'
+
+metatags.title = formatPageTitle('Admin > Entities')
 
 onMount(() => $entityCodes.length || loadEntityCodes())
+
+const onSubmit = async (event: CustomEvent) => {
+  const duplicate = $entityCodes.find((entity) => entity.code === event.detail.code)
+  if (duplicate) {
+    setNotice(`Entity code ${duplicate.code} already exists`)
+    return
+  }
+  const entity = await createEntity(event.detail)
+
+  setNotice(`Succesfully created entity ${entity.name}`)
+}
 </script>
 
 <Page>
   <div class="flex justify-between align-items-center">
     <h4>Entities</h4>
   </div>
+  <EntityModal on:submit={onSubmit} />
   {#if $entityCodes.length}
     <Datatable>
       <Datatable.Header>

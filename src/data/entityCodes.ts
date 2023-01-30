@@ -1,4 +1,4 @@
-import { GET, UPDATE } from '.'
+import { CREATE, GET, UPDATE } from '.'
 import { writable } from 'svelte/store'
 
 export type EntityCode = {
@@ -38,6 +38,28 @@ export const updateEntity = async (entity: EntityCode): Promise<EntityCode> => {
   entityCodes.update((data) => {
     const index = data.findIndex((d) => d.id === entity.id)
     data[index] = results
+    return data
+  })
+
+  return results
+}
+
+//create a new entity code
+export const createEntity = async (entity: EntityCode): Promise<EntityCode> => {
+  const urlPath = `entity-codes`
+
+  const body = {
+    code: entity.code,
+    name: entity.name,
+    income_account: entity.income_account,
+    parent_entity: entity.parent_entity,
+    active: entity.active,
+  }
+
+  const results = await CREATE<EntityCode>(urlPath, body)
+
+  entityCodes.update((data) => {
+    data.push(results)
     return data
   })
 

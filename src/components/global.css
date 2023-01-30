@@ -18,6 +18,10 @@ p {
   background: #fff;
 }
 
+.mw-300 {
+  min-width: 300px;
+}
+
 .mw-500 {
   min-width: 500px;
 }

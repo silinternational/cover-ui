@@ -1,13 +1,17 @@
 <script lang="ts">
 import { Breadcrumb, TextFieldWithLabel } from 'components'
 import { EntityCode, entityCodes, getEntity, updateEntity } from 'data/entityCodes'
+import { formatPageTitle } from 'helpers/pageTitle'
 import { entityDetails } from 'helpers/routes'
+import { metatags } from '@roxi/routify'
 import { onMount } from 'svelte'
 import { Button, Page, setNotice } from '@silintl/ui-components'
 
 export let entityId: string
 
 let entity = {} as EntityCode
+
+metatags.title = formatPageTitle(`Admin > Entities > ${entityId}`)
 
 onMount(async () => {
   entity = $entityCodes.find((e) => e.id === entityId) || (await getEntity(entityId))
@@ -32,7 +36,7 @@ const onSave = async () => {
     <div class="my-1">
       <h4>Code: {entity.code}</h4>
 
-      <TextFieldWithLabel label="name" bind:value={entity.name} />
+      <TextFieldWithLabel label="Name" bind:value={entity.name} />
 
       <TextFieldWithLabel label="Income Account" bind:value={entity.income_account} />
 

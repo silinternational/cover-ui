@@ -16,6 +16,11 @@ const onSubmit = (event: any) => {
   event.target.reset()
   open = false
 }
+
+const onCancel = (event: Event) => {
+  event.preventDefault()
+  open = false
+}
 </script>
 
 <style>
@@ -53,7 +58,7 @@ const onSubmit = (event: any) => {
       <Button raised>Create Entity</Button>
     </div>
     <div class="form-button">
-      <Button on:click|preventDefault={() => (open = false)}>Cancel</Button>
+      <Button on:click={onCancel}>Cancel</Button>
     </div>
   </Form>
 </Dialog.Alert>

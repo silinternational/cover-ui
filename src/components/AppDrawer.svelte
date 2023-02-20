@@ -58,7 +58,8 @@ const logoClickHandler = () => $goto(ROOT)
   title="Covered"
   class="drawer border-white {$showApp ? 'opacity1' : 'opacity0'}"
 >
-  <span class="pointer" on:click={logoClickHandler} on:keyup slot="header">
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
+  <span class="pointer" on:click={logoClickHandler} slot="header">
     <img class="logo" src="/logo.svg" alt="Cover" />
   </span>
 

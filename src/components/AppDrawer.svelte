@@ -34,8 +34,6 @@ $beforeUrlChange((event: CustomEvent, route: string, { url }: { url: string }) =
   currentUrl = url
   return true
 })
-
-const logoClickHandler = () => $goto(ROOT)
 </script>
 
 <style>
@@ -58,10 +56,9 @@ const logoClickHandler = () => $goto(ROOT)
   title="Covered"
   class="drawer border-white {$showApp ? 'opacity1' : 'opacity0'}"
 >
-  <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <span class="pointer" on:click={logoClickHandler} slot="header">
+  <a class="pointer" href="/" slot="header">
     <img class="logo" src="/logo.svg" alt="Cover" />
-  </span>
+  </a>
 
   <AppHeader on:toggleDrawer={() => (toggle = !toggle)} />
 

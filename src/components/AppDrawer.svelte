@@ -14,6 +14,7 @@ import { onMount } from 'svelte'
 export let menuItems: any[]
 export let myPolicies: Policy[]
 export let role: UserAppRole
+export let userIsAnonymous: boolean
 
 const isNotProduction = process.env.CF_PAGES_BRANCH !== 'main'
 
@@ -57,6 +58,7 @@ const logoClickHandler = () => $goto(ROOT)
   title="Covered"
   class="drawer border-white {$showApp ? 'opacity1' : 'opacity0'}"
 >
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
   <span class="pointer" on:click={logoClickHandler} slot="header">
     <img class="logo" src="/logo.svg" alt="Cover" />
   </span>
@@ -64,7 +66,9 @@ const logoClickHandler = () => $goto(ROOT)
   <AppHeader on:toggleDrawer={() => (toggle = !toggle)} />
 
   <div class="role-and-policy-menu pt-1" slot="drawer-content-top">
-    <RoleAndPolicyMenu {myPolicies} {role} on:policy on:role />
+    {#if !userIsAnonymous}
+      <RoleAndPolicyMenu {myPolicies} {role} on:policy on:role />
+    {/if}
   </div>
 
   <slot />

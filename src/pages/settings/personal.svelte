@@ -27,10 +27,28 @@ metatags.title = formatPageTitle('Personal Settings')
 
 $: country = $user.country || ''
 $: $user.id && setEmail()
+$: customEmailHasChanged = email_override && email_override !== $user.email_override
 $: notificationOptions = [
   { label: 'Default email: ' + $user.email, value: NOTIFICATION_OPTION_DEFAULT },
   { label: 'Custom email', value: NOTIFICATION_OPTION_CUSTOM },
 ]
+
+function onSave() {
+  if (customEmailHasChanged) {
+    updateCustomEmail()
+  } else {
+    setNotice('Changes are saved after each change')
+  }
+}
+
+function onDiscard() {
+  if (customEmailHasChanged) {
+    email_override = $user.email_override
+    setNotice('Your changes have been discarded')
+  } else {
+    setNotice('No changes to discard')
+  }
+}
 
 const setEmail = () => {
   if ($user.email_override !== $user.email) {
@@ -158,7 +176,10 @@ p {
     />
   </p>
   {#if notification_email === NOTIFICATION_OPTION_CUSTOM}
-    <TextField {maxlength} label="Custom email" bind:value={email_override} on:blur={updateCustomEmail} />
+    <TextField {maxlength} label="Custom email" bind:value={email_override} />
+    {#if customEmailHasChanged}
+      <Button raised on:click={updateCustomEmail}>save</Button>
+    {/if}
   {/if}
 
   <p>
@@ -185,8 +206,11 @@ p {
   {/if}
 
   {#if !croppieIsHidden}
-    <Button raised on:click={onUpload}>Save</Button>
+    <Button raised on:click={onUpload}>save</Button>
   {/if}
 
   <RemoveProfilePicModal {open} on:closed={onDelete} />
+
+  <Button raised on:click={onSave}>save changes</Button>
+  <Button on:click={onDiscard}>discard changes</Button>
 </Page>

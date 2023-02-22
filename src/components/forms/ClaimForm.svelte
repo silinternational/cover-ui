@@ -316,6 +316,7 @@ const unSetReplaceEstimate = () => {
   </Form>
 
   <InfoModal
+    hasButton={false}
     content={fmvExplanation}
     title="Fair Market Value"
     on:closed={() => (fmvModalOpen = false)}

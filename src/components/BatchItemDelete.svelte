@@ -36,4 +36,4 @@ const handleDialog = (choice: string) => {
   >Are you sure you would like to remove coverage or delete the selected items (coverage ends at a later date)?</Dialog.Alert
 >
 
-<InfoModal content={infoModalContent} title="Some items can't be deleted" />
+<InfoModal hasButton content={infoModalContent} title="Some items can't be deleted" />

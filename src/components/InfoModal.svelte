@@ -3,7 +3,7 @@ import { Dialog, IconButton } from '@silintl/ui-components'
 
 export let content = ''
 export let title = ''
-export let hasButton = true
+export let hasButton = false
 export let open = false
 
 const buttons: Dialog.AlertButton[] = [{ label: 'Ok', action: 'cancel', class: 'mdc-dialog__button' }]

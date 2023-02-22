@@ -7,7 +7,7 @@ export const convertToCents = (dollars: number): number => {
 
 export const formatMoney = (cents: number): string => {
   if (!cents || !Number.isFinite(+cents)) {
-    return ''
+    return '$0.00'
   }
   const convertToDollars = (cents: number) => '$' + Number(cents / 100).toFixed(2)
 

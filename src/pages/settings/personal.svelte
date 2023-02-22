@@ -27,27 +27,13 @@ metatags.title = formatPageTitle('Personal Settings')
 
 $: country = $user.country || ''
 $: $user.id && setEmail()
-$: customEmailHasChanged = email_override && email_override !== $user.email_override
 $: notificationOptions = [
   { label: 'Default email: ' + $user.email, value: NOTIFICATION_OPTION_DEFAULT },
   { label: 'Custom email', value: NOTIFICATION_OPTION_CUSTOM },
 ]
 
 function onSave() {
-  if (customEmailHasChanged) {
-    updateCustomEmail()
-  } else {
-    setNotice('Changes are saved after each change')
-  }
-}
-
-function onDiscard() {
-  if (customEmailHasChanged) {
-    email_override = $user.email_override
-    setNotice('Your changes have been discarded')
-  } else {
-    setNotice('No changes to discard')
-  }
+  setNotice('Changes are saved after each change')
 }
 
 const setEmail = () => {
@@ -176,10 +162,7 @@ p {
     />
   </p>
   {#if notification_email === NOTIFICATION_OPTION_CUSTOM}
-    <TextField {maxlength} label="Custom email" bind:value={email_override} />
-    {#if customEmailHasChanged}
-      <Button raised on:click={updateCustomEmail}>save</Button>
-    {/if}
+    <TextField {maxlength} label="Custom email" bind:value={email_override} on:blur={updateCustomEmail} />
   {/if}
 
   <p>
@@ -212,5 +195,4 @@ p {
   <RemoveProfilePicModal {open} on:closed={onDelete} />
 
   <Button raised on:click={onSave}>save changes</Button>
-  <Button on:click={onDiscard}>discard changes</Button>
 </Page>

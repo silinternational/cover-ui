@@ -32,6 +32,10 @@ $: notificationOptions = [
   { label: 'Custom email', value: NOTIFICATION_OPTION_CUSTOM },
 ]
 
+function onSave() {
+  setNotice('Changes are saved after each change')
+}
+
 const setEmail = () => {
   if ($user.email_override !== $user.email) {
     email_override = $user.email_override || ''
@@ -185,8 +189,10 @@ p {
   {/if}
 
   {#if !croppieIsHidden}
-    <Button raised on:click={onUpload}>Save</Button>
+    <Button raised on:click={onUpload}>save</Button>
   {/if}
 
   <RemoveProfilePicModal {open} on:closed={onDelete} />
+
+  <Button raised on:click={onSave}>save changes</Button>
 </Page>

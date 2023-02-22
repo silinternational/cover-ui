@@ -133,7 +133,14 @@ const goToAdminView = () => {
 }
 </script>
 
-<AppDrawer {menuItems} {myPolicies} role={$user.app_role} on:policy={goToCustomerView} on:role={goToAdminView}>
+<AppDrawer
+  {menuItems}
+  {myPolicies}
+  role={$user.app_role}
+  {userIsAnonymous}
+  on:policy={goToCustomerView}
+  on:role={goToAdminView}
+>
   {#if customerIsOnAdminView}
     <Page>
       <p class="m-0-auto">

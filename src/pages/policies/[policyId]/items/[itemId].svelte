@@ -172,6 +172,7 @@ const onReviseItem = () => {
     >
       <p class="message-box">
         <TextArea
+          class="admin-message-text-area"
           {maxlength}
           style="width: 300px"
           rows="4"

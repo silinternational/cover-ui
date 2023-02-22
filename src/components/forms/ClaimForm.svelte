@@ -211,6 +211,10 @@ const unSetRepairEstimate = () => {
 const unSetReplaceEstimate = () => {
   replaceEstimateUSD = undefined
 }
+const onInfoClick = (event: Event) => {
+  event.preventDefault()
+  fmvModalOpen = true
+}
 </script>
 
 <style></style>
@@ -255,7 +259,7 @@ const unSetReplaceEstimate = () => {
             <span class="d-block mb-half">Fair market value (USD)</span>
             <MoneyInput minValue={'0'} bind:value={fairMarketValueUSD} />
           </div>
-          <IconButton class="gray mt-4px" icon="info" on:click={() => (fmvModalOpen = true)} />
+          <IconButton class="gray mt-4px" icon="info" on:click={onInfoClick} />
         </span>
         <Description>
           <ConvertCurrencyLink />
@@ -289,7 +293,7 @@ const unSetReplaceEstimate = () => {
             <span class="d-block mb-half">Fair market value (USD)</span>
             <MoneyInput minValue={'0'} bind:value={fairMarketValueUSD} />
           </div>
-          <IconButton class="gray mt-4px" icon="info" on:click={() => (fmvModalOpen = true)} />
+          <IconButton class="gray mt-4px" icon="info" on:click={onInfoClick} />
         </span>
         <Description>
           <ConvertCurrencyLink />
@@ -315,10 +319,5 @@ const unSetReplaceEstimate = () => {
     </p>
   </Form>
 
-  <InfoModal
-    content={fmvExplanation}
-    title="Fair Market Value"
-    on:closed={() => (fmvModalOpen = false)}
-    open={fmvModalOpen}
-  />
+  <InfoModal content={fmvExplanation} title="Fair Market Value" bind:open={fmvModalOpen} />
 </div>

@@ -34,7 +34,7 @@ const getYear = (iso8601Date: string) => iso8601Date.split('-')[0]
 <Button class="mb-1" on:click={() => (modalOpen = true)}>create a report</Button>
 <CreateCustomerReportModal {modalOpen} on:submit={createReport} on:cancel={() => (modalOpen = false)} />
 
-<InfoModal {content} {title} />
+<InfoModal hasInfoButton {content} {title} />
 
 {#if $policyLedgerReports.length > 0}
   <Datatable>

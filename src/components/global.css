@@ -53,6 +53,10 @@ p {
   overflow-y: hidden;
 }
 
+.admin-message-text-area .mdc-text-field__input {
+  height: auto !important;
+}
+
 @media print {
   footer, .drawer {
     display: none !important;

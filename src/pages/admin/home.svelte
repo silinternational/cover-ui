@@ -10,15 +10,26 @@ import { formatPageTitle } from 'helpers/pageTitle'
 import { customerClaimDetails, itemDetails } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
-import { onMount } from 'svelte'
+import { onDestroy, onMount } from 'svelte'
 
 $: filteredChanges = $roleSelection && $recentChanges.filter(recentChangesFilter)
 
 metatags.title = formatPageTitle('Admin > Home')
 
+let timeoutId: number | undefined
+
 onMount(() => {
   // TODO: recent activity does not include old items (those over 1 week) that are still unresolved.
+  refresh()
+})
+
+function refresh() {
   loadRecentActivity()
+  timeoutId = setTimeout(refresh, 60000)
+}
+
+onDestroy(() => {
+  clearTimeout(timeoutId)
 })
 
 const recentChangesFilter = (change: RecentChange): boolean => {

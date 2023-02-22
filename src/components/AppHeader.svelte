@@ -1,9 +1,10 @@
 <script lang="ts">
+import user from 'data/user'
 import * as routes from 'helpers/routes'
 import Progress from './progress/Progress.svelte'
+import { beforeUrlChange } from '@roxi/routify'
 import { Badge, IconButton, isAboveMobile, Menu, MenuItem } from '@silintl/ui-components'
 import { createEventDispatcher, onMount } from 'svelte'
-import user from 'data/user'
 
 const menuItems: MenuItem[] = [
   {
@@ -23,6 +24,7 @@ let alt = 'avatar'
 let showDrawerButton: boolean
 let menuOpen = false
 let nameOfUser: string
+let currentUrl: string
 
 const dispatch = createEventDispatcher()
 
@@ -31,6 +33,11 @@ $: ownerInitial = $user.first_name?.charAt(0) || ''
 $: nameOfUser = $user.id ? $user.first_name + ' ' + $user.last_name : ''
 
 onMount(() => showOrHideDrawerButton())
+
+$beforeUrlChange((event: CustomEvent, route: string, { url }: { url: string }) => {
+  currentUrl = url
+  return true
+})
 
 const avatarError = () => (showImage = false)
 const toggleMenu = () => (menuOpen = !menuOpen)
@@ -78,7 +85,7 @@ img {
       {/if}
     </button>
 
-    <Menu bind:menuOpen {menuItems} />
+    <Menu bind:menuOpen {menuItems} {currentUrl} />
   </div>
 </header>
 

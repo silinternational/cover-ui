@@ -42,5 +42,5 @@ async function copy() {
 <div class="flex align-items-center">
   <Button on:click={copy}>Copy Table contents</Button>
 
-  <InfoModal hasButton {content} {title} />
+  <InfoModal hasInfoButton {content} {title} />
 </div>

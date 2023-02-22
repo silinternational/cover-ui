@@ -81,7 +81,7 @@ const onPaginate = (event: CustomEvent<{ page: number; limit: number }>) => {
       {#each matchingPolicies as policy (policy.id)}
         <Datatable.Data.Row on:click={() => $goto(policyDetails(policy.id))} clickable>
           <!-- icon: -->
-          <Datatable.Data.Row.Item>
+          <Datatable.Data.Row.Item numeric>
             {#if policy.type === PolicyType.Household}
               <span class="material-icons">family_restroom</span>
             {:else if policy.type === PolicyType.Team}

@@ -16,7 +16,7 @@ export let role: UserAppRole
 
 const addTeamPolicyEntry: MenuItem = {
   icon: 'add',
-  label: 'add team policy',
+  label: 'Add Team Policy',
   url: POLICY_NEW_TEAM,
 }
 const dispatch = createEventDispatcher()

@@ -118,12 +118,14 @@ $: items && (checkedItems = returnFilteredCheckedItems())
 const dispatch = createEventDispatcher()
 
 const getMenuItems = (item: PolicyItem) => {
-  const menuItems: MenuItem[] = [
-    {
+  const menuItems: MenuItem[] = []
+
+  if (item.coverage_status !== ItemCoverageStatus.Draft) {
+    menuItems.push({
       label: 'View item',
       url: itemDetails(policyId, item.id),
-    },
-  ]
+    })
+  }
   if (item.coverage_status !== ItemCoverageStatus.Inactive) {
     menuItems.push({
       label: item.coverage_status === ItemCoverageStatus.Draft ? 'Delete' : 'End coverage',

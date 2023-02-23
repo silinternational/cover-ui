@@ -4,7 +4,7 @@ import ItemBanner from './banners/ItemBanner.svelte'
 import MessageBanner from './banners/MessageBanner.svelte'
 import { PolicyItem, ItemCoverageStatus } from 'data/items'
 import { getPolicyById, loadPolicy, policies, Policy, PolicyType } from 'data/policies'
-import { formatDate } from '../helpers/dates'
+import { formatDate, getYear } from '../helpers/dates'
 import { formatMoney } from 'helpers/money'
 import InfoBoxModal from './InfoBoxModal.svelte'
 import { formatDistanceToNow } from 'date-fns'
@@ -14,7 +14,7 @@ import { onMount } from 'svelte'
 export let item: PolicyItem
 export let isCheckingOut: boolean = false
 export let policyId: string
-export let isAdmin: boolean
+export let isAdmin: boolean = false
 
 let policy: Policy
 
@@ -30,6 +30,9 @@ $: status = (item.coverage_status || '') as ItemCoverageStatus
 $: showRevisionMessage = item.status_reason && status === ItemCoverageStatus.Revision
 $: startDate = formatDate(item.coverage_start_date)
 $: endDate = formatDate(item.coverage_end_date)
+$: thisYear = getYear(startDate)
+$: renewYear = Number(thisYear) + 1
+$: renewDate = formatDate(`${renewYear}-01-01`)
 $: commonDetails = {
   [assignedTo]: item?.accountable_person?.name,
   Location: item.accountable_person?.country || item.country,
@@ -144,7 +147,7 @@ const toggleModal = (i: number) => (showInfoBox[i] = !showInfoBox[i])
       {#if title && value && value !== ' '}
         <div class="body-item">
           <div class="title"><b>{title}</b></div>
-          <div class="value break-word">{value || '-'}</div>
+          <div class="value break-word" class:pre={title === 'Description'}>{value || '-'}</div>
         </div>
       {/if}
     {/each}
@@ -159,8 +162,8 @@ const toggleModal = (i: number) => (showInfoBox[i] = !showInfoBox[i])
         <div class="value">{startDate || '—'}</div>
       </div>
       <div class="end-date">
-        <b>Coverage ends</b>
-        <div class="value">{endDate || '—'}</div>
+        <b>{endDate ? 'Coverage ends' : 'Renew on'}</b>
+        <div class="value">{endDate || renewDate || '—'}</div>
       </div>
     </div>
   </div>

@@ -30,8 +30,8 @@ $: status = (item.coverage_status || '') as ItemCoverageStatus
 $: showRevisionMessage = item.status_reason && status === ItemCoverageStatus.Revision
 $: startDate = formatDate(item.coverage_start_date)
 $: endDate = formatDate(item.coverage_end_date)
-$: year = getYear(startDate)
-$: renewYear = Number(year) + 1
+$: thisYear = getYear(startDate)
+$: renewYear = Number(thisYear) + 1
 $: renewDate = formatDate(`${renewYear}-01-01`)
 $: commonDetails = {
   [assignedTo]: item?.accountable_person?.name,

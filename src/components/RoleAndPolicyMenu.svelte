@@ -57,7 +57,7 @@ const getTeamPolicyEntries = (policies: Policy[]): MenuItem[] => {
       action: () => selectUserPolicy(policy.id),
     }
   })
-  return [{ subtitle: 'team policies' }, ...policyItems]
+  return [{ subtitle: 'Team Policies' }, ...policyItems]
 }
 
 const getHouseholdEntries = (policies: Policy[]): MenuItem[] => {
@@ -68,7 +68,7 @@ const getHouseholdEntries = (policies: Policy[]): MenuItem[] => {
       action: () => selectUserPolicy(policy.id),
     }
   })
-  return [{ subtitle: 'personal policy' }, ...policyItems]
+  return [{ subtitle: 'Personal Policy' }, ...policyItems]
 }
 
 const selectRole = (role: UserAppRole) => {

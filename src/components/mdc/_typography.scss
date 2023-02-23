@@ -29,3 +29,7 @@
 .mdc-data-table__header-cell {
   font-weight: var(--mdc-typography-bold-font-weight);
 }
+
+.mdc-deprecated-list-item__subtitle {
+  text-transform: capitalize;
+}

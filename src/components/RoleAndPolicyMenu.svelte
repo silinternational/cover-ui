@@ -64,7 +64,7 @@ const getHouseholdEntries = (policies: Policy[]): MenuItem[] => {
   const policyItems = policies.map((policy): MenuItem => {
     return {
       icon: HOUSEHOLD_POLICY_ICON,
-      label: 'household', // TODO: Replace with name, when available
+      label: getTruncatedNameOfPolicy(policy, 18) || 'Household',
       action: () => selectUserPolicy(policy.id),
     }
   })
@@ -106,7 +106,7 @@ const getButtonText = (userAppRoleSelection: UserAppRole, policyIdSelection: str
     return getTruncatedNameOfPolicy(policy)
   }
 
-  return 'household'
+  return getTruncatedNameOfPolicy(policy, 15) || 'household'
 }
 
 const getButtonIcon = (userAppRoleSelection: UserAppRole, policyIdSelection: string, myPolicies: Policy[]) => {

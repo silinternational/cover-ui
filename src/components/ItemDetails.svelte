@@ -14,7 +14,7 @@ import { onMount } from 'svelte'
 export let item: PolicyItem
 export let isCheckingOut: boolean = false
 export let policyId: string
-export let isAdmin: boolean
+export let isAdmin: boolean = false
 
 let policy: Policy
 
@@ -144,7 +144,7 @@ const toggleModal = (i: number) => (showInfoBox[i] = !showInfoBox[i])
       {#if title && value && value !== ' '}
         <div class="body-item">
           <div class="title"><b>{title}</b></div>
-          <div class="value break-word">{value || '-'}</div>
+          <div class="value break-word" class:pre={title === 'Description'}>{value || '-'}</div>
         </div>
       {/if}
     {/each}

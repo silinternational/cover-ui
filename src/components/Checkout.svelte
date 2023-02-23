@@ -4,8 +4,8 @@ import { selectedPolicy } from 'data/policies'
 import { formatDate, getYear } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { HOME, TERMS_OF_SERVICE } from 'helpers/routes'
-import ItemDeleteModal from 'ItemDeleteModal.svelte'
-import ItemDetails from 'ItemDetails.svelte'
+import ItemDeleteModal from './ItemDeleteModal.svelte'
+import ItemDetails from './ItemDetails.svelte'
 import { goto } from '@roxi/routify'
 import { Button, Checkbox } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
@@ -29,7 +29,9 @@ $: renewYear = Number(year) + 1
 $: renewDate = formatDate(`${renewYear}-01-01`)
 $: proratedMessage = `Pay ${formatMoney(item.prorated_annual_premium)} for the remainder of ${year} from ${org} account
     ${accountOrhouseholdId}. Auto-renew and pay ${formatMoney(item.annual_premium)} on ${renewDate}.`
-$: noPaymentMessage = `No payment needed right now. Auto-renew for ${formatMoney(item.annual_premium)} on ${renewDate}, paid from ${org}
+$: noPaymentMessage = `No payment needed right now. Auto-renew for ${formatMoney(
+  item.annual_premium
+)} on ${renewDate}, paid from ${org}
      account ${accountOrhouseholdId}.`
 $: checkoutMessage = item.prorated_annual_premium > 100 ? proratedMessage : noPaymentMessage
 
@@ -69,12 +71,12 @@ const handleDialog = (event: CustomEvent<string>) => {
     <Button raised on:click={() => dispatch('edit')}>Edit Item</Button>
   </div>
 </div>
-<ItemDetails {item} isCheckingOut {policyId} {householdId} />
+<ItemDetails {item} isCheckingOut {policyId} />
 
 <div class="flex align-items-center my-2">
   <Checkbox on:checked={() => (checked = true)} on:unchecked={() => (checked = false)} />
 
-  <span class="mr-3px">I have reviewed and agree to</span><a target="_blank" href={TERMS_OF_SERVICE}>
+  <span class="mr-3px">I have reviewed and agree to</span><a target="_blank" rel="noreferrer" href={TERMS_OF_SERVICE}>
     Terms of Service</a
   >
 </div>

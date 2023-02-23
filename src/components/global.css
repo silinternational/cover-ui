@@ -15,7 +15,7 @@ p {
 }
 
 .pre {
-  white-space: pre;
+  white-space: pre-wrap;
 }
 
 #main-drawer-content {

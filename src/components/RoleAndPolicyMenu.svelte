@@ -64,7 +64,7 @@ const getHouseholdEntries = (policies: Policy[]): MenuItem[] => {
   const policyItems = policies.map((policy): MenuItem => {
     return {
       icon: HOUSEHOLD_POLICY_ICON,
-      label: 'household', // TODO: Replace with name, when available
+      label: 'Household', // TODO: Replace with name, when available
       action: () => selectUserPolicy(policy.id),
     }
   })
@@ -80,11 +80,11 @@ const getEntriesForRole = (role: UserAppRole): MenuItem[] => {
   const specialEntriesByRole: { [role: string]: MenuItem[] } = {
     Signator: [
       { subtitle: 'admin' },
-      { icon: ADMIN_ICON, label: 'signator', action: () => selectRole(UserAppRole.Signator) },
+      { icon: ADMIN_ICON, label: 'Signator', action: () => selectRole(UserAppRole.Signator) },
     ],
     Steward: [
       { subtitle: 'admin' },
-      { icon: ADMIN_ICON, label: 'steward', action: () => selectRole(UserAppRole.Steward) },
+      { icon: ADMIN_ICON, label: 'Steward', action: () => selectRole(UserAppRole.Steward) },
     ],
   }
   return specialEntriesByRole[role] || []

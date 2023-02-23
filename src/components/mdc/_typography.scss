@@ -33,3 +33,7 @@
 .mdc-deprecated-list-item__text, .mdc-deprecated-list-item__subtitle {
   text-transform: capitalize;
 }
+
+.mdc-deprecated-list-item__text {
+  text-transform: unset;
+}

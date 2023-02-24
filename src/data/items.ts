@@ -289,8 +289,7 @@ export async function updateItem(policyId: string, itemId: string, itemData: Upd
 export async function deleteItem(policyId: string, itemId: string): Promise<any> {
   const urlPath = `items/${itemId}`
 
-  // TODO: Check the contents of the delete response before removing the item from the store
-  const response = await DELETE(urlPath)
+  await DELETE(urlPath)
 
   itemsByPolicyId.update((data) => {
     const items = data[policyId] || []

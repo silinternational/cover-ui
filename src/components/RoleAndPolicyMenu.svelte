@@ -16,7 +16,7 @@ export let role: UserAppRole
 
 const addTeamPolicyEntry: MenuItem = {
   icon: 'add',
-  label: 'add team policy',
+  label: 'Add Team Policy',
   url: POLICY_NEW_TEAM,
 }
 const dispatch = createEventDispatcher()
@@ -57,7 +57,7 @@ const getTeamPolicyEntries = (policies: Policy[]): MenuItem[] => {
       action: () => selectUserPolicy(policy.id),
     }
   })
-  return [{ subtitle: 'team policies' }, ...policyItems]
+  return [{ subtitle: 'Team Policies' }, ...policyItems]
 }
 
 const getHouseholdEntries = (policies: Policy[]): MenuItem[] => {
@@ -68,7 +68,7 @@ const getHouseholdEntries = (policies: Policy[]): MenuItem[] => {
       action: () => selectUserPolicy(policy.id),
     }
   })
-  return [{ subtitle: 'personal policy' }, ...policyItems]
+  return [{ subtitle: 'Personal Policy' }, ...policyItems]
 }
 
 const selectRole = (role: UserAppRole) => {
@@ -80,11 +80,11 @@ const getEntriesForRole = (role: UserAppRole): MenuItem[] => {
   const specialEntriesByRole: { [role: string]: MenuItem[] } = {
     Signator: [
       { subtitle: 'admin' },
-      { icon: ADMIN_ICON, label: 'signator', action: () => selectRole(UserAppRole.Signator) },
+      { icon: ADMIN_ICON, label: 'Signator', action: () => selectRole(UserAppRole.Signator) },
     ],
     Steward: [
       { subtitle: 'admin' },
-      { icon: ADMIN_ICON, label: 'steward', action: () => selectRole(UserAppRole.Steward) },
+      { icon: ADMIN_ICON, label: 'Steward', action: () => selectRole(UserAppRole.Steward) },
     ],
   }
   return specialEntriesByRole[role] || []

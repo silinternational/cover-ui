@@ -22,7 +22,7 @@ const optionId = (option: RadioOption) => `radio-options-${String(option.value).
   display: block;
 }
 input {
-  margin-right: 0.3rem;
+  margin-right: 0.6rem;
   margin-bottom: 0.2rem;
 }
 </style>

@@ -374,7 +374,6 @@ export async function updateClaimItem(claimId: string, claimItemId: string, clai
     replace_actual: convertToCents(claimItemData.replaceActual),
   }
 
-  // TODO: update a store with this response data
   const response = await UPDATE<ClaimItem>(`claim-items/${claimItemId}`, parsedData)
 
   claims.update((currClaims) => {

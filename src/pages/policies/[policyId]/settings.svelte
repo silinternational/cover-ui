@@ -332,12 +332,6 @@ p {
 
             <Tooltip tooltipID="edit-profile-button" positionX="start">Edit your profile</Tooltip>
           {:else}
-            <!-- TODO: Figure out how editing a policy member is different from editing a dependent -->
-            <!-- <Tooltip.Wrapper ariaDescribedBy={'edit-person-' + policyMember.id}>
-              <IconButton icon="edit" ariaLabel="Edit" on:click={() => editPerson(policyMember)} />
-            </Tooltip.Wrapper>
-
-            <Tooltip tooltipID={'edit-person-' + policyMember.id} positionX="end">Edit Person</Tooltip> -->
             <IconButton
               icon="delete"
               ariaLabel="Delete"

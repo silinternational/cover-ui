@@ -11,11 +11,11 @@ import InfoModal from '../InfoModal.svelte'
 import { claimIncidentTypes, loadClaimIncidentTypes } from 'data/types/claim-incident-types'
 import { Claim, ClaimItem, PayoutOption } from 'data/claims'
 import type { PolicyItem } from 'data/items'
-import DateInput from 'DateInput.svelte'
-import Description from 'Description.svelte'
-import ConvertCurrencyLink from 'ConvertCurrencyLink.svelte'
+import DateInput from '../DateInput.svelte'
+import Description from '../Description.svelte'
+import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
 import { formatMoney } from 'helpers/money'
-import RadioOptions from 'RadioOptions.svelte'
+import RadioOptions from '../RadioOptions.svelte'
 import { assertHas } from '../../validation/assertions'
 import { Button, Form, IconButton, MoneyInput, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher, onMount } from 'svelte'
@@ -111,7 +111,6 @@ $: submitIsDisabled =
 // Calculate dynamic options for radio-button prompts.
 $: lossReasonOptions = $claimIncidentTypes.map(({ name, description }) => ({ label: name, value: name, description }))
 
-// TODO: get accountable person from item
 // TODO: add reimbursed value
 
 const calculateIsRepairable = (potentiallyRepairable: boolean, repairableSelection?: string) => {
@@ -229,7 +228,6 @@ const onInfoClick = (event: Event) => {
     </p>
     <p>
       <span class="header">Reason for loss or damage</span>
-      <!--TODO: make description text on next line and inline with the above, label text-->
       <RadioOptions name="lossReason" options={lossReasonOptions} bind:value={lossReason} />
     </p>
     <p>

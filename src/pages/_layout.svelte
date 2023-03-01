@@ -51,6 +51,13 @@ $: menuItems = [
     hide: userNotAdmin,
   },
   {
+    url: routes.AUDITS,
+    icon: 'history',
+    label: 'Audits',
+    hide: userNotAdmin,
+  },
+  // Non admin menu items
+  {
     url: routes.policyDetails(policyId),
     icon: 'description',
     label: 'Policy',

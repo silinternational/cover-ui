@@ -1,12 +1,15 @@
 import type { PolicyItem } from './items'
 import { CREATE } from 'data'
+import { writable } from 'svelte/store'
 
 export type AuditResult = {
   AuditType: string
   Items: PolicyItem[]
 }
 
-export const runAudits = async (date: string): Promise<AuditResult> => {
+export const audits = writable({} as AuditResult)
+
+export const runAudits = async (date: string): Promise<void> => {
   const response = (await CREATE('audits', { audit_type: 'renewal', Date: date })) as AuditResult
-  return response
+  audits.set(response)
 }

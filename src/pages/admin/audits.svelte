@@ -1,49 +1,22 @@
 <script lang="ts">
 import { loading } from 'components/progress'
 import type { PolicyItem } from 'data/items'
-import { AuditResult, runAudits } from 'data/audits'
+import { audits, runAudits } from 'data/audits'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { itemDetails, policyDetails } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
-import { onMount } from 'svelte'
 import { Button, Datatable, Page, setNotice } from '@silintl/ui-components'
 
 metatags.title = formatPageTitle('Admin > Audit')
 
-let auditResult: AuditResult
 let canViewItemDetails = true
 let utcDate = new Date().toISOString().split('T')[0]
 
-$: items = auditResult?.Items || [
-  {
-    accountable_person: 'asdfsdfa',
-    annual_premium: 12,
-    category: 'asdfasdf' /*ItemCategory*/,
-    country: 'sdfasdfs',
-    coverage_amount: 'number',
-    coverage_end_date: 'string' /*Date*/,
-    coverage_start_date: 'string' /* yyyy-mm-dd Date */,
-    coverage_status: 'ItemCoverageStatus',
-    created_at: 'string' /*Date*/,
-    description: 'string',
-    id: 'string',
-    in_storage: 'boolean',
-    make: 'string',
-    model: 'string',
-    name: 'string',
-    policy_id: 'string',
-    prorated_annual_premium: 12,
-    risk_category: 'RiskCategory',
-    serial_number: 'string',
-    status_change: 'string',
-    status_reason: 'string',
-    updated_at: 'string' /*Date*/,
-  },
-]
+$: items = $audits?.Items || []
 
-onMount(async () => {
-  auditResult = await runAudits(utcDate)
-})
+const onClick = () => {
+  runAudits(utcDate)
+}
 
 const gotoItemDetails = (item: PolicyItem) => {
   if (canViewItemDetails) {
@@ -57,19 +30,22 @@ const preventRowClick = async () => {
   canViewItemDetails = false
 }
 
-const repair = async (item: PolicyItem) => {
+const repair = async () => {
   //TODO: repair the item using post /repair endpoint
-  console.log('repairing', item.name)
 
-  setNotice(`Item ${item.name} has been repaired.`)
+  setNotice(`All item records found to be at fault have been repaired.`)
+
+  items = []
 }
 </script>
 
 <Page>
-  <div class="flex justify-between align-items-center">
-    <h4>Audit Results (Items that were incorrectly renewed and billed)</h4>
+  <h4>Audit Results (Items that were incorrectly renewed and billed)</h4>
 
-    <Button raised on:click={repair} disabled={!items.length}>repair</Button>
+  <div class="my-1">
+    <Button class="mr-1" raised on:click={onClick}>run audits</Button>
+
+    <Button outlined on:click={repair} disabled={!items.length}>repair</Button>
   </div>
   {#if items.length}
     <Datatable>

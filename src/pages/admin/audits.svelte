@@ -1,9 +1,10 @@
 <script lang="ts">
 import { delayLoading, loading } from 'components/progress'
 import type { PolicyItem } from 'data/items'
-import { audits, runAudits } from 'data/audits'
+import { audits, repairAudits, repairedAudits, runAudits } from 'data/audits'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { itemDetails, policyDetails } from 'helpers/routes'
+import { isEqual } from 'lodash-es'
 import { goto, metatags } from '@roxi/routify'
 import { Button, Datatable, Page, setNotice } from '@silintl/ui-components'
 
@@ -13,6 +14,7 @@ let canViewItemDetails = true
 let utcDate = new Date().toISOString().split('T')[0]
 
 $: items = $audits?.Items || []
+$: haveAuditResults = $audits?.Items?.length
 
 const onClick = () => {
   runAudits(utcDate)
@@ -31,11 +33,18 @@ const preventRowClick = async () => {
 }
 
 const repair = async () => {
-  //TODO: repair the item using post /repair endpoint
-
-  setNotice(`All item records found to be at fault have been repaired.`)
-
-  items = []
+  try {
+    await repairAudits(utcDate)
+    const responseIsEqualToAudits = isEqual($audits, $repairedAudits)
+    setNotice(
+      responseIsEqualToAudits
+        ? `All item records found to be at fault have been repaired.`
+        : `Some item records found to be at fault were not repaired. Try running another audit.`
+    )
+    items = $repairedAudits.Items
+  } catch {
+    setNotice(`There was an error repairing the item records. Please try again.`)
+  }
 }
 </script>
 
@@ -45,7 +54,7 @@ const repair = async () => {
   <div class="my-1">
     <Button class="mr-1" raised on:click={onClick}>run audits</Button>
 
-    <Button outlined on:click={repair} disabled={!items.length}>repair</Button>
+    <Button outlined on:click={repair} disabled={!haveAuditResults}>repair</Button>
   </div>
   {#if items.length}
     <Datatable>

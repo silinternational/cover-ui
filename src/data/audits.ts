@@ -8,8 +8,16 @@ export type AuditResult = {
 }
 
 export const audits = writable({} as AuditResult)
+export const repairedAudits = writable({} as AuditResult)
 
 export const runAudits = async (date: string): Promise<void> => {
   const response = (await CREATE('audits', { audit_type: 'renewal', Date: date })) as AuditResult
   audits.set(response)
+}
+
+export const repairAudits = async (date: string): Promise<void> => {
+  const response = (await CREATE('audits', { audit_type: 'repair', Date: date })) as AuditResult
+
+  repairedAudits.set(response)
+  audits.set({} as AuditResult)
 }

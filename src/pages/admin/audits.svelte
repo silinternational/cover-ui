@@ -1,5 +1,5 @@
 <script lang="ts">
-import { loading } from 'components/progress'
+import { delayLoading, loading } from 'components/progress'
 import type { PolicyItem } from 'data/items'
 import { audits, runAudits } from 'data/audits'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -72,9 +72,15 @@ const repair = async () => {
         {/each}
       </Datatable.Data>
     </Datatable>
-  {:else if $loading}
-    <p>Loading...</p>
   {:else}
-    <p>No items found.</p>
+    {#await delayLoading($loading)}
+      <p>Loading...</p>
+    {:then is_loading}
+      {#if $loading}
+        <p>Loading...</p>
+      {:else}
+        <p>No items found.</p>
+      {/if}
+    {/await}
   {/if}
 </Page>

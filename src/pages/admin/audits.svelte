@@ -46,11 +46,7 @@ const repair = async () => {
 
   {#if haveRepairResults}
     <h4>Repair results (item records that have been repaired)</h4>
-    <div class="my-1">
-      <Button class="mr-1" raised on:click={onClick}>run audits</Button>
 
-      <Button prependIcon="build" outlined on:click={repair} disabled={!haveAuditResults}>repair</Button>
-    </div>
     <AuditsOrRepairTable items={repairedItems} />
   {/if}
 </Page>

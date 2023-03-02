@@ -14,6 +14,7 @@ $: auditItems = $audits?.items || []
 $: repairedItems = $repairedAudits?.items || []
 $: haveAuditResults = auditItems?.length
 $: haveRepairResults = repairedItems?.length
+$: repairIsDisabled = !haveAuditResults || !!haveRepairResults
 
 const onClick = () => {
   runAudits(utcDate)
@@ -40,7 +41,7 @@ const repair = async () => {
   <div class="my-1">
     <Button class="mr-1" raised on:click={onClick}>run audits</Button>
 
-    <Button prependIcon="build" outlined on:click={repair} disabled={!haveAuditResults}>repair</Button>
+    <Button prependIcon="build" outlined on:click={repair} disabled={repairIsDisabled}>repair</Button>
   </div>
   <AuditsOrRepairTable items={auditItems} />
 

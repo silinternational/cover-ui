@@ -23,14 +23,9 @@ const onClick = () => {
 const repair = async () => {
   try {
     await repairAudits(utcDate)
-    const responseIsEqualToAudits = isEqual($audits.items, $repairedAudits.items)
-    setNotice(
-      responseIsEqualToAudits
-        ? `All item records found to be at fault have been repaired.`
-        : `Some item records found to be at fault were not repaired. Try running another audit.`
-    )
+    setNotice('Succesfully repaired item records found to be at fault.')
   } catch {
-    setNotice(`There was an error repairing the item records. Please try again.`)
+    setNotice('There was an error repairing the item records. Please try again.')
   }
 }
 </script>

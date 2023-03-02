@@ -24,21 +24,25 @@ const preventRowClick = async () => {
 }
 </script>
 
+<style>
+:global(.audit-header:hover) {
+  cursor: default;
+}
+</style>
+
 {#if items.length}
   <Datatable>
     <Datatable.Header>
-      <Datatable.Header.Item>Name</Datatable.Header.Item>
-      <Datatable.Header.Item>Policy</Datatable.Header.Item>
-      <Datatable.Header.Item>Annual Premium</Datatable.Header.Item>
-      <Datatable.Header.Item>End Date</Datatable.Header.Item>
-      <Datatable.Header.Item>Coverage Status</Datatable.Header.Item>
-      <Datatable.Header.Item>Action</Datatable.Header.Item>
+      <Datatable.Header.Item class="audit-header">Name</Datatable.Header.Item>
+      <Datatable.Header.Item class="audit-header">Annual Premium</Datatable.Header.Item>
+      <Datatable.Header.Item class="audit-header">End Date</Datatable.Header.Item>
+      <Datatable.Header.Item class="audit-header">Coverage Status</Datatable.Header.Item>
+      <Datatable.Header.Item class="audit-header">Action</Datatable.Header.Item>
     </Datatable.Header>
     <Datatable.Data>
       {#each items as item (item.id)}
         <Datatable.Data.Row on:click={() => gotoItemDetails(item)} clickable>
           <Datatable.Data.Row.Item>{item.name}</Datatable.Data.Row.Item>
-          <Datatable.Data.Row.Item>{item.policy_id}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{formatDate(item.coverage_end_date)}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{item.coverage_status}</Datatable.Data.Row.Item>

@@ -30,7 +30,7 @@ const repair = async () => {
 }
 
 onMount(() => {
-  runAudits(utcDate)
+  haveAuditResults || runAudits(utcDate)
 })
 </script>
 

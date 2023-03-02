@@ -52,7 +52,7 @@ $: menuItems = [
   },
   {
     url: routes.AUDITS,
-    icon: 'history',
+    icon: 'sync_problem',
     label: 'Audits',
     hide: userNotAdmin,
   },

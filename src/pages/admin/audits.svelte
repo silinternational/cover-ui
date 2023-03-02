@@ -2,9 +2,9 @@
 import AuditsOrRepairTable from './_components/AuditsOrRepairTable.svelte'
 import { audits, repairAudits, repairedAudits, runAudits } from 'data/audits'
 import { formatPageTitle } from 'helpers/pageTitle'
-import { isEqual } from 'lodash-es'
 import { metatags } from '@roxi/routify'
 import { Button, Page, setNotice } from '@silintl/ui-components'
+import { onMount } from 'svelte'
 
 metatags.title = formatPageTitle('Admin > Audit')
 
@@ -28,6 +28,10 @@ const repair = async () => {
     setNotice('There was an error repairing the item records. Please try again.')
   }
 }
+
+onMount(() => {
+  runAudits(utcDate)
+})
 </script>
 
 <Page>

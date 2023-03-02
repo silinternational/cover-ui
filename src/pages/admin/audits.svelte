@@ -52,7 +52,8 @@ onMount(() => {
 </script>
 
 <Page>
-  <h4>Audits results (items that were incorrectly renewed and billed)</h4>
+  <h3>Audit results</h3>
+  <p>items that were incorrectly renewed and billed</p>
 
   <div class="my-1">
     <Button class="mr-1" raised on:click={onClick}>run audits</Button>

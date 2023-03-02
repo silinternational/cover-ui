@@ -35,7 +35,7 @@ const preventRowClick = async () => {
 const repair = async () => {
   try {
     await repairAudits(utcDate)
-    const responseIsEqualToAudits = isEqual($audits, $repairedAudits)
+    const responseIsEqualToAudits = isEqual($audits.Items, $repairedAudits.Items)
     setNotice(
       responseIsEqualToAudits
         ? `All item records found to be at fault have been repaired.`

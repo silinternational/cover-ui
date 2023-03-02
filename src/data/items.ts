@@ -1,5 +1,5 @@
 import { CREATE, DELETE, GET, UPDATE } from '.'
-import { claimIsOpen, claims, loadClaimsByPolicyId } from 'data/claims'
+import { claimIsOpenButNotDraft, claims, loadClaimsByPolicyId } from 'data/claims'
 import { throwError } from '../error'
 import { derived, get, writable } from 'svelte/store'
 import { selectedPolicyId } from './role-policy-selection'
@@ -380,7 +380,7 @@ export const isItemWithActiveClaim = async (itemId: string, policyId: string): P
   let hasActiveClaim = false
 
   get(claims).forEach((claim) => {
-    if (claimIsOpen(claim)) {
+    if (claimIsOpenButNotDraft(claim)) {
       hasActiveClaim = claim.claim_items.some((item) => item.item_id === itemId)
       if (hasActiveClaim) return
     }

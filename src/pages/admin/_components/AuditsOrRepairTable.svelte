@@ -1,6 +1,8 @@
 <script lang="ts">
 import { delayLoading, loading } from 'components/progress'
 import type { PolicyItem } from 'data/items'
+import { formatDate } from 'helpers/dates'
+import { formatMoney } from 'helpers/money'
 import { itemDetails, policyDetails } from 'helpers/routes'
 import { goto } from '@roxi/routify'
 import { Button, Datatable } from '@silintl/ui-components'
@@ -37,8 +39,8 @@ const preventRowClick = async () => {
         <Datatable.Data.Row on:click={() => gotoItemDetails(item)} clickable>
           <Datatable.Data.Row.Item>{item.name}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{item.policy_id}</Datatable.Data.Row.Item>
-          <Datatable.Data.Row.Item>{item.annual_premium}</Datatable.Data.Row.Item>
-          <Datatable.Data.Row.Item>{item.coverage_end_date}</Datatable.Data.Row.Item>
+          <Datatable.Data.Row.Item>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
+          <Datatable.Data.Row.Item>{formatDate(item.coverage_end_date)}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{item.coverage_status}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>
             <Button url={policyDetails(item.policy_id)} on:click={preventRowClick}>view policy</Button>

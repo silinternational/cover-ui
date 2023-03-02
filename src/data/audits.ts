@@ -24,5 +24,4 @@ export const repairAudits = async (date: string): Promise<void> => {
   const response = (await CREATE('repairs', { repair_type: 'renewal', date })) as RepairsResult
 
   repairedAudits.set(response)
-  audits.set({} as AuditResult)
 }

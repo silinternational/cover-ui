@@ -34,6 +34,10 @@ const checkForOpenClaims = async () => {
 
 const repair = async () => {
   await checkForOpenClaims()
+  if (itemsWithOpenClaim.length) {
+    setNotice(`Some items have active claims. Please resolve the claims before repairing the item records.`)
+    return
+  }
   try {
     await repairAudits(utcDate)
     setNotice('Succesfully repaired item records found to be at fault.')

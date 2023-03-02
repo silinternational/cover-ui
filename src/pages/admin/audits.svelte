@@ -13,8 +13,8 @@ metatags.title = formatPageTitle('Admin > Audit')
 let canViewItemDetails = true
 let utcDate = new Date().toISOString().split('T')[0]
 
-$: items = $audits?.Items || []
-$: haveAuditResults = $audits?.Items?.length
+$: items = $audits?.items || []
+$: haveAuditResults = $audits?.items?.length
 
 const onClick = () => {
   runAudits(utcDate)
@@ -35,13 +35,13 @@ const preventRowClick = async () => {
 const repair = async () => {
   try {
     await repairAudits(utcDate)
-    const responseIsEqualToAudits = isEqual($audits.Items, $repairedAudits.Items)
+    const responseIsEqualToAudits = isEqual($audits.items, $repairedAudits.items)
     setNotice(
       responseIsEqualToAudits
         ? `All item records found to be at fault have been repaired.`
         : `Some item records found to be at fault were not repaired. Try running another audit.`
     )
-    items = $repairedAudits.Items
+    items = $repairedAudits.items
   } catch {
     setNotice(`There was an error repairing the item records. Please try again.`)
   }

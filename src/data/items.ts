@@ -1,4 +1,5 @@
 import { CREATE, DELETE, GET, UPDATE } from '.'
+import { claimIsOpen, claims, loadClaimsByPolicyId } from 'data/claims'
 import { throwError } from '../error'
 import { derived, get, writable } from 'svelte/store'
 import { selectedPolicyId } from './role-policy-selection'
@@ -372,4 +373,17 @@ export const parseItemForAddItem = (item: PolicyItem): NewItemFormData => {
     riskCategoryId: item.risk_category.id,
     uniqueIdentifier: item.serial_number,
   }
+}
+
+export const isItemWithActiveClaim = async (itemId: string, policyId: string): Promise<boolean> => {
+  await loadClaimsByPolicyId(policyId)
+  let hasActiveClaim = false
+
+  get(claims).forEach((claim) => {
+    if (claimIsOpen(claim)) {
+      hasActiveClaim = claim.claim_items.some((item) => item.item_id === itemId)
+      if (hasActiveClaim) return
+    }
+  })
+  return hasActiveClaim
 }

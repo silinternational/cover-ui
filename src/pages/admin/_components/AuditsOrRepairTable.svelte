@@ -53,10 +53,6 @@ const preventRowClick = async () => {
   {#await delayLoading($loading)}
     <p>Loading...</p>
   {:then is_loading}
-    {#if $loading}
-      <p>Loading...</p>
-    {:else}
-      <p>No items found.</p>
-    {/if}
+    <p>{is_loading ? 'Loading...' : 'No items found.'}</p>
   {/await}
 {/if}

@@ -446,7 +446,3 @@ export const getClaimById = async (claimId: string): Promise<Claim> => {
 export const claimIsOpen = (claim: Claim): boolean => {
   return incompleteClaimItemStatuses.includes(claim.status)
 }
-
-export const claimIsOpenButNotDraft = (claim: Claim): boolean => {
-  return claimIsOpen(claim) && claim.status !== ClaimStatus.Draft
-}

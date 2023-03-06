@@ -1,7 +1,7 @@
 <script lang="ts">
 import AuditsOrRepairTable from './_components/AuditsOrRepairTable.svelte'
 import { audits, repairAudits, repairedAudits, runAudits } from 'data/audits'
-import { isItemWithActiveClaim, PolicyItem } from 'data/items'
+import type { PolicyItem } from 'data/items'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { metatags } from '@roxi/routify'
 import { Button, Page, setNotice } from '@silintl/ui-components'
@@ -20,12 +20,13 @@ $: haveRepairResults = repairedItems?.length
 $: repairIsDisabled = !haveAuditResults || !!haveRepairResults || !!itemsWithOpenClaim.length
 
 const onClick = () => {
+  itemsWithOpenClaim = []
   runAudits(utcDate)
 }
 
-const checkForOpenClaims = async () => {
+const checkForOpenClaims = () => {
   for (let item of auditItems) {
-    if (await isItemWithActiveClaim(item.id, item.policy_id)) {
+    if (!item.can_be_updated) {
       itemsWithOpenClaim.push(item)
       itemsWithOpenClaim = itemsWithOpenClaim
     }
@@ -33,7 +34,7 @@ const checkForOpenClaims = async () => {
 }
 
 const repair = async () => {
-  await checkForOpenClaims()
+  checkForOpenClaims()
   if (itemsWithOpenClaim.length) {
     setNotice(`Some items have active claims. Please resolve the claims before repairing the item records.`)
     return

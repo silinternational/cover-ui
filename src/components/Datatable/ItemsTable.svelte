@@ -2,17 +2,15 @@
 import BatchItemClone from '../BatchItemClone.svelte'
 import BatchItemDelete from '../BatchItemDelete.svelte'
 import CopyTableButton from './CopyTableButton.svelte'
-import { ClaimItem, incompleteClaimItemStatuses, selectedPolicyClaims } from 'data/claims'
 import { getItemState } from 'data/states'
 import { AccountablePerson, editableCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/items'
 import { formatDate, formatFriendlyDate } from 'helpers/dates'
-import { throwError } from '../../error'
 import { formatMoney } from 'helpers/money'
 import { itemDetails, itemEdit } from 'helpers/routes'
 import { sortByNum, sortByString } from 'helpers/sort'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import type { Column } from './types'
-import { capitalize } from 'lodash-es'
+import { assertItemsCanBeDeleted } from '../../validation/assertions'
 import { createEventDispatcher } from 'svelte'
 import { Checkbox, Datatable, IconButton, Menu, MenuItem } from '@silintl/ui-components'
 import { generateRandomID } from '@silintl/ui-components/random'
@@ -155,7 +153,7 @@ const handleModalDialog = async (event: CustomEvent<string>) => {
 
 const handleClosed = (e: CustomEvent<string>) => {
   if (e.detail === 'delete') {
-    assertItemsHaveNoOpenClaims(checkedItems)
+    assertItemsCanBeDeleted(checkedItems)
     dispatch('batchDelete', checkedItems)
   }
   if (e.detail === 'clone') {
@@ -220,20 +218,6 @@ const registerNewCheckbox = () => {
 }
 
 const returnFilteredCheckedItems = () => checkedItems.filter((ci) => items.some((i) => i.id === ci.id))
-
-const assertItemsHaveNoOpenClaims = (items: PolicyItem[]): void => {
-  const checkClaimItemsForItemAndOpenClaim = (claimItems: ClaimItem[], item: PolicyItem) => {
-    const hasOpenClaim = claimItems.some(
-      (claimItem) => claimItem.item_id === item.id && incompleteClaimItemStatuses.includes(claimItem.status)
-    )
-    if (hasOpenClaim) {
-      throwError(`${capitalize(item.name)} has an open claim, you cannot end coverage until it is resolved.`)
-    }
-  }
-  $selectedPolicyClaims.forEach((claim) => {
-    items.forEach((item) => checkClaimItemsForItemAndOpenClaim(claim.claim_items, item))
-  })
-}
 
 const toggleShowSnMakeAndModel = () => {
   columnIndicesToToggle.forEach((i) => (columns[i].hidden = !columns[i].hidden))

@@ -1,4 +1,6 @@
+import type { PolicyItem } from 'data/items'
 import { throwError } from '../error'
+import { capitalize } from 'lodash-es'
 
 export function assertHas(value: any, errorMessage: string): void {
   if (!value) {
@@ -44,4 +46,12 @@ export function assertEmailAddress(email: string, errorMessage: string): void {
   if (!simpleEmailRegex.test(email)) {
     throwError(errorMessage)
   }
+}
+
+export const assertItemsCanBeDeleted = (items: PolicyItem[]): void => {
+  items.forEach((item) => {
+    if (item.can_be_deleted === false) {
+      throwError(`${capitalize(item.name)} has an open claim, you cannot end coverage until it is resolved.`)
+    }
+  })
 }

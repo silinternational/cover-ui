@@ -9,7 +9,7 @@ import { onMount } from 'svelte'
 
 metatags.title = formatPageTitle('Admin > Audit')
 
-let itemsWithOpenClaim: PolicyItem[] = []
+let UnEditableItems: PolicyItem[] = []
 
 let utcDate = new Date().toISOString().split('T')[0]
 
@@ -17,16 +17,16 @@ $: auditItems = $audits?.items || []
 $: repairedItems = $repairedAudits?.items || []
 $: haveAuditResults = auditItems?.length
 $: haveRepairResults = repairedItems?.length
-$: repairIsDisabled = !haveAuditResults || !!haveRepairResults || !!itemsWithOpenClaim.length
+$: repairIsDisabled = !haveAuditResults || !!haveRepairResults || !!UnEditableItems.length
 
 const onClick = () => {
-  itemsWithOpenClaim = []
+  UnEditableItems = []
   runAudits(utcDate)
 }
 
 const repair = async () => {
-  itemsWithOpenClaim = getUneditableItems(auditItems)
-  if (itemsWithOpenClaim.length) {
+  UnEditableItems = getUneditableItems(auditItems)
+  if (UnEditableItems.length) {
     setNotice(`Some items have active claims. Please resolve the claims before repairing the item records.`)
     return
   }
@@ -54,9 +54,9 @@ onMount(() => {
   </div>
   <AuditsOrRepairTable items={auditItems} />
 
-  {#if itemsWithOpenClaim.length}
+  {#if UnEditableItems.length}
     <h4>Items with open claims (need to be closed before repairing to records)</h4>
-    <AuditsOrRepairTable items={itemsWithOpenClaim} />
+    <AuditsOrRepairTable items={UnEditableItems} />
   {/if}
 
   {#if haveRepairResults}

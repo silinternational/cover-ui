@@ -24,7 +24,7 @@ const onClick = () => {
   runAudits(utcDate)
 }
 
-const checkForOpenClaims = () => {
+const findLockedItems = () => {
   for (let item of auditItems) {
     if (!item.can_be_updated) {
       itemsWithOpenClaim.push(item)
@@ -34,7 +34,7 @@ const checkForOpenClaims = () => {
 }
 
 const repair = async () => {
-  checkForOpenClaims()
+  findLockedItems()
   if (itemsWithOpenClaim.length) {
     setNotice(`Some items have active claims. Please resolve the claims before repairing the item records.`)
     return

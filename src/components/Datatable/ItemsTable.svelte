@@ -221,6 +221,7 @@ const registerNewCheckbox = () => {
 
 const returnFilteredCheckedItems = () => checkedItems.filter((ci) => items.some((i) => i.id === ci.id))
 
+//TODO - use the items flags to determine if the user can delete or end coverage
 const assertItemsHaveNoOpenClaims = (items: PolicyItem[]): void => {
   const checkClaimItemsForItemAndOpenClaim = (claimItems: ClaimItem[], item: PolicyItem) => {
     const hasOpenClaim = claimItems.some(

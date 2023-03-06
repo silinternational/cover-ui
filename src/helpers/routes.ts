@@ -13,6 +13,8 @@ export const adminPolicySearch = (query: string) => `/admin/policies?${query}`
 export const ENTITIES = '/admin/entities'
 export const entityDetails = (entityId: string) => `/admin/entities/${entityId}`
 
+export const AUDITS = '/admin/audits'
+
 export const CHAT = '/chat'
 
 export const CLAIMS = '/claims'

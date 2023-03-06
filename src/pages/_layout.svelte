@@ -51,6 +51,13 @@ $: menuItems = [
     hide: userNotAdmin,
   },
   {
+    url: routes.AUDITS,
+    icon: 'sync_problem',
+    label: 'Audits',
+    hide: userNotAdmin,
+  },
+  // Non admin menu items
+  {
     url: routes.policyDetails(policyId),
     icon: 'description',
     label: 'Policy',

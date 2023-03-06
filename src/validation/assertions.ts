@@ -1,3 +1,4 @@
+import type { PolicyItem } from 'data/items'
 import { throwError } from '../error'
 
 export function assertHas(value: any, errorMessage: string): void {

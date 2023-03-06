@@ -1,6 +1,5 @@
 import type { PolicyItem } from 'data/items'
 import { throwError } from '../error'
-import { capitalize } from 'lodash-es'
 
 export function assertHas(value: any, errorMessage: string): void {
   if (!value) {

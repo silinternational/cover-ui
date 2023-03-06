@@ -2,6 +2,7 @@ import { CREATE, DELETE, GET, UPDATE } from '.'
 import { throwError } from '../error'
 import { derived, get, writable } from 'svelte/store'
 import { selectedPolicyId } from './role-policy-selection'
+import { assertItemCanBeUpdated } from '../validation/assertions'
 
 export enum ItemCoverageStatus {
   Draft = 'Draft',
@@ -374,4 +375,8 @@ export const parseItemForAddItem = (item: PolicyItem): NewItemFormData => {
     riskCategoryId: item.risk_category.id,
     uniqueIdentifier: item.serial_number,
   }
+}
+
+export const getUneditableItems = (items: PolicyItem[]): PolicyItem[] => {
+  return items.filter((item) => !assertItemCanBeUpdated(item))
 }

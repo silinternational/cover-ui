@@ -2,7 +2,6 @@ import { CREATE, DELETE, GET, UPDATE } from '.'
 import { throwError } from '../error'
 import { derived, get, writable } from 'svelte/store'
 import { selectedPolicyId } from './role-policy-selection'
-import { assertItemCanBeUpdated } from '../validation/assertions'
 
 export enum ItemCoverageStatus {
   Draft = 'Draft',

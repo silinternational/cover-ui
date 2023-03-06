@@ -48,10 +48,6 @@ export function assertEmailAddress(email: string, errorMessage: string): void {
   }
 }
 
-export const assertItemsCanBeDeleted = (items: PolicyItem[]): void => {
-  items.forEach((item) => {
-    if (item.can_be_deleted === false) {
-      throwError(`${capitalize(item.name)} has an open claim, you cannot end coverage until it is resolved.`)
-    }
-  })
+export const assertItemCanBeUpdated = (item: PolicyItem): boolean => {
+  return item.can_be_updated === true
 }

@@ -46,7 +46,3 @@ export function assertEmailAddress(email: string, errorMessage: string): void {
     throwError(errorMessage)
   }
 }
-
-export const assertItemCanBeUpdated = (item: PolicyItem): boolean => {
-  return item.can_be_updated === true
-}

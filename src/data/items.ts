@@ -378,5 +378,7 @@ export const parseItemForAddItem = (item: PolicyItem): NewItemFormData => {
 }
 
 export const getUneditableItems = (items: PolicyItem[]): PolicyItem[] => {
-  return items.filter((item) => !assertItemCanBeUpdated(item))
+  return items.filter((item) => {
+    return item.can_be_updated === false
+  })
 }

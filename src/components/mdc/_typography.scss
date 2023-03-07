@@ -1,8 +1,6 @@
 // https://material.io/develop/web/components/typography
 @use '@material/typography/mdc-typography';
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans&family=Source+Sans+Pro:wght@300;400;600&display=swap');
-
 :root {
   font-family: Source Sans Pro, Roboto, sans-serif;
   line-height: 1.4rem;
@@ -30,6 +28,6 @@
   font-weight: var(--mdc-typography-bold-font-weight);
 }
 
-.mdc-deprecated-list-item__text, .mdc-deprecated-list-item__subtitle {
+.mdc-deprecated-list-item__subtitle {
   text-transform: capitalize;
 }

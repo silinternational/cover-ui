@@ -1,1 +1,1 @@
-<span class="d-block mdc-theme--neutral"><slot /></span>
+<span class="d-block mdc-theme--neutral pre"><slot /></span>

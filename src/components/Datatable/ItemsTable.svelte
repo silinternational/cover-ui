@@ -118,21 +118,23 @@ $: items && (checkedItems = returnFilteredCheckedItems())
 const dispatch = createEventDispatcher()
 
 const getMenuItems = (item: PolicyItem) => {
-  const menuItems: MenuItem[] = [
-    {
-      label: 'view item',
+  const menuItems: MenuItem[] = []
+
+  if (item.coverage_status !== ItemCoverageStatus.Draft) {
+    menuItems.push({
+      label: 'View item',
       url: itemDetails(policyId, item.id),
-    },
-  ]
+    })
+  }
   if (item.coverage_status !== ItemCoverageStatus.Inactive) {
     menuItems.push({
-      label: item.coverage_status === ItemCoverageStatus.Draft ? 'delete' : 'end coverage',
+      label: item.coverage_status === ItemCoverageStatus.Draft ? 'Delete' : 'End coverage',
       action: handleDeleteClick,
     })
   }
   if (editableCoverageStatuses.includes(item.coverage_status)) {
     menuItems.push({
-      label: 'edit item',
+      label: 'Edit item',
       url: itemEdit(policyId, item.id),
     })
   }
@@ -219,6 +221,7 @@ const registerNewCheckbox = () => {
 
 const returnFilteredCheckedItems = () => checkedItems.filter((ci) => items.some((i) => i.id === ci.id))
 
+//TODO - use the items flags to determine if the user can delete or end coverage
 const assertItemsHaveNoOpenClaims = (items: PolicyItem[]): void => {
   const checkClaimItemsForItemAndOpenClaim = (claimItems: ClaimItem[], item: PolicyItem) => {
     const hasOpenClaim = claimItems.some(

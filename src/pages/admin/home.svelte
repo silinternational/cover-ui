@@ -1,10 +1,10 @@
 <script lang="ts">
 import { CardsGrid, RecentActivityTable, Row } from 'components'
 import { loading } from 'components/progress'
-import { Claim, isClaim, statusesAwaitingSignator, statusesAwaitingSteward } from 'data/claims'
+import { Claim, statusesAwaitingSignator, statusesAwaitingSteward } from 'data/claims'
 import { ItemCoverageStatus, PolicyItem } from 'data/items'
 import { roleSelection } from 'data/role-policy-selection'
-import { isRecentClaim, loadRecentActivity, RecentChange, recentChanges } from 'data/recent-activity'
+import { isRecentClaim, isRecentItem, loadRecentActivity, RecentChange, recentChanges } from 'data/recent-activity'
 import { isUserSteward } from 'data/user'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { customerClaimDetails, itemDetails } from 'helpers/routes'
@@ -12,7 +12,20 @@ import { goto, metatags } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 import { onDestroy, onMount } from 'svelte'
 
-$: filteredChanges = $roleSelection && $recentChanges.filter(recentChangesFilter)
+$: recentClaimsForSignator = $recentChanges.filter(
+  (change: RecentChange) => isRecentClaim(change) && claimNeedsSignator(change.Claim)
+)
+
+$: recentClaimsForSteward = $recentChanges.filter(
+  (change: RecentChange) => isRecentClaim(change) && claimNeedsSteward(change.Claim)
+)
+
+$: recentItems = $recentChanges.filter((change: RecentChange) => isRecentItem(change) && itemNeedsAction(change.Item))
+
+$: sortedFilteredChanges =
+  $roleSelection && isUserSteward($roleSelection)
+    ? [...recentClaimsForSteward, ...recentItems]
+    : [...recentClaimsForSignator, ...recentItems]
 
 metatags.title = formatPageTitle('Admin > Home')
 
@@ -32,16 +45,10 @@ onDestroy(() => {
   clearTimeout(timeoutId)
 })
 
-const recentChangesFilter = (change: RecentChange): boolean => {
-  const claimOrItem: Claim | PolicyItem = isRecentClaim(change) ? change.Claim : change.Item
-  return isClaim(claimOrItem) ? claimNeedsAction(claimOrItem) : itemNeedsAction(claimOrItem)
-}
+const claimNeedsSignator = (claim: Claim): boolean => statusesAwaitingSignator.includes(claim.status)
+const claimNeedsSteward = (claim: Claim): boolean => statusesAwaitingSteward.includes(claim.status)
 
 const itemNeedsAction = (item: PolicyItem): boolean => item.coverage_status === ItemCoverageStatus.Pending
-const claimNeedsAction = (claim: Claim): boolean =>
-  isUserSteward($roleSelection)
-    ? statusesAwaitingSteward.includes(claim.status)
-    : statusesAwaitingSignator.includes(claim.status)
 
 const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(event.detail.policy_id, event.detail.id))
 const onGotoPolicyItem = (event: CustomEvent<PolicyItem>) => $goto(itemDetails(event.detail.policy_id, event.detail.id))
@@ -49,7 +56,12 @@ const onGotoPolicyItem = (event: CustomEvent<PolicyItem>) => $goto(itemDetails(e
 
 <Page layout="grid">
   <Row cols="12">
-    <CardsGrid isAdmin recentChanges={filteredChanges} on:goto-claim={onGotoClaim} on:goto-item={onGotoPolicyItem} />
+    <CardsGrid
+      isAdmin
+      recentChanges={sortedFilteredChanges}
+      on:goto-claim={onGotoClaim}
+      on:goto-item={onGotoPolicyItem}
+    />
   </Row>
 
   <Row cols={'12'}>

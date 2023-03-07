@@ -56,6 +56,8 @@ export type PolicyItem = {
   description: string
   id: string
   in_storage: boolean
+  can_be_deleted: boolean
+  can_be_updated: boolean
   make: string
   model: string
   name: string
@@ -289,8 +291,7 @@ export async function updateItem(policyId: string, itemId: string, itemData: Upd
 export async function deleteItem(policyId: string, itemId: string): Promise<any> {
   const urlPath = `items/${itemId}`
 
-  // TODO: Check the contents of the delete response before removing the item from the store
-  const response = await DELETE(urlPath)
+  await DELETE(urlPath)
 
   itemsByPolicyId.update((data) => {
     const items = data[policyId] || []
@@ -373,4 +374,10 @@ export const parseItemForAddItem = (item: PolicyItem): NewItemFormData => {
     riskCategoryId: item.risk_category.id,
     uniqueIdentifier: item.serial_number,
   }
+}
+
+export const getUneditableItems = (items: PolicyItem[]): PolicyItem[] => {
+  return items.filter((item) => {
+    return item.can_be_updated === false
+  })
 }

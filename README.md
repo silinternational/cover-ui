@@ -42,6 +42,29 @@ make
 Navigate to <http://cover.local:8081>. You should see your app running app
 _(configured to auto-reload page for any changes)_.
 
+## Local development using Docker
+
+Install the dependencies...
+
+```bash
+docker-compose run --rm app npm install
+```
+
+...then start [Rollup](https://rollupjs.org):
+
+```bash
+docker-compose up -d app
+docker-compose logs -f app
+```
+
+or, to run the install and dev scripts in sequence
+
+```bash
+make docker
+```
+
+Navigate to <http://cover.local:8081>. You should see your app running app. It will auto-rebuild on code changes, but not auto-refresh the browser.
+
 ### Running in prod mode
 
 ```bash

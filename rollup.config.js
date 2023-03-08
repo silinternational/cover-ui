@@ -11,13 +11,15 @@ import routify from '@roxi/routify/plugins/rollup'
 import autoPreprocess from 'svelte-preprocess'
 import typescript from '@rollup/plugin-typescript'
 import nodePolyfills from 'rollup-plugin-polyfill-node'
+import html from '@rollup/plugin-html'
 
 const production = !process.env.ROLLUP_WATCH
 
 export default {
   input: 'src/main.ts',
   output: {
-    file: 'dist/bundle.js',
+    dir: 'dist',
+    entryFileNames: 'bundle.[hash].js',
     format: 'iife',
     sourcemap: !production,
   },
@@ -68,8 +70,53 @@ export default {
 
     //           minify     auto-refresh browser on changes
     production ? terser() : livereload('dist'),
+    html({
+      template: async ({ attributes, files, meta, publicPath, title }) => {
+        const script = (files.js || [])
+          .map(({ fileName }) => {
+            return `<script src='/${fileName}'></script>`
+          })
+          .join('\n')
+
+        const css = (files.css || [])
+          .map(({ fileName }) => {
+            return `<link rel='stylesheet' href='/${fileName}'>`
+          })
+          .join('\n')
+        return getHtml(script, css)
+      }
+    }),
   ],
   watch: {
     clearScreen: false,
   },
+}
+
+function getHtml (script, css) {
+  return `<!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width,initial-scale=1'>
+    <meta property="og:title" content="Cover" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://cover.sil.org/logo.svg" />
+    <meta property="og:url" content="https://cover.sil.org/" />
+    <title>Cover</title>
+
+    <link rel='icon' type='image/svg+xml' href='/favicon.svg'>
+    <link rel='alternate icon' type='image/png' href='/favicon.png' >
+    <link href="/manifest.json" rel="manifest">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+    ${css}
+  </head>
+
+  <body>
+      ${script}
+  </body>
+  </html>`
 }

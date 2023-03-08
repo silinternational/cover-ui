@@ -50,7 +50,6 @@
     "rollup-plugin-dotenv": "^0.4.1",
     "rollup-plugin-includepaths": "^0.2.4",
     "rollup-plugin-livereload": "^2.0.5",
-    "rollup-plugin-output-manifest": "^2.0.0",
     "rollup-plugin-polyfill-node": "^0.10.2",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-svelte": "^7.1.0",

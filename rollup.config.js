@@ -35,6 +35,7 @@ const getHtml = (script, css) => `<!DOCTYPE html>
 	<link href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet" />
 	<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+  ${css}
 </head>
 
 <body>
@@ -82,7 +83,7 @@ export default {
 
     json(), // adds support for importing json files
     postcss({
-      extract: false, // create a css file alongside the output.file
+      extract: true, // create a css file alongside the output.file
       sourceMap: production,
       use: {
         sass: {
@@ -108,12 +109,12 @@ export default {
           })
           .join('\n')
 
-        // const css = (files.css || [])
-        //   .map(({ fileName }) => {
-        //     return `<link rel='stylesheet' href='${fileName}'>`
-        //   })
-        //   .join('\n')
-        return getHtml(script)
+        const css = (files.css || [])
+          .map(({ fileName }) => {
+            return `<link rel='stylesheet' href='${fileName}'>`
+          })
+          .join('\n')
+        return getHtml(script, css)
       }
     }),
   ],

@@ -71,17 +71,13 @@ export default {
     //           minify     auto-refresh browser on changes
     production ? terser() : livereload('dist'),
     html({
-      template: async ({ attributes, files, meta, publicPath, title }) => {
+      template: ({ files }) => {
         const script = (files.js || [])
-          .map(({ fileName }) => {
-            return `<script src='/${fileName}'></script>`
-          })
+          .map(({ fileName }) => `<script src='/${fileName}'></script>`)
           .join('\n')
 
         const css = (files.css || [])
-          .map(({ fileName }) => {
-            return `<link rel='stylesheet' href='/${fileName}'>`
-          })
+          .map(({ fileName }) => `<link rel='stylesheet' href='/${fileName}'>`)
           .join('\n')
         return getHtml(script, css)
       }
@@ -116,7 +112,7 @@ function getHtml (script, css) {
   </head>
 
   <body>
-      ${script}
+    ${script}
   </body>
   </html>`
 }

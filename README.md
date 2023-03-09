@@ -63,7 +63,7 @@ or, to run the install and dev scripts in sequence
 make docker
 ```
 
-Navigate to <http://cover.local:8081>. You should see your app running app. It will auto-rebuild on code changes, but not auto-refresh the browser.
+Navigate to <http://cover.local:8081>. You should see your app running app. It will auto-rebuild on code changes.
 
 ### Running in prod mode
 
@@ -109,5 +109,5 @@ make build-prod
 
 ## Icons
 
-This code uses Material Design icons. To search for additional icons, go here:  
+This code uses Material Design icons. To search for additional icons, go here:
 <https://fonts.google.com/icons>

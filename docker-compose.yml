@@ -6,7 +6,8 @@ services:
     volumes:
       - ./:/app
     working_dir: /app
-    ports: 
+    ports:
       - 8081:8081
-    command: npm run local:dev 
+      - 35729:35729
+    command: npm run local:dev
     user: 1000:1000

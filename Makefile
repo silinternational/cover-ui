@@ -1,5 +1,10 @@
 start: install local-dev
 
+docker:
+	docker-compose run --rm app npm install
+	docker-compose up -d
+	docker-compose logs -f app
+
 install:
 	npm install
 

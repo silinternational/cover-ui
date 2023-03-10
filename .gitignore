@@ -1,5 +1,6 @@
 # build files
 dist/bundle*
+dist/index.html
 dist/service-worker*
 dist/workbox*
 
@@ -112,3 +113,6 @@ typings/
 
 # TernJS port file
 .tern-port
+
+# Jetbrains IDE
+.idea/

@@ -56,6 +56,12 @@ $: menuItems = [
     label: 'Audits',
     hide: userNotAdmin,
   },
+  {
+    url: routes.RENEWALS,
+    icon: 'refresh',
+    label: 'Renewals',
+    hide: userNotAdmin,
+  },
   // Non admin menu items
   {
     url: routes.policyDetails(policyId),

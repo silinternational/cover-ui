@@ -41,6 +41,8 @@ export const POLICIES = '/admin/policies'
 export const policyDetails = (policyId: string) => `/policies/${policyId}`
 export const POLICY_NEW_TEAM = '/policies/new'
 
+export const RENEWALS = '/admin/renewals'
+
 export const REPORTS = '/admin/reports'
 export const reportDetails = (reportId: string) => `${REPORTS}/${reportId}`
 export const policyReportDetails = (policyId: string, month: string, year: string): string =>

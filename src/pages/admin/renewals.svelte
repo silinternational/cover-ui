@@ -1,51 +1,25 @@
 <script lang="ts">
-import LedgerList from './_components/LedgerList.svelte'
-import { LedgerEntry, LedgerReport, getPolicyRenewals, processPolicyRenewals } from 'data/ledger'
+import { processPolicyRenewals } from 'data/ledger'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { metatags } from '@roxi/routify'
-import { Button, Page } from '@silintl/ui-components'
-import { onMount } from 'svelte'
+import { Button, Page, setNotice } from '@silintl/ui-components'
 
-let ledgerReport: LedgerReport
-let ledgerEntries: LedgerEntry[]
-$: ledgerEntries = ledgerReport?.ledger_entries || []
-$: reportFile = ledgerReport?.file
+let isProcessing = false
+
+const onClickProcess = () => {
+  isProcessing = true
+  processPolicyRenewals()
+  setNotice('annual renewal process has been started')
+}
 
 metatags.title = formatPageTitle('Admin > Renewals')
-
-onMount(() => loadRenewals())
-
-async function loadRenewals() {
-  ledgerReport = await getPolicyRenewals()
-}
-
-async function onUpdate() {
-  await processPolicyRenewals()
-  await loadRenewals()
-}
-
-async function onDownload() {
-  // Download and rename the file. The download attribute would be overridden if added directly to Download button.
-  const response = await fetch(reportFile.url)
-  if (response.status != 200) {
-    console.log('non-200 response from file fetch: ' + response.status)
-    return
-  }
-  const data = await response.blob()
-  const url = URL.createObjectURL(data)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = reportFile.name
-  a.click()
-  URL.revokeObjectURL(url)
-}
 </script>
 
 <Page>
-  <div class="flex justify-between align-items-center">
-    <Button raised on:click={onUpdate}>Update</Button>
-    <Button disabled={!reportFile?.url} on:click={onDownload}>Download</Button>
+  <h3>Annual renewals</h3>
+  <p>annual process for renewing coverage</p>
+  <p></p>
+  <div class="my-1">
+    <Button class="mr-1" raised on:click={onClickProcess} disabled={isProcessing}>process</Button>
   </div>
-
-  <LedgerList header={`Coverage renewals (${ledgerEntries.length})`} {ledgerEntries} />
 </Page>

@@ -31,7 +31,7 @@ metatags.title = formatPageTitle('Admin > Renewals')
   <h3>Annual renewals</h3>
   <p>annual process for renewing coverage</p>
   <p>
-    Number of items to renew: {status?.items_to_process?.toLocaleString()}
+    Number of items to renew: {status?.items_to_process?.toLocaleString() || '…'}
     {#if isProcessing && !status.is_complete}
       <Button class="ml-1" on:click={onClickRefresh}>refresh</Button>
     {/if}

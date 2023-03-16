@@ -74,6 +74,11 @@ export type PolicyReportData = {
   report_year: number
 }
 
+export type AnnualRenewalStatus = {
+  is_complete: boolean
+  items_to_process: number
+}
+
 export const LedgerReports = writable<LedgerReport[]>([])
 
 function updateLedgerReports(report: LedgerReport) {
@@ -117,11 +122,6 @@ export async function getLedgerEntriesByPolicyId(id: string, month: string, year
   return result
 }
 
-export async function getPolicyRenewals(): Promise<LedgerReport> {
-  await processPolicyRenewals()
-  return createLedgerReport(LedgerReportType.annual, new Date().toISOString().split('T')[0])
-}
-
 export async function createLedgerReport(type: LedgerReportType, date: string): Promise<LedgerReport> {
   const params: CreateLedgerReportInput = {
     date,
@@ -158,4 +158,8 @@ export async function reconcileLedgerReport(reportId: string): Promise<LedgerRep
 
 export async function processPolicyRenewals(): Promise<void> {
   return await CREATE('ledger-reports/annual')
+}
+
+export async function getPolicyRenewalStatus(): Promise<AnnualRenewalStatus> {
+  return await GET('ledger-reports/annual')
 }

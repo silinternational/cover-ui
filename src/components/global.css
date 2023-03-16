@@ -61,6 +61,10 @@ p {
   height: auto !important;
 }
 
+.justify-self-center {
+  justify-self: center;
+}
+
 @media print {
   footer, .drawer {
     display: none !important;

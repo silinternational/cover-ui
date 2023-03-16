@@ -84,7 +84,7 @@ const onPopulated = () => {
 
   <h1>New claim</h1>
 
-  <ClaimForm itemIsSelectable {item} on:save-for-later={onSaveForLater} on:submit={onSubmit}>
+  <p class="w-50">
     <Select
       label="Item"
       {selectedID}
@@ -92,5 +92,7 @@ const onPopulated = () => {
       on:change={(event) => (itemId = event.detail.id)}
       on:populated={onPopulated}
     />
-  </ClaimForm>
+  </p>
+
+  <ClaimForm hideItemName {item} on:save-for-later={onSaveForLater} on:submit={onSubmit} />
 </Page>

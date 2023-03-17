@@ -9,6 +9,7 @@ import {
   LOSS_REASON_EVACUATION,
 } from '../../business-rules/claim-payout-amount'
 import { validateForm } from './claims/claimFormHelpers'
+import { LossReasonRadioOptions, PayoutRadioOptions, RepairableRadioOptions } from './claims/_components'
 import { MAX_TEXT_AREA_LENGTH as maxlength } from 'components/const'
 import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
 import { Claim, ClaimItem, PayoutOption } from 'data/claims'
@@ -18,7 +19,6 @@ import DateInput from '../DateInput.svelte'
 import Description from '../Description.svelte'
 import { formatMoney } from 'helpers/money'
 import InfoModal from '../InfoModal.svelte'
-import RadioOptions from '../RadioOptions.svelte'
 import type { ClaimFormData } from './claims/types'
 import { assertHas } from '../../validation/assertions'
 import { Button, Form, IconButton, MoneyInput, TextArea } from '@silintl/ui-components'
@@ -33,26 +33,6 @@ const dispatch = createEventDispatcher()
 const fmvExplanation =
   'Fair Market Value: FMV is the price that a given item of "like kind and quality" would reasonably sell for within your marketplace.'
 const todayDateString = new Date().toISOString()
-const repairableOptions = [
-  {
-    label: 'Repairable',
-    value: 'repairable',
-  },
-  {
-    label: 'Not Repairable',
-    value: 'not_repairable',
-  },
-]
-const payoutOptions = [
-  {
-    label: 'Replace and get reimbursed later',
-    value: PayoutOption.Replacement,
-  },
-  {
-    label: 'Get fair market value (no replacement)',
-    value: PayoutOption.FMV,
-  },
-]
 
 let fmvModalOpen = false
 // Set default form values.
@@ -66,11 +46,9 @@ let payoutOption: PayoutOption | undefined
 let claimItem = {} as ClaimItem
 let claimItems: ClaimItem[] = []
 let isEvacuation: boolean
-let lossReasonOptions: { label: string; value: string }[] = []
 let potentiallyRepairable = true
 let repairableSelection: string | undefined
 let repairCostIsTooHigh: boolean | undefined
-let shouldAskIfRepairable = false
 let shouldAskForFMV = false
 let shouldAskReplaceOrFMV = false
 let unrepairableOrTooExpensive: boolean | undefined
@@ -95,11 +73,9 @@ $: isRepairable = calculateIsRepairable(potentiallyRepairable, repairableSelecti
 $: repairCostIsTooHigh = isRepairCostTooHigh(repairEstimateUSD, fairMarketValueUSD)
 $: unrepairableOrTooExpensive = isUnrepairableOrTooExpensive(isRepairable, repairCostIsTooHigh)
 $: shouldAskReplaceOrFMV = !isEvacuation && unrepairableOrTooExpensive === true
-$: shouldAskIfRepairable = !!(potentiallyRepairable && lossReason)
 $: shouldAskForFMV = isFairMarketValueNeeded(isRepairable, payoutOption)
 $: payoutOption !== PayoutOption.Replacement && unSetReplaceEstimate()
 $: !shouldAskReplaceOrFMV && unSetPayoutOption()
-$: !shouldAskIfRepairable && unSetRepairableSelection()
 $: !shouldAskForFMV && unSetFairMarketValue()
 $: !isRepairable && unSetRepairEstimate()
 $: !isRepairable && (repairCostIsTooHigh = undefined) //above line should make this happen but it doesn't
@@ -107,15 +83,19 @@ $: needsEvidence = !unrepairableOrTooExpensive || payoutOption === PayoutOption.
 $: needsPayoutOption = !(isRepairable || isEvacuation) || repairCostIsTooHigh
 $: canContinueToEvidence = (!!repairEstimateUSD && !!fairMarketValueUSD) || (!!fairMarketValueUSD && !isRepairable)
 $: saveButtonIsDisabled = !situationDescription || !lossReason
+
+//submit button logic
+$: potentiallyRepairableButNoSelection = potentiallyRepairable && !repairableSelection
+$: fmvOrRepairEstimateMissing = !repairEstimateUSD || !fairMarketValueUSD
+$: isRepairableAndFmvOrRepairEstimateMissing = isRepairable && fmvOrRepairEstimateMissing
+$: needsPayoutOptionAndNoSelection = needsPayoutOption && !payoutOption
+$: payoutOptionIsReplacementButNoReplaceEstimate = payoutOption === PayoutOption.Replacement && !replaceEstimateUSD
 $: submitIsDisabled =
   saveButtonIsDisabled ||
-  (potentiallyRepairable && !repairableSelection) ||
-  (isRepairable && (!repairEstimateUSD || !fairMarketValueUSD)) ||
-  (needsPayoutOption && !payoutOption) ||
-  (payoutOption === PayoutOption.Replacement && !replaceEstimateUSD)
-
-// Calculate dynamic options for radio-button prompts.
-$: lossReasonOptions = $claimIncidentTypes.map(({ name, description }) => ({ label: name, value: name, description }))
+  potentiallyRepairableButNoSelection ||
+  isRepairableAndFmvOrRepairEstimateMissing ||
+  needsPayoutOptionAndNoSelection ||
+  payoutOptionIsReplacementButNoReplaceEstimate
 
 // TODO: add reimbursed value
 
@@ -174,9 +154,6 @@ function unSetPayoutOption() {
 function unSetFairMarketValue() {
   fairMarketValueUSD = undefined
 }
-function unSetRepairableSelection() {
-  repairableSelection = undefined
-}
 function unSetRepairEstimate() {
   repairEstimateUSD = undefined
 }
@@ -199,20 +176,12 @@ function onInfoClick(event: Event) {
       <span class="header">Date lost or damaged</span>
       <DateInput bind:value={lostDate} />
     </p>
-    <p>
-      <span class="header">Reason for loss or damage</span>
-      <RadioOptions name="lossReason" options={lossReasonOptions} bind:value={lossReason} />
-    </p>
+    <LossReasonRadioOptions bind:lossReason />
     <p>
       <span class="header">What happened?</span>
       <TextArea {maxlength} required description="Describe the situation" bind:value={situationDescription} rows="4" />
     </p>
-    {#if shouldAskIfRepairable}
-      <div>
-        <RadioOptions name="repairableSelection" options={repairableOptions} bind:value={repairableSelection} />
-      </div>
-    {/if}
-
+    <RepairableRadioOptions bind:repairableSelection {potentiallyRepairable} {lossReason} />
     {#if isRepairable}
       <p>
         <span class="d-block mb-half">Repair estimate (USD)</span>
@@ -239,10 +208,7 @@ function onInfoClick(event: Event) {
     {/if}
 
     {#if shouldAskReplaceOrFMV}
-      <div>
-        <span class="header">Payout options</span>
-        <RadioOptions name="payoutOption" options={payoutOptions} bind:value={payoutOption} />
-      </div>
+      <PayoutRadioOptions bind:payoutOption />
       {#if payoutOption === PayoutOption.Replacement}
         <p>
           <span class="d-block mb-half">Replacement estimate (USD)</span>

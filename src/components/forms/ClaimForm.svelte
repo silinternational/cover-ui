@@ -84,22 +84,19 @@ $: needsPayoutOption = !(isRepairable || isEvacuation) || repairCostIsTooHigh
 
 // TODO: add reimbursed value
 
-const onSubmitClaim = (event: Event) => {
-  event.preventDefault()
+const onSubmitClaim = () => {
   const formData = getFormData()
   validateForm(formData, potentiallyRepairable, repairableSelection, needsPayoutOption)
   if (payoutOption === PayoutOption.Replacement) assertHas(replaceEstimateUSD, 'Please enter a replacement estimate')
   dispatch('submit', formData)
 }
 
-const onSaveForLater = (event: Event) => {
+const onSaveForLater = () => {
   validateFormOnSave(item.id, lossReason, situationDescription)
-  event.preventDefault()
   dispatch('save-for-later', getFormData())
 }
 
-const onContinue = (event: Event) => {
-  event.preventDefault()
+const onContinue = () => {
   validateFormOnContinue(repairEstimateUSD, fairMarketValueUSD, isRepairable)
   dispatch('save-for-later', getFormData())
 }

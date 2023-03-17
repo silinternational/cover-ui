@@ -23,10 +23,11 @@ import type { ClaimFormData } from './claims/types'
 import { assertHas } from '../../validation/assertions'
 import { Button, Form, IconButton, MoneyInput, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher, onMount } from 'svelte'
+import ItemSelector from './claims/_components/ItemSelector.svelte'
 
 export let claim = {} as Claim
 export let item = {} as PolicyItem
-export let hideItemName = false
+export let items = [] as PolicyItem[]
 
 const dispatch = createEventDispatcher()
 
@@ -167,11 +168,13 @@ function onInfoClick(event: Event) {
 </script>
 
 <div class="w-50">
-  {#if !hideItemName}
-    <div class="item-name">{item.name}</div>
-  {/if}
-  <div>Covered value: {formatMoney(item.coverage_amount)}</div>
   <Form>
+    {#if items.length < 1}
+      <div class="item-name">{item.name}</div>
+    {:else}
+      <ItemSelector on:change {items} />
+    {/if}
+    <div>Covered value: {formatMoney(item.coverage_amount)}</div>
     <p>
       <span class="header">Date lost or damaged</span>
       <DateInput bind:value={lostDate} />

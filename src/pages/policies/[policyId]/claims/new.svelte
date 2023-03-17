@@ -21,7 +21,6 @@ import { onMount } from 'svelte'
 export let policyId = $selectedPolicyId
 
 let itemId: string
-let selectedID: string
 
 onMount(async () => {
   await loadItems(policyId)
@@ -34,7 +33,6 @@ onMount(async () => {
 
 $: items = $selectedPolicyItems || []
 $: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
-$: options = items.map((item) => ({ id: item.id, name: item.name }))
 
 $: existingClaim = $claims.find((claim) => isItemIdOnClaim(itemId, claim)) || ({} as Claim)
 $: claimExists = !!existingClaim.id
@@ -69,9 +67,7 @@ const onSubmit = async (event: CustomEvent) => {
   $goto(routes.customerClaimDetails(policyId, claimId))
 }
 
-const onPopulated = () => {
-  selectedID = options[0].id
-}
+const onItemChange = (event: CustomEvent) => (itemId = event.detail.id)
 </script>
 
 <Page>
@@ -84,15 +80,5 @@ const onPopulated = () => {
 
   <h1>New claim</h1>
 
-  <p class="w-50">
-    <Select
-      label="Item"
-      {selectedID}
-      {options}
-      on:change={(event) => (itemId = event.detail.id)}
-      on:populated={onPopulated}
-    />
-  </p>
-
-  <ClaimForm hideItemName {item} on:save-for-later={onSaveForLater} on:submit={onSubmit} />
+  <ClaimForm {item} {items} on:change={onItemChange} on:save-for-later={onSaveForLater} on:submit={onSubmit} />
 </Page>

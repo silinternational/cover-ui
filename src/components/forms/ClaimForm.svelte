@@ -97,6 +97,7 @@ const onSaveForLater = () => {
 }
 
 const onContinue = () => {
+  validateFormOnSave(item.id, lossReason, situationDescription)
   validateFormOnContinue(repairEstimateUSD, fairMarketValueUSD, isRepairable)
   dispatch('save-for-later', getFormData())
 }

@@ -1,21 +1,25 @@
 <script lang="ts">
 import {
+  calculateIsRepairable,
+  determinePayoutOption,
   isFairMarketValueNeeded,
   isPotentiallyRepairable,
   isRepairCostTooHigh,
   isUnrepairableOrTooExpensive,
   LOSS_REASON_EVACUATION,
 } from '../../business-rules/claim-payout-amount'
+import { validateForm } from './claims/claimFormHelpers'
 import { MAX_TEXT_AREA_LENGTH as maxlength } from 'components/const'
-import InfoModal from '../InfoModal.svelte'
-import { claimIncidentTypes, loadClaimIncidentTypes } from 'data/types/claim-incident-types'
+import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
 import { Claim, ClaimItem, PayoutOption } from 'data/claims'
 import type { PolicyItem } from 'data/items'
+import { claimIncidentTypes, loadClaimIncidentTypes } from 'data/types/claim-incident-types'
 import DateInput from '../DateInput.svelte'
 import Description from '../Description.svelte'
-import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
 import { formatMoney } from 'helpers/money'
+import InfoModal from '../InfoModal.svelte'
 import RadioOptions from '../RadioOptions.svelte'
+import type { ClaimFormData } from './claims/types'
 import { assertHas } from '../../validation/assertions'
 import { Button, Form, IconButton, MoneyInput, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher, onMount } from 'svelte'
@@ -114,47 +118,12 @@ $: lossReasonOptions = $claimIncidentTypes.map(({ name, description }) => ({ lab
 
 // TODO: add reimbursed value
 
-const calculateIsRepairable = (potentiallyRepairable: boolean, repairableSelection?: string) => {
-  if (!potentiallyRepairable) {
-    return false
-  }
-  if (!repairableSelection) {
-    return undefined
-  }
-  return repairableSelection === 'repairable'
-}
-
-const determinePayoutOption = (
-  isEvacuation: boolean,
-  repairCostIsTooHigh?: boolean,
-  selectedPayoutOption?: PayoutOption
-) => {
-  if (isEvacuation) {
-    return PayoutOption.FixedFraction
-  }
-  if (repairCostIsTooHigh === false) {
-    // ... not merely falsy, like `null` or `undefined`
-    return PayoutOption.Repair
-  }
-  return selectedPayoutOption
-}
-const validateForm = () => {
-  assertHas(item.id, 'Please select an item')
-  assertHas(lossReason, 'Please select a reason for loss or damage')
-  assertHas(situationDescription, 'Please describe the situation')
-  potentiallyRepairable && assertHas(repairableSelection, 'Please specify if the item is repairable')
-  if (isRepairable) {
-    assertHas(repairEstimateUSD, 'Please enter a repair estimate')
-    assertHas(fairMarketValueUSD, 'Please enter a fair market value')
-  }
-  needsPayoutOption && assertHas(payoutOption, 'Please select a payout option')
-}
-
 const onSubmitClaim = (event: Event) => {
   event.preventDefault()
-  validateForm()
+  const formData = getFormData()
+  validateForm(formData, potentiallyRepairable, repairableSelection, needsPayoutOption)
   if (payoutOption === PayoutOption.Replacement) assertHas(replaceEstimateUSD, 'Please enter a replacement estimate')
-  dispatch('submit', getFormData())
+  dispatch('submit', formData)
 }
 
 const onSaveForLater = (event: Event) => {
@@ -163,7 +132,7 @@ const onSaveForLater = (event: Event) => {
   dispatch('save-for-later', getFormData())
 }
 
-const getFormData = () => {
+const getFormData = (): ClaimFormData => {
   const date = lostDate === todayDateString.split('T')[0] ? todayDateString : lostDate
   return {
     claimData: {
@@ -173,8 +142,8 @@ const getFormData = () => {
     },
     claimItemData: {
       itemId: item.id,
-      isRepairable,
-      payoutOption: determinePayoutOption(isEvacuation, repairCostIsTooHigh, payoutOption),
+      isRepairable: !!isRepairable, //will the backend accept undefined?
+      payoutOption: determinePayoutOption(isEvacuation, repairCostIsTooHigh, payoutOption) as PayoutOption,
       repairEstimateUSD,
       replaceEstimateUSD,
       fairMarketValueUSD,

@@ -8,7 +8,7 @@ import {
   isUnrepairableOrTooExpensive,
   LOSS_REASON_EVACUATION,
 } from '../../business-rules/claim-payout-amount'
-import { validateForm } from './claims/claimFormHelpers'
+import { validateForm, validateFormOnSave } from './claims/claimFormHelpers'
 import { ItemSelector, LossReasonRadioOptions, PayoutRadioOptions, RepairableRadioOptions } from './claims/_components'
 import { MAX_TEXT_AREA_LENGTH as maxlength } from 'components/const'
 import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
@@ -38,7 +38,7 @@ let fmvModalOpen = false
 // Set default form values.
 let lostDate = todayDateString.split('T')[0]
 let lossReason: string
-let situationDescription = ''
+let situationDescription: string
 let isRepairable: boolean | undefined
 let payoutOption: PayoutOption | undefined
 
@@ -81,21 +81,6 @@ $: !isRepairable && unSetRepairEstimate()
 $: !isRepairable && (repairCostIsTooHigh = undefined) //above line should make this happen but it doesn't
 $: needsEvidence = !unrepairableOrTooExpensive || payoutOption === PayoutOption.FMV
 $: needsPayoutOption = !(isRepairable || isEvacuation) || repairCostIsTooHigh
-$: canContinueToEvidence = (!!repairEstimateUSD && !!fairMarketValueUSD) || (!!fairMarketValueUSD && !isRepairable)
-$: saveButtonIsDisabled = !situationDescription || !lossReason
-
-//submit button logic
-$: potentiallyRepairableButNoSelection = potentiallyRepairable && !repairableSelection
-$: fmvOrRepairEstimateMissing = !repairEstimateUSD || !fairMarketValueUSD
-$: isRepairableAndFmvOrRepairEstimateMissing = isRepairable && fmvOrRepairEstimateMissing
-$: needsPayoutOptionAndNoSelection = needsPayoutOption && !payoutOption
-$: payoutOptionIsReplacementButNoReplaceEstimate = payoutOption === PayoutOption.Replacement && !replaceEstimateUSD
-$: submitIsDisabled =
-  saveButtonIsDisabled ||
-  potentiallyRepairableButNoSelection ||
-  isRepairableAndFmvOrRepairEstimateMissing ||
-  needsPayoutOptionAndNoSelection ||
-  payoutOptionIsReplacementButNoReplaceEstimate
 
 // TODO: add reimbursed value
 
@@ -108,7 +93,7 @@ const onSubmitClaim = (event: Event) => {
 }
 
 const onSaveForLater = (event: Event) => {
-  assertHas(item.id, 'Please select an item')
+  validateFormOnSave(item.id, lossReason, situationDescription)
   event.preventDefault()
   dispatch('save-for-later', getFormData())
 }
@@ -176,7 +161,7 @@ function onInfoClick(event: Event) {
   <Form>
     <p>
       <span class="header">Date lost or damaged</span>
-      <DateInput bind:value={lostDate} />
+      <DateInput required bind:value={lostDate} />
     </p>
     <LossReasonRadioOptions bind:lossReason />
     <p>
@@ -187,7 +172,7 @@ function onInfoClick(event: Event) {
     {#if isRepairable}
       <p>
         <span class="d-block mb-half">Repair estimate (USD)</span>
-        <MoneyInput minValue={'0'} bind:value={repairEstimateUSD} />
+        <MoneyInput required minValue={'0'} bind:value={repairEstimateUSD} />
         <Description>
           How much will it probably cost to be repaired?
           <br />
@@ -199,7 +184,7 @@ function onInfoClick(event: Event) {
         <span class="flex justify-start align-items-center">
           <div>
             <span class="d-block mb-half">Fair market value (USD)</span>
-            <MoneyInput minValue={'0'} bind:value={fairMarketValueUSD} />
+            <MoneyInput required minValue={'0'} bind:value={fairMarketValueUSD} />
           </div>
           <IconButton class="gray mt-4px" icon="info" on:click={onInfoClick} />
         </span>
@@ -214,7 +199,7 @@ function onInfoClick(event: Event) {
       {#if payoutOption === PayoutOption.Replacement}
         <p>
           <span class="d-block mb-half">Replacement estimate (USD)</span>
-          <MoneyInput minValue={'0'} bind:value={replaceEstimateUSD} />
+          <MoneyInput required minValue={'0'} bind:value={replaceEstimateUSD} />
           <Description>
             How much will it probably cost to replace?
             <br />
@@ -230,7 +215,7 @@ function onInfoClick(event: Event) {
         <span class="flex justify-start align-items-center">
           <div>
             <span class="d-block mb-half">Fair market value (USD)</span>
-            <MoneyInput minValue={'0'} bind:value={fairMarketValueUSD} />
+            <MoneyInput required minValue={'0'} bind:value={fairMarketValueUSD} />
           </div>
           <IconButton class="gray mt-4px" icon="info" on:click={onInfoClick} />
         </span>
@@ -249,11 +234,11 @@ function onInfoClick(event: Event) {
     {/if}
     <!--TODO: add evacuation amount when items is done (covered_value*(2/3))-->
     <p>
-      <Button on:click={onSaveForLater} disabled={saveButtonIsDisabled} outlined>Save For Later</Button>
+      <Button on:click={onSaveForLater} outlined>Save For Later</Button>
       {#if needsEvidence}
-        <Button on:click={onSaveForLater} disabled={!canContinueToEvidence} raised>Continue</Button>
+        <Button on:click={onSaveForLater} raised>Continue</Button>
       {:else}
-        <Button on:click={onSubmitClaim} disabled={submitIsDisabled} raised>Submit Claim</Button>
+        <Button on:click={onSubmitClaim} raised>Submit Claim</Button>
       {/if}
     </p>
   </Form>

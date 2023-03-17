@@ -18,5 +18,5 @@ const payoutOptions = [
 
 <div>
   <span class="header">Payout options</span>
-  <RadioOptions name="payoutOption" options={payoutOptions} bind:value={payoutOption} />
+  <RadioOptions required name="payoutOption" options={payoutOptions} bind:value={payoutOption} />
 </div>

@@ -22,6 +22,7 @@ import { createEventDispatcher, onMount } from 'svelte'
 
 export let claim = {} as Claim
 export let item = {} as PolicyItem
+export let hideItemName = false
 
 const dispatch = createEventDispatcher()
 
@@ -138,6 +139,7 @@ const determinePayoutOption = (
   return selectedPayoutOption
 }
 const validateForm = () => {
+  assertHas(item.id, 'Please select an item')
   assertHas(lossReason, 'Please select a reason for loss or damage')
   assertHas(situationDescription, 'Please describe the situation')
   potentiallyRepairable && assertHas(repairableSelection, 'Please specify if the item is repairable')
@@ -156,6 +158,7 @@ const onSubmitClaim = (event: Event) => {
 }
 
 const onSaveForLater = (event: Event) => {
+  assertHas(item.id, 'Please select an item')
   event.preventDefault()
   dispatch('save-for-later', getFormData())
 }
@@ -216,10 +219,10 @@ const onInfoClick = (event: Event) => {
 }
 </script>
 
-<style></style>
-
 <div class="w-50">
-  <div class="item-name">{item.name}</div>
+  {#if !hideItemName}
+    <div class="item-name">{item.name}</div>
+  {/if}
   <div>Covered value: {formatMoney(item.coverage_amount)}</div>
   <Form>
     <p>

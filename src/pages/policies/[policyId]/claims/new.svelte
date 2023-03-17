@@ -15,7 +15,7 @@ import { formatPageTitle } from 'helpers/pageTitle'
 import * as routes from 'helpers/routes'
 import { assertHas } from '../../../../validation/assertions'
 import { goto, metatags, redirect } from '@roxi/routify'
-import { Page, Select, setNotice } from '@silintl/ui-components'
+import { Page, setNotice } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 export let policyId = $selectedPolicyId

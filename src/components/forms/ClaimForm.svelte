@@ -9,6 +9,7 @@ import {
   LOSS_REASON_EVACUATION,
 } from '../../business-rules/claim-payout-amount'
 import { validateForm } from './claims/claimFormHelpers'
+import { LossReasonRadioOptions, PayoutRadioOptions, RepairableRadioOptions } from './claims/_components'
 import { MAX_TEXT_AREA_LENGTH as maxlength } from 'components/const'
 import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
 import { Claim, ClaimItem, PayoutOption } from 'data/claims'
@@ -22,7 +23,6 @@ import type { ClaimFormData } from './claims/types'
 import { assertHas } from '../../validation/assertions'
 import { Button, Form, IconButton, MoneyInput, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher, onMount } from 'svelte'
-import { LossReasonRadioOptions, PayoutRadioOptions, RepairableRadioOptions } from './claims/_components'
 
 export let claim = {} as Claim
 export let item = {} as PolicyItem
@@ -84,7 +84,7 @@ $: needsPayoutOption = !(isRepairable || isEvacuation) || repairCostIsTooHigh
 $: canContinueToEvidence = (!!repairEstimateUSD && !!fairMarketValueUSD) || (!!fairMarketValueUSD && !isRepairable)
 $: saveButtonIsDisabled = !situationDescription || !lossReason
 
-//submit button is disabled if:
+//submit button logic
 $: potentiallyRepairableButNoSelection = potentiallyRepairable && !repairableSelection
 $: fmvOrRepairEstimateMissing = !repairEstimateUSD || !fairMarketValueUSD
 $: isRepairableAndFmvOrRepairEstimateMissing = isRepairable && fmvOrRepairEstimateMissing

@@ -168,13 +168,13 @@ function onInfoClick(event: Event) {
 </script>
 
 <div class="w-50">
+  {#if items.length < 1}
+    <div class="item-name">{item.name}</div>
+  {:else}
+    <ItemSelector on:change {items} />
+  {/if}
+  <div>Covered value: {formatMoney(item.coverage_amount)}</div>
   <Form>
-    {#if items.length < 1}
-      <div class="item-name">{item.name}</div>
-    {:else}
-      <ItemSelector on:change {items} />
-    {/if}
-    <div>Covered value: {formatMoney(item.coverage_amount)}</div>
     <p>
       <span class="header">Date lost or damaged</span>
       <DateInput bind:value={lostDate} />

@@ -9,7 +9,7 @@ import {
   LOSS_REASON_EVACUATION,
 } from '../../business-rules/claim-payout-amount'
 import { validateForm } from './claims/claimFormHelpers'
-import { LossReasonRadioOptions, PayoutRadioOptions, RepairableRadioOptions } from './claims/_components'
+import { ItemSelector, LossReasonRadioOptions, PayoutRadioOptions, RepairableRadioOptions } from './claims/_components'
 import { MAX_TEXT_AREA_LENGTH as maxlength } from 'components/const'
 import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
 import { Claim, ClaimItem, PayoutOption } from 'data/claims'
@@ -23,11 +23,10 @@ import type { ClaimFormData } from './claims/types'
 import { assertHas } from '../../validation/assertions'
 import { Button, Form, IconButton, MoneyInput, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher, onMount } from 'svelte'
-import ItemSelector from './claims/_components/ItemSelector.svelte'
 
 export let claim = {} as Claim
 export let item = {} as PolicyItem
-export let items = [] as PolicyItem[]
+export let items: PolicyItem[]
 
 const dispatch = createEventDispatcher()
 
@@ -168,10 +167,10 @@ function onInfoClick(event: Event) {
 </script>
 
 <div class="w-50">
-  {#if items.length < 1}
-    <div class="item-name">{item.name}</div>
-  {:else}
+  {#if items?.length}
     <ItemSelector on:change {items} />
+  {:else}
+    <div class="item-name">{item.name}</div>
   {/if}
   <div>Covered value: {formatMoney(item.coverage_amount)}</div>
   <Form>

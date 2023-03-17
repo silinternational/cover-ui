@@ -102,6 +102,7 @@ $: !shouldAskReplaceOrFMV && unSetPayoutOption()
 $: !shouldAskIfRepairable && unSetRepairableSelection()
 $: !shouldAskForFMV && unSetFairMarketValue()
 $: !isRepairable && unSetRepairEstimate()
+$: !isRepairable && (repairCostIsTooHigh = undefined) //above line should make this happen but it doesn't
 $: needsEvidence = !unrepairableOrTooExpensive || payoutOption === PayoutOption.FMV
 $: needsPayoutOption = !(isRepairable || isEvacuation) || repairCostIsTooHigh
 $: canContinueToEvidence = (!!repairEstimateUSD && !!fairMarketValueUSD) || (!!fairMarketValueUSD && !isRepairable)
@@ -167,22 +168,22 @@ const setInitialValues = (claim: Claim, claimItem: ClaimItem) => {
   fairMarketValueUSD = claimItem.fmv / 100
 }
 
-const unSetPayoutOption = () => {
+function unSetPayoutOption() {
   payoutOption = undefined
 }
-const unSetFairMarketValue = () => {
+function unSetFairMarketValue() {
   fairMarketValueUSD = undefined
 }
-const unSetRepairableSelection = () => {
+function unSetRepairableSelection() {
   repairableSelection = undefined
 }
-const unSetRepairEstimate = () => {
+function unSetRepairEstimate() {
   repairEstimateUSD = undefined
 }
-const unSetReplaceEstimate = () => {
+function unSetReplaceEstimate() {
   replaceEstimateUSD = undefined
 }
-const onInfoClick = (event: Event) => {
+function onInfoClick(event: Event) {
   event.preventDefault()
   fmvModalOpen = true
 }

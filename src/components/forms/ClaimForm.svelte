@@ -8,7 +8,7 @@ import {
   isUnrepairableOrTooExpensive,
   LOSS_REASON_EVACUATION,
 } from '../../business-rules/claim-payout-amount'
-import { validateForm, validateFormOnSave } from './claims/claimFormHelpers'
+import { validateForm, validateFormOnContinue, validateFormOnSave } from './claims/claimFormHelpers'
 import { ItemSelector, LossReasonRadioOptions, PayoutRadioOptions, RepairableRadioOptions } from './claims/_components'
 import { MAX_TEXT_AREA_LENGTH as maxlength } from 'components/const'
 import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
@@ -95,6 +95,12 @@ const onSubmitClaim = (event: Event) => {
 const onSaveForLater = (event: Event) => {
   validateFormOnSave(item.id, lossReason, situationDescription)
   event.preventDefault()
+  dispatch('save-for-later', getFormData())
+}
+
+const onContinue = (event: Event) => {
+  event.preventDefault()
+  validateFormOnContinue(repairEstimateUSD, fairMarketValueUSD, isRepairable)
   dispatch('save-for-later', getFormData())
 }
 
@@ -236,7 +242,7 @@ function onInfoClick(event: Event) {
     <p>
       <Button on:click={onSaveForLater} outlined>Save For Later</Button>
       {#if needsEvidence}
-        <Button on:click={onSaveForLater} raised>Continue</Button>
+        <Button on:click={onContinue} raised>Continue</Button>
       {:else}
         <Button on:click={onSubmitClaim} raised>Submit Claim</Button>
       {/if}

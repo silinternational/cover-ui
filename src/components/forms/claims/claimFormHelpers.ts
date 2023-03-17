@@ -23,3 +23,14 @@ export const validateFormOnSave = (itemId: string, lossReason: string, situation
   assertHas(lossReason, 'Please select a loss reason')
   assertHas(situationDescription, 'Please enter a description')
 }
+
+export const validateFormOnContinue = (
+  repairEstimateUSD: number | undefined,
+  fairMarketValueUSD: number | undefined,
+  isRepairable: boolean | undefined
+): void => {
+  if (isRepairable) {
+    assertHas(repairEstimateUSD, 'Please enter a repair estimate')
+  }
+  assertHas(fairMarketValueUSD, 'Please enter a fair market value')
+}

@@ -18,19 +18,20 @@ export const validateForm = (
   needsPayoutOption && assertHas(claimItemData.payoutOption, 'Please select a payout option')
 }
 
-export const validateFormOnSave = (itemId: string, lossReason: string, situationDescription: string): void => {
+export const validateFormOnSave = (itemId: string, lossReason: string): void => {
   assertHas(itemId, 'Please select an item')
   assertHas(lossReason, 'Please select a loss reason')
-  assertHas(situationDescription, 'Please enter a description')
 }
 
 export const validateFormOnContinue = (
   repairEstimateUSD: number | undefined,
   fairMarketValueUSD: number | undefined,
-  isRepairable: boolean | undefined
+  isRepairable: boolean | undefined,
+  situationDescription: string
 ): void => {
   if (isRepairable) {
     assertHas(repairEstimateUSD, 'Please enter a repair estimate')
   }
+  assertHas(situationDescription, 'Please describe the situation')
   assertHas(fairMarketValueUSD, 'Please enter a fair market value')
 }

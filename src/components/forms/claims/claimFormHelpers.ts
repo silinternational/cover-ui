@@ -7,8 +7,7 @@ export const validateForm = (
   repairableSelection?: string,
   needsPayoutOption?: boolean
 ): void => {
-  assertHas(claimItemData.itemId, 'Please select an item')
-  assertHas(claimData.lossReason, 'Please select a reason for loss or damage')
+  validateFormOnSave(claimItemData.itemId, claimData.lossReason)
   assertHas(claimData.situationDescription, 'Please describe the situation')
   potentiallyRepairable && assertHas(repairableSelection, 'Please specify if the item is repairable')
   if (claimItemData.isRepairable) {
@@ -20,7 +19,7 @@ export const validateForm = (
 
 export const validateFormOnSave = (itemId: string, lossReason: string): void => {
   assertHas(itemId, 'Please select an item')
-  assertHas(lossReason, 'Please select a loss reason')
+  assertHas(lossReason, 'Please select a reason for loss or damage')
 }
 
 export const validateFormOnContinue = (

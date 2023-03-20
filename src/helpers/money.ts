@@ -1,4 +1,4 @@
-export const convertToCents = (dollars: number): number => {
+export const convertToCents = (dollars?: number): number => {
   if (dollars === undefined || dollars === null) {
     return 0
   }

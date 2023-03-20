@@ -1,7 +1,7 @@
 <script lang="ts">
 import CreateReportModal from './_components/CreateReportModal.svelte'
 import { FileLink } from 'components'
-import { createLedgerReport, getLedgerReportById, getLedgerReports, LedgerReport, LedgerReports } from 'data/ledger'
+import { createLedgerReport, getLedgerReportById, getLedgerReports, LedgerReports } from 'data/ledger'
 import { formatDateAndTime, formatFriendlyDate } from 'helpers/dates'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { reportDetails } from 'helpers/routes'

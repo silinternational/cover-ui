@@ -5,11 +5,11 @@ import { loading } from 'components/progress'
 import { Claim, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import { getNameOfPolicy, selectedPolicy } from 'data/policies'
 import { roleSelection } from 'data/role-policy-selection'
-import { customerClaims, customerClaimDetails, POLICIES, policyDetails } from 'helpers/routes'
+import { customerClaims, customerClaimDetails, POLICIES, policyDetails, customerClaimsNew } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { items } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
-import { Page } from '@silintl/ui-components'
+import { Button, Page } from '@silintl/ui-components'
 
 export let policyId: string
 
@@ -35,9 +35,9 @@ const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(ev
   {#if isAdmin}
     <Breadcrumb links={breadcrumbLinks} />
   {/if}
-  <!-- <Row cols={'12'}>
-    <Button raised url={customerClaimsNew(policyId)}>New claim</Button>
-  </Row> -->
+  <Row class="justify-self-center" cols={'12'}>
+    <Button class="m-auto" raised url={customerClaimsNew(policyId)}>New claim</Button>
+  </Row>
 
   <Row cols={'12'}>
     {#if $selectedPolicyClaims.length}

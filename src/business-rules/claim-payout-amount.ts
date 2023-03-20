@@ -68,3 +68,31 @@ export const getUploadLabel = (
   else if (claimItem.fmv) return longLabel ? 'evidence of fair market value' : 'evidence'
   else return ''
 }
+
+export const calculateIsRepairable = (
+  potentiallyRepairable: boolean,
+  repairableSelection?: string
+): boolean | undefined => {
+  if (!potentiallyRepairable) {
+    return false
+  }
+  if (!repairableSelection) {
+    return undefined
+  }
+  return repairableSelection === 'repairable'
+}
+
+export const determinePayoutOption = (
+  isEvacuation: boolean,
+  repairCostIsTooHigh?: boolean,
+  selectedPayoutOption?: PayoutOption
+): PayoutOption | undefined => {
+  if (isEvacuation) {
+    return PayoutOption.FixedFraction
+  }
+  if (repairCostIsTooHigh === false) {
+    // ... not merely falsy, like `null` or `undefined`
+    return PayoutOption.Repair
+  }
+  return selectedPayoutOption
+}

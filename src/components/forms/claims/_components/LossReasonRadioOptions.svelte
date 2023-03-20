@@ -12,5 +12,5 @@ $: lossReasonOptions = $claimIncidentTypes.map(({ name, description }) => ({ lab
 
 <p>
   <span class="header">Reason for loss or damage</span>
-  <RadioOptions name="lossReason" options={lossReasonOptions} bind:value={lossReason} />
+  <RadioOptions required name="lossReason" options={lossReasonOptions} bind:value={lossReason} />
 </p>

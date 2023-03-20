@@ -28,6 +28,11 @@ function unSetRepairableSelection() {
 
 {#if shouldAskIfRepairable}
   <div>
-    <RadioOptions name="repairableSelection" options={repairableOptions} bind:value={repairableSelection} />
+    <RadioOptions
+      required={potentiallyRepairable}
+      name="repairableSelection"
+      options={repairableOptions}
+      bind:value={repairableSelection}
+    />
   </div>
 {/if}

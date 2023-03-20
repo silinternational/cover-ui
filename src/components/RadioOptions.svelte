@@ -9,6 +9,7 @@ export let options: RadioOption[] = []
 
 export let name: string
 export let value: string | undefined
+export let required: boolean = false
 
 const onInput = (event: any) => {
   value = event?.target?.value
@@ -30,6 +31,7 @@ input {
 {#each options as option (option.value)}
   <div class="flex align-items-center my-1">
     <input
+      {required}
       type="radio"
       {name}
       id={optionId(option)}

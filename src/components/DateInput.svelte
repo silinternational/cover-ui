@@ -4,6 +4,7 @@ export let disabled = false
 export let autofocus = false
 export let padding = '12px'
 export let width = '220px'
+export let required = false
 
 const focus = (node) => autofocus && node.focus()
 </script>
@@ -29,6 +30,6 @@ const focus = (node) => autofocus && node.focus()
 }
 </style>
 
-<label class="{$$props.class} custom-field" style:--field-padding={padding} {disabled}>
-  <input type="date" class="fs-14" style:width bind:value on:blur use:focus {disabled} />
+<label class="{$$props.class} custom-field" style:--field-padding={padding}>
+  <input {required} type="date" class="fs-14" style:width bind:value on:blur use:focus {disabled} />
 </label>

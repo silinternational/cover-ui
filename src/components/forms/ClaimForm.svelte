@@ -95,13 +95,13 @@ const onSubmitClaim = () => {
 }
 
 const onSaveForLater = () => {
-  validateForDraft(item.id, lossReason)
+  validateForDraft(item.id, lossReason, situationDescription)
   dispatch('save-for-later', getFormData())
 }
 
 const onContinue = () => {
-  validateForDraft(item.id, lossReason)
-  validateFormOnContinue(repairEstimateUSD, fairMarketValueUSD, isRepairable, situationDescription)
+  validateForDraft(item.id, lossReason, situationDescription)
+  validateFormOnContinue(repairEstimateUSD, fairMarketValueUSD, isRepairable)
   dispatch('save-for-later', getFormData())
 }
 

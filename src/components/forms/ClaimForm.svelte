@@ -8,7 +8,7 @@ import {
   isUnrepairableOrTooExpensive,
   LOSS_REASON_EVACUATION,
 } from '../../business-rules/claim-payout-amount'
-import { validateForm, validateFormOnContinue, validateFormOnSave } from './claims/claimFormHelpers'
+import { validateForDraft, validateForFinalSubmission, validateFormOnContinue } from './claims/claimFormHelpers'
 import { ItemSelector, LossReasonRadioOptions, PayoutRadioOptions, RepairableRadioOptions } from './claims/_components'
 import { MAX_TEXT_AREA_LENGTH as maxlength } from 'components/const'
 import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
@@ -57,7 +57,10 @@ let replaceEstimateUSD: number | undefined
 let fairMarketValueUSD: number | undefined
 
 // Load the necessary data.
-onMount(() => $claimIncidentTypes.length || loadClaimIncidentTypes())
+onMount(() => {
+  $claimIncidentTypes.length || loadClaimIncidentTypes()
+  setInitialValues(claim, claimItem)
+})
 
 // Set initial form values based on the provided data.
 $: setInitialValues(claim, claimItem)
@@ -86,18 +89,18 @@ $: needsPayoutOption = !(isRepairable || isEvacuation) || repairCostIsTooHigh
 
 const onSubmitClaim = () => {
   const formData = getFormData()
-  validateForm(formData, potentiallyRepairable, repairableSelection, needsPayoutOption)
+  validateForFinalSubmission(formData, potentiallyRepairable, repairableSelection, needsPayoutOption)
   if (payoutOption === PayoutOption.Replacement) assertHas(replaceEstimateUSD, 'Please enter a replacement estimate')
   dispatch('submit', formData)
 }
 
 const onSaveForLater = () => {
-  validateFormOnSave(item.id, lossReason)
+  validateForDraft(item.id, lossReason)
   dispatch('save-for-later', getFormData())
 }
 
 const onContinue = () => {
-  validateFormOnSave(item.id, lossReason)
+  validateForDraft(item.id, lossReason)
   validateFormOnContinue(repairEstimateUSD, fairMarketValueUSD, isRepairable, situationDescription)
   dispatch('save-for-later', getFormData())
 }

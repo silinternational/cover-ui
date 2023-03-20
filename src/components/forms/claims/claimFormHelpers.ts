@@ -1,13 +1,13 @@
 import type { ClaimFormData } from './types'
 import { assertHas } from '../../../validation/assertions'
 
-export const validateForm = (
+export const validateForFinalSubmission = (
   { claimData, claimItemData }: ClaimFormData,
   potentiallyRepairable: boolean,
   repairableSelection?: string,
   needsPayoutOption?: boolean
 ): void => {
-  validateFormOnSave(claimItemData.itemId, claimData.lossReason)
+  validateForDraft(claimItemData.itemId, claimData.lossReason)
   assertHas(claimData.situationDescription, 'Please describe the situation')
   potentiallyRepairable && assertHas(repairableSelection, 'Please specify if the item is repairable')
   if (claimItemData.isRepairable) {
@@ -17,7 +17,7 @@ export const validateForm = (
   needsPayoutOption && assertHas(claimItemData.payoutOption, 'Please select a payout option')
 }
 
-export const validateFormOnSave = (itemId: string, lossReason: string): void => {
+export const validateForDraft = (itemId: string, lossReason: string): void => {
   assertHas(itemId, 'Please select an item')
   assertHas(lossReason, 'Please select a reason for loss or damage')
 }

@@ -1,3 +1,4 @@
+import { PayoutOption } from 'data/claims'
 import type { ClaimFormData } from './types'
 import { assertHas } from '../../../validation/assertions'
 
@@ -5,7 +6,9 @@ export const validateForFinalSubmission = (
   { claimData, claimItemData }: ClaimFormData,
   potentiallyRepairable: boolean,
   repairableSelection?: string,
-  needsPayoutOption?: boolean
+  needsPayoutOption?: boolean,
+  payoutOption?: PayoutOption,
+  replaceEstimateUSD?: number
 ): void => {
   validateForDraft(claimItemData.itemId, claimData.lossReason, claimData.situationDescription)
   potentiallyRepairable && assertHas(repairableSelection, 'Please specify if the item is repairable')
@@ -14,6 +17,7 @@ export const validateForFinalSubmission = (
     assertHas(claimItemData.fairMarketValueUSD, 'Please enter a fair market value')
   }
   needsPayoutOption && assertHas(claimItemData.payoutOption, 'Please select a payout option')
+  if (payoutOption === PayoutOption.Replacement) assertHas(replaceEstimateUSD, 'Please enter a replacement estimate')
 }
 
 export const validateForDraft = (itemId: string, lossReason: string, situationDescription: string): void => {

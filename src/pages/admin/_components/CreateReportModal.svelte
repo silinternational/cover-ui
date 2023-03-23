@@ -1,7 +1,6 @@
 <script lang="ts">
-import { DateInput } from 'components'
 import { CreateLedgerReportInput, LedgerReportType } from 'data/ledger'
-import { Button, Dialog, Form, Select } from '@silintl/ui-components'
+import { Button, DateInput, Dialog, Form, Select } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let modalOpen = false

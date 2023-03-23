@@ -13,7 +13,6 @@ import ConvertCurrencyLink from './ConvertCurrencyLink.svelte'
 import CountrySelector from './CountrySelector.svelte'
 import CustomerReport from './CustomerReport.svelte'
 import ItemsTable from './Datatable/ItemsTable.svelte'
-import DateInput from './DateInput.svelte'
 import DependentForm from './forms/DependentForm.svelte'
 import Description from './Description.svelte'
 import FileLink from './FileLink.svelte'
@@ -52,7 +51,6 @@ export {
   ClaimsTable,
   ConvertCurrencyLink,
   CountrySelector,
-  DateInput,
   DependentForm,
   Description,
   FileLink,

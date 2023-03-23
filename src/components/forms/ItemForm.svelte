@@ -1,16 +1,16 @@
 <script lang="ts">
-import user, { isAdmin, User } from 'data/user'
 import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
 import Description from '../Description.svelte'
-import MakeAndModelModal from 'MakeAndModelModal.svelte'
+import MakeAndModelModal from '../MakeAndModelModal.svelte'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
-import SelectAccountablePerson from '../SelectAccountablePerson.svelte'
 import { MAX_TEXT_AREA_LENGTH } from 'components/const'
 import type { AccountablePersonOptions } from 'data/accountablePersons'
 import { ItemCoverageStatus, NewItemFormData, PolicyItem, RiskCategoryNames, UpdateItemFormData } from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
+import user, { isAdmin, User } from 'data/user'
+import { areMakeAndModelRequired, validateForSubmit, validateForSave } from './items/itemFormHelpers'
+import SelectAccountablePerson from '../SelectAccountablePerson.svelte'
 import TextFieldWithLabel from '../TextFieldWithLabel.svelte'
-import { assertHas, assertIsLessOrEqual } from '../../validation/assertions'
 import { debounce } from 'lodash-es'
 import { Button, Card, Form, MoneyInput, Select, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
@@ -34,7 +34,7 @@ const dispatch = createEventDispatcher<{
 let accountablePersonId = ''
 let categoryId = ''
 let country = ''
-let marketValueUSD = ''
+let marketValueUSD: number | string | undefined
 let coverageEndDate = ''
 let coverageStartDate = ''
 let coverageStatus: ItemCoverageStatus
@@ -105,33 +105,10 @@ const onCategorySelectPopulated = () => {
   }
 }
 
-const validateOnSave = (formData: any) => {
-  assertHas(formData.accountablePersonId, 'Please Assign an Accountable Person')
-  assertHas(formData.categoryId, 'Please select a category')
-  assertHas(formData.name, 'Please specify a short name')
-
-  return true
-}
-
-const validate = (formData: any) => {
-  validateOnSave(formData)
-  assertHas(formData.marketValueUSD, 'Please specify the market value')
-  item.coverage_status !== ItemCoverageStatus.Draft &&
-    assertIsLessOrEqual(formData.marketValueUSD * 100, item.coverage_amount, 'Coverage amount cannot be increased')
-  return true
-}
-
-const areMakeAndModelRequired = () => {
-  return (
-    item.coverage_status !== ItemCoverageStatus.Approved &&
-    $categories.find((category) => category.id === categoryId)?.require_make_model
-  )
-}
-
-const onSubmit = (event: Event) => {
+const onSubmit = () => {
   formData = getFormData()
-  validate(formData)
-  if (!(make && model) && areMakeAndModelRequired()) {
+  validateForSubmit(item, formData)
+  if (!(make && model) && areMakeAndModelRequired(item, categoryId)) {
     makeModelIsOpen = true
   } else {
     dispatch('submit', formData)
@@ -140,7 +117,7 @@ const onSubmit = (event: Event) => {
 
 const saveForLater = (event?: Event, isAutoSaving = false) => {
   const formData = getFormData()
-  validateOnSave(formData)
+  validateForSave(formData)
   dispatch('save-for-later', { ...formData, isAutoSaving })
   event?.preventDefault()
 }
@@ -166,7 +143,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
   accountablePersonId = item.accountable_person?.id || user.id
   categoryId = item.category?.id || categoryId
   country = item.country || country
-  marketValueUSD = Number.isInteger(item.coverage_amount) ? String(item.coverage_amount / 100) : ''
+  marketValueUSD = Number.isInteger(item.coverage_amount) ? String(item.coverage_amount / 100) : undefined
   coverageEndDate = item.coverage_end_date || coverageEndDate
   coverageStartDate = item.coverage_start_date || today.toISOString().slice(0, 10) //api requires yyyy-mm-dd
   coverageStatus = item.coverage_status || coverageStatus
@@ -261,7 +238,7 @@ span.label {
   </p>
   <p>
     <span class="label">Value to cover (USD)<span class="error">*</span></span>
-    <MoneyInput minValue={'0'} bind:value={marketValueUSD} disabled={marketValueIsDisabled} required />
+    <MoneyInput bind:value={marketValueUSD} disabled={marketValueIsDisabled} required />
     <Description>
       <ConvertCurrencyLink />
     </Description>

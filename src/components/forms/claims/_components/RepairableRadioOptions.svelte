@@ -27,6 +27,7 @@ function unSetRepairableSelection() {
 </script>
 
 {#if shouldAskIfRepairable}
+  <span class="header">Is the item repairable?</span>
   <div>
     <RadioOptions
       required={potentiallyRepairable}

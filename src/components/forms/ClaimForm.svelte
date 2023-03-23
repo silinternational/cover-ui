@@ -19,7 +19,6 @@ import Description from '../Description.svelte'
 import { formatMoney } from 'helpers/money'
 import InfoModal from '../InfoModal.svelte'
 import type { ClaimFormData } from './claims/types'
-import { assertHas } from '../../validation/assertions'
 import { Button, DateInput, Form, IconButton, MoneyInput, TextArea } from '@silintl/ui-components'
 import { createEventDispatcher, onMount } from 'svelte'
 
@@ -88,8 +87,14 @@ $: needsPayoutOption = !(isRepairable || isEvacuation) || repairCostIsTooHigh
 
 const onSubmitClaim = () => {
   const formData = getFormData()
-  validateForFinalSubmission(formData, potentiallyRepairable, repairableSelection, needsPayoutOption)
-  if (payoutOption === PayoutOption.Replacement) assertHas(replaceEstimateUSD, 'Please enter a replacement estimate')
+  validateForFinalSubmission(
+    formData,
+    potentiallyRepairable,
+    repairableSelection,
+    needsPayoutOption,
+    payoutOption,
+    replaceEstimateUSD
+  )
   dispatch('submit', formData)
 }
 

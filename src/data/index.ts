@@ -34,6 +34,7 @@ async function customFetch<T>(method: FetchMethod, uri: string, body: any = unde
   const headers: HeadersInit = {
     Authorization: `Bearer ${getToken()}`,
     'Content-Type': 'application/json',
+    'Strict-Transport-Security': 'max-age=31536000',
   }
 
   // when dealing with FormData, i.e., when uploading files, allow the browser to set the request up

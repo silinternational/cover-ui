@@ -1,7 +1,8 @@
 import { CREATE, DELETE, GET, UPDATE } from '.'
 import { throwError } from '../error'
-import { derived, get, writable } from 'svelte/store'
+import { convertToCents } from 'helpers/money'
 import { selectedPolicyId } from './role-policy-selection'
+import { derived, get, writable } from 'svelte/store'
 
 export enum ItemCoverageStatus {
   Draft = 'Draft',
@@ -168,7 +169,7 @@ export async function addItem(policyId: string, itemData: NewItemFormData): Prom
     accountable_person_id: itemData.accountablePersonId,
     category_id: itemData.categoryId,
     country: itemData.country,
-    coverage_amount: Number(itemData.marketValueUSD) * 100,
+    coverage_amount: convertToCents(itemData.marketValueUSD),
     coverage_start_date: itemData.coverageStartDate,
     coverage_status: itemData.coverageStatus,
     description: itemData.itemDescription,
@@ -258,7 +259,7 @@ export async function updateItem(policyId: string, itemId: string, itemData: Upd
     accountable_person_id: itemData.accountablePersonId,
     category_id: itemData.categoryId,
     country: itemData.country,
-    coverage_amount: Number(itemData.marketValueUSD) * 100,
+    coverage_amount: convertToCents(itemData.marketValueUSD),
     description: itemData.itemDescription,
     in_storage: itemData.inStorage,
     make: itemData.make,

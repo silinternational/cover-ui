@@ -1,7 +1,7 @@
 <script lang="ts">
 export let text: string = 'Watermark'
-export let rowHeight: number = 250
-export let colsWidth: number = 400
+export let rowHeight: number = 200
+export let colsWidth: number = 500
 
 let innerHeight: number
 let innerWidth: number
@@ -18,8 +18,10 @@ const getPixelString = (num1: number, num2: number): string => `${num1 * num2}px
 
 <style>
 .watermark {
+  font-size: 5rem;
+  font-weight: 900;
   position: absolute;
-  opacity: 0.3;
+  opacity: 0.1;
   z-index: 6;
   transform: rotate(-35deg);
 }
@@ -29,12 +31,12 @@ const getPixelString = (num1: number, num2: number): string => `${num1 * num2}px
 
 {#each columns as column}
   {#each rows as row}
-    <h3
+    <p
       class="watermark mdc-theme--neutral"
       style:top={getPixelString(row, rowHeight)}
       style:left={getPixelString(column, colsWidth)}
     >
       {text}
-    </h3>
+    </p>
   {/each}
 {/each}

@@ -133,6 +133,16 @@ th {
   margin: 1rem auto 0 auto;
   font-size: 11px;
 }
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+section:not(:first-child) {
+  margin-block-start: 2rem;
+}
 </style>
 
 <Page>
@@ -151,114 +161,133 @@ th {
     />
   </Row>
 
-  <h3>{getNameOfPolicy($selectedPolicy)} Policy</h3>
-  <div class="details">
-    <table>
-      <tr>
-        <th>Type</th>
-        <td>{policy.type}</td>
-      </tr>
-      {#if policy.type === PolicyType.Team}
+  <!-- HEADER -->
+  <header>
+    <h1>{getNameOfPolicy($selectedPolicy)} Policy</h1>
+    <div class="details">
+      <table>
         <tr>
-          <th>Name</th>
-          <td>{getNameOfPolicy(policy)}</td>
+          <th>Type</th>
+          <td>{policy.type}</td>
+        </tr>
+        {#if policy.type === PolicyType.Team}
+          <tr>
+            <th>Name</th>
+            <td>{getNameOfPolicy(policy)}</td>
+          </tr>
+          <tr>
+            <th>Account</th>
+            <td>{policy.account || '-'}</td>
+          </tr>
+          <tr>
+            <th>Account Detail</th>
+            <td>{policy.account_detail || '-'}</td>
+          </tr>
+          <tr>
+            <th>Cost Center</th>
+            <td>{policy.cost_center || '-'}</td>
+          </tr>
+          <tr>
+            <th>Entity Code</th>
+            <td>{entityCode || '-'}</td>
+          </tr>
+        {:else if policy.type === PolicyType.Household}
+          <tr>
+            <th>Household ID</th>
+            <td>{policy.household_id || '-'}</td>
+          </tr>
+        {/if}
+        <tr>
+          <th>Updated</th>
+          <td>{formatFriendlyDate(policy.updated_at)}</td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+          <th>Coverage</th><td>{coverage}</td>
         </tr>
         <tr>
-          <th>Account</th>
-          <td>{policy.account || '-'}</td>
+          <th>Premium</th><td>{premium}/yr (2%)</td>
         </tr>
-        <tr>
-          <th>Account Detail</th>
-          <td>{policy.account_detail || '-'}</td>
-        </tr>
-        <tr>
-          <th>Cost Center</th>
-          <td>{policy.cost_center || '-'}</td>
-        </tr>
-        <tr>
-          <th>Entity Code</th>
-          <td>{entityCode || '-'}</td>
-        </tr>
-      {:else if policy.type === PolicyType.Household}
-        <tr>
-          <th>Household ID</th>
-          <td>{policy.household_id || '-'}</td>
-        </tr>
-      {/if}
-      <tr>
-        <th>Updated</th>
-        <td>{formatFriendlyDate(policy.updated_at)}</td>
-      </tr>
-    </table>
-    <table>
-      <tr>
-        <th>Coverage</th><td>{coverage}</td>
-      </tr>
-      <tr>
-        <th>Premium</th><td>{premium}/yr (2%)</td>
-      </tr>
-    </table>
-  </div>
-
-  <div class="flex justify-between align-items-center">
-    <h4>Members</h4>
-    <Button url={settingsPolicy(policyId)}>Policy Settings</Button>
-  </div>
-  <Datatable>
-    <Datatable.Header>
-      <Datatable.Header.Item>Name</Datatable.Header.Item>
-      <Datatable.Header.Item>Email</Datatable.Header.Item>
-      <Datatable.Header.Item>Last Login</Datatable.Header.Item>
-    </Datatable.Header>
-    <Datatable.Data>
-      {#each members as member (member.id)}
-        <Datatable.Data.Row>
-          <Datatable.Data.Row.Item>{member.first_name || ''} {member.last_name || ''}</Datatable.Data.Row.Item>
-          <Datatable.Data.Row.Item>{member.email || ''}</Datatable.Data.Row.Item>
-          <Datatable.Data.Row.Item>{formatFriendlyDate(member.last_login_utc)}</Datatable.Data.Row.Item>
-        </Datatable.Data.Row>
-      {/each}
-    </Datatable.Data>
-  </Datatable>
-
-  <div class="flex justify-between align-items-center">
-    <h4>Claims <span class="subtext">({openClaimCount} open)</span></h4>
-    <Button disabled={allClaimsBtnDisabled} on:click={() => (showAllClaims = true)}>All Claims…</Button>
-  </div>
-  {#if $loading && isLoadingById(`policies/${policyId}/claims`)}
-    Loading claims...
-  {:else}
-    <ClaimsTable claims={claimsForTable} {policyId} />
-  {/if}
-
-  <div class="flex justify-between align-items-center">
-    <h4>Items <span class="subtext">({approvedItems?.length} covered)</span></h4>
-    <div>
-      {#if isAboveTablet()}
-        <Checkbox label="Hide Inactive" on:checked={hideInactiveItems} on:unchecked={showInactiveItems} />
-      {:else}
-        <Switch on:selected={hideInactiveItems} on:deselected={showInactiveItems} label="Hide Inactive" />
-      {/if}
+      </table>
     </div>
-  </div>
-  {#if $loading && isLoadingById(`policies/${policyId}/items`)}
-    Loading items...
-  {:else}
-    <ItemsTable
-      items={itemsForTable}
-      {policyId}
-      on:delete={onDelete}
-      on:gotoItem={(e) => $goto(e.detail)}
-      on:batchDelete={onBatchDelete}
-      on:batchClone={onBatchClone}
-    />
-    <div class="text-align-center">
-      <p class="item-footer">Showing {itemsForTable.length} out of {items.length} items</p>
-      {#if numberOfItemsNotShown > 0}
-        <Button url={itemsRoute(policyId)}>{gotoItemsBtnLabel}</Button>
-      {/if}
-    </div>
-  {/if}
+  </header>
+
+  <!-- MEMBERS -->
+  <section>
+    <header class="flex justify-between align-items-center">
+      <h2>Members</h2>
+      <Button url={settingsPolicy(policyId)}>Policy Settings</Button>
+    </header>
+    <Datatable>
+      <Datatable.Header>
+        <Datatable.Header.Item>Name</Datatable.Header.Item>
+        <Datatable.Header.Item>Email</Datatable.Header.Item>
+        <Datatable.Header.Item>Last Login</Datatable.Header.Item>
+      </Datatable.Header>
+      <Datatable.Data>
+        {#each members as member (member.id)}
+          <Datatable.Data.Row>
+            <Datatable.Data.Row.Item>{member.first_name || ''} {member.last_name || ''}</Datatable.Data.Row.Item>
+            <Datatable.Data.Row.Item>{member.email || ''}</Datatable.Data.Row.Item>
+            <Datatable.Data.Row.Item>{formatFriendlyDate(member.last_login_utc)}</Datatable.Data.Row.Item>
+          </Datatable.Data.Row>
+        {/each}
+      </Datatable.Data>
+    </Datatable>
+  </section>
+
+  <!-- RECENT CLAIMS -->
+  <section>
+    <header class="flex justify-between align-items-center">
+      <h2>Recent Claims <span class="subtext">({openClaimCount} open)</span></h2>
+      <div class="button-group">
+        <Button disabled={allClaimsBtnDisabled} on:click={() => (showAllClaims = true)}>All Claims…</Button>
+        <!-- TODO Add a dropdown menu -->
+        <Button outlined="true" appendIcon="arrow_drop_down">Download</Button>
+      </div>
+    </header>
+    {#if $loading && isLoadingById(`policies/${policyId}/claims`)}
+      Loading claims...
+    {:else}
+      <ClaimsTable claims={claimsForTable} {policyId} />
+    {/if}
+  </section>
+
+  <!-- ITEMS -->
+  <section>
+    <header class="flex justify-between align-items-center">
+      <h2>Items <span class="subtext">({approvedItems?.length} covered)</span></h2>
+      <div class="button-group">
+        {#if isAboveTablet()}
+          <Checkbox label="Hide Inactive" on:checked={hideInactiveItems} on:unchecked={showInactiveItems} />
+        {:else}
+          <Switch on:selected={hideInactiveItems} on:deselected={showInactiveItems} label="Hide Inactive" />
+        {/if}
+        <!-- TODO Add a dropdown menu -->
+        <Button outlined="true" appendIcon="arrow_drop_down">Download</Button>
+        <Button outlined="true" appendIcon="content_copy" title="Copy to Clipboard">Copy</Button>
+      </div>
+    </header>
+    {#if $loading && isLoadingById(`policies/${policyId}/items`)}
+      Loading items...
+    {:else}
+      <ItemsTable
+        items={itemsForTable}
+        {policyId}
+        on:delete={onDelete}
+        on:gotoItem={(e) => $goto(e.detail)}
+        on:batchDelete={onBatchDelete}
+        on:batchClone={onBatchClone}
+      />
+      <div class="text-align-center">
+        <p class="item-footer">Showing {itemsForTable.length} out of {items.length} items</p>
+        {#if numberOfItemsNotShown > 0}
+          <Button url={itemsRoute(policyId)}>{gotoItemsBtnLabel}</Button>
+        {/if}
+      </div>
+    {/if}
+  </section>
 
   <CustomerReport {policy} />
 

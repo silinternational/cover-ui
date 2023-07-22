@@ -24,6 +24,7 @@ const getPixelString = (num1: number, num2: number): string => `${num1 * num2}px
   opacity: 0.1;
   z-index: 6;
   transform: rotate(-35deg);
+  pointer-events: none;
 }
 </style>
 

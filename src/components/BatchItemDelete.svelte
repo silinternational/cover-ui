@@ -24,8 +24,11 @@ const handleDialog = (choice: string) => {
 }
 </script>
 
-<Button class="mb-1" disabled={isDisabled} on:click={() => (modalIsOpen = true)}>{buttonLabel}</Button>
+<span>
+  <Button class="mb-1" disabled={isDisabled} on:click={() => (modalIsOpen = true)}>{buttonLabel}</Button>
 
+  <InfoModal hasInfoButton content={infoModalContent} title="Some items can't be deleted" />
+</span>
 <Dialog.Alert
   open={modalIsOpen}
   {buttons}
@@ -35,5 +38,3 @@ const handleDialog = (choice: string) => {
   on:closed={handleDialog}
   >Are you sure you would like to remove coverage or delete the selected items (coverage ends at a later date)?</Dialog.Alert
 >
-
-<InfoModal hasInfoButton content={infoModalContent} title="Some items can't be deleted" />

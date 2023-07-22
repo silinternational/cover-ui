@@ -1,6 +1,7 @@
 <script lang="ts">
 import { Breadcrumb, CardsGrid, ClaimsTable, ItemsTable, Row, Strikes, CustomerReport } from 'components'
 import { isLoadingById, loading } from 'components/progress'
+import CopyTableButton from '../../components/Datatable/CopyTableButton.svelte'
 import { Claim, claimIsOpen, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import {
   deleteItem,
@@ -26,7 +27,18 @@ import {
   settingsPolicy,
 } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
-import { Button, Checkbox, Datatable, isAboveMobile, isAboveTablet, Page, Switch } from '@silintl/ui-components'
+import {
+  Button,
+  Checkbox,
+  Datatable,
+  isAboveMobile,
+  isAboveTablet,
+  Menu,
+  MenuItem,
+  Page,
+  Switch,
+} from '@silintl/ui-components'
+import { generateRandomID } from '@silintl/ui-components/random'
 import { onMount } from 'svelte'
 
 export let policyId: string
@@ -34,6 +46,8 @@ export let policyId: string
 let policy = {} as Policy
 let showAllClaims = false
 let hideInactive = false
+let downloadMenuOpen = false
+const uniqueTableClass = generateRandomID('items-table-')
 
 onMount(() => {
   loadPolicy(policyId)
@@ -102,6 +116,21 @@ const onBatchClone = (e: CustomEvent<PolicyItem[]>) => {
 const hideInactiveItems = (): void => {
   hideInactive = true
 }
+
+const toggleDownloadMenu = () => (downloadMenuOpen = !downloadMenuOpen)
+// TODO: I prefer `icon: 'table_rows→csv_file',`, but it may need a dependency update?
+const downloadMenuItems: MenuItem[] = [
+  {
+    icon: 'table_rows',
+    label: 'All transactions (.csv for Sage)',
+    url: 'http://example.com',
+  },
+  {
+    icon: 'folder_zip',
+    label: 'Transactions split by type (.zip for NetSuite)',
+    url: 'http://example.com',
+  },
+]
 
 const showInactiveItems = (): void => {
   hideInactive = false
@@ -211,6 +240,10 @@ section:not(:first-child) {
         </tr>
       </table>
     </div>
+    <div class="menu-button-container">
+      <Button outlined="true" appendIcon="arrow_drop_down" on:click={toggleDownloadMenu}>Download</Button>
+      <Menu bind:menuOpen={downloadMenuOpen} menuItems={downloadMenuItems} />
+    </div>
   </header>
 
   <!-- MEMBERS -->
@@ -240,11 +273,9 @@ section:not(:first-child) {
   <!-- RECENT CLAIMS -->
   <section>
     <header class="flex justify-between align-items-center">
-      <h2>Recent Claims <span class="subtext">({openClaimCount} open)</span></h2>
+      <h2>Recent Claims <span class="subtext">{openClaimCount} open</span></h2>
       <div class="button-group">
         <Button disabled={allClaimsBtnDisabled} on:click={() => (showAllClaims = true)}>All Claims…</Button>
-        <!-- TODO Add a dropdown menu -->
-        <Button outlined="true" appendIcon="arrow_drop_down">Download</Button>
       </div>
     </header>
     {#if $loading && isLoadingById(`policies/${policyId}/claims`)}
@@ -257,16 +288,16 @@ section:not(:first-child) {
   <!-- ITEMS -->
   <section>
     <header class="flex justify-between align-items-center">
-      <h2>Items <span class="subtext">({approvedItems?.length} covered)</span></h2>
+      <h2>Items <span class="subtext">{approvedItems?.length} covered</span></h2>
       <div class="button-group">
         {#if isAboveTablet()}
           <Checkbox label="Hide Inactive" on:checked={hideInactiveItems} on:unchecked={showInactiveItems} />
         {:else}
           <Switch on:selected={hideInactiveItems} on:deselected={showInactiveItems} label="Hide Inactive" />
         {/if}
-        <!-- TODO Add a dropdown menu -->
-        <Button outlined="true" appendIcon="arrow_drop_down">Download</Button>
-        <Button outlined="true" appendIcon="content_copy" title="Copy to Clipboard">Copy</Button>
+        <!-- TODO Add download function -->
+        <Button outlined="true" prependIcon="download">Download</Button>
+        <CopyTableButton {uniqueTableClass} />
       </div>
     </header>
     {#if $loading && isLoadingById(`policies/${policyId}/items`)}
@@ -279,6 +310,8 @@ section:not(:first-child) {
         on:gotoItem={(e) => $goto(e.detail)}
         on:batchDelete={onBatchDelete}
         on:batchClone={onBatchClone}
+        includeCopyToClipboard={false}
+        {uniqueTableClass}
       />
       <div class="text-align-center">
         <p class="item-footer">Showing {itemsForTable.length} out of {items.length} items</p>

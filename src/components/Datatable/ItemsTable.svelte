@@ -20,6 +20,7 @@ import { generateRandomID } from '@silintl/ui-components/random'
 export let items = [] as PolicyItem[]
 export let policyId: string
 export let title: string = ''
+export let includeCopyToClipboard: boolean = true
 
 const columnIndicesToToggle = [1, 2, 3]
 const columns: Column[] = [
@@ -89,7 +90,7 @@ const columns: Column[] = [
     sortable: true,
   },
 ]
-const uniqueTableClass = generateRandomID('items-table-')
+export let uniqueTableClass = generateRandomID('items-table-')
 
 let numberOfCheckboxes = 0
 let headerId = 'name'
@@ -325,7 +326,7 @@ const toggleShowSnMakeAndModel = () => {
     {/each}
   </Datatable.Data>
 </Datatable>
-
-<CopyTableButton {uniqueTableClass} />
-
+{#if includeCopyToClipboard}
+  <CopyTableButton {uniqueTableClass} />
+{/if}
 <ItemDeleteModal open={deleteModalIsOpen} item={currentItem} on:closed={handleModalDialog} />

@@ -165,13 +165,16 @@ section:not(:first-child) {
   display: grid;
   grid-template-columns: repeat(2, max-content);
   row-gap: 1rem;
-  column-gap: clamp(1rem, 3vw, 4rem);
+  column-gap: clamp(2rem, 5vw, 6rem);
   & * {
     justify-content: start;
   }
 }
 .main-header h1 {
   grid-column: 1 / -1;
+}
+.main-header dd {
+  margin-inline-start: clamp(0.5rem, 2vw, 2rem);
 }
 .main-header dl {
   grid-column: span 1;
@@ -180,6 +183,7 @@ section:not(:first-child) {
   align-content: start;
   margin: unset;
 }
+
 @container (width >= 600px) {
   .main-header .main-header-bits {
     grid-template-columns: repeat(2, max-content) 1fr;

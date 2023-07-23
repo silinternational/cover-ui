@@ -145,14 +145,6 @@ const showInactiveItems = (): void => {
   display: flex;
   flex-direction: column;
 }
-td,
-th {
-  padding: 0.25ex;
-}
-
-th {
-  text-align: left;
-}
 .subtext {
   font-weight: normal;
   font-size: small;
@@ -171,6 +163,28 @@ th {
 
 section:not(:first-child) {
   margin-block-start: 2rem;
+}
+
+.main-header {
+  display: grid;
+  grid-template-columns: repeat(2, max-content) 1fr;
+  column-gap: 5rem;
+  & * {
+    justify-content: start;
+  }
+}
+.main-header h1 {
+  grid-column: 1 / -1;
+}
+.main-header dl {
+  grid-column: span 1;
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  align-content: start;
+  margin: unset;
+}
+.main-header div.menu-button-container {
+  margin-inline-start: auto;
 }
 </style>
 
@@ -191,55 +205,35 @@ section:not(:first-child) {
   </Row>
 
   <!-- HEADER -->
-  <header>
+  <header class="main-header">
     <h1>{getNameOfPolicy($selectedPolicy)} Policy</h1>
-    <div class="details">
-      <table>
-        <tr>
-          <th>Type</th>
-          <td>{policy.type}</td>
-        </tr>
-        {#if policy.type === PolicyType.Team}
-          <tr>
-            <th>Name</th>
-            <td>{getNameOfPolicy(policy)}</td>
-          </tr>
-          <tr>
-            <th>Account</th>
-            <td>{policy.account || '-'}</td>
-          </tr>
-          <tr>
-            <th>Account Detail</th>
-            <td>{policy.account_detail || '-'}</td>
-          </tr>
-          <tr>
-            <th>Cost Center</th>
-            <td>{policy.cost_center || '-'}</td>
-          </tr>
-          <tr>
-            <th>Entity Code</th>
-            <td>{entityCode || '-'}</td>
-          </tr>
-        {:else if policy.type === PolicyType.Household}
-          <tr>
-            <th>Household ID</th>
-            <td>{policy.household_id || '-'}</td>
-          </tr>
-        {/if}
-        <tr>
-          <th>Updated</th>
-          <td>{formatFriendlyDate(policy.updated_at)}</td>
-        </tr>
-      </table>
-      <table>
-        <tr>
-          <th>Coverage</th><td>{coverage}</td>
-        </tr>
-        <tr>
-          <th>Premium</th><td>{premium}/yr (2%)</td>
-        </tr>
-      </table>
-    </div>
+    <dl class="details">
+      <dt>Coverage</dt>
+      <dd>{coverage}</dd>
+      <dt>Premium</dt>
+      <dd>{premium}/yr (2%)</dd>
+      <dt>Last Updated</dt>
+      <dd>{formatFriendlyDate(policy.updated_at)}</dd>
+    </dl>
+    <dl class="details">
+      <dt>Policy Type</dt>
+      <dd>{policy.type}</dd>
+      {#if policy.type === PolicyType.Team}
+        <dt>Name</dt>
+        <dd>{getNameOfPolicy(policy)}</dd>
+        <dt>Account</dt>
+        <dd>{policy.account || '-'}</dd>
+        <dt>Account Detail</dt>
+        <dd>{policy.account_detail || '-'}</dd>
+        <dt>Cost Center</dt>
+        <dd>{policy.cost_center || '-'}</dd>
+        <dt>Entity Code</dt>
+        <dd>{entityCode || '-'}</dd>
+      {:else if policy.type === PolicyType.Household}
+        <dt>Household ID</dt>
+        <dd>{policy.household_id || '-'}</dd>
+      {/if}
+    </dl>
     <div class="menu-button-container">
       <Button outlined="true" appendIcon="arrow_drop_down" on:click={toggleDownloadMenu}>Download</Button>
       <Menu bind:menuOpen={downloadMenuOpen} menuItems={downloadMenuItems} />

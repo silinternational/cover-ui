@@ -138,13 +138,6 @@ const showInactiveItems = (): void => {
 </script>
 
 <style>
-.details {
-  display: flex;
-}
-.details table:nth-child(2) {
-  display: flex;
-  flex-direction: column;
-}
 .subtext {
   font-weight: normal;
   font-size: small;
@@ -166,9 +159,13 @@ section:not(:first-child) {
 }
 
 .main-header {
+  container-type: inline-size;
+}
+.main-header-bits {
   display: grid;
-  grid-template-columns: repeat(2, max-content) 1fr;
-  column-gap: 5rem;
+  grid-template-columns: repeat(2, max-content);
+  row-gap: 1rem;
+  column-gap: clamp(1rem, 3vw, 4rem);
   & * {
     justify-content: start;
   }
@@ -183,8 +180,13 @@ section:not(:first-child) {
   align-content: start;
   margin: unset;
 }
-.main-header div.menu-button-container {
-  margin-inline-start: auto;
+@container (width >= 600px) {
+  .main-header .main-header-bits {
+    grid-template-columns: repeat(2, max-content) 1fr;
+  }
+  .main-header div.menu-button-container {
+    margin-inline-start: auto;
+  }
 }
 </style>
 
@@ -207,36 +209,38 @@ section:not(:first-child) {
   <!-- HEADER -->
   <header class="main-header">
     <h1>{getNameOfPolicy($selectedPolicy)} Policy</h1>
-    <dl class="details">
-      <dt>Coverage</dt>
-      <dd>{coverage}</dd>
-      <dt>Premium</dt>
-      <dd>{premium}/yr (2%)</dd>
-      <dt>Last Updated</dt>
-      <dd>{formatFriendlyDate(policy.updated_at)}</dd>
-    </dl>
-    <dl class="details">
-      <dt>Policy Type</dt>
-      <dd>{policy.type}</dd>
-      {#if policy.type === PolicyType.Team}
-        <dt>Name</dt>
-        <dd>{getNameOfPolicy(policy)}</dd>
-        <dt>Account</dt>
-        <dd>{policy.account || '-'}</dd>
-        <dt>Account Detail</dt>
-        <dd>{policy.account_detail || '-'}</dd>
-        <dt>Cost Center</dt>
-        <dd>{policy.cost_center || '-'}</dd>
-        <dt>Entity Code</dt>
-        <dd>{entityCode || '-'}</dd>
-      {:else if policy.type === PolicyType.Household}
-        <dt>Household ID</dt>
-        <dd>{policy.household_id || '-'}</dd>
-      {/if}
-    </dl>
-    <div class="menu-button-container">
-      <Button outlined="true" appendIcon="arrow_drop_down" on:click={toggleDownloadMenu}>Download</Button>
-      <Menu bind:menuOpen={downloadMenuOpen} menuItems={downloadMenuItems} />
+    <div class="main-header-bits">
+      <dl>
+        <dt>Coverage</dt>
+        <dd>{coverage}</dd>
+        <dt>Premium</dt>
+        <dd>{premium}/yr (2%)</dd>
+        <dt>Last Updated</dt>
+        <dd>{formatFriendlyDate(policy.updated_at)}</dd>
+      </dl>
+      <dl>
+        <dt>Policy Type</dt>
+        <dd>{policy.type}</dd>
+        {#if policy.type === PolicyType.Team}
+          <dt>Name</dt>
+          <dd>{getNameOfPolicy(policy)}</dd>
+          <dt>Account</dt>
+          <dd>{policy.account || '-'}</dd>
+          <dt>Account Detail</dt>
+          <dd>{policy.account_detail || '-'}</dd>
+          <dt>Cost Center</dt>
+          <dd>{policy.cost_center || '-'}</dd>
+          <dt>Entity Code</dt>
+          <dd>{entityCode || '-'}</dd>
+        {:else if policy.type === PolicyType.Household}
+          <dt>Household ID</dt>
+          <dd>{policy.household_id || '-'}</dd>
+        {/if}
+      </dl>
+      <div class="menu-button-container">
+        <Button outlined="true" appendIcon="arrow_drop_down" on:click={toggleDownloadMenu}>Download</Button>
+        <Menu bind:menuOpen={downloadMenuOpen} menuItems={downloadMenuItems} />
+      </div>
     </div>
   </header>
 

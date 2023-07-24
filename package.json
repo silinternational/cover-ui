@@ -1,5 +1,9 @@
 {
   "name": "@silintl/cover-ui",
+  "engines": {
+    "node": ">=18 <19",
+    "comment": "Constrain Node version to match our staging and production environments"
+  },
   "scripts": {
     "prebuild:dev": "npm run clean:build",
     "build:dev": "rollup -c -w",

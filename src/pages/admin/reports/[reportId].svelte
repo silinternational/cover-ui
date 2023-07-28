@@ -37,49 +37,52 @@ async function getReport() {
 </script>
 
 <style>
-td,
-th {
-  padding: 0.25ex;
+header {
+  margin-block-end: 2rem;
 }
-
-th {
-  text-align: left;
+dd {
+  margin-inline-start: clamp(0.5rem, 2vw, 2rem);
 }
-div:has(dl) {
+dl {
+  grid-column: span 1;
   display: grid;
   grid-template-columns: repeat(2, max-content);
-  row-gap: 1rem;
-  column-gap: clamp(2rem, 5vw, 6rem);
-  & * {
-    justify-content: start;
-  }
+  align-content: start;
+  margin: unset;
+  gap: 1rem;
 }
 </style>
 
 <Page>
-  <div class="flex justify-between align-items-center">
-    <h4>{report.type} Report</h4>
-    <Button
-      on:click={() => {
-        alertOpen = true
-      }}>Reconcile</Button
-    >
-
-    <Dialog.Alert open={alertOpen} {buttons} defaultAction="cancel" {title} on:chosen={(e) => handleDialog(e.detail)}>
-      {message}
-    </Dialog.Alert>
-  </div>
+  <header>
+    <div class="flex justify-between align-items-center">
+      <h1>{report.type} Report</h1>
+      <Button
+        on:click={() => {
+          alertOpen = true
+        }}>Reconcile</Button
+      >
+      <Dialog.Alert open={alertOpen} {buttons} defaultAction="cancel" {title} on:chosen={(e) => handleDialog(e.detail)}>
+        {message}
+      </Dialog.Alert>
+    </div>
+    <div class="fs-14">Created {formatDateAndTime(report.created_at)}</div>
+  </header>
 
   <div>
     <dl>
       <dt>Report Date</dt>
       <dd>{formatFriendlyDate(report.date)}</dd>
-      <dt>Created At</dt>
-      <dd>{formatDateAndTime(report.created_at)}</dd>
-      <dt>Download for Sage<br />Mixed transations</dt>
+      <dt>
+        File for Sage
+        <div class="fs-12">Mixed transations</div>
+      </dt>
       <dd><FileLink on:expired={getReport} file={report.file} /></dd>
-      <dt>Download for NetSuite<br />Split transations</dt>
-      <dd><FileLink on:expired={getReport} file={report.file} /></dd>
+      <dt>
+        File for NetSuite
+        <div class="fs-12">Split transations</div>
+      </dt>
+      <dd><FileLink on:expired={getReport} file={report.zip} /></dd>
       <dt>Cleared</dt>
       <dd>{report.is_cleared ? 'Yes' : 'No'}</dd>
       <dt>Transactions</dt>

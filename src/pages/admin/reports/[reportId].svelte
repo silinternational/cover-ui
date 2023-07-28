@@ -76,6 +76,10 @@ th {
         <td><FileLink on:expired={getReport} file={report.file} /></td>
       </tr>
       <tr>
+        <th>File</th>
+        <td><FileLink on:expired={getReport} file={report.file} /></td>
+      </tr>
+      <tr>
         <th>Cleared</th>
         <td>{report.is_cleared ? 'Yes' : 'No'}</td>
       </tr>

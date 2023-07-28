@@ -45,6 +45,15 @@ th {
 th {
   text-align: left;
 }
+div:has(dl) {
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  row-gap: 1rem;
+  column-gap: clamp(2rem, 5vw, 6rem);
+  & * {
+    justify-content: start;
+  }
+}
 </style>
 
 <Page>
@@ -62,31 +71,19 @@ th {
   </div>
 
   <div>
-    <table>
-      <tr>
-        <th>Report Date</th>
-        <td>{formatFriendlyDate(report.date)}</td>
-      </tr>
-      <tr>
-        <th>Created At</th>
-        <td>{formatDateAndTime(report.created_at)}</td>
-      </tr>
-      <tr>
-        <th>File</th>
-        <td><FileLink on:expired={getReport} file={report.file} /></td>
-      </tr>
-      <tr>
-        <th>File</th>
-        <td><FileLink on:expired={getReport} file={report.file} /></td>
-      </tr>
-      <tr>
-        <th>Cleared</th>
-        <td>{report.is_cleared ? 'Yes' : 'No'}</td>
-      </tr>
-      <tr>
-        <th>Transactions</th>
-        <td>{report.transaction_count}</td>
-      </tr>
-    </table>
+    <dl>
+      <dt>Report Date</dt>
+      <dd>{formatFriendlyDate(report.date)}</dd>
+      <dt>Created At</dt>
+      <dd>{formatDateAndTime(report.created_at)}</dd>
+      <dt>Download for Sage<br />Mixed transations</dt>
+      <dd><FileLink on:expired={getReport} file={report.file} /></dd>
+      <dt>Download for NetSuite<br />Split transations</dt>
+      <dd><FileLink on:expired={getReport} file={report.file} /></dd>
+      <dt>Cleared</dt>
+      <dd>{report.is_cleared ? 'Yes' : 'No'}</dd>
+      <dt>Transactions</dt>
+      <dd>{report.transaction_count}</dd>
+    </dl>
   </div>
 </Page>

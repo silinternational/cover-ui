@@ -20,7 +20,6 @@ const onKeydown = debounce(() => dispatch('search', searchFieldContents), 500)
     bind:value={searchFieldContents}
     on:keydown={onKeydown}
     label="Search"
-    autofocus
     icon="search"
     name="searchField"
   />

@@ -1,6 +1,7 @@
 <script lang="ts">
 import BatchItemClone from '../BatchItemClone.svelte'
 import BatchItemDelete from '../BatchItemDelete.svelte'
+import { hasEnded, willEnd } from 'components/forms/items/itemTableHelpers'
 import CopyTableButton from './CopyTableButton.svelte'
 import { ClaimItem, incompleteClaimItemStatuses, selectedPolicyClaims } from 'data/claims'
 import { getItemState } from 'data/states'
@@ -11,6 +12,7 @@ import { formatMoney } from 'helpers/money'
 import { itemDetails, itemEdit } from 'helpers/routes'
 import { sortBy } from 'helpers/sort'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
+import RowItem from './RowItem.svelte'
 import type { Column } from './types'
 import { capitalize } from 'lodash-es'
 import { createEventDispatcher } from 'svelte'
@@ -115,10 +117,6 @@ $: items && (checkedItems = returnFilteredCheckedItems())
 
 const dispatch = createEventDispatcher()
 
-function isEnded(item: PolicyItem) {
-  return item.coverage_status === ItemCoverageStatus.Inactive && item.coverage_end_date
-}
-
 const getMenuItems = (item: PolicyItem) => {
   const menuItems: MenuItem[] = []
 
@@ -180,9 +178,6 @@ const redirectAndSetCurrentItem = (item: PolicyItem) => {
     goToItemDetails = true
   }
 }
-
-const getStatusClass = (status: string) =>
-  status === ItemCoverageStatus.Draft ? 'mdc-theme--primary mdc-bold-font' : ''
 
 const setAccountablePersonCountryIfNoneExists = () => {
   if (currentColumn.headerId === 'location') {
@@ -288,33 +283,36 @@ and Model
     {#each sortedItemsArray as item (item.id)}
       <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} let:rowId clickable>
         <Datatable.Checkbox {rowId} on:click={() => (goToItemDetails = false)} on:mounted={registerNewCheckbox} />
-        <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
+        <RowItem {item}>{item.name || ''}</RowItem>
         {#if snMakeAndModelAreVisible}
-          <Datatable.Data.Row.Item>{item.serial_number || ''}</Datatable.Data.Row.Item>
-          <Datatable.Data.Row.Item>{item.make || ''}</Datatable.Data.Row.Item>
-          <Datatable.Data.Row.Item>{item.model || ''}</Datatable.Data.Row.Item>
+          <RowItem {item}>{item.serial_number || ''}</RowItem>
+          <RowItem {item}>{item.make || ''}</RowItem>
+          <RowItem {item}>{item.model || ''}</RowItem>
         {/if}
-        <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}>
-          {#if item.coverage_status === ItemCoverageStatus.Approved && item.coverage_end_date}
-            <div class:red={!isEnded(item)}>
-              {isEnded(item) ? 'Coverage ended' : 'Covered through'}
+        <RowItem {item}>
+          {#if willEnd(item)}
+            <div class:red={!hasEnded(item)}>
+              Covered through
               {formatFriendlyDate(item.coverage_end_date)}
             </div>
+          {:else if hasEnded(item)}
+            Coverage ended
+            {formatFriendlyDate(item.coverage_end_date)}
           {:else}
             {getItemState(item.coverage_status)?.title || ''}
           {/if}
-        </Datatable.Data.Row.Item>
-        <Datatable.Data.Row.Item>{item.accountable_person?.name || ''}</Datatable.Data.Row.Item>
-        <Datatable.Data.Row.Item>{item.accountable_person?.country || item.country || ''}</Datatable.Data.Row.Item>
-        <Datatable.Data.Row.Item numeric>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
-        <Datatable.Data.Row.Item numeric>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
-        <Datatable.Data.Row.Item>{formatDate(item.updated_at)}</Datatable.Data.Row.Item>
-        <Datatable.Data.Row.Item>
+        </RowItem>
+        <RowItem {item}>{item.accountable_person?.name || ''}</RowItem>
+        <RowItem {item}>{item.accountable_person?.country || item.country || ''}</RowItem>
+        <RowItem {item} numeric>{formatMoney(item.coverage_amount)}</RowItem>
+        <RowItem {item} numeric>{formatMoney(item.annual_premium)}</RowItem>
+        <RowItem {item}>{formatDate(item.updated_at)}</RowItem>
+        <RowItem {item}>
           <IconButton icon="more_vert" on:click={() => handleMoreVertClick(item.id)} />
           <div class="item-menu">
             <Menu bind:menuOpen={shownMenus[item.id]} menuItems={getMenuItems(item)} />
           </div>
-        </Datatable.Data.Row.Item>
+        </RowItem>
       </Datatable.Data.Row>
     {/each}
   </Datatable.Data>

@@ -73,9 +73,7 @@ dl {
     <dl>
       <dt>Report Date</dt>
       <dd>{formatFriendlyDate(report.date)}</dd>
-      <dt>
-        File
-      </dt>
+      <dt>File</dt>
       <dd><FileLink on:expired={getReport} file={report.file} /></dd>
       <dt>Cleared</dt>
       <dd>{report.is_cleared ? 'Yes' : 'No'}</dd>

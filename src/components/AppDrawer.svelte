@@ -44,9 +44,6 @@ $beforeUrlChange((event: CustomEvent, route: string, { url }: { url: string }) =
   display: block;
   margin: 0 auto;
 }
-:global(.drawer .mdc-drawer__content div a.mdc-deprecated-list-item) {
-  margin: 8px;
-}
 </style>
 
 <Drawer

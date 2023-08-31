@@ -50,6 +50,7 @@ let uniqueIdentifier = ''
 $: setInitialValues($user, item)
 
 let initialCategoryId: string
+let shortNameExample = ''
 let today = new Date()
 
 $: country = item?.accountable_person?.country || country
@@ -65,6 +66,7 @@ $: make,
   accountablePersonId && categoryId && name && debouncedSave()
 $: selectedCategoryIsStationary =
   $categories.find((c) => c.id === categoryId)?.risk_category?.name === RiskCategoryNames.Stationary
+$: shortNameExample = `${make} ${model}`.trim()
 
 const debouncedSave = debounce(() => saveForLater(undefined, true), 4000)
 
@@ -214,7 +216,7 @@ span.label {
   <p>
     <TextFieldWithLabel
       label="Short name"
-      description="This label will appear on your statements."
+      description={'This label will appear on your statements.' + (shortNameExample ? ` Example: ${shortNameExample}` : '')}
       required
       bind:value={name}
     />

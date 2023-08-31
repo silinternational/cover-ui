@@ -174,6 +174,7 @@ span.label {
 </style>
 
 <Form on:submit={onSubmit}>
+  <h2>About the item</h2>
   <p>
     <span class="label">
       Category<span class="error">*</span>
@@ -223,6 +224,7 @@ span.label {
     <span class="label">Notes</span>
     <TextArea maxlength={MAX_TEXT_AREA_LENGTH} description="For your own use" bind:value={itemDescription} rows="4" />
   </p>
+  <h2>Coverage</h2>
   <p>
     <span class="label">Accountable Person<span class="error">*</span></span>
     <SelectAccountablePerson
@@ -243,6 +245,7 @@ span.label {
       <ConvertCurrencyLink />
     </Description>
   </p>
+  <h2>For your own use</h2>
   <p>
     <Button outlined on:click={saveForLater}>Save for later</Button>
     {#if itemIsDraft}

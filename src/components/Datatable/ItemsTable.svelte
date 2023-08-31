@@ -9,7 +9,7 @@ import { formatDate, formatFriendlyDate } from 'helpers/dates'
 import { throwError } from '../../error'
 import { formatMoney } from 'helpers/money'
 import { itemDetails, itemEdit } from 'helpers/routes'
-import { sortByNum, sortByString } from 'helpers/sort'
+import { sortBy } from 'helpers/sort'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import type { Column } from './types'
 import { capitalize } from 'lodash-es'
@@ -104,9 +104,7 @@ let shownMenus: { [name: string]: boolean } = {}
 let snMakeAndModelAreVisible = false
 
 $: selectedItemNames = checkedItems.map((item) => item.name)
-$: sortedItemsArray = currentColumn.numeric
-  ? sortByNum(currentColumn.path as string, items, ascending)
-  : sortByString(currentColumn.path as string, items, ascending)
+$: sortedItemsArray = sortBy(currentColumn.numeric, currentColumn.path, items, ascending) as PolicyItem[]
 $: allCheckedItemsAreDraft =
   checkedItems.length > 0 && checkedItems.every((item) => item.coverage_status === ItemCoverageStatus.Draft)
 $: batchActionIsDisabled = checkedItems.length === 0
@@ -116,6 +114,10 @@ $: batchDeleteIsDisabled =
 $: items && (checkedItems = returnFilteredCheckedItems())
 
 const dispatch = createEventDispatcher()
+
+function isEnded(item: PolicyItem) {
+  return item.coverage_status === ItemCoverageStatus.Inactive && item.coverage_end_date
+}
 
 const getMenuItems = (item: PolicyItem) => {
   const menuItems: MenuItem[] = []
@@ -294,7 +296,10 @@ and Model
         {/if}
         <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}>
           {#if item.coverage_status === ItemCoverageStatus.Approved && item.coverage_end_date}
-            <div class="red">Covered through {formatFriendlyDate(item.coverage_end_date)}</div>
+            <div class:red={!isEnded(item)}>
+              {isEnded(item) ? 'Coverage ended' : 'Covered through'}
+              {formatFriendlyDate(item.coverage_end_date)}
+            </div>
           {:else}
             {getItemState(item.coverage_status)?.title || ''}
           {/if}

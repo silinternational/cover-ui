@@ -212,10 +212,6 @@ span.label {
       bind:value={uniqueIdentifier}
     />
   </p>
-  <p>
-    <span class="label">Notes</span>
-    <TextArea maxlength={MAX_TEXT_AREA_LENGTH} description="For your own use" bind:value={itemDescription} rows="4" />
-  </p>
   <h2>Coverage</h2>
   <p>
     <span class="label">Accountable Person<span class="error">*</span></span>
@@ -245,6 +241,10 @@ span.label {
       required
       bind:value={name}
     />
+  </p>
+  <p>
+    <span class="label">Notes</span>
+    <TextArea maxlength={MAX_TEXT_AREA_LENGTH} description="For your own use" bind:value={itemDescription} rows="4" />
   </p>
   <p>
     <Button outlined on:click={saveForLater}>Save for later</Button>

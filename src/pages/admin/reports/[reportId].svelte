@@ -74,15 +74,9 @@ dl {
       <dt>Report Date</dt>
       <dd>{formatFriendlyDate(report.date)}</dd>
       <dt>
-        File for Sage
-        <div class="fs-12">Mixed transations</div>
+        File
       </dt>
       <dd><FileLink on:expired={getReport} file={report.file} /></dd>
-      <dt>
-        File for NetSuite
-        <div class="fs-12">Split transations</div>
-      </dt>
-      <dd><FileLink on:expired={getReport} file={report.zip} /></dd>
       <dt>Cleared</dt>
       <dd>{report.is_cleared ? 'Yes' : 'No'}</dd>
       <dt>Transactions</dt>

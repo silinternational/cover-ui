@@ -242,7 +242,7 @@ section:not(:first-child) {
         {/if}
       </dl>
       <div class="menu-button-container">
-        <Button outlined="true" appendIcon="arrow_drop_down" on:click={toggleDownloadMenu}>Download</Button>
+        <Button outlined appendIcon="arrow_drop_down" on:click={toggleDownloadMenu}>Download</Button>
         <Menu bind:menuOpen={downloadMenuOpen} menuItems={downloadMenuItems} />
       </div>
     </div>

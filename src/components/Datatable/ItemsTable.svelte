@@ -21,6 +21,7 @@ export let items = [] as PolicyItem[]
 export let policyId: string
 export let title: string = ''
 export let includeCopyToClipboard: boolean = true
+export let uniqueTableClass = generateRandomID('items-table-')
 
 const columnIndicesToToggle = [1, 2, 3]
 const columns: Column[] = [
@@ -90,7 +91,6 @@ const columns: Column[] = [
     sortable: true,
   },
 ]
-export let uniqueTableClass = generateRandomID('items-table-')
 
 let numberOfCheckboxes = 0
 let headerId = 'name'

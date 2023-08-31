@@ -1,19 +1,19 @@
 <script lang="ts">
-import BatchItemClone from '../BatchItemClone.svelte'
-import BatchItemDelete from '../BatchItemDelete.svelte'
+import BatchItemClone from '../../BatchItemClone.svelte'
+import BatchItemDelete from '../../BatchItemDelete.svelte'
 import { hasEnded, willEnd } from 'components/forms/items/itemTableHelpers'
-import CopyTableButton from './CopyTableButton.svelte'
+import CopyTableButton from '../CopyTableButton.svelte'
 import { ClaimItem, incompleteClaimItemStatuses, selectedPolicyClaims } from 'data/claims'
 import { getItemState } from 'data/states'
 import { AccountablePerson, editableCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/items'
 import { formatDate, formatFriendlyDate } from 'helpers/dates'
-import { throwError } from '../../error'
+import { throwError } from '../../../error'
 import { formatMoney } from 'helpers/money'
 import { itemDetails, itemEdit } from 'helpers/routes'
 import { sortBy } from 'helpers/sort'
-import ItemDeleteModal from '../ItemDeleteModal.svelte'
+import ItemDeleteModal from '../../ItemDeleteModal.svelte'
 import RowItem from './RowItem.svelte'
-import type { Column } from './types'
+import type { Column } from '../types'
 import { capitalize } from 'lodash-es'
 import { createEventDispatcher } from 'svelte'
 import { Checkbox, Datatable, IconButton, Menu, MenuItem } from '@silintl/ui-components'
@@ -293,7 +293,7 @@ and Model
         {/if}
         <RowItem {item} className={getStatusClass(item.coverage_status)}>
           {#if willEnd(item)}
-            <div class:red={!hasEnded(item)}>
+            <div class="red">
               Covered through
               {formatFriendlyDate(item.coverage_end_date)}
             </div>

@@ -46,7 +46,6 @@ export let policyId: string
 let policy = {} as Policy
 let showAllClaims = false
 let hideInactive = false
-let downloadMenuOpen = false
 const uniqueTableClass = generateRandomID('items-table-')
 
 onMount(() => {
@@ -116,21 +115,6 @@ const onBatchClone = (e: CustomEvent<PolicyItem[]>) => {
 const hideInactiveItems = (): void => {
   hideInactive = true
 }
-
-const toggleDownloadMenu = () => (downloadMenuOpen = !downloadMenuOpen)
-// TODO: I prefer `icon: 'table_rows→csv_file',`, but it may need a dependency update?
-const downloadMenuItems: MenuItem[] = [
-  {
-    icon: 'table_rows',
-    label: 'All transactions (.csv for Sage)',
-    url: 'http://example.com',
-  },
-  {
-    icon: 'folder_zip',
-    label: 'Transactions split by type (.zip for NetSuite)',
-    url: 'http://example.com',
-  },
-]
 
 const showInactiveItems = (): void => {
   hideInactive = false
@@ -241,10 +225,6 @@ section:not(:first-child) {
           <dd>{policy.household_id || '-'}</dd>
         {/if}
       </dl>
-      <div class="menu-button-container">
-        <Button outlined appendIcon="arrow_drop_down" on:click={toggleDownloadMenu}>Download</Button>
-        <Menu bind:menuOpen={downloadMenuOpen} menuItems={downloadMenuItems} />
-      </div>
     </div>
   </header>
 
@@ -298,7 +278,7 @@ section:not(:first-child) {
           <Switch on:selected={hideInactiveItems} on:deselected={showInactiveItems} label="Hide Inactive" />
         {/if}
         <!-- TODO Add download function -->
-        <Button outlined="true" prependIcon="download">Download</Button>
+        <Button outlined prependIcon="download">Download</Button>
         <CopyTableButton {uniqueTableClass} />
       </div>
     </header>

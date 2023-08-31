@@ -213,14 +213,6 @@ span.label {
     />
   </p>
   <p>
-    <TextFieldWithLabel
-      label="Short name"
-      description="This label will appear on your statements."
-      required
-      bind:value={name}
-    />
-  </p>
-  <p>
     <span class="label">Notes</span>
     <TextArea maxlength={MAX_TEXT_AREA_LENGTH} description="For your own use" bind:value={itemDescription} rows="4" />
   </p>
@@ -246,6 +238,14 @@ span.label {
     </Description>
   </p>
   <h2>For your own use</h2>
+  <p>
+    <TextFieldWithLabel
+      label="Short name"
+      description="This label will appear on your statements."
+      required
+      bind:value={name}
+    />
+  </p>
   <p>
     <Button outlined on:click={saveForLater}>Save for later</Button>
     {#if itemIsDraft}

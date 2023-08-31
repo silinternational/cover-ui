@@ -64,9 +64,17 @@ $: make,
   uniqueIdentifier,
   marketValueUSD,
   accountablePersonId && categoryId && name && debouncedSave()
-$: selectedCategoryIsStationary =
-  $categories.find((c) => c.id === categoryId)?.risk_category?.name === RiskCategoryNames.Stationary
-$: shortNameExample = `${make} ${model}`.trim()
+$: selectedCategory = $categories.find((c) => c.id === categoryId)
+$: selectedCategoryIsStationary = selectedCategory?.risk_category?.name === RiskCategoryNames.Stationary
+$: selectedCategoryIsVehicle = selectedCategory?.risk_category?.name === RiskCategoryNames.Vehicle
+$: shortNameExample = assembleShortNameExample(selectedCategoryIsVehicle, make, model)
+
+const assembleShortNameExample = (isVehicle, make, model) => {
+  if (isVehicle) {
+    return `${make} ${model}`.trim()
+  }
+  return ''
+}
 
 const debouncedSave = debounce(() => saveForLater(undefined, true), 4000)
 

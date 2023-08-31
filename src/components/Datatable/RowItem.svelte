@@ -5,9 +5,11 @@ import type { PolicyItem } from 'data/items'
 
 export let item: PolicyItem
 export let numeric = false
+export let className = ''
 
 const getRowClass = (item: PolicyItem) => {
-  if (noCoverage(item.coverage_status)) return 'low-contrast'
+  if (noCoverage(item.coverage_status)) return `low-contrast ${className}`
+  return className
 }
 </script>
 

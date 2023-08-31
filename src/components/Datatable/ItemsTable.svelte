@@ -237,6 +237,8 @@ const toggleShowSnMakeAndModel = () => {
   columnIndicesToToggle.forEach((i) => (columns[i].hidden = !columns[i].hidden))
   snMakeAndModelAreVisible = !snMakeAndModelAreVisible
 }
+const getStatusClass = (status: ItemCoverageStatus) =>
+  status === ItemCoverageStatus.Draft ? 'mdc-theme--primary mdc-bold-font' : ''
 </script>
 
 <style>
@@ -289,7 +291,7 @@ and Model
           <RowItem {item}>{item.make || ''}</RowItem>
           <RowItem {item}>{item.model || ''}</RowItem>
         {/if}
-        <RowItem {item}>
+        <RowItem {item} className={getStatusClass(item.coverage_status)}>
           {#if willEnd(item)}
             <div class:red={!hasEnded(item)}>
               Covered through

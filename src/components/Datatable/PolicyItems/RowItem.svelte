@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Datatable } from '@silintl/ui-components'
-import { noCoverage } from 'components/forms/items/itemTableHelpers'
+import { noCoverage } from 'components/Datatable/PolicyItems/itemTableHelpers'
 import type { PolicyItem } from 'data/items'
 
 export let item: PolicyItem

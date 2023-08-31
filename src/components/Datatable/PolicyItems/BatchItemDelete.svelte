@@ -1,5 +1,5 @@
 <script lang="ts">
-import InfoModal from '../../InfoModal.svelte'
+import { InfoModal } from 'components'
 import { Button, Dialog } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 

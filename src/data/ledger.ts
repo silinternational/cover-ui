@@ -5,8 +5,7 @@ import { writable } from 'svelte/store'
 
 export type LedgerReport = {
   id: string
-  file: CoverFile // Mixed all transactions (Sage)(original)
-  zip: CoverFile // Split transactions into files by type (NetSuite)
+  file: CoverFile
   type: string
   date: string
   is_cleared: boolean

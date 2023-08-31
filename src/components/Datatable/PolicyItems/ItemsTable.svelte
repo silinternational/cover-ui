@@ -1,6 +1,6 @@
 <script lang="ts">
-import BatchItemClone from '../../BatchItemClone.svelte'
-import BatchItemDelete from '../../BatchItemDelete.svelte'
+import BatchItemClone from './BatchItemClone.svelte'
+import BatchItemDelete from './BatchItemDelete.svelte'
 import { hasEnded, willEnd } from 'components/forms/items/itemTableHelpers'
 import CopyTableButton from '../CopyTableButton.svelte'
 import { ClaimItem, incompleteClaimItemStatuses, selectedPolicyClaims } from 'data/claims'

@@ -27,17 +27,7 @@ import {
   settingsPolicy,
 } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
-import {
-  Button,
-  Checkbox,
-  Datatable,
-  isAboveMobile,
-  isAboveTablet,
-  Menu,
-  MenuItem,
-  Page,
-  Switch,
-} from '@silintl/ui-components'
+import { Button, Checkbox, Datatable, isAboveMobile, isAboveTablet, Page, Switch } from '@silintl/ui-components'
 import { generateRandomID } from '@silintl/ui-components/random'
 import { onMount } from 'svelte'
 

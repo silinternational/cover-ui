@@ -249,7 +249,6 @@ span.label {
     <TextArea
       label="Notes (optional)"
       maxlength={MAX_TEXT_AREA_LENGTH}
-      description="For your own use"
       bind:value={itemDescription}
       rows="4"
     />

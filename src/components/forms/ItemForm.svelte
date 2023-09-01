@@ -229,8 +229,11 @@ span.label {
     />
   </p>
   <p>
-    <span class="label">Coverage value (USD)<span class="error">*</span></span>
-    <MoneyInput bind:value={marketValueUSD} disabled={marketValueIsDisabled} />
+    <MoneyInput
+      label="Coverage value (USD)"
+      bind:value={marketValueUSD}
+      disabled={marketValueIsDisabled}
+    />
     <Description>
       <ConvertCurrencyLink />
     </Description>

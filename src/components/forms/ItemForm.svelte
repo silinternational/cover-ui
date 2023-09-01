@@ -175,12 +175,9 @@ span.label {
 <Form on:submit={onSubmit}>
   <h2>About the item</h2>
   <p>
-    <span class="label">
-      Category<span class="error">*</span>
-    </span>
     <Select
       width="360px"
-      label="Input"
+      label="Category"
       options={$categories}
       selectedID={initialCategoryId}
       on:change={onSelectCategory}
@@ -250,8 +247,13 @@ span.label {
     />
   </p>
   <p>
-    <span class="label">Notes (optional)</span>
-    <TextArea maxlength={MAX_TEXT_AREA_LENGTH} description="For your own use" bind:value={itemDescription} rows="4" />
+    <TextArea
+      label="Notes (optional)"
+      maxlength={MAX_TEXT_AREA_LENGTH}
+      description="For your own use"
+      bind:value={itemDescription}
+      rows="4"
+    />
   </p>
   <p>
     <Button outlined on:click={saveForLater}>Save for later</Button>

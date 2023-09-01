@@ -10,9 +10,8 @@ import { categories, loadCategories, initialized as catItemsInitialized } from '
 import user, { isAdmin, User } from 'data/user'
 import { areMakeAndModelRequired, validateForSubmit, validateForSave } from './items/itemFormHelpers'
 import SelectAccountablePerson from '../SelectAccountablePerson.svelte'
-import TextFieldWithLabel from '../TextFieldWithLabel.svelte'
 import { debounce } from 'lodash-es'
-import { Button, Card, Form, MoneyInput, Select, TextArea } from '@silintl/ui-components'
+import { Button, Card, Form, MoneyInput, Select, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let item = {} as PolicyItem
@@ -200,22 +199,25 @@ span.label {
     {/if}
   </p>
   <p>
-    <TextFieldWithLabel
+    <TextField
       label="Brand (optional)"
+      class="mw-300"
       description="e.g., Apple or Toyota"
       bind:value={make}
     />
   </p>
   <p>
-    <TextFieldWithLabel
+    <TextField
       label="Model (optional)"
+      class="mw-300"
       description="e.g., iPhone 10 Max 64 GB, A1921, or Land Cruiser"
       bind:value={model}
     />
   </p>
   <p>
-    <TextFieldWithLabel
+    <TextField
       label="Serial number (optional for fast approval)"
+      class="mw-300"
       description="e.g., VIN, IMEI, or service tag"
       bind:value={uniqueIdentifier}
     />
@@ -239,8 +241,9 @@ span.label {
   </p>
   <h2>For your own use</h2>
   <p>
-    <TextFieldWithLabel
+    <TextField
       label="Statement name"
+      class="mw-300"
       description="Customize what will appear on your financial statements"
       required
       bind:value={name}

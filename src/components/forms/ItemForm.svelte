@@ -200,15 +200,23 @@ span.label {
     {/if}
   </p>
   <p>
-    <TextFieldWithLabel label="Brand" description={'For example, "Apple"'} bind:value={make} />
-  </p>
-  <p>
-    <TextFieldWithLabel label="Model" description="For example, “iPhone 10 Max 64 GB” or “A1921”" bind:value={model} />
+    <TextFieldWithLabel
+      label="Brand (optional)"
+      description="e.g., Apple or Toyota"
+      bind:value={make}
+    />
   </p>
   <p>
     <TextFieldWithLabel
-      label="Unique identifier"
-      description="Optional. Serial number, IMEI, service tag, VIN"
+      label="Model (optional)"
+      description="e.g., iPhone 10 Max 64 GB, A1921, or Land Cruiser"
+      bind:value={model}
+    />
+  </p>
+  <p>
+    <TextFieldWithLabel
+      label="Serial number (optional for fast approval)"
+      description="e.g., VIN, IMEI, or service tag"
       bind:value={uniqueIdentifier}
     />
   </p>
@@ -221,13 +229,9 @@ span.label {
       on:populated={onAccountablePersonSelectPopulated}
       on:change={onAccountablePersonChange}
     />
-    <Description>
-      Dependents are eligible. Dependents include spouses and children under 26 who haven't married or finished college.
-      Coverage for children is limited to $3,000 per household.
-    </Description>
   </p>
   <p>
-    <span class="label">Value to cover (USD)<span class="error">*</span></span>
+    <span class="label">Coverage value (USD)<span class="error">*</span></span>
     <MoneyInput bind:value={marketValueUSD} disabled={marketValueIsDisabled} required />
     <Description>
       <ConvertCurrencyLink />
@@ -236,14 +240,14 @@ span.label {
   <h2>For your own use</h2>
   <p>
     <TextFieldWithLabel
-      label="Short name"
-      description="This label will appear on your statements."
+      label="Statement name"
+      description="Customize what will appear on your financial statements"
       required
       bind:value={name}
     />
   </p>
   <p>
-    <span class="label">Notes</span>
+    <span class="label">Notes (optional)</span>
     <TextArea maxlength={MAX_TEXT_AREA_LENGTH} description="For your own use" bind:value={itemDescription} rows="4" />
   </p>
   <p>

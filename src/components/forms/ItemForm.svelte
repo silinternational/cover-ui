@@ -221,7 +221,6 @@ span.label {
   </p>
   <h2>Coverage</h2>
   <p>
-    <span class="label">Accountable Person<span class="error">*</span></span>
     <SelectAccountablePerson
       {policyId}
       selectedID={selectedAccountablePersonId}

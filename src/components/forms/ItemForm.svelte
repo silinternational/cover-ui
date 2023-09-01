@@ -230,7 +230,7 @@ span.label {
   </p>
   <p>
     <span class="label">Coverage value (USD)<span class="error">*</span></span>
-    <MoneyInput bind:value={marketValueUSD} disabled={marketValueIsDisabled} required />
+    <MoneyInput bind:value={marketValueUSD} disabled={marketValueIsDisabled} />
     <Description>
       <ConvertCurrencyLink />
     </Description>
@@ -241,7 +241,6 @@ span.label {
       label="Statement name"
       class="mw-300"
       description="Customize what will appear on your financial statements"
-      required
       bind:value={name}
     />
   </p>

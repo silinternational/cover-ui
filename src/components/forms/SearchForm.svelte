@@ -15,6 +15,12 @@ const onKeydown = debounce(() => dispatch('search', searchFieldContents), 500)
 </script>
 
 <Form>
-  Search:
-  <TextField {maxlength} bind:value={searchFieldContents} on:keydown={onKeydown} />
+  <TextField
+    {maxlength}
+    bind:value={searchFieldContents}
+    on:keydown={onKeydown}
+    label="Search"
+    icon="search"
+    name="searchField"
+  />
 </Form>

@@ -6,8 +6,8 @@ import { Button, setNotice } from '@silintl/ui-components'
 export let uniqueTableClass: string
 
 let content =
-  'You can paste the contents of this table into a spreadsheet program like Excel or Google Sheets by pressing Ctrl+V (Windows) or Cmd+V (Mac).'
-let title = 'Copy Table Contents'
+  'You can paste the contents of this table into a spreadsheet program like Excel or Google Sheets. On Windows, type Ctrl+V. On macOS, type ⌘+V.'
+let title = 'Copy Table to Clipboard'
 
 async function copy() {
   const tableContentsClone = document.getElementsByClassName(uniqueTableClass)[0].cloneNode(true)
@@ -33,14 +33,14 @@ async function copy() {
     await copyToClipboard(html)
     setNotice('Copied to clipboard')
   } else {
-    setNotice('There was a problem copying the table, you can highlight the table and copy it manually')
+    setNotice('There was a problem copying the table. Try highlighting the table and copy it manually')
   }
   hiddenElement.remove()
 }
 </script>
 
 <div class="flex align-items-center">
-  <Button on:click={copy}>Copy Table contents</Button>
+  <Button outlined appendIcon="content_copy" title="Copy to Clipboard" on:click={copy}>Copy</Button>
 
   <InfoModal hasInfoButton {content} {title} />
 </div>

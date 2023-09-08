@@ -122,12 +122,6 @@ const showInactiveItems = (): void => {
   font-size: 11px;
 }
 
-.button-group {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-}
-
 section:not(:first-child) {
   margin-block-start: 2rem;
 }
@@ -261,14 +255,12 @@ section:not(:first-child) {
   <section>
     <header class="flex justify-between align-items-center">
       <h2>Items <span class="subtext">{approvedItems?.length} covered</span></h2>
-      <div class="button-group">
+      <div class="button-group gap-sm">
         {#if isAboveTablet()}
           <Checkbox label="Hide Inactive" on:checked={hideInactiveItems} on:unchecked={showInactiveItems} />
         {:else}
           <Switch on:selected={hideInactiveItems} on:deselected={showInactiveItems} label="Hide Inactive" />
         {/if}
-        <!-- TODO Add download function -->
-        <Button outlined prependIcon="download">Download</Button>
         <CopyTableButton {uniqueTableClass} />
       </div>
     </header>

@@ -24,9 +24,8 @@ const handleDialog = (choice: string) => {
 }
 </script>
 
-<span>
-  <Button class="mb-1" disabled={isDisabled} on:click={() => (modalIsOpen = true)}>{buttonLabel}</Button>
-
+<span class="flex align-items-center">
+  <Button disabled={isDisabled} on:click={() => (modalIsOpen = true)}>{buttonLabel}</Button>
   <InfoModal hasInfoButton content={infoModalContent} title="Some items can't be deleted" />
 </span>
 <Dialog.Alert

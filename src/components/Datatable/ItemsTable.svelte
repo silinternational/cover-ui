@@ -252,24 +252,18 @@ const toggleShowSnMakeAndModel = () => {
 .red {
   color: var(--mdc-theme-status-error);
 }
-.button-group {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-}
 </style>
 
 {#if title}
   <h3>{title}</h3>
 {/if}
 
-<div class="button-group">
+<div class="flex align-items-center">
   <BatchItemDelete isDisabled={batchDeleteIsDisabled} {allCheckedItemsAreDraft} on:closed={handleClosed} />
 
   <BatchItemClone isDisabled={batchActionIsDisabled} {selectedItemNames} on:closed={handleClosed} />
 
   <Checkbox
-    class="mb-1"
     on:checked={toggleShowSnMakeAndModel}
     on:unchecked={toggleShowSnMakeAndModel}
     label="Show Serial, Make and Model"

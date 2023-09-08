@@ -6,8 +6,8 @@ import { Button, setNotice } from '@silintl/ui-components'
 export let uniqueTableClass: string
 
 let content =
-  'You can paste the contents of this table into a spreadsheet program like Excel or Google Sheets by pressing Ctrl+V (Windows) or Cmd+V (Mac).'
-let title = 'Copy Table Contents'
+  'You can paste the contents of this table into a spreadsheet program like Excel or Google Sheets. On Windows, type Ctrl+V. On macOS, type ⌘+V.'
+let title = 'Copy Table to Clipboard'
 
 async function copy() {
   const tableContentsClone = document.getElementsByClassName(uniqueTableClass)[0].cloneNode(true)

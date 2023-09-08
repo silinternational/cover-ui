@@ -286,9 +286,14 @@ section:not(:first-child) {
     {/if}
   </section>
 
-  <CustomerReport {policy} />
+  <section>
+    <h2>Reports</h2>
+    <CustomerReport {policy} />
+  </section>
 
-  <Strikes {userIsAdmin} {policy} />
+  <section>
+    <Strikes {userIsAdmin} {policy} />
+  </section>
 
   <div class="p-2" />
 </Page>

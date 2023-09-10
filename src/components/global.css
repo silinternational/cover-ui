@@ -73,5 +73,5 @@ p {
 }
 
 td.low-contrast.mdc-data-table__cell {
-  color: var(--mdc-theme-low-contrast);
+  color: var(--mdc-theme-text-secondary-on-light);
 }

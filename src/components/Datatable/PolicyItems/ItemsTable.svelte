@@ -7,13 +7,14 @@ import { ClaimItem, incompleteClaimItemStatuses, selectedPolicyClaims } from 'da
 import { getItemState } from 'data/states'
 import { AccountablePerson, editableCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/items'
 import { formatDate, formatFriendlyDate } from 'helpers/dates'
-import { hasEnded, willEnd } from './itemTableHelpers'
+import { getItemIcon, hasEnded, willEnd } from './itemTableHelpers'
 import { throwError } from '../../../error'
 import { formatMoney } from 'helpers/money'
 import { itemDetails, itemEdit } from 'helpers/routes'
 import { sortBy } from 'helpers/sort'
 import RowItem from './RowItem.svelte'
 import type { Column } from '../types'
+import 'iconify-icon'
 import { capitalize } from 'lodash-es'
 import { createEventDispatcher } from 'svelte'
 import { Checkbox, Datatable, IconButton, Menu, MenuItem } from '@silintl/ui-components'
@@ -272,6 +273,7 @@ and Model
 >
   <Datatable.Header>
     <Datatable.Header.Checkbox />
+    <Datatable.Header.Item><iconify-icon icon="mdi:category" /></Datatable.Header.Item>
     <!--TODO: make the amount of columns shown be dependent on the device size-->
     {#each columns as column}
       {#if !column.hidden}
@@ -285,6 +287,7 @@ and Model
     {#each sortedItemsArray as item (item.id)}
       <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} let:rowId clickable>
         <Datatable.Checkbox {rowId} on:click={() => (goToItemDetails = false)} on:mounted={registerNewCheckbox} />
+        <RowItem {item}><iconify-icon icon={getItemIcon(item.category.name)} /></RowItem>
         <RowItem {item}>{item.name || ''}</RowItem>
         {#if snMakeAndModelAreVisible}
           <RowItem {item}>{item.serial_number || ''}</RowItem>

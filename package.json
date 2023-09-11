@@ -18,7 +18,7 @@
     "lint:fix": "eslint --fix ./'src/**/*.{js,ts,svelte}'",
     "prelint": "bun run format",
     "local:dev": "run-p -l build:dev serve:http",
-    "local:prod": "run-p -l build:prod serve:http",
+    "local:prod": "conc 'build:prod' 'serve:http'",
     "serve:http": "sirv dist --dev --host 0.0.0.0 --port 8081 --single",
     "serve:https": "sirv dist --dev --host 0.0.0.0 --port 8443 --single --http2 --key key.pem --cert cert.pem"
   },

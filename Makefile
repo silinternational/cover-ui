@@ -1,20 +1,20 @@
 start: install local-dev
 
 docker:
-	docker-compose run --rm app npm install
+	docker-compose run --rm app bun install
 	docker-compose run --rm --service-ports app
 
 install:
-	npm install
+	bun install
 
 local-dev:
-	npm run local:dev
+	bun run local:dev
 
 local-prod:
-	npm run local:prod
+	bun run local:prod
 
 build-prod:
-	npm run build:prod
+	bun run build:prod
 
 clean:
-	npm run clean
+	bun run clean

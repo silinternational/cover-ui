@@ -1,6 +1,6 @@
 # Cover-UI
 
-> You will need [Node.js](https://nodejs.org) and optionally [make](https://www.npmjs.com/package/make) installed.
+> You will need [Bun](https://bun.sh/docs/installation) and optionally [make](https://www.npm.com/package/make) installed.
 
 ## env variables
 
@@ -24,13 +24,13 @@ Add `127.0.0.1 cover.local` to `/etc/hosts` (or equivalent for your OS)
 Install the dependencies...
 
 ```bash
-npm i
+bun i
 ```
 
 ...then start [Rollup](https://rollupjs.org):
 
 ```bash
-npm run local:dev
+bun run local:dev
 ```
 
 or
@@ -47,7 +47,7 @@ _(configured to auto-reload page for any changes)_.
 Install the dependencies...
 
 ```bash
-docker-compose run --rm app npm install
+docker-compose run --rm app bun install
 ```
 
 ...then start [Rollup](https://rollupjs.org):
@@ -68,7 +68,7 @@ Navigate to <http://cover.local:8081>. You should see your app running app. It w
 ### Running in prod mode
 
 ```bash
-npm run local:prod
+bun run local:prod
 ```
 
 or
@@ -82,7 +82,7 @@ make local-prod
 ### Clean up
 
 ```bash
-npm run clean
+bun run clean
 ```
 
 or
@@ -96,7 +96,7 @@ make clean
 Build the optimized app...
 
 ```bash
-npm run build:prod
+bun run build:prod
 ```
 
 or

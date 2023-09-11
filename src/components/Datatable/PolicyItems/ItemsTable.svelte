@@ -287,14 +287,14 @@ and Model
     {#each sortedItemsArray as item (item.id)}
       <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} let:rowId clickable>
         <Datatable.Checkbox {rowId} on:click={() => (goToItemDetails = false)} on:mounted={registerNewCheckbox} />
-        <RowItem {item}><iconify-icon icon={getItemIcon(item.category.name)} /></RowItem>
-        <RowItem {item}>{item.name || ''}</RowItem>
+        <RowItem status={item.coverage_status}><iconify-icon icon={getItemIcon(item.category.name)} /></RowItem>
+        <RowItem status={item.coverage_status}>{item.name || ''}</RowItem>
         {#if snMakeAndModelAreVisible}
-          <RowItem {item}>{item.serial_number || ''}</RowItem>
-          <RowItem {item}>{item.make || ''}</RowItem>
-          <RowItem {item}>{item.model || ''}</RowItem>
+          <RowItem status={item.coverage_status}>{item.serial_number || ''}</RowItem>
+          <RowItem status={item.coverage_status}>{item.make || ''}</RowItem>
+          <RowItem status={item.coverage_status}>{item.model || ''}</RowItem>
         {/if}
-        <RowItem {item} className={getStatusClass(item.coverage_status)}>
+        <RowItem status={item.coverage_status} className={getStatusClass(item.coverage_status)}>
           {#if willEnd(item)}
             <div class="red">
               Covered through
@@ -307,12 +307,12 @@ and Model
             {getItemState(item.coverage_status)?.title || ''}
           {/if}
         </RowItem>
-        <RowItem {item}>{item.accountable_person?.name || ''}</RowItem>
-        <RowItem {item}>{item.accountable_person?.country || item.country || ''}</RowItem>
-        <RowItem {item} numeric>{formatMoney(item.coverage_amount)}</RowItem>
-        <RowItem {item} numeric>{formatMoney(item.annual_premium)}</RowItem>
-        <RowItem {item}>{formatDate(item.updated_at)}</RowItem>
-        <RowItem {item}>
+        <RowItem status={item.coverage_status}>{item.accountable_person?.name || ''}</RowItem>
+        <RowItem status={item.coverage_status}>{item.accountable_person?.country || item.country || ''}</RowItem>
+        <RowItem status={item.coverage_status} numeric>{formatMoney(item.coverage_amount)}</RowItem>
+        <RowItem status={item.coverage_status} numeric>{formatMoney(item.annual_premium)}</RowItem>
+        <RowItem status={item.coverage_status}>{formatDate(item.updated_at)}</RowItem>
+        <RowItem status={item.coverage_status}>
           <IconButton icon="more_vert" on:click={() => handleMoreVertClick(item.id)} />
           <div class="item-menu">
             <Menu bind:menuOpen={shownMenus[item.id]} menuItems={getMenuItems(item)} />

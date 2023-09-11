@@ -71,7 +71,3 @@ p {
     display: none !important;
   }
 }
-
-td.low-contrast.mdc-data-table__cell {
-  color: var(--mdc-theme-text-secondary-on-light);
-}

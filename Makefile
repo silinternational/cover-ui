@@ -18,3 +18,6 @@ build-prod:
 
 clean:
 	npm run clean
+
+bun:
+	bun run bun:dev

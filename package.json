@@ -19,6 +19,8 @@
     "prelint": "npm run format",
     "local:dev": "run-p -l build:dev serve:http",
     "local:prod": "run-p -l build:prod serve:http",
+    "bun:dev": "conc \"bun run build:dev\" \"bun run serve:http\"",
+    "bun:prod": "conc \"bun run build:prod\" \"bun run serve:http\"",
     "serve:http": "sirv dist --dev --host 0.0.0.0 --port 8081 --single",
     "serve:https": "sirv dist --dev --host 0.0.0.0 --port 8443 --single --http2 --key key.pem --cert cert.pem"
   },
@@ -38,6 +40,7 @@
     "@types/qs": "^6.9.7",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
+    "concurrently": "^8.2.1",
     "croppie": "^2.6.5",
     "date-fns": "^2.30.0",
     "eslint": "^7.32.0",

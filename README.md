@@ -19,7 +19,7 @@ API_HOST=//cover.local:3000
 
 Add `127.0.0.1 cover.local` to `/etc/hosts` (or equivalent for your OS)
 
-## Local development
+## Local development using npm
 
 Install the dependencies...
 
@@ -37,6 +37,26 @@ or
 
 ```bash
 make
+```
+
+## Local development using bun
+
+Install the dependencies...
+
+```bash
+bun i
+```
+
+...then start [Rollup](https://rollupjs.org):
+
+```bash
+bun run local:dev
+```
+
+or
+
+```bash
+make bun
 ```
 
 Navigate to <http://cover.local:8081>. You should see your app running app

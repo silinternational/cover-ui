@@ -50,7 +50,7 @@ bun i
 ...then start [Rollup](https://rollupjs.org):
 
 ```bash
-bun run local:dev
+bun run bun:dev
 ```
 
 or

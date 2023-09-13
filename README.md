@@ -59,6 +59,8 @@ or
 make bun
 ```
 
+Note: this won't update package-lock.json so if you change dependencies you will need to run `npm install` to do so.
+
 Navigate to <http://cover.local:8081>. You should see your app running app
 _(configured to auto-reload page for any changes)_.
 

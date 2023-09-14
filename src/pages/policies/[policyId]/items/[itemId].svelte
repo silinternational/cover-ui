@@ -30,7 +30,7 @@ onMount(() => {
   loadPolicy(policyId)
 })
 
-let deleteDialgoOpen = false
+let deleteDialogOpen = false
 let denyDialogOpen = false
 let denyDialogButtons: Dialog.AlertButton[] = []
 let denyDialogMessage: string
@@ -46,7 +46,7 @@ $: status === ItemCoverageStatus.Draft && isMemberOfPolicy && editItemRedirect()
 
 $: policy = $policies.find((policy) => policy.id === policyId) || ({} as Policy)
 
-$: allowRemoveCovereage = (![ItemCoverageStatus.Inactive, ItemCoverageStatus.Denied].includes(status) &&
+$: allowRemoveCoverage = (![ItemCoverageStatus.Inactive, ItemCoverageStatus.Denied].includes(status) &&
   isMemberOfPolicy) as boolean
 $: canEdit = editableCoverageStatuses.includes(status) && isMemberOfPolicy
 
@@ -76,7 +76,7 @@ const goToNewClaim = () => {
 }
 
 const handleRemoveDialog = async (event: CustomEvent<string>) => {
-  deleteDialgoOpen = false
+  deleteDialogOpen = false
   if (event.detail === 'remove') {
     await deleteItem(policyId, itemId)
 
@@ -134,20 +134,24 @@ const onReviseItem = () => {
       We could not find that item. Please <a href={itemsRoute(policyId)}>go back</a> and select an item from the list.
     {/if}
   {:else}
-    <div class="flex justify-between align-items-center">
-      <Breadcrumb links={breadcrumbLinks} />
-      <div>
-        {#if allowRemoveCovereage}
-          <Button class="remove-button mx-5px" on:click={() => (deleteDialgoOpen = true)}>Remove</Button>
+    <header>
+      <div class="flex justify-between align-items-center">
+        <Breadcrumb links={breadcrumbLinks} />
+      </div>
+      <h1>Item Details</h1>
+    </header>
+
+    <ItemDetails {item} {policyId} {isAdmin}>
+      <span slot="headerButtonGroup">
+        <ItemDeleteModal open={deleteDialogOpen} {item} on:closed={handleRemoveDialog} />
+        {#if allowRemoveCoverage}
+          <Button class="remove-button mx-5px" on:click={() => (deleteDialogOpen = true)}>Remove</Button>
         {/if}
         {#if canEdit}
           <Button on:click={goToEditItem}>Edit Item</Button>
         {/if}
-      </div>
-    </div>
-
-    <ItemDeleteModal open={deleteDialgoOpen} {item} on:closed={handleRemoveDialog} />
-    <ItemDetails {item} {policyId} {isAdmin} />
+      </span>
+    </ItemDetails>
 
     <br />
     {#if status === ItemCoverageStatus.Approved && isMemberOfPolicy}

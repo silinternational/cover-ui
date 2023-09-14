@@ -8,7 +8,7 @@ import { formatDate } from '../helpers/dates'
 import { formatMoney } from 'helpers/money'
 import InfoBoxModal from './InfoBoxModal.svelte'
 import { formatDistanceToNow } from 'date-fns'
-import { IconButton } from '@silintl/ui-components'
+import { IconButton, StaticChip } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 export let item: PolicyItem
@@ -70,6 +70,12 @@ const toggleModal = (i: number) => (showInfoBox[i] = !showInfoBox[i])
 </script>
 
 <style>
+.payment-header {
+  background-color: var(--mdc-theme-neutral-bg);
+  padding: 4px;
+  border-radius: 8px 8px 0 0;
+}
+
 .wrapper {
   background-color: var(--mdc-theme-neutral-9);
   border-radius: 0 0 8px 8px;
@@ -107,6 +113,14 @@ const toggleModal = (i: number) => (showInfoBox[i] = !showInfoBox[i])
     {/if}
   </div>
 {/if}
+
+<div class="payment-header flex justify-between align-items-center px-1">
+  <span class="flex align-items-center gap-sm">
+    <h2>{item.name}</h2>
+    <StaticChip>Placeholder</StaticChip>
+  </span>
+  <slot name="headerButtonGroup" />
+</div>
 
 <div class="flex p-1 wrapper">
   <div class="w-25 sidebar">

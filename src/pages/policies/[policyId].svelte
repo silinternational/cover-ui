@@ -186,7 +186,7 @@ section:not(:first-child) {
         <dt>Coverage</dt>
         <dd>{coverage}</dd>
         <dt>Premium</dt>
-        <dd>{premium}/yr (2%)</dd>
+        <dd>{premium} per year</dd>
         <dt>Last Updated</dt>
         <dd>{formatFriendlyDate(policy.updated_at)}</dd>
       </dl>

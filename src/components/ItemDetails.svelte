@@ -99,10 +99,17 @@ const toggleModal = (i: number) => (showInfoBox[i] = !showInfoBox[i])
 }
 </style>
 
+{#if !isCheckingOut}
+  <div class="banners">
+    <ItemBanner itemStatus={status} {isAdmin}>{statusText}</ItemBanner>
+    {#if showRevisionMessage}
+      <MessageBanner class="mt-4px">{item.status_reason}</MessageBanner>
+    {/if}
+  </div>
+{/if}
+
 <div class="flex p-1 wrapper">
   <div class="w-25 sidebar">
-    <h2 class="break-word my-1">{item.name || ''}</h2>
-
     {#each sidebarDetailsArray as sidebarDetail}
       <div class="sidebar-chunk">
         {#each Object.entries(sidebarDetail) as [title, value], i}
@@ -133,15 +140,6 @@ const toggleModal = (i: number) => (showInfoBox[i] = !showInfoBox[i])
   </div>
 
   <div class="w-75">
-    {#if !isCheckingOut}
-      <div class="banners">
-        <ItemBanner itemStatus={status} {isAdmin}>{statusText}</ItemBanner>
-        {#if showRevisionMessage}
-          <MessageBanner class="mt-4px">{item.status_reason}</MessageBanner>
-        {/if}
-      </div>
-    {/if}
-
     {#each Object.entries(bodyItems) as [title, value]}
       {#if title && value && value !== ' '}
         <div class="body-item">

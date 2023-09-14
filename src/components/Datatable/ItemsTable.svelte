@@ -20,6 +20,8 @@ import { generateRandomID } from '@silintl/ui-components/random'
 export let items = [] as PolicyItem[]
 export let policyId: string
 export let title: string = ''
+export let includeCopyToClipboard: boolean = true
+export let uniqueTableClass = generateRandomID('items-table-')
 
 const columnIndicesToToggle = [1, 2, 3]
 const columns: Column[] = [
@@ -89,7 +91,6 @@ const columns: Column[] = [
     sortable: true,
   },
 ]
-const uniqueTableClass = generateRandomID('items-table-')
 
 let numberOfCheckboxes = 0
 let headerId = 'name'
@@ -253,16 +254,21 @@ const toggleShowSnMakeAndModel = () => {
 }
 </style>
 
-<BatchItemDelete isDisabled={batchDeleteIsDisabled} {allCheckedItemsAreDraft} on:closed={handleClosed} />
-
-<BatchItemClone isDisabled={batchActionIsDisabled} {selectedItemNames} on:closed={handleClosed} />
-
-<Checkbox class="mb-1" on:checked={toggleShowSnMakeAndModel} on:unchecked={toggleShowSnMakeAndModel} />Show S/N, Make
-and Model
-
 {#if title}
   <h3>{title}</h3>
 {/if}
+
+<div class="flex align-items-center">
+  <BatchItemDelete isDisabled={batchDeleteIsDisabled} {allCheckedItemsAreDraft} on:closed={handleClosed} />
+
+  <BatchItemClone isDisabled={batchActionIsDisabled} {selectedItemNames} on:closed={handleClosed} />
+
+  <Checkbox
+    on:checked={toggleShowSnMakeAndModel}
+    on:unchecked={toggleShowSnMakeAndModel}
+    label="Show Serial, Make and Model"
+  />
+</div>
 <Datatable
   class={uniqueTableClass}
   {numberOfCheckboxes}
@@ -314,7 +320,7 @@ and Model
     {/each}
   </Datatable.Data>
 </Datatable>
-
-<CopyTableButton {uniqueTableClass} />
-
+{#if includeCopyToClipboard}
+  <CopyTableButton {uniqueTableClass} />
+{/if}
 <ItemDeleteModal open={deleteModalIsOpen} item={currentItem} on:closed={handleModalDialog} />

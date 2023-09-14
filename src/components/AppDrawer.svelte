@@ -73,6 +73,6 @@ $beforeUrlChange((event: CustomEvent, route: string, { url }: { url: string }) =
   {/if}
 
   {#if isNotProduction}
-    <Watermark text="DEVELOPMENT VERSION" />
+    <Watermark text="DEVELOPMENT" />
   {/if}
 </Drawer>

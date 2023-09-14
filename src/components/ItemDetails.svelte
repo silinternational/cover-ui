@@ -70,7 +70,7 @@ const toggleModal = (i: number) => (showInfoBox[i] = !showInfoBox[i])
 </script>
 
 <style>
-.isCheckingOut {
+.wrapper {
   background-color: var(--mdc-theme-neutral-9);
   border-radius: 0 0 8px 8px;
 }
@@ -99,7 +99,7 @@ const toggleModal = (i: number) => (showInfoBox[i] = !showInfoBox[i])
 }
 </style>
 
-<div class="flex p-1" class:isCheckingOut>
+<div class="flex p-1 wrapper">
   <div class="w-25 sidebar">
     <h2 class="break-word my-1">{item.name || ''}</h2>
 

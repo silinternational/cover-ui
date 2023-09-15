@@ -27,5 +27,6 @@ const setUserData = (user: User) => {
     type="text/javascript"
     src="https://widget.freshworks.com/widgets/{process.env.FRESHDESK_ID}.js"
     async
-    defer></script>
+    defer
+  ></script>
 </svelte:head>

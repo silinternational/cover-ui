@@ -18,3 +18,6 @@ build-prod:
 
 clean:
 	npm run clean
+
+format:
+	npm run format

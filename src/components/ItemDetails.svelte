@@ -95,6 +95,7 @@ dd {
   border-radius: 0 0 8px 8px;
 }
 section {
+  flex-direction: column;
   flex-grow: 1;
   flex-basis: max-content;
 }
@@ -143,7 +144,7 @@ section {
       <dt>Unique ID</dt>
       <dd>{item?.serial_number || '–'}</dd>
       <dt>Notes</dt>
-      <dd>{item?.description || '–'}</dd>
+      <dd class="max-w-300">{item?.description || '–'}</dd>
     </dl>
   </section>
   <section>

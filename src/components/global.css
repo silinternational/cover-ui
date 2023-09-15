@@ -25,9 +25,14 @@ p {
 .mw-300 {
   min-width: 300px;
 }
-
 .mw-500 {
   min-width: 500px;
+}
+.max-w-300 {
+  max-width: 300px;
+}
+.max-w-500 {
+  max-width: 500px;
 }
 
 .w-360px {

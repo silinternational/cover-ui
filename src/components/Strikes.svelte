@@ -25,35 +25,38 @@ const addStrike = () => {
 </script>
 
 {#if strikes.length || userIsAdmin}
-  <h4>Deductible Adjustment</h4>
-  {#if !userIsAdmin}
-    <p>
-      This policy has been given a deductible adjustment for suspicious or potentially abusive behavior. Each deductible
-      adjustment increases the deductible by 20%. Each deductible adjustment lasts 2 years. Multiple deductible
-      adjustments can be on a policy at a time.
-    </p>
-  {:else}
-    <Button class="mb-1" on:click={() => (showStrikeForm = !showStrikeForm)}>
-      {showStrikeForm ? 'hide' : 'add a deductible adjustment'}
-    </Button>
-    {#if showStrikeForm}
-      <Form class="mb-2">
-        <p>
-          <TextArea
-            {maxlength}
-            label="Add a deductible adjustment to this policy"
-            rows="4"
-            bind:value={strikeDescription}
-          />
-          <Button disabled={!strikeDescription} on:click={addStrike}>submit</Button>
-        </p>
-      </Form>
+  <header>
+    <h2>Deductible Adjustments</h2>
+    {#if !userIsAdmin}
+      <p>
+        This policy has been given a deductible adjustment for suspicious or potentially abusive behavior. Each
+        deductible adjustment increases the deductible by 20%. Each deductible adjustment lasts 2 years. Multiple
+        deductible adjustments can be on a policy at a time.
+      </p>
+    {:else}
+      <Button outlined class="mb-1" prependIcon="bolt" on:click={() => (showStrikeForm = !showStrikeForm)}>
+        {showStrikeForm ? 'hide' : 'Add a deductible adjustment'}
+      </Button>
+      {#if showStrikeForm}
+        <Form class="mb-2">
+          <p>
+            <TextArea
+              {maxlength}
+              label="Add a deductible adjustment to this policy"
+              rows="4"
+              bind:value={strikeDescription}
+            />
+            <Button disabled={!strikeDescription} on:click={addStrike}>submit</Button>
+          </p>
+        </Form>
+      {/if}
     {/if}
-  {/if}
+  </header>
+
   <Datatable>
     <HeaderRow>
       <HeaderItem>Date Created</HeaderItem>
-      <HeaderItem>Updated At</HeaderItem>
+      <HeaderItem>Last Updated</HeaderItem>
       <HeaderItem>Description</HeaderItem>
     </HeaderRow>
     <TableBody>
@@ -63,6 +66,9 @@ const addStrike = () => {
           <RowItem>{formatFriendlyDate(strike.updated_at)}</RowItem>
           <RowItem>{strike.description}</RowItem>
         </DataRow>
+      {:else}<DataRow>
+          <RowItem><i>None</i></RowItem></DataRow
+        >
       {/each}
     </TableBody>
   </Datatable>

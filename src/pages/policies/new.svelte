@@ -53,7 +53,12 @@ const getEntityChoice = (entityCode: string) => {
   return name && code ? `${code} - ${name}` : ''
 }
 
-const onCheck = (e: CustomEvent) => !entityOptions[e.detail] && setNotice('Please select a valid entity code')
+const onCheck = (e: CustomEvent) => {
+  if (!entityOptions[e.detail]) {
+    entityCodeName = ''
+    setNotice('Please select a valid entity code')
+  }
+}
 </script>
 
 <Page>

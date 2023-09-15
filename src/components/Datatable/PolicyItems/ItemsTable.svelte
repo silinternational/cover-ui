@@ -312,7 +312,7 @@ and Model
         <RowItem status={item.coverage_status} numeric>{formatMoney(item.coverage_amount)}</RowItem>
         <RowItem status={item.coverage_status} numeric>{formatMoney(item.annual_premium)}</RowItem>
         <RowItem status={item.coverage_status}>{formatDate(item.updated_at)}</RowItem>
-        <RowItem status={item.coverage_status}>
+        <RowItem>
           <IconButton icon="more_vert" on:click={() => handleMoreVertClick(item.id)} />
           <div class="item-menu">
             <Menu bind:menuOpen={shownMenus[item.id]} menuItems={getMenuItems(item)} />

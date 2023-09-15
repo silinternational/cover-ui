@@ -37,52 +37,48 @@ async function getReport() {
 </script>
 
 <style>
-td,
-th {
-  padding: 0.25ex;
+header {
+  margin-block-end: 2rem;
 }
-
-th {
-  text-align: left;
+dd {
+  margin-inline-start: clamp(0.5rem, 2vw, 2rem);
+}
+dl {
+  grid-column: span 1;
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  align-content: start;
+  margin: unset;
+  gap: 1rem;
 }
 </style>
 
 <Page>
-  <div class="flex justify-between align-items-center">
-    <h4>{report.type} Report</h4>
-    <Button
-      on:click={() => {
-        alertOpen = true
-      }}>Reconcile</Button
-    >
-
-    <Dialog.Alert open={alertOpen} {buttons} defaultAction="cancel" {title} on:chosen={(e) => handleDialog(e.detail)}>
-      {message}
-    </Dialog.Alert>
-  </div>
+  <header>
+    <div class="flex justify-between align-items-center">
+      <h1>{report.type} Report</h1>
+      <Button
+        on:click={() => {
+          alertOpen = true
+        }}>Reconcile</Button
+      >
+      <Dialog.Alert open={alertOpen} {buttons} defaultAction="cancel" {title} on:chosen={(e) => handleDialog(e.detail)}>
+        {message}
+      </Dialog.Alert>
+    </div>
+    <div class="fs-14">Created {formatDateAndTime(report.created_at)}</div>
+  </header>
 
   <div>
-    <table>
-      <tr>
-        <th>Report Date</th>
-        <td>{formatFriendlyDate(report.date)}</td>
-      </tr>
-      <tr>
-        <th>Created At</th>
-        <td>{formatDateAndTime(report.created_at)}</td>
-      </tr>
-      <tr>
-        <th>File</th>
-        <td><FileLink on:expired={getReport} file={report.file} /></td>
-      </tr>
-      <tr>
-        <th>Cleared</th>
-        <td>{report.is_cleared ? 'Yes' : 'No'}</td>
-      </tr>
-      <tr>
-        <th>Transactions</th>
-        <td>{report.transaction_count}</td>
-      </tr>
-    </table>
+    <dl>
+      <dt>Report Date</dt>
+      <dd>{formatFriendlyDate(report.date)}</dd>
+      <dt>File</dt>
+      <dd><FileLink on:expired={getReport} file={report.file} /></dd>
+      <dt>Cleared</dt>
+      <dd>{report.is_cleared ? 'Yes' : 'No'}</dd>
+      <dt>Transactions</dt>
+      <dd>{report.transaction_count}</dd>
+    </dl>
   </div>
 </Page>

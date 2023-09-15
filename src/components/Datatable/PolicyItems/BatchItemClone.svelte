@@ -30,7 +30,7 @@ const handleDialog = (choice: 'clone' | 'cancel') => {
 }
 </script>
 
-<Button class="mb-1" disabled={isDisabled} on:click={() => (open = true)}>clone coverage</Button>
+<Button disabled={isDisabled} on:click={() => (open = true)}>Duplicate</Button>
 
 <Dialog.Alert
   {open}

@@ -34,6 +34,13 @@ p {
   width: 360px !important;
 }
 
+.gap-xs {
+  gap: 0.5rem;
+}
+.gap-sm {
+  gap: 1rem;
+}
+
 .break-word {
   overflow-wrap: break-word;
 }

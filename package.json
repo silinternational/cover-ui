@@ -32,6 +32,7 @@
     "@rollup/plugin-typescript": "^8.5.0",
     "@roxi/routify": "^2.18.12",
     "@silintl/ui-components": "^10.4.0",
+    "@tailwindcss/typography": "^0.5.10",
     "@tsconfig/svelte": "^2.0.1",
     "@types/croppie": "^2.6.1",
     "@types/gtag.js": "^0.0.12",
@@ -40,6 +41,7 @@
     "@types/qs": "^6.9.7",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
+    "autoprefixer": "^10.4.15",
     "concurrently": "^8.2.1",
     "croppie": "^2.6.5",
     "date-fns": "^2.30.0",
@@ -51,6 +53,7 @@
     "postcss": "^8.4.23",
     "prettier": "2.8.8",
     "prettier-plugin-svelte": "^2.10.0",
+    "prettier-plugin-tailwindcss": "^0.5.4",
     "qs": "^6.11.2",
     "rimraf": "^3.0.2",
     "rollup": "^2.79.1",
@@ -66,6 +69,8 @@
     "svelte": "^3.55.1",
     "svelte-check": "^2.9.0",
     "svelte-preprocess": "^4.10.7",
+    "tailwind": "^4.0.0",
+    "tailwind-utopia": "github:domchristie/tailwind-utopia",
     "tslib": "^2.5.0",
     "typescript": "^4.9.4"
   }

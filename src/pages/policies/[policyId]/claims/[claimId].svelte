@@ -291,7 +291,7 @@ const onReCover = async () => {
       <Breadcrumb links={breadcrumbLinks} />
     </Row>
     <Row cols="3">
-      <h2 class="break-word my-1">{item.name || ''}</h2>
+      <h2 class="tw-break-words my-1">{item.name || ''}</h2>
 
       <b>Covered value</b>
       <div>{formatMoney(claimItem.coverage_amount)}</div>
@@ -330,7 +330,7 @@ const onReCover = async () => {
       {#if showRevisionMessage}
         <MessageBanner class="mt-4px">{claim.status_reason}</MessageBanner>
       {/if}
-      <p class="break-word">
+      <p class="tw-break-words">
         {claim.incident_description || ''}
       </p>
       <div>

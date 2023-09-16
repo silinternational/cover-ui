@@ -23,4 +23,4 @@ export let value: string = ''
     {/if}
   </span>
 {/if}
-<TextField class="mw-300" {required} {description} {maxlength} bind:value />
+<TextField class="tw-min-w-[36ch]" {required} {description} {maxlength} bind:value />

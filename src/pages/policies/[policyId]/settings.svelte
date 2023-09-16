@@ -395,7 +395,7 @@ p {
   >
     {#if showAddDependentModal}
       <DependentForm
-        class="w-100 mw-500"
+        class="w-100 tw-min-w-[500px]"
         dependent={modalData}
         {dependents}
         {isHouseholdPolicy}

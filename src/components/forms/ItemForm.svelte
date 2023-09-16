@@ -174,20 +174,17 @@ span.label {
 </style>
 
 <Form on:submit={onSubmit}>
-  <p>
-    <span class="label">
-      Category<span class="error">*</span>
-    </span>
+  <div class="tw-w-[20rem]">
     <Select
-      width="360px"
-      label="Input"
+      width="100%"
+      label="Category"
       options={$categories}
       selectedID={initialCategoryId}
       on:change={onSelectCategory}
       on:populated={onCategorySelectPopulated}
     />
     {#if selectedCategoryIsStationary}
-      <Card class="w-360px mt-1" color="var(--mdc-theme-status-info-bg)">
+      <Card class="tw-w-full mt-1" color="var(--mdc-theme-status-info-bg)">
         <div class="flex justify-start">
           <div class="material-icons">info</div>
           <div class="category-info">
@@ -197,7 +194,7 @@ span.label {
         </div>
       </Card>
     {/if}
-  </p>
+  </div>
   <p>
     <TextFieldWithLabel label="Brand" description={'For example, "Apple"'} bind:value={make} />
   </p>
@@ -233,6 +230,7 @@ span.label {
     />
     <Description>
       Dependents are eligible. Dependents include spouses and children under 26 who haven't married or finished college.
+
       Coverage for children is limited to $3,000 per household.
     </Description>
   </p>

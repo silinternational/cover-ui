@@ -101,7 +101,7 @@ const toggleModal = (i: number) => (showInfoBox[i] = !showInfoBox[i])
 
 <div class="flex p-1" class:isCheckingOut>
   <div class="w-25 sidebar">
-    <h2 class="break-word my-1">{item.name || ''}</h2>
+    <h2 class="tw-break-words my-1">{item.name || ''}</h2>
 
     {#each sidebarDetailsArray as sidebarDetail}
       <div class="sidebar-chunk">
@@ -146,7 +146,7 @@ const toggleModal = (i: number) => (showInfoBox[i] = !showInfoBox[i])
       {#if title && value && value !== ' '}
         <div class="body-item">
           <div class="title"><b>{title}</b></div>
-          <div class="value break-word" class:pre={title === 'Description'}>{value || '-'}</div>
+          <div class="value tw-break-words" class:pre={title === 'Description'}>{value || '-'}</div>
         </div>
       {/if}
     {/each}

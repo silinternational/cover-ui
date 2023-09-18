@@ -1,4 +1,3 @@
-
 // onClear pushes a function that will be executed one and only one time, when clearApp is called
 export function onClear(fn: ClearFn): void {
   customClearFns.push(fn)
@@ -17,5 +16,5 @@ export function clearApp(): void {
 const customClearFns: ClearFn[] = []
 
 interface ClearFn {
-  (): void;
+  (): void
 }

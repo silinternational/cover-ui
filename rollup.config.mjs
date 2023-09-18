@@ -6,12 +6,14 @@ import dotenv from 'rollup-plugin-dotenv'
 import livereload from 'rollup-plugin-livereload'
 import postcss from 'rollup-plugin-postcss'
 import svelte from 'rollup-plugin-svelte'
-import { terser } from 'rollup-plugin-terser'
-import routify from '@roxi/routify/plugins/rollup'
+import terser from '@rollup/plugin-terser'
+import routify from '@roxi/routify/plugins/rollup.js'
 import autoPreprocess from 'svelte-preprocess'
 import typescript from '@rollup/plugin-typescript'
 import nodePolyfills from 'rollup-plugin-polyfill-node'
 import html from '@rollup/plugin-html'
+import tailwindcss from 'tailwindcss'
+import autoprefixer from 'autoprefixer'
 
 const production = !process.env.ROLLUP_WATCH
 
@@ -62,7 +64,7 @@ export default {
           includePaths: ['node_modules'],
         },
       },
-      plugins: [require('tailwindcss'), require('autoprefixer')],
+      plugins: [tailwindcss, autoprefixer],
     }),
     routify({
       dynamicImports: false,

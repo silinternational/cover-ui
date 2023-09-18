@@ -9,6 +9,7 @@
         "src/customTypes",
         "node_modules/@types"
       ],
+      "ignoreDeprecations": "5.0",
       "paths": {
         "components": ["./src/components/"],
         "components/*": ["./src/components/*"],

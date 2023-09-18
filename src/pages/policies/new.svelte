@@ -54,7 +54,7 @@ const getEntityChoice = (entityCode: string) => {
 }
 
 const onCheck = (e: CustomEvent) => {
-  if (!entityOptions[e.detail]) {
+  if (Object.keys(entityOptions).every((key: string) => !key.includes(e.detail))) {
     entityCodeName = ''
     setNotice('Please select a valid entity code')
   }
@@ -70,7 +70,7 @@ const onCheck = (e: CustomEvent) => {
   </p>
 
   <p>
-    <span class="header">Entity code<span class="required-input">*</span></span>
+    <span class="header">Entity<span class="required-input">*</span></span>
     <SearchableSelect
       options={entityOptions}
       bind:choice={entityCodeName}

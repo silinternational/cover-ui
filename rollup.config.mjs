@@ -1,3 +1,4 @@
+import autoprefixer from 'autoprefixer'
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import resolve from '@rollup/plugin-node-resolve'
@@ -13,7 +14,6 @@ import typescript from '@rollup/plugin-typescript'
 import nodePolyfills from 'rollup-plugin-polyfill-node'
 import html from '@rollup/plugin-html'
 import tailwindcss from 'tailwindcss'
-import autoprefixer from 'autoprefixer'
 
 const production = !process.env.ROLLUP_WATCH
 

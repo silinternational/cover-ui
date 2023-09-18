@@ -1,12 +1,12 @@
 <script lang="ts">
 import BatchItemClone from './BatchItemClone.svelte'
 import BatchItemDelete from './BatchItemDelete.svelte'
-import ItemDeleteModal from '../../ItemDeleteModal.svelte'
 import CopyTableButton from '../CopyTableButton.svelte'
 import { ClaimItem, incompleteClaimItemStatuses, selectedPolicyClaims } from 'data/claims'
 import { getItemState } from 'data/states'
 import { AccountablePerson, editableCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/items'
 import { formatDate, formatFriendlyDate } from 'helpers/dates'
+import ItemDeleteModal from '../../ItemDeleteModal.svelte'
 import { getItemIcon, hasEnded, willEnd } from './itemTableHelpers'
 import { throwError } from '../../../error'
 import { formatMoney } from 'helpers/money'

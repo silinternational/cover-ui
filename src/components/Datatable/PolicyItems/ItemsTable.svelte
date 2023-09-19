@@ -325,6 +325,12 @@ const getStatusClass = (status: ItemCoverageStatus) =>
           </div>
         </RowItem>
       </Datatable.Data.Row>
+    {:else}
+    <tr>
+      <RowItem className="p-1">
+        <i>None</i>
+      </RowItem>
+    </tr>
     {/each}
   </Datatable.Data>
 </Datatable>

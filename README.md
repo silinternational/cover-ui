@@ -19,7 +19,7 @@ API_HOST=//cover.local:3000
 
 Add `127.0.0.1 cover.local` to `/etc/hosts` (or equivalent for your OS)
 
-## Local development
+## Local development using npm
 
 Install the dependencies...
 
@@ -38,6 +38,28 @@ or
 ```bash
 make
 ```
+
+## Local development using bun
+
+Install the dependencies...
+
+```bash
+bun i
+```
+
+...then start [Rollup](https://rollupjs.org):
+
+```bash
+bun run bun:dev
+```
+
+or
+
+```bash
+make bun
+```
+
+Note: this won't update package-lock.json so if you change dependencies you will need to run `npm install` to do so.
 
 Navigate to <http://cover.local:8081>. You should see your app running app
 _(configured to auto-reload page for any changes)_.

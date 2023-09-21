@@ -18,3 +18,7 @@ build-prod:
 
 clean:
 	npm run clean
+
+bun:
+	bun install
+	bun run bun:dev

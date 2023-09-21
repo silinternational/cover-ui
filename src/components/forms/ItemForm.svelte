@@ -174,7 +174,7 @@ span.label {
 
 <Form on:submit={onSubmit}>
   <h2>About the item</h2>
-  <div class="tw-w-[20rem]">
+  <div class="tw-w-[20rem] tw-max-w-full">
     <Select
       width="100%"
       label="Category"
@@ -195,40 +195,40 @@ span.label {
       </Card>
     {/if}
   </div>
-  <p>
+  <div>
     <TextField
       label="Brand (optional)"
-      class="mw-300"
+      class="tw-w-[20rem] tw-max-w-full"
       description="e.g., Apple or Toyota"
       bind:value={make}
     />
-  </p>
-  <p>
+  </div>
+  <div>
     <TextField
       label="Model (optional)"
-      class="mw-300"
+      class="tw-w-[20rem] tw-max-w-full"
       description="e.g., iPhone 10 Max 64 GB, A1921, or Land Cruiser"
       bind:value={model}
     />
-  </p>
-  <p>
+  </div>
+  <div>
     <TextField
       label="Serial number (optional for fast approval)"
-      class="mw-300"
+      class="tw-w-[20rem] tw-max-w-full"
       description="e.g., chassis number, VIN, IMEI, or service tag"
       bind:value={uniqueIdentifier}
     />
-  </p>
+  </div>
   <h2>Coverage</h2>
-  <p>
+  <div class="tw-w-[20rem] tw-max-w-full">
     <SelectAccountablePerson
       {policyId}
       selectedID={selectedAccountablePersonId}
       on:populated={onAccountablePersonSelectPopulated}
       on:change={onAccountablePersonChange}
     />
-  </p>
-  <p>
+  </div>
+  <div>
     <MoneyInput
       label="Coverage value (USD)"
       bind:value={marketValueUSD}
@@ -237,24 +237,24 @@ span.label {
     <Description>
       <ConvertCurrencyLink />
     </Description>
-  </p>
+  </div>
   <h2>For your own use</h2>
-  <p>
+  <div>
     <TextField
       label="Statement name"
-      class="mw-300"
+      class="tw-w-[20rem] tw-max-w-full"
       description="Customize what will appear on your financial statements"
       bind:value={name}
     />
-  </p>
-  <p>
+  </div>
+  <div class="tw-max-w-prose">
     <TextArea
       label="Notes (optional)"
       maxlength={MAX_TEXT_AREA_LENGTH}
       bind:value={itemDescription}
       rows="4"
     />
-  </p>
+  </div>
   <p>
     <Button outlined on:click={saveForLater}>Save for later</Button>
     {#if itemIsDraft}

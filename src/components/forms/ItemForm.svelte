@@ -51,6 +51,7 @@ $: setInitialValues($user, item)
 let initialCategoryId: string
 let statementNameDefault = ''
 let today = new Date()
+let userCustomizedStatementName = false
 
 $: country = item?.accountable_person?.country || country
 $: !$catItemsInitialized && loadCategories()
@@ -66,6 +67,7 @@ $: make,
 $: selectedCategory = $categories.find((c) => c.id === categoryId)
 $: selectedCategoryIsStationary = selectedCategory?.risk_category?.name === RiskCategoryNames.Stationary
 $: statementNameDefault = assembleStatementNameDefault(make, model, uniqueIdentifier)
+$: !userCustomizedStatementName && (name = statementNameDefault)
 
 const debouncedSave = debounce(() => saveForLater(undefined, true), 4000)
 
@@ -138,6 +140,11 @@ const handleDialog = (event: CustomEvent<string>) => {
 const onMakeModelClosed = (event: CustomEvent<string>) => {
   makeModelIsOpen = false
   event.detail === 'submit' && dispatch('submit', formData)
+}
+
+const onStatementNameInput = (event: InputEvent) => {
+  const inputElement = event.target as HTMLInputElement
+  userCustomizedStatementName = (inputElement.value !== '');
 }
 
 const setInitialValues = (user: User, item: PolicyItem) => {
@@ -245,8 +252,9 @@ span.label {
     <TextField
       label="Statement name"
       class="mw-300"
-      description={'Customize what will appear on your financial statements.' + (statementNameDefault ? ` Example: ${statementNameDefault}` : '')}
+      description="Customize what will appear on your financial statements."
       bind:value={name}
+      on:input={onStatementNameInput}
     />
   </p>
   <p>

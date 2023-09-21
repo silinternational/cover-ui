@@ -10,6 +10,13 @@ export const areMakeAndModelRequired = (item: PolicyItem, categoryId: string): b
   )
 }
 
+export const assembleShortNameExample = (isVehicle, make, model) => {
+  if (isVehicle) {
+    return `${make} ${model}`.trim()
+  }
+  return ''
+}
+
 export const validateForSave = (formData: NewItemFormData | UpdateItemFormData): void => {
   assertHas(formData.accountablePersonId, 'Please indicate who will be responsible for the item')
   assertHas(formData.categoryId, 'Please select a category')

@@ -1,6 +1,7 @@
 <script lang="ts">
 import { Breadcrumb, CardsGrid, ClaimsTable, ItemsTable, Row, Strikes, CustomerReport } from 'components'
 import { isLoadingById, loading } from 'components/progress'
+import CopyTableButton from '../../components/Datatable/CopyTableButton.svelte'
 import { Claim, claimIsOpen, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import {
   deleteItem,
@@ -27,6 +28,7 @@ import {
 } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
 import { Button, Checkbox, Datatable, isAboveMobile, isAboveTablet, Page, Switch } from '@silintl/ui-components'
+import { generateRandomID } from '@silintl/ui-components/random'
 import { onMount } from 'svelte'
 
 export let policyId: string
@@ -34,6 +36,7 @@ export let policyId: string
 let policy = {} as Policy
 let showAllClaims = false
 let hideInactive = false
+const uniqueTableClass = generateRandomID('items-table-')
 
 onMount(() => {
   loadPolicy(policyId)
@@ -109,21 +112,6 @@ const showInactiveItems = (): void => {
 </script>
 
 <style>
-.details {
-  display: flex;
-}
-.details table:nth-child(2) {
-  display: flex;
-  flex-direction: column;
-}
-td,
-th {
-  padding: 0.25ex;
-}
-
-th {
-  text-align: left;
-}
 .subtext {
   font-weight: normal;
   font-size: small;
@@ -132,6 +120,45 @@ th {
 .item-footer {
   margin: 1rem auto 0 auto;
   font-size: 11px;
+}
+
+section:not(:first-child) {
+  margin-block-start: 2rem;
+}
+
+.main-header {
+  container-type: inline-size;
+}
+.main-header-bits {
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  row-gap: 1rem;
+  column-gap: clamp(2rem, 5vw, 6rem);
+  & * {
+    justify-content: start;
+  }
+}
+.main-header h1 {
+  grid-column: 1 / -1;
+}
+.main-header dd {
+  margin-inline-start: clamp(0.5rem, 2vw, 2rem);
+}
+.main-header dl {
+  grid-column: span 1;
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  align-content: start;
+  margin: unset;
+}
+
+@container (width >= 600px) {
+  .main-header .main-header-bits {
+    grid-template-columns: repeat(2, max-content) 1fr;
+  }
+  .main-header div.menu-button-container {
+    margin-inline-start: auto;
+  }
 }
 </style>
 
@@ -151,118 +178,122 @@ th {
     />
   </Row>
 
-  <h3>{getNameOfPolicy($selectedPolicy)} Policy</h3>
-  <div class="details">
-    <table>
-      <tr>
-        <th>Type</th>
-        <td>{policy.type}</td>
-      </tr>
-      {#if policy.type === PolicyType.Team}
-        <tr>
-          <th>Name</th>
-          <td>{getNameOfPolicy(policy)}</td>
-        </tr>
-        <tr>
-          <th>Account</th>
-          <td>{policy.account || '-'}</td>
-        </tr>
-        <tr>
-          <th>Account Detail</th>
-          <td>{policy.account_detail || '-'}</td>
-        </tr>
-        <tr>
-          <th>Cost Center</th>
-          <td>{policy.cost_center || '-'}</td>
-        </tr>
-        <tr>
-          <th>Entity Code</th>
-          <td>{entityCode || '-'}</td>
-        </tr>
-      {:else if policy.type === PolicyType.Household}
-        <tr>
-          <th>Household ID</th>
-          <td>{policy.household_id || '-'}</td>
-        </tr>
-      {/if}
-      <tr>
-        <th>Updated</th>
-        <td>{formatFriendlyDate(policy.updated_at)}</td>
-      </tr>
-    </table>
-    <table>
-      <tr>
-        <th>Coverage</th><td>{coverage}</td>
-      </tr>
-      <tr>
-        <th>Premium</th><td>{premium}/yr (2%)</td>
-      </tr>
-    </table>
-  </div>
-
-  <div class="flex justify-between align-items-center">
-    <h4>Members</h4>
-    <Button url={settingsPolicy(policyId)}>Policy Settings</Button>
-  </div>
-  <Datatable>
-    <Datatable.Header>
-      <Datatable.Header.Item>Name</Datatable.Header.Item>
-      <Datatable.Header.Item>Email</Datatable.Header.Item>
-      <Datatable.Header.Item>Last Login</Datatable.Header.Item>
-    </Datatable.Header>
-    <Datatable.Data>
-      {#each members as member (member.id)}
-        <Datatable.Data.Row>
-          <Datatable.Data.Row.Item>{member.first_name || ''} {member.last_name || ''}</Datatable.Data.Row.Item>
-          <Datatable.Data.Row.Item>{member.email || ''}</Datatable.Data.Row.Item>
-          <Datatable.Data.Row.Item>{formatFriendlyDate(member.last_login_utc)}</Datatable.Data.Row.Item>
-        </Datatable.Data.Row>
-      {/each}
-    </Datatable.Data>
-  </Datatable>
-
-  <div class="flex justify-between align-items-center">
-    <h4>Claims <span class="subtext">({openClaimCount} open)</span></h4>
-    <Button disabled={allClaimsBtnDisabled} on:click={() => (showAllClaims = true)}>All Claims…</Button>
-  </div>
-  {#if $loading && isLoadingById(`policies/${policyId}/claims`)}
-    Loading claims...
-  {:else}
-    <ClaimsTable claims={claimsForTable} {policyId} />
-  {/if}
-
-  <div class="flex justify-between align-items-center">
-    <h4>Items <span class="subtext">({approvedItems?.length} covered)</span></h4>
-    <div>
-      {#if isAboveTablet()}
-        <Checkbox label="Hide Inactive" on:checked={hideInactiveItems} on:unchecked={showInactiveItems} />
-      {:else}
-        <Switch on:selected={hideInactiveItems} on:deselected={showInactiveItems} label="Hide Inactive" />
-      {/if}
+  <!-- HEADER -->
+  <header class="main-header">
+    <h1>{getNameOfPolicy($selectedPolicy)} Policy</h1>
+    <div class="main-header-bits">
+      <dl>
+        <dt>Coverage</dt>
+        <dd>{coverage}</dd>
+        <dt>Premium</dt>
+        <dd>{premium} per year</dd>
+        <dt>Last Updated</dt>
+        <dd>{formatFriendlyDate(policy.updated_at)}</dd>
+      </dl>
+      <dl>
+        <dt>Policy Type</dt>
+        <dd>{policy.type}</dd>
+        {#if policy.type === PolicyType.Team}
+          <dt>Name</dt>
+          <dd>{getNameOfPolicy(policy)}</dd>
+          <dt>Account</dt>
+          <dd>{policy.account || '-'}</dd>
+          <dt>Account Detail</dt>
+          <dd>{policy.account_detail || '-'}</dd>
+          <dt>Cost Center</dt>
+          <dd>{policy.cost_center || '-'}</dd>
+          <dt>Entity Code</dt>
+          <dd>{entityCode || '-'}</dd>
+        {:else if policy.type === PolicyType.Household}
+          <dt>Household ID</dt>
+          <dd>{policy.household_id || '-'}</dd>
+        {/if}
+      </dl>
     </div>
-  </div>
-  {#if $loading && isLoadingById(`policies/${policyId}/items`)}
-    Loading items...
-  {:else}
-    <ItemsTable
-      items={itemsForTable}
-      {policyId}
-      on:delete={onDelete}
-      on:gotoItem={(e) => $goto(e.detail)}
-      on:batchDelete={onBatchDelete}
-      on:batchClone={onBatchClone}
-    />
-    <div class="text-align-center">
-      <p class="item-footer">Showing {itemsForTable.length} out of {items.length} items</p>
-      {#if numberOfItemsNotShown > 0}
-        <Button url={itemsRoute(policyId)}>{gotoItemsBtnLabel}</Button>
-      {/if}
-    </div>
-  {/if}
+  </header>
 
-  <CustomerReport {policy} />
+  <!-- MEMBERS -->
+  <section>
+    <header class="flex justify-between align-items-center">
+      <h2>Members</h2>
+      <Button url={settingsPolicy(policyId)}>Policy Settings</Button>
+    </header>
+    <Datatable>
+      <Datatable.Header>
+        <Datatable.Header.Item>Name</Datatable.Header.Item>
+        <Datatable.Header.Item>Email</Datatable.Header.Item>
+        <Datatable.Header.Item>Last Login</Datatable.Header.Item>
+      </Datatable.Header>
+      <Datatable.Data>
+        {#each members as member (member.id)}
+          <Datatable.Data.Row>
+            <Datatable.Data.Row.Item>{member.first_name || ''} {member.last_name || ''}</Datatable.Data.Row.Item>
+            <Datatable.Data.Row.Item>{member.email || ''}</Datatable.Data.Row.Item>
+            <Datatable.Data.Row.Item>{formatFriendlyDate(member.last_login_utc)}</Datatable.Data.Row.Item>
+          </Datatable.Data.Row>
+        {/each}
+      </Datatable.Data>
+    </Datatable>
+  </section>
 
-  <Strikes {userIsAdmin} {policy} />
+  <!-- RECENT CLAIMS -->
+  <section>
+    <header class="flex justify-between align-items-center">
+      <h2>Recent Claims <span class="subtext">{openClaimCount} open</span></h2>
+      <div class="button-group">
+        <Button disabled={allClaimsBtnDisabled} on:click={() => (showAllClaims = true)}>All Claims…</Button>
+      </div>
+    </header>
+    {#if $loading && isLoadingById(`policies/${policyId}/claims`)}
+      Loading claims...
+    {:else}
+      <ClaimsTable claims={claimsForTable} {policyId} />
+    {/if}
+  </section>
+
+  <!-- ITEMS -->
+  <section>
+    <header class="flex justify-between align-items-center">
+      <h2>Items <span class="subtext">{approvedItems?.length} covered</span></h2>
+      <div class="button-group gap-sm">
+        {#if isAboveTablet()}
+          <Checkbox label="Hide Inactive" on:checked={hideInactiveItems} on:unchecked={showInactiveItems} />
+        {:else}
+          <Switch on:selected={hideInactiveItems} on:deselected={showInactiveItems} label="Hide Inactive" />
+        {/if}
+        <CopyTableButton {uniqueTableClass} />
+      </div>
+    </header>
+    {#if $loading && isLoadingById(`policies/${policyId}/items`)}
+      Loading items...
+    {:else}
+      <ItemsTable
+        items={itemsForTable}
+        {policyId}
+        on:delete={onDelete}
+        on:gotoItem={(e) => $goto(e.detail)}
+        on:batchDelete={onBatchDelete}
+        on:batchClone={onBatchClone}
+        includeCopyToClipboard={false}
+        {uniqueTableClass}
+      />
+      <div class="text-align-center">
+        <p class="item-footer">Showing {itemsForTable.length} out of {items.length} items</p>
+        {#if numberOfItemsNotShown > 0}
+          <Button url={itemsRoute(policyId)}>{gotoItemsBtnLabel}</Button>
+        {/if}
+      </div>
+    {/if}
+  </section>
+
+  <section>
+    <h2>Reports</h2>
+    <CustomerReport {policy} />
+  </section>
+
+  <section>
+    <Strikes {userIsAdmin} {policy} />
+  </section>
 
   <div class="p-2" />
 </Page>

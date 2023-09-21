@@ -215,7 +215,7 @@ span.label {
     <TextField
       label="Serial number (optional for fast approval)"
       class="mw-300"
-      description="e.g., VIN, IMEI, or service tag"
+      description="e.g., chassis number, VIN, IMEI, or service tag"
       bind:value={uniqueIdentifier}
     />
   </p>

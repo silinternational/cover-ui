@@ -8,7 +8,7 @@ import type { AccountablePersonOptions } from 'data/accountablePersons'
 import { ItemCoverageStatus, NewItemFormData, PolicyItem, RiskCategoryNames, UpdateItemFormData } from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
 import user, { isAdmin, User } from 'data/user'
-import { areMakeAndModelRequired, assembleShortNameExample, validateForSubmit, validateForSave } from './items/itemFormHelpers'
+import { areMakeAndModelRequired, assembleStatementNameDefault, validateForSubmit, validateForSave } from './items/itemFormHelpers'
 import SelectAccountablePerson from '../SelectAccountablePerson.svelte'
 import { debounce } from 'lodash-es'
 import { Button, Card, Form, MoneyInput, Select, TextArea, TextField } from '@silintl/ui-components'
@@ -49,7 +49,7 @@ let uniqueIdentifier = ''
 $: setInitialValues($user, item)
 
 let initialCategoryId: string
-let shortNameExample = ''
+let statementNameDefault = ''
 let today = new Date()
 
 $: country = item?.accountable_person?.country || country
@@ -65,7 +65,7 @@ $: make,
   accountablePersonId && categoryId && name && debouncedSave()
 $: selectedCategory = $categories.find((c) => c.id === categoryId)
 $: selectedCategoryIsStationary = selectedCategory?.risk_category?.name === RiskCategoryNames.Stationary
-$: shortNameExample = assembleShortNameExample(make, model)
+$: statementNameDefault = assembleStatementNameDefault(make, model)
 
 const debouncedSave = debounce(() => saveForLater(undefined, true), 4000)
 
@@ -245,7 +245,7 @@ span.label {
     <TextField
       label="Statement name"
       class="mw-300"
-      description={'Customize what will appear on your financial statements.' + (shortNameExample ? ` Example: ${shortNameExample}` : '')}
+      description={'Customize what will appear on your financial statements.' + (statementNameDefault ? ` Example: ${statementNameDefault}` : '')}
       bind:value={name}
     />
   </p>

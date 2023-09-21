@@ -10,7 +10,7 @@ export const areMakeAndModelRequired = (item: PolicyItem, categoryId: string): b
   )
 }
 
-export const assembleShortNameExample = (make: string, model: string) => {
+export const assembleStatementNameDefault = (make: string, model: string) => {
   return `${make} ${model}`.trim()
 }
 

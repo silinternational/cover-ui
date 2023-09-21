@@ -1,17 +1,20 @@
 <script lang="ts">
-import BatchItemClone from '../BatchItemClone.svelte'
-import BatchItemDelete from '../BatchItemDelete.svelte'
-import CopyTableButton from './CopyTableButton.svelte'
+import BatchItemClone from './BatchItemClone.svelte'
+import BatchItemDelete from './BatchItemDelete.svelte'
+import { ItemDeleteModal } from 'components'
+import CopyTableButton from '../CopyTableButton.svelte'
 import { ClaimItem, incompleteClaimItemStatuses, selectedPolicyClaims } from 'data/claims'
 import { getItemState } from 'data/states'
 import { AccountablePerson, editableCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/items'
 import { formatDate, formatFriendlyDate } from 'helpers/dates'
-import { throwError } from '../../error'
+import { getItemIcon, hasEnded, willEnd } from './itemTableHelpers'
+import { throwError } from '../../../error'
 import { formatMoney } from 'helpers/money'
 import { itemDetails, itemEdit } from 'helpers/routes'
-import { sortByNum, sortByString } from 'helpers/sort'
-import ItemDeleteModal from '../ItemDeleteModal.svelte'
-import type { Column } from './types'
+import { sortBy } from 'helpers/sort'
+import RowItem from './RowItem.svelte'
+import type { Column } from '../types'
+import 'iconify-icon'
 import { capitalize } from 'lodash-es'
 import { createEventDispatcher } from 'svelte'
 import { Checkbox, Datatable, IconButton, Menu, MenuItem } from '@silintl/ui-components'
@@ -20,6 +23,8 @@ import { generateRandomID } from '@silintl/ui-components/random'
 export let items = [] as PolicyItem[]
 export let policyId: string
 export let title: string = ''
+export let includeCopyToClipboard: boolean = true
+export let uniqueTableClass = generateRandomID('items-table-')
 
 const columnIndicesToToggle = [1, 2, 3]
 const columns: Column[] = [
@@ -89,7 +94,6 @@ const columns: Column[] = [
     sortable: true,
   },
 ]
-const uniqueTableClass = generateRandomID('items-table-')
 
 let numberOfCheckboxes = 0
 let headerId = 'name'
@@ -104,9 +108,7 @@ let shownMenus: { [name: string]: boolean } = {}
 let snMakeAndModelAreVisible = false
 
 $: selectedItemNames = checkedItems.map((item) => item.name)
-$: sortedItemsArray = currentColumn.numeric
-  ? sortByNum(currentColumn.path as string, items, ascending)
-  : sortByString(currentColumn.path as string, items, ascending)
+$: sortedItemsArray = sortBy(currentColumn.numeric, currentColumn.path, items, ascending) as PolicyItem[]
 $: allCheckedItemsAreDraft =
   checkedItems.length > 0 && checkedItems.every((item) => item.coverage_status === ItemCoverageStatus.Draft)
 $: batchActionIsDisabled = checkedItems.length === 0
@@ -179,9 +181,6 @@ const redirectAndSetCurrentItem = (item: PolicyItem) => {
   }
 }
 
-const getStatusClass = (status: string) =>
-  status === ItemCoverageStatus.Draft ? 'mdc-theme--primary mdc-bold-font' : ''
-
 const setAccountablePersonCountryIfNoneExists = () => {
   if (currentColumn.headerId === 'location') {
     items.forEach((item) => {
@@ -240,6 +239,8 @@ const toggleShowSnMakeAndModel = () => {
   columnIndicesToToggle.forEach((i) => (columns[i].hidden = !columns[i].hidden))
   snMakeAndModelAreVisible = !snMakeAndModelAreVisible
 }
+const getStatusClass = (status: ItemCoverageStatus) =>
+  status === ItemCoverageStatus.Draft ? 'mdc-theme--primary mdc-bold-font' : ''
 </script>
 
 <style>
@@ -253,16 +254,21 @@ const toggleShowSnMakeAndModel = () => {
 }
 </style>
 
-<BatchItemDelete isDisabled={batchDeleteIsDisabled} {allCheckedItemsAreDraft} on:closed={handleClosed} />
-
-<BatchItemClone isDisabled={batchActionIsDisabled} {selectedItemNames} on:closed={handleClosed} />
-
-<Checkbox class="mb-1" on:checked={toggleShowSnMakeAndModel} on:unchecked={toggleShowSnMakeAndModel} />Show S/N, Make
-and Model
-
 {#if title}
   <h3>{title}</h3>
 {/if}
+
+<div class="flex align-items-center">
+  <BatchItemDelete isDisabled={batchDeleteIsDisabled} {allCheckedItemsAreDraft} on:closed={handleClosed} />
+
+  <BatchItemClone isDisabled={batchActionIsDisabled} {selectedItemNames} on:closed={handleClosed} />
+
+  <Checkbox
+    on:checked={toggleShowSnMakeAndModel}
+    on:unchecked={toggleShowSnMakeAndModel}
+    label="Show Serial, Make and Model"
+  />
+</div>
 <Datatable
   class={uniqueTableClass}
   {numberOfCheckboxes}
@@ -273,6 +279,7 @@ and Model
 >
   <Datatable.Header>
     <Datatable.Header.Checkbox />
+    <Datatable.Header.Item><iconify-icon icon="mdi:category" /></Datatable.Header.Item>
     <!--TODO: make the amount of columns shown be dependent on the device size-->
     {#each columns as column}
       {#if !column.hidden}
@@ -286,35 +293,48 @@ and Model
     {#each sortedItemsArray as item (item.id)}
       <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} let:rowId clickable>
         <Datatable.Checkbox {rowId} on:click={() => (goToItemDetails = false)} on:mounted={registerNewCheckbox} />
-        <Datatable.Data.Row.Item>{item.name || ''}</Datatable.Data.Row.Item>
+        <RowItem status={item.coverage_status}><iconify-icon icon={getItemIcon(item.category.name)} /></RowItem>
+        <RowItem status={item.coverage_status}>{item.name || ''}</RowItem>
         {#if snMakeAndModelAreVisible}
-          <Datatable.Data.Row.Item>{item.serial_number || ''}</Datatable.Data.Row.Item>
-          <Datatable.Data.Row.Item>{item.make || ''}</Datatable.Data.Row.Item>
-          <Datatable.Data.Row.Item>{item.model || ''}</Datatable.Data.Row.Item>
+          <RowItem status={item.coverage_status}>{item.serial_number || ''}</RowItem>
+          <RowItem status={item.coverage_status}>{item.make || ''}</RowItem>
+          <RowItem status={item.coverage_status}>{item.model || ''}</RowItem>
         {/if}
-        <Datatable.Data.Row.Item class={getStatusClass(item.coverage_status)}>
-          {#if item.coverage_status === ItemCoverageStatus.Approved && item.coverage_end_date}
-            <div class="red">Covered through {formatFriendlyDate(item.coverage_end_date)}</div>
+        <RowItem status={item.coverage_status} className={getStatusClass(item.coverage_status)}>
+          {#if willEnd(item)}
+            <div class="red">
+              Covered through
+              {formatFriendlyDate(item.coverage_end_date)}
+            </div>
+          {:else if hasEnded(item)}
+            Coverage ended
+            {formatFriendlyDate(item.coverage_end_date)}
           {:else}
             {getItemState(item.coverage_status)?.title || ''}
           {/if}
-        </Datatable.Data.Row.Item>
-        <Datatable.Data.Row.Item>{item.accountable_person?.name || ''}</Datatable.Data.Row.Item>
-        <Datatable.Data.Row.Item>{item.accountable_person?.country || item.country || ''}</Datatable.Data.Row.Item>
-        <Datatable.Data.Row.Item numeric>{formatMoney(item.coverage_amount)}</Datatable.Data.Row.Item>
-        <Datatable.Data.Row.Item numeric>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
-        <Datatable.Data.Row.Item>{formatDate(item.updated_at)}</Datatable.Data.Row.Item>
-        <Datatable.Data.Row.Item>
+        </RowItem>
+        <RowItem status={item.coverage_status}>{item.accountable_person?.name || ''}</RowItem>
+        <RowItem status={item.coverage_status}>{item.accountable_person?.country || item.country || ''}</RowItem>
+        <RowItem status={item.coverage_status} numeric>{formatMoney(item.coverage_amount)}</RowItem>
+        <RowItem status={item.coverage_status} numeric>{formatMoney(item.annual_premium)}</RowItem>
+        <RowItem status={item.coverage_status}>{formatDate(item.updated_at)}</RowItem>
+        <RowItem>
           <IconButton icon="more_vert" on:click={() => handleMoreVertClick(item.id)} />
           <div class="item-menu">
             <Menu bind:menuOpen={shownMenus[item.id]} menuItems={getMenuItems(item)} />
           </div>
-        </Datatable.Data.Row.Item>
+        </RowItem>
       </Datatable.Data.Row>
+    {:else}
+      <tr>
+        <RowItem className="p-1">
+          <i>None</i>
+        </RowItem>
+      </tr>
     {/each}
   </Datatable.Data>
 </Datatable>
-
-<CopyTableButton {uniqueTableClass} />
-
+{#if includeCopyToClipboard}
+  <CopyTableButton {uniqueTableClass} />
+{/if}
 <ItemDeleteModal open={deleteModalIsOpen} item={currentItem} on:closed={handleModalDialog} />

@@ -44,9 +44,6 @@ $beforeUrlChange((event: CustomEvent, route: string, { url }: { url: string }) =
   display: block;
   margin: 0 auto;
 }
-:global(.drawer .mdc-drawer__content div a.mdc-deprecated-list-item) {
-  margin: 16px 8px;
-}
 </style>
 
 <Drawer
@@ -76,6 +73,6 @@ $beforeUrlChange((event: CustomEvent, route: string, { url }: { url: string }) =
   {/if}
 
   {#if isNotProduction}
-    <Watermark text="DEVELOPMENT VERSION" />
+    <Watermark text="DEVELOPMENT" />
   {/if}
 </Drawer>

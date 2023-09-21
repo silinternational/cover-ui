@@ -11,9 +11,9 @@ export const areMakeAndModelRequired = (item: PolicyItem, categoryId: string): b
 }
 
 export const validateForSave = (formData: NewItemFormData | UpdateItemFormData): void => {
-  assertHas(formData.accountablePersonId, 'Please Assign an Accountable Person')
+  assertHas(formData.accountablePersonId, 'Please indicate who will be responsible for the item')
   assertHas(formData.categoryId, 'Please select a category')
-  assertHas(formData.name, 'Please specify a short name')
+  assertHas(formData.name, 'Please specify a statement name')
 }
 
 export const validateForSubmit = (item: PolicyItem, formData: NewItemFormData | UpdateItemFormData): void => {

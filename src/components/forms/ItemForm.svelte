@@ -10,9 +10,8 @@ import { categories, loadCategories, initialized as catItemsInitialized } from '
 import user, { isAdmin, User } from 'data/user'
 import { areMakeAndModelRequired, validateForSubmit, validateForSave } from './items/itemFormHelpers'
 import SelectAccountablePerson from '../SelectAccountablePerson.svelte'
-import TextFieldWithLabel from '../TextFieldWithLabel.svelte'
 import { debounce } from 'lodash-es'
-import { Button, Card, Form, MoneyInput, Select, TextArea } from '@silintl/ui-components'
+import { Button, Card, Form, MoneyInput, Select, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let item = {} as PolicyItem
@@ -184,13 +183,11 @@ span.label {
 </style>
 
 <Form on:submit={onSubmit}>
+  <h2>About the item</h2>
   <p>
-    <span class="label">
-      Category<span class="error">*</span>
-    </span>
     <Select
       width="360px"
-      label="Input"
+      label="Category"
       options={$categories}
       selectedID={initialCategoryId}
       on:change={onSelectCategory}
@@ -209,49 +206,64 @@ span.label {
     {/if}
   </p>
   <p>
-    <TextFieldWithLabel label="Brand" description={'For example, "Apple"'} bind:value={make} />
+    <TextField
+      label="Brand (optional)"
+      class="mw-300"
+      description="e.g., Apple or Toyota"
+      bind:value={make}
+    />
   </p>
   <p>
-    <TextFieldWithLabel label="Model" description="For example, “iPhone 10 Max 64 GB” or “A1921”" bind:value={model} />
+    <TextField
+      label="Model (optional)"
+      class="mw-300"
+      description="e.g., iPhone 10 Max 64 GB, A1921, or Land Cruiser"
+      bind:value={model}
+    />
   </p>
   <p>
-    <TextFieldWithLabel
-      label="Unique identifier"
-      description="Optional. Serial number, IMEI, service tag, VIN"
+    <TextField
+      label="Serial number (optional for fast approval)"
+      class="mw-300"
+      description="e.g., chassis number, VIN, IMEI, or service tag"
       bind:value={uniqueIdentifier}
     />
   </p>
+  <h2>Coverage</h2>
   <p>
-    <TextFieldWithLabel
-      label="Short name"
-      description={'This label will appear on your statements.' + (shortNameExample ? ` Example: ${shortNameExample}` : '')}
-      required
-      bind:value={name}
-    />
-  </p>
-  <p>
-    <span class="label">Notes</span>
-    <TextArea maxlength={MAX_TEXT_AREA_LENGTH} description="For your own use" bind:value={itemDescription} rows="4" />
-  </p>
-  <p>
-    <span class="label">Accountable Person<span class="error">*</span></span>
     <SelectAccountablePerson
       {policyId}
       selectedID={selectedAccountablePersonId}
       on:populated={onAccountablePersonSelectPopulated}
       on:change={onAccountablePersonChange}
     />
-    <Description>
-      Dependents are eligible. Dependents include spouses and children under 26 who haven't married or finished college.
-      Coverage for children is limited to $3,000 per household.
-    </Description>
   </p>
   <p>
-    <span class="label">Value to cover (USD)<span class="error">*</span></span>
-    <MoneyInput bind:value={marketValueUSD} disabled={marketValueIsDisabled} required />
+    <MoneyInput
+      label="Coverage value (USD)"
+      bind:value={marketValueUSD}
+      disabled={marketValueIsDisabled}
+    />
     <Description>
       <ConvertCurrencyLink />
     </Description>
+  </p>
+  <h2>For your own use</h2>
+  <p>
+    <TextField
+      label="Statement name"
+      class="mw-300"
+      description={'Customize what will appear on your financial statements.' + (shortNameExample ? ` Example: ${shortNameExample}` : '')}
+      bind:value={name}
+    />
+  </p>
+  <p>
+    <TextArea
+      label="Notes (optional)"
+      maxlength={MAX_TEXT_AREA_LENGTH}
+      bind:value={itemDescription}
+      rows="4"
+    />
   </p>
   <p>
     <Button outlined on:click={saveForLater}>Save for later</Button>

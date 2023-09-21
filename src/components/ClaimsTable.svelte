@@ -3,7 +3,7 @@ import { Claim, ClaimStatus } from '../data/claims'
 import { formatFriendlyDate } from '../helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { customerClaimDetails } from 'helpers/routes'
-import { sortByNum, sortByString } from 'helpers/sort'
+import { sortBy } from 'helpers/sort'
 import { Datatable } from '@silintl/ui-components'
 
 type Column = {
@@ -73,9 +73,7 @@ let headerId = 'reference'
 let ascending = true
 let currentColumn = columns[0]
 
-$: sortedClaimsArray = currentColumn.numeric
-  ? sortByNum(currentColumn.path, claims, ascending)
-  : sortByString(currentColumn.path, claims, ascending)
+$: sortedClaimsArray = sortBy(currentColumn.numeric, currentColumn.path, claims, ascending) as Claim[]
 
 const onSorted = (event: CustomEvent) => {
   ascending = event.detail.sortValue === 'ascending'

@@ -20,3 +20,13 @@ export const sortByString = (path: string, items: any[], ascending: boolean): an
 //on myObj.arr[0].prop path will be 'arr.0.prop'
 export const resolvePath = (object: any, path: string): any =>
   path?.split('.').reduce((o, p) => (o ? o[p] : ''), object)
+
+export function sortBy(
+  numeric: boolean | undefined,
+  path: string | undefined,
+  items: any[],
+  ascending: boolean
+): any[] {
+  if (!path) return items || []
+  return numeric ? sortByNum(path, items, ascending) : sortByString(path, items, ascending)
+}

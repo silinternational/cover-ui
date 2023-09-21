@@ -72,15 +72,11 @@ export default {
     production ? terser() : livereload('dist'),
     html({
       template: ({ files }) => {
-        const script = (files.js || [])
-          .map(({ fileName }) => `<script src='/${fileName}'></script>`)
-          .join('\n')
+        const script = (files.js || []).map(({ fileName }) => `<script src='/${fileName}'></script>`).join('\n')
 
-        const css = (files.css || [])
-          .map(({ fileName }) => `<link rel='stylesheet' href='/${fileName}'>`)
-          .join('\n')
+        const css = (files.css || []).map(({ fileName }) => `<link rel='stylesheet' href='/${fileName}'>`).join('\n')
         return getHtml(script, css)
-      }
+      },
     }),
   ],
   watch: {
@@ -88,7 +84,7 @@ export default {
   },
 }
 
-function getHtml (script, css) {
+function getHtml(script, css) {
   return `<!DOCTYPE html>
   <html lang="en">
   <head>
@@ -107,7 +103,7 @@ function getHtml (script, css) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
     ${css}
   </head>
 

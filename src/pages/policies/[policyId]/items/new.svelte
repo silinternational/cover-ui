@@ -77,6 +77,7 @@ const onClosed = async (event: CustomEvent<any>) => {
 
 <Page>
   <Breadcrumb links={breadcrumbLinks} />
+  <h1>Add Item</h1>
   <ItemForm {item} {policyId} on:submit={onApply} on:save-for-later={onSaveForLater} />
   <NoHouseholdIdModal {open} on:closed={onClosed} />
 </Page>

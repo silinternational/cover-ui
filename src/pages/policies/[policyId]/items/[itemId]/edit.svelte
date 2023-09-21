@@ -75,6 +75,7 @@ const onDelete = async () => {
   <Page>
     <Breadcrumb links={breadcrumbLinks} />
     <ItemBanner itemStatus={item.coverage_status} class="my-2" />
+    <h1>Edit Item</h1>
     <ItemForm {item} {policyId} on:submit={onApply} on:save-for-later={onSaveForLater} on:delete={onDelete} />
   </Page>
 {/if}

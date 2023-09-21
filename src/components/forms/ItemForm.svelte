@@ -65,7 +65,6 @@ $: make,
   accountablePersonId && categoryId && name && debouncedSave()
 $: selectedCategory = $categories.find((c) => c.id === categoryId)
 $: selectedCategoryIsStationary = selectedCategory?.risk_category?.name === RiskCategoryNames.Stationary
-$: selectedCategoryIsVehicle = selectedCategory?.risk_category?.name === RiskCategoryNames.Vehicle
 $: shortNameExample = assembleShortNameExample(make, model)
 
 const debouncedSave = debounce(() => saveForLater(undefined, true), 4000)

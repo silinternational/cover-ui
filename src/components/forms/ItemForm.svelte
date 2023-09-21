@@ -162,6 +162,11 @@ const setInitialValues = (user: User, item: PolicyItem) => {
   riskCategoryId = item.risk_category?.id || riskCategoryId
   name = item.name || name
   uniqueIdentifier = item.serial_number || uniqueIdentifier
+
+  const defaultName = assembleStatementNameDefault(make, model, uniqueIdentifier)
+  if (name && name !== defaultName) {
+    userCustomizedStatementName = true
+  }
 }
 </script>
 

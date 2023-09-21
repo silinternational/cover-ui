@@ -4,11 +4,12 @@
 :root {
   font-family: Source Sans Pro, Roboto, sans-serif;
   line-height: 1.4rem;
-  --mdc-typography-font-family: Source Sans Pro, Roboto, sans-serif;
+  --mdc-typography-font-family: Source Sans Pro, sans-serif;
   --mdc-typography-bold-font-weight: 700;
   --mdc-typography-button-font-weight: 700;
   --mdc-typography-select-font-weight: 500;
   --mdc-typography-button-text-transform: capitalize;
+  --mdc-typography-button-letter-spacing: 5%;
 }
 
 .mdc-bold-font {

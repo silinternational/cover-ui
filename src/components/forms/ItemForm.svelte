@@ -257,7 +257,7 @@ span.label {
     <TextField
       label="Statement name"
       class="mw-300"
-      description="Customize what will appear on your financial statements."
+      description="Customize what will appear on your financial statements"
       bind:value={name}
       on:input={onStatementNameInput}
     />

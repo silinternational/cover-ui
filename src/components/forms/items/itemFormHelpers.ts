@@ -10,11 +10,8 @@ export const areMakeAndModelRequired = (item: PolicyItem, categoryId: string): b
   )
 }
 
-export const assembleShortNameExample = (isVehicle: boolean, make: string, model: string) => {
-  if (isVehicle) {
-    return `${make} ${model}`.trim()
-  }
-  return ''
+export const assembleShortNameExample = (make: string, model: string) => {
+  return `${make} ${model}`.trim()
 }
 
 export const validateForSave = (formData: NewItemFormData | UpdateItemFormData): void => {

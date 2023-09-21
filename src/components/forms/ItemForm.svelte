@@ -65,7 +65,7 @@ $: make,
   accountablePersonId && categoryId && name && debouncedSave()
 $: selectedCategory = $categories.find((c) => c.id === categoryId)
 $: selectedCategoryIsStationary = selectedCategory?.risk_category?.name === RiskCategoryNames.Stationary
-$: statementNameDefault = assembleStatementNameDefault(make, model)
+$: statementNameDefault = assembleStatementNameDefault(make, model, uniqueIdentifier)
 
 const debouncedSave = debounce(() => saveForLater(undefined, true), 4000)
 

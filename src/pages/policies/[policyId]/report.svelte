@@ -168,7 +168,6 @@ th {
             {/if}
             <td>{entry.type}</td>
             <!-- Todo get rate from entry when available -->
-            <td>{reportData.premium_rate * 100}%</td>
             <td>{formatMoney(entry.value)}</td>
             <td>{entry.assigned_to || ''}</td>
             <td>{entry.location || ''}</td>

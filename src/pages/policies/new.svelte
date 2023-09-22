@@ -7,7 +7,7 @@ import { formatPageTitle } from 'helpers/pageTitle'
 import { policyDetails } from 'helpers/routes'
 import { assertHas } from '../../validation/assertions'
 import { goto, metatags } from '@roxi/routify'
-import { Button, SearchableSelect, TextField, Page } from '@silintl/ui-components'
+import { Button, SearchableSelect, TextField, Page, setNotice } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 let account = ''
@@ -20,9 +20,11 @@ let entityOptions: any = {}
 onMount(() => $entityCodes.length || loadEntityCodes())
 
 $: metatags.title = formatPageTitle('New Team Policy')
-$: $entityCodes.filter(e => e.active && e.code != 'HH').forEach(e => {
-  entityOptions[`${e.code} - ${e.name}`] = e.code
-})
+$: $entityCodes
+  .filter((e) => e.active && e.code != 'HH')
+  .forEach((e) => {
+    entityOptions[`${e.code} - ${e.name}`] = e.code
+  })
 $: entityCodeName = getEntityChoice(entityCode)
 
 const onCreatePolicy = async () => {
@@ -50,6 +52,13 @@ const getEntityChoice = (entityCode: string) => {
   const code = currentEntity?.code
   return name && code ? `${code} - ${name}` : ''
 }
+
+const onCheck = (e: CustomEvent) => {
+  if (Object.keys(entityOptions).every((key: string) => !key.includes(e.detail))) {
+    entityCodeName = ''
+    setNotice('Please select a valid entity code')
+  }
+}
 </script>
 
 <Page>
@@ -61,8 +70,13 @@ const getEntityChoice = (entityCode: string) => {
   </p>
 
   <p>
-    <span class="header">Entity code<span class="required-input">*</span></span>
-    <SearchableSelect options={entityOptions} choice={entityCodeName} on:chosen={(e) => (entityCode = e.detail)} />
+    <span class="header">Entity<span class="required-input">*</span></span>
+    <SearchableSelect
+      options={entityOptions}
+      bind:choice={entityCodeName}
+      on:check={onCheck}
+      on:chosen={(e) => (entityCode = e.detail)}
+    />
   </p>
 
   <p>

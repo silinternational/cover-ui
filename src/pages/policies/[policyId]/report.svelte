@@ -39,17 +39,7 @@ $: year = $params.year || year
 $: policy = $selectedPolicy
 $: $selectedPolicyId !== policyId && loadPolicy($selectedPolicyId)
 
-$: entries = [
-  {
-    name: 'No data',
-    status_after: 'No data',
-    type: 'No data',
-    value: 0,
-    assigned_to: 'No data',
-    location: 'No data',
-    date: 'No data',
-  },
-]
+$: entries = reportData.entries || []
 
 $: policyName = getNameOfPolicy(policy)
 $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))

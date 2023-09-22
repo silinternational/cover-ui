@@ -17,7 +17,6 @@ const columns: Column[] = [
   { title: 'Item' },
   { title: 'Status', colspan: 3, centered: true },
   { title: 'Type' },
-  { title: 'Rate', numeric: true },
   { title: 'Amount', numeric: true },
   { title: 'Assigned To' },
   { title: 'Location' },
@@ -40,7 +39,17 @@ $: year = $params.year || year
 $: policy = $selectedPolicy
 $: $selectedPolicyId !== policyId && loadPolicy($selectedPolicyId)
 
-$: entries = reportData.entries || []
+$: entries = [
+  {
+    name: 'No data',
+    status_after: 'No data',
+    type: 'No data',
+    value: 0,
+    assigned_to: 'No data',
+    location: 'No data',
+    date: 'No data',
+  },
+]
 
 $: policyName = getNameOfPolicy(policy)
 $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))

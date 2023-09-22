@@ -156,25 +156,9 @@ const setInitialValues = (user: User, item: PolicyItem) => {
 }
 </script>
 
-<style>
-span.label {
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-.material-icons {
-  padding-right: 0.5rem;
-  color: var(--mdc-theme-status-info);
-}
-
-.category-info {
-  color: var(--mdc-theme-status-info);
-}
-</style>
-
 <Form on:submit={onSubmit}>
   <h2>About the item</h2>
-  <div class="tw-w-[20rem] tw-max-w-full">
+  <div class="tw-w-80 tw-max-w-full">
     <Select
       width="100%"
       label="Category"
@@ -185,9 +169,9 @@ span.label {
     />
     {#if selectedCategoryIsStationary}
       <Card class="tw-w-full mt-1" color="var(--mdc-theme-status-info-bg)">
-        <div class="flex justify-start">
-          <div class="material-icons">info</div>
-          <div class="category-info">
+        <div class="flex justify-start tw-gap-2">
+          <div class="material-icons tw-text-[var(--mdc-theme-status-info)]">info</div>
+          <div class="tw-text-[var(--mdc-theme-status-info)]">
             Coverage for home electronics and appliances is intended for locations that lack access to homeowner’s or
             renter’s insurance.
           </div>
@@ -198,7 +182,7 @@ span.label {
   <div>
     <TextField
       label="Brand (optional)"
-      class="tw-w-[20rem] tw-max-w-full"
+      class="tw-w-80 tw-max-w-full"
       description="e.g., Apple or Toyota"
       bind:value={make}
     />
@@ -206,7 +190,7 @@ span.label {
   <div>
     <TextField
       label="Model (optional)"
-      class="tw-w-[20rem] tw-max-w-full"
+      class="tw-w-80 tw-max-w-full"
       description="e.g., iPhone 10 Max 64 GB, A1921, or Land Cruiser"
       bind:value={model}
     />
@@ -214,13 +198,13 @@ span.label {
   <div>
     <TextField
       label="Serial number (optional for fast approval)"
-      class="tw-w-[20rem] tw-max-w-full"
+      class="tw-w-80 tw-max-w-full"
       description="e.g., chassis number, VIN, IMEI, or service tag"
       bind:value={uniqueIdentifier}
     />
   </div>
   <h2>Coverage</h2>
-  <div class="tw-w-[20rem] tw-max-w-full">
+  <div class="tw-w-80 tw-max-w-full">
     <SelectAccountablePerson
       {policyId}
       selectedID={selectedAccountablePersonId}
@@ -242,7 +226,7 @@ span.label {
   <div>
     <TextField
       label="Statement name"
-      class="tw-w-[20rem] tw-max-w-full"
+      class="tw-w-80 tw-max-w-full"
       description="Customize what will appear on your financial statements"
       bind:value={name}
     />

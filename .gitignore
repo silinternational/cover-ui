@@ -4,9 +4,6 @@ dist/index.html
 dist/service-worker*
 dist/workbox*
 
-# bun lock
-bun.lockb
-
 # cert for https
 *.pem
 

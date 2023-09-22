@@ -15,28 +15,28 @@ export function noCoverage(status: ItemCoverageStatus): boolean {
 
 export function getItemIcon(categoryName: itemCategoryName): string {
   switch (categoryName) {
-    case 'Appliances and home electronics':
-      return 'mdi:kettle'
+    case 'Computers, tablets, and phones':
+      return 'mdi:laptop'
     case 'Clothing':
       return 'mdi:hanger'
-    case 'Computers and accessories':
-      return 'mdi:laptop'
-    case 'Bikes and Lightweight Vehicles':
-      return 'mdi:scooter'
-    case 'Field electronics':
-      return 'mdi:satellite-uplink'
-    case 'Furniture':
-      return 'mdi:table-chair'
-    case 'Home goods':
-      return 'mdi:desk-lamp'
     case 'Medical':
       return 'mdi:wheelchair-accessibility'
-    case 'Mobile phones':
-      return 'mdi:cellphone'
+    case 'Photography and recording':
+      return 'mdi:camera'
+    case 'Other':
+      return 'mdi:help-circle'
     case 'Musical instruments':
       return 'mdi:bugle'
-    case 'Photography and videography':
-      return 'mdi:camera'
+    case 'Appliances and home electronics':
+      return 'mdi:kettle'
+    case 'Home goods':
+      return 'mdi:desk-lamp'
+    case 'Field site electronics':
+      return 'mdi:satellite-uplink'
+    case 'Books and media':
+      return 'mdi:album'
+    case 'Travel and recreation':
+      return 'mdi:bicycle'
     case 'Vehicles':
       return 'mdi:car'
     default:

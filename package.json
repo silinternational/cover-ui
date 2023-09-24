@@ -73,9 +73,7 @@
     "tailwind": "^4.0.0",
     "tailwind-utopia": "github:domchristie/tailwind-utopia",
     "tslib": "^2.5.0",
-    "typescript": "^4.9.4"
-  },
-  "dependencies": {
+    "typescript": "^4.9.4",
     "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
     "postcss-nesting": "^12.0.1"
   }

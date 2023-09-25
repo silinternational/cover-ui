@@ -44,6 +44,7 @@ let model = ''
 let riskCategoryId = ''
 let name = ''
 let uniqueIdentifier = ''
+let year = ''
 
 // Set initial values based on the provided item data.
 $: setInitialValues($user, item)
@@ -63,9 +64,11 @@ $: make,
   itemDescription,
   uniqueIdentifier,
   marketValueUSD,
+  year,
   accountablePersonId && categoryId && name && debouncedSave()
 $: selectedCategory = $categories.find((c) => c.id === categoryId)
 $: selectedCategoryIsStationary = selectedCategory?.risk_category?.name === RiskCategoryNames.Stationary
+$: selectedCategoryIsVehicle = selectedCategory?.risk_category?.name === RiskCategoryNames.Vehicle
 $: statementNameDefault = assembleStatementNameDefault(make, model, uniqueIdentifier)
 $: !userCustomizedStatementName && (name = statementNameDefault)
 
@@ -95,6 +98,7 @@ const getFormData = (): NewItemFormData => {
     name,
     riskCategoryId,
     uniqueIdentifier,
+    year,
   }
 }
 
@@ -162,6 +166,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
   riskCategoryId = item.risk_category?.id || riskCategoryId
   name = item.name || name
   uniqueIdentifier = item.serial_number || uniqueIdentifier
+  year = item.year || year
 
   const defaultName = assembleStatementNameDefault(make, model, uniqueIdentifier)
   if (name && name !== defaultName) {
@@ -183,6 +188,11 @@ span.label {
 
 .category-info {
   color: var(--mdc-theme-status-info);
+}
+
+.side-by-side > * {
+  display: inline-block;
+  margin-right: 1rem;
 }
 </style>
 
@@ -217,14 +227,24 @@ span.label {
       bind:value={make}
     />
   </p>
-  <p>
-    <TextField
-      label="Model (optional)"
-      class="mw-300"
-      description="e.g., iPhone 10 Max 64 GB, A1921, or Land Cruiser"
-      bind:value={model}
-    />
-  </p>
+  <div class:side-by-side={selectedCategoryIsVehicle}>
+    <div>
+      <TextField
+        label="Model (optional)"
+        class="mw-300"
+        description="e.g., iPhone 10 Max 64 GB, A1921, or Land Cruiser"
+        bind:value={model}
+      />
+    </div>
+    {#if selectedCategoryIsVehicle}
+      <div>
+        <TextField
+          label="Year (optional)"
+          bind:value={year}
+        />
+      </div>
+    {/if}
+  </div>
   <p>
     <TextField
       label="Serial number (optional for fast approval)"

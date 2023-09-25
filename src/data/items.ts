@@ -70,6 +70,7 @@ export type PolicyItem = {
   status_change: string
   status_reason: string
   updated_at: string /*Date*/
+  year: string
 }
 
 export type CreatePolicyItemRequestBody = {
@@ -114,6 +115,7 @@ export interface ItemFormData {
   riskCategoryId?: string
   name: string
   uniqueIdentifier?: string
+  year?: string
 }
 
 export interface NewItemFormData extends ItemFormData {

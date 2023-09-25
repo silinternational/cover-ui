@@ -8,7 +8,7 @@ import type { AccountablePersonOptions } from 'data/accountablePersons'
 import { ItemCoverageStatus, NewItemFormData, PolicyItem, RiskCategoryNames, UpdateItemFormData } from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
 import user, { isAdmin, User } from 'data/user'
-import { areMakeAndModelRequired, validateForSubmit, validateForSave } from './items/itemFormHelpers'
+import { areMakeAndModelRequired, assembleStatementNameDefault, validateForSubmit, validateForSave } from './items/itemFormHelpers'
 import SelectAccountablePerson from '../SelectAccountablePerson.svelte'
 import { debounce } from 'lodash-es'
 import { Button, Card, Form, MoneyInput, Select, TextArea, TextField } from '@silintl/ui-components'
@@ -49,7 +49,9 @@ let uniqueIdentifier = ''
 $: setInitialValues($user, item)
 
 let initialCategoryId: string
+let statementNameDefault = ''
 let today = new Date()
+let userCustomizedStatementName = false
 
 $: country = item?.accountable_person?.country || country
 $: !$catItemsInitialized && loadCategories()
@@ -62,8 +64,10 @@ $: make,
   uniqueIdentifier,
   marketValueUSD,
   accountablePersonId && categoryId && name && debouncedSave()
-$: selectedCategoryIsStationary =
-  $categories.find((c) => c.id === categoryId)?.risk_category?.name === RiskCategoryNames.Stationary
+$: selectedCategory = $categories.find((c) => c.id === categoryId)
+$: selectedCategoryIsStationary = selectedCategory?.risk_category?.name === RiskCategoryNames.Stationary
+$: statementNameDefault = assembleStatementNameDefault(make, model, uniqueIdentifier)
+$: !userCustomizedStatementName && (name = statementNameDefault)
 
 const debouncedSave = debounce(() => saveForLater(undefined, true), 4000)
 
@@ -138,6 +142,11 @@ const onMakeModelClosed = (event: CustomEvent<string>) => {
   event.detail === 'submit' && dispatch('submit', formData)
 }
 
+const onStatementNameInput = (event: InputEvent) => {
+  const inputElement = event.target as HTMLInputElement
+  userCustomizedStatementName = (inputElement.value !== '');
+}
+
 const setInitialValues = (user: User, item: PolicyItem) => {
   accountablePersonId = item.accountable_person?.id || user.id
   categoryId = item.category?.id || categoryId
@@ -153,6 +162,11 @@ const setInitialValues = (user: User, item: PolicyItem) => {
   riskCategoryId = item.risk_category?.id || riskCategoryId
   name = item.name || name
   uniqueIdentifier = item.serial_number || uniqueIdentifier
+
+  const defaultName = assembleStatementNameDefault(make, model, uniqueIdentifier)
+  if (name && name !== defaultName) {
+    userCustomizedStatementName = true
+  }
 }
 </script>
 
@@ -245,6 +259,7 @@ span.label {
       class="mw-300"
       description="Customize what will appear on your financial statements"
       bind:value={name}
+      on:input={onStatementNameInput}
     />
   </p>
   <p>

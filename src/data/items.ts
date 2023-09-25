@@ -42,6 +42,7 @@ export type RiskCategory = {
 export enum RiskCategoryNames {
   Stationary = 'Stationary',
   Mobile = 'Mobile',
+  Vehicle = 'Vehicle',
 }
 
 export type PolicyItem = {

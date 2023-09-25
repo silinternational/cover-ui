@@ -1,14 +1,11 @@
 <!-- https://github.com/material-components/material-components-web/tree/master/packages/mdc-textfield -->
 <script>
-  import { getDecimalPlacesLength } from './helpers'
   import { generateRandomID } from '@silintl/ui-components/random'
   import { MDCTextField } from '@material/textfield'
   import { afterUpdate, onMount } from 'svelte'
 
   export let label = ''
   export let value = ''
-  export let step = '0.01'
-  export let placeholder = ''
   export let name = ''
   export let maxValue = undefined
   export let minValue = undefined
@@ -17,7 +14,8 @@
   export let required = false
   export let description = ''
 
-  const labelID = generateRandomID('text-label-')
+  const step = '1'
+  const labelID = generateRandomID('year-input-')
 
   let maxlength = 524288 /* default */
   let element = {}
@@ -30,12 +28,8 @@
   $: hasExceededMaxLength = maxlength && valueLength > maxlength
   $: hasExceededMaxValue = maxValue && internalValue > maxValue
   $: isLowerThanMinValue = minValue && internalValue < minValue
-  $: showErrorIcon = hasExceededMaxValue || isLowerThanMinValue || hasExceededMaxLength || valueNotDivisibleByStep
+  $: showErrorIcon = hasExceededMaxValue || isLowerThanMinValue || hasExceededMaxLength
   $: error = showErrorIcon || (hasFocused && hasBlurred && required && !internalValue)
-  $: showCounter = maxlength && valueLength / maxlength > 0.85
-  $: valueHasTooManyDecPlaces = getDecimalPlacesLength(internalValue) > getDecimalPlacesLength(step)
-  $: valueNotDivisibleByStep =
-    (internalValue && (internalValue / Number(step)).toFixed(2) % 1 !== 0) || valueHasTooManyDecPlaces
   $: internalValue = Number(value) || 0
 
   onMount(() => {
@@ -70,7 +64,6 @@
   class:mdc-text-field--invalid={error}
   bind:this={element}
 >
-  <i class="material-icons" class:error aria-hidden="true">attach_money</i>
   <input
     {step}
     type="number"
@@ -91,7 +84,6 @@
     {disabled}
     {maxlength}
     {name}
-    {placeholder}
     {required}
   />
   {#if showErrorIcon}
@@ -119,17 +111,10 @@
       <span class="error">Maximum value allowed is {maxValue}</span>
     {:else if isLowerThanMinValue}
       <span class="error">Minimun value allowed is ({minValue})</span>
-    {:else if valueNotDivisibleByStep}
-      <span class="error">{internalValue} is not divisible by {step}</span>
     {:else if hasExceededMaxLength}
       <span class="error">Maximum {maxlength} characters</span>
     {/if}
   </div>
-  {#if showCounter}
-    <div class="mdc-text-field-character-counter" class:error>
-      {valueLength} / {maxlength}
-    </div>
-  {/if}
 </div>
 {#if description}
   <span class="d-block mdc-theme--neutral">{description}</span>

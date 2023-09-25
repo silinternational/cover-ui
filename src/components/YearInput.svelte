@@ -1,60 +1,60 @@
 <!-- https://github.com/material-components/material-components-web/tree/master/packages/mdc-textfield -->
 <script>
-  import { generateRandomID } from '@silintl/ui-components/random'
-  import { MDCTextField } from '@material/textfield'
-  import { afterUpdate, onMount } from 'svelte'
+import { generateRandomID } from '@silintl/ui-components/random'
+import { MDCTextField } from '@material/textfield'
+import { afterUpdate, onMount } from 'svelte'
 
-  export let label = ''
-  export let value = ''
-  export let name = ''
-  export let maxValue = undefined
-  export let minValue = undefined
-  export let autofocus = false
-  export let disabled = false
-  export let required = false
-  export let description = ''
+export let label = ''
+export let value = ''
+export let name = ''
+export let maxValue = undefined
+export let minValue = undefined
+export let autofocus = false
+export let disabled = false
+export let required = false
+export let description = ''
 
-  const step = '1'
-  const labelID = generateRandomID('year-input-')
+const step = '1'
+const labelID = generateRandomID('year-input-')
 
-  let maxlength = 524288 /* default */
-  let element = {}
-  let mdcTextField = {}
-  let width = ''
-  let hasFocused = false
-  let hasBlurred = false
+let maxlength = 524288 /* default */
+let element = {}
+let mdcTextField = {}
+let width = ''
+let hasFocused = false
+let hasBlurred = false
 
-  $: valueLength = value?.toString()?.length
-  $: hasExceededMaxLength = maxlength && valueLength > maxlength
-  $: hasExceededMaxValue = maxValue && internalValue > maxValue
-  $: isLowerThanMinValue = minValue && internalValue < minValue
-  $: showErrorIcon = hasExceededMaxValue || isLowerThanMinValue || hasExceededMaxLength
-  $: error = showErrorIcon || (hasFocused && hasBlurred && required && !internalValue)
-  $: internalValue = Number(value) || 0
+$: valueLength = value?.toString()?.length
+$: hasExceededMaxLength = maxlength && valueLength > maxlength
+$: hasExceededMaxValue = maxValue && internalValue > maxValue
+$: isLowerThanMinValue = minValue && internalValue < minValue
+$: showErrorIcon = hasExceededMaxValue || isLowerThanMinValue || hasExceededMaxLength
+$: error = showErrorIcon || (hasFocused && hasBlurred && required && !internalValue)
+$: internalValue = Number(value) || 0
 
-  onMount(() => {
-    mdcTextField = new MDCTextField(element)
-    return () => mdcTextField.destroy()
-  })
+onMount(() => {
+  mdcTextField = new MDCTextField(element)
+  return () => mdcTextField.destroy()
+})
 
-  afterUpdate(() => (width = `${element?.offsetWidth}px`))
+afterUpdate(() => (width = `${element?.offsetWidth}px`))
 
-  const focus = (node) => autofocus && node.focus()
+const focus = (node) => autofocus && node.focus()
 </script>
 
 <style>
-  .material-icons {
-    color: rgb(133, 140, 148);
-    position: relative;
-    top: 0.4rem;
-    right: 0.6rem;
-  }
-  .label-margin {
-    margin-left: 1.1rem;
-  }
-  .mdc-text-field--label-floating .mdc-floating-label {
-    margin-left: 0;
-  }
+.material-icons {
+  color: rgb(133, 140, 148);
+  position: relative;
+  top: 0.4rem;
+  right: 0.6rem;
+}
+.label-margin {
+  margin-left: 1.1rem;
+}
+.mdc-text-field--label-floating .mdc-floating-label {
+  margin-left: 0;
+}
 </style>
 
 <label

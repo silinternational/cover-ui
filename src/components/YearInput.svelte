@@ -1,7 +1,7 @@
 <!-- https://github.com/material-components/material-components-web/tree/master/packages/mdc-textfield -->
 <script>
   import { getDecimalPlacesLength } from './helpers'
-  import { generateRandomID } from '../../../random'
+  import { generateRandomID } from '@silintl/ui-components/random'
   import { MDCTextField } from '@material/textfield'
   import { afterUpdate, onMount } from 'svelte'
 

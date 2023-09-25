@@ -10,8 +10,8 @@ export const areMakeAndModelRequired = (item: PolicyItem, categoryId: string): b
   )
 }
 
-export const assembleStatementNameDefault = (make: string, model: string, uniqueIdentifier: string) => {
-  return `${make} ${model} ${uniqueIdentifier.slice(-6)}`.trim()
+export const assembleStatementNameDefault = (make: string, model: string, year: string, uniqueIdentifier: string) => {
+  return `${make} ${model} ${year} ${uniqueIdentifier.slice(-6)}`.trim()
 }
 
 export const validateForSave = (formData: NewItemFormData | UpdateItemFormData): void => {

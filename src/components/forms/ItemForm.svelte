@@ -69,7 +69,7 @@ $: make,
 $: selectedCategory = $categories.find((c) => c.id === categoryId)
 $: selectedCategoryIsStationary = selectedCategory?.risk_category?.name === RiskCategoryNames.Stationary
 $: selectedCategoryIsVehicle = selectedCategory?.risk_category?.name === RiskCategoryNames.Vehicle
-$: statementNameDefault = assembleStatementNameDefault(make, model, uniqueIdentifier)
+$: statementNameDefault = assembleStatementNameDefault(make, model, year, uniqueIdentifier)
 $: !userCustomizedStatementName && (name = statementNameDefault)
 
 const debouncedSave = debounce(() => saveForLater(undefined, true), 4000)
@@ -168,7 +168,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
   uniqueIdentifier = item.serial_number || uniqueIdentifier
   year = item.year || year
 
-  const defaultName = assembleStatementNameDefault(make, model, uniqueIdentifier)
+  const defaultName = assembleStatementNameDefault(make, model, year, uniqueIdentifier)
   if (name && name !== defaultName) {
     userCustomizedStatementName = true
   }

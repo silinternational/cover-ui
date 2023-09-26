@@ -70,7 +70,7 @@ export type PolicyItem = {
   status_change: string
   status_reason: string
   updated_at: string /*Date*/
-  year: string
+  year: number
 }
 
 export type CreatePolicyItemRequestBody = {
@@ -87,7 +87,7 @@ export type CreatePolicyItemRequestBody = {
   name: string
   risk_category_id?: string
   serial_number?: string
-  year?: string
+  year?: number
 }
 
 export type UpdatePolicyItemRequestBody = {
@@ -102,7 +102,7 @@ export type UpdatePolicyItemRequestBody = {
   name: string
   risk_category_id?: string
   serial_number?: string
-  year?: string
+  year?: number
 }
 
 export interface ItemFormData {
@@ -117,7 +117,7 @@ export interface ItemFormData {
   riskCategoryId?: string
   name: string
   uniqueIdentifier?: string
-  year?: string
+  year?: number
 }
 
 export interface NewItemFormData extends ItemFormData {

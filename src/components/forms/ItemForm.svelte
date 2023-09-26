@@ -3,6 +3,7 @@ import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
 import Description from '../Description.svelte'
 import MakeAndModelModal from '../MakeAndModelModal.svelte'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
+import YearInput from '../YearInput.svelte'
 import { MAX_TEXT_AREA_LENGTH } from 'components/const'
 import type { AccountablePersonOptions } from 'data/accountablePersons'
 import { ItemCoverageStatus, NewItemFormData, PolicyItem, RiskCategoryNames, UpdateItemFormData } from 'data/items'
@@ -10,6 +11,7 @@ import { categories, loadCategories, initialized as catItemsInitialized } from '
 import user, { isAdmin, User } from 'data/user'
 import { areMakeAndModelRequired, assembleStatementNameDefault, validateForSubmit, validateForSave } from './items/itemFormHelpers'
 import SelectAccountablePerson from '../SelectAccountablePerson.svelte'
+import { assertHas, assertPositiveInteger } from '../../validation/assertions'
 import { debounce } from 'lodash-es'
 import { Button, Card, Form, MoneyInput, Select, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
@@ -44,7 +46,7 @@ let model = ''
 let riskCategoryId = ''
 let name = ''
 let uniqueIdentifier = ''
-let year = ''
+let year: number | undefined
 
 // Set initial values based on the provided item data.
 $: setInitialValues($user, item)
@@ -117,6 +119,9 @@ const onSubmit = () => {
   validateForSubmit(item, formData)
   if (!(make && model) && areMakeAndModelRequired(item, categoryId)) {
     makeModelIsOpen = true
+  } else if (selectedCategoryIsVehicle) {
+    assertHas(formData.year, "Please specify the vehicle's model year, e.g., 1995")
+    assertPositiveInteger(formData.year, "Please provide a number for the vehicle's model year")
   } else {
     dispatch('submit', formData)
   }
@@ -238,8 +243,8 @@ span.label {
     </div>
     {#if selectedCategoryIsVehicle}
       <div>
-        <TextField
-          label="Year (optional)"
+        <YearInput
+          label="Year"
           bind:value={year}
         />
       </div>

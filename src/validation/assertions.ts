@@ -45,3 +45,10 @@ export function assertEmailAddress(email: string, errorMessage: string): void {
     throwError(errorMessage)
   }
 }
+
+export function assertPositiveInteger(value: any, errorMessage: string): void {
+  const integerRegex = /^[0-9]+$/
+  if (integerRegex.test(String(value))) {
+    throwError(errorMessage)
+  }
+}

@@ -39,6 +39,7 @@ import RemoveMemberModal from './RemoveMemberModal.svelte'
 import RevokeModal from './RevokeModal.svelte'
 import Strikes from './Strikes.svelte'
 import TextFieldWithLabel from './TextFieldWithLabel.svelte'
+import YearInput from './YearInput.svelte'
 
 export {
   AppDrawer,
@@ -82,4 +83,5 @@ export {
   RevokeModal,
   Strikes,
   TextFieldWithLabel,
+  YearInput,
 }

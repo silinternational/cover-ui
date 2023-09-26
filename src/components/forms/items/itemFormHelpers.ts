@@ -10,9 +10,10 @@ export const areMakeAndModelRequired = (item: PolicyItem, categoryId: string): b
   )
 }
 
-export const assembleStatementNameDefault = (make: string, model: string, year: string, uniqueIdentifier: string) => {
+export const assembleStatementNameDefault = (make: string, model: string, year: number | undefined, uniqueIdentifier: string) => {
   const consecutiveSpaces = / {2,}/
-  return `${make} ${model} ${year} ${uniqueIdentifier.slice(-6)}`.trim().replace(consecutiveSpaces, ' ')
+  const combinedValues = `${make} ${model} ${year || ''} ${uniqueIdentifier.slice(-6)}`
+  return combinedValues.trim().replace(consecutiveSpaces, ' ')
 }
 
 export const validateForSave = (formData: NewItemFormData | UpdateItemFormData): void => {

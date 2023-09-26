@@ -24,7 +24,7 @@ const categoryIcons: Record<string, string> = {
   electronics: 'mdi:satellite-uplink',
   books: 'mdi:album',
   travel: 'mdi:bicycle',
-  vehicles: 'mdi:car',
+  cars: 'mdi:car',
 }
 
 export function getItemIcon(categoryKey: string): string {

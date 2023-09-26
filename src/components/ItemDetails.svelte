@@ -8,7 +8,7 @@ import { formatDate } from '../helpers/dates'
 import { formatMoney } from 'helpers/money'
 import InfoBoxModal from './InfoBoxModal.svelte'
 import { formatDistanceToNow } from 'date-fns'
-import { IconButton } from '@silintl/ui-components'
+import { IconButton, StaticChip } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 export let item: PolicyItem
@@ -20,7 +20,7 @@ let policy: Policy
 let renewYear = new Date().getFullYear() + 1
 
 const showInfoBox: boolean[] = []
-const assignedTo = 'Assigned To'
+const assignedTo = 'Accountable Person'
 
 onMount(() => loadPolicy(policyId))
 
@@ -46,18 +46,13 @@ $: teamDetails = {
   'Internal Account': policy.account,
 }
 $: moneyDetails = {
-  'Covered value': formatMoney(item.coverage_amount),
+  Value: formatMoney(item.coverage_amount),
   Premium: `${formatMoney(item.annual_premium)} / yr`,
 }
 $: sidebarDetailsArray =
   policy.type === PolicyType.Team
-    ? [commonDetails, teamDetails, moneyDetails]
-    : [commonDetails, householdId, moneyDetails]
-$: bodyItems = {
-  Model: `${item?.make} ${item?.model}`,
-  'Unique ID': item?.serial_number,
-  Description: item?.description,
-}
+    ? [moneyDetails, { ...commonDetails, ...teamDetails }]
+    : [moneyDetails, { ...commonDetails, ...householdId }]
 
 const getItemStatusText = (item: PolicyItem) => {
   const updatedAtStr = item.updated_at ? formatDistanceToNow(Date.parse(item.updated_at), { addSuffix: true }) : ''
@@ -69,51 +64,103 @@ const getItemStatusText = (item: PolicyItem) => {
 const toggleModal = (i: number) => (showInfoBox[i] = !showInfoBox[i])
 </script>
 
-<style>
+<style lang="scss">
+@use '@material/typography/mdc-typography';
+dl {
+  margin-bottom: 1.5rem;
+}
+dt {
+  @extend .mdc-typography--subtitle2;
+  color: var(--mdc-theme-text-secondary-on-light);
+  margin-top: 0.5rem;
+}
+dd {
+  margin-left: unset;
+}
+.horizontal-dl {
+  display: grid;
+  grid-template-rows: auto auto;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  gap: 0.5rem;
+  width: max-content;
+}
+.payment-header {
+  background-color: var(--mdc-theme-neutral-bg);
+  padding: 4px;
+  border-radius: 8px 8px 0 0;
+}
 .wrapper {
   background-color: var(--mdc-theme-neutral-9);
   border-radius: 0 0 8px 8px;
 }
-.sidebar-chunk,
-.body-item {
-  margin-bottom: 1.25em;
-}
-.sidebar-item {
-  margin-bottom: 0.5em;
-}
-.title {
-  margin-bottom: 0.4em;
-}
-.value {
-  font-size: larger;
-}
-.coverage-dates {
-  margin-top: 1em;
-  display: flex;
-}
-.start-date {
-  margin-right: 2em;
+section {
+  flex-direction: column;
+  flex-grow: 1;
+  flex-basis: max-content;
 }
 .banners {
   margin-bottom: 0.5em;
 }
 </style>
 
-<div class="flex p-1 wrapper">
-  <div class="w-25 sidebar">
-    <h2 class="break-word my-1">{item.name || ''}</h2>
+{#if !isCheckingOut}
+  <div class="banners">
+    <ItemBanner itemStatus={status} {isAdmin}>{statusText}</ItemBanner>
+    {#if showRevisionMessage}
+      <MessageBanner class="mt-4px">{item.status_reason}</MessageBanner>
+    {/if}
+  </div>
+{/if}
 
+<div class="payment-header flex justify-between align-items-center px-1">
+  <span class="flex align-items-center gap-sm">
+    <h2>{item.name}</h2>
+  </span>
+  <slot name="headerButtonGroup" />
+</div>
+
+<div class="flex flex-wrap p-1 gap-sm wrapper">
+  <section>
+    <h3>Item</h3>
+    <dl>
+      <dt>Category</dt>
+      <dd>
+        <StaticChip class="max-content-width">
+          {item.category?.name || '–'}
+        </StaticChip>
+      </dd>
+      <div class="horizontal-dl">
+        <dt>Brand</dt>
+        <dd>{item?.make || '–'}</dd>
+        <dt>Model</dt>
+        <dd>{item?.model || '–'}</dd>
+        {#if item?.year}
+          <dt>Year</dt>
+          <dd>{item?.year}</dd>
+        {/if}
+      </div>
+      <dt>Unique ID</dt>
+      <dd>{item?.serial_number || '–'}</dd>
+      <dt>Notes</dt>
+      <dd class="max-w-300">{item?.description || '–'}</dd>
+    </dl>
+  </section>
+  <section>
+    <h3>Coverage</h3>
     {#each sidebarDetailsArray as sidebarDetail}
-      <div class="sidebar-chunk">
+      <dl>
         {#each Object.entries(sidebarDetail) as [title, value], i}
           <div class="sidebar-item">
             {#if ['Location'].includes(title) && !value}
-              <div class="title">
-                <div class="flex align-items-center">
-                  <b>{title}</b>
-                  <IconButton class="gray" icon="info" on:click={() => toggleModal(i)} />
+              <dt>
+                <div class="flex align-items-center relative">
+                  {title}
+                  <span class="relative">
+                    <IconButton class="gray absolute" icon="info" on:click={() => toggleModal(i)} />
+                  </span>
                 </div>
-              </div>
+              </dt>
               <InfoBoxModal
                 {i}
                 {policyId}
@@ -123,47 +170,16 @@ const toggleModal = (i: number) => (showInfoBox[i] = !showInfoBox[i])
                 on:closed={() => (showInfoBox[i] = false)}
               />
             {:else}
-              <div class="title"><b>{title}</b></div>
+              <dt>{title}</dt>
             {/if}
-            <div class="value">{value || '-'}</div>
+            <dd>{value || '-'}</dd>
           </div>
         {/each}
-      </div>
+      </dl>
     {/each}
-  </div>
-
-  <div class="w-75">
-    {#if !isCheckingOut}
-      <div class="banners">
-        <ItemBanner itemStatus={status} {isAdmin}>{statusText}</ItemBanner>
-        {#if showRevisionMessage}
-          <MessageBanner class="mt-4px">{item.status_reason}</MessageBanner>
-        {/if}
-      </div>
-    {/if}
-
-    {#each Object.entries(bodyItems) as [title, value]}
-      {#if title && value && value !== ' '}
-        <div class="body-item">
-          <div class="title"><b>{title}</b></div>
-          <div class="value break-word" class:pre={title === 'Description'}>{value || '-'}</div>
-        </div>
-      {/if}
-    {/each}
-
-    <Banner background="var(--mdc-theme-primary-header-bg)" color="var(--mdc-theme-primary)" class="max-content-width">
-      {item.category?.name || ''}
-    </Banner>
-
-    <div class="coverage-dates">
-      <div class="start-date">
-        <b>Coverage starts</b>
-        <div class="value">{startDate || '—'}</div>
-      </div>
-      <div class="end-date">
-        <b>{endDate ? 'Coverage ends' : 'Renew on'}</b>
-        <div class="value">{endDate || renewDate || '—'}</div>
-      </div>
-    </div>
-  </div>
+    <dt>Starts</dt>
+    <dd class="value">{startDate || '—'}</dd>
+    <dt>{endDate ? 'Ends' : 'Renews'}</dt>
+    <dd class="value">{endDate || renewDate || '—'}</dd>
+  </section>
 </div>

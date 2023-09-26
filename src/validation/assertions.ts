@@ -6,6 +6,13 @@ export function assertHas(value: any, errorMessage: string): void {
   }
 }
 
+export function assertIsFourDigitYear(year: number | undefined, errorMessage: string): void {
+  const fourDigitYearRegex = /^[1-9][0-9]{3}$/
+  if (!fourDigitYearRegex.test(String(year))) {
+    throwError(errorMessage)
+  }
+}
+
 export function assertUnique(value: any, values: any[], errorMessage: string): void {
   if (value && values.includes(value)) {
     throwError(errorMessage)
@@ -42,13 +49,6 @@ export function assertEmailAddress(email: string, errorMessage: string): void {
   const simpleEmailRegex = /\S+@\S+\.\S+/
 
   if (!simpleEmailRegex.test(email)) {
-    throwError(errorMessage)
-  }
-}
-
-export function assertPositiveInteger(value: any, errorMessage: string): void {
-  const integerRegex = /^[0-9]+$/
-  if (integerRegex.test(String(value))) {
     throwError(errorMessage)
   }
 }

@@ -11,7 +11,7 @@ import { categories, loadCategories, initialized as catItemsInitialized } from '
 import user, { isAdmin, User } from 'data/user'
 import { areMakeAndModelRequired, assembleStatementNameDefault, validateForSubmit, validateForSave } from './items/itemFormHelpers'
 import SelectAccountablePerson from '../SelectAccountablePerson.svelte'
-import { assertHas, assertPositiveInteger } from '../../validation/assertions'
+import { assertIsFourDigitYear } from '../../validation/assertions'
 import { debounce } from 'lodash-es'
 import { Button, Card, Form, MoneyInput, Select, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
@@ -120,8 +120,7 @@ const onSubmit = () => {
   if (!(make && model) && areMakeAndModelRequired(item, categoryId)) {
     makeModelIsOpen = true
   } else if (selectedCategoryIsVehicle) {
-    assertHas(formData.year, "Please specify the vehicle's model year, e.g., 1995")
-    assertPositiveInteger(formData.year, "Please provide a number for the vehicle's model year")
+    assertIsFourDigitYear(formData.year, "Please enter the vehicle's model year, e.g., 1995 (all four digits)")
   } else {
     dispatch('submit', formData)
   }

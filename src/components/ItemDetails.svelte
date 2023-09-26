@@ -116,7 +116,6 @@ section {
 <div class="payment-header flex justify-between align-items-center px-1">
   <span class="flex align-items-center gap-sm">
     <h2>{item.name}</h2>
-    <StaticChip>Placeholder</StaticChip>
   </span>
   <slot name="headerButtonGroup" />
 </div>

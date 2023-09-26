@@ -20,6 +20,7 @@ export type itemCategoryName =
 export type ItemCategory = {
   created_at: string /*Date*/
   help_text: string
+  key: string
   id: string
   name: itemCategoryName
   require_make_model: boolean

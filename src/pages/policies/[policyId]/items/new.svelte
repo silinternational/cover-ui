@@ -48,7 +48,7 @@ const onApply = async (event: CustomEvent) => {
 
 const onSaveForLater = async (event: CustomEvent) => {
   const itemData: UpdateItemFormData = event.detail
-  saveOrAddItem(itemData)
+  await saveOrAddItem(itemData)
 
   if (!event.detail.isAutoSaving) {
     $goto(HOME)

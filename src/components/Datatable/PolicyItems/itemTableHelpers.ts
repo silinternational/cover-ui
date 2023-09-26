@@ -13,18 +13,18 @@ export function noCoverage(status: ItemCoverageStatus): boolean {
 }
 
 const categoryIcons: Record<string, string> = {
-  computers: 'mdi:laptop',
-  clothing: 'mdi:hanger',
-  medical: 'mdi:wheelchair-accessibility',
-  photography: 'mdi:camera',
-  other: 'mdi:help-circle',
-  musical: 'mdi:bugle',
   appliances: 'mdi:kettle',
-  home: 'mdi:desk-lamp',
-  electronics: 'mdi:satellite-uplink',
   books: 'mdi:album',
-  travel: 'mdi:bicycle',
   cars: 'mdi:car',
+  clothing: 'mdi:hanger',
+  computers: 'mdi:laptop',
+  electronics: 'mdi:satellite-uplink',
+  home: 'mdi:desk-lamp',
+  medical: 'mdi:wheelchair-accessibility',
+  musical: 'mdi:bugle',
+  other: 'mdi:help-circle',
+  photography: 'mdi:camera',
+  travel: 'mdi:bicycle',
 }
 
 export function getItemIcon(categoryKey: string): string {

@@ -41,4 +41,5 @@ export function getItemIcon(categoryName: itemCategoryName): string {
       return 'mdi:car'
     default:
       return 'mdi:help-circle'
+  }
 }

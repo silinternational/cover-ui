@@ -110,7 +110,7 @@ const focus = (node) => autofocus && node.focus()
     {:else if hasExceededMaxValue}
       <span class="error">Maximum value allowed is {maxValue}</span>
     {:else if isLowerThanMinValue}
-      <span class="error">Minimun value allowed is ({minValue})</span>
+      <span class="error">Minimum value allowed is {minValue}</span>
     {:else if hasExceededMaxLength}
       <span class="error">Maximum {maxlength} characters</span>
     {/if}

@@ -1,4 +1,3 @@
-import type { itemCategoryName } from 'data/itemCategories'
 import { ItemCoverageStatus, type PolicyItem } from 'data/items'
 
 export function hasEnded(item: PolicyItem): boolean {
@@ -13,32 +12,21 @@ export function noCoverage(status: ItemCoverageStatus): boolean {
   return status === ItemCoverageStatus.Inactive || status === ItemCoverageStatus.Denied
 }
 
-export function getItemIcon(categoryName: itemCategoryName): string {
-  switch (categoryName) {
-    case 'Computers, tablets, and phones':
-      return 'mdi:laptop'
-    case 'Clothing':
-      return 'mdi:hanger'
-    case 'Medical':
-      return 'mdi:wheelchair-accessibility'
-    case 'Photography and recording':
-      return 'mdi:camera'
-    case 'Other':
-      return 'mdi:help-circle'
-    case 'Musical instruments':
-      return 'mdi:bugle'
-    case 'Appliances and home electronics':
-      return 'mdi:kettle'
-    case 'Home goods':
-      return 'mdi:desk-lamp'
-    case 'Field site electronics':
-      return 'mdi:satellite-uplink'
-    case 'Books and media':
-      return 'mdi:album'
-    case 'Travel and recreation':
-      return 'mdi:bicycle'
-    case 'Vehicles':
-      return 'mdi:car'
-    default:
-      return 'mdi:help-circle'
+const categoryIcons: Record<string, string> = {
+  appliances: 'mdi:kettle',
+  books: 'mdi:album',
+  cars: 'mdi:car',
+  clothing: 'mdi:hanger',
+  computers: 'mdi:laptop',
+  electronics: 'mdi:satellite-uplink',
+  home: 'mdi:desk-lamp',
+  medical: 'mdi:wheelchair-accessibility',
+  musical: 'mdi:bugle',
+  other: 'mdi:help-circle',
+  photography: 'mdi:camera',
+  travel: 'mdi:bicycle',
+}
+
+export function getItemIcon(categoryKey: string): string {
+  return categoryIcons[categoryKey] || 'mdi:help-circle'
 }

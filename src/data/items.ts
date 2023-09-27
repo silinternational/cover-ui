@@ -70,7 +70,7 @@ export type PolicyItem = {
   status_change: string
   status_reason: string
   updated_at: string /*Date*/
-  year: number
+  year?: number
 }
 
 export type CreatePolicyItemRequestBody = {

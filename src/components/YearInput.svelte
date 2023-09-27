@@ -5,7 +5,7 @@ import { MDCTextField } from '@material/textfield'
 import { afterUpdate, onMount } from 'svelte'
 
 export let label = ''
-export let value = ''
+export let value
 export let name = ''
 export let maxValue = undefined
 export let minValue = undefined

@@ -242,6 +242,7 @@ span.label {
       <div>
         <YearInput
           label="Year"
+          minValue={1900}
           bind:value={year}
         />
       </div>

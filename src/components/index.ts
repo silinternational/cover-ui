@@ -1,3 +1,4 @@
+import AccountablePeopleList from './AccountablePeopleList.svelte'
 import AppDrawer from './AppDrawer.svelte'
 import AppFooter from './AppFooter.svelte'
 import Banner from './Banner.svelte'
@@ -40,6 +41,7 @@ import RevokeModal from './RevokeModal.svelte'
 import Strikes from './Strikes.svelte'
 
 export {
+  AccountablePeopleList,
   AppDrawer,
   AppFooter,
   Banner,

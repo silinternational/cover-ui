@@ -1,6 +1,6 @@
 <script lang="ts">
 import user, { isAdmin } from 'data/user'
-import { Breadcrumb, DependentForm, RemoveMemberModal } from 'components'
+import { AccountablePeopleList, Breadcrumb, DependentForm, RemoveMemberModal } from 'components'
 import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import type { DependentFormData } from 'components/forms/DependentForm.svelte'
 import {
@@ -20,16 +20,7 @@ import type { PolicyMember } from 'data/types/policy-members'
 import { ITEMS, POLICIES, policyDetails, settingsPolicy, SETTINGS_PERSONAL } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
-import {
-  Button,
-  SearchableSelect,
-  TextField,
-  IconButton,
-  Page,
-  setNotice,
-  Tooltip,
-  Dialog,
-} from '@silintl/ui-components'
+import { Button, SearchableSelect, TextField, Page, setNotice, Dialog } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 const policyData = {} as Policy
@@ -79,7 +70,6 @@ $: invites = $selectedPolicy.invites || []
 
 $: setInitialValues(policy)
 
-$: isYou = (member: PolicyMember) => $user.id === member.id
 $: isHouseholdPolicy = policy.type === PolicyType.Household
 
 function setInitialValues(policy: Policy): void {
@@ -214,9 +204,9 @@ const onSubmitModal = async (event: CustomEvent<DependentFormData>) => {
 
 const isIdValid = (id: string): boolean => /^[0-9]+$/.test(id)
 const editProfile = () => $goto(SETTINGS_PERSONAL)
-const editDependent = (dependent: PolicyDependent) => {
+const editDependent = (e: CustomEvent) => {
   modalTitle = isHouseholdPolicy ? 'Edit Child or Spouse' : 'Edit Person'
-  modalData = dependent
+  modalData = e.detail
   showAddDependentModal = true
 }
 
@@ -232,39 +222,14 @@ const getEntityChoice = (entityCode: string) => {
   const code = currentEntity?.code
   return name && code ? `${code} - ${name}` : ''
 }
+
+const onDeleteMember = (e: CustomEvent) => {
+  selectedPolicyMember = e.detail
+  removeModalIsOpen = true
+}
 </script>
 
 <style>
-p {
-  margin-top: 2rem;
-}
-
-.accountable-people-list {
-  counter-reset: item;
-  list-style-type: none;
-  padding-left: 0;
-  margin: 10px 0;
-}
-
-.accountable-people-list-item {
-  display: flex;
-  justify-content: space-between;
-  border: 0 solid rgba(0, 0, 0, 0.12);
-  border-top-width: 1px;
-  padding: 10px;
-  position: relative;
-}
-
-.accountable-people-list-item:last-of-type {
-  border-bottom-width: 1px;
-}
-
-.edit-button {
-  top: 0.25rem;
-  color: rgba(0, 0, 0, 0.5);
-  padding-right: 2rem;
-}
-
 /* TODO use tailwind classes for these */
 div {
   margin-top: 1rem;
@@ -320,62 +285,15 @@ div {
     </div>
   {/if}
 
-  <div>
-    <span class="header">Accountable people</span>
-  </div>
-  <ul class="accountable-people-list">
-    {#each policyMembers as policyMember}
-      <li class="accountable-people-list-item">
-        <span>
-          {policyMember.first_name || ''}
-          {policyMember.last_name || ''}
-          {isYou(policyMember) ? '(you)' : ''}
-          <br />
-          <small>{policyMember.email || ''}</small>
-          <br />
-          <small>{policyMember.country || ''}</small>
-        </span>
-        <span class="edit-button">
-          {#if isYou(policyMember)}
-            <Tooltip.Wrapper ariaDescribedBy="edit-profile-button">
-              <IconButton icon="person" ariaLabel="Edit your profile" on:click={editProfile} />
-            </Tooltip.Wrapper>
-
-            <Tooltip tooltipID="edit-profile-button" positionX="start">Edit your profile</Tooltip>
-          {:else}
-            <IconButton
-              icon="delete"
-              ariaLabel="Delete"
-              on:click={() => {
-                selectedPolicyMember = policyMember
-                removeModalIsOpen = true
-              }}
-            />
-          {/if}
-        </span>
-      </li>
-    {/each}
-    {#each dependents as dependent}
-      <li class="accountable-people-list-item">
-        <span>
-          {dependent.name || ''}
-          {#if isHouseholdPolicy}
-            <br />
-            <small>Dependent ({dependent.relationship || '-'})</small>
-          {/if}
-          <br />
-          <small>{dependent.country || ''}</small>
-        </span>
-        <span class="edit-button">
-          <Tooltip.Wrapper ariaDescribedBy={'edit-person-' + dependent.id}>
-            <IconButton icon="edit" ariaLabel="Edit" on:click={() => editDependent(dependent)} />
-          </Tooltip.Wrapper>
-
-          <Tooltip tooltipID={'edit-person-' + dependent.id} positionX="end">Edit dependent</Tooltip>
-        </span>
-      </li>
-    {/each}
-  </ul>
+  <AccountablePeopleList
+    {policyMembers}
+    {dependents}
+    {isHouseholdPolicy}
+    userID={$user.id}
+    on:deleteMember={onDeleteMember}
+    on:editDependent={editDependent}
+    on:editProfile={editProfile}
+  />
 
   <p>
     <span class="header">Invites</span>

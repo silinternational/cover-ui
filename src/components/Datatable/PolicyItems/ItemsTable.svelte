@@ -293,7 +293,7 @@ const getStatusClass = (status: ItemCoverageStatus) =>
     {#each sortedItemsArray as item (item.id)}
       <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} let:rowId clickable>
         <Datatable.Checkbox {rowId} on:click={() => (goToItemDetails = false)} on:mounted={registerNewCheckbox} />
-        <RowItem status={item.coverage_status}><iconify-icon icon={getItemIcon(item.category.name)} /></RowItem>
+        <RowItem status={item.coverage_status}><iconify-icon icon={getItemIcon(item.category.key)} /></RowItem>
         <RowItem status={item.coverage_status}>{item.name || ''}</RowItem>
         {#if snMakeAndModelAreVisible}
           <RowItem status={item.coverage_status}>{item.serial_number || ''}</RowItem>

@@ -17,7 +17,6 @@ export let description = ''
 const step = '1'
 const labelID = generateRandomID('year-input-')
 
-let maxlength = 524288 /* default */
 let element = {}
 let mdcTextField = {}
 let width = ''
@@ -25,10 +24,9 @@ let hasFocused = false
 let hasBlurred = false
 
 $: valueLength = value?.toString()?.length
-$: hasExceededMaxLength = maxlength && valueLength > maxlength
 $: hasExceededMaxValue = maxValue && internalValue > maxValue
 $: isLowerThanMinValue = minValue && internalValue < minValue
-$: showErrorIcon = hasExceededMaxValue || isLowerThanMinValue || hasExceededMaxLength
+$: showErrorIcon = hasExceededMaxValue || isLowerThanMinValue
 $: error = showErrorIcon || (hasFocused && hasBlurred && required && !internalValue)
 $: internalValue = Number(value) || 0
 
@@ -82,7 +80,6 @@ const focus = (node) => autofocus && node.focus()
     on:keypress
     on:keyup
     {disabled}
-    {maxlength}
     {name}
     {required}
   />
@@ -104,6 +101,7 @@ const focus = (node) => autofocus && node.focus()
   </span>
 </label>
 <div class="mdc-text-field-helper-line" style="width: {width};">
+  <!-- TODO: Update in line with https://github.com/silinternational/ui-components/commit/5d017c38530af6124169d2eecf8b158d9282fc56 -->
   <div class="mdc-text-field-helper-text" class:opacity1={required} id="{labelID}-helper-id" aria-hidden="true">
     {#if required && !internalValue}
       <span class="required" class:error={hasFocused}>*Required</span>
@@ -111,8 +109,6 @@ const focus = (node) => autofocus && node.focus()
       <span class="error">Maximum value allowed is {maxValue}</span>
     {:else if isLowerThanMinValue}
       <span class="error">Minimum value allowed is {minValue}</span>
-    {:else if hasExceededMaxLength}
-      <span class="error">Maximum {maxlength} characters</span>
     {/if}
   </div>
 </div>

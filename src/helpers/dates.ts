@@ -55,3 +55,8 @@ export const formatDateAndTime = (
   }
   return ''
 }
+
+export const isFourDigitYear = (year: any): boolean => {
+  const fourDigitYearRegex = /^[1-9][0-9]{3}$/
+  return fourDigitYearRegex.test(String(year))
+}

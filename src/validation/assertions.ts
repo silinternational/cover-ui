@@ -1,4 +1,5 @@
 import { throwError } from '../error'
+import { isFourDigitYear } from 'helpers/dates'
 
 export function assertHas(value: any, errorMessage: string): void {
   if (!value) {
@@ -7,8 +8,7 @@ export function assertHas(value: any, errorMessage: string): void {
 }
 
 export function assertIsFourDigitYear(year: number | undefined, errorMessage: string): void {
-  const fourDigitYearRegex = /^[1-9][0-9]{3}$/
-  if (!fourDigitYearRegex.test(String(year))) {
+  if (!isFourDigitYear(year)) {
     throwError(errorMessage)
   }
 }

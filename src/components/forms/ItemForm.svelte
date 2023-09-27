@@ -116,11 +116,9 @@ const onCategorySelectPopulated = () => {
 
 const onSubmit = () => {
   formData = getFormData()
-  validateForSubmit(item, formData)
+  validateForSubmit(item, formData, selectedCategoryIsVehicle)
   if (!(make && model) && areMakeAndModelRequired(item, categoryId)) {
     makeModelIsOpen = true
-  } else if (selectedCategoryIsVehicle) {
-    assertIsFourDigitYear(formData.year, "Please enter the vehicle's model year, e.g., 1995 (all four digits)")
   } else {
     dispatch('submit', formData)
   }

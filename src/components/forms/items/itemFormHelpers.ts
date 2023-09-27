@@ -1,6 +1,6 @@
 import { categories } from 'data/itemCategories'
 import { ItemCoverageStatus, PolicyItem, NewItemFormData, UpdateItemFormData } from 'data/items'
-import { assertHas, assertIsLessOrEqual } from '../../../validation/assertions'
+import { assertHas, assertIsFourDigitYear, assertIsLessOrEqual } from '../../../validation/assertions'
 import { get } from 'svelte/store'
 
 export const areMakeAndModelRequired = (item: PolicyItem, categoryId: string): boolean | undefined => {
@@ -22,7 +22,7 @@ export const validateForSave = (formData: NewItemFormData | UpdateItemFormData):
   assertHas(formData.name, 'Please specify a statement name')
 }
 
-export const validateForSubmit = (item: PolicyItem, formData: NewItemFormData | UpdateItemFormData): void => {
+export const validateForSubmit = (item: PolicyItem, formData: NewItemFormData | UpdateItemFormData, isVehicle: boolean): void => {
   validateForSave(formData)
   assertIsLessOrEqual(0.01, Number(formData.marketValueUSD), 'Please specify the market value')
   item.coverage_status !== ItemCoverageStatus.Draft &&
@@ -31,4 +31,10 @@ export const validateForSubmit = (item: PolicyItem, formData: NewItemFormData | 
       item.coverage_amount,
       'Coverage amount cannot be increased'
     )
+  if (isVehicle) {
+    assertIsFourDigitYear(
+      formData.year,
+      "Please enter the vehicle's model year, e.g., 1995 (all four digits)"
+    )
+  }
 }

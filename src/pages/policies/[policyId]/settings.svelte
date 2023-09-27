@@ -1,6 +1,6 @@
 <script lang="ts">
 import user, { isAdmin } from 'data/user'
-import { Breadcrumb, Description, DependentForm, RemoveMemberModal } from 'components'
+import { Breadcrumb, DependentForm, RemoveMemberModal } from 'components'
 import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import type { DependentFormData } from 'components/forms/DependentForm.svelte'
 import {
@@ -11,7 +11,7 @@ import {
   selectedPolicyDependents,
   updateDependent,
 } from 'data/dependents'
-import { EntityCode, entityCodes, loadEntityCodes } from 'data/entityCodes'
+import { entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { assignItems, loadItems } from 'data/items'
 import { updatePolicy, Policy, PolicyType, loadPolicy, selectedPolicy } from 'data/policies'
 import { deletePolicyMember, invitePolicyMember, loadMembersOfPolicy, selectedPolicyMembers } from 'data/policy-members'
@@ -264,27 +264,40 @@ p {
   color: rgba(0, 0, 0, 0.5);
   padding-right: 2rem;
 }
+
+/* TODO use tailwind classes for these */
+div {
+  margin-top: 1rem;
+}
+.extra-margin {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
 </style>
 
 <Page>
   <Breadcrumb links={breadcrumbLinks} />
   {#if policy.type === PolicyType.Household && isAdmin($roleSelection)}
-    <p>
-      <span class="header">Household ID<span class="required-input">*</span></span>
-      <TextField {maxlength} required bind:value={householdId} on:blur={updateHouseholdId} />
-    </p>
+    <div>
+      <TextField {maxlength} label="Household ID" required bind:value={householdId} on:blur={updateHouseholdId} />
+    </div>
   {/if}
 
   {#if policy.type === PolicyType.Team}
-    <p>
-      <span class="header">Policy name<span class="required-input">*</span></span>
-      <TextField {maxlength} required bind:value={policyName} on:blur={updatePolicyName} />
-      <Description>Appears in your statements</Description>
-    </p>
+    <div>
+      <TextField
+        {maxlength}
+        description="Appears in your statements"
+        label="Policy name"
+        required
+        bind:value={policyName}
+        on:blur={updatePolicyName}
+      />
+    </div>
 
-    <p>
-      <span class="header">Affiliation<span class="required-input">*</span></span>
+    <div class="extra-margin">
       <SearchableSelect
+        required
         options={entityOptions}
         choice={getEntityChoice(entityCode)}
         {placeholder}
@@ -292,26 +305,24 @@ p {
         on:chosen={updateEntityCode}
         on:check={warnUserCodeIsNotValid}
       />
-    </p>
-    <p>
-      <span class="header">Cost center<span class="required-input">*</span></span>
-      <TextField {maxlength} required bind:value={costCenter} on:blur={updateCostCenter} />
-    </p>
+    </div>
 
-    <p>
-      <span class="header">Account<span class="required-input">*</span></span>
-      <TextField {maxlength} required bind:value={account} on:blur={updateAccount} />
-    </p>
+    <div>
+      <TextField label="Cost center" {maxlength} required bind:value={costCenter} on:blur={updateCostCenter} />
+    </div>
 
-    <p>
-      <span class="header">Account Detail</span>
-      <TextField {maxlength} bind:value={accountDetail} on:blur={updateAccountDetail} />
-    </p>
+    <div>
+      <TextField label="Account" {maxlength} required bind:value={account} on:blur={updateAccount} />
+    </div>
+
+    <div>
+      <TextField label="Account Detail" {maxlength} bind:value={accountDetail} on:blur={updateAccountDetail} />
+    </div>
   {/if}
 
-  <p>
+  <div>
     <span class="header">Accountable people</span>
-  </p>
+  </div>
   <ul class="accountable-people-list">
     {#each policyMembers as policyMember}
       <li class="accountable-people-list-item">

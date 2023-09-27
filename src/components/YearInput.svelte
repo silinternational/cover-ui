@@ -106,7 +106,6 @@ const focus = (node) => autofocus && node.focus()
   </span>
 </label>
 <div class="mdc-text-field-helper-line" style="width: {width};">
-  <!-- TODO: Update in line with https://github.com/silinternational/ui-components/commit/5d017c38530af6124169d2eecf8b158d9282fc56 -->
   <div
     class="mdc-text-field-helper-text"
     class:mdc-text-field-helper-text--validation-msg={error}

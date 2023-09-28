@@ -90,7 +90,7 @@ const focus = (node) => autofocus && node.focus()
   />
   {#if error}
     <span class="mdc-text-field__affix mdc-text-field__affix--suffix">
-      <i class="material-icons error" aria-hidden="true"> error</i>
+      <i class="material-icons error" aria-hidden="true">error</i>
     </span>
   {/if}
   <span class="mdc-notched-outline">

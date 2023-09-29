@@ -1,3 +1,4 @@
+import AccountablePeopleList from './AccountablePeopleList.svelte'
 import AppDrawer from './AppDrawer.svelte'
 import AppFooter from './AppFooter.svelte'
 import Banner from './Banner.svelte'
@@ -38,10 +39,10 @@ import RemoveDependentModal from './RemoveDependentModal.svelte'
 import RemoveMemberModal from './RemoveMemberModal.svelte'
 import RevokeModal from './RevokeModal.svelte'
 import Strikes from './Strikes.svelte'
-import TextFieldWithLabel from './TextFieldWithLabel.svelte'
 import YearInput from './YearInput.svelte'
 
 export {
+  AccountablePeopleList,
   AppDrawer,
   AppFooter,
   Banner,
@@ -82,6 +83,5 @@ export {
   RemoveMemberModal,
   RevokeModal,
   Strikes,
-  TextFieldWithLabel,
   YearInput,
 }

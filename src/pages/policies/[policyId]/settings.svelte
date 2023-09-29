@@ -1,6 +1,6 @@
 <script lang="ts">
 import user, { isAdmin } from 'data/user'
-import { Breadcrumb, Description, DependentForm, RemoveMemberModal } from 'components'
+import { AccountablePeopleList, Breadcrumb, DependentForm, RemoveMemberModal } from 'components'
 import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import type { DependentFormData } from 'components/forms/DependentForm.svelte'
 import {
@@ -11,7 +11,7 @@ import {
   selectedPolicyDependents,
   updateDependent,
 } from 'data/dependents'
-import { EntityCode, entityCodes, loadEntityCodes } from 'data/entityCodes'
+import { entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { assignItems, loadItems } from 'data/items'
 import { updatePolicy, Policy, PolicyType, loadPolicy, selectedPolicy } from 'data/policies'
 import { deletePolicyMember, invitePolicyMember, loadMembersOfPolicy, selectedPolicyMembers } from 'data/policy-members'
@@ -20,16 +20,7 @@ import type { PolicyMember } from 'data/types/policy-members'
 import { ITEMS, POLICIES, policyDetails, settingsPolicy, SETTINGS_PERSONAL } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
-import {
-  Button,
-  SearchableSelect,
-  TextField,
-  IconButton,
-  Page,
-  setNotice,
-  Tooltip,
-  Dialog,
-} from '@silintl/ui-components'
+import { Button, SearchableSelect, TextField, Page, setNotice, Dialog } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 const policyData = {} as Policy
@@ -79,7 +70,6 @@ $: invites = $selectedPolicy.invites || []
 
 $: setInitialValues(policy)
 
-$: isYou = (member: PolicyMember) => $user.id === member.id
 $: isHouseholdPolicy = policy.type === PolicyType.Household
 
 function setInitialValues(policy: Policy): void {
@@ -214,9 +204,9 @@ const onSubmitModal = async (event: CustomEvent<DependentFormData>) => {
 
 const isIdValid = (id: string): boolean => /^[0-9]+$/.test(id)
 const editProfile = () => $goto(SETTINGS_PERSONAL)
-const editDependent = (dependent: PolicyDependent) => {
+const editDependent = (e: CustomEvent) => {
   modalTitle = isHouseholdPolicy ? 'Edit Child or Spouse' : 'Edit Person'
-  modalData = dependent
+  modalData = e.detail
   showAddDependentModal = true
 }
 
@@ -232,59 +222,47 @@ const getEntityChoice = (entityCode: string) => {
   const code = currentEntity?.code
   return name && code ? `${code} - ${name}` : ''
 }
+
+const onDeleteMember = (e: CustomEvent) => {
+  selectedPolicyMember = e.detail
+  removeModalIsOpen = true
+}
 </script>
 
 <style>
-p {
-  margin-top: 2rem;
+/* TODO use tailwind classes for these */
+div {
+  margin-top: 1rem;
 }
-
-.accountable-people-list {
-  counter-reset: item;
-  list-style-type: none;
-  padding-left: 0;
-  margin: 10px 0;
-}
-
-.accountable-people-list-item {
-  display: flex;
-  justify-content: space-between;
-  border: 0 solid rgba(0, 0, 0, 0.12);
-  border-top-width: 1px;
-  padding: 10px;
-  position: relative;
-}
-
-.accountable-people-list-item:last-of-type {
-  border-bottom-width: 1px;
-}
-
-.edit-button {
-  top: 0.25rem;
-  color: rgba(0, 0, 0, 0.5);
-  padding-right: 2rem;
+.extra-margin {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 </style>
 
 <Page>
   <Breadcrumb links={breadcrumbLinks} />
   {#if policy.type === PolicyType.Household && isAdmin($roleSelection)}
-    <p>
-      <span class="header">Household ID<span class="required-input">*</span></span>
-      <TextField {maxlength} required bind:value={householdId} on:blur={updateHouseholdId} />
-    </p>
+    <div>
+      <TextField {maxlength} label="Household ID" required bind:value={householdId} on:blur={updateHouseholdId} />
+    </div>
   {/if}
 
   {#if policy.type === PolicyType.Team}
-    <p>
-      <span class="header">Policy name<span class="required-input">*</span></span>
-      <TextField {maxlength} required bind:value={policyName} on:blur={updatePolicyName} />
-      <Description>Appears in your statements</Description>
-    </p>
+    <div>
+      <TextField
+        {maxlength}
+        description="Appears in your statements"
+        label="Policy name"
+        required
+        bind:value={policyName}
+        on:blur={updatePolicyName}
+      />
+    </div>
 
-    <p>
-      <span class="header">Affiliation<span class="required-input">*</span></span>
+    <div class="extra-margin">
       <SearchableSelect
+        required
         options={entityOptions}
         choice={getEntityChoice(entityCode)}
         {placeholder}
@@ -292,79 +270,30 @@ p {
         on:chosen={updateEntityCode}
         on:check={warnUserCodeIsNotValid}
       />
-    </p>
-    <p>
-      <span class="header">Cost center<span class="required-input">*</span></span>
-      <TextField {maxlength} required bind:value={costCenter} on:blur={updateCostCenter} />
-    </p>
+    </div>
 
-    <p>
-      <span class="header">Account<span class="required-input">*</span></span>
-      <TextField {maxlength} required bind:value={account} on:blur={updateAccount} />
-    </p>
+    <div>
+      <TextField label="Cost center" {maxlength} required bind:value={costCenter} on:blur={updateCostCenter} />
+    </div>
 
-    <p>
-      <span class="header">Account Detail</span>
-      <TextField {maxlength} bind:value={accountDetail} on:blur={updateAccountDetail} />
-    </p>
+    <div>
+      <TextField label="Account" {maxlength} required bind:value={account} on:blur={updateAccount} />
+    </div>
+
+    <div>
+      <TextField label="Account Detail" {maxlength} bind:value={accountDetail} on:blur={updateAccountDetail} />
+    </div>
   {/if}
 
-  <p>
-    <span class="header">Accountable people</span>
-  </p>
-  <ul class="accountable-people-list">
-    {#each policyMembers as policyMember}
-      <li class="accountable-people-list-item">
-        <span>
-          {policyMember.first_name || ''}
-          {policyMember.last_name || ''}
-          {isYou(policyMember) ? '(you)' : ''}
-          <br />
-          <small>{policyMember.email || ''}</small>
-          <br />
-          <small>{policyMember.country || ''}</small>
-        </span>
-        <span class="edit-button">
-          {#if isYou(policyMember)}
-            <Tooltip.Wrapper ariaDescribedBy="edit-profile-button">
-              <IconButton icon="person" ariaLabel="Edit your profile" on:click={editProfile} />
-            </Tooltip.Wrapper>
-
-            <Tooltip tooltipID="edit-profile-button" positionX="start">Edit your profile</Tooltip>
-          {:else}
-            <IconButton
-              icon="delete"
-              ariaLabel="Delete"
-              on:click={() => {
-                selectedPolicyMember = policyMember
-                removeModalIsOpen = true
-              }}
-            />
-          {/if}
-        </span>
-      </li>
-    {/each}
-    {#each dependents as dependent}
-      <li class="accountable-people-list-item">
-        <span>
-          {dependent.name || ''}
-          {#if isHouseholdPolicy}
-            <br />
-            <small>Dependent ({dependent.relationship || '-'})</small>
-          {/if}
-          <br />
-          <small>{dependent.country || ''}</small>
-        </span>
-        <span class="edit-button">
-          <Tooltip.Wrapper ariaDescribedBy={'edit-person-' + dependent.id}>
-            <IconButton icon="edit" ariaLabel="Edit" on:click={() => editDependent(dependent)} />
-          </Tooltip.Wrapper>
-
-          <Tooltip tooltipID={'edit-person-' + dependent.id} positionX="end">Edit dependent</Tooltip>
-        </span>
-      </li>
-    {/each}
-  </ul>
+  <AccountablePeopleList
+    {policyMembers}
+    {dependents}
+    {isHouseholdPolicy}
+    userID={$user.id}
+    on:deleteMember={onDeleteMember}
+    on:editDependent={editDependent}
+    on:editProfile={editProfile}
+  />
 
   <p>
     <span class="header">Invites</span>

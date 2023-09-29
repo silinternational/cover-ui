@@ -1,5 +1,6 @@
 <script lang="ts">
-import { Button, Dialog, Form, TextField } from '@silintl/ui-components'
+import { TextFieldWithLabel } from 'components/index'
+import { Button, Dialog, Form } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let title = 'Create an Entity'
@@ -35,16 +36,16 @@ const onCancel = (event: Event) => {
   <Form on:submit={onSubmit}>
     <div class="my-1">
       <p>
-        <TextField required label="Code" bind:value={formData.code} />
+        <TextFieldWithLabel required label="Code" bind:value={formData.code} />
       </p>
       <p>
-        <TextField required label="Name" bind:value={formData.name} />
+        <TextFieldWithLabel required label="Name" bind:value={formData.name} />
       </p>
       <p>
-        <TextField required label="Income Account" bind:value={formData.income_account} />
+        <TextFieldWithLabel required label="Income Account" bind:value={formData.income_account} />
       </p>
       <p>
-        <TextField label="Parent Entity" bind:value={formData.parent_entity} />
+        <TextFieldWithLabel label="Parent Entity" bind:value={formData.parent_entity} />
       </p>
       <p>
         <label>

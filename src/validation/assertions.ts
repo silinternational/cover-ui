@@ -1,7 +1,14 @@
 import { throwError } from '../error'
+import { isFourDigitYear } from 'helpers/dates'
 
 export function assertHas(value: any, errorMessage: string): void {
   if (!value) {
+    throwError(errorMessage)
+  }
+}
+
+export function assertIsFourDigitYear(year: number | undefined, errorMessage: string): void {
+  if (!isFourDigitYear(year)) {
     throwError(errorMessage)
   }
 }

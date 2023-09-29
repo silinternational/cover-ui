@@ -3,6 +3,7 @@ import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
 import Description from '../Description.svelte'
 import MakeAndModelModal from '../MakeAndModelModal.svelte'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
+import YearInput from '../YearInput.svelte'
 import { MAX_TEXT_AREA_LENGTH } from 'components/const'
 import type { AccountablePersonOptions } from 'data/accountablePersons'
 import { ItemCoverageStatus, NewItemFormData, PolicyItem, RiskCategoryNames, UpdateItemFormData } from 'data/items'
@@ -44,6 +45,7 @@ let model = ''
 let riskCategoryId = ''
 let name = ''
 let uniqueIdentifier = ''
+let year: number | undefined
 
 // Set initial values based on the provided item data.
 $: setInitialValues($user, item)
@@ -63,10 +65,12 @@ $: make,
   itemDescription,
   uniqueIdentifier,
   marketValueUSD,
+  year,
   accountablePersonId && categoryId && name && debouncedSave()
 $: selectedCategory = $categories.find((c) => c.id === categoryId)
 $: selectedCategoryIsStationary = selectedCategory?.risk_category?.name === RiskCategoryNames.Stationary
-$: statementNameDefault = assembleStatementNameDefault(make, model, uniqueIdentifier)
+$: selectedCategoryIsVehicle = selectedCategory?.risk_category?.name === RiskCategoryNames.Vehicle
+$: statementNameDefault = assembleStatementNameDefault(make, model, year, uniqueIdentifier)
 $: !userCustomizedStatementName && (name = statementNameDefault)
 
 const debouncedSave = debounce(() => saveForLater(undefined, true), 4000)
@@ -95,6 +99,7 @@ const getFormData = (): NewItemFormData => {
     name,
     riskCategoryId,
     uniqueIdentifier,
+    year,
   }
 }
 
@@ -110,7 +115,7 @@ const onCategorySelectPopulated = () => {
 
 const onSubmit = () => {
   formData = getFormData()
-  validateForSubmit(item, formData)
+  validateForSubmit(item, formData, selectedCategoryIsVehicle)
   if (!(make && model) && areMakeAndModelRequired(item, categoryId)) {
     makeModelIsOpen = true
   } else {
@@ -162,8 +167,9 @@ const setInitialValues = (user: User, item: PolicyItem) => {
   riskCategoryId = item.risk_category?.id || riskCategoryId
   name = item.name || name
   uniqueIdentifier = item.serial_number || uniqueIdentifier
+  year = item.year || year
 
-  const defaultName = assembleStatementNameDefault(make, model, uniqueIdentifier)
+  const defaultName = assembleStatementNameDefault(make, model, year, uniqueIdentifier)
   if (name && name !== defaultName) {
     userCustomizedStatementName = true
   }
@@ -183,6 +189,11 @@ span.label {
 
 .category-info {
   color: var(--mdc-theme-status-info);
+}
+
+.side-by-side > * {
+  display: inline-block;
+  margin-right: 1rem;
 }
 </style>
 
@@ -217,14 +228,25 @@ span.label {
       bind:value={make}
     />
   </p>
-  <p>
-    <TextField
-      label="Model (optional)"
-      class="mw-300"
-      description="e.g., iPhone 10 Max 64 GB, A1921, or Land Cruiser"
-      bind:value={model}
-    />
-  </p>
+  <div class:side-by-side={selectedCategoryIsVehicle}>
+    <div>
+      <TextField
+        label="Model (optional)"
+        class="mw-300"
+        description="e.g., iPhone 10 Max 64 GB, A1921, or Land Cruiser"
+        bind:value={model}
+      />
+    </div>
+    {#if selectedCategoryIsVehicle}
+      <div>
+        <YearInput
+          label="Year"
+          minValue={1900}
+          bind:value={year}
+        />
+      </div>
+    {/if}
+  </div>
   <p>
     <TextField
       label="Serial number (optional for fast approval)"

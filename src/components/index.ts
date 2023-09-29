@@ -39,6 +39,7 @@ import RemoveDependentModal from './RemoveDependentModal.svelte'
 import RemoveMemberModal from './RemoveMemberModal.svelte'
 import RevokeModal from './RevokeModal.svelte'
 import Strikes from './Strikes.svelte'
+import YearInput from './YearInput.svelte'
 
 export {
   AccountablePeopleList,
@@ -82,4 +83,5 @@ export {
   RemoveMemberModal,
   RevokeModal,
   Strikes,
+  YearInput,
 }

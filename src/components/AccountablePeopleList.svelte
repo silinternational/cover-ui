@@ -11,7 +11,11 @@ export let userID: string
 
 $: isYou = (member: PolicyMember) => userID === member.id
 
-const dispatch = createEventDispatcher()
+const dispatch = createEventDispatcher<{
+  deleteMember: PolicyMember
+  editDependent: PolicyDependent
+  editProfile: void
+}>()
 
 const editProfile = () => dispatch('editProfile')
 

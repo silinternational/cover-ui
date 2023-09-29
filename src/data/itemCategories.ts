@@ -7,6 +7,7 @@ export type ItemCategory = {
   help_text: string
   key: string
   id: string
+  minimum_deductible: number
   name: string
   require_make_model: boolean
   risk_category: RiskCategory

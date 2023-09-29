@@ -70,6 +70,7 @@ let householdId: string = ''
 let claimName: string
 let policy = {} as Policy
 let claim = {} as Claim
+let minimumDeductible: number | undefined
 let revokeModalOpen = false
 let newCoverageModalOpen = false
 
@@ -86,6 +87,7 @@ $: statusText = getClaimStatusText(claim, claimItem)
 $: items = $selectedPolicyItems
 $: policyId && loadItems(policyId)
 $: item = items.find((itm) => itm.id === claimItem.item_id) || ({} as PolicyItem)
+$: minimumDeductible = item?.category?.minimum_deductible
 
 $: isMemberOfPolicy = memberBelongsToPolicy($user.id, $policies, policyId)
 
@@ -337,7 +339,11 @@ const onReCover = async () => {
         <h2>Resolution</h2>
         <h3>{payoutOption || 'No payout option selected'}</h3>
         {#if payoutOption == PayoutOption.Replacement}
-          <p>Payout is the item’s covered value or replacement cost, whichever is less, minus a 5% deductible.</p>
+          {#if minimumDeductible}
+            <p>Payout is the item’s covered value or replacement cost, whichever is less, minus the greater of a {formatMoney(minimumDeductible)} minimum or 5% of claimed loss.</p>
+          {:else}
+            <p>Payout is the item’s covered value or replacement cost, whichever is less, minus a 5% deductible.</p>
+          {/if}
         {/if}
       </div>
       <p>

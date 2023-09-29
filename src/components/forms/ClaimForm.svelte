@@ -24,7 +24,7 @@ import { createEventDispatcher, onMount } from 'svelte'
 
 export let claim = {} as Claim
 export let item = {} as PolicyItem
-export let items: PolicyItem[]
+export let items: PolicyItem[] = []
 
 const dispatch = createEventDispatcher()
 

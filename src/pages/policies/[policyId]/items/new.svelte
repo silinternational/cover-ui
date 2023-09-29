@@ -34,7 +34,7 @@ $: metatags.title = formatPageTitle('Items > New')
 $: item.id && $redirect(itemsNewQs(policyId, item.id))
 $: $selectedPolicy.type === PolicyType.Household && !$selectedPolicy.household_id && (open = true)
 
-$: $params.itemId && (item = $selectedPolicyItems.find((i) => i.id === $params.itemId) || {})
+$: $params.itemId && (item = $selectedPolicyItems.find((i) => i.id === $params.itemId) || ({} as PolicyItem))
 $: breadcrumbLinks = [
   { name: 'Items', url: itemsRoute(policyId) },
   { name: 'New', url: item.id ? itemsNewQs(policyId, item.id) : itemsNew(policyId) },

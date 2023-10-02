@@ -51,9 +51,9 @@ const editDependent = (dependent: PolicyDependent) => {
 }
 </style>
 
-<div>
+<header>
   <span class="header">Accountable people</span>
-</div>
+</header>
 <ul class="accountable-people-list">
   {#each policyMembers as policyMember}
     <li class="accountable-people-list-item">

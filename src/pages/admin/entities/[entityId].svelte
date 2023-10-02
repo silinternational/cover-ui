@@ -5,7 +5,7 @@ import { formatPageTitle } from 'helpers/pageTitle'
 import { entityDetails } from 'helpers/routes'
 import { metatags } from '@roxi/routify'
 import { onMount } from 'svelte'
-import { Button, Page, TextField, setNotice } from '@silintl/ui-components'
+import { Button, Page, Progress, TextField, setNotice } from '@silintl/ui-components'
 
 export let entityId: string
 
@@ -36,11 +36,11 @@ const onSave = async () => {
     <div class="my-1">
       <h4>Code: {entity.code}</h4>
 
-      <TextField label="Name" bind:value={entity.name} />
+      <TextField required label="Name" bind:value={entity.name} />
 
-      <TextField label="Income Account" bind:value={entity.income_account} />
+      <TextField required label="Income Account" bind:value={entity.income_account} />
 
-      <TextField label="Parent Entity" bind:value={entity.parent_entity} />
+      <TextField required label="Parent Entity" bind:value={entity.parent_entity} />
 
       <label>
         <input type="checkbox" bind:checked={entity.active} />

@@ -73,11 +73,19 @@ const onCheck = (e: CustomEvent) => {
   <Breadcrumb />
   <Form on:submit={onCreatePolicy}>
     <div>
-      <TextField label="Policy name" description="A name for the policy" {maxlength} required bind:value={policyName} />
+      <TextField
+        class="w-22"
+        label="Policy name"
+        description="A name for the policy"
+        {maxlength}
+        required
+        bind:value={policyName}
+      />
     </div>
 
     <div class="extra-margin">
       <SearchableSelect
+        required
         placeholder="Entity"
         options={entityOptions}
         bind:choice={entityCodeName}
@@ -87,18 +95,26 @@ const onCheck = (e: CustomEvent) => {
     </div>
 
     <div>
-      <TextField {maxlength} required description="e.g., ABCD12" label="Cost center" bind:value={costCenter} />
+      <TextField
+        class="w-22"
+        {maxlength}
+        required
+        description="Use within organization"
+        label="Cost center"
+        bind:value={costCenter}
+      />
     </div>
 
     <div>
-      <TextField {maxlength} required label="Account" description="e.g., 12345" bind:value={account} />
+      <TextField class="w-22" {maxlength} required label="Account" bind:value={account} />
     </div>
 
     <div>
       <TextField
-        label="Account Detail"
-        description="Appears in your statements"
-        {maxlength}
+        class="w-22"
+        label="Ledger Entry Description (optional)"
+        description="Appears after the Entity, Account, and Cost Center on financial transaction journals"
+        maxlength={40}
         bind:value={accountDetail}
       />
     </div>

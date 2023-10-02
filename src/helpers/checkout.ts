@@ -23,6 +23,19 @@ const getMonthlyCheckoutMessage = (
   org: string,
   accountOrHouseholdId: string
 ): string => {
+  const today = new Date()
+  const thisMonthName = today.toLocaleString('default', { month: 'long' })
+
+  const nextMonth = new Date()
+  nextMonth.setMonth(today.getMonth() + 1)
+  nextMonth.setDate(1)
+
+  const renewDate = formatDate(nextMonth.toISOString())
+
+  if (willStartToday(item.coverage_start_date)) {
+    return `Pay ${formatMoney(item.monthly_premium)} for ${thisMonthName} from ${org} account
+    ${accountOrHouseholdId}. Auto-renew and pay ${formatMoney(item.monthly_premium)} on ${renewDate}.`
+  }
   return 'TODO: Implement monthly checkout message logic' // TEMP
 }
 
@@ -50,3 +63,8 @@ const getYearlyCheckoutMessage = (
 }
 
 const isMonthly = (billingPeriod: number) => billingPeriod === BillingPeriod.Monthly
+
+const willStartToday = (startDate: string) => {
+  const todayYyyyMmDd = new Date().toISOString().slice(0, 10)
+  return startDate === todayYyyyMmDd
+}

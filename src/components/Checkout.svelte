@@ -22,7 +22,7 @@ $: householdId = policy.household_id || ''
 $: accountOrHouseholdId = householdId || policy.account || ''
 $: org = policy?.entity_code?.code
 
-$: checkoutMessage = getCheckoutMessage(item?.coverage_start_date, item.prorated_annual_premium, org, accountOrHouseholdId, item.annual_premium)
+$: checkoutMessage = getCheckoutMessage(item, org, accountOrHouseholdId)
 
 const dispatch = createEventDispatcher<{ agreeAndPay: string; delete: string; edit: string }>()
 

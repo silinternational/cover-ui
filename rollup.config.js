@@ -62,6 +62,12 @@ export default {
           includePaths: ['node_modules'],
         },
       },
+      plugins: [
+        require('postcss-import'),
+        require('@tailwindcss/nesting'),
+        require('tailwindcss'),
+        require('autoprefixer'),
+      ]
     }),
     routify({
       dynamicImports: false,
@@ -72,15 +78,11 @@ export default {
     production ? terser() : livereload('dist'),
     html({
       template: ({ files }) => {
-        const script = (files.js || [])
-          .map(({ fileName }) => `<script src='/${fileName}'></script>`)
-          .join('\n')
+        const script = (files.js || []).map(({ fileName }) => `<script src='/${fileName}'></script>`).join('\n')
 
-        const css = (files.css || [])
-          .map(({ fileName }) => `<link rel='stylesheet' href='/${fileName}'>`)
-          .join('\n')
+        const css = (files.css || []).map(({ fileName }) => `<link rel='stylesheet' href='/${fileName}'>`).join('\n')
         return getHtml(script, css)
-      }
+      },
     }),
   ],
   watch: {
@@ -88,7 +90,7 @@ export default {
   },
 }
 
-function getHtml (script, css) {
+function getHtml(script, css) {
   return `<!DOCTYPE html>
   <html lang="en">
   <head>

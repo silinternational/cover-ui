@@ -177,31 +177,16 @@ const setInitialValues = (user: User, item: PolicyItem) => {
 </script>
 
 <style>
-span.label {
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-.material-icons {
-  padding-right: 0.5rem;
-  color: var(--mdc-theme-status-info);
-}
-
-.category-info {
-  color: var(--mdc-theme-status-info);
-}
-
 .side-by-side > * {
   display: inline-block;
   margin-right: 1rem;
 }
 </style>
-
 <Form on:submit={onSubmit}>
   <h2>About the item</h2>
-  <p>
+  <div class="tw-w-80 tw-max-w-full">
     <Select
-      width="360px"
+      width="100%"
       label="Category"
       options={$categories}
       selectedID={initialCategoryId}
@@ -209,30 +194,30 @@ span.label {
       on:populated={onCategorySelectPopulated}
     />
     {#if selectedCategoryIsStationary}
-      <Card class="w-360px mt-1" color="var(--mdc-theme-status-info-bg)">
-        <div class="flex justify-start">
-          <div class="material-icons">info</div>
-          <div class="category-info">
+      <Card class="tw-w-full mt-1" color="var(--mdc-theme-status-info-bg)">
+        <div class="flex justify-start tw-gap-2">
+          <div class="material-icons tw-text-[var(--mdc-theme-status-info)]">info</div>
+          <div class="tw-text-[var(--mdc-theme-status-info)]">
             Coverage for home electronics and appliances is intended for locations that lack access to homeowner’s or
             renter’s insurance.
           </div>
         </div>
       </Card>
     {/if}
-  </p>
-  <p>
+  </div>
+  <div>
     <TextField
       label="Brand (optional)"
-      class="mw-300"
+      class="tw-w-80 tw-max-w-full"
       description="e.g., Apple or Toyota"
       bind:value={make}
     />
-  </p>
+  </div>
   <div class:side-by-side={selectedCategoryIsVehicle}>
     <div>
       <TextField
         label="Model (optional)"
-        class="mw-300"
+        class="tw-w-80 tw-max-w-full"
         description="e.g., iPhone 10 Max 64 GB, A1921, or Land Cruiser"
         bind:value={model}
       />
@@ -247,24 +232,24 @@ span.label {
       </div>
     {/if}
   </div>
-  <p>
+  <div>
     <TextField
       label="Serial number (optional for fast approval)"
-      class="mw-300"
+      class="tw-w-80 tw-max-w-full"
       description="e.g., chassis number, VIN, IMEI, or service tag"
       bind:value={uniqueIdentifier}
     />
-  </p>
+  </div>
   <h2>Coverage</h2>
-  <p>
+  <div class="tw-w-80 tw-max-w-full">
     <SelectAccountablePerson
       {policyId}
       selectedID={selectedAccountablePersonId}
       on:populated={onAccountablePersonSelectPopulated}
       on:change={onAccountablePersonChange}
     />
-  </p>
-  <p>
+  </div>
+  <div>
     <MoneyInput
       label="Coverage value (USD)"
       bind:value={marketValueUSD}
@@ -273,25 +258,25 @@ span.label {
     <Description>
       <ConvertCurrencyLink />
     </Description>
-  </p>
+  </div>
   <h2>For your own use</h2>
-  <p>
+  <div>
     <TextField
       label="Statement name"
-      class="mw-300"
+      class="tw-w-80 tw-max-w-full"
       description="Customize what will appear on your financial statements"
       bind:value={name}
       on:input={onStatementNameInput}
     />
-  </p>
-  <p>
+  </div>
+  <div class="tw-max-w-prose">
     <TextArea
       label="Notes (optional)"
       maxlength={MAX_TEXT_AREA_LENGTH}
       bind:value={itemDescription}
       rows="4"
     />
-  </p>
+  </div>
   <p>
     <Button outlined on:click={saveForLater}>Save for later</Button>
     {#if itemIsDraft}

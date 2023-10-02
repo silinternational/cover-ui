@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 html,
 body {
   height: 100%;
@@ -14,40 +18,8 @@ p {
   max-width: 80ch;
 }
 
-.pre {
-  white-space: pre-wrap;
-}
-
 #main-drawer-content {
   background: #fff;
-}
-
-.mw-300 {
-  min-width: 300px;
-}
-.mw-500 {
-  min-width: 500px;
-}
-.max-w-300 {
-  max-width: 300px;
-}
-.max-w-500 {
-  max-width: 500px;
-}
-
-.w-360px {
-  width: 360px !important;
-}
-
-.gap-xs {
-  gap: 0.5rem;
-}
-.gap-sm {
-  gap: 1rem;
-}
-
-.break-word {
-  overflow-wrap: break-word;
 }
 
 .header {
@@ -61,20 +33,12 @@ p {
   color: var(--mdc-theme-status-error);
 }
 
-.mh-275px {
-  min-height: 275px;
-}
-
 .mdc-data-table__table-container {
   overflow-y: hidden;
 }
 
 .admin-message-text-area .mdc-text-field__input {
   height: auto !important;
-}
-
-.justify-self-center {
-  justify-self: center;
 }
 
 @media print {

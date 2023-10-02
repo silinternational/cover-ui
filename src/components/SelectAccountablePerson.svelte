@@ -87,6 +87,7 @@ const onModalFormCancel = (event: CustomEvent) => {
   {#if accountablePersonsHasBeenPopulated}
     <Select
       label="Accountable Person"
+      width="100%"
       on:change={onAccountablePersonChange}
       on:populated
       options={accountablePersons}

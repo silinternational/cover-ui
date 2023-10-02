@@ -255,7 +255,7 @@ section:not(:first-child) {
   <section>
     <header class="flex justify-between align-items-center">
       <h2>Items <span class="subtext">{approvedItems?.length} covered</span></h2>
-      <div class="button-group gap-sm">
+      <div class="button-group tw-flex tw-gap-fl-xs">
         {#if isAboveTablet()}
           <Checkbox label="Hide Inactive" on:checked={hideInactiveItems} on:unchecked={showInactiveItems} />
         {:else}

@@ -35,7 +35,7 @@ const onGotoClaim = (event: CustomEvent<Claim>) => $goto(customerClaimDetails(ev
   {#if isAdmin}
     <Breadcrumb links={breadcrumbLinks} />
   {/if}
-  <Row class="justify-self-center" cols={'12'}>
+  <Row class="tw-justify-self-center" cols={'12'}>
     <Button class="m-auto" raised url={customerClaimsNew(policyId)}>New claim</Button>
   </Row>
 

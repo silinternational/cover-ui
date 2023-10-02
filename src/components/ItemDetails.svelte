@@ -117,13 +117,13 @@ section {
 {/if}
 
 <div class="payment-header flex justify-between align-items-center px-1">
-  <span class="flex align-items-center gap-sm">
+  <span class="tw-flex align-items-center tw-gap-fl-xs">
     <h2>{item.name}</h2>
   </span>
   <slot name="headerButtonGroup" />
 </div>
 
-<div class="flex flex-wrap p-1 gap-sm wrapper">
+<div class="tw-flex flex-wrap p-1 tw-fl-gap-xs wrapper">
   <section>
     <h3>Item</h3>
     <dl>
@@ -146,7 +146,7 @@ section {
       <dt>Unique ID</dt>
       <dd>{item?.serial_number || '–'}</dd>
       <dt>Notes</dt>
-      <dd class="max-w-300">{item?.description || '–'}</dd>
+      <dd class="tw-max-w-prose">{item?.description || '–'}</dd>
     </dl>
   </section>
   <section>

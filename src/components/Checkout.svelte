@@ -1,6 +1,7 @@
 <script lang="ts">
 import type { PolicyItem } from 'data/items'
 import { selectedPolicy } from 'data/policies'
+import { getCheckoutMessage } from 'helpers/checkout'
 import { formatDate, getYear } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { HOME, TERMS_OF_SERVICE } from 'helpers/routes'
@@ -33,7 +34,7 @@ $: noPaymentMessage = `No payment needed right now. Auto-renew for ${formatMoney
   item.annual_premium
 )} on ${renewDate}, paid from ${org}
      account ${accountOrhouseholdId}.`
-$: checkoutMessage = item.prorated_annual_premium > 100 ? proratedMessage : noPaymentMessage
+$: checkoutMessage = getCheckoutMessage(item.prorated_annual_premium, proratedMessage, noPaymentMessage)
 
 const dispatch = createEventDispatcher<{ agreeAndPay: string; delete: string; edit: string }>()
 

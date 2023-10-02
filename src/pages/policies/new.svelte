@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Breadcrumb, Description } from 'components'
+import { Breadcrumb } from 'components'
 import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import { entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { createPolicy } from 'data/policies'
@@ -7,7 +7,7 @@ import { formatPageTitle } from 'helpers/pageTitle'
 import { policyDetails } from 'helpers/routes'
 import { assertHas } from '../../validation/assertions'
 import { goto, metatags } from '@roxi/routify'
-import { Button, SearchableSelect, TextField, Page } from '@silintl/ui-components'
+import { Button, SearchableSelect, TextField, Page, setNotice, Form } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 let account = ''
@@ -20,9 +20,11 @@ let entityOptions: any = {}
 onMount(() => $entityCodes.length || loadEntityCodes())
 
 $: metatags.title = formatPageTitle('New Team Policy')
-$: $entityCodes.filter(e => e.active && e.code != 'HH').forEach(e => {
-  entityOptions[`${e.code} - ${e.name}`] = e.code
-})
+$: $entityCodes
+  .filter((e) => e.active && e.code != 'HH')
+  .forEach((e) => {
+    entityOptions[`${e.code} - ${e.name}`] = e.code
+  })
 $: entityCodeName = getEntityChoice(entityCode)
 
 const onCreatePolicy = async () => {
@@ -50,36 +52,57 @@ const getEntityChoice = (entityCode: string) => {
   const code = currentEntity?.code
   return name && code ? `${code} - ${name}` : ''
 }
+
+const onCheck = (e: CustomEvent) => {
+  if (Object.keys(entityOptions).every((key: string) => !key.includes(e.detail))) {
+    entityCodeName = ''
+    setNotice('Please select a valid entity code')
+  }
+}
 </script>
+
+<style>
+/* TODO use tailwind classes for this */
+.extra-margin {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+</style>
 
 <Page>
   <Breadcrumb />
+  <Form on:submit={onCreatePolicy}>
+    <div>
+      <TextField label="Policy name" description="A name for the policy" {maxlength} required bind:value={policyName} />
+    </div>
 
-  <p>
-    <span class="header">Policy name<span class="required-input">*</span></span>
-    <TextField {maxlength} required autofocus bind:value={policyName} />
-  </p>
+    <div class="extra-margin">
+      <SearchableSelect
+        placeholder="Entity"
+        options={entityOptions}
+        bind:choice={entityCodeName}
+        on:check={onCheck}
+        on:chosen={(e) => (entityCode = e.detail)}
+      />
+    </div>
 
-  <p>
-    <span class="header">Entity code<span class="required-input">*</span></span>
-    <SearchableSelect options={entityOptions} choice={entityCodeName} on:chosen={(e) => (entityCode = e.detail)} />
-  </p>
+    <div>
+      <TextField {maxlength} required description="e.g., ABCD12" label="Cost center" bind:value={costCenter} />
+    </div>
 
-  <p>
-    <span class="header">Cost center<span class="required-input">*</span></span>
-    <TextField {maxlength} required label="ABCD12" bind:value={costCenter} />
-  </p>
+    <div>
+      <TextField {maxlength} required label="Account" description="e.g., 12345" bind:value={account} />
+    </div>
 
-  <p>
-    <span class="header">Account<span class="required-input">*</span></span>
-    <TextField {maxlength} required label="12345" bind:value={account} />
-  </p>
+    <div>
+      <TextField
+        label="Account Detail"
+        description="Appears in your statements"
+        {maxlength}
+        bind:value={accountDetail}
+      />
+    </div>
 
-  <p>
-    <span class="header">Account Detail</span>
-    <TextField label="details" {maxlength} bind:value={accountDetail} />
-    <Description>Appears in your statements</Description>
-  </p>
-
-  <Button raised on:click={onCreatePolicy}>Create policy</Button>
+    <Button raised>Create policy</Button>
+  </Form>
 </Page>

@@ -42,6 +42,7 @@ export type RiskCategory = {
 export enum RiskCategoryNames {
   Stationary = 'Stationary',
   Mobile = 'Mobile',
+  Vehicle = 'Vehicle',
 }
 
 export type PolicyItem = {
@@ -69,6 +70,7 @@ export type PolicyItem = {
   status_change: string
   status_reason: string
   updated_at: string /*Date*/
+  year?: number
 }
 
 export type CreatePolicyItemRequestBody = {
@@ -85,6 +87,7 @@ export type CreatePolicyItemRequestBody = {
   name: string
   risk_category_id?: string
   serial_number?: string
+  year?: number
 }
 
 export type UpdatePolicyItemRequestBody = {
@@ -99,6 +102,7 @@ export type UpdatePolicyItemRequestBody = {
   name: string
   risk_category_id?: string
   serial_number?: string
+  year?: number
 }
 
 export interface ItemFormData {
@@ -113,6 +117,7 @@ export interface ItemFormData {
   riskCategoryId?: string
   name: string
   uniqueIdentifier?: string
+  year?: number
 }
 
 export interface NewItemFormData extends ItemFormData {
@@ -178,6 +183,7 @@ export async function addItem(policyId: string, itemData: NewItemFormData): Prom
     model: itemData.model,
     name: itemData.name,
     serial_number: itemData.uniqueIdentifier,
+    year: itemData.year,
   }
 
   const addedItem = await CREATE<PolicyItem>(urlPath, parsedItemData as any)
@@ -267,6 +273,7 @@ export async function updateItem(policyId: string, itemId: string, itemData: Upd
     name: itemData.name,
     risk_category_id: itemData.riskCategoryId,
     serial_number: itemData.uniqueIdentifier,
+    year: itemData.year,
   }
   const updatedItem = await UPDATE<PolicyItem>(urlPath, parsedItemData)
 

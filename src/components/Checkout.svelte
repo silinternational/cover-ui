@@ -41,7 +41,7 @@ const onAgreeAndPay = () => {
   dispatch('agreeAndPay', itemId)
 }
 
-const handleDialog = (event: CustomEvent<string>) => {
+const handleRemoveDialog = (event: CustomEvent<string>) => {
   open = false
   if (event.detail === 'remove') {
     dispatch('delete', itemId)
@@ -50,28 +50,21 @@ const handleDialog = (event: CustomEvent<string>) => {
 </script>
 
 <style>
-.payment-header {
-  background-color: var(--mdc-theme-neutral-bg);
-  padding: 4px;
-  border-radius: 8px 8px 0 0;
-}
-
 .agreement {
   padding: 1rem 20% 1rem 1rem;
 }
 </style>
 
-<h2>Review Coverage and Checkout</h2>
-<div class="payment-header flex justify-between align-items-center pr-1">
-  <Button class="mx-5px" on:click={() => (open = true)}>Discard</Button>
-  <ItemDeleteModal {open} {item} on:closed={handleDialog} />
+<h1>Review Coverage and Checkout</h1>
 
-  <div>
+<ItemDetails {item} isCheckingOut {policyId}>
+  <span slot="headerButtonGroup">
+    <Button class="mx-5px" on:click={() => (open = true)}>Discard</Button>
+    <ItemDeleteModal {open} {item} on:closed={handleRemoveDialog} />
     <Button outlined on:click={$goto(HOME)}>Save for later</Button>
     <Button raised on:click={() => dispatch('edit')}>Edit Item</Button>
-  </div>
-</div>
-<ItemDetails {item} isCheckingOut {policyId} />
+  </span>
+</ItemDetails>
 
 <div class="flex align-items-center my-2">
   <Checkbox on:checked={() => (checked = true)} on:unchecked={() => (checked = false)} />

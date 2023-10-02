@@ -22,3 +22,6 @@ clean:
 bun:
 	bun install
 	bun run bun:dev
+
+format:
+	npm run format

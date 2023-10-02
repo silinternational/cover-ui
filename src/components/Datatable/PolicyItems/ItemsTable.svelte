@@ -1,7 +1,6 @@
 <script lang="ts">
 import BatchItemClone from './BatchItemClone.svelte'
 import BatchItemDelete from './BatchItemDelete.svelte'
-import { ItemDeleteModal } from 'components'
 import CopyTableButton from '../CopyTableButton.svelte'
 import { ClaimItem, incompleteClaimItemStatuses, selectedPolicyClaims } from 'data/claims'
 import { getItemState } from 'data/states'
@@ -12,6 +11,7 @@ import { throwError } from '../../../error'
 import { formatMoney } from 'helpers/money'
 import { itemDetails, itemEdit } from 'helpers/routes'
 import { sortBy } from 'helpers/sort'
+import ItemDeleteModal from '../../ItemDeleteModal.svelte'
 import RowItem from './RowItem.svelte'
 import type { Column } from '../types'
 import 'iconify-icon'
@@ -293,7 +293,7 @@ const getStatusClass = (status: ItemCoverageStatus) =>
     {#each sortedItemsArray as item (item.id)}
       <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} let:rowId clickable>
         <Datatable.Checkbox {rowId} on:click={() => (goToItemDetails = false)} on:mounted={registerNewCheckbox} />
-        <RowItem status={item.coverage_status}><iconify-icon icon={getItemIcon(item.category.name)} /></RowItem>
+        <RowItem status={item.coverage_status}><iconify-icon icon={getItemIcon(item.category.key)} /></RowItem>
         <RowItem status={item.coverage_status}>{item.name || ''}</RowItem>
         {#if snMakeAndModelAreVisible}
           <RowItem status={item.coverage_status}>{item.serial_number || ''}</RowItem>

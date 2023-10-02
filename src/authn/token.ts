@@ -1,14 +1,14 @@
-export const getSeed = () => localStorage.getItem('seed')
+export const getSeed = () => sessionStorage.getItem('seed')
 export const getToken = () => (getAccessToken() ? getSeed() + getAccessToken() : '')
 export const clear = () => {
-  localStorage.removeItem('seed')
-  localStorage.removeItem('access-token')
-  localStorage.removeItem('token-type')
+  sessionStorage.removeItem('seed')
+  sessionStorage.removeItem('access-token')
+  sessionStorage.removeItem('token-type')
 }
 
 initialize()
 function initialize() {
-  localStorage.getItem('seed') || localStorage.setItem('seed', createSeed())
+  sessionStorage.getItem('seed') || sessionStorage.setItem('seed', createSeed())
 
   initializeToken()
 }
@@ -24,7 +24,7 @@ function initializeToken() {
     const value = params.get(name)
 
     if (value !== null) {
-      localStorage.setItem(name, value)
+      sessionStorage.setItem(name, value)
       params.delete(name)
     }
 
@@ -39,7 +39,7 @@ function initializeToken() {
 }
 
 function getAccessToken() {
-  return localStorage.getItem('access-token') || ''
+  return sessionStorage.getItem('access-token') || ''
 }
 
 function createSeed() {

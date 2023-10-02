@@ -7,7 +7,7 @@ export const getCheckoutMessage = (
   org: string,
   accountOrHouseholdId: string
 ): string => {
-  if (item == undefined) {
+  if (!item || !item.id) {
     return '-'
   }
 

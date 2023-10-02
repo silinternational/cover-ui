@@ -24,11 +24,7 @@ $: householdId = policy.household_id || ''
 $: accountOrhouseholdId = householdId || policy.account || ''
 $: org = policy?.entity_code?.code
 
-$: startDate = formatDate(item?.coverage_start_date)
-$: year = getYear(startDate)
-$: renewYear = Number(year) + 1
-$: renewDate = formatDate(`${renewYear}-01-01`)
-$: checkoutMessage = getCheckoutMessage(item.prorated_annual_premium, year, org, accountOrhouseholdId, item.annual_premium, renewDate)
+$: checkoutMessage = getCheckoutMessage(item?.coverage_start_date, item.prorated_annual_premium, org, accountOrhouseholdId, item.annual_premium)
 
 const dispatch = createEventDispatcher<{ agreeAndPay: string; delete: string; edit: string }>()
 

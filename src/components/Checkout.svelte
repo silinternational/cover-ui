@@ -19,10 +19,10 @@ $: itemId = item.id
 
 $: policy = $selectedPolicy
 $: householdId = policy.household_id || ''
-$: accountOrhouseholdId = householdId || policy.account || ''
+$: accountOrHouseholdId = householdId || policy.account || ''
 $: org = policy?.entity_code?.code
 
-$: checkoutMessage = getCheckoutMessage(item?.coverage_start_date, item.prorated_annual_premium, org, accountOrhouseholdId, item.annual_premium)
+$: checkoutMessage = getCheckoutMessage(item?.coverage_start_date, item.prorated_annual_premium, org, accountOrHouseholdId, item.annual_premium)
 
 const dispatch = createEventDispatcher<{ agreeAndPay: string; delete: string; edit: string }>()
 

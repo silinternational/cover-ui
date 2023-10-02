@@ -5,7 +5,7 @@ export const getCheckoutMessage = (
   coverageStartDate: string | undefined,
   proratedAnnualPremium: number,
   org: string,
-  accountOrhouseholdId: string,
+  accountOrHouseholdId: string,
   annualPremium: number
 ): string => {
   const startDate = formatDate(coverageStartDate)
@@ -13,10 +13,10 @@ export const getCheckoutMessage = (
   const renewYear = Number(year) + 1
   const renewDate = formatDate(`${renewYear}-01-01`)
   const proratedMessage = `Pay ${formatMoney(proratedAnnualPremium)} for the remainder of ${year} from ${org} account
-    ${accountOrhouseholdId}. Auto-renew and pay ${formatMoney(annualPremium)} on ${renewDate}.`
+    ${accountOrHouseholdId}. Auto-renew and pay ${formatMoney(annualPremium)} on ${renewDate}.`
   const noPaymentMessage = `No payment needed right now. Auto-renew for ${formatMoney(
     annualPremium
   )} on ${renewDate}, paid from ${org}
-     account ${accountOrhouseholdId}.`
+     account ${accountOrHouseholdId}.`
   return proratedAnnualPremium > 100 ? proratedMessage : noPaymentMessage
 }

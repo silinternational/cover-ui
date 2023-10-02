@@ -28,13 +28,11 @@ $: startDate = formatDate(item?.coverage_start_date)
 $: year = getYear(startDate)
 $: renewYear = Number(year) + 1
 $: renewDate = formatDate(`${renewYear}-01-01`)
-$: proratedMessage = `Pay ${formatMoney(item.prorated_annual_premium)} for the remainder of ${year} from ${org} account
-    ${accountOrhouseholdId}. Auto-renew and pay ${formatMoney(item.annual_premium)} on ${renewDate}.`
 $: noPaymentMessage = `No payment needed right now. Auto-renew for ${formatMoney(
   item.annual_premium
 )} on ${renewDate}, paid from ${org}
      account ${accountOrhouseholdId}.`
-$: checkoutMessage = getCheckoutMessage(item.prorated_annual_premium, proratedMessage, noPaymentMessage)
+$: checkoutMessage = getCheckoutMessage(item.prorated_annual_premium, year, org, accountOrhouseholdId, item.annual_premium, renewDate, noPaymentMessage)
 
 const dispatch = createEventDispatcher<{ agreeAndPay: string; delete: string; edit: string }>()
 

@@ -212,7 +212,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
       description="e.g., Apple or Toyota"
       bind:value={make}
     />
-  </p>
+  </div>
   <div class:side-by-side={selectedCategoryIsVehicle}>
     <div>
       <TextField
@@ -232,7 +232,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
       </div>
     {/if}
   </div>
-  <p>
+  <div>
     <TextField
       label="Serial number (optional for fast approval)"
       class="tw-w-80 tw-max-w-full"

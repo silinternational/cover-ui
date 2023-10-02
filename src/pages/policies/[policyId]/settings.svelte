@@ -251,10 +251,10 @@ div {
   {#if policy.type === PolicyType.Team}
     <div>
       <TextField
+        required
         {maxlength}
         description="Appears in your statements"
         label="Policy name"
-        required
         bind:value={policyName}
         on:blur={updatePolicyName}
       />
@@ -281,7 +281,12 @@ div {
     </div>
 
     <div>
-      <TextField label="Account Detail" {maxlength} bind:value={accountDetail} on:blur={updateAccountDetail} />
+      <TextField
+        label="Account Detail (optional)"
+        {maxlength}
+        bind:value={accountDetail}
+        on:blur={updateAccountDetail}
+      />
     </div>
   {/if}
 
@@ -310,9 +315,9 @@ div {
     {/each}
   </ul>
 
-  <Button prependIcon="add" on:click={onAddDependent} outlined
-    >{isHouseholdPolicy ? 'Add dependent' : 'Add person'}</Button
-  >
+  <Button prependIcon="add" on:click={onAddDependent} outlined>
+    {isHouseholdPolicy ? 'Add dependent' : 'Add person'}
+  </Button>
 
   <Dialog.Alert
     open={showAddDependentModal}

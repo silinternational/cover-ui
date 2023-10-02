@@ -24,19 +24,33 @@ const getMonthlyCheckoutMessage = (
   accountOrHouseholdId: string
 ): string => {
   const today = new Date()
-  const thisMonthName = today.toLocaleString('default', { month: 'long' })
 
   const nextMonth = new Date()
   nextMonth.setMonth(today.getMonth() + 1)
   nextMonth.setDate(1)
 
-  const renewDate = formatDate(nextMonth.toISOString())
+  const firstChargeDate = formatDate(nextMonth.toISOString())
 
   if (willStartToday(item.coverage_start_date)) {
-    return `Pay ${formatMoney(item.monthly_premium)} for ${thisMonthName} from ${org} account
-    ${accountOrHouseholdId}. Auto-renew and pay ${formatMoney(item.monthly_premium)} on ${renewDate}.`
+    const thisMonthName = today.toLocaleString('default', { month: 'long' })
+    const nextMonthName = nextMonth.toLocaleString('default', { month: 'long' })
+
+    const thirdMonth = new Date()
+    thirdMonth.setMonth(nextMonth.getMonth() + 1)
+    thirdMonth.setDate(1)
+
+    const twoMonthsPremium = item.monthly_premium * 2
+    const renewDate = formatDate(thirdMonth.toISOString())
+
+    return `Around ${firstChargeDate} you will pay ${formatMoney(twoMonthsPremium)} for `
+         + `${thisMonthName} + ${nextMonthName}, from ${org} account ${accountOrHouseholdId}. `
+         + `After that, you will pay ${formatMoney(item.monthly_premium)} each month (beginning `
+         + `${renewDate}).`
+  } else {
+    return `Pay ${formatMoney(item.monthly_premium)} from ${org} account ${accountOrHouseholdId} `
+         + `each month, starting ${firstChargeDate}. \n`
+         + `NOTE: Coverage will not begin until ${firstChargeDate}.`
   }
-  return 'TODO: Implement monthly checkout message logic' // TEMP
 }
 
 const getYearlyCheckoutMessage = (

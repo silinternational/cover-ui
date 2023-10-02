@@ -5,7 +5,7 @@ import { formatPageTitle } from 'helpers/pageTitle'
 import { entityDetails } from 'helpers/routes'
 import { metatags } from '@roxi/routify'
 import { onMount } from 'svelte'
-import { Button, Page, Progress, TextField, setNotice } from '@silintl/ui-components'
+import { Button, Page, TextField, setNotice } from '@silintl/ui-components'
 
 export let entityId: string
 

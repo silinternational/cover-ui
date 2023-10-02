@@ -48,6 +48,7 @@ export enum RiskCategoryNames {
 export type PolicyItem = {
   accountable_person: AccountablePerson
   annual_premium: number
+  billing_period: number /* in months, e.g. 1 or 12 */
   category: any /*ItemCategory*/
   country: string
   coverage_amount: number
@@ -62,6 +63,7 @@ export type PolicyItem = {
   can_be_updated: boolean
   make: string
   model: string
+  monthly_premium: number
   name: string
   policy_id: string
   prorated_annual_premium: number

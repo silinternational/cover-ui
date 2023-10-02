@@ -2,8 +2,6 @@
 import type { PolicyItem } from 'data/items'
 import { selectedPolicy } from 'data/policies'
 import { getCheckoutMessage } from 'helpers/checkout'
-import { formatDate, getYear } from 'helpers/dates'
-import { formatMoney } from 'helpers/money'
 import { HOME, TERMS_OF_SERVICE } from 'helpers/routes'
 import ItemDeleteModal from './ItemDeleteModal.svelte'
 import ItemDetails from './ItemDetails.svelte'

@@ -1,5 +1,5 @@
 import { formatDate, getYear } from 'helpers/dates'
-import {formatMoney} from "helpers/money";
+import { formatMoney } from 'helpers/money'
 
 export const getCheckoutMessage = (
   coverageStartDate: string | undefined,

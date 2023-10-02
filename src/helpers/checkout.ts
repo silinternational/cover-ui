@@ -1,4 +1,4 @@
-import type { PolicyItem } from 'data/items'
+import { BillingPeriod, PolicyItem } from 'data/items'
 import { formatDate, getYear } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 
@@ -11,6 +11,26 @@ export const getCheckoutMessage = (
     return '-'
   }
 
+  if (isMonthly(item.billing_period)) {
+    return getMonthlyCheckoutMessage(item, org, accountOrHouseholdId)
+  } else {
+    return getYearlyCheckoutMessage(item, org, accountOrHouseholdId)
+  }
+}
+
+const getMonthlyCheckoutMessage = (
+  item: PolicyItem,
+  org: string,
+  accountOrHouseholdId: string
+): string => {
+  return 'TODO: Implement monthly checkout message logic' // TEMP
+}
+
+const getYearlyCheckoutMessage = (
+  item: PolicyItem,
+  org: string,
+  accountOrHouseholdId: string
+): string => {
   const annualPremium = item.annual_premium
   const proratedAnnualPremium = item.prorated_annual_premium
 
@@ -28,3 +48,5 @@ export const getCheckoutMessage = (
 
   return proratedAnnualPremium > 100 ? proratedMessage : noPaymentMessage
 }
+
+const isMonthly = (billingPeriod: number) => billingPeriod === BillingPeriod.Monthly

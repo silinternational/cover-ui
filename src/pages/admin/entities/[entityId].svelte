@@ -40,7 +40,7 @@ const onSave = async () => {
 
       <TextField required label="Income Account" bind:value={entity.income_account} />
 
-      <TextField required label="Parent Entity" bind:value={entity.parent_entity} />
+      <TextField label="Parent Entity (optional)" bind:value={entity.parent_entity} />
 
       <label>
         <input type="checkbox" bind:checked={entity.active} />

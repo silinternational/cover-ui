@@ -4,6 +4,11 @@ import { convertToCents } from 'helpers/money'
 import { selectedPolicyId } from './role-policy-selection'
 import { derived, get, writable } from 'svelte/store'
 
+export enum BillingPeriod {
+  Monthly = 1,
+  Yearly = 12,
+}
+
 export enum ItemCoverageStatus {
   Draft = 'Draft',
   Pending = 'Pending',

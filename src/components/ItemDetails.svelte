@@ -50,7 +50,7 @@ $: minimumDeductibleDescription = minimumDeductible ? `(subject to ${formatMoney
 $: moneyDetails = {
   Value: formatMoney(item.coverage_amount),
   Premium: `${formatMoney(item.annual_premium)} / yr`,
-  Deductible: `5% ${minimumDeductibleDescription}`.trim()
+  Deductible: `5% ${minimumDeductibleDescription}`.trim(),
 }
 $: sidebarDetailsArray =
   policy.type === PolicyType.Team
@@ -67,13 +67,11 @@ const getItemStatusText = (item: PolicyItem) => {
 const toggleModal = (i: number) => (showInfoBox[i] = !showInfoBox[i])
 </script>
 
-<style lang="scss">
-@use '@material/typography/mdc-typography';
+<style lang="postcss">
 dl {
   margin-bottom: 1.5rem;
 }
 dt {
-  @extend .mdc-typography--subtitle2;
   color: var(--mdc-theme-text-secondary-on-light);
   margin-top: 0.5rem;
 }
@@ -117,13 +115,13 @@ section {
 {/if}
 
 <div class="payment-header flex justify-between align-items-center px-1">
-  <span class="tw-flex align-items-center tw-gap-fl-xs">
+  <span class="align-items-center tw-flex tw-gap-fl-xs">
     <h2>{item.name}</h2>
   </span>
   <slot name="headerButtonGroup" />
 </div>
 
-<div class="tw-flex flex-wrap p-1 tw-fl-gap-xs wrapper">
+<div class="flex-wrap p-1 tw-fl-gap-xs wrapper tw-flex">
   <section>
     <h3>Item</h3>
     <dl>

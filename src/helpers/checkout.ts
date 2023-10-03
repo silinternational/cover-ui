@@ -1,24 +1,8 @@
-import { BillingPeriod, PolicyItem } from 'data/items'
+import type { PolicyItem } from 'data/items'
 import { formatDate, getYear } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 
-export const getCheckoutMessage = (
-  item: PolicyItem | undefined,
-  org: string,
-  accountOrHouseholdId: string
-): string => {
-  if (!item || !item.id) {
-    return '-'
-  }
-
-  if (isMonthly(item.billing_period)) {
-    return getMonthlyCheckoutMessage(item, org, accountOrHouseholdId)
-  } else {
-    return getYearlyCheckoutMessage(item, org, accountOrHouseholdId)
-  }
-}
-
-const getMonthlyCheckoutMessage = (
+export const getMonthlyCheckoutMessage = (
   item: PolicyItem,
   org: string,
   accountOrHouseholdId: string
@@ -45,7 +29,7 @@ const getMonthlyCheckoutMessage = (
   }
 }
 
-const getYearlyCheckoutMessage = (
+export const getYearlyCheckoutMessage = (
   item: PolicyItem,
   org: string,
   accountOrHouseholdId: string
@@ -67,7 +51,5 @@ const getYearlyCheckoutMessage = (
 
   return proratedAnnualPremium > 100 ? proratedMessage : noPaymentMessage
 }
-
-const isMonthly = (billingPeriod: number) => billingPeriod === BillingPeriod.Monthly
 
 const isBeforeMonthlyCutoff = (today: Date) => today.getUTCDate() < 20

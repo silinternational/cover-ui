@@ -29,27 +29,19 @@ const getMonthlyCheckoutMessage = (
   nextMonth.setMonth(today.getMonth() + 1)
   nextMonth.setDate(1)
 
-  const firstChargeDate = formatDate(nextMonth.toISOString())
-
   if (willStartToday(item.coverage_start_date)) {
-    const thisMonthName = today.toLocaleString('default', { month: 'long' })
-    const nextMonthName = nextMonth.toLocaleString('default', { month: 'long' })
-
+    return `Pay ${formatMoney(item.monthly_premium)} from ${org} account ${accountOrHouseholdId} each month.`
+  } else {
     const thirdMonth = new Date()
     thirdMonth.setMonth(nextMonth.getMonth() + 1)
     thirdMonth.setDate(1)
 
-    const twoMonthsPremium = item.monthly_premium * 2
     const renewDate = formatDate(thirdMonth.toISOString())
 
-    return `Around ${firstChargeDate} you will pay ${formatMoney(twoMonthsPremium)} for `
-         + `${thisMonthName} + ${nextMonthName}, from ${org} account ${accountOrHouseholdId}. `
-         + `After that, you will pay ${formatMoney(item.monthly_premium)} each month (beginning `
-         + `${renewDate}).`
-  } else {
     return `Pay ${formatMoney(item.monthly_premium)} from ${org} account ${accountOrHouseholdId} `
-         + `each month, starting ${firstChargeDate}. \n`
-         + `NOTE: Coverage will not begin until ${firstChargeDate}.`
+         + `each month, starting ${renewDate}. \n`
+         + `NOTE: Coverage will begin ${formatDate(item.coverage_start_date)} if this request `
+         + `for coverage is approved.`
   }
 }
 

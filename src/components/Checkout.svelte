@@ -1,7 +1,7 @@
 <script lang="ts">
+import CheckoutMessage from './CheckoutMessage.svelte'
 import type { PolicyItem } from 'data/items'
 import { selectedPolicy } from 'data/policies'
-import { getCheckoutMessage } from 'helpers/checkout'
 import { HOME, TERMS_OF_SERVICE } from 'helpers/routes'
 import ItemDeleteModal from './ItemDeleteModal.svelte'
 import ItemDetails from './ItemDetails.svelte'
@@ -21,8 +21,6 @@ $: policy = $selectedPolicy
 $: householdId = policy.household_id || ''
 $: accountOrHouseholdId = householdId || policy.account || ''
 $: org = policy?.entity_code?.code
-
-$: checkoutMessage = getCheckoutMessage(item, org, accountOrHouseholdId)
 
 const dispatch = createEventDispatcher<{ agreeAndPay: string; delete: string; edit: string }>()
 
@@ -64,8 +62,6 @@ const handleRemoveDialog = (event: CustomEvent<string>) => {
 </div>
 
 <div class="agreement flex align-items-center">
-  <div>
-    {checkoutMessage}
-  </div>
+  <CheckoutMessage {item} {org} {accountOrHouseholdId} />
   <Button class="ml-1" disabled={!checked} raised on:click={onAgreeAndPay}>Agree and Pay</Button>
 </div>

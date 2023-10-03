@@ -18,9 +18,6 @@ let checked: boolean = false
 $: itemId = item.id
 
 $: policy = $selectedPolicy
-$: householdId = policy.household_id || ''
-$: accountOrHouseholdId = householdId || policy.account || ''
-$: org = policy?.entity_code?.code
 
 const dispatch = createEventDispatcher<{ agreeAndPay: string; delete: string; edit: string }>()
 
@@ -62,6 +59,6 @@ const handleRemoveDialog = (event: CustomEvent<string>) => {
 </div>
 
 <div class="agreement flex align-items-center">
-  <CheckoutMessage {item} {org} {accountOrHouseholdId} />
+  <CheckoutMessage {item} {policy} />
   <Button class="ml-1" disabled={!checked} raised on:click={onAgreeAndPay}>Agree and Pay</Button>
 </div>

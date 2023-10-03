@@ -29,7 +29,7 @@ const getMonthlyCheckoutMessage = (
   nextMonth.setMonth(today.getMonth() + 1)
   nextMonth.setDate(1)
 
-  if (willStartToday(item.coverage_start_date)) {
+  if (isBeforeMonthlyCutoff(today)) {
     return `Pay ${formatMoney(item.monthly_premium)} from ${org} account ${accountOrHouseholdId} each month.`
   } else {
     const thirdMonth = new Date()
@@ -70,7 +70,4 @@ const getYearlyCheckoutMessage = (
 
 const isMonthly = (billingPeriod: number) => billingPeriod === BillingPeriod.Monthly
 
-const willStartToday = (startDate: string) => {
-  const todayYyyyMmDd = new Date().toISOString().slice(0, 10)
-  return startDate === todayYyyyMmDd
-}
+const isBeforeMonthlyCutoff = (today: Date) => today.getUTCDate() < 20

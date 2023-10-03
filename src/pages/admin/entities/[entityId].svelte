@@ -36,11 +36,11 @@ const onSave = async () => {
     <div class="my-1">
       <h4>Code: {entity.code}</h4>
 
-      <TextField label="Name" bind:value={entity.name} />
+      <TextField required label="Name" bind:value={entity.name} />
 
-      <TextField label="Income Account" bind:value={entity.income_account} />
+      <TextField required label="Income Account" bind:value={entity.income_account} />
 
-      <TextField label="Parent Entity" bind:value={entity.parent_entity} />
+      <TextField label="Parent Entity (optional)" bind:value={entity.parent_entity} />
 
       <label>
         <input type="checkbox" bind:checked={entity.active} />

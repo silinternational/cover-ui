@@ -44,7 +44,7 @@ const onCancel = (event: Event) => {
         <TextField required label="Income Account" bind:value={formData.income_account} />
       </p>
       <p>
-        <TextField label="Parent Entity" bind:value={formData.parent_entity} />
+        <TextField label="Parent Entity (optional)" bind:value={formData.parent_entity} />
       </p>
       <p>
         <label>

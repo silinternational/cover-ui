@@ -2,33 +2,6 @@ import type { PolicyItem } from 'data/items'
 import { formatDate, getYear } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 
-export const getMonthlyCheckoutMessage = (
-  item: PolicyItem,
-  org: string,
-  accountOrHouseholdId: string
-): string => {
-  const today = new Date()
-
-  const nextMonth = new Date()
-  nextMonth.setMonth(today.getMonth() + 1)
-  nextMonth.setDate(1)
-
-  if (isBeforeMonthlyCutoff(today)) {
-    return `Pay ${formatMoney(item.monthly_premium)} from ${org} account ${accountOrHouseholdId} each month.`
-  } else {
-    const thirdMonth = new Date()
-    thirdMonth.setMonth(nextMonth.getMonth() + 1)
-    thirdMonth.setDate(1)
-
-    const renewDate = formatDate(thirdMonth.toISOString())
-
-    return `Pay ${formatMoney(item.monthly_premium)} from ${org} account ${accountOrHouseholdId} `
-         + `each month, starting ${renewDate}. \n`
-         + `NOTE: Coverage will begin ${formatDate(item.coverage_start_date)} if this request `
-         + `for coverage is approved.`
-  }
-}
-
 export const getYearlyCheckoutMessage = (
   item: PolicyItem,
   org: string,
@@ -51,5 +24,3 @@ export const getYearlyCheckoutMessage = (
 
   return proratedAnnualPremium > 100 ? proratedMessage : noPaymentMessage
 }
-
-const isBeforeMonthlyCutoff = (today: Date) => today.getUTCDate() < 20

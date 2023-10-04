@@ -1,10 +1,9 @@
 <script lang="ts">
-import Banner from './Banner.svelte'
 import ItemBanner from './banners/ItemBanner.svelte'
 import MessageBanner from './banners/MessageBanner.svelte'
 import { PolicyItem, ItemCoverageStatus } from 'data/items'
 import { getPolicyById, loadPolicy, policies, Policy, PolicyType } from 'data/policies'
-import { formatDate } from '../helpers/dates'
+import { formatDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import InfoBoxModal from './InfoBoxModal.svelte'
 import { formatDistanceToNow } from 'date-fns'

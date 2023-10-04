@@ -68,12 +68,14 @@ const getPremiumDescription = (item: PolicyItem | undefined): string => {
     return ''
   }
 
-  if (item.billing_period === BillingPeriod.Monthly) {
+  if (isMonthly(item)) {
     return `${formatMoney(item.monthly_premium)} / month`
   }
 
   return `${formatMoney(item.annual_premium)} / year`
 }
+
+const isMonthly = (item: PolicyItem | undefined) => item?.billing_period === BillingPeriod.Monthly
 
 const toggleModal = (i: number) => (showInfoBox[i] = !showInfoBox[i])
 </script>

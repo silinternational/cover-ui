@@ -1,7 +1,7 @@
 <script lang="ts">
 import ItemBanner from './banners/ItemBanner.svelte'
 import MessageBanner from './banners/MessageBanner.svelte'
-import { PolicyItem, ItemCoverageStatus } from 'data/items'
+import { BillingPeriod, ItemCoverageStatus, PolicyItem } from 'data/items'
 import { getPolicyById, loadPolicy, policies, Policy, PolicyType } from 'data/policies'
 import { formatDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
@@ -64,7 +64,15 @@ const getItemStatusText = (item: PolicyItem) => {
 }
 
 const getPremiumDescription = (item: PolicyItem | undefined): string => {
-  return `${formatMoney(item.annual_premium)} / yr`
+  if (!item || !item.id) {
+    return ''
+  }
+
+  if (item.billing_period === BillingPeriod.Monthly) {
+    return `${formatMoney(item.monthly_premium)} / month`
+  }
+
+  return `${formatMoney(item.annual_premium)} / year`
 }
 
 const toggleModal = (i: number) => (showInfoBox[i] = !showInfoBox[i])

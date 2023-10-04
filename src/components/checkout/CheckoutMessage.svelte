@@ -2,8 +2,8 @@
 import { BillingPeriod, PolicyItem } from 'data/items'
 import type { Policy } from 'data/policies'
 import { getYearlyCheckoutMessage } from 'helpers/checkout'
-import MonthlyCheckoutMessage from "components/checkout/MonthlyCheckoutMessage.svelte";
-import YearlyCheckoutMessage from "components/checkout/YearlyCheckoutMessage.svelte";
+import MonthlyCheckoutMessage from './MonthlyCheckoutMessage.svelte'
+import YearlyCheckoutMessage from './YearlyCheckoutMessage.svelte'
 
 export let item: PolicyItem | undefined = undefined
 export let policy: Policy | undefined = undefined

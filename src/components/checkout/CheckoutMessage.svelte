@@ -16,7 +16,7 @@ $: isMonthly = item?.billing_period === BillingPeriod.Monthly
 <div>
   {#if item && item.id}
     {#if isMonthly}
-      <MonthlyCheckoutMessage {accountOrHouseholdId} monthlyPremium={item.monthly_premium} {org} />
+      <MonthlyCheckoutMessage {accountOrHouseholdId} {item} {org} />
     {:else}
       <YearlyCheckoutMessage {accountOrHouseholdId} {item} {org} />
     {/if}

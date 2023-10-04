@@ -1,10 +1,11 @@
 <script lang="ts">
+import type { PolicyItem } from 'data/items'
 import { formatDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 
 export let accountOrHouseholdId: string
 export let coverageStartDate: string
-export let monthlyPremium: number
+export let item: PolicyItem
 export let org: string
 
 const today = new Date()
@@ -18,6 +19,8 @@ nextMonth.setDate(1)
 const thirdMonth = new Date()
 thirdMonth.setMonth(nextMonth.getMonth() + 1)
 thirdMonth.setDate(1)
+
+$: monthlyPremium = item.monthly_premium
 </script>
 
 <span>

@@ -16,7 +16,6 @@ export let policyId: string
 export let isAdmin: boolean = false
 
 let policy: Policy
-let renewYear = new Date().getFullYear() + 1
 
 const showInfoBox: boolean[] = []
 const assignedTo = 'Accountable Person'
@@ -30,7 +29,7 @@ $: status = (item.coverage_status || '') as ItemCoverageStatus
 $: showRevisionMessage = item.status_reason && status === ItemCoverageStatus.Revision
 $: startDate = formatDate(item.coverage_start_date)
 $: endDate = formatDate(item.coverage_end_date)
-$: renewDate = formatDate(`${renewYear}-01-01`)
+$: renewDate = getRenewalDate()
 $: commonDetails = {
   [assignedTo]: item?.accountable_person?.name,
   Location: item.accountable_person?.country || item.country,
@@ -61,6 +60,11 @@ const getItemStatusText = (item: PolicyItem) => {
   const statusChangeStr = item.status_change ? `${item.status_change} ` : updatedAtStr ? 'Submitted ' : ''
 
   return statusChangeStr + updatedAtStr
+}
+
+const getRenewalDate = (): string => {
+  const renewYear = new Date().getFullYear() + 1
+  return formatDate(`${renewYear}-01-01`)
 }
 
 const getPremiumDescription = (item: PolicyItem | undefined): string => {

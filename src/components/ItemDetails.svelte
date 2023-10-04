@@ -49,7 +49,7 @@ $: minimumDeductible = item?.category?.minimum_deductible
 $: minimumDeductibleDescription = minimumDeductible ? `(subject to ${formatMoney(minimumDeductible)} minimum)` : ''
 $: moneyDetails = {
   Value: formatMoney(item.coverage_amount),
-  Premium: `${formatMoney(item.annual_premium)} / yr`,
+  Premium: getPremiumDescription(item),
   Deductible: `5% ${minimumDeductibleDescription}`.trim(),
 }
 $: sidebarDetailsArray =
@@ -62,6 +62,10 @@ const getItemStatusText = (item: PolicyItem) => {
   const statusChangeStr = item.status_change ? `${item.status_change} ` : updatedAtStr ? 'Submitted ' : ''
 
   return statusChangeStr + updatedAtStr
+}
+
+const getPremiumDescription = (item: PolicyItem | undefined): string => {
+  return `${formatMoney(item.annual_premium)} / yr`
 }
 
 const toggleModal = (i: number) => (showInfoBox[i] = !showInfoBox[i])

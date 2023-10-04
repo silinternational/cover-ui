@@ -54,9 +54,9 @@
     "postcss": "^8.4.31",
     "postcss-import": "^15.1.0",
     "postcss-nesting": "^12.0.1",
-    "prettier": "2.8.8",
-    "prettier-plugin-svelte": "^2.10.0",
-    "prettier-plugin-tailwindcss": "0.4.1",
+    "prettier": "3.0.3",
+    "prettier-plugin-svelte": "^3.0.3",
+    "prettier-plugin-tailwindcss": "0.5.5",
     "qs": "^6.11.2",
     "rimraf": "^3.0.2",
     "rollup": "^2.79.1",
@@ -74,7 +74,7 @@
     "svelte-preprocess": "^4.10.7",
     "tailwind-utopia": "github:domchristie/tailwind-utopia",
     "tailwindcss": "^3.3.3",
-    "tslib": "^2.5.0",
+    "tslib": "^2.6.2",
     "typescript": "^4.9.4"
   }
 }

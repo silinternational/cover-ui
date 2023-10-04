@@ -1,5 +1,5 @@
 <script lang="ts">
-import CheckoutMessage from './CheckoutMessage.svelte'
+import CheckoutMessage from './checkout/CheckoutMessage.svelte'
 import type { PolicyItem } from 'data/items'
 import { selectedPolicy } from 'data/policies'
 import { HOME, TERMS_OF_SERVICE } from 'helpers/routes'

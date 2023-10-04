@@ -1,5 +1,6 @@
 <script lang="ts">
 import type { PolicyItem } from 'data/items'
+import { isBeforeMonthlyCutoff } from 'helpers/coverage'
 import { formatDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 
@@ -9,8 +10,6 @@ export let item: PolicyItem
 export let org: string
 
 const today = new Date()
-
-const isBeforeMonthlyCutoff = today.getUTCDate() < 20
 
 const nextMonth = new Date()
 nextMonth.setMonth(today.getMonth() + 1)

@@ -1,7 +1,6 @@
 <script lang="ts">
 import { BillingPeriod, PolicyItem } from 'data/items'
 import type { Policy } from 'data/policies'
-import { getYearlyCheckoutMessage } from 'helpers/checkout'
 import MonthlyCheckoutMessage from './MonthlyCheckoutMessage.svelte'
 import YearlyCheckoutMessage from './YearlyCheckoutMessage.svelte'
 
@@ -12,8 +11,6 @@ $: householdId = policy?.household_id || ''
 $: accountOrHouseholdId = householdId || policy?.account || ''
 $: org = policy?.entity_code?.code || ''
 $: isMonthly = item?.billing_period === BillingPeriod.Monthly
-
-$: yearlyCheckoutMessage = getYearlyCheckoutMessage(item, org, accountOrHouseholdId)
 </script>
 
 <div>

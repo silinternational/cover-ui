@@ -10,9 +10,8 @@ export let org: string = ''
 $: annualPremium = item?.annual_premium
 $: proratedAnnualPremium = item?.prorated_annual_premium
 
-$: startDate = formatDate(item?.coverage_start_date)
-$: year = getYear(startDate)
-$: renewYear = Number(year) + 1
+$: year = (new Date()).getFullYear()
+$: renewYear = year + 1
 $: renewDate = formatDate(`${renewYear}-01-01`)
 </script>
 

@@ -61,6 +61,16 @@ export const formatDateAndTime = (
   return ''
 }
 
+/**
+ * Get formatted date string for the 1st day of the specified month.
+ */
+export const startOfFutureMonth = (offsetInMonths: number = 0): string => {
+  const targetDate = new Date()
+  targetDate.setMonth(targetDate.getMonth() + offsetInMonths)
+  targetDate.setDate(1)
+  return formatDate(targetDate.toISOString())
+}
+
 export const isFourDigitYear = (year: any): boolean => {
   const fourDigitYearRegex = /^[1-9][0-9]{3}$/
   return fourDigitYearRegex.test(String(year))

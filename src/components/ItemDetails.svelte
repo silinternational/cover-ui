@@ -10,7 +10,7 @@ import {
 } from 'data/items'
 import { getPolicyById, loadPolicy, policies, Policy, PolicyType } from 'data/policies'
 import { isBeforeMonthlyCutoff } from 'helpers/coverage'
-import { formatDate } from 'helpers/dates'
+import { formatDate, startOfFutureMonth } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import InfoBoxModal from './InfoBoxModal.svelte'
 import { formatDistanceToNow } from 'date-fns'
@@ -71,23 +71,14 @@ const getItemStatusText = (item: PolicyItem) => {
 
 const getMonthlyRenewalDate = (item: PolicyItem): string => {
   if (itemIsApproved(item)) {
-    const nextMonth = new Date()
-    nextMonth.setMonth(nextMonth.getMonth() + 1)
-    nextMonth.setDate(1)
-    return formatDate(nextMonth.toISOString())
+    return startOfFutureMonth(1)
   }
 
   if (isItemDraft(item)) {
     if (isBeforeMonthlyCutoff()) {
-      const nextMonth = new Date()
-      nextMonth.setMonth(nextMonth.getMonth() + 1)
-      nextMonth.setDate(1)
-      return formatDate(nextMonth.toISOString())
+      return startOfFutureMonth(1)
     } else {
-      const monthAfterNext = new Date()
-      monthAfterNext.setMonth(monthAfterNext.getMonth() + 2)
-      monthAfterNext.setDate(1)
-      return formatDate(monthAfterNext.toISOString())
+      return startOfFutureMonth(2)
     }
   }
 

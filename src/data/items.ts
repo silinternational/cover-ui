@@ -31,6 +31,13 @@ export const incompleteItemCoverageStatuses = [
   ItemCoverageStatus.Revision,
 ]
 
+/**
+ * The day of the month before which monthly coverage can start in the current
+ * month. See corresponding `MonthlyCutoffDay` constant in cover-api here:
+ * https://github.com/silinternational/cover-api/blob/develop/application/models/item.go
+ */
+export const MonthlyCutoffDay = 20
+
 export type AccountablePerson = {
   id: string
   name: string

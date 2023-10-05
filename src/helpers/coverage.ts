@@ -1,4 +1,6 @@
+import { MonthlyCutoffDay } from 'data/items'
+
 export const isBeforeMonthlyCutoff = () => {
   const today = new Date()
-  return today.getUTCDate() < 20
+  return today.getUTCDate() < MonthlyCutoffDay
 }

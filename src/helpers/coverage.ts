@@ -42,6 +42,10 @@ export const getRenewalDate = (item: PolicyItem | undefined): string => {
   return getYearlyRenewalDate(item)
 }
 
+export const getStartDate = (item: PolicyItem): string => {
+  return formatDate(item.coverage_start_date) || '(when approved)'
+}
+
 const getYearlyRenewalDate = (item: PolicyItem): string => {
   const renewYear = new Date().getFullYear() + 1
   return formatDate(`${renewYear}-01-01`)

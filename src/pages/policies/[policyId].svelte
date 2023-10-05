@@ -111,7 +111,7 @@ const showInactiveItems = (): void => {
 }
 </script>
 
-<style>
+<style lang="postcss">
 .subtext {
   font-weight: normal;
   font-size: small;

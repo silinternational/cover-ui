@@ -50,7 +50,6 @@ $: setInitialValues($user, item)
 
 let initialCategoryId: string
 let statementNameDefault = ''
-let today = new Date()
 let userCustomizedStatementName = false
 
 $: country = item?.accountable_person?.country || country

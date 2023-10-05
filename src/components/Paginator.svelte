@@ -3,7 +3,7 @@ import type { PaginatedData } from 'data/types/PaginatedData'
 import { IconButton, Select } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
-type SelectOption = { id: string; name: number }
+type SelectOption = { id: string; name: string }
 
 const dispatch = createEventDispatcher<{ paginate: { page: number; limit: number } }>()
 
@@ -12,7 +12,7 @@ export let thingName = 'items'
 export let limitOptions = [10, 20, 50, 100]
 export let limitSelection = ''
 
-$: limitSelectOptions = limitOptions.map((o) => ({ id: 'limit-' + o, name: o } as SelectOption))
+$: limitSelectOptions = limitOptions.map((o) => ({ id: 'limit-' + o, name: o.toString() } as SelectOption))
 
 const onClickFirst = () => {
   dispatch('paginate', { page: 1, limit: pageData.per_page })

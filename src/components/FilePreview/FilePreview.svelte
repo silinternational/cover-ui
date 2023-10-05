@@ -1,5 +1,5 @@
 <script lang="ts">
-import Banner from '../components/Banner.svelte'
+import Banner from '../Banner.svelte'
 import { formatDate } from '../../helpers/dates'
 import { Button } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
@@ -31,7 +31,7 @@ function onDelete(event: CustomEvent, id: string) {
 }
 </style>
 
-<div class="preview flex justify-between align-items-center br-8px p-10px mb-1 {$$props.class}" on:click>
+<div class="preview flex justify-between align-items-center br-8px p-10px mb-1 {$$props.class}" on:click on:keydown={(e) => {if (e.key === 'Enter') e.currentTarget.click()}}>
   <div>
     <p class="white my-0">{label}</p>
     <p class="white my-0">{formatDate(date)}</p>

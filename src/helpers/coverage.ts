@@ -1,5 +1,5 @@
 import { BillingPeriod, isItemDraft, itemIsApproved, MonthlyCutoffDay, PolicyItem } from 'data/items'
-import { formatDate, startOfFutureMonth } from 'helpers/dates'
+import { formatDate, isMeaningfulDateString, startOfFutureMonth } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 
 const getMonthlyRenewalDate = (item: PolicyItem): string => {
@@ -43,7 +43,15 @@ export const getRenewalDate = (item: PolicyItem | undefined): string => {
 }
 
 export const getStartDate = (item: PolicyItem): string => {
-  return formatDate(item.coverage_start_date) || '(when approved)'
+  if (isMeaningfulDateString(item.coverage_start_date)) {
+    return formatDate(item.coverage_start_date)
+  }
+
+  if (isItemDraft(item)) {
+    return '(when approved)'
+  }
+
+  return ''
 }
 
 const getYearlyRenewalDate = (item: PolicyItem): string => {

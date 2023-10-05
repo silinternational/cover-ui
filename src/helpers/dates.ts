@@ -18,14 +18,7 @@ export const formatDate = (
   options: Intl.DateTimeFormatOptions | undefined = { month: 'long', day: 'numeric', year: 'numeric' }
 ): string => {
   if (dateString) {
-    const date = new Date(dateString)
-
-    if (Math.abs(date.getTime()) < day) {
-      // if the date is within a day of the epoch assume it is the epoch since local timestring could be used
-      return ''
-    }
-
-    if (date.toISOString() === '0001-01-01T00:00:00.000Z') {
+    if (!isMeaningfulDateString(dateString)) {
       return ''
     }
 
@@ -33,6 +26,8 @@ export const formatDate = (
       // When the dateString does not contain a time portion, treat it as a UTC date
       options.timeZone = 'UTC'
     }
+
+    const date = new Date(dateString)
     return date.toLocaleDateString('default', options)
   }
   return ''
@@ -69,4 +64,24 @@ export const formatDateAndTime = (
 export const isFourDigitYear = (year: any): boolean => {
   const fourDigitYearRegex = /^[1-9][0-9]{3}$/
   return fourDigitYearRegex.test(String(year))
+}
+
+export const isMeaningfulDateString = (dateString: string | undefined): boolean => {
+  if (!dateString) {
+    return false
+  }
+
+  const date = new Date(dateString)
+
+  if (Math.abs(date.getTime()) < day) {
+    // If the date is within a day of the epoch, assume it is the epoch since a local time string
+    // could have been used.
+    return false
+  }
+
+  if (date.toISOString() === '0001-01-01T00:00:00.000Z') {
+    return false
+  }
+
+  return true
 }

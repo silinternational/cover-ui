@@ -4,7 +4,6 @@ import { formatDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 
 export let accountOrHouseholdId: string
-export let coverageStartDate: string
 export let item: PolicyItem
 export let org: string
 

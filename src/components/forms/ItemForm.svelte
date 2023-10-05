@@ -6,7 +6,14 @@ import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import YearInput from '../YearInput.svelte'
 import { MAX_TEXT_AREA_LENGTH } from 'components/const'
 import type { AccountablePersonOptions } from 'data/accountablePersons'
-import { ItemCoverageStatus, NewItemFormData, PolicyItem, RiskCategoryNames, UpdateItemFormData } from 'data/items'
+import {
+  isItemDraft,
+  ItemCoverageStatus,
+  NewItemFormData,
+  PolicyItem,
+  RiskCategoryNames,
+  UpdateItemFormData
+} from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
 import user, { isAdmin, User } from 'data/user'
 import { areMakeAndModelRequired, assembleStatementNameDefault, validateForSubmit, validateForSave } from './items/itemFormHelpers'
@@ -57,7 +64,7 @@ let userCustomizedStatementName = false
 
 $: country = item?.accountable_person?.country || country
 $: !$catItemsInitialized && loadCategories()
-$: itemIsDraft = item.coverage_status === ItemCoverageStatus.Draft
+$: itemIsDraft = isItemDraft(item)
 $: marketValueIsDisabled = !!item.id && !itemIsDraft && !isAdmin
 $: applyBtnLabel = !item.coverage_status || itemIsDraft ? 'review and checkout' : 'save changes'
 $: make,

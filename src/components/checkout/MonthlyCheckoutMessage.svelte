@@ -11,12 +11,8 @@ const today = new Date()
 
 const isBeforeMonthlyCutoff = today.getUTCDate() < MonthlyCutoffDay
 
-const nextMonth = new Date()
-nextMonth.setMonth(today.getMonth() + 1)
-nextMonth.setDate(1)
-
 const thirdMonth = new Date()
-thirdMonth.setMonth(nextMonth.getMonth() + 1)
+thirdMonth.setMonth(today.getMonth() + 2)
 thirdMonth.setDate(1)
 
 $: monthlyPremium = item.monthly_premium

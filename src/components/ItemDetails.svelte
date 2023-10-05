@@ -1,5 +1,4 @@
 <script lang="ts">
-import Banner from './Banner.svelte'
 import ItemBanner from './banners/ItemBanner.svelte'
 import MessageBanner from './banners/MessageBanner.svelte'
 import { PolicyItem, ItemCoverageStatus } from 'data/items'

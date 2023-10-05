@@ -1,8 +1,15 @@
 <script lang="ts">
 import ItemBanner from './banners/ItemBanner.svelte'
 import MessageBanner from './banners/MessageBanner.svelte'
-import { BillingPeriod, ItemCoverageStatus, PolicyItem } from 'data/items'
+import {
+  BillingPeriod,
+  isItemDraft,
+  ItemCoverageStatus,
+  itemIsApproved,
+  PolicyItem
+} from 'data/items'
 import { getPolicyById, loadPolicy, policies, Policy, PolicyType } from 'data/policies'
+import { isBeforeMonthlyCutoff } from 'helpers/coverage'
 import { formatDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import InfoBoxModal from './InfoBoxModal.svelte'
@@ -29,7 +36,7 @@ $: status = (item.coverage_status || '') as ItemCoverageStatus
 $: showRevisionMessage = item.status_reason && status === ItemCoverageStatus.Revision
 $: startDate = formatDate(item?.coverage_start_date) || '(when approved)'
 $: endDate = formatDate(item.coverage_end_date)
-$: renewDate = getRenewalDate()
+$: renewDate = getRenewalDate(item)
 $: commonDetails = {
   [assignedTo]: item?.accountable_person?.name,
   Location: item.accountable_person?.country || item.country,
@@ -62,9 +69,41 @@ const getItemStatusText = (item: PolicyItem) => {
   return statusChangeStr + updatedAtStr
 }
 
-const getRenewalDate = (): string => {
-  const renewYear = new Date().getFullYear() + 1
-  return formatDate(`${renewYear}-01-01`)
+const getMonthlyRenewalDate = (item: PolicyItem): string => {
+  if (itemIsApproved(item)) {
+    const nextMonth = new Date()
+    nextMonth.setMonth(nextMonth.getMonth() + 1)
+    nextMonth.setDate(1)
+    return formatDate(nextMonth.toISOString())
+  }
+
+  if (isItemDraft(item)) {
+    if (isBeforeMonthlyCutoff()) {
+      const nextMonth = new Date()
+      nextMonth.setMonth(nextMonth.getMonth() + 1)
+      nextMonth.setDate(1)
+      return formatDate(nextMonth.toISOString())
+    } else {
+      const monthAfterNext = new Date()
+      monthAfterNext.setMonth(monthAfterNext.getMonth() + 2)
+      monthAfterNext.setDate(1)
+      return formatDate(monthAfterNext.toISOString())
+    }
+  }
+
+  return ''
+}
+
+const getRenewalDate = (item: PolicyItem | undefined): string => {
+  if (!item || !item.id) {
+    return ''
+  }
+
+  if (isMonthly(item)) {
+    return getMonthlyRenewalDate(item)
+  }
+
+  return getYearlyRenewalDate(item)
 }
 
 const getPremiumDescription = (item: PolicyItem | undefined): string => {
@@ -79,7 +118,12 @@ const getPremiumDescription = (item: PolicyItem | undefined): string => {
   return `${formatMoney(item.annual_premium)} / year`
 }
 
-const isMonthly = (item: PolicyItem | undefined) => item?.billing_period === BillingPeriod.Monthly
+const getYearlyRenewalDate = (item: PolicyItem): string => {
+  const renewYear = new Date().getFullYear() + 1
+  return formatDate(`${renewYear}-01-01`)
+}
+
+const isMonthly = (item: PolicyItem) => item.billing_period === BillingPeriod.Monthly
 
 const toggleModal = (i: number) => (showInfoBox[i] = !showInfoBox[i])
 </script>

@@ -34,7 +34,7 @@ $: $policies && (policy = getPolicyById(policyId))
 $: statusText = getItemStatusText(item)
 $: status = (item.coverage_status || '') as ItemCoverageStatus
 $: showRevisionMessage = item.status_reason && status === ItemCoverageStatus.Revision
-$: startDate = formatDate(item?.coverage_start_date) || '(when approved)'
+$: startDate = formatDate(item.coverage_start_date) || '(when approved)'
 $: endDate = formatDate(item.coverage_end_date)
 $: renewDate = getRenewalDate(item)
 $: commonDetails = {

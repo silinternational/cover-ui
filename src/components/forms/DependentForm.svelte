@@ -3,7 +3,7 @@ export type DependentFormData = {
   id: string
   name: string
   country: string
-  relationship: string
+  relationship?: string
   childBirthYear?: number
   permissions: 'no-login' | 'can-edit'
   email: string
@@ -20,6 +20,7 @@ import { ITEMS } from 'helpers/routes'
 import RadioOptions from '../RadioOptions.svelte'
 import RemoveDependentModal from '../RemoveDependentModal.svelte'
 import { assertEmailAddress, assertHas, assertIsLessThan, assertUnique } from '../../validation/assertions'
+import YearInput from '../YearInput.svelte'
 import { Button, Form, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 import { goto } from '@roxi/routify'
@@ -174,7 +175,7 @@ const onAssign = (e: CustomEvent) => {
       </p>
       {#if formData.relationship === 'Child'}
         <p>
-          <TextField {maxlength} label="Child's birth year" bind:value={formData.childBirthYear} class="w-100" />
+          <YearInput {maxlength} label="Child's birth year" bind:value={formData.childBirthYear} class="w-100" />
         </p>
       {/if}
     {/if}

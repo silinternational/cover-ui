@@ -38,7 +38,7 @@ onMount(() => {
 
 function refresh() {
   loadRecentActivity()
-  timeoutId = setTimeout(refresh, 60000)
+  timeoutId = setTimeout(refresh, 60000) as unknown as number
 }
 
 onDestroy(() => {

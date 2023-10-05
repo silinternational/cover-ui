@@ -35,8 +35,6 @@ let accountablePersonId = ''
 let categoryId = ''
 let country = ''
 let marketValueUSD: number | string | undefined
-let coverageEndDate = ''
-let coverageStartDate = ''
 let coverageStatus: ItemCoverageStatus
 let itemDescription = ''
 let inStorage = false
@@ -52,7 +50,6 @@ $: setInitialValues($user, item)
 
 let initialCategoryId: string
 let statementNameDefault = ''
-let today = new Date()
 let userCustomizedStatementName = false
 
 $: country = item?.accountable_person?.country || country
@@ -89,8 +86,6 @@ const getFormData = (): NewItemFormData => {
     categoryId,
     country,
     marketValueUSD,
-    coverageEndDate,
-    coverageStartDate,
     coverageStatus,
     itemDescription,
     inStorage,
@@ -157,8 +152,6 @@ const setInitialValues = (user: User, item: PolicyItem) => {
   categoryId = item.category?.id || categoryId
   country = item.country || country
   marketValueUSD = Number.isInteger(item.coverage_amount) ? String(item.coverage_amount / 100) : undefined
-  coverageEndDate = item.coverage_end_date || coverageEndDate
-  coverageStartDate = item.coverage_start_date || today.toISOString().slice(0, 10) //api requires yyyy-mm-dd
   coverageStatus = item.coverage_status || coverageStatus
   itemDescription = item.description || itemDescription
   inStorage = typeof item.in_storage === 'boolean' ? item.in_storage : false

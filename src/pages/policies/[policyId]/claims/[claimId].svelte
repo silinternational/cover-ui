@@ -39,6 +39,7 @@ import {
 } from 'data/claims'
 import { addItem, loadItems, parseItemForAddItem, PolicyItem, selectedPolicyItems } from 'data/items'
 import { getNameOfPolicy, getPolicyById, loadPolicy, memberBelongsToPolicy, policies, Policy } from 'data/policies'
+import type { SecondaryClaimStatus } from 'data/states'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
@@ -83,6 +84,7 @@ $: claim = ($claims.find((clm: Claim) => clm.id === claimId) || {}) as Claim
 $: claimItem = claim.claim_items?.[0] || ({} as ClaimItem) //For now there will only be one claim_item
 $: setInitialValues(claimItem)
 $: statusText = getClaimStatusText(claim, claimItem)
+$: claimStatusSecondary = `${claimStatus}Secondary` as SecondaryClaimStatus
 
 $: items = $selectedPolicyItems
 $: policyId && loadItems(policyId)
@@ -109,7 +111,7 @@ $: allowDelete = needsRevision || [ClaimStatus.Receipt, ClaimStatus.Draft].inclu
 $: needsRepairReceipt = needsReceipt && payoutOption === PayoutOption.Repair
 $: needsReplaceReceipt = needsReceipt && payoutOption === PayoutOption.Replacement
 
-$: filePurpose = getFilePurpose(claimItem, needsReceipt) as ClaimFilePurpose
+$: filePurpose = getFilePurpose(claimItem, needsReceipt) as ClaimFilePurpose | ''
 $: noFilesUploaded = !isFileUploadedByPurpose(filePurpose, claimFiles)
 $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType)
 $: uploadLabelForButton = needsFile
@@ -254,7 +256,7 @@ const getClaimStatusText = (claim: Claim, item: ClaimItem) => {
   return statusChangeStr + updatedAtStr
 }
 
-const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]): boolean => {
+const isFileUploadedByPurpose = (purpose: ClaimFilePurpose | '', files: ClaimFile[]): boolean => {
   return files.filter((file) => file.purpose === purpose).length > 0
 }
 
@@ -325,7 +327,7 @@ const onReCover = async () => {
     <Row cols="9">
       <ClaimBanner {claimStatus} roleSelection={$roleSelection} {receiptType}>{statusText}</ClaimBanner>
       {#if showSecondaryBanner}
-        <ClaimBanner claimStatus={`${claimStatus}Secondary`} roleSelection={$roleSelection} class="mt-4px">
+        <ClaimBanner claimStatus={claimStatusSecondary} roleSelection={$roleSelection} class="mt-4px">
           Upload {uploadLabel} to get reimbursed.
         </ClaimBanner>
       {/if}

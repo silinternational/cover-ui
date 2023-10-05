@@ -92,7 +92,6 @@ export type CreatePolicyItemRequestBody = {
   category_id: string
   country?: string
   coverage_amount?: number
-  coverage_start_date: string /*Date*/
   coverage_status?: ItemCoverageStatus
   description?: string
   in_storage?: boolean
@@ -135,8 +134,6 @@ export interface ItemFormData {
 }
 
 export interface NewItemFormData extends ItemFormData {
-  coverageStartDate: string /*Date*/
-  coverageEndDate?: string /*Date*/
   coverageStatus?: ItemCoverageStatus
 }
 
@@ -189,7 +186,6 @@ export async function addItem(policyId: string, itemData: NewItemFormData): Prom
     category_id: itemData.categoryId,
     country: itemData.country,
     coverage_amount: convertToCents(itemData.marketValueUSD),
-    coverage_start_date: itemData.coverageStartDate,
     coverage_status: itemData.coverageStatus,
     description: itemData.itemDescription,
     in_storage: itemData.inStorage,
@@ -387,7 +383,6 @@ export const parseItemForAddItem = (item: PolicyItem): NewItemFormData => {
     categoryId: item.category.id,
     country: item.country || item.accountable_person.country,
     marketValueUSD: item.coverage_amount / 100,
-    coverageStartDate: new Date().toISOString().slice(0, 10),
     itemDescription: item.description,
     inStorage: item.in_storage,
     make: item.make,

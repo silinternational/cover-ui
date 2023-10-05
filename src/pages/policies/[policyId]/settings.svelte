@@ -164,10 +164,10 @@ const onAddDependent = () => {
   showAddDependentModal = true
 }
 
-const onDependentModalClosed = (event: CustomEvent) => {
+const onDependentModalClosed = () => {
   showAddDependentModal = false
 }
-const onCancelModal = (event: CustomEvent) => {
+const onCancelModal = () => {
   showAddDependentModal = false
 }
 const onRemoveModal = (event: CustomEvent<string>) => {

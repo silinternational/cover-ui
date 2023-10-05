@@ -1,11 +1,10 @@
 <script lang="ts">
+import CheckoutMessage from './CheckoutMessage.svelte'
 import type { PolicyItem } from 'data/items'
 import { selectedPolicy } from 'data/policies'
-import { formatDate, getYear } from 'helpers/dates'
-import { formatMoney } from 'helpers/money'
 import { HOME, TERMS_OF_SERVICE } from 'helpers/routes'
-import ItemDeleteModal from './ItemDeleteModal.svelte'
-import ItemDetails from './ItemDetails.svelte'
+import ItemDeleteModal from '../ItemDeleteModal.svelte'
+import ItemDetails from '../ItemDetails.svelte'
 import { goto } from '@roxi/routify'
 import { Button, Checkbox } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
@@ -19,21 +18,6 @@ let checked: boolean = false
 $: itemId = item.id
 
 $: policy = $selectedPolicy
-$: householdId = policy.household_id || ''
-$: accountOrhouseholdId = householdId || policy.account || ''
-$: org = policy?.entity_code?.code
-
-$: startDate = formatDate(item?.coverage_start_date)
-$: year = getYear(startDate)
-$: renewYear = Number(year) + 1
-$: renewDate = formatDate(`${renewYear}-01-01`)
-$: proratedMessage = `Pay ${formatMoney(item.prorated_annual_premium)} for the remainder of ${year} from ${org} account
-    ${accountOrhouseholdId}. Auto-renew and pay ${formatMoney(item.annual_premium)} on ${renewDate}.`
-$: noPaymentMessage = `No payment needed right now. Auto-renew for ${formatMoney(
-  item.annual_premium
-)} on ${renewDate}, paid from ${org}
-     account ${accountOrhouseholdId}.`
-$: checkoutMessage = item.prorated_annual_premium > 100 ? proratedMessage : noPaymentMessage
 
 const dispatch = createEventDispatcher<{ agreeAndPay: string; delete: string; edit: string }>()
 
@@ -75,8 +59,6 @@ const handleRemoveDialog = (event: CustomEvent<string>) => {
 </div>
 
 <div class="agreement flex align-items-center">
-  <div>
-    {checkoutMessage}
-  </div>
+  <CheckoutMessage {item} {policy} />
   <Button class="ml-1" disabled={!checked} raised on:click={onAgreeAndPay}>Agree and Pay</Button>
 </div>

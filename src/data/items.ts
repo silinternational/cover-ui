@@ -4,6 +4,11 @@ import { convertToCents } from 'helpers/money'
 import { selectedPolicyId } from './role-policy-selection'
 import { derived, get, writable } from 'svelte/store'
 
+export enum BillingPeriod {
+  Monthly = 1,
+  Yearly = 12,
+}
+
 export enum ItemCoverageStatus {
   Draft = 'Draft',
   Pending = 'Pending',
@@ -25,6 +30,13 @@ export const incompleteItemCoverageStatuses = [
   ItemCoverageStatus.Pending,
   ItemCoverageStatus.Revision,
 ]
+
+/**
+ * The day of the month before which monthly coverage can start in the current
+ * month. See corresponding `MonthlyCutoffDay` constant in cover-api here:
+ * https://github.com/silinternational/cover-api/blob/develop/application/models/item.go
+ */
+export const MonthlyCutoffDay = 20
 
 export type AccountablePerson = {
   id: string
@@ -48,6 +60,7 @@ export enum RiskCategoryNames {
 export type PolicyItem = {
   accountable_person: AccountablePerson
   annual_premium: number
+  billing_period: number /* in months, e.g. 1 or 12 */
   category: any /*ItemCategory*/
   country: string
   coverage_amount: number
@@ -62,6 +75,7 @@ export type PolicyItem = {
   can_be_updated: boolean
   make: string
   model: string
+  monthly_premium: number
   name: string
   policy_id: string
   prorated_annual_premium: number

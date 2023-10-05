@@ -9,7 +9,7 @@ export const formatFriendlyDate = (dateTimeString: string): string => {
 }
 
 export const formatDate = (
-  dateString: string,
+  dateString: string | undefined,
   options: Intl.DateTimeFormatOptions | undefined = { month: 'long', day: 'numeric', year: 'numeric' }
 ): string => {
   if (dateString) {

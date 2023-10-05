@@ -30,7 +30,6 @@ $: monthlyPremium = item.monthly_premium
   {:else}
     Pay {formatMoney(monthlyPremium)} from {org} account {accountOrHouseholdId}
     each month, starting {formatDate(thirdMonth.toISOString())}. <br />
-    <strong>NOTE:</strong> Coverage will begin {formatDate(item.coverage_start_date)}
-    if this request for coverage is approved.
+    <strong>NOTE:</strong> Coverage will begin when approved.
   {/if}
 </span>

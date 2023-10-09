@@ -1,9 +1,10 @@
 <script lang="ts">
 import ItemBanner from './banners/ItemBanner.svelte'
 import MessageBanner from './banners/MessageBanner.svelte'
-import { PolicyItem, ItemCoverageStatus } from 'data/items'
+import { ItemCoverageStatus, PolicyItem } from 'data/items'
 import { getPolicyById, loadPolicy, policies, Policy, PolicyType } from 'data/policies'
-import { formatDate } from '../helpers/dates'
+import { getPremiumDescription, getRenewalDate, getStartDate } from 'helpers/coverage'
+import { formatDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import InfoBoxModal from './InfoBoxModal.svelte'
 import { formatDistanceToNow } from 'date-fns'
@@ -16,7 +17,6 @@ export let policyId: string
 export let isAdmin: boolean = false
 
 let policy: Policy
-let renewYear = new Date().getFullYear() + 1
 
 const showInfoBox: boolean[] = []
 const assignedTo = 'Accountable Person'
@@ -28,9 +28,9 @@ $: $policies && (policy = getPolicyById(policyId))
 $: statusText = getItemStatusText(item)
 $: status = (item.coverage_status || '') as ItemCoverageStatus
 $: showRevisionMessage = item.status_reason && status === ItemCoverageStatus.Revision
-$: startDate = formatDate(item.coverage_start_date)
+$: startDate = getStartDate(item)
 $: endDate = formatDate(item.coverage_end_date)
-$: renewDate = formatDate(`${renewYear}-01-01`)
+$: renewDate = getRenewalDate(item)
 $: commonDetails = {
   [assignedTo]: item?.accountable_person?.name,
   Location: item.accountable_person?.country || item.country,
@@ -48,7 +48,7 @@ $: minimumDeductible = item?.category?.minimum_deductible
 $: minimumDeductibleDescription = minimumDeductible ? `(subject to ${formatMoney(minimumDeductible)} minimum)` : ''
 $: moneyDetails = {
   Value: formatMoney(item.coverage_amount),
-  Premium: `${formatMoney(item.annual_premium)} / yr`,
+  Premium: getPremiumDescription(item),
   Deductible: `5% ${minimumDeductibleDescription}`.trim(),
 }
 $: sidebarDetailsArray =

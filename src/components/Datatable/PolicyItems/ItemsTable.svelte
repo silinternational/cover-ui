@@ -84,7 +84,7 @@ const columns: Column[] = [
     title: 'Premium',
     headerId: 'premium',
     numeric: true,
-    path: 'prorated_annual_premium',
+    path: 'annual_premium',
     sortable: true,
   },
   {

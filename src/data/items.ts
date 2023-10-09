@@ -355,7 +355,7 @@ export const itemIsApproved = (item: PolicyItem): boolean => {
   return item.coverage_status === ItemCoverageStatus.Approved
 }
 
-export const isItemDraft = (item: PolicyItem): boolean => {
+export const itemIsDraft = (item: PolicyItem): boolean => {
   return item.coverage_status === ItemCoverageStatus.Draft
 }
 

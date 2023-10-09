@@ -7,7 +7,7 @@ import YearInput from '../YearInput.svelte'
 import { MAX_TEXT_AREA_LENGTH } from 'components/const'
 import type { AccountablePersonOptions } from 'data/accountablePersons'
 import {
-  isItemDraft,
+  itemIsDraft,
   ItemCoverageStatus,
   NewItemFormData,
   PolicyItem,
@@ -61,9 +61,9 @@ let userCustomizedStatementName = false
 
 $: country = item?.accountable_person?.country || country
 $: !$catItemsInitialized && loadCategories()
-$: itemIsDraft = isItemDraft(item)
-$: marketValueIsDisabled = !!item.id && !itemIsDraft && !isAdmin
-$: applyBtnLabel = !item.coverage_status || itemIsDraft ? 'review and checkout' : 'save changes'
+$: isDraft = itemIsDraft(item)
+$: marketValueIsDisabled = !!item.id && !isDraft && !isAdmin
+$: applyBtnLabel = !item.coverage_status || isDraft ? 'review and checkout' : 'save changes'
 $: make,
   model,
   itemDescription,

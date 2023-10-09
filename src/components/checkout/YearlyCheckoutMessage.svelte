@@ -1,6 +1,6 @@
 <script lang="ts">
-import { PolicyItem } from 'data/items'
-import { formatDate, getYear } from 'helpers/dates'
+import type { PolicyItem } from 'data/items'
+import { formatDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 
 export let accountOrHouseholdId: string = ''
@@ -8,19 +8,22 @@ export let item: PolicyItem | undefined = undefined
 export let org: string = ''
 
 $: annualPremium = item?.annual_premium
-$: proratedAnnualPremium = item?.prorated_annual_premium
+$: proratedAnnualPremiumOrMin = getGreaterOfTwoValues(
+  item?.prorated_annual_premium || 0,
+  item?.category?.minimum_premium || 0
+)
 
-$: year = (new Date()).getFullYear()
+$: year = new Date().getFullYear()
 $: renewYear = year + 1
 $: renewDate = formatDate(`${renewYear}-01-01`)
+$: premiumEqualsProrated = annualPremium === proratedAnnualPremiumOrMin
+
+const getGreaterOfTwoValues = (value1: number, value2: number) => (value1 > value2 ? value1 : value2)
 </script>
 
 <span>
-  {#if proratedAnnualPremium > 100}
-    Pay {formatMoney(proratedAnnualPremium)} for the remainder of {year} from {org} account
-    {accountOrHouseholdId}. Auto-renew and pay {formatMoney(annualPremium)} on {renewDate}.
-  {:else}
-    No payment needed right now. Auto-renew for {formatMoney(annualPremium)} on {renewDate},
-    paid from {org} account {accountOrHouseholdId}.
-  {/if}
+  Pay {formatMoney(proratedAnnualPremiumOrMin)}
+  {premiumEqualsProrated ? 'for' : 'for the remainder of'}
+  {year} from {org} account
+  {accountOrHouseholdId}. Auto-renew and pay {formatMoney(annualPremium)} on {renewDate}.
 </span>

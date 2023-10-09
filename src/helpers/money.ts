@@ -6,6 +6,9 @@ export const convertToCents = (dollars?: number | string): number => {
 }
 
 export const formatMoney = (cents: number | undefined): string => {
+  if (cents === undefined) {
+    return ''
+  }
   if (!cents || !Number.isFinite(+cents)) {
     return '$0.00'
   }

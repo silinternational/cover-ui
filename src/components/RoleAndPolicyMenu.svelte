@@ -101,7 +101,7 @@ const getButtonText = (userAppRoleSelection: UserAppRole, policyIdSelection: str
     return userAppRoleSelection
   }
 
-  const policy = myPolicies.find((policy) => policy.id === policyIdSelection)
+  const policy = myPolicies.find((policy) => policy.id === policyIdSelection) as Policy
   if (policy && isTeamPolicy(policy)) {
     return getTruncatedNameOfPolicy(policy)
   }

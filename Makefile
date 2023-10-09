@@ -1,5 +1,11 @@
 start: install local-dev
 
+check:
+	npm run check
+
+lint:
+	npm run lint
+
 docker:
 	docker-compose run --rm app npm install
 	docker-compose run --rm --service-ports app

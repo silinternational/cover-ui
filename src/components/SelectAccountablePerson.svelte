@@ -70,14 +70,14 @@ const onModalFormSubmit = async (event: CustomEvent) => {
   modalOpen = false
 }
 
-const onDialogClosed = (event: CustomEvent) => {
+const onDialogClosed = () => {
   if (selectedID === 'new') {
     selectedID = accountablePersons[0]?.id
   }
   modalOpen = false
 }
 
-const onModalFormCancel = (event: CustomEvent) => {
+const onModalFormCancel = () => {
   modalOpen = false
   selectedID = accountablePersons[0]?.id
 }

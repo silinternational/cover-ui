@@ -12,7 +12,7 @@ $: monthlyPremium = item.monthly_premium
 </script>
 
 <span>
-  {#if isBeforeMonthlyCutoff}
+  {#if isBeforeMonthlyCutoff()}
     Pay {formatMoney(monthlyPremium)} from {org} account {accountOrHouseholdId}
     each month.
   {:else}

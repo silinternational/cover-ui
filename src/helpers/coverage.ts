@@ -64,4 +64,4 @@ export const isBeforeMonthlyCutoff = () => {
   return today.getUTCDate() < MonthlyCutoffDay
 }
 
-const isMonthly = (item: PolicyItem) => item.billing_period === BillingPeriod.Monthly
+export const isMonthly = (item: PolicyItem) => item.billing_period === BillingPeriod.Monthly

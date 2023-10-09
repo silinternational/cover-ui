@@ -39,7 +39,7 @@ export const getRenewalDate = (item: PolicyItem | undefined): string => {
     return getMonthlyRenewalDate(item)
   }
 
-  return getYearlyRenewalDate(item)
+  return getYearlyRenewalDate()
 }
 
 export const getStartDate = (item: PolicyItem): string => {
@@ -54,12 +54,12 @@ export const getStartDate = (item: PolicyItem): string => {
   return ''
 }
 
-const getYearlyRenewalDate = (item: PolicyItem): string => {
+const getYearlyRenewalDate = (): string => {
   const renewYear = new Date().getFullYear() + 1
   return formatDate(`${renewYear}-01-01`)
 }
 
-export const isBeforeMonthlyCutoff = () => {
+export const isBeforeMonthlyCutoff = (): boolean => {
   const today = new Date()
   return today.getUTCDate() < MonthlyCutoffDay
 }

@@ -8,17 +8,12 @@ export let item: PolicyItem | undefined = undefined
 export let org: string = ''
 
 $: annualPremium = item?.annual_premium
-$: proratedAnnualPremiumOrMin = getGreaterOfTwoValues(
-  item?.prorated_annual_premium || 0,
-  item?.category?.minimum_premium || 0
-)
+$: proratedAnnualPremiumOrMin = Math.max(item?.prorated_annual_premium || 0, item?.category?.minimum_premium || 0)
 
 $: year = new Date().getFullYear()
 $: renewYear = year + 1
 $: renewDate = formatDate(`${renewYear}-01-01`)
 $: premiumEqualsProrated = annualPremium === proratedAnnualPremiumOrMin
-
-const getGreaterOfTwoValues = (value1: number, value2: number) => (value1 > value2 ? value1 : value2)
 </script>
 
 <span>

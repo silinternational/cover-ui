@@ -11,4 +11,4 @@ jobs:
         DF_RUN_TOKEN: ${{ secrets.DF_RUN_TOKEN }}
     steps:
     - name: Scan with Deepfactor
-      run: dfctl scan -s fs -a ${{ github.event.repository.name }} -C ${{ github.event.repository.name }} -V unreleased .
+      run: dfctl scan -s fs -a ${{ github.event.repository.name }} -c ${{ github.event.repository.name }} -V unreleased .

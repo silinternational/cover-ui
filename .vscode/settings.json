@@ -5,11 +5,12 @@
 
   "[typescript]": {
     "editor.formatOnSave": true,
-    "editor.formatOnPaste": true,
+    "editor.formatOnPaste": true
   },
 
   "[svelte]": {
     "editor.formatOnSave": true,
-    "editor.formatOnPaste": true
+    "editor.formatOnPaste": true,
+    "editor.defaultFormatter": "svelte.svelte-vscode"
   }
 }

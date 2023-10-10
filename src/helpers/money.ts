@@ -5,7 +5,10 @@ export const convertToCents = (dollars?: number | string): number => {
   return Math.round(Number(dollars) * 100) // Round to avoid #'s like 7001.000000000001
 }
 
-export const formatMoney = (cents: number): string => {
+export const formatMoney = (cents: number | undefined): string => {
+  if (cents === undefined) {
+    return ''
+  }
   if (!cents || !Number.isFinite(+cents)) {
     return '$0.00'
   }

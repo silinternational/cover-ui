@@ -1,6 +1,7 @@
 import { CREATE, DELETE, GET, UPDATE } from '.'
 import { throwError } from '../error'
 import { convertToCents } from 'helpers/money'
+import type { ItemCategory } from './itemCategories'
 import { selectedPolicyId } from './role-policy-selection'
 import { derived, get, writable } from 'svelte/store'
 
@@ -61,7 +62,7 @@ export type PolicyItem = {
   accountable_person: AccountablePerson
   annual_premium: number
   billing_period: number /* in months, e.g. 1 or 12 */
-  category: any /*ItemCategory*/
+  category: ItemCategory
   country: string
   coverage_amount: number
   coverage_end_date: string /*Date*/
@@ -149,7 +150,7 @@ export const selectedPolicyItems = derived(
   [itemsByPolicyId, selectedPolicyId],
   ([$itemsByPolicyId, $selectedPolicyId]) => {
     return $itemsByPolicyId[$selectedPolicyId] || []
-  }
+  },
 )
 
 /**

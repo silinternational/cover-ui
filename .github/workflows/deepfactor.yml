@@ -10,5 +10,7 @@ jobs:
       env:
         DF_RUN_TOKEN: ${{ secrets.DF_RUN_TOKEN }}
     steps:
+    - name: Checkout
+      uses: actions/checkout@v2
     - name: Scan with Deepfactor
       run: dfctl scan -s fs -a ${{ github.event.repository.name }} -c ${{ github.event.repository.name }} -V unreleased .

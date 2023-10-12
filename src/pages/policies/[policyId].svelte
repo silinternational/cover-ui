@@ -72,8 +72,11 @@ $: openClaimCount = recentClaims.filter(claimIsOpen).length
 $: policyName = getNameOfPolicy(policy)
 $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))
 $: coverage = formatMoney(approvedItems.reduce((sum, item) => sum + item.coverage_amount, 0))
-$: premium = formatMoney(approvedItems.reduce((sum, item) => sum + item.annual_premium, 0))
-$: monthlyPremiumTotal = formatMoney(approvedItems.reduce((sum, item) => sum + item.monthly_premium, 0))
+$: premium = formatMoney(
+  approvedItems.reduce((sum, item) => (item.billing_period === 1 ? sum : sum + item.annual_premium), 0)
+)
+$: monthlyPremiumsSum = approvedItems.reduce((sum, item) => sum + item.monthly_premium, 0)
+$: monthlyPremiumSumsString = formatMoney(monthlyPremiumsSum)
 $: entityCode = policy.entity_code?.code
 $: numberOfItemsNotShown = items.length - itemsForTable.length
 $: gotoItemsBtnLabel = `View ${numberOfItemsNotShown} more items…`
@@ -202,13 +205,15 @@ dd {
         <dd>{coverage}</dd>
         <dt>Yearly Premium</dt>
         <dd>{premium} per year</dd>
-        <dt class="tw-flex tw-items-center">
-          <span> Monthly Premium</span>
-          <IconButton class="gray" icon="info" on:click={() => (infoIsOpen = true)} />
-        </dt>
-        <dd>
-          {monthlyPremiumTotal} per month
-        </dd>
+        {#if monthlyPremiumsSum}
+          <dt class="tw-flex tw-items-center">
+            <span> Monthly Premium</span>
+            <IconButton class="gray" icon="info" on:click={() => (infoIsOpen = true)} />
+          </dt>
+          <dd>
+            {monthlyPremiumSumsString} per month
+          </dd>
+        {/if}
         <dt>Last Updated</dt>
         <dd>{formatFriendlyDate(policy.updated_at)}</dd>
       </dl>

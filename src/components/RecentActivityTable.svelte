@@ -2,6 +2,7 @@
 import type { Claim } from 'data/claims'
 import type { PolicyItem } from 'data/items'
 import { isRecentClaim, isRecentItem, RecentChange } from 'data/recent-activity'
+import { isMonthly } from 'helpers/coverage'
 import { formatMoney } from 'helpers/money'
 import { customerClaimDetails, itemDetails } from 'helpers/routes'
 import { goto } from '@roxi/routify'
@@ -67,7 +68,14 @@ const getFormattedClaimItemPremium = (claim: Claim): string => {
           <RowItem>{recentChange.Item.status_change}</RowItem>
           <RowItem>{getItemPersonName(recentChange.Item)}</RowItem>
           <RowItem numeric>{formatMoney(recentChange.Item.coverage_amount)}</RowItem>
-          <RowItem numeric>{formatMoney(recentChange.Item.annual_premium)}</RowItem>
+          <RowItem numeric>
+            {formatMoney(recentChange.Item.annual_premium)}
+            {#if isMonthly(recentChange.Item)}
+              <div>
+                <small class="tw-opacity-60">({formatMoney(recentChange.Item.monthly_premium)}/month)</small>
+              </div>
+            {/if}
+          </RowItem>
           <RowItem>Coverage</RowItem>
         </DataRow>
       {/if}

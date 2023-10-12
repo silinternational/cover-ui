@@ -11,7 +11,6 @@ export let title = ''
   defaultAction="cancel"
   {title}
   titleIcon="info"
-  on:closed={() => (infoIsOpen = false)}
   on:closed
 >
   <slot />

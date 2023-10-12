@@ -1,6 +1,7 @@
 <script lang="ts">
 import { delayLoading, loading } from 'components/progress'
 import type { PolicyItem } from 'data/items'
+import { isMonthly } from 'helpers/coverage'
 import { formatDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { itemDetails, policyDetails } from 'helpers/routes'
@@ -34,7 +35,7 @@ const preventRowClick = async () => {
   <Datatable>
     <Datatable.Header>
       <Datatable.Header.Item class="audit-header">Name</Datatable.Header.Item>
-      <Datatable.Header.Item class="audit-header">Annual Premium</Datatable.Header.Item>
+      <Datatable.Header.Item numeric class="audit-header">Annual Premium</Datatable.Header.Item>
       <Datatable.Header.Item class="audit-header">End Date</Datatable.Header.Item>
       <Datatable.Header.Item class="audit-header">Coverage Status</Datatable.Header.Item>
       <Datatable.Header.Item class="audit-header">Action</Datatable.Header.Item>
@@ -43,7 +44,14 @@ const preventRowClick = async () => {
       {#each items as item (item.id)}
         <Datatable.Data.Row on:click={() => gotoItemDetails(item)} clickable>
           <Datatable.Data.Row.Item>{item.name}</Datatable.Data.Row.Item>
-          <Datatable.Data.Row.Item>{formatMoney(item.annual_premium)}</Datatable.Data.Row.Item>
+          <Datatable.Data.Row.Item numeric>
+            {formatMoney(item.annual_premium)}
+            {#if isMonthly(item)}
+              <div>
+                <small class="tw-opacity-60">({formatMoney(item.monthly_premium)}/month)</small>
+              </div>
+            {/if}
+          </Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{formatDate(item.coverage_end_date)}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{item.coverage_status}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>

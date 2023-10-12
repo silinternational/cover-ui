@@ -40,6 +40,11 @@ const getFormattedClaimItemPremium = (claim: Claim): string => {
   const claimItem = claim.claim_items[0]
   return formatMoney(claimItem?.item?.annual_premium)
 }
+
+const getMonthlyPremiumFromClaim = (claim: Claim): string => {
+  const claimItem = claim.claim_items[0]
+  return formatMoney(claimItem?.item?.monthly_premium)
+}
 </script>
 
 <Datatable>
@@ -63,7 +68,7 @@ const getFormattedClaimItemPremium = (claim: Claim): string => {
             {getFormattedClaimItemPremium(recentChange.Claim)}
             {#if isMonthly(recentChange.Claim.claim_items[0]?.item)}
               <div>
-                <small class="tw-opacity-60">({getFormattedClaimItemPremium(recentChange.Claim)}/month)</small>
+                <small class="tw-opacity-60">({getMonthlyPremiumFromClaim(recentChange.Claim)}/month)</small>
               </div>
             {/if}
           </RowItem>

@@ -68,14 +68,14 @@ const getFormattedClaimItemPremium = (claim: Claim): string => {
           <RowItem>{recentChange.Item.status_change}</RowItem>
           <RowItem>{getItemPersonName(recentChange.Item)}</RowItem>
           <RowItem numeric>{formatMoney(recentChange.Item.coverage_amount)}</RowItem>
-          <RowItem numeric
-            >{formatMoney(recentChange.Item.annual_premium)}
+          <RowItem numeric>
+            {formatMoney(recentChange.Item.annual_premium)}
             {#if isMonthly(recentChange.Item)}
               <div>
                 <small class="tw-opacity-60">({formatMoney(recentChange.Item.monthly_premium)}/month)</small>
               </div>
-            {/if}</RowItem
-          >
+            {/if}
+          </RowItem>
           <RowItem>Coverage</RowItem>
         </DataRow>
       {/if}

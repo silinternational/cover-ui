@@ -45,7 +45,7 @@ $: teamDetails = {
   'Internal Account': policy.account,
 }
 $: minimumDeductible = item?.category?.minimum_deductible
-$: minimumDeductibleDescription = minimumDeductible ? `(subject to ${formatMoney(minimumDeductible)} minimum)` : ''
+$: minimumDeductibleDescription = (minimumDeductible > 1) ? `(subject to ${formatMoney(minimumDeductible)} minimum)` : ''
 $: moneyDetails = {
   Value: formatMoney(item.coverage_amount),
   Premium: getPremiumDescription(item),

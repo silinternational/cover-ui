@@ -1,5 +1,6 @@
 <script lang="ts">
 import { Dialog, IconButton } from '@silintl/ui-components'
+import { InfoDialog } from '.'
 
 export let content = ''
 export let title = ''
@@ -12,6 +13,6 @@ const buttons: Dialog.AlertButton[] = [{ label: 'Ok', action: 'cancel', class: '
 {#if hasInfoButton}
   <IconButton class="gray" icon="info" on:click={() => (open = true)} />
 {/if}
-<Dialog.Alert {open} {buttons} defaultAction="cancel" {title} titleIcon="info" on:closed={() => (open = false)}>
+<InfoDialog infoIsOpen={open} {title} on:closed={() => (open = false)}>
   {content}
-</Dialog.Alert>
+</InfoDialog>

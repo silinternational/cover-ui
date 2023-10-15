@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Breadcrumb, CardsGrid, ClaimsTable, ItemsTable, Row, Strikes, CustomerReport } from 'components'
+import { Breadcrumb, CardsGrid, ClaimsTable, InfoDialog, ItemsTable, Row, Strikes, CustomerReport } from 'components'
 import { isLoadingById, loading } from 'components/progress'
 import CopyTableButton from '../../components/Datatable/CopyTableButton.svelte'
 import { Claim, claimIsOpen, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
@@ -27,7 +27,16 @@ import {
   settingsPolicy,
 } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
-import { Button, Checkbox, Datatable, isAboveMobile, isAboveTablet, Page, Switch } from '@silintl/ui-components'
+import {
+  Button,
+  Checkbox,
+  Datatable,
+  IconButton,
+  isAboveMobile,
+  isAboveTablet,
+  Page,
+  Switch,
+} from '@silintl/ui-components'
 import { generateRandomID } from '@silintl/ui-components/random'
 import { onMount } from 'svelte'
 
@@ -36,6 +45,7 @@ export let policyId: string
 let policy = {} as Policy
 let showAllClaims = false
 let hideInactive = false
+let infoIsOpen = false
 const uniqueTableClass = generateRandomID('items-table-')
 
 onMount(() => {
@@ -62,7 +72,11 @@ $: openClaimCount = recentClaims.filter(claimIsOpen).length
 $: policyName = getNameOfPolicy(policy)
 $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))
 $: coverage = formatMoney(approvedItems.reduce((sum, item) => sum + item.coverage_amount, 0))
-$: premium = formatMoney(approvedItems.reduce((sum, item) => sum + item.annual_premium, 0))
+$: premium = formatMoney(
+  approvedItems.reduce((sum, item) => (item.billing_period === 1 ? sum : sum + item.annual_premium), 0)
+)
+$: monthlyPremiumsSum = approvedItems.reduce((sum, item) => sum + item.monthly_premium, 0)
+$: monthlyPremiumSumsString = formatMoney(monthlyPremiumsSum)
 $: entityCode = policy.entity_code?.code
 $: numberOfItemsNotShown = items.length - itemsForTable.length
 $: gotoItemsBtnLabel = `View ${numberOfItemsNotShown} more items…`
@@ -138,6 +152,10 @@ section:not(:first-child) {
     justify-content: start;
   }
 }
+dt,
+dd {
+  height: 1.7rem;
+}
 .main-header h1 {
   grid-column: 1 / -1;
 }
@@ -185,8 +203,17 @@ section:not(:first-child) {
       <dl>
         <dt>Coverage</dt>
         <dd>{coverage}</dd>
-        <dt>Premium</dt>
+        <dt>Yearly Premium</dt>
         <dd>{premium} per year</dd>
+        {#if monthlyPremiumsSum}
+          <dt class="tw-flex tw-items-center">
+            <span> Monthly Premium</span>
+            <IconButton class="gray" icon="info" on:click={() => (infoIsOpen = true)} />
+          </dt>
+          <dd>
+            {monthlyPremiumSumsString} per month
+          </dd>
+        {/if}
         <dt>Last Updated</dt>
         <dd>{formatFriendlyDate(policy.updated_at)}</dd>
       </dl>
@@ -296,4 +323,8 @@ section:not(:first-child) {
   </section>
 
   <div class="p-2" />
+
+  <InfoDialog {infoIsOpen} title="Monthly Premiums" on:closed={() => (infoIsOpen = false)}>
+    Only some premiums are billed monthly (e.g. vehicles). Most are billed Annually.
+  </InfoDialog>
 </Page>

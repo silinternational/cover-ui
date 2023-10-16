@@ -67,7 +67,7 @@ export default {
         require('@tailwindcss/nesting'),
         require('tailwindcss'),
         require('autoprefixer'),
-      ]
+      ],
     }),
     routify({
       dynamicImports: false,
@@ -109,7 +109,7 @@ function getHtml(script, css) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet"
     ${css}
   </head>
 

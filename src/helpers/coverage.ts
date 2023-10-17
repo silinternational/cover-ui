@@ -7,7 +7,7 @@ const getMonthlyRenewalDate = (item: PolicyItem): string => {
     return startOfFutureMonth(1)
   }
 
-  if (itemIsDraft(item)) {
+  if (itemIsDraft(item) || itemIsPending(item)) {
     if (isBeforeMonthlyCutoff()) {
       return startOfFutureMonth(1)
     } else {

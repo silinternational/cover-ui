@@ -41,7 +41,7 @@ const dispatch = createEventDispatcher<{
 let accountablePersonId = ''
 let categoryId = ''
 let country = ''
-let marketValueUSD: number | string | undefined
+let coverageAmountUSD: number | string | undefined
 let coverageStatus: ItemCoverageStatus
 let itemDescription = ''
 let inStorage = false
@@ -68,7 +68,7 @@ $: make,
   model,
   itemDescription,
   uniqueIdentifier,
-  marketValueUSD,
+  coverageAmountUSD,
   year,
   accountablePersonId && categoryId && name && debouncedSave()
 $: selectedCategory = $categories.find((c) => c.id === categoryId)
@@ -92,7 +92,7 @@ const getFormData = (): NewItemFormData => {
     accountablePersonId,
     categoryId,
     country,
-    marketValueUSD,
+    coverageAmountUSD,
     coverageStatus,
     itemDescription,
     inStorage,
@@ -158,7 +158,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
   accountablePersonId = item.accountable_person?.id || user.id
   categoryId = item.category?.id || categoryId
   country = item.country || country
-  marketValueUSD = Number.isInteger(item.coverage_amount) ? String(item.coverage_amount / 100) : undefined
+  coverageAmountUSD = Number.isInteger(item.coverage_amount) ? String(item.coverage_amount / 100) : undefined
   coverageStatus = item.coverage_status || coverageStatus
   itemDescription = item.description || itemDescription
   inStorage = typeof item.in_storage === 'boolean' ? item.in_storage : false
@@ -252,7 +252,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
   <div>
     <MoneyInput
       label="Coverage value (USD)"
-      bind:value={marketValueUSD}
+      bind:value={coverageAmountUSD}
       disabled={marketValueIsDisabled}
     />
     <Description>

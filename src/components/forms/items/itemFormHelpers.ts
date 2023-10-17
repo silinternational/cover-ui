@@ -24,10 +24,10 @@ export const validateForSave = (formData: NewItemFormData | UpdateItemFormData):
 
 export const validateForSubmit = (item: PolicyItem, formData: NewItemFormData | UpdateItemFormData, isVehicle: boolean): void => {
   validateForSave(formData)
-  assertIsLessOrEqual(0.01, Number(formData.marketValueUSD), 'Please specify the coverage value')
+  assertIsLessOrEqual(0.01, Number(formData.coverageAmountUSD), 'Please specify the coverage value')
   item.coverage_status !== ItemCoverageStatus.Draft &&
     assertIsLessOrEqual(
-      Number(formData.marketValueUSD) * 100,
+      Number(formData.coverageAmountUSD) * 100,
       item.coverage_amount,
       'Coverage amount cannot be increased'
     )

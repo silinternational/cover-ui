@@ -364,6 +364,10 @@ export const itemIsInactive = (item: PolicyItem): boolean => {
   return item.coverage_status === ItemCoverageStatus.Inactive
 }
 
+export const itemIsPending = (item: PolicyItem): boolean => {
+  return item.coverage_status === ItemCoverageStatus.Pending
+}
+
 export const assignItems = (newMemberId: string, policyId: string, selectedPolicyMemberId: string): void => {
   const items = getItemsAccountablePersonIsOn(selectedPolicyMemberId, policyId)
   items.forEach((item) => {

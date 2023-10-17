@@ -1,4 +1,4 @@
-import { BillingPeriod, itemIsDraft, itemIsApproved, MonthlyCutoffDay, PolicyItem } from 'data/items'
+import { BillingPeriod, itemIsDraft, itemIsApproved, itemIsPending, MonthlyCutoffDay, PolicyItem } from 'data/items'
 import { formatDate, isMeaningfulDateString, startOfFutureMonth } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 
@@ -47,7 +47,7 @@ export const getStartDate = (item: PolicyItem): string => {
     return formatDate(item.coverage_start_date)
   }
 
-  if (itemIsDraft(item)) {
+  if (itemIsDraft(item) || itemIsPending(item)) {
     return '(when approved)'
   }
 

@@ -279,7 +279,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
   </div>
   <p>
     <Button outlined on:click={saveForLater}>Save for later</Button>
-    {#if itemIsDraft}
+    {#if isDraft}
       <Button outlined on:click={onDelete}>Delete</Button>
       <ItemDeleteModal {open} {item} on:closed={handleDialog} />
     {/if}

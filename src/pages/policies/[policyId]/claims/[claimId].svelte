@@ -108,6 +108,7 @@ $: needsReceipt = claimStatus === ClaimStatus.Receipt
 $: needsFile = needsReceipt || isEvidenceNeeded(claimItem, claimStatus)
 $: allowDelete = needsRevision || [ClaimStatus.Receipt, ClaimStatus.Draft].includes(claimStatus)
 
+$: isRepair = payoutOption === PayoutOption.Repair
 $: needsRepairReceipt = needsReceipt && payoutOption === PayoutOption.Repair
 $: needsReplaceReceipt = needsReceipt && payoutOption === PayoutOption.Replacement
 
@@ -118,8 +119,8 @@ $: uploadLabelForButton = needsFile
   ? `upload ${getUploadLabel(claimItem, needsReceipt, receiptType, false)}`
   : 'submit changes'
 $: showUploadButton = [ClaimStatus.Receipt, ClaimStatus.Revision].includes(claimStatus) && !isAdmin
-$: moneyFormLabel = needsRepairReceipt ? 'Actual cost of repair' : 'Actual cost of replacement'
-$: receiptType = needsRepairReceipt ? ReceiptType.repair : ReceiptType.replacement
+$: moneyFormLabel = isRepair ? 'Actual cost of repair' : 'Actual cost of replacement'
+$: receiptType = isRepair ? ReceiptType.repair : ReceiptType.replacement
 $: claimFiles = claim.claim_files || ([] as ClaimFile[])
 $: maximumPayout = claim.total_payout || 0
 $: payoutLabel = claimStatus !== ClaimStatus.Paid ? 'Maximum payout (if approved)' : 'Payout'

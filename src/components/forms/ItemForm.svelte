@@ -62,7 +62,7 @@ let userCustomizedStatementName = false
 $: country = item?.accountable_person?.country || country
 $: !$catItemsInitialized && loadCategories()
 $: isDraft = itemIsDraft(item)
-$: marketValueIsDisabled = !!item.id && !isDraft && !isAdmin
+$: coverageAmountIsDisabled = !!item.id && !isDraft && !isAdmin
 $: applyBtnLabel = !item.coverage_status || isDraft ? 'review and checkout' : 'save changes'
 $: make,
   model,
@@ -253,7 +253,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
     <MoneyInput
       label="Coverage value (USD)"
       bind:value={coverageAmountUSD}
-      disabled={marketValueIsDisabled}
+      disabled={coverageAmountIsDisabled}
     />
     <Description>
       <ConvertCurrencyLink />

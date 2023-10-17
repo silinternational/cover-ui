@@ -123,7 +123,7 @@ export interface ItemFormData {
   accountablePersonId: string /*UUID*/
   categoryId: string
   country?: string
-  marketValueUSD?: number | string
+  coverageAmountUSD?: number | string
   itemDescription?: string
   inStorage?: boolean
   make?: string
@@ -186,7 +186,7 @@ export async function addItem(policyId: string, itemData: NewItemFormData): Prom
     accountable_person_id: itemData.accountablePersonId,
     category_id: itemData.categoryId,
     country: itemData.country,
-    coverage_amount: convertToCents(itemData.marketValueUSD),
+    coverage_amount: convertToCents(itemData.coverageAmountUSD),
     coverage_status: itemData.coverageStatus,
     description: itemData.itemDescription,
     in_storage: itemData.inStorage,
@@ -276,7 +276,7 @@ export async function updateItem(policyId: string, itemId: string, itemData: Upd
     accountable_person_id: itemData.accountablePersonId,
     category_id: itemData.categoryId,
     country: itemData.country,
-    coverage_amount: convertToCents(itemData.marketValueUSD),
+    coverage_amount: convertToCents(itemData.coverageAmountUSD),
     description: itemData.itemDescription,
     in_storage: itemData.inStorage,
     make: itemData.make,
@@ -370,7 +370,7 @@ export const assignItems = (newMemberId: string, policyId: string, selectedPolic
     updateItem(policyId, item.id, {
       categoryId: item.category.id,
       accountablePersonId: newMemberId,
-      marketValueUSD: item.coverage_amount / 100,
+      coverageAmountUSD: item.coverage_amount / 100,
       itemDescription: item.description,
       inStorage: item.in_storage,
       make: item.make,
@@ -387,7 +387,7 @@ export const parseItemForAddItem = (item: PolicyItem): NewItemFormData => {
     accountablePersonId: item.accountable_person.id,
     categoryId: item.category.id,
     country: item.country || item.accountable_person.country,
-    marketValueUSD: item.coverage_amount / 100,
+    coverageAmountUSD: item.coverage_amount / 100,
     itemDescription: item.description,
     inStorage: item.in_storage,
     make: item.make,

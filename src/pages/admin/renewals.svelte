@@ -1,42 +1,74 @@
 <script lang="ts">
-import { AnnualRenewalStatus, getAnnualPolicyRenewalStatus, processAnnualPolicyRenewals } from 'data/ledger'
+  import {
+    getAnnualPolicyRenewalStatus,
+    getMonthlyPolicyRenewalStatus,
+    processAnnualPolicyRenewals,
+    processMonthlyPolicyRenewals,
+    RenewalStatus
+  } from 'data/ledger'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { metatags } from '@roxi/routify'
 import { Button, Page, setNotice } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
-let isProcessing = false
-let annualStatus = {} as AnnualRenewalStatus
+let isProcessingAnnual = false
+let isProcessingMonthly = false
+let annualStatus = {} as RenewalStatus
+let monthlyStatus = {} as RenewalStatus
 
-$: disableProcessButton = isProcessing || annualStatus?.is_complete
+$: disableProcessAnnualButton = isProcessingAnnual || annualStatus?.is_complete
+$: disableProcessMonthlyButton = isProcessingMonthly || monthlyStatus?.is_complete
 
 onMount(async () => {
   annualStatus = await getAnnualPolicyRenewalStatus()
+  monthlyStatus = await getMonthlyPolicyRenewalStatus()
 })
 
-const onClickProcess = () => {
-  isProcessing = true
+const onClickProcessAnnual = () => {
+  isProcessingAnnual = true
   processAnnualPolicyRenewals()
   setNotice('Annual renewal process has been started')
 }
 
-const onClickRefresh = async () => {
+const onClickProcessMonthly = () => {
+  isProcessingMonthly = true
+  processMonthlyPolicyRenewals()
+  setNotice('Monthly renewal process has been started')
+}
+
+const onClickRefreshAnnual = async () => {
   annualStatus = await getAnnualPolicyRenewalStatus()
+}
+
+const onClickRefreshMonthly = async () => {
+  monthlyStatus = await getMonthlyPolicyRenewalStatus()
 }
 
 metatags.title = formatPageTitle('Admin > Renewals')
 </script>
 
 <Page>
-  <h3>Annual renewals</h3>
-  <p>annual process for renewing coverage</p>
+  <h2>Annual Renewals</h2>
+  <p>Annual process for renewing coverage</p>
   <p>
     Number of items to renew: {annualStatus?.items_to_process?.toLocaleString() || '…'}
-    {#if isProcessing && !annualStatus.is_complete}
-      <Button class="ml-1" on:click={onClickRefresh}>refresh</Button>
+    {#if isProcessingAnnual && !annualStatus.is_complete}
+      <Button class="ml-1" on:click={onClickRefreshAnnual}>refresh</Button>
     {/if}
   </p>
   <div class="my-1">
-    <Button raised on:click={onClickProcess} disabled={disableProcessButton}>process</Button>
+    <Button raised on:click={onClickProcessAnnual} disabled={disableProcessAnnualButton}>process</Button>
+  </div>
+
+  <h2>Monthly Renewals</h2>
+  <p>Monthly process for renewing coverage</p>
+  <p>
+    Number of items to renew: {monthlyStatus?.items_to_process?.toLocaleString() || '…'}
+    {#if isProcessingMonthly && !monthlyStatus.is_complete}
+      <Button class="ml-1" on:click={onClickRefreshMonthly}>refresh</Button>
+    {/if}
+  </p>
+  <div class="my-1">
+    <Button raised on:click={onClickProcessMonthly} disabled={disableProcessMonthlyButton}>process</Button>
   </div>
 </Page>

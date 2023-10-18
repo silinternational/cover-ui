@@ -138,7 +138,7 @@ export async function createPolicyLedgerReport(
   policyId: string,
   type: LedgerReportType,
   month: number,
-  year: number
+  year: number,
 ): Promise<LedgerReport> {
   const params = {
     type,
@@ -156,10 +156,10 @@ export async function reconcileLedgerReport(reportId: string): Promise<LedgerRep
   return await UPDATE(`ledger-reports/${reportId}`)
 }
 
-export async function processPolicyRenewals(): Promise<void> {
+export async function processAnnualPolicyRenewals(): Promise<void> {
   return await CREATE('ledger-reports/annual')
 }
 
-export async function getPolicyRenewalStatus(): Promise<AnnualRenewalStatus> {
+export async function getAnnualPolicyRenewalStatus(): Promise<AnnualRenewalStatus> {
   return await GET('ledger-reports/annual')
 }

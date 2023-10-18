@@ -1,5 +1,5 @@
 <script lang="ts">
-import { AnnualRenewalStatus, getPolicyRenewalStatus, processPolicyRenewals } from 'data/ledger'
+import { AnnualRenewalStatus, getAnnualPolicyRenewalStatus, processAnnualPolicyRenewals } from 'data/ledger'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { metatags } from '@roxi/routify'
 import { Button, Page, setNotice } from '@silintl/ui-components'
@@ -11,17 +11,17 @@ let status = {} as AnnualRenewalStatus
 $: disableProcessButton = isProcessing || status?.is_complete
 
 onMount(async () => {
-  status = await getPolicyRenewalStatus()
+  status = await getAnnualPolicyRenewalStatus()
 })
 
 const onClickProcess = () => {
   isProcessing = true
-  processPolicyRenewals()
+  processAnnualPolicyRenewals()
   setNotice('Annual renewal process has been started')
 }
 
 const onClickRefresh = async () => {
-  status = await getPolicyRenewalStatus()
+  status = await getAnnualPolicyRenewalStatus()
 }
 
 metatags.title = formatPageTitle('Admin > Renewals')

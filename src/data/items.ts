@@ -266,7 +266,7 @@ export async function submitItem(itemId: string): Promise<void> {
  * @param {Object} itemData
  * @return {Object}
  */
-export async function updateItem(policyId: string, itemId: string, itemData: UpdateItemFormData): Promise<PolicyItem> {
+export async function updateItem(policyId: string, itemId: string, itemData: UpdateItemFormData): Promise<void> {
   if (!itemId) {
     throwError('item id not set')
   }
@@ -298,8 +298,6 @@ export async function updateItem(policyId: string, itemId: string, itemData: Upd
     data[policyId] = items
     return data
   })
-
-  return updatedItem
 }
 
 /**
@@ -374,7 +372,7 @@ export const assignItems = async (
   newMemberId: string,
   policyId: string,
   selectedPolicyMemberId: string,
-): Promise<PolicyItem[]> => {
+): Promise<void> => {
   const promises = []
   const items = getItemsAccountablePersonIsOn(selectedPolicyMemberId, policyId)
   for (const item of items) {
@@ -394,7 +392,7 @@ export const assignItems = async (
     )
   }
 
-  return await Promise.all(promises)
+  await Promise.all(promises)
 }
 
 export const parseItemForAddItem = (item: PolicyItem): NewItemFormData => {

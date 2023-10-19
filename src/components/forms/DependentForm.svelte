@@ -115,9 +115,6 @@ const onClickRemove = (event: Event) => {
 
 const onRemove = async (e: CustomEvent) => {
   const personIdToAssign = e.detail
-  if (personIdToAssign) {
-    await assignItems(personIdToAssign, policyId, formData.id)
-  }
 
   dispatch('remove', { personIdToRemove: formData.id, personIdToAssign })
   removeModalIsOpen = false

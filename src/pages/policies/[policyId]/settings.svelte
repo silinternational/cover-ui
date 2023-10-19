@@ -173,7 +173,7 @@ const onCancelModal = () => {
 const onRemoveDependent = async (event: CustomEvent) => {
   const { personIdToAssign, personIdToRemove } = event.detail
   if (personIdToAssign) {
-    await assignItems(personIdToAssign, policyId, personIdToAssign)
+    await assignItems(personIdToAssign, policyId, personIdToRemove)
   }
   deleteDependent(policyId, personIdToRemove)
   showAddDependentModal = false

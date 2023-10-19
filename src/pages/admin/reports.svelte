@@ -1,7 +1,14 @@
 <script lang="ts">
 import CreateReportModal from './_components/CreateReportModal.svelte'
 import { FileLink } from 'components'
-import { createLedgerReport, getLedgerReportById, getLedgerReports, LedgerReports } from 'data/ledger'
+import {
+  createLedgerReport,
+  getLedgerReportById,
+  getLedgerReports,
+  LedgerReport,
+  LedgerReports
+} from 'data/ledger'
+import { compare } from 'helpers/sort'
 import { formatDateAndTime, formatFriendlyDate } from 'helpers/dates'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { reportDetails } from 'helpers/routes'
@@ -10,10 +17,15 @@ import { onMount } from 'svelte'
 import { Button, Datatable, Page } from '@silintl/ui-components'
 
 let modalOpen = false
+let sortedReports: LedgerReport[] = []
+
+$: sortedReports = $LedgerReports.sort(byCreationTime)
 
 metatags.title = formatPageTitle('Admin > Reports')
 
 onMount(getLedgerReports)
+
+const byCreationTime = (a: LedgerReport, b: LedgerReport) => compare(a.created_at, b.created_at, false)
 
 async function createReport(e: CustomEvent) {
   modalOpen = false
@@ -41,7 +53,7 @@ function getReport(reportId: string) {
       <Datatable.Header.Item>File</Datatable.Header.Item>
     </Datatable.Header>
     <Datatable.Data>
-      {#each $LedgerReports as report (report.id)}
+      {#each sortedReports as report (report.id)}
         <Datatable.Data.Row on:click={() => $goto(reportDetails(report.id))} clickable>
           <Datatable.Data.Row.Item>{report.type || ''}</Datatable.Data.Row.Item>
           <Datatable.Data.Row.Item>{formatFriendlyDate(report.date)}</Datatable.Data.Row.Item>

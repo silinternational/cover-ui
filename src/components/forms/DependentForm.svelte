@@ -112,11 +112,17 @@ const onClickRemove = (event: Event) => {
   event.preventDefault()
   removeModalIsOpen = true
 }
-const onRemove = (event: Event) => {
-  event.preventDefault()
-  dispatch('remove', formData.id)
+
+const onRemove = async (e: CustomEvent) => {
+  const personIdToAssign = e.detail
+  if (personIdToAssign) {
+    await assignItems(personIdToAssign, policyId, formData.id)
+  }
+
+  dispatch('remove', { personIdToRemove: formData.id, personIdToAssign })
   removeModalIsOpen = false
 }
+
 const onSubmit = () => {
   if (isHouseholdPolicy) {
     const isChild: boolean = formData.relationship === 'Child'
@@ -133,10 +139,6 @@ const onSubmit = () => {
 }
 
 const onChosen = (event: CustomEvent) => (formData.country = event.detail)
-
-const onAssign = (e: CustomEvent) => {
-  assignItems(e.detail, policyId, dependent.id)
-}
 </script>
 
 <style>
@@ -219,6 +221,5 @@ const onAssign = (e: CustomEvent) => {
     on:gotoItems={() => $goto(ITEMS)}
     on:cancel={() => (removeModalIsOpen = false)}
     on:closed={() => (removeModalIsOpen = false)}
-    on:assign={onAssign}
   />
 </div>

@@ -266,7 +266,7 @@ export async function submitItem(itemId: string): Promise<void> {
  * @param {Object} itemData
  * @return {Object}
  */
-export async function updateItem(policyId: string, itemId: string, itemData: UpdateItemFormData): Promise<void> {
+export async function updateItem(policyId: string, itemId: string, itemData: UpdateItemFormData): Promise<PolicyItem> {
   if (!itemId) {
     throwError('item id not set')
   }
@@ -298,6 +298,8 @@ export async function updateItem(policyId: string, itemId: string, itemData: Upd
     data[policyId] = items
     return data
   })
+
+  return updatedItem
 }
 
 /**
@@ -368,22 +370,31 @@ export const itemIsPending = (item: PolicyItem): boolean => {
   return item.coverage_status === ItemCoverageStatus.Pending
 }
 
-export const assignItems = (newMemberId: string, policyId: string, selectedPolicyMemberId: string): void => {
+export const assignItems = async (
+  newMemberId: string,
+  policyId: string,
+  selectedPolicyMemberId: string,
+): Promise<PolicyItem[]> => {
+  const promises = []
   const items = getItemsAccountablePersonIsOn(selectedPolicyMemberId, policyId)
-  items.forEach((item) => {
-    updateItem(policyId, item.id, {
-      categoryId: item.category.id,
-      accountablePersonId: newMemberId,
-      coverageAmountUSD: item.coverage_amount / 100,
-      itemDescription: item.description,
-      inStorage: item.in_storage,
-      make: item.make,
-      model: item.model,
-      name: item.name,
-      riskCategoryId: item.risk_category.id,
-      uniqueIdentifier: item.serial_number,
-    })
-  })
+  for (const item of items) {
+    promises.push(
+      updateItem(policyId, item.id, {
+        categoryId: item.category.id,
+        accountablePersonId: newMemberId,
+        coverageAmountUSD: item.coverage_amount / 100,
+        itemDescription: item.description,
+        inStorage: item.in_storage,
+        make: item.make,
+        model: item.model,
+        name: item.name,
+        riskCategoryId: item.risk_category.id,
+        uniqueIdentifier: item.serial_number,
+      }),
+    )
+  }
+
+  return await Promise.all(promises)
 }
 
 export const parseItemForAddItem = (item: PolicyItem): NewItemFormData => {

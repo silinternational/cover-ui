@@ -12,7 +12,6 @@ export type DependentFormData = {
 </script>
 
 <script lang="ts">
-import { assignItems } from 'data/items'
 import { MAX_INPUT_LENGTH as maxlength, MAX_TEXT_AREA_LENGTH } from 'components/const'
 import CountrySelector from '../CountrySelector.svelte'
 import type { PolicyDependent } from 'data/dependents'

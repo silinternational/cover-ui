@@ -24,13 +24,10 @@ const onEdit = () => {
 
 const onDelete = async (event: CustomEvent<string>) => {
   //don't await this or item will be undefined before the page navigates
-  deleteItem(policyId, event.detail).then(
-    () => null,
-    (e) => {
-      setNotice('There was an error deleting item')
-      console.error(e)
-    }
-  )
+  deleteItem(policyId, event.detail).catch((e) => {
+    setNotice('There was an error deleting item')
+    console.error(e)
+  })
 
   $goto(items(policyId))
 }

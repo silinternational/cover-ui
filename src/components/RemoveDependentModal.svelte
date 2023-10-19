@@ -31,7 +31,7 @@ const allTheButtons: Dialog.AlertButton[] = [
 
 $: buttons = selectedAccountablePersonOption || radioValue === 'no-one' ? allTheButtons : cancelButton
 
-const dispatch = createEventDispatcher<{ remove: string; assign: string }>()
+const dispatch = createEventDispatcher<{ remove: string }>()
 
 const handleDialog = (e: CustomEvent) => {
   if (e.detail === 'remove') {

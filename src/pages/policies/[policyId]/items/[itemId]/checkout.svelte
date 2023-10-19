@@ -22,7 +22,7 @@ const onEdit = () => {
 }
 
 const onDelete = async (event: CustomEvent<string>) => {
-  await deleteItem(policyId, event.detail)
+  deleteItem(policyId, event.detail) //don't await this or item will be undefined before the page navigates
   $goto(items(policyId))
 }
 

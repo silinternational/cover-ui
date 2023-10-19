@@ -11,7 +11,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { IconButton, StaticChip } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
-export let item: PolicyItem
+export let item = {} as PolicyItem
 export let isCheckingOut: boolean = false
 export let policyId: string
 export let isAdmin: boolean = false
@@ -45,7 +45,7 @@ $: teamDetails = {
   'Internal Account': policy.account,
 }
 $: minimumDeductible = item?.category?.minimum_deductible
-$: minimumDeductibleDescription = (minimumDeductible > 1) ? `(subject to ${formatMoney(minimumDeductible)} minimum)` : ''
+$: minimumDeductibleDescription = minimumDeductible > 1 ? `(subject to ${formatMoney(minimumDeductible)} minimum)` : ''
 $: moneyDetails = {
   Value: formatMoney(item.coverage_amount),
   Premium: getPremiumDescription(item),

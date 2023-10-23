@@ -6,7 +6,6 @@ import { itemDetails, items, itemEdit } from 'helpers/routes'
 import { goto, metatags, params } from '@roxi/routify'
 import { Page, setNotice } from '@silintl/ui-components'
 import { onMount } from 'svelte'
-import { set } from 'date-fns'
 
 export let itemId: string
 

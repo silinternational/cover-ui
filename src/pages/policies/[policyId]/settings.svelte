@@ -170,8 +170,12 @@ const onDependentModalClosed = () => {
 const onCancelModal = () => {
   showAddDependentModal = false
 }
-const onRemoveModal = (event: CustomEvent<string>) => {
-  deleteDependent(policyId, event.detail)
+const onRemoveDependent = async (event: CustomEvent) => {
+  const { personIdToAssign, personIdToRemove } = event.detail
+  if (personIdToAssign) {
+    await assignItems(personIdToAssign, policyId, personIdToRemove)
+  }
+  deleteDependent(policyId, personIdToRemove)
   showAddDependentModal = false
 }
 const hasNotBeenInvited = (email: string): boolean =>
@@ -210,10 +214,12 @@ const editDependent = (e: CustomEvent) => {
   showAddDependentModal = true
 }
 
-const onRemove = (policyUserId: string) => deletePolicyMember(policyUserId)
-
-const onAssign = (e: CustomEvent) => {
-  assignItems(e.detail, policyId, selectedPolicyMember.id)
+const onRemoveMember = async (e: CustomEvent) => {
+  const personIdToAssign = e.detail
+  if (personIdToAssign) {
+    await assignItems(personIdToAssign, policyId, selectedPolicyMember.id)
+  }
+  deletePolicyMember(selectedPolicyMember.policy_user_id)
 }
 
 const getEntityChoice = (entityCode: string) => {
@@ -336,7 +342,7 @@ div {
         {policyId}
         on:submit={onSubmitModal}
         on:cancel={onCancelModal}
-        on:remove={onRemoveModal}
+        on:remove={onRemoveDependent}
       />
     {/if}
   </Dialog.Alert>
@@ -345,10 +351,9 @@ div {
     policyMember={selectedPolicyMember}
     {policyId}
     open={removeModalIsOpen}
-    on:remove={() => onRemove(selectedPolicyMember.policy_user_id)}
+    on:remove={onRemoveMember}
     on:gotoItems={() => $goto(ITEMS)}
     on:cancel={() => (removeModalIsOpen = false)}
     on:closed={() => (removeModalIsOpen = false)}
-    on:assign={onAssign}
   />
 </Page>

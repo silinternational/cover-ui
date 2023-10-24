@@ -10,9 +10,15 @@ export const formatMoney = (cents: number | undefined): string => {
     return ''
   }
   if (!cents || !Number.isFinite(+cents)) {
-    return '$0.00'
+    cents = 0
   }
-  const convertToDollars = (cents: number) => '$' + Number(cents / 100).toFixed(2)
+
+  const convertToDollars = (cents: number): string => {
+    return Number(cents / 100).toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    })
+  }
 
   return cents >= 0 ? convertToDollars(cents) : `(${convertToDollars(cents * -1)})`
 }

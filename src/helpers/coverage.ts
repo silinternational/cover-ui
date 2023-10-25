@@ -65,3 +65,4 @@ export const isBeforeMonthlyCutoff = (): boolean => {
 }
 
 export const isMonthly = (item: PolicyItem) => item.billing_period === BillingPeriod.Monthly
+export const isYearly = (item: PolicyItem) => item.billing_period === BillingPeriod.Yearly

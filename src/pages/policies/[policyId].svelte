@@ -72,11 +72,13 @@ $: openClaimCount = recentClaims.filter(claimIsOpen).length
 $: policyName = getNameOfPolicy(policy)
 $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))
 $: coverage = formatMoney(approvedItems.reduce((sum, item) => sum + item.coverage_amount, 0))
-$: premium = formatMoney(
+
+$: annualPremium = formatMoney(
   approvedItems.reduce((sum, item) => (item.billing_period === 1 ? sum : sum + item.annual_premium), 0)
 )
 $: monthlyPremiumsSum = approvedItems.reduce((sum, item) => sum + item.monthly_premium, 0)
 $: monthlyPremiumSumsString = formatMoney(monthlyPremiumsSum)
+
 $: entityCode = policy.entity_code?.code
 $: numberOfItemsNotShown = items.length - itemsForTable.length
 $: gotoItemsBtnLabel = `View ${numberOfItemsNotShown} more items…`
@@ -204,7 +206,7 @@ dd {
         <dt>Coverage</dt>
         <dd>{coverage}</dd>
         <dt>Yearly Premium</dt>
-        <dd>{premium} per year</dd>
+        <dd>{annualPremium} per year</dd>
         {#if monthlyPremiumsSum}
           <dt class="tw-flex tw-items-center">
             <span> Monthly Premium</span>

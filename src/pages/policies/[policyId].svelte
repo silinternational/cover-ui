@@ -15,6 +15,7 @@ import {
 import { getNameOfPolicy, loadPolicy, Policy, PolicyType, selectedPolicy } from 'data/policies'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { isAdmin } from 'data/user'
+import { isMonthly, isYearly } from 'helpers/coverage'
 import { formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -42,6 +43,9 @@ import { onMount } from 'svelte'
 
 export let policyId: string
 
+let approvedAnnualItems: PolicyItem[] = []
+let approvedMonthlyItems: PolicyItem[] = []
+let approvedItems: PolicyItem[] = []
 let policy = {} as Policy
 let showAllClaims = false
 let hideInactive = false
@@ -73,11 +77,10 @@ $: policyName = getNameOfPolicy(policy)
 $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))
 $: coverage = formatMoney(approvedItems.reduce((sum, item) => sum + item.coverage_amount, 0))
 
-$: annualPremium = formatMoney(
-  approvedItems.reduce((sum, item) => (item.billing_period === 1 ? sum : sum + item.annual_premium), 0)
-)
-$: monthlyPremiumsSum = approvedItems.reduce((sum, item) => sum + item.monthly_premium, 0)
-$: monthlyPremiumSumsString = formatMoney(monthlyPremiumsSum)
+$: approvedAnnualItems = approvedItems.filter(isYearly)
+$: approvedMonthlyItems = approvedItems.filter(isMonthly)
+$: annualPremium = approvedAnnualItems.reduce((sum, item) => sum + item.annual_premium, 0)
+$: monthlyPremium = approvedMonthlyItems.reduce((sum, item) => sum + item.monthly_premium, 0)
 
 $: entityCode = policy.entity_code?.code
 $: numberOfItemsNotShown = items.length - itemsForTable.length
@@ -206,14 +209,14 @@ dd {
         <dt>Coverage</dt>
         <dd>{coverage}</dd>
         <dt>Yearly Premium</dt>
-        <dd>{annualPremium} per year</dd>
-        {#if monthlyPremiumsSum}
+        <dd>{formatMoney(annualPremium)} per year</dd>
+        {#if monthlyPremium > 0}
           <dt class="tw-flex tw-items-center">
             <span> Monthly Premium</span>
             <IconButton class="gray" icon="info" on:click={() => (infoIsOpen = true)} />
           </dt>
           <dd>
-            {monthlyPremiumSumsString} per month
+            {formatMoney(monthlyPremium)} per month
           </dd>
         {/if}
         <dt>Last Updated</dt>

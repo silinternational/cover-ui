@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Dialog, IconButton } from '@silintl/ui-components'
-import { InfoDialog } from '.'
+import InfoDialog from './InfoDialog.svelte'
 
 export let content = ''
 export let title = ''

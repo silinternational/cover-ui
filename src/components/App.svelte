@@ -30,8 +30,8 @@ const authenticateUser = async () => {
     })
 }
 
-$afterPageLoad((page: { path: string }) => {
-  if (!publicRoutes.includes(page.path)) {
+$afterPageLoad((page?: ClientNodeApi) => {
+  if (!publicRoutes.includes(page?.path || 'undefined')) {
     authenticateUser()
   } else {
     $showApp = true

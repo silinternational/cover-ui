@@ -34,8 +34,8 @@ $: nameOfUser = $user.id ? $user.first_name + ' ' + $user.last_name : ''
 
 onMount(() => showOrHideDrawerButton())
 
-$beforeUrlChange((event: CustomEvent, route: string, { url }: { url: string }) => {
-  currentUrl = url
+$beforeUrlChange((event?: PopStateEvent, route?: ClientNodeApi) => {
+  currentUrl = route?.path || ''
   return true
 })
 

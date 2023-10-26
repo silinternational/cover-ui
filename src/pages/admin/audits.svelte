@@ -44,7 +44,7 @@ onMount(() => {
 </script>
 
 <Page>
-  <h3>Audit results</h3>
+  <h1>Audit results</h1>
   <p>items that were incorrectly renewed and billed</p>
 
   <div class="my-1">

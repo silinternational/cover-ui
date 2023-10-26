@@ -1,8 +1,14 @@
 import { CREATE, DELETE, GET, UPDATE } from '.'
 import { throwError } from '../error'
 import { convertToCents } from 'helpers/money'
+import type { ItemCategory } from './itemCategories'
 import { selectedPolicyId } from './role-policy-selection'
 import { derived, get, writable } from 'svelte/store'
+
+export enum BillingPeriod {
+  Monthly = 1,
+  Yearly = 12,
+}
 
 export enum ItemCoverageStatus {
   Draft = 'Draft',
@@ -26,6 +32,13 @@ export const incompleteItemCoverageStatuses = [
   ItemCoverageStatus.Revision,
 ]
 
+/**
+ * The day of the month before which monthly coverage can start in the current
+ * month. See corresponding `MonthlyCutoffDay` constant in cover-api here:
+ * https://github.com/silinternational/cover-api/blob/develop/application/models/item.go
+ */
+export const MonthlyCutoffDay = 20
+
 export type AccountablePerson = {
   id: string
   name: string
@@ -42,12 +55,14 @@ export type RiskCategory = {
 export enum RiskCategoryNames {
   Stationary = 'Stationary',
   Mobile = 'Mobile',
+  Vehicle = 'Vehicle',
 }
 
 export type PolicyItem = {
   accountable_person: AccountablePerson
   annual_premium: number
-  category: any /*ItemCategory*/
+  billing_period: number /* in months, e.g. 1 or 12 */
+  category: ItemCategory
   country: string
   coverage_amount: number
   coverage_end_date: string /*Date*/
@@ -61,6 +76,7 @@ export type PolicyItem = {
   can_be_updated: boolean
   make: string
   model: string
+  monthly_premium: number
   name: string
   policy_id: string
   prorated_annual_premium: number
@@ -69,6 +85,7 @@ export type PolicyItem = {
   status_change: string
   status_reason: string
   updated_at: string /*Date*/
+  year?: number
 }
 
 export type CreatePolicyItemRequestBody = {
@@ -76,7 +93,6 @@ export type CreatePolicyItemRequestBody = {
   category_id: string
   country?: string
   coverage_amount?: number
-  coverage_start_date: string /*Date*/
   coverage_status?: ItemCoverageStatus
   description?: string
   in_storage?: boolean
@@ -85,6 +101,7 @@ export type CreatePolicyItemRequestBody = {
   name: string
   risk_category_id?: string
   serial_number?: string
+  year?: number
 }
 
 export type UpdatePolicyItemRequestBody = {
@@ -99,13 +116,14 @@ export type UpdatePolicyItemRequestBody = {
   name: string
   risk_category_id?: string
   serial_number?: string
+  year?: number
 }
 
 export interface ItemFormData {
   accountablePersonId: string /*UUID*/
   categoryId: string
   country?: string
-  marketValueUSD?: number | string
+  coverageAmountUSD?: number | string
   itemDescription?: string
   inStorage?: boolean
   make?: string
@@ -113,11 +131,10 @@ export interface ItemFormData {
   riskCategoryId?: string
   name: string
   uniqueIdentifier?: string
+  year?: number
 }
 
 export interface NewItemFormData extends ItemFormData {
-  coverageStartDate: string /*Date*/
-  coverageEndDate?: string /*Date*/
   coverageStatus?: ItemCoverageStatus
 }
 
@@ -133,7 +150,7 @@ export const selectedPolicyItems = derived(
   [itemsByPolicyId, selectedPolicyId],
   ([$itemsByPolicyId, $selectedPolicyId]) => {
     return $itemsByPolicyId[$selectedPolicyId] || []
-  }
+  },
 )
 
 /**
@@ -169,8 +186,7 @@ export async function addItem(policyId: string, itemData: NewItemFormData): Prom
     accountable_person_id: itemData.accountablePersonId,
     category_id: itemData.categoryId,
     country: itemData.country,
-    coverage_amount: convertToCents(itemData.marketValueUSD),
-    coverage_start_date: itemData.coverageStartDate,
+    coverage_amount: convertToCents(itemData.coverageAmountUSD),
     coverage_status: itemData.coverageStatus,
     description: itemData.itemDescription,
     in_storage: itemData.inStorage,
@@ -178,6 +194,7 @@ export async function addItem(policyId: string, itemData: NewItemFormData): Prom
     model: itemData.model,
     name: itemData.name,
     serial_number: itemData.uniqueIdentifier,
+    year: itemData.year,
   }
 
   const addedItem = await CREATE<PolicyItem>(urlPath, parsedItemData as any)
@@ -259,7 +276,7 @@ export async function updateItem(policyId: string, itemId: string, itemData: Upd
     accountable_person_id: itemData.accountablePersonId,
     category_id: itemData.categoryId,
     country: itemData.country,
-    coverage_amount: convertToCents(itemData.marketValueUSD),
+    coverage_amount: convertToCents(itemData.coverageAmountUSD),
     description: itemData.itemDescription,
     in_storage: itemData.inStorage,
     make: itemData.make,
@@ -267,6 +284,7 @@ export async function updateItem(policyId: string, itemId: string, itemData: Upd
     name: itemData.name,
     risk_category_id: itemData.riskCategoryId,
     serial_number: itemData.uniqueIdentifier,
+    year: itemData.year,
   }
   const updatedItem = await UPDATE<PolicyItem>(urlPath, parsedItemData)
 
@@ -338,26 +356,43 @@ export const itemIsApproved = (item: PolicyItem): boolean => {
   return item.coverage_status === ItemCoverageStatus.Approved
 }
 
+export const itemIsDraft = (item: PolicyItem): boolean => {
+  return item.coverage_status === ItemCoverageStatus.Draft
+}
+
 export const itemIsInactive = (item: PolicyItem): boolean => {
   return item.coverage_status === ItemCoverageStatus.Inactive
 }
 
-export const assignItems = (newMemberId: string, policyId: string, selectedPolicyMemberId: string): void => {
+export const itemIsPending = (item: PolicyItem): boolean => {
+  return item.coverage_status === ItemCoverageStatus.Pending
+}
+
+export const assignItems = async (
+  newMemberId: string,
+  policyId: string,
+  selectedPolicyMemberId: string,
+): Promise<void> => {
+  const promises = []
   const items = getItemsAccountablePersonIsOn(selectedPolicyMemberId, policyId)
-  items.forEach((item) => {
-    updateItem(policyId, item.id, {
-      categoryId: item.category.id,
-      accountablePersonId: newMemberId,
-      marketValueUSD: item.coverage_amount / 100,
-      itemDescription: item.description,
-      inStorage: item.in_storage,
-      make: item.make,
-      model: item.model,
-      name: item.name,
-      riskCategoryId: item.risk_category.id,
-      uniqueIdentifier: item.serial_number,
-    })
-  })
+  for (const item of items) {
+    promises.push(
+      updateItem(policyId, item.id, {
+        categoryId: item.category.id,
+        accountablePersonId: newMemberId,
+        coverageAmountUSD: item.coverage_amount / 100,
+        itemDescription: item.description,
+        inStorage: item.in_storage,
+        make: item.make,
+        model: item.model,
+        name: item.name,
+        riskCategoryId: item.risk_category.id,
+        uniqueIdentifier: item.serial_number,
+      }),
+    )
+  }
+
+  await Promise.all(promises)
 }
 
 export const parseItemForAddItem = (item: PolicyItem): NewItemFormData => {
@@ -365,8 +400,7 @@ export const parseItemForAddItem = (item: PolicyItem): NewItemFormData => {
     accountablePersonId: item.accountable_person.id,
     categoryId: item.category.id,
     country: item.country || item.accountable_person.country,
-    marketValueUSD: item.coverage_amount / 100,
-    coverageStartDate: new Date().toISOString().slice(0, 10),
+    coverageAmountUSD: item.coverage_amount / 100,
     itemDescription: item.description,
     inStorage: item.in_storage,
     make: item.make,

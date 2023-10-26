@@ -31,18 +31,19 @@ const allTheButtons: Dialog.AlertButton[] = [
 
 $: buttons = selectedAccountablePersonOption || radioValue === 'no-one' ? allTheButtons : cancelButton
 
-const dispatch = createEventDispatcher<{ remove: string; assign: string; cancel: string; closed: string }>()
+const dispatch = createEventDispatcher<{ remove: string }>()
 
 const handleDialog = (e: CustomEvent) => {
-  e.detail ? dispatch(e.detail) : dispatch('closed')
-  e.detail === 'remove' && selectedAccountablePersonOption && dispatch('assign', selectedAccountablePersonOption.id)
+  if (e.detail === 'remove') {
+    dispatch('remove', selectedAccountablePersonOption.id)
+  }
 }
 const onSelect = (e: CustomEvent) => {
   selectedAccountablePersonOption = e.detail
 }
 </script>
 
-<Dialog.Alert {open} {buttons} defaultAction="cancel" {title} on:closed={handleDialog} on:chosen={handleDialog}>
+<Dialog.Alert {open} {buttons} defaultAction="cancel" {title} on:closed on:cancel on:chosen={handleDialog}>
   {policyMember.first_name} is accountable for {numberOfItemsDependentIsOn}
   {numberOfItemsDependentIsOn === 1 ? 'item' : 'items'}.
 

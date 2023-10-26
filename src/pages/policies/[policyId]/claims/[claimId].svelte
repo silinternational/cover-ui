@@ -39,6 +39,7 @@ import {
 } from 'data/claims'
 import { addItem, loadItems, parseItemForAddItem, PolicyItem, selectedPolicyItems } from 'data/items'
 import { getNameOfPolicy, getPolicyById, loadPolicy, memberBelongsToPolicy, policies, Policy } from 'data/policies'
+import type { SecondaryClaimStatus } from 'data/states'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
@@ -70,6 +71,7 @@ let householdId: string = ''
 let claimName: string
 let policy = {} as Policy
 let claim = {} as Claim
+let minimumDeductible: number | undefined
 let revokeModalOpen = false
 let newCoverageModalOpen = false
 
@@ -82,10 +84,12 @@ $: claim = ($claims.find((clm: Claim) => clm.id === claimId) || {}) as Claim
 $: claimItem = claim.claim_items?.[0] || ({} as ClaimItem) //For now there will only be one claim_item
 $: setInitialValues(claimItem)
 $: statusText = getClaimStatusText(claim, claimItem)
+$: claimStatusSecondary = `${claimStatus}Secondary` as SecondaryClaimStatus
 
 $: items = $selectedPolicyItems
 $: policyId && loadItems(policyId)
 $: item = items.find((itm) => itm.id === claimItem.item_id) || ({} as PolicyItem)
+$: minimumDeductible = item?.category?.minimum_deductible
 
 $: isMemberOfPolicy = memberBelongsToPolicy($user.id, $policies, policyId)
 
@@ -104,18 +108,19 @@ $: needsReceipt = claimStatus === ClaimStatus.Receipt
 $: needsFile = needsReceipt || isEvidenceNeeded(claimItem, claimStatus)
 $: allowDelete = needsRevision || [ClaimStatus.Receipt, ClaimStatus.Draft].includes(claimStatus)
 
+$: isRepair = payoutOption === PayoutOption.Repair
 $: needsRepairReceipt = needsReceipt && payoutOption === PayoutOption.Repair
 $: needsReplaceReceipt = needsReceipt && payoutOption === PayoutOption.Replacement
 
-$: filePurpose = getFilePurpose(claimItem, needsReceipt) as ClaimFilePurpose
+$: filePurpose = getFilePurpose(claimItem, needsReceipt) as ClaimFilePurpose | ''
 $: noFilesUploaded = !isFileUploadedByPurpose(filePurpose, claimFiles)
 $: uploadLabel = getUploadLabel(claimItem, needsReceipt, receiptType)
 $: uploadLabelForButton = needsFile
   ? `upload ${getUploadLabel(claimItem, needsReceipt, receiptType, false)}`
   : 'submit changes'
 $: showUploadButton = [ClaimStatus.Receipt, ClaimStatus.Revision].includes(claimStatus) && !isAdmin
-$: moneyFormLabel = needsRepairReceipt ? 'Actual cost of repair' : 'Actual cost of replacement'
-$: receiptType = needsRepairReceipt ? ReceiptType.repair : ReceiptType.replacement
+$: moneyFormLabel = isRepair ? 'Actual cost of repair' : 'Actual cost of replacement'
+$: receiptType = isRepair ? ReceiptType.repair : ReceiptType.replacement
 $: claimFiles = claim.claim_files || ([] as ClaimFile[])
 $: maximumPayout = claim.total_payout || 0
 $: payoutLabel = claimStatus !== ClaimStatus.Paid ? 'Maximum payout (if approved)' : 'Payout'
@@ -252,7 +257,7 @@ const getClaimStatusText = (claim: Claim, item: ClaimItem) => {
   return statusChangeStr + updatedAtStr
 }
 
-const isFileUploadedByPurpose = (purpose: ClaimFilePurpose, files: ClaimFile[]): boolean => {
+const isFileUploadedByPurpose = (purpose: ClaimFilePurpose | '', files: ClaimFile[]): boolean => {
   return files.filter((file) => file.purpose === purpose).length > 0
 }
 
@@ -291,7 +296,7 @@ const onReCover = async () => {
       <Breadcrumb links={breadcrumbLinks} />
     </Row>
     <Row cols="3">
-      <h2 class="break-word my-1">{item.name || ''}</h2>
+      <h2 class="tw-break-words my-1">{item.name || ''}</h2>
 
       <b>Covered value</b>
       <div>{formatMoney(claimItem.coverage_amount)}</div>
@@ -323,21 +328,25 @@ const onReCover = async () => {
     <Row cols="9">
       <ClaimBanner {claimStatus} roleSelection={$roleSelection} {receiptType}>{statusText}</ClaimBanner>
       {#if showSecondaryBanner}
-        <ClaimBanner claimStatus={`${claimStatus}Secondary`} roleSelection={$roleSelection} class="mt-4px">
+        <ClaimBanner claimStatus={claimStatusSecondary} roleSelection={$roleSelection} class="mt-4px">
           Upload {uploadLabel} to get reimbursed.
         </ClaimBanner>
       {/if}
       {#if showRevisionMessage}
         <MessageBanner class="mt-4px">{claim.status_reason}</MessageBanner>
       {/if}
-      <p class="break-word">
+      <p class="tw-break-words">
         {claim.incident_description || ''}
       </p>
       <div>
         <h2>Resolution</h2>
         <h3>{payoutOption || 'No payout option selected'}</h3>
         {#if payoutOption == PayoutOption.Replacement}
-          <p>Payout is the item’s covered value or replacement cost, whichever is less, minus a 5% deductible.</p>
+          {#if minimumDeductible}
+            <p>Payout is the item’s covered value or replacement cost, whichever is less, minus the greater of a {formatMoney(minimumDeductible)} minimum or 5% of claimed loss.</p>
+          {:else}
+            <p>Payout is the item’s covered value or replacement cost, whichever is less, minus a 5% deductible.</p>
+          {/if}
         {/if}
       </div>
       <p>

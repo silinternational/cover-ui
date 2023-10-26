@@ -34,7 +34,7 @@ $: metatags.title = formatPageTitle('Items > New')
 $: item.id && $redirect(itemsNewQs(policyId, item.id))
 $: $selectedPolicy.type === PolicyType.Household && !$selectedPolicy.household_id && (open = true)
 
-$: $params.itemId && (item = $selectedPolicyItems.find((i) => i.id === $params.itemId) || {})
+$: $params.itemId && (item = $selectedPolicyItems.find((i) => i.id === $params.itemId) || ({} as PolicyItem))
 $: breadcrumbLinks = [
   { name: 'Items', url: itemsRoute(policyId) },
   { name: 'New', url: item.id ? itemsNewQs(policyId, item.id) : itemsNew(policyId) },
@@ -48,7 +48,7 @@ const onApply = async (event: CustomEvent) => {
 
 const onSaveForLater = async (event: CustomEvent) => {
   const itemData: UpdateItemFormData = event.detail
-  saveOrAddItem(itemData)
+  await saveOrAddItem(itemData)
 
   if (!event.detail.isAutoSaving) {
     $goto(HOME)
@@ -77,6 +77,7 @@ const onClosed = async (event: CustomEvent<any>) => {
 
 <Page>
   <Breadcrumb links={breadcrumbLinks} />
+  <h1>Add Item</h1>
   <ItemForm {item} {policyId} on:submit={onApply} on:save-for-later={onSaveForLater} />
   <NoHouseholdIdModal {open} on:closed={onClosed} />
 </Page>

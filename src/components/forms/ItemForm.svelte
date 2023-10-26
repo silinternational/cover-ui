@@ -3,16 +3,23 @@ import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
 import Description from '../Description.svelte'
 import MakeAndModelModal from '../MakeAndModelModal.svelte'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
+import YearInput from '../YearInput.svelte'
 import { MAX_TEXT_AREA_LENGTH } from 'components/const'
 import type { AccountablePersonOptions } from 'data/accountablePersons'
-import { ItemCoverageStatus, NewItemFormData, PolicyItem, RiskCategoryNames, UpdateItemFormData } from 'data/items'
+import {
+  itemIsDraft,
+  ItemCoverageStatus,
+  NewItemFormData,
+  PolicyItem,
+  RiskCategoryNames,
+  UpdateItemFormData
+} from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
 import user, { isAdmin, User } from 'data/user'
-import { areMakeAndModelRequired, validateForSubmit, validateForSave } from './items/itemFormHelpers'
+import { areMakeAndModelRequired, assembleStatementNameDefault, validateForSubmit, validateForSave } from './items/itemFormHelpers'
 import SelectAccountablePerson from '../SelectAccountablePerson.svelte'
-import TextFieldWithLabel from '../TextFieldWithLabel.svelte'
 import { debounce } from 'lodash-es'
-import { Button, Card, Form, MoneyInput, Select, TextArea } from '@silintl/ui-components'
+import { Button, Card, Form, MoneyInput, Select, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 
 export let item = {} as PolicyItem
@@ -34,9 +41,7 @@ const dispatch = createEventDispatcher<{
 let accountablePersonId = ''
 let categoryId = ''
 let country = ''
-let marketValueUSD: number | string | undefined
-let coverageEndDate = ''
-let coverageStartDate = ''
+let coverageAmountUSD: number | string | undefined
 let coverageStatus: ItemCoverageStatus
 let itemDescription = ''
 let inStorage = false
@@ -45,26 +50,32 @@ let model = ''
 let riskCategoryId = ''
 let name = ''
 let uniqueIdentifier = ''
+let year: number | undefined
 
 // Set initial values based on the provided item data.
 $: setInitialValues($user, item)
 
 let initialCategoryId: string
-let today = new Date()
+let statementNameDefault = ''
+let userCustomizedStatementName = false
 
 $: country = item?.accountable_person?.country || country
 $: !$catItemsInitialized && loadCategories()
-$: itemIsDraft = item.coverage_status === ItemCoverageStatus.Draft
-$: marketValueIsDisabled = !!item.id && !itemIsDraft && !isAdmin
-$: applyBtnLabel = !item.coverage_status || itemIsDraft ? 'review and checkout' : 'save changes'
+$: isDraft = itemIsDraft(item)
+$: coverageAmountIsDisabled = !!item.id && !isDraft && !isAdmin
+$: applyBtnLabel = !item.coverage_status || isDraft ? 'review and checkout' : 'save changes'
 $: make,
   model,
   itemDescription,
   uniqueIdentifier,
-  marketValueUSD,
+  coverageAmountUSD,
+  year,
   accountablePersonId && categoryId && name && debouncedSave()
-$: selectedCategoryIsStationary =
-  $categories.find((c) => c.id === categoryId)?.risk_category?.name === RiskCategoryNames.Stationary
+$: selectedCategory = $categories.find((c) => c.id === categoryId)
+$: selectedCategoryIsStationary = selectedCategory?.risk_category?.name === RiskCategoryNames.Stationary
+$: selectedCategoryIsVehicle = selectedCategory?.risk_category?.name === RiskCategoryNames.Vehicle
+$: statementNameDefault = assembleStatementNameDefault(make, model, year, uniqueIdentifier)
+$: !userCustomizedStatementName && (name = statementNameDefault)
 
 const debouncedSave = debounce(() => saveForLater(undefined, true), 4000)
 
@@ -81,9 +92,7 @@ const getFormData = (): NewItemFormData => {
     accountablePersonId,
     categoryId,
     country,
-    marketValueUSD,
-    coverageEndDate,
-    coverageStartDate,
+    coverageAmountUSD,
     coverageStatus,
     itemDescription,
     inStorage,
@@ -92,6 +101,7 @@ const getFormData = (): NewItemFormData => {
     name,
     riskCategoryId,
     uniqueIdentifier,
+    year,
   }
 }
 
@@ -107,7 +117,7 @@ const onCategorySelectPopulated = () => {
 
 const onSubmit = () => {
   formData = getFormData()
-  validateForSubmit(item, formData)
+  validateForSubmit(item, formData, selectedCategoryIsVehicle)
   if (!(make && model) && areMakeAndModelRequired(item, categoryId)) {
     makeModelIsOpen = true
   } else {
@@ -139,13 +149,16 @@ const onMakeModelClosed = (event: CustomEvent<string>) => {
   event.detail === 'submit' && dispatch('submit', formData)
 }
 
+const onStatementNameInput = (event: InputEvent) => {
+  const inputElement = event.target as HTMLInputElement
+  userCustomizedStatementName = (inputElement.value !== '');
+}
+
 const setInitialValues = (user: User, item: PolicyItem) => {
   accountablePersonId = item.accountable_person?.id || user.id
   categoryId = item.category?.id || categoryId
   country = item.country || country
-  marketValueUSD = Number.isInteger(item.coverage_amount) ? String(item.coverage_amount / 100) : undefined
-  coverageEndDate = item.coverage_end_date || coverageEndDate
-  coverageStartDate = item.coverage_start_date || today.toISOString().slice(0, 10) //api requires yyyy-mm-dd
+  coverageAmountUSD = Number.isInteger(item.coverage_amount) ? String(item.coverage_amount / 100) : undefined
   coverageStatus = item.coverage_status || coverageStatus
   itemDescription = item.description || itemDescription
   inStorage = typeof item.in_storage === 'boolean' ? item.in_storage : false
@@ -154,98 +167,119 @@ const setInitialValues = (user: User, item: PolicyItem) => {
   riskCategoryId = item.risk_category?.id || riskCategoryId
   name = item.name || name
   uniqueIdentifier = item.serial_number || uniqueIdentifier
+  year = item.year || year
+
+  const defaultName = assembleStatementNameDefault(make, model, year, uniqueIdentifier)
+  if (name && name !== defaultName) {
+    userCustomizedStatementName = true
+  }
 }
 </script>
 
 <style>
-span.label {
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-.material-icons {
-  padding-right: 0.5rem;
-  color: var(--mdc-theme-status-info);
-}
-
-.category-info {
-  color: var(--mdc-theme-status-info);
+.side-by-side > * {
+  display: inline-block;
+  margin-right: 1rem;
 }
 </style>
-
 <Form on:submit={onSubmit}>
-  <p>
-    <span class="label">
-      Category<span class="error">*</span>
-    </span>
+  <h2>About the item</h2>
+  <div class="tw-w-80 tw-max-w-full">
     <Select
-      width="360px"
-      label="Input"
+      width="100%"
+      label="Category"
       options={$categories}
       selectedID={initialCategoryId}
       on:change={onSelectCategory}
       on:populated={onCategorySelectPopulated}
     />
     {#if selectedCategoryIsStationary}
-      <Card class="w-360px mt-1" color="var(--mdc-theme-status-info-bg)">
-        <div class="flex justify-start">
-          <div class="material-icons">info</div>
-          <div class="category-info">
+      <Card class="tw-w-full mt-1" color="var(--mdc-theme-status-info-bg)">
+        <div class="flex justify-start tw-gap-2">
+          <div class="material-icons tw-text-[var(--mdc-theme-status-info)]">info</div>
+          <div class="tw-text-[var(--mdc-theme-status-info)]">
             Coverage for home electronics and appliances is intended for locations that lack access to homeowner’s or
             renter’s insurance.
           </div>
         </div>
       </Card>
     {/if}
-  </p>
-  <p>
-    <TextFieldWithLabel label="Brand" description={'For example, "Apple"'} bind:value={make} />
-  </p>
-  <p>
-    <TextFieldWithLabel label="Model" description="For example, “iPhone 10 Max 64 GB” or “A1921”" bind:value={model} />
-  </p>
-  <p>
-    <TextFieldWithLabel
-      label="Unique identifier"
-      description="Optional. Serial number, IMEI, service tag, VIN"
+  </div>
+  <div>
+    <TextField
+      label="Brand (optional)"
+      class="tw-w-80 tw-max-w-full"
+      description="e.g., Apple or Toyota"
+      bind:value={make}
+    />
+  </div>
+  <div class:side-by-side={selectedCategoryIsVehicle}>
+    <div>
+      <TextField
+        label="Model (optional)"
+        class="tw-w-80 tw-max-w-full"
+        description="e.g., iPhone 10 Max 64 GB, A1921, or Land Cruiser"
+        bind:value={model}
+      />
+    </div>
+    {#if selectedCategoryIsVehicle}
+      <div>
+        <YearInput
+          label="Year"
+          minValue={1900}
+          bind:value={year}
+        />
+      </div>
+    {/if}
+  </div>
+  <div>
+    <TextField
+      label="Serial number (optional for fast approval)"
+      class="tw-w-80 tw-max-w-full"
+      description="e.g., chassis number, VIN, IMEI, or service tag"
       bind:value={uniqueIdentifier}
     />
-  </p>
-  <p>
-    <TextFieldWithLabel
-      label="Short name"
-      description="This label will appear on your statements."
-      required
-      bind:value={name}
-    />
-  </p>
-  <p>
-    <span class="label">Notes</span>
-    <TextArea maxlength={MAX_TEXT_AREA_LENGTH} description="For your own use" bind:value={itemDescription} rows="4" />
-  </p>
-  <p>
-    <span class="label">Accountable Person<span class="error">*</span></span>
+  </div>
+  <h2>Coverage</h2>
+  <div class="tw-w-80 tw-max-w-full">
     <SelectAccountablePerson
       {policyId}
       selectedID={selectedAccountablePersonId}
       on:populated={onAccountablePersonSelectPopulated}
       on:change={onAccountablePersonChange}
     />
-    <Description>
-      Dependents are eligible. Dependents include spouses and children under 26 who haven't married or finished college.
-      Coverage for children is limited to $3,000 per household.
-    </Description>
-  </p>
-  <p>
-    <span class="label">Value to cover (USD)<span class="error">*</span></span>
-    <MoneyInput bind:value={marketValueUSD} disabled={marketValueIsDisabled} required />
+  </div>
+  <div>
+    <MoneyInput
+      label="Coverage value (USD)"
+      bind:value={coverageAmountUSD}
+      disabled={coverageAmountIsDisabled}
+    />
     <Description>
       <ConvertCurrencyLink />
     </Description>
-  </p>
+  </div>
+  <h2>For your own use</h2>
+  <div>
+    <TextField
+      label="Statement name"
+      class="tw-w-80 tw-max-w-full"
+      description="Customize what will appear on your financial statements"
+      bind:value={name}
+      on:input={onStatementNameInput}
+    />
+  </div>
+  <div class="tw-max-w-prose">
+    <TextArea
+      label="Notes (optional)"
+      maxlength={MAX_TEXT_AREA_LENGTH}
+      bind:value={itemDescription}
+      rows="4"
+    />
+  </div>
   <p>
     <Button outlined on:click={saveForLater}>Save for later</Button>
-    {#if itemIsDraft}
+    {#if isDraft}
       <Button outlined on:click={onDelete}>Delete</Button>
       <ItemDeleteModal {open} {item} on:closed={handleDialog} />
     {/if}

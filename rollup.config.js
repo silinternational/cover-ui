@@ -62,6 +62,12 @@ export default {
           includePaths: ['node_modules'],
         },
       },
+      plugins: [
+        require('postcss-import'),
+        require('@tailwindcss/nesting'),
+        require('tailwindcss'),
+        require('autoprefixer'),
+      ],
     }),
     routify({
       dynamicImports: false,
@@ -72,15 +78,11 @@ export default {
     production ? terser() : livereload('dist'),
     html({
       template: ({ files }) => {
-        const script = (files.js || [])
-          .map(({ fileName }) => `<script src='/${fileName}'></script>`)
-          .join('\n')
+        const script = (files.js || []).map(({ fileName }) => `<script src='/${fileName}'></script>`).join('\n')
 
-        const css = (files.css || [])
-          .map(({ fileName }) => `<link rel='stylesheet' href='/${fileName}'>`)
-          .join('\n')
+        const css = (files.css || []).map(({ fileName }) => `<link rel='stylesheet' href='/${fileName}'>`).join('\n')
         return getHtml(script, css)
-      }
+      },
     }),
   ],
   watch: {
@@ -88,26 +90,25 @@ export default {
   },
 }
 
-function getHtml (script, css) {
+function getHtml(script, css) {
   return `<!DOCTYPE html>
   <html lang="en">
   <head>
-    <meta charset='utf-8'>
-    <meta name='viewport' content='width=device-width,initial-scale=1'>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width,initial-scale=1' />
     <meta property="og:title" content="Cover" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://cover.sil.org/logo.svg" />
     <meta property="og:url" content="https://cover.sil.org/" />
     <title>Cover</title>
 
-    <link rel='icon' type='image/svg+xml' href='/favicon.svg'>
-    <link rel='alternate icon' type='image/png' href='/favicon.png' >
-    <link href="/manifest.json" rel="manifest">
+    <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
+    <link rel='alternate icon' type='image/png' href='/favicon.png' />
+    <link href="/manifest.json" rel="manifest" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet" />
     ${css}
   </head>
 

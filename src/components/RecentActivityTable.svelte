@@ -2,6 +2,7 @@
 import type { Claim } from 'data/claims'
 import type { PolicyItem } from 'data/items'
 import { isRecentClaim, isRecentItem, RecentChange } from 'data/recent-activity'
+import { isMonthly } from 'helpers/coverage'
 import { formatMoney } from 'helpers/money'
 import { customerClaimDetails, itemDetails } from 'helpers/routes'
 import { goto } from '@roxi/routify'
@@ -39,6 +40,11 @@ const getFormattedClaimItemPremium = (claim: Claim): string => {
   const claimItem = claim.claim_items[0]
   return formatMoney(claimItem?.item?.annual_premium)
 }
+
+const getMonthlyPremiumFromClaim = (claim: Claim): string => {
+  const claimItem = claim.claim_items[0]
+  return formatMoney(claimItem?.item?.monthly_premium)
+}
 </script>
 
 <Datatable>
@@ -58,7 +64,14 @@ const getFormattedClaimItemPremium = (claim: Claim): string => {
           <RowItem>{recentChange.Claim.status_change}</RowItem>
           <RowItem>{getClaimItemPersonName(recentChange.Claim)}</RowItem>
           <RowItem numeric>{getFormattedClaimItemValue(recentChange.Claim)}</RowItem>
-          <RowItem numeric>{getFormattedClaimItemPremium(recentChange.Claim)}</RowItem>
+          <RowItem numeric>
+            {getFormattedClaimItemPremium(recentChange.Claim)}
+            {#if isMonthly(recentChange.Claim.claim_items[0]?.item)}
+              <div>
+                <small class="tw-opacity-60">({getMonthlyPremiumFromClaim(recentChange.Claim)}/month)</small>
+              </div>
+            {/if}
+          </RowItem>
           <RowItem>Claim</RowItem>
         </DataRow>
       {:else if isRecentItem(recentChange)}
@@ -67,7 +80,14 @@ const getFormattedClaimItemPremium = (claim: Claim): string => {
           <RowItem>{recentChange.Item.status_change}</RowItem>
           <RowItem>{getItemPersonName(recentChange.Item)}</RowItem>
           <RowItem numeric>{formatMoney(recentChange.Item.coverage_amount)}</RowItem>
-          <RowItem numeric>{formatMoney(recentChange.Item.annual_premium)}</RowItem>
+          <RowItem numeric>
+            {formatMoney(recentChange.Item.annual_premium)}
+            {#if isMonthly(recentChange.Item)}
+              <div>
+                <small class="tw-opacity-60">({formatMoney(recentChange.Item.monthly_premium)}/month)</small>
+              </div>
+            {/if}
+          </RowItem>
           <RowItem>Coverage</RowItem>
         </DataRow>
       {/if}

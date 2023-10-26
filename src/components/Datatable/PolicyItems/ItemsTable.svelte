@@ -1,17 +1,18 @@
 <script lang="ts">
 import BatchItemClone from './BatchItemClone.svelte'
 import BatchItemDelete from './BatchItemDelete.svelte'
-import { ItemDeleteModal } from 'components'
 import CopyTableButton from '../CopyTableButton.svelte'
 import { ClaimItem, incompleteClaimItemStatuses, selectedPolicyClaims } from 'data/claims'
 import { getItemState } from 'data/states'
 import { AccountablePerson, editableCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/items'
+import { isMonthly } from 'helpers/coverage'
 import { formatDate, formatFriendlyDate } from 'helpers/dates'
 import { getItemIcon, hasEnded, willEnd } from './itemTableHelpers'
 import { throwError } from '../../../error'
 import { formatMoney } from 'helpers/money'
 import { itemDetails, itemEdit } from 'helpers/routes'
 import { sortBy } from 'helpers/sort'
+import ItemDeleteModal from '../../ItemDeleteModal.svelte'
 import RowItem from './RowItem.svelte'
 import type { Column } from '../types'
 import 'iconify-icon'
@@ -84,7 +85,7 @@ const columns: Column[] = [
     title: 'Premium',
     headerId: 'premium',
     numeric: true,
-    path: 'prorated_annual_premium',
+    path: 'annual_premium',
     sortable: true,
   },
   {
@@ -293,7 +294,7 @@ const getStatusClass = (status: ItemCoverageStatus) =>
     {#each sortedItemsArray as item (item.id)}
       <Datatable.Data.Row on:click={() => redirectAndSetCurrentItem(item)} let:rowId clickable>
         <Datatable.Checkbox {rowId} on:click={() => (goToItemDetails = false)} on:mounted={registerNewCheckbox} />
-        <RowItem status={item.coverage_status}><iconify-icon icon={getItemIcon(item.category.name)} /></RowItem>
+        <RowItem status={item.coverage_status}><iconify-icon icon={getItemIcon(item.category.key)} /></RowItem>
         <RowItem status={item.coverage_status}>{item.name || ''}</RowItem>
         {#if snMakeAndModelAreVisible}
           <RowItem status={item.coverage_status}>{item.serial_number || ''}</RowItem>
@@ -316,7 +317,14 @@ const getStatusClass = (status: ItemCoverageStatus) =>
         <RowItem status={item.coverage_status}>{item.accountable_person?.name || ''}</RowItem>
         <RowItem status={item.coverage_status}>{item.accountable_person?.country || item.country || ''}</RowItem>
         <RowItem status={item.coverage_status} numeric>{formatMoney(item.coverage_amount)}</RowItem>
-        <RowItem status={item.coverage_status} numeric>{formatMoney(item.annual_premium)}</RowItem>
+        <RowItem status={item.coverage_status} numeric>
+          {formatMoney(item.annual_premium)}
+          {#if isMonthly(item)}
+            <div>
+              <small class="tw-opacity-60">({formatMoney(item.monthly_premium)}/month)</small>
+            </div>
+          {/if}
+        </RowItem>
         <RowItem status={item.coverage_status}>{formatDate(item.updated_at)}</RowItem>
         <RowItem>
           <IconButton icon="more_vert" on:click={() => handleMoreVertClick(item.id)} />

@@ -51,9 +51,6 @@ export const policyReportDetails = (policyId: string, month: string, year: strin
 export const SETTINGS = '/settings'
 export const SETTINGS_PERSONAL = '/settings/personal'
 export const settingsPolicy = (policyId: string) => `/policies/${policyId}/settings`
-export const householdSettingsDependent = (policyId: string, dependentId: string) =>
-  `/policies/${policyId}/settings/dependents/${dependentId}`
-export const householdSettingsNewDependent = (policyId: string) => `/policies/${policyId}/settings/dependents/new`
 
 export const TERMS_OF_SERVICE = '/terms'
 export const PRIVACY_POLICY = '/privacy'

@@ -121,9 +121,6 @@ th {
       <tr>
         <th>Coverage Value</th><td>{formatMoney(reportData.coverage_value)}</td>
       </tr>
-      <tr>
-        <th>Premium Rate</th><td>{reportData.premium_rate * 100}%</td>
-      </tr>
 
       <br />
 
@@ -161,10 +158,15 @@ th {
         {#each entries as entry}
           <tr>
             <td>{entry.item_name || ''}</td>
-            <td>{entry.status_before || '-'}</td>
-            <td>-></td>
-            <td>{entry.status_after}</td>
+            {#if entry.status_before && entry.status_before != entry.status_after}
+              <td>{entry.status_before}</td>
+              <td>-></td>
+              <td>{entry.status_after}</td>
+            {:else}
+              <td colspan="3" class="text-align-center">{entry.status_after}</td>
+            {/if}
             <td>{entry.type}</td>
+            <!-- Todo get rate from entry when available -->
             <td>{formatMoney(entry.value)}</td>
             <td>{entry.assigned_to || ''}</td>
             <td>{entry.location || ''}</td>

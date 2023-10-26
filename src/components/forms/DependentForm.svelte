@@ -3,7 +3,7 @@ export type DependentFormData = {
   id: string
   name: string
   country: string
-  relationship: string
+  relationship?: string
   childBirthYear?: number
   permissions: 'no-login' | 'can-edit'
   email: string
@@ -12,7 +12,6 @@ export type DependentFormData = {
 </script>
 
 <script lang="ts">
-import { assignItems } from 'data/items'
 import { MAX_INPUT_LENGTH as maxlength, MAX_TEXT_AREA_LENGTH } from 'components/const'
 import CountrySelector from '../CountrySelector.svelte'
 import type { PolicyDependent } from 'data/dependents'
@@ -20,6 +19,7 @@ import { ITEMS } from 'helpers/routes'
 import RadioOptions from '../RadioOptions.svelte'
 import RemoveDependentModal from '../RemoveDependentModal.svelte'
 import { assertEmailAddress, assertHas, assertIsLessThan, assertUnique } from '../../validation/assertions'
+import YearInput from '../YearInput.svelte'
 import { Button, Form, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 import { goto } from '@roxi/routify'
@@ -111,11 +111,14 @@ const onClickRemove = (event: Event) => {
   event.preventDefault()
   removeModalIsOpen = true
 }
-const onRemove = (event: Event) => {
-  event.preventDefault()
-  dispatch('remove', formData.id)
+
+const onRemove = async (e: CustomEvent) => {
+  const personIdToAssign = e.detail
+
+  dispatch('remove', { personIdToRemove: formData.id, personIdToAssign })
   removeModalIsOpen = false
 }
+
 const onSubmit = () => {
   if (isHouseholdPolicy) {
     const isChild: boolean = formData.relationship === 'Child'
@@ -132,10 +135,6 @@ const onSubmit = () => {
 }
 
 const onChosen = (event: CustomEvent) => (formData.country = event.detail)
-
-const onAssign = (e: CustomEvent) => {
-  assignItems(e.detail, policyId, dependent.id)
-}
 </script>
 
 <style>
@@ -174,7 +173,7 @@ const onAssign = (e: CustomEvent) => {
       </p>
       {#if formData.relationship === 'Child'}
         <p>
-          <TextField {maxlength} label="Child's birth year" bind:value={formData.childBirthYear} class="w-100" />
+          <YearInput {maxlength} label="Child's birth year" bind:value={formData.childBirthYear} class="w-100" />
         </p>
       {/if}
     {/if}
@@ -218,6 +217,5 @@ const onAssign = (e: CustomEvent) => {
     on:gotoItems={() => $goto(ITEMS)}
     on:cancel={() => (removeModalIsOpen = false)}
     on:closed={() => (removeModalIsOpen = false)}
-    on:assign={onAssign}
   />
 </div>

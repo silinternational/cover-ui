@@ -4,7 +4,7 @@ import { deleteItem, loadItems, PolicyItem, selectedPolicyItems, submitItem } fr
 import { formatPageTitle } from 'helpers/pageTitle'
 import { itemDetails, items, itemEdit } from 'helpers/routes'
 import { goto, metatags, params } from '@roxi/routify'
-import { Page } from '@silintl/ui-components'
+import { Page, setNotice } from '@silintl/ui-components'
 import { onMount } from 'svelte'
 
 export let itemId: string
@@ -22,7 +22,12 @@ const onEdit = () => {
 }
 
 const onDelete = async (event: CustomEvent<string>) => {
-  await deleteItem(policyId, event.detail)
+  //don't await this or item will be undefined before the page navigates
+  deleteItem(policyId, event.detail).catch((e) => {
+    setNotice('There was an error deleting item')
+    console.error(e)
+  })
+
   $goto(items(policyId))
 }
 

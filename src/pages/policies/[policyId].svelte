@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Breadcrumb, CardsGrid, ClaimsTable, ItemsTable, Row, Strikes, CustomerReport } from 'components'
+import { Breadcrumb, CardsGrid, ClaimsTable, InfoDialog, ItemsTable, Row, Strikes, CustomerReport } from 'components'
 import { isLoadingById, loading } from 'components/progress'
 import CopyTableButton from '../../components/Datatable/CopyTableButton.svelte'
 import { Claim, claimIsOpen, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
@@ -15,6 +15,7 @@ import {
 import { getNameOfPolicy, loadPolicy, Policy, PolicyType, selectedPolicy } from 'data/policies'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { isAdmin } from 'data/user'
+import { isMonthly, isYearly } from 'helpers/coverage'
 import { formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import { formatPageTitle } from 'helpers/pageTitle'
@@ -27,15 +28,28 @@ import {
   settingsPolicy,
 } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'
-import { Button, Checkbox, Datatable, isAboveMobile, isAboveTablet, Page, Switch } from '@silintl/ui-components'
+import {
+  Button,
+  Checkbox,
+  Datatable,
+  IconButton,
+  isAboveMobile,
+  isAboveTablet,
+  Page,
+  Switch,
+} from '@silintl/ui-components'
 import { generateRandomID } from '@silintl/ui-components/random'
 import { onMount } from 'svelte'
 
 export let policyId: string
 
+let approvedAnnualItems: PolicyItem[] = []
+let approvedMonthlyItems: PolicyItem[] = []
+let approvedItems: PolicyItem[] = []
 let policy = {} as Policy
 let showAllClaims = false
 let hideInactive = false
+let infoIsOpen = false
 const uniqueTableClass = generateRandomID('items-table-')
 
 onMount(() => {
@@ -62,7 +76,12 @@ $: openClaimCount = recentClaims.filter(claimIsOpen).length
 $: policyName = getNameOfPolicy(policy)
 $: policyName && (metatags.title = formatPageTitle(`Policies > ${policyName}`))
 $: coverage = formatMoney(approvedItems.reduce((sum, item) => sum + item.coverage_amount, 0))
-$: premium = formatMoney(approvedItems.reduce((sum, item) => sum + item.annual_premium, 0))
+
+$: approvedAnnualItems = approvedItems.filter(isYearly)
+$: approvedMonthlyItems = approvedItems.filter(isMonthly)
+$: annualPremium = approvedAnnualItems.reduce((sum, item) => sum + item.annual_premium, 0)
+$: monthlyPremium = approvedMonthlyItems.reduce((sum, item) => sum + item.monthly_premium, 0)
+
 $: entityCode = policy.entity_code?.code
 $: numberOfItemsNotShown = items.length - itemsForTable.length
 $: gotoItemsBtnLabel = `View ${numberOfItemsNotShown} more items…`
@@ -111,7 +130,7 @@ const showInactiveItems = (): void => {
 }
 </script>
 
-<style>
+<style lang="postcss">
 .subtext {
   font-weight: normal;
   font-size: small;
@@ -137,6 +156,10 @@ section:not(:first-child) {
   & * {
     justify-content: start;
   }
+}
+dt,
+dd {
+  height: 1.7rem;
 }
 .main-header h1 {
   grid-column: 1 / -1;
@@ -185,8 +208,17 @@ section:not(:first-child) {
       <dl>
         <dt>Coverage</dt>
         <dd>{coverage}</dd>
-        <dt>Premium</dt>
-        <dd>{premium} per year</dd>
+        <dt>Yearly Premium</dt>
+        <dd>{formatMoney(annualPremium)} per year</dd>
+        {#if monthlyPremium > 0}
+          <dt class="tw-flex tw-items-center">
+            <span> Monthly Premium</span>
+            <IconButton class="gray" icon="info" on:click={() => (infoIsOpen = true)} />
+          </dt>
+          <dd>
+            {formatMoney(monthlyPremium)} per month
+          </dd>
+        {/if}
         <dt>Last Updated</dt>
         <dd>{formatFriendlyDate(policy.updated_at)}</dd>
       </dl>
@@ -255,7 +287,7 @@ section:not(:first-child) {
   <section>
     <header class="flex justify-between align-items-center">
       <h2>Items <span class="subtext">{approvedItems?.length} covered</span></h2>
-      <div class="button-group gap-sm">
+      <div class="button-group tw-flex tw-gap-fl-xs">
         {#if isAboveTablet()}
           <Checkbox label="Hide Inactive" on:checked={hideInactiveItems} on:unchecked={showInactiveItems} />
         {:else}
@@ -296,4 +328,8 @@ section:not(:first-child) {
   </section>
 
   <div class="p-2" />
+
+  <InfoDialog {infoIsOpen} title="Monthly Premiums" on:closed={() => (infoIsOpen = false)}>
+    Only some premiums are billed monthly (e.g. vehicles). Most are billed Annually.
+  </InfoDialog>
 </Page>

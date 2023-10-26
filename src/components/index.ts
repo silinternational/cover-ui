@@ -1,9 +1,10 @@
+import AccountablePeopleList from './AccountablePeopleList.svelte'
 import AppDrawer from './AppDrawer.svelte'
 import AppFooter from './AppFooter.svelte'
 import Banner from './Banner.svelte'
 import Breadcrumb from './Breadcrumb.svelte'
 import CardsGrid from './CardsGrid.svelte'
-import Checkout from './Checkout.svelte'
+import Checkout from './checkout/Checkout.svelte'
 import ClaimActions from './ClaimActions.svelte'
 import ClaimCard from './ClaimCard.svelte'
 import ClaimCards from './ClaimCards.svelte'
@@ -19,6 +20,7 @@ import FileLink from './FileLink.svelte'
 import { FilePreview } from './FilePreview'
 import FilePreviews from './FilePreview'
 import InfoModal from './InfoModal.svelte'
+import InfoDialog from './InfoDialog.svelte'
 import ItemBanner from './banners/ItemBanner.svelte'
 import ItemDeleteModal from './ItemDeleteModal.svelte'
 import ItemDetails from './ItemDetails.svelte'
@@ -38,9 +40,10 @@ import RemoveDependentModal from './RemoveDependentModal.svelte'
 import RemoveMemberModal from './RemoveMemberModal.svelte'
 import RevokeModal from './RevokeModal.svelte'
 import Strikes from './Strikes.svelte'
-import TextFieldWithLabel from './TextFieldWithLabel.svelte'
+import YearInput from './YearInput.svelte'
 
 export {
+  AccountablePeopleList,
   AppDrawer,
   AppFooter,
   Banner,
@@ -57,6 +60,7 @@ export {
   FilePreview,
   FilePreviews,
   InfoModal,
+  InfoDialog,
   ItemBanner,
   ItemDeleteModal,
   ItemDetails,
@@ -81,5 +85,5 @@ export {
   RemoveMemberModal,
   RevokeModal,
   Strikes,
-  TextFieldWithLabel,
+  YearInput,
 }

@@ -6,7 +6,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: public.ecr.aws/deepfactor/df/runtime:3.3.3-2346
+      image: public.ecr.aws/deepfactor/df/runtime:latest
       env:
         DF_RUN_TOKEN: ${{ secrets.DF_RUN_TOKEN }}
     steps:

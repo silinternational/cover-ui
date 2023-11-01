@@ -4,7 +4,7 @@ import { AppDrawer } from 'components'
 import { initialized as policiesInitialized, loadPolicies } from 'data/policies'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import * as routes from 'helpers/routes'
-import { goto, params } from '@roxi/routify'
+import { goto, params, route } from '@roxi/routify'
 import { Page } from '@silintl/ui-components'
 import { afterUpdate } from 'svelte'
 
@@ -20,7 +20,7 @@ $: $policiesInitialized || ($user.policies?.length > 0 && loadPolicies())
 $: myPolicies = $user?.policies || []
 $: policyId = $selectedPolicyId || getDefaultPolicyId($user)
 $: inAdminRole = isAdmin($roleSelection)
-$: customerIsOnAdminView = location.pathname.includes('admin') && isCustomer($user.app_role)
+$: customerIsOnAdminView = $route.path.includes('admin') && isCustomer($user.app_role)
 $: userNotAdmin = !inAdminRole || userIsAnonymous
 
 $: menuItems = [

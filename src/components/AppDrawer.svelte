@@ -29,7 +29,8 @@ onMount(() => {
 
 $: drawerWidth = `${drawerEl?.offsetWidth || 0}px`
 
-$beforeUrlChange((event: CustomEvent, route: string, { url }: { url: string }) => {
+//@ts-expect-error
+$beforeUrlChange((event?: PopStateEvent, route?: ClientNodeApi, { url }) => {
   currentUrl = url
   return true
 })

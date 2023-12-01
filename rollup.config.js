@@ -15,6 +15,11 @@ import html from '@rollup/plugin-html'
 
 const production = !process.env.ROLLUP_WATCH
 
+//Todo: fix these warnings if possible then remove from filter
+const warnFilters = [
+  'A11y: noninteractive element cannot have nonnegative tabIndex value'
+]
+
 export default {
   input: 'src/main.ts',
   output: {
@@ -22,6 +27,11 @@ export default {
     entryFileNames: 'bundle.[hash].js',
     format: 'iife',
     sourcemap: !production,
+  },
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  onwarn: (warning, next) => {
+    if (warnFilters.includes(warning.message)) return // you can do this now btw
+    next(warning)
   },
   plugins: [
     svelte({

@@ -17,8 +17,7 @@ const production = !process.env.ROLLUP_WATCH
 
 //Todo: fix these warnings if possible then remove from filter
 const warnFilters = [
-  'A11y: noninteractive element cannot have nonnegative tabIndex value',
-  'end value has mixed support, consider using flex-end instead',
+  'A11y: noninteractive element cannot have nonnegative tabIndex value'
 ]
 
 export default {

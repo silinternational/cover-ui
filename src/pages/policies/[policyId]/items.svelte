@@ -1,21 +1,34 @@
 <script lang="ts">
 import { ItemsTable, Row, SearchForm } from 'components'
 import { isLoadingPolicyItems, loading } from 'components/progress'
-import { cloneItems, deleteItem, deleteItems, loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
+import {
+  cloneItems,
+  deleteItem,
+  deleteItems,
+  itemIsApproved,
+  loadItems,
+  PolicyItem,
+  selectedPolicyItems,
+} from 'data/items'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import * as routes from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
-import { Button, Page } from '@silintl/ui-components'
+import { Button, Checkbox, Page, Switch, isAboveTablet } from '@silintl/ui-components'
+import { generateRandomID } from '@silintl/ui-components/random'
 
 let searchText = ''
 let filteredItems = $selectedPolicyItems
+let hideInactive = false
+let approvedItems: PolicyItem[] = []
 
 $: policyId = $selectedPolicyId
 $: policyId && loadItems(policyId)
 
 $: metatags.title = formatPageTitle('Home')
 $: filteredItems = $selectedPolicyItems.filter((item) => item.name.toLowerCase().includes(searchText.toLowerCase()))
+$: approvedItems = filteredItems.filter(itemIsApproved)
+$: itemsForTable = hideInactive ? approvedItems : $selectedPolicyItems
 
 const onDelete = async (event: CustomEvent<any>) => {
   const itemId = event.detail
@@ -43,16 +56,34 @@ const onSearch = (event: CustomEvent<string>) => {
     searchText = event.detail
   }
 }
+
+const hideInactiveItems = (): void => {
+  hideInactive = true
+}
+
+const showInactiveItems = (): void => {
+  hideInactive = false
+}
 </script>
 
 <Page layout="grid">
   <Row cols={'12'}>
     <SearchForm initial={searchText} on:search={onSearch} />
+    <header class="flex justify-between align-items-center">
+      <h2>Items <span class="subtext">{approvedItems?.length} covered</span></h2>
+      <div class="button-group tw-flex tw-gap-fl-xs">
+        {#if isAboveTablet()}
+          <Checkbox label="Hide Inactive" on:checked={hideInactiveItems} on:unchecked={showInactiveItems} />
+        {:else}
+          <Switch on:selected={hideInactiveItems} on:deselected={showInactiveItems} label="Hide Inactive" />
+        {/if}
+      </div>
+    </header>
     {#if $loading && isLoadingPolicyItems(policyId)}
       Loading items...
-    {:else if filteredItems.length > 0}
+    {:else if itemsForTable.length > 0}
       <ItemsTable
-        items={filteredItems}
+        items={itemsForTable}
         {policyId}
         title="Items"
         on:delete={onDelete}

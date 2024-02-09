@@ -15,7 +15,6 @@ import * as routes from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'
 import { Button, Checkbox, Page, Switch, isAboveTablet } from '@silintl/ui-components'
-import { generateRandomID } from '@silintl/ui-components/random'
 
 let searchText = ''
 let filteredItems = $selectedPolicyItems
@@ -65,6 +64,14 @@ const showInactiveItems = (): void => {
   hideInactive = false
 }
 </script>
+
+<style>
+.subtext {
+  font-weight: normal;
+  font-size: small;
+  padding-left: 0.5rem;
+}
+</style>
 
 <Page layout="grid">
   <Row cols={'12'}>

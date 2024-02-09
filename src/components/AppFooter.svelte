@@ -9,7 +9,7 @@ footer {
   height: 150px;
   display: flex;
   justify-content: center;
-  align-items: end;
+  align-items: flex-end;
   margin-right: var(--right-margin);
 }
 a {

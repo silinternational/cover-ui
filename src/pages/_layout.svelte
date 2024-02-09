@@ -20,6 +20,7 @@ $: $policiesInitialized || ($user.policies?.length > 0 && loadPolicies())
 $: myPolicies = $user?.policies || []
 $: policyId = $selectedPolicyId || getDefaultPolicyId($user)
 $: inAdminRole = isAdmin($roleSelection)
+//@ts-expect-error
 $: customerIsOnAdminView = $route.path.includes('admin') && isCustomer($user.app_role)
 $: userNotAdmin = !inAdminRole || userIsAnonymous
 

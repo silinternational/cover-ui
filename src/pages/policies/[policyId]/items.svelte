@@ -92,7 +92,6 @@ const showInactiveItems = (): void => {
       <ItemsTable
         items={itemsForTable}
         {policyId}
-        title="Items"
         on:delete={onDelete}
         on:gotoItem={onGotoItem}
         on:batchDelete={onBatchDelete}

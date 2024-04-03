@@ -35,7 +35,7 @@ $: nameOfUser = $user.id ? $user.first_name + ' ' + $user.last_name : ''
 onMount(() => showOrHideDrawerButton())
 
 //@ts-expect-error
-$beforeUrlChange((_?: PopStateEvent, __?: ClientNodeApi, { url }) => {
+$beforeUrlChange((_, __, { url }) => {
   currentUrl = url
   return true
 })

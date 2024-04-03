@@ -25,7 +25,9 @@ export let policyId = $selectedPolicyId
 
 let claimName: string
 
-onMount(() => $initialized || getClaimById(claimId))
+onMount(() => {
+  $initialized || getClaimById(claimId)
+})
 
 $: claim = ($claims.find((clm: Claim) => clm.id === claimId) || {}) as Claim
 $: claimItems = claim.claim_items || []

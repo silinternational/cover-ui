@@ -6,7 +6,7 @@ export let file: CoverFile
 
 let expired: boolean = false
 
-const dispatch = createEventDispatcher<{ expired: string }>()
+const dispatch = createEventDispatcher<{ expired: any }>()
 
 $: url = (!expired && file?.url) || undefined
 $: filename = file?.name || '-'

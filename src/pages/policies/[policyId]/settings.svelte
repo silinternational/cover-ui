@@ -25,7 +25,9 @@ import { onMount } from 'svelte'
 
 const policyData = {} as Policy
 
-onMount(() => $entityCodes.length || loadEntityCodes())
+onMount(() => {
+  $entityCodes.length || loadEntityCodes()
+})
 
 $: policyId = $selectedPolicyId
 

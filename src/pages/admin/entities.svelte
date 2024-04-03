@@ -9,7 +9,9 @@ import { Datatable, Page, setNotice } from '@silintl/ui-components'
 
 metatags.title = formatPageTitle('Admin > Entities')
 
-onMount(() => $entityCodes.length || loadEntityCodes())
+onMount(() => {
+  $entityCodes.length || loadEntityCodes()
+})
 
 const onSubmit = async (event: CustomEvent) => {
   const duplicate = $entityCodes.find((entity) => entity.code === event.detail.code)

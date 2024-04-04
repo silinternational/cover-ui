@@ -7,7 +7,7 @@ import livereload from 'rollup-plugin-livereload'
 import postcss from 'rollup-plugin-postcss'
 import svelte from 'rollup-plugin-svelte'
 import { terser } from 'rollup-plugin-terser'
-import routify from '@roxi/routify/plugins/rollup'
+import routify from '@roxi/routify/plugins/rollup.js'
 import autoPreprocess from 'svelte-preprocess'
 import typescript from '@rollup/plugin-typescript'
 import nodePolyfills from 'rollup-plugin-polyfill-node'
@@ -16,9 +16,7 @@ import html from '@rollup/plugin-html'
 const production = !process.env.ROLLUP_WATCH
 
 //Todo: fix these warnings if possible then remove from filter
-const warnFilters = [
-  'A11y: noninteractive element cannot have nonnegative tabIndex value'
-]
+const warnFilters = ['A11y: noninteractive element cannot have nonnegative tabIndex value']
 
 export default {
   input: 'src/main.ts',

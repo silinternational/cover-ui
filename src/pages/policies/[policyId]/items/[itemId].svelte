@@ -178,7 +178,6 @@ const onReviseItem = () => {
         <TextArea
           class="admin-message-text-area"
           {maxlength}
-          style="width: 300px"
           rows="4"
           placeholder="A message is required to deny coverage or ask for changes"
           bind:value={denyDialogMessage}

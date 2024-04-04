@@ -34,7 +34,6 @@ $: myHouseholdPolicies = myPolicies.filter(isHouseholdPolicy)
 
 $: setInitialRoleSelection(role)
 
-$: buttonLabel = getButtonLabel($roleSelection)
 $: buttonText = getButtonText($roleSelection, $selectedPolicyId, myPolicies)
 $: buttonIcon = getButtonIcon($roleSelection, $selectedPolicyId, myPolicies)
 
@@ -157,14 +156,9 @@ const toggleRoleAndPolicyMenu = () => (menuIsOpen = !menuIsOpen)
 
 <div class="role-label capitalize mdc-theme--primary fs-12">show policy</div>
 
-<Button
-  class="w-90"
-  outlined
-  label={buttonLabel}
-  prependIcon={buttonIcon}
-  appendIcon="arrow_drop_down"
-  on:click={toggleRoleAndPolicyMenu}>{buttonText || ''}</Button
->
+<Button class="w-90" outlined prependIcon={buttonIcon} appendIcon="arrow_drop_down" on:click={toggleRoleAndPolicyMenu}>
+  {buttonText || ''}
+</Button>
 <div id="role-and-policy-menu-options-container">
   <Menu bind:menuOpen={menuIsOpen} {menuItems} />
 </div>

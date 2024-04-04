@@ -35,12 +35,13 @@ const handleDialog = (choice: string) => {
 }
 </script>
 
-<Dialog.Alert
-  {open}
-  {buttons}
-  defaultAction="cancel"
-  {title}
-  {disabled}
-  on:chosen={(e) => handleDialog(e.detail)}
-  on:closed={handleDialog}>{message}</Dialog.Alert
->
+{#if !disabled}
+  <Dialog.Alert
+    {open}
+    {buttons}
+    defaultAction="cancel"
+    {title}
+    on:chosen={(e) => handleDialog(e.detail)}
+    on:closed={handleDialog}>{message}</Dialog.Alert
+  >
+{/if}

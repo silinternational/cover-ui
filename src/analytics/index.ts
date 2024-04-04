@@ -1,5 +1,11 @@
 import { route } from '@roxi/routify'
 
+declare global {
+  interface Window {
+    gtag: (...args: any[]) => void
+  }
+}
+
 const GA_MEASUREMENT_ID = process.env.GA_MEASUREMENT_ID || ''
 
 init()
@@ -13,10 +19,10 @@ function init() {
   ;(window as any).dataLayer = (window as any).dataLayer || []
   window.gtag = () => (window as any).dataLayer.push(arguments)
 
-  gtag('js', new Date())
+  window.gtag('js', new Date())
 
   //since we are sending manually we need to disable the default of sending each pageview
-  gtag('config', GA_MEASUREMENT_ID, {
+  window.gtag('config', GA_MEASUREMENT_ID, {
     send_page_view: false,
   })
 
@@ -35,7 +41,7 @@ function loadLib() {
 function trackPageView(page: any) {
   if (page) {
     // https://developers.google.com/analytics/devguides/collection/gtagjs/pages#default_behavior
-    gtag('event', 'page_view', {
+    window.gtag('event', 'page_view', {
       page_path: location.pathname, //page.path or page.shortPath are also available
     })
   }
@@ -43,7 +49,7 @@ function trackPageView(page: any) {
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/events
 function trackEvent(eventName: string, eventParameters: any) {
-  gtag('event', eventName, eventParameters)
+  window.gtag('event', eventName, eventParameters)
 }
 
 export const notFound = (): void => trackEvent('Error', 'Page not found')

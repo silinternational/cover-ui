@@ -21,7 +21,9 @@ import { onMount } from 'svelte'
 export let itemId: string
 export let policyId = $selectedPolicyId
 
-onMount(() => $initialized || loadClaimsByPolicyId(policyId))
+onMount(() => {
+  $initialized || loadClaimsByPolicyId(policyId)
+})
 
 $: policyId && loadItems(policyId)
 $: items = $selectedPolicyItems

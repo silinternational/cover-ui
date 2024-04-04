@@ -17,7 +17,9 @@ let policyName = ''
 let entityCode = ''
 let entityOptions: any = {}
 
-onMount(() => $entityCodes.length || loadEntityCodes())
+onMount(() => {
+  $entityCodes.length || loadEntityCodes()
+})
 
 $: metatags.title = formatPageTitle('New Team Policy')
 $: $entityCodes

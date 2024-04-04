@@ -19,7 +19,7 @@ $: itemId = item.id
 
 $: policy = $selectedPolicy
 
-const dispatch = createEventDispatcher<{ agreeAndPay: string; delete: string; edit: string }>()
+const dispatch = createEventDispatcher<{ agreeAndPay: string; delete: string; edit: any }>()
 
 const onAgreeAndPay = () => {
   dispatch('agreeAndPay', itemId)

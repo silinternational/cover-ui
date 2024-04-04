@@ -311,8 +311,8 @@ td > p {
   <h2 id="deductibles">Deductibles</h2>
   <p>
     The deductible is 5% of the covered item listed on the policy, or a minimum deductible based on the covered item's
-    category (where applicable), whichever is greater. However, management reserves the right to increase the
-    deductible for above normal claims activity.
+    category (where applicable), whichever is greater. However, management reserves the right to increase the deductible
+    for above normal claims activity.
   </p>
   <h2 id="limitations-of-coverage">Limitations of Coverage</h2>
   <p>

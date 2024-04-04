@@ -138,7 +138,7 @@ export async function createPolicyLedgerReport(
   policyId: string,
   type: LedgerReportType,
   month: number,
-  year: number,
+  year: number
 ): Promise<LedgerReport> {
   const params = {
     type,

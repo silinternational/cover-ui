@@ -150,7 +150,7 @@ export const selectedPolicyItems = derived(
   [itemsByPolicyId, selectedPolicyId],
   ([$itemsByPolicyId, $selectedPolicyId]) => {
     return $itemsByPolicyId[$selectedPolicyId] || []
-  },
+  }
 )
 
 /**
@@ -371,7 +371,7 @@ export const itemIsPending = (item: PolicyItem): boolean => {
 export const assignItems = async (
   newMemberId: string,
   policyId: string,
-  selectedPolicyMemberId: string,
+  selectedPolicyMemberId: string
 ): Promise<void> => {
   const promises = []
   const items = getItemsAccountablePersonIsOn(selectedPolicyMemberId, policyId)
@@ -388,7 +388,7 @@ export const assignItems = async (
         name: item.name,
         riskCategoryId: item.risk_category.id,
         uniqueIdentifier: item.serial_number,
-      }),
+      })
     )
   }
 

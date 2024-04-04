@@ -39,7 +39,7 @@ async function copy() {
 }
 </script>
 
-<div class="flex align-items-center">
+<div title="Copy to Clipboard" class="flex align-items-center">
   <Button outlined appendIcon="content_copy" on:click={copy}>Copy</Button>
 
   <InfoModal hasInfoButton {content} {title} />

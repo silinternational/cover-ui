@@ -121,14 +121,6 @@ const getButtonIcon = (userAppRoleSelection: UserAppRole, policyIdSelection: str
   return HOUSEHOLD_POLICY_ICON
 }
 
-const getButtonLabel = (userAppRoleSelection: UserAppRole) => {
-  if (userAppRoleSelection !== UserAppRole.Customer) {
-    return ''
-  }
-
-  return 'show policy'
-}
-
 const isTeamPolicy = (policy: Policy): boolean => policy.type === PolicyType.Team
 const isHouseholdPolicy = (policy: Policy): boolean => policy.type === PolicyType.Household
 const toggleRoleAndPolicyMenu = () => (menuIsOpen = !menuIsOpen)

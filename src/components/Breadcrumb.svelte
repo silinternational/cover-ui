@@ -47,7 +47,6 @@ a {
 </style>
 
 <div class="flex text-align-center align-items-center {$$props.class}">
-  <!-- svelte-ignore a11y-invalid-attribute -->
   {#if hasHome}
     <a href={HOME}>
       <i class="material-icons breadcrumb-icon breadcrumb-home" aria-hidden="true"> home </i>
@@ -55,7 +54,6 @@ a {
     <i class="material-icons breadcrumb-icon" aria-hidden="true"> chevron_right </i>
   {/if}
   {#each urls as val, i}
-    <!-- svelte-ignore a11y-invalid-attribute -->
     {#if val.icon}
       <i class="material-icons breadcrumb-icon" aria-hidden="true">
         {val.icon}

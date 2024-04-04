@@ -17,7 +17,7 @@ function init() {
 
   // TODO: get the dataLayer references to play nicer with ts
   ;(window as any).dataLayer = (window as any).dataLayer || []
-  window.gtag = () => (window as any).dataLayer.push(arguments)
+  window.gtag = (...args: any[]) => (window as any).dataLayer.push(...args)
 
   window.gtag('js', new Date())
 

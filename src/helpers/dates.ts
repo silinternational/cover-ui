@@ -95,3 +95,8 @@ export const isMeaningfulDateString = (dateString: string | undefined): boolean 
 
   return true
 }
+
+export const dateIsInThePast = (dateString: string): boolean => {
+  const date = new Date(dateString)
+  return date < new Date()
+}

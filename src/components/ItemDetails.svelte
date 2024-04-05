@@ -1,10 +1,10 @@
 <script lang="ts">
 import ItemBanner from './banners/ItemBanner.svelte'
 import MessageBanner from './banners/MessageBanner.svelte'
-import { ItemCoverageStatus, PolicyItem } from 'data/items'
+import { ItemCoverageStatus, PolicyItem, itemIsDenied, itemIsNotInactive } from 'data/items'
 import { getPolicyById, loadPolicy, policies, Policy, PolicyType } from 'data/policies'
 import { getPremiumDescription, getRenewalDate, getStartDate } from 'helpers/coverage'
-import { formatDate } from 'helpers/dates'
+import { dateIsInThePast, formatDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import InfoBoxModal from './InfoBoxModal.svelte'
 import { formatDistanceToNow } from 'date-fns'
@@ -177,9 +177,14 @@ section {
         {/each}
       </dl>
     {/each}
-    <dt>Starts</dt>
+    <dt>{dateIsInThePast(item.coverage_end_date) ? 'Started' : 'Starts'}</dt>
     <dd class="value">{startDate || '—'}</dd>
-    <dt>{endDate ? 'Ends' : 'Renews'}</dt>
-    <dd class="value">{endDate || renewDate || '—'}</dd>
+    {#if endDate}
+      <dt>{dateIsInThePast(item.coverage_end_date) ? 'Ended' : 'Ends'}</dt>
+      <dd class="value">{endDate}</dd>
+    {:else if renewDate && itemIsNotInactive(item) && !itemIsDenied(item)}
+      <dt>Renews</dt>
+      <dd class="value">{renewDate}</dd>
+    {/if}
   </section>
 </div>

@@ -368,6 +368,10 @@ export const itemIsPending = (item: PolicyItem): boolean => {
   return item.coverage_status === ItemCoverageStatus.Pending
 }
 
+export const itemIsDenied = (item: PolicyItem): boolean => {
+  return item.coverage_status === ItemCoverageStatus.Denied
+}
+
 export const assignItems = async (
   newMemberId: string,
   policyId: string,

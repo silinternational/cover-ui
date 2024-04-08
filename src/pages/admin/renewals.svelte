@@ -16,8 +16,8 @@ let isProcessingMonthly = false
 let annualStatus = {} as RenewalStatus
 let monthlyStatus = {} as RenewalStatus
 
-$: disableProcessAnnualButton = isProcessingAnnual || annualStatus?.is_complete
-$: disableProcessMonthlyButton = isProcessingMonthly || monthlyStatus?.is_complete
+$: disableProcessAnnualButton = !annualStatus.safe_to_process || isProcessingAnnual || annualStatus?.is_complete
+$: disableProcessMonthlyButton = !monthlyStatus.safe_to_process || isProcessingMonthly || monthlyStatus?.is_complete
 
 onMount(async () => {
   annualStatus = await getAnnualPolicyRenewalStatus()

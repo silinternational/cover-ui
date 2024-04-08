@@ -87,7 +87,6 @@ const onLimitChange = (event: CustomEvent<SelectOption>) => {
       <div class="limit-selector">
         <Select
           label={thingName + ' per page'}
-          aria-label="per page"
           on:change={onLimitChange}
           on:populated={onSetLimitDefault}
           options={limitSelectOptions}

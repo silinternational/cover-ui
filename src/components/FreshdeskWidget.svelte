@@ -5,7 +5,7 @@ import { onMount } from 'svelte'
 onMount(() => {
   // Here be dragons
   window.fwSettings = { widget_id: Number(process.env.FRESHDESK_ID) }
-  // @ts-ignore
+  // @ts-expect-error since FreshworksWidget snippet is not meant for ts
   // prettier-ignore
   !function(){if("function"!=typeof window.FreshworksWidget){var n=function(){n.q.push(arguments)};n.q=[],window.FreshworksWidget=n}}()
 })

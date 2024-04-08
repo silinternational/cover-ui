@@ -77,6 +77,7 @@ export type PolicyReportData = {
 export type RenewalStatus = {
   is_complete: boolean
   items_to_process: number
+  safe_to_process: boolean
 }
 
 export const LedgerReports = writable<LedgerReport[]>([])

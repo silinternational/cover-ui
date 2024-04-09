@@ -12,7 +12,7 @@ const buttons: Dialog.AlertButton[] = [
   { label: 'Add Coverage for Replacement', action: 'reCover', class: 'mdc-dialog__button' },
 ]
 
-const dispatch = createEventDispatcher<{ closed: string }>()
+const dispatch = createEventDispatcher<{ closed: any }>()
 
 const handleDialog = (e: CustomEvent) => {
   e.detail ? dispatch(e.detail) : dispatch('closed')

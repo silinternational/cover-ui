@@ -17,7 +17,9 @@ let policyName = ''
 let entityCode = ''
 let entityOptions: any = {}
 
-onMount(() => $entityCodes.length || loadEntityCodes())
+onMount(() => {
+  $entityCodes.length || loadEntityCodes()
+})
 
 $: metatags.title = formatPageTitle('New Team Policy')
 $: $entityCodes
@@ -74,7 +76,7 @@ const onCheck = (e: CustomEvent) => {
   <Form on:submit={onCreatePolicy}>
     <div>
       <TextField
-        class="w-22"
+        class="tw-w-72"
         label="Policy name"
         description="A name for the policy"
         {maxlength}
@@ -96,7 +98,7 @@ const onCheck = (e: CustomEvent) => {
 
     <div>
       <TextField
-        class="w-22"
+        class="tw-w-72"
         {maxlength}
         required
         description="Use within organization"
@@ -106,12 +108,12 @@ const onCheck = (e: CustomEvent) => {
     </div>
 
     <div>
-      <TextField class="w-22" {maxlength} required label="Account" bind:value={account} />
+      <TextField class="tw-w-72" {maxlength} required label="Account" bind:value={account} />
     </div>
 
     <div>
       <TextField
-        class="w-22"
+        class="tw-w-72"
         label="Ledger Entry Description (optional)"
         description="Appears after the Entity, Account, and Cost Center on financial transaction journals"
         maxlength={40}

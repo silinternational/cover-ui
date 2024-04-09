@@ -25,7 +25,9 @@ import { onMount } from 'svelte'
 
 const policyData = {} as Policy
 
-onMount(() => $entityCodes.length || loadEntityCodes())
+onMount(() => {
+  $entityCodes.length || loadEntityCodes()
+})
 
 $: policyId = $selectedPolicyId
 
@@ -95,7 +97,7 @@ const updateAccountDetail = async () => {
     policyData.account_detail = accountDetail
     await callUpdatePolicy()
 
-    setNotice('Your account detail has been saved')
+    setNotice('Your ledger entry description has been saved')
   }
 }
 
@@ -250,13 +252,14 @@ div {
   <Breadcrumb links={breadcrumbLinks} />
   {#if policy.type === PolicyType.Household && isAdmin($roleSelection)}
     <div>
-      <TextField {maxlength} label="Household ID" required bind:value={householdId} on:blur={updateHouseholdId} />
+      <TextField class="tw-w-72" {maxlength} label="Household ID" required bind:value={householdId} on:blur={updateHouseholdId} />
     </div>
   {/if}
 
   {#if policy.type === PolicyType.Team}
     <div>
       <TextField
+      class="tw-w-72"
         required
         {maxlength}
         description="Appears in your statements"
@@ -279,16 +282,17 @@ div {
     </div>
 
     <div>
-      <TextField label="Cost center" {maxlength} required bind:value={costCenter} on:blur={updateCostCenter} />
+      <TextField class="tw-w-72" label="Cost center" {maxlength} required bind:value={costCenter} on:blur={updateCostCenter} />
     </div>
 
     <div>
-      <TextField label="Account" {maxlength} required bind:value={account} on:blur={updateAccount} />
+      <TextField class="tw-w-72" label="Account" {maxlength} required bind:value={account} on:blur={updateAccount} />
     </div>
 
     <div>
       <TextField
-        label="Account Detail (optional)"
+        class="tw-w-72"
+        label="Ledger Entry Description (optional)"
         {maxlength}
         bind:value={accountDetail}
         on:blur={updateAccountDetail}

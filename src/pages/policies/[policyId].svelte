@@ -230,7 +230,7 @@ dd {
           <dd>{getNameOfPolicy(policy)}</dd>
           <dt>Account</dt>
           <dd>{policy.account || '-'}</dd>
-          <dt>Account Detail</dt>
+          <dt>Ledger Entry Description</dt>
           <dd>{policy.account_detail || '-'}</dd>
           <dt>Cost Center</dt>
           <dd>{policy.cost_center || '-'}</dd>

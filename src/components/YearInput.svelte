@@ -1,6 +1,6 @@
 <!-- https://github.com/material-components/material-components-web/tree/master/packages/mdc-textfield -->
 <script lang="ts">
-import { isFourDigitYear } from "helpers/dates";
+import { isFourDigitYear } from 'helpers/dates'
 import { generateRandomID } from '@silintl/ui-components/random'
 import { MDCTextField } from '@material/textfield'
 import { afterUpdate, onMount } from 'svelte'

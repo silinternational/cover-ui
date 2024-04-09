@@ -154,17 +154,20 @@ const onReviseItem = () => {
     </ItemDetails>
 
     <br />
-    {#if status === ItemCoverageStatus.Approved && isMemberOfPolicy}
-      <div class="m-1">
+    <div class="tw-flex tw-justify-between tw-m-4">
+      {#if status === ItemCoverageStatus.Approved && isMemberOfPolicy}
+      <div>
         <Button class="mdc-theme--secondary-background" on:click={goToNewClaim} raised>File Claim</Button>
       </div>
-    {:else if status === ItemCoverageStatus.Pending && isAdmin}
+      {:else if status === ItemCoverageStatus.Pending && isAdmin}
       <div>
         <Button class="mdc-theme--secondary-background" on:click={onDenyItem} raised>Deny Item Coverage</Button>
-        <Button class="m-1 mdc-theme--primary-variant" on:click={onReviseItem} raised>Ask for Changes</Button>
+        <Button class="mdc-theme--primary-variant tw-mx-4" on:click={onReviseItem} raised>Ask for Changes</Button>
         <Button class="mdc-theme--primary-background" on:click={onApproveItem} raised>Approve Item Coverage</Button>
       </div>
-    {/if}
+      {/if}
+      <Button on:click={() => $goto(itemsRoute(policyId))} outlined>Back to Items</Button>
+    </div>
 
     <Dialog.Alert
       open={denyDialogOpen}
@@ -178,7 +181,6 @@ const onReviseItem = () => {
         <TextArea
           class="admin-message-text-area"
           {maxlength}
-          style="width: 300px"
           rows="4"
           placeholder="A message is required to deny coverage or ask for changes"
           bind:value={denyDialogMessage}

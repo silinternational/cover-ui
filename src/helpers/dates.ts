@@ -105,6 +105,6 @@ export const dateIsInThePast = (dateString: string): boolean => {
 export const isItemActiveByDates = (item: PolicyItem): boolean => {
   const today = new Date()
   const start = new Date(item.coverage_start_date)
-  const end = new Date(item.coverage_end_date)
+  const end = item.coverage_end_date ? new Date(item.coverage_end_date) : new Date()
   return start <= today && today <= end
 }

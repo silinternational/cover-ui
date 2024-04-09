@@ -9,8 +9,9 @@ import {
   loadClaimsByPolicyId,
   submitClaim,
 } from 'data/claims'
-import { loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
+import { itemIsApproved, loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
 import { selectedPolicyId } from 'data/role-policy-selection'
+import { isItemActiveByDates } from 'helpers/dates'
 import { formatPageTitle } from 'helpers/pageTitle'
 import * as routes from 'helpers/routes'
 import { assertHas } from '../../../../validation/assertions'
@@ -31,7 +32,7 @@ onMount(async () => {
   }
 })
 
-$: items = $selectedPolicyItems || []
+$: items = $selectedPolicyItems.filter(itemCanClaimFilter) || []
 $: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
 
 $: existingClaim = $claims.find((claim) => isItemIdOnClaim(itemId, claim)) || ({} as Claim)
@@ -68,6 +69,8 @@ const onSubmit = async (event: CustomEvent) => {
 }
 
 const onItemChange = (event: CustomEvent) => (itemId = event.detail.id)
+
+const itemCanClaimFilter = (item: PolicyItem) => itemIsApproved(item) && isItemActiveByDates(item)
 </script>
 
 <Page>

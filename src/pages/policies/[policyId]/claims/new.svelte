@@ -23,15 +23,6 @@ export let policyId = $selectedPolicyId
 
 let itemId: string
 
-onMount(async () => {
-  await loadItems(policyId)
-  $initialized || (await loadClaimsByPolicyId(policyId))
-  if (!$selectedPolicyItems.length) {
-    setNotice('You have no items to start a claim on')
-    $redirect(routes.CLAIMS)
-  }
-})
-
 $: items = $selectedPolicyItems.filter(itemCanClaimFilter) || []
 $: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
 
@@ -39,6 +30,15 @@ $: existingClaim = $claims.find((claim) => isItemIdOnClaim(itemId, claim)) || ({
 $: claimExists = !!existingClaim.id
 
 $: metatags.title = formatPageTitle(`Claims > New Claim`)
+
+onMount(async () => {
+  await loadItems(policyId)
+  $initialized || (await loadClaimsByPolicyId(policyId))
+  if (!items.length) {
+    setNotice('You have no items to start a claim on')
+    $redirect(routes.CLAIMS)
+  }
+})
 
 const isItemIdOnClaim = (itemId: string, claim: Claim) => {
   const claimItems = claim.claim_items || []

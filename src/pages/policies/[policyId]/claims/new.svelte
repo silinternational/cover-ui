@@ -34,7 +34,7 @@ $: metatags.title = formatPageTitle(`Claims > New Claim`)
 onMount(async () => {
   await loadItems(policyId)
   $initialized || (await loadClaimsByPolicyId(policyId))
-  if (!$selectedPolicyItems.filter(itemCanClaimFilter)) {
+  if (!$selectedPolicyItems.filter(itemCanClaimFilter).length) {
     setNotice('You have no items to start a claim on')
     $redirect(routes.CLAIMS)
   }

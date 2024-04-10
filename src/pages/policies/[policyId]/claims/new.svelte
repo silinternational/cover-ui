@@ -9,8 +9,9 @@ import {
   loadClaimsByPolicyId,
   submitClaim,
 } from 'data/claims'
-import { loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
+import { itemIsApproved, loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
 import { selectedPolicyId } from 'data/role-policy-selection'
+import { isItemActiveByDates } from 'helpers/dates'
 import { formatPageTitle } from 'helpers/pageTitle'
 import * as routes from 'helpers/routes'
 import { assertHas } from '../../../../validation/assertions'
@@ -22,22 +23,22 @@ export let policyId = $selectedPolicyId
 
 let itemId: string
 
-onMount(async () => {
-  await loadItems(policyId)
-  $initialized || (await loadClaimsByPolicyId(policyId))
-  if (!$selectedPolicyItems.length) {
-    setNotice('You have no items to start a claim on')
-    $redirect(routes.CLAIMS)
-  }
-})
-
-$: items = $selectedPolicyItems || []
+$: items = $selectedPolicyItems.filter(itemCanClaimFilter) || []
 $: item = items.find((itm) => itm.id === itemId) || ({} as PolicyItem)
 
 $: existingClaim = $claims.find((claim) => isItemIdOnClaim(itemId, claim)) || ({} as Claim)
 $: claimExists = !!existingClaim.id
 
 $: metatags.title = formatPageTitle(`Claims > New Claim`)
+
+onMount(async () => {
+  await loadItems(policyId)
+  $initialized || (await loadClaimsByPolicyId(policyId))
+  if (!$selectedPolicyItems.filter(itemCanClaimFilter).length) {
+    setNotice('You have no items to start a claim on')
+    $redirect(routes.CLAIMS)
+  }
+})
 
 const isItemIdOnClaim = (itemId: string, claim: Claim) => {
   const claimItems = claim.claim_items || []
@@ -68,6 +69,8 @@ const onSubmit = async (event: CustomEvent) => {
 }
 
 const onItemChange = (event: CustomEvent) => (itemId = event.detail.id)
+
+const itemCanClaimFilter = (item: PolicyItem) => itemIsApproved(item) && isItemActiveByDates(item)
 </script>
 
 <Page>

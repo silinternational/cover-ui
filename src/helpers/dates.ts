@@ -1,4 +1,5 @@
 import { day } from 'components/const'
+import type { PolicyItem } from 'data/items'
 
 export const formatFriendlyDate = (dateTimeString: string): string => {
   if (dateTimeString?.includes('0001-01-01') || new Date(dateTimeString).toDateString() === 'Invalid Date') {
@@ -99,4 +100,11 @@ export const isMeaningfulDateString = (dateString: string | undefined): boolean 
 export const dateIsInThePast = (dateString: string): boolean => {
   const date = new Date(dateString)
   return date < new Date()
+}
+
+export const isItemActiveByDates = (item: PolicyItem): boolean => {
+  const today = new Date()
+  const start = new Date(item.coverage_start_date)
+  const end = item.coverage_end_date ? new Date(item.coverage_end_date) : new Date()
+  return start <= today && today <= end
 }

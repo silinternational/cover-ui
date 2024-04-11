@@ -16,6 +16,7 @@ import {
 } from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
 import user, { isAdmin, User } from 'data/user'
+import { isFourDigitYear } from 'helpers/dates'
 import {
   areMakeAndModelRequired,
   assembleStatementNameDefault,
@@ -210,6 +211,7 @@ const beforeSubmit = () => {
     hasMakeWarn = !make
     hasModelWarn = !model
     hasSerialWarn = !uniqueIdentifier
+    hasYearError = !year || !isFourDigitYear(year)
   }
 }
 </script>

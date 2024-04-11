@@ -61,8 +61,8 @@ let hasModelWarn = false
 let hasMakeWarn = false
 let hasSerialWarn = false
 let hasNameError = false
-// let hasAccountableError = false
-// let hasCategoryError = false
+let hasAccountableError = false
+let hasCategoryError = false
 let hasValueError = false
 let hasYearError = false
 let isSavingForLater = false
@@ -203,8 +203,8 @@ const onSubmitClick = () => beforeSubmit()
 
 const beforeSubmit = () => {
   hasNameError = !name
-  // hasAccountableError = !accountablePersonId)
-  //hasCategoryError = !categoryId)
+  hasAccountableError = !accountablePersonId
+  hasCategoryError = !categoryId
   hasValueError = !Number(coverageAmountUSD)
   if (selectedCategoryIsVehicle) {
     hasMakeWarn = !make
@@ -225,12 +225,15 @@ const beforeSubmit = () => {
   <h2>About the item</h2>
   <div class="tw-w-80 tw-max-w-full">
     <Select
+      required
+      showError={hasCategoryError}
       width="100%"
       label="Category"
       options={$categories}
       selectedID={initialCategoryId}
       on:change={onSelectCategory}
       on:populated={onCategorySelectPopulated}
+      on:blur={() => (hasCategoryError = false)}
     />
     {#if selectedCategoryIsStationary}
       <Card class="mt-1 tw-w-full" color="var(--mdc-theme-status-info-bg)">
@@ -291,10 +294,12 @@ const beforeSubmit = () => {
   <h2>Coverage</h2>
   <div class="tw-w-80 tw-max-w-full">
     <SelectAccountablePerson
+      showError={hasAccountableError}
       {policyId}
       selectedID={selectedAccountablePersonId}
       on:populated={onAccountablePersonSelectPopulated}
       on:change={onAccountablePersonChange}
+      on:blur={() => (hasAccountableError = false)}
     />
   </div>
   <div>

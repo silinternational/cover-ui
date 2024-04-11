@@ -10,6 +10,7 @@ import { createEventDispatcher } from 'svelte'
 
 export let policyId: string
 export let selectedID: string
+export let showError: boolean
 
 let dispatch = createEventDispatcher<{ change: AccountablePersonOptions }>()
 
@@ -86,10 +87,13 @@ const onModalFormCancel = () => {
 {#if showSelectBox}
   {#if accountablePersonsHasBeenPopulated}
     <Select
+      required
+      {showError}
       label="Accountable Person"
       width="100%"
       on:change={onAccountablePersonChange}
       on:populated
+      on:blur
       options={accountablePersons}
       {selectedID}
     />

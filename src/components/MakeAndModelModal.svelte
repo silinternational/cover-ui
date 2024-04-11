@@ -4,7 +4,7 @@ import { createEventDispatcher } from 'svelte'
 
 export let open = true
 
-let message = 'You may have difficulty getting coverage without a make and model.'
+let message = 'You may have difficulty getting coverage without a make and model or serial number.'
 let title = 'Missing information'
 
 const buttons: Dialog.AlertButton[] = [

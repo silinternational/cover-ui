@@ -51,13 +51,18 @@ afterUpdate(() => (width = `${element?.offsetWidth}px`))
 const focus = (node: any) => autofocus && node.focus()
 </script>
 
+<style>
+.error {
+  color: var(--mdc-theme-error);
+}
+</style>
+
 <label
   class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon {$$props.class ||
     ''} textfield-radius"
   class:mdc-text-field--no-label={!label}
   class:mdc-text-field--disabled={disabled}
   class:mdc-text-field--invalid={error || showError}
-  class:showError
   class:mdc-text-field--with-leading-icon={error}
   bind:this={element}
 >
@@ -65,7 +70,7 @@ const focus = (node: any) => autofocus && node.focus()
     <span class="mdc-notched-outline__leading" />
     {#if label}
       <span class="mdc-notched-outline__notch">
-        <span class="mdc-floating-label" class:error id={labelID}>
+        <span class="mdc-floating-label" class:error={showError} id={labelID}>
           {label}
         </span>
       </span>

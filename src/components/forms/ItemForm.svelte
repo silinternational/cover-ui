@@ -133,7 +133,7 @@ const onCategorySelectPopulated = () => {
 const onSubmit = () => {
   formData = getFormData()
   validateForSubmit(item, formData, selectedCategoryIsVehicle)
-  if (!(make && model && uniqueIdentifier) && areMakeAndModelRequired(item, categoryId)) {
+  if (!(make && model) && areMakeAndModelRequired(item, categoryId)) {
     makeModelIsOpen = true
   } else {
     dispatch('submit', formData)
@@ -164,7 +164,6 @@ const onMakeModelClosed = (event: CustomEvent<string>) => {
   makeModelIsOpen = false
   hasMakeWarn = !make
   hasModelWarn = !model
-  hasSerialWarn = !uniqueIdentifier
   event.detail === 'submit' && dispatch('submit', formData)
 }
 

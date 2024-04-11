@@ -246,6 +246,7 @@ const beforeSubmit = () => {
   </div>
   <div>
     <TextField
+      on:blur={() => (hasMakeWarn = false)}
       showWarn={hasMakeWarn}
       label="Brand (optional)"
       class="tw-w-80 tw-max-w-full"
@@ -256,6 +257,7 @@ const beforeSubmit = () => {
   <div class:side-by-side={selectedCategoryIsVehicle}>
     <div>
       <TextField
+        on:blur={() => (hasModelWarn = false)}
         showWarn={hasModelWarn}
         label="Model (optional)"
         class="tw-w-80 tw-max-w-full"
@@ -265,13 +267,21 @@ const beforeSubmit = () => {
     </div>
     {#if selectedCategoryIsVehicle}
       <div>
-        <YearInput showError={hasYearError} required label="Year" minValue={1900} bind:value={year} />
+        <YearInput
+          on:blur={() => (hasYearError = false)}
+          showError={hasYearError}
+          required
+          label="Year"
+          minValue={1900}
+          bind:value={year}
+        />
       </div>
     {/if}
   </div>
   <div>
     <TextField
-      showWarn={hasModelWarn}
+      on:blur={() => (hasSerialWarn = false)}
+      showWarn={hasSerialWarn}
       label="Serial number (optional for fast approval)"
       class="tw-w-80 tw-max-w-full"
       description="e.g., chassis number, VIN, IMEI, or service tag"
@@ -289,6 +299,7 @@ const beforeSubmit = () => {
   </div>
   <div>
     <MoneyInput
+      on:blur={() => (hasValueError = false)}
       required={!isSavingForLater}
       showError={hasValueError}
       label="Coverage value (USD)"
@@ -302,6 +313,7 @@ const beforeSubmit = () => {
   <h2>For your own use</h2>
   <div>
     <TextField
+      on:blur={() => (hasNameError = false)}
       required
       showError={hasNameError}
       label="Statement name"

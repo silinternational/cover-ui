@@ -205,7 +205,7 @@ const beforeSubmit = () => {
   hasNameError = !name
   // hasAccountableError = !accountablePersonId)
   //hasCategoryError = !categoryId)
-  hasValueError = !coverageAmountUSD
+  hasValueError = !Number(coverageAmountUSD)
   if (selectedCategoryIsVehicle) {
     hasMakeWarn = !make
     hasModelWarn = !model

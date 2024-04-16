@@ -28,7 +28,6 @@ $: isValidYear = isFourDigitYear(value)
 $: showValidationMessages = !!(hasFocused && hasBlurred && !isFocused && value)
 $: error = showValidationMessages && !isValidYear
 $: mdcTextField && (mdcTextField.valid = !error)
-$: mdcTextField && (mdcTextField.valid = !showError)
 
 const onBlur = () => {
   hasBlurred = true

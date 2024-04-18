@@ -228,15 +228,17 @@ function onInfoClick(event: Event) {
       </p>
       <p>
         <!-- If it's repairable, position this BEFORE the "Payout options" prompt. -->
-        <span class="tw-flex tw-items-center tw-justify-start">
-          <MoneyInput
-            label="Fair market value (USD)"
-            class="tw-w-80 tw-max-w-full"
-            required
-            minValue={'0'}
-            bind:value={fairMarketValueUSD}
-            showError={showFmvError}
-          />
+        <span class="tw-flex">
+          <div>
+            <MoneyInput
+              label="Fair market value (USD)"
+              class="tw-w-80 tw-max-w-full"
+              required
+              minValue={'0'}
+              bind:value={fairMarketValueUSD}
+              showError={showFmvError}
+            />
+          </div>
           <IconButton class="gray mt-4px" icon="info" on:click={onInfoClick} />
         </span>
         <Description>
@@ -270,15 +272,17 @@ function onInfoClick(event: Event) {
     {#if isRepairable === false && payoutOption === PayoutOption.FMV}
       <p>
         <!-- If we know it's not repairable, position this AFTER the "Payout options" prompt. -->
-        <span class="tw-flex tw-items-center tw-justify-start">
-          <MoneyInput
-            label="Fair market value (USD)"
-            class="tw-w-80 tw-max-w-full"
-            required
-            minValue={'0'}
-            bind:value={fairMarketValueUSD}
-            showError={showFmvError}
-          />
+        <span class="tw-flex">
+          <div>
+            <MoneyInput
+              label="Fair market value (USD)"
+              class="tw-w-80 tw-max-w-full"
+              required
+              minValue={'0'}
+              bind:value={fairMarketValueUSD}
+              showError={showFmvError}
+            />
+          </div>
           <IconButton class="gray mt-4px" icon="info" on:click={onInfoClick} />
         </span>
         <Description>

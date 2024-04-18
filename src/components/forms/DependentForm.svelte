@@ -43,6 +43,8 @@ let formData: DependentFormData = {
 }
 let showRelativeError = false
 let showBirthYearError = false
+let showEmailError = false
+let showInviteError = false
 
 const relationshipOptions = [
   {
@@ -69,6 +71,7 @@ const permissionOptions = [
   },
 ]
 
+$: canEdit = formData.permissions === 'can-edit'
 $: alreadyHasSpouse = !!dependents
   .filter((dep) => dep.id !== dependent.id)
   .find((dependent) => dependent.relationship === 'Spouse')
@@ -100,7 +103,7 @@ const validate = (isChild: boolean) => {
     const year = new Date().getFullYear()
     isChild && assertIsLessThan(formData.childBirthYear, year + 1, `Birthyear should be ${year} or earlier`)
   }
-  if (formData.permissions === 'can-edit') {
+  if (canEdit) {
     assertEmailAddress(formData.email, 'Please enter a valid email address')
     assertHas(formData.message, 'Please supply a personalized message')
   }
@@ -139,8 +142,15 @@ const onSubmit = () => {
 const setErrors = () => {
   showRelativeError = isHouseholdPolicy && !formData.relationship
   showBirthYearError = isHouseholdPolicy && formData.relationship === 'Child' && !formData.childBirthYear
+  showEmailError = canEdit && !formData.email
+  showInviteError = canEdit && !formData.message
 }
 
+const onKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Enter') {
+    setErrors()
+  }
+}
 const onChosen = (event: CustomEvent) => (formData.country = event.detail)
 </script>
 
@@ -189,23 +199,36 @@ const onChosen = (event: CustomEvent) => (formData.country = event.detail)
       <label class="mdc-bold-font" for="permissions">Permissions</label>
       <RadioOptions name="permissions" options={permissionOptions} bind:value={formData.permissions} />
     </p>
-    {#if formData.permissions === 'can-edit'}
+    {#if canEdit}
       <p>
-        <TextField {maxlength} label="Email" bind:value={formData.email} class="w-100" />
+        <TextField
+          required
+          showError={showEmailError}
+          {maxlength}
+          label="Email"
+          bind:value={formData.email}
+          class="w-100"
+          on:blur={() => (showEmailError = false)}
+        />
       </p>
       <p>
         <TextArea
+          required
+          showError={showInviteError}
           maxlength={MAX_TEXT_AREA_LENGTH}
           class="w-100"
           rows="4"
           placeholder="A personalized message for the person you are inviting"
           bind:value={formData.message}
+          on:blur={() => (showInviteError = false)}
         />
       </p>
     {/if}
 
     <div class="tw-float-right tw-m-2">
-      <Button on:click={setErrors} raised>{formData.permissions === 'no-login' ? 'Save' : 'Invite Person'}</Button>
+      <Button on:click={setErrors} on:keydown={onKeydown} raised>
+        {formData.permissions === 'no-login' ? 'Save' : 'Invite Person'}
+      </Button>
     </div>
     <div class="tw-float-right tw-m-2">
       <Button on:click={onCancel}>Cancel</Button>

@@ -212,8 +212,9 @@ function onInfoClick(event: Event) {
     <RepairableRadioOptions bind:repairableSelection {potentiallyRepairable} {lossReason} />
     {#if isRepairable}
       <p>
-        <span class="tw-mb-2 tw-block">Repair estimate (USD)</span>
         <MoneyInput
+          class="tw-w-80 tw-max-w-full"
+          label="Repair estimate (USD)"
           required
           minValue={'0'}
           bind:value={repairEstimateUSD}
@@ -221,18 +222,21 @@ function onInfoClick(event: Event) {
           on:blur={() => (showRepairError = false)}
         />
         <Description>
-          How much will it probably cost to be repaired?
-          <br />
+          <div>How much will it probably cost to be repaired?</div>
           <ConvertCurrencyLink />
         </Description>
       </p>
       <p>
         <!-- If it's repairable, position this BEFORE the "Payout options" prompt. -->
         <span class="tw-flex tw-items-center tw-justify-start">
-          <div>
-            <span class="tw-mb-2 tw-block">Fair market value (USD)</span>
-            <MoneyInput required minValue={'0'} bind:value={fairMarketValueUSD} showError={showFmvError} />
-          </div>
+          <MoneyInput
+            label="Fair market value (USD)"
+            class="tw-w-80 tw-max-w-full"
+            required
+            minValue={'0'}
+            bind:value={fairMarketValueUSD}
+            showError={showFmvError}
+          />
           <IconButton class="gray mt-4px" icon="info" on:click={onInfoClick} />
         </span>
         <Description>
@@ -245,8 +249,9 @@ function onInfoClick(event: Event) {
       <PayoutRadioOptions showError={showPayoutError} on:change={() => (showPayoutError = false)} bind:payoutOption />
       {#if payoutOption === PayoutOption.Replacement}
         <p>
-          <span class="tw-mb-2 tw-block">Replacement estimate (USD)</span>
           <MoneyInput
+            label="Replacement estimate (USD)"
+            class="tw-w-80 tw-max-w-full"
             required
             minValue={'0'}
             bind:value={replaceEstimateUSD}
@@ -266,10 +271,14 @@ function onInfoClick(event: Event) {
       <p>
         <!-- If we know it's not repairable, position this AFTER the "Payout options" prompt. -->
         <span class="tw-flex tw-items-center tw-justify-start">
-          <div>
-            <span class="tw-mb-2 tw-block">Fair market value (USD)</span>
-            <MoneyInput required minValue={'0'} bind:value={fairMarketValueUSD} showError={showFmvError} />
-          </div>
+          <MoneyInput
+            label="Fair market value (USD)"
+            class="tw-w-80 tw-max-w-full"
+            required
+            minValue={'0'}
+            bind:value={fairMarketValueUSD}
+            showError={showFmvError}
+          />
           <IconButton class="gray mt-4px" icon="info" on:click={onInfoClick} />
         </span>
         <Description>

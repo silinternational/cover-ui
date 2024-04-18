@@ -5,6 +5,7 @@ import { createEventDispatcher } from 'svelte'
 
 export let country = ''
 export let required = false
+export let showError = false
 
 let countryOptions: any = {}
 
@@ -26,8 +27,10 @@ const updateCountry = (event: CustomEvent) => {
 
 <SearchableSelect
   {required}
+  class={showError ? 'error-input' : ''}
   choice={country}
   options={countryOptions}
   placeholder="Enter country"
   on:check={updateCountry}
+  on:focus
 />

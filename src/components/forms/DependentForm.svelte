@@ -45,6 +45,7 @@ let showRelativeError = false
 let showBirthYearError = false
 let showEmailError = false
 let showInviteError = false
+let showCountryError = false
 
 const relationshipOptions = [
   {
@@ -144,6 +145,7 @@ const setErrors = () => {
   showBirthYearError = isHouseholdPolicy && formData.relationship === 'Child' && !formData.childBirthYear
   showEmailError = canEdit && !formData.email
   showInviteError = canEdit && !formData.message
+  showCountryError = !formData.country
 }
 
 const onKeydown = (event: KeyboardEvent) => {
@@ -167,7 +169,13 @@ const onChosen = (event: CustomEvent) => (formData.country = event.detail)
     {/if}
     <p>
       <span class="header">Primary Location<span class="required-input">*</span></span>
-      <CountrySelector required country={formData.country} on:chosen={onChosen} />
+      <CountrySelector
+        required
+        showError={showCountryError}
+        country={formData.country}
+        on:chosen={onChosen}
+        on:focus={() => (showCountryError = false)}
+      />
     </p>
     {#if isHouseholdPolicy}
       <p>

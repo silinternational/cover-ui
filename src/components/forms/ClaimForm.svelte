@@ -33,6 +33,12 @@ const fmvExplanation =
 const todayDateString = new Date().toISOString()
 
 let fmvModalOpen = false
+let showLossError = false
+let showPayoutError = false
+let showFmvError = false
+let showDescriptionError = false
+let showRepairError = false
+let showReplaceError = false
 // Set default form values.
 let lostDate = todayDateString.split('T')[0]
 let lossReason: string
@@ -86,6 +92,7 @@ $: needsPayoutOption = !(isRepairable || isEvacuation) || repairCostIsTooHigh
 // TODO: add reimbursed value
 
 const onSubmitClaim = () => {
+  setErrors()
   const formData = getFormData()
   validateForFinalSubmission(
     formData,
@@ -104,9 +111,24 @@ const onSaveForLater = () => {
 }
 
 const onContinue = () => {
+  setErrors()
   validateForDraft(item.id, lossReason, situationDescription)
   validateFormOnContinue(repairEstimateUSD, fairMarketValueUSD, isRepairable)
   dispatch('save-for-later', getFormData())
+}
+const onKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Enter') {
+    setErrors()
+  }
+}
+
+const setErrors = () => {
+  showLossError = !lossReason
+  showPayoutError = !!needsPayoutOption && !payoutOption
+  showRepairError = !!isRepairable && !Number(repairEstimateUSD)
+  showReplaceError = payoutOption === PayoutOption.Replacement && !Number(replaceEstimateUSD)
+  showFmvError = shouldAskForFMV && !Number(fairMarketValueUSD)
+  showDescriptionError = !situationDescription
 }
 
 const getFormData = (): ClaimFormData => {
@@ -174,16 +196,30 @@ function onInfoClick(event: Event) {
       <span class="header">Date lost or damaged</span>
       <DateInput required bind:value={lostDate} />
     </p>
-    <LossReasonRadioOptions bind:lossReason />
+    <LossReasonRadioOptions showError={showLossError} bind:lossReason on:change={() => (showLossError = false)} />
     <p>
       <span class="header">What happened?</span>
-      <TextArea {maxlength} required description="Describe the situation" bind:value={situationDescription} rows="4" />
+      <TextArea
+        {maxlength}
+        required
+        description="Describe the situation"
+        bind:value={situationDescription}
+        rows="4"
+        showError={showDescriptionError}
+        on:blur={() => (showDescriptionError = false)}
+      />
     </p>
     <RepairableRadioOptions bind:repairableSelection {potentiallyRepairable} {lossReason} />
     {#if isRepairable}
       <p>
-        <span class="d-block mb-half">Repair estimate (USD)</span>
-        <MoneyInput required minValue={'0'} bind:value={repairEstimateUSD} />
+        <span class="tw-mb-2 tw-block">Repair estimate (USD)</span>
+        <MoneyInput
+          required
+          minValue={'0'}
+          bind:value={repairEstimateUSD}
+          showError={showRepairError}
+          on:blur={() => (showRepairError = false)}
+        />
         <Description>
           How much will it probably cost to be repaired?
           <br />
@@ -192,10 +228,10 @@ function onInfoClick(event: Event) {
       </p>
       <p>
         <!-- If it's repairable, position this BEFORE the "Payout options" prompt. -->
-        <span class="flex justify-start align-items-center">
+        <span class="tw-flex tw-items-center tw-justify-start">
           <div>
-            <span class="d-block mb-half">Fair market value (USD)</span>
-            <MoneyInput required minValue={'0'} bind:value={fairMarketValueUSD} />
+            <span class="tw-mb-2 tw-block">Fair market value (USD)</span>
+            <MoneyInput required minValue={'0'} bind:value={fairMarketValueUSD} showError={showFmvError} />
           </div>
           <IconButton class="gray mt-4px" icon="info" on:click={onInfoClick} />
         </span>
@@ -206,11 +242,17 @@ function onInfoClick(event: Event) {
     {/if}
 
     {#if shouldAskReplaceOrFMV}
-      <PayoutRadioOptions bind:payoutOption />
+      <PayoutRadioOptions showError={showPayoutError} on:change={() => (showPayoutError = false)} bind:payoutOption />
       {#if payoutOption === PayoutOption.Replacement}
         <p>
-          <span class="d-block mb-half">Replacement estimate (USD)</span>
-          <MoneyInput required minValue={'0'} bind:value={replaceEstimateUSD} />
+          <span class="tw-mb-2 tw-block">Replacement estimate (USD)</span>
+          <MoneyInput
+            required
+            minValue={'0'}
+            bind:value={replaceEstimateUSD}
+            showError={showReplaceError}
+            on:blur={() => (showReplaceError = false)}
+          />
           <Description>
             How much will it probably cost to replace?
             <br />
@@ -223,10 +265,10 @@ function onInfoClick(event: Event) {
     {#if isRepairable === false && payoutOption === PayoutOption.FMV}
       <p>
         <!-- If we know it's not repairable, position this AFTER the "Payout options" prompt. -->
-        <span class="flex justify-start align-items-center">
+        <span class="tw-flex tw-items-center tw-justify-start">
           <div>
-            <span class="d-block mb-half">Fair market value (USD)</span>
-            <MoneyInput required minValue={'0'} bind:value={fairMarketValueUSD} />
+            <span class="tw-mb-2 tw-block">Fair market value (USD)</span>
+            <MoneyInput required minValue={'0'} bind:value={fairMarketValueUSD} showError={showFmvError} />
           </div>
           <IconButton class="gray mt-4px" icon="info" on:click={onInfoClick} />
         </span>
@@ -247,9 +289,9 @@ function onInfoClick(event: Event) {
     <p>
       <Button on:click={onSaveForLater} outlined>Save For Later</Button>
       {#if needsEvidence}
-        <Button on:click={onContinue} raised>Continue</Button>
+        <Button on:click={onContinue} on:onkeydown={onKeydown} raised>Continue</Button>
       {:else}
-        <Button on:click={onSubmitClaim} raised>Submit Claim</Button>
+        <Button on:click={onSubmitClaim} on:onkeydown={onKeydown} raised>Submit Claim</Button>
       {/if}
     </p>
   </Form>

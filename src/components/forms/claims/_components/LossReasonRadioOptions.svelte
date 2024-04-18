@@ -3,6 +3,7 @@ import RadioOptions from '../../../RadioOptions.svelte'
 import { claimIncidentTypes } from 'data/types/claim-incident-types'
 
 export let lossReason: string
+export let showError: boolean = false
 
 let lossReasonOptions: { label: string; value: string }[] = []
 
@@ -12,5 +13,5 @@ $: lossReasonOptions = $claimIncidentTypes.map(({ name, description }) => ({ lab
 
 <p>
   <span class="header">Reason for loss or damage</span>
-  <RadioOptions required name="lossReason" options={lossReasonOptions} bind:value={lossReason} />
+  <RadioOptions required name="lossReason" options={lossReasonOptions} {showError} bind:value={lossReason} on:change />
 </p>

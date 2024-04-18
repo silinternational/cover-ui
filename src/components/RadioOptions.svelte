@@ -10,6 +10,7 @@ export let options: RadioOption[] = []
 export let name: string
 export let value: string | undefined
 export let required: boolean = false
+export let showError: boolean = false
 
 const onInput = (event: any) => {
   value = event?.target?.value
@@ -26,6 +27,9 @@ input {
   margin-right: 0.6rem;
   margin-bottom: 0.2rem;
 }
+.showError {
+  color: var(--mdc-theme-error);
+}
 </style>
 
 {#each options as option (option.value)}
@@ -41,7 +45,7 @@ input {
       on:input={onInput}
       on:change
     />
-    <label for={optionId(option)}>
+    <label class:showError for={optionId(option)}>
       {option.label}
       {#if option.description}
         <small class="description">{option.description}</small>

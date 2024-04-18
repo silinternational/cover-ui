@@ -41,6 +41,8 @@ let formData: DependentFormData = {
   email: '',
   message: '',
 }
+let showRelativeError = false
+let showBirthYearError = false
 
 const relationshipOptions = [
   {
@@ -134,27 +136,18 @@ const onSubmit = () => {
   dispatch('submit', formData)
 }
 
+const setErrors = () => {
+  showRelativeError = isHouseholdPolicy && !formData.relationship
+  showBirthYearError = isHouseholdPolicy && formData.relationship === 'Child' && !formData.childBirthYear
+}
+
 const onChosen = (event: CustomEvent) => (formData.country = event.detail)
 </script>
-
-<style>
-.float-left {
-  float: left;
-}
-
-.float-right {
-  float: right;
-}
-
-.form-button {
-  margin: 0.5rem;
-}
-</style>
 
 <div class={$$props.class}>
   <Form on:submit={onSubmit}>
     <p>
-      <TextField {maxlength} label="Person's Name" bind:value={formData.name} class="w-100" autofocus />
+      <TextField required {maxlength} label="Person's Name" bind:value={formData.name} class="w-100" autofocus />
     </p>
     {#if isHouseholdPolicy}
       <p>
@@ -164,16 +157,31 @@ const onChosen = (event: CustomEvent) => (formData.country = event.detail)
     {/if}
     <p>
       <span class="header">Primary Location<span class="required-input">*</span></span>
-      <CountrySelector country={formData.country} on:chosen={onChosen} />
+      <CountrySelector required country={formData.country} on:chosen={onChosen} />
     </p>
     {#if isHouseholdPolicy}
       <p>
         <label class="mdc-bold-font" for="relationship">Relationship</label>
-        <RadioOptions name="relationship" options={relationshipOptions} bind:value={formData.relationship} />
+        <RadioOptions
+          name="relationship"
+          required
+          showError={showRelativeError}
+          options={relationshipOptions}
+          bind:value={formData.relationship}
+          on:change={() => (showRelativeError = false)}
+        />
       </p>
       {#if formData.relationship === 'Child'}
         <p>
-          <YearInput {maxlength} label="Child's birth year" bind:value={formData.childBirthYear} class="w-100" />
+          <YearInput
+            showError={showBirthYearError}
+            required
+            {maxlength}
+            label="Child's birth year"
+            bind:value={formData.childBirthYear}
+            class="w-100"
+            on:blur={() => (showBirthYearError = false)}
+          />
         </p>
       {/if}
     {/if}
@@ -196,14 +204,14 @@ const onChosen = (event: CustomEvent) => (formData.country = event.detail)
       </p>
     {/if}
 
-    <div class="float-right form-button">
-      <Button raised>{formData.permissions === 'no-login' ? 'Save' : 'Invite Person'}</Button>
+    <div class="tw-float-right tw-m-2">
+      <Button on:click={setErrors} raised>{formData.permissions === 'no-login' ? 'Save' : 'Invite Person'}</Button>
     </div>
-    <div class="float-right form-button">
+    <div class="tw-float-right tw-m-2">
       <Button on:click={onCancel}>Cancel</Button>
     </div>
     {#if formData.id !== undefined}
-      <div class="float-left form-button">
+      <div class="tw-float-left tw-m-2">
         <Button on:click={onClickRemove} outlined class="mdc-theme--error">Remove</Button>
       </div>
     {/if}

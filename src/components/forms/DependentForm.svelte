@@ -41,6 +41,11 @@ let formData: DependentFormData = {
   email: '',
   message: '',
 }
+let showRelativeError = false
+let showBirthYearError = false
+let showEmailError = false
+let showInviteError = false
+let showCountryError = false
 
 const relationshipOptions = [
   {
@@ -67,6 +72,7 @@ const permissionOptions = [
   },
 ]
 
+$: canEdit = formData.permissions === 'can-edit'
 $: alreadyHasSpouse = !!dependents
   .filter((dep) => dep.id !== dependent.id)
   .find((dependent) => dependent.relationship === 'Spouse')
@@ -98,7 +104,7 @@ const validate = (isChild: boolean) => {
     const year = new Date().getFullYear()
     isChild && assertIsLessThan(formData.childBirthYear, year + 1, `Birthyear should be ${year} or earlier`)
   }
-  if (formData.permissions === 'can-edit') {
+  if (canEdit) {
     assertEmailAddress(formData.email, 'Please enter a valid email address')
     assertHas(formData.message, 'Please supply a personalized message')
   }
@@ -134,27 +140,26 @@ const onSubmit = () => {
   dispatch('submit', formData)
 }
 
+const setErrors = () => {
+  showRelativeError = isHouseholdPolicy && !formData.relationship
+  showBirthYearError = isHouseholdPolicy && formData.relationship === 'Child' && !formData.childBirthYear
+  showEmailError = canEdit && !formData.email
+  showInviteError = canEdit && !formData.message
+  showCountryError = !formData.country
+}
+
+const onKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Enter') {
+    setErrors()
+  }
+}
 const onChosen = (event: CustomEvent) => (formData.country = event.detail)
 </script>
-
-<style>
-.float-left {
-  float: left;
-}
-
-.float-right {
-  float: right;
-}
-
-.form-button {
-  margin: 0.5rem;
-}
-</style>
 
 <div class={$$props.class}>
   <Form on:submit={onSubmit}>
     <p>
-      <TextField {maxlength} label="Person's Name" bind:value={formData.name} class="w-100" autofocus />
+      <TextField required {maxlength} label="Person's Name" bind:value={formData.name} class="w-100" autofocus />
     </p>
     {#if isHouseholdPolicy}
       <p>
@@ -164,16 +169,37 @@ const onChosen = (event: CustomEvent) => (formData.country = event.detail)
     {/if}
     <p>
       <span class="header">Primary Location<span class="required-input">*</span></span>
-      <CountrySelector country={formData.country} on:chosen={onChosen} />
+      <CountrySelector
+        required
+        showError={showCountryError}
+        country={formData.country}
+        on:chosen={onChosen}
+        on:focus={() => (showCountryError = false)}
+      />
     </p>
     {#if isHouseholdPolicy}
       <p>
         <label class="mdc-bold-font" for="relationship">Relationship</label>
-        <RadioOptions name="relationship" options={relationshipOptions} bind:value={formData.relationship} />
+        <RadioOptions
+          name="relationship"
+          required
+          showError={showRelativeError}
+          options={relationshipOptions}
+          bind:value={formData.relationship}
+          on:change={() => (showRelativeError = false)}
+        />
       </p>
       {#if formData.relationship === 'Child'}
         <p>
-          <YearInput {maxlength} label="Child's birth year" bind:value={formData.childBirthYear} class="w-100" />
+          <YearInput
+            showError={showBirthYearError}
+            required
+            {maxlength}
+            label="Child's birth year"
+            bind:value={formData.childBirthYear}
+            class="w-100"
+            on:blur={() => (showBirthYearError = false)}
+          />
         </p>
       {/if}
     {/if}
@@ -181,29 +207,42 @@ const onChosen = (event: CustomEvent) => (formData.country = event.detail)
       <label class="mdc-bold-font" for="permissions">Permissions</label>
       <RadioOptions name="permissions" options={permissionOptions} bind:value={formData.permissions} />
     </p>
-    {#if formData.permissions === 'can-edit'}
+    {#if canEdit}
       <p>
-        <TextField {maxlength} label="Email" bind:value={formData.email} class="w-100" />
+        <TextField
+          required
+          showError={showEmailError}
+          {maxlength}
+          label="Email"
+          bind:value={formData.email}
+          class="w-100"
+          on:blur={() => (showEmailError = false)}
+        />
       </p>
       <p>
         <TextArea
+          required
+          showError={showInviteError}
           maxlength={MAX_TEXT_AREA_LENGTH}
           class="w-100"
           rows="4"
           placeholder="A personalized message for the person you are inviting"
           bind:value={formData.message}
+          on:blur={() => (showInviteError = false)}
         />
       </p>
     {/if}
 
-    <div class="float-right form-button">
-      <Button raised>{formData.permissions === 'no-login' ? 'Save' : 'Invite Person'}</Button>
+    <div class="tw-float-right tw-m-2">
+      <Button on:click={setErrors} on:keydown={onKeydown} raised>
+        {formData.permissions === 'no-login' ? 'Save' : 'Invite Person'}
+      </Button>
     </div>
-    <div class="float-right form-button">
+    <div class="tw-float-right tw-m-2">
       <Button on:click={onCancel}>Cancel</Button>
     </div>
     {#if formData.id !== undefined}
-      <div class="float-left form-button">
+      <div class="tw-float-left tw-m-2">
         <Button on:click={onClickRemove} outlined class="mdc-theme--error">Remove</Button>
       </div>
     {/if}

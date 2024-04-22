@@ -117,3 +117,7 @@ typings/
 # Jetbrains IDE
 .idea/
 bun.lockb
+
+
+# Sentry Config File
+.sentryclirc

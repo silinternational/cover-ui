@@ -30,4 +30,7 @@ export default defineConfig({
       ]
     }
   },
+  optimizeDeps: {
+    exclude: ['@roxy/routify']
+  }
 })

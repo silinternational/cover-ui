@@ -1,7 +1,7 @@
 <script lang="ts">
 import { ClaimForm } from 'components/index'
 import {
-  Claim,
+  type Claim,
   claims,
   createClaim,
   createClaimItem,
@@ -9,7 +9,7 @@ import {
   loadClaimsByPolicyId,
   submitClaim,
 } from 'data/claims'
-import { itemIsApproved, loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
+import { itemIsApproved, loadItems, type PolicyItem, selectedPolicyItems } from 'data/items'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import { isItemActiveByDates } from 'helpers/dates'
 import { formatPageTitle } from 'helpers/pageTitle'

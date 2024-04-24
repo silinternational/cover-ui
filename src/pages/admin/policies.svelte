@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Paginator, SearchForm } from 'components'
-import { getNameOfPolicy, Policy, PolicyType, searchPoliciesFor } from 'data/policies'
+import { getNameOfPolicy, type Policy, PolicyType, searchPoliciesFor } from 'data/policies'
 import type { PaginatedData } from 'data/types/PaginatedData'
 import type { PolicyMember } from 'data/types/policy-members'
 import { urlQuery } from 'data/query-string'

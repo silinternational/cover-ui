@@ -10,7 +10,7 @@ import {
   editableCoverageStatuses,
   ItemCoverageStatus,
   loadItems,
-  PolicyItem,
+  type PolicyItem,
   reviseItem,
   selectedPolicyItems,
 } from 'data/items'

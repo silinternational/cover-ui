@@ -4,9 +4,9 @@ import { loadDependents } from 'data/dependents'
 import {
   addItem,
   loadItems,
-  NewItemFormData,
-  PolicyItem,
-  UpdateItemFormData,
+  type NewItemFormData,
+  type PolicyItem,
+  type UpdateItemFormData,
   selectedPolicyItems,
   updateItem,
 } from 'data/items'

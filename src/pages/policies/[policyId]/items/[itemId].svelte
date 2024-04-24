@@ -14,7 +14,7 @@ import {
   reviseItem,
   selectedPolicyItems,
 } from 'data/items'
-import { getNameOfPolicy, loadPolicy, memberBelongsToPolicy, policies, Policy } from 'data/policies'
+import { getNameOfPolicy, loadPolicy, memberBelongsToPolicy, policies, type Policy } from 'data/policies'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { items as itemsRoute, itemDetails, itemEdit, itemNewClaim, POLICIES, policyDetails } from 'helpers/routes'
 import { goto, metatags, redirect } from '@roxi/routify'

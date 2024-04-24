@@ -1,5 +1,5 @@
 import type { ClaimIncidentType } from 'data/types/claim-incident-types'
-import { PayoutOption, ClaimItem, ClaimStatus, ClaimFilePurpose } from 'data/claims'
+import { PayoutOption, type ClaimItem, ClaimStatus, type ClaimFilePurpose } from 'data/claims'
 
 export const LOSS_REASON_EVACUATION = 'Evacuation'
 

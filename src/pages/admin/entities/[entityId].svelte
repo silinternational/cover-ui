@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Breadcrumb } from 'components'
-import { EntityCode, entityCodes, getEntity, updateEntity } from 'data/entityCodes'
+import { type EntityCode, entityCodes, getEntity, updateEntity } from 'data/entityCodes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { entityDetails } from 'helpers/routes'
 import { metatags } from '@roxi/routify'

@@ -5,8 +5,8 @@ import {
   createLedgerReport,
   getLedgerReportById,
   getLedgerReports,
-  LedgerReport,
-  LedgerReports
+  type LedgerReport,
+  LedgerReports,
 } from 'data/ledger'
 import { compare } from 'helpers/sort'
 import { formatDateAndTime, formatFriendlyDate } from 'helpers/dates'

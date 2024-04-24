@@ -1,5 +1,5 @@
 <script lang="ts">
-import { countries, Country } from 'data/countries'
+import { countries, type Country } from 'data/countries'
 import { SearchableSelect, setNotice } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 

@@ -1,4 +1,4 @@
-import { PolicyDependent, selectedPolicyDependents } from './dependents'
+import { type PolicyDependent, selectedPolicyDependents } from './dependents'
 import { selectedPolicyMembers } from './policy-members'
 import type { PolicyMember } from './types/policy-members'
 import { derived } from 'svelte/store'

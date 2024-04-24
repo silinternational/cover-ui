@@ -2,7 +2,7 @@
 import { isAdmin as checkIsAdmin } from 'data/user'
 import { Breadcrumb, ClaimCards, ClaimsTable, Row } from 'components'
 import { loading } from 'components/progress'
-import { Claim, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
+import { type Claim, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
 import { getNameOfPolicy, selectedPolicy } from 'data/policies'
 import { roleSelection } from 'data/role-policy-selection'
 import { customerClaims, customerClaimDetails, POLICIES, policyDetails, customerClaimsNew } from 'helpers/routes'

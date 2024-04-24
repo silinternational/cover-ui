@@ -2,17 +2,17 @@
 import { Breadcrumb, ClaimBanner, ClaimForm } from 'components'
 import { isLoadingById, loading } from 'components/progress'
 import {
-  ClaimItem,
+  type ClaimItem,
   claims,
   initialized,
   getClaimById,
   submitClaim,
   updateClaim,
   updateClaimItem,
-  Claim,
+  type Claim,
   ClaimStatus,
 } from 'data/claims'
-import { loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
+import { loadItems, type PolicyItem, selectedPolicyItems } from 'data/items'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import { customerClaims, customerClaimDetails, customerClaimEdit } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'

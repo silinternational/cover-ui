@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Claim, ClaimStatus } from 'data/claims'
+import { type Claim, ClaimStatus } from 'data/claims'
 import { createEventDispatcher } from 'svelte'
 import { Dialog } from '@silintl/ui-components'
 

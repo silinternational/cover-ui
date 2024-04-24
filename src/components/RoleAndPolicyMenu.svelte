@@ -1,7 +1,7 @@
 <script lang="ts">
 import type { MenuItem } from './mdc/types'
 import { UserAppRole } from 'data/user'
-import { getTruncatedNameOfPolicy, Policy, PolicyType } from 'data/policies'
+import { getTruncatedNameOfPolicy, type Policy, PolicyType } from 'data/policies'
 import { roleSelection, recordRoleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import { POLICY_NEW_TEAM } from 'helpers/routes'
 import { Button, Menu } from '@silintl/ui-components'

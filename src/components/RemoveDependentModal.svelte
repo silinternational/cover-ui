@@ -1,5 +1,5 @@
 <script lang="ts">
-import { AccountablePersonOptions, selectedAccountablePersonOptions } from 'data/accountablePersons'
+import { type AccountablePersonOptions, selectedAccountablePersonOptions } from 'data/accountablePersons'
 import type { PolicyDependent } from 'data/dependents'
 import { howManyItemsAccountablePersonIsOn } from 'data/items'
 import RadioOptions from './RadioOptions.svelte'

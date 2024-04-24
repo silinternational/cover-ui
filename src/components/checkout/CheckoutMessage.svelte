@@ -1,5 +1,5 @@
 <script lang="ts">
-import { BillingPeriod, PolicyItem } from 'data/items'
+import { BillingPeriod, type PolicyItem } from 'data/items'
 import type { Policy } from 'data/policies'
 import MonthlyCheckoutMessage from './MonthlyCheckoutMessage.svelte'
 import YearlyCheckoutMessage from './YearlyCheckoutMessage.svelte'

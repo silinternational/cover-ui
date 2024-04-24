@@ -1,5 +1,5 @@
 <script lang="ts">
-import { CreateLedgerReportInput, LedgerReportType } from 'data/ledger'
+import { type CreateLedgerReportInput, LedgerReportType } from 'data/ledger'
 import { Button, DateInput, Dialog, Form, Select } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
 

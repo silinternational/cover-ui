@@ -1,6 +1,6 @@
 <script lang="ts">
 import { FileLink } from 'components'
-import { getLedgerReportById, LedgerReport, reconcileLedgerReport } from 'data/ledger'
+import { getLedgerReportById, type LedgerReport, reconcileLedgerReport } from 'data/ledger'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { formatDateAndTime, formatFriendlyDate } from 'helpers/dates'
 import { metatags } from '@roxi/routify'

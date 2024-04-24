@@ -1,5 +1,5 @@
 import { categories } from 'data/itemCategories'
-import { ItemCoverageStatus, PolicyItem, NewItemFormData, UpdateItemFormData } from 'data/items'
+import { ItemCoverageStatus, type PolicyItem, type NewItemFormData, type UpdateItemFormData } from 'data/items'
 import { assertHas, assertIsFourDigitYear, assertIsLessOrEqual } from '../../../validation/assertions'
 import { get } from 'svelte/store'
 

@@ -1,6 +1,6 @@
 <script lang="ts">
 import { MAX_TEXT_AREA_LENGTH as maxlength } from 'components/const'
-import { createPolicyStrike, Policy, Strike } from 'data/policies'
+import { createPolicyStrike, type Policy, type Strike } from 'data/policies'
 import { formatDate, formatFriendlyDate } from 'helpers/dates'
 import { Button, Datatable, Form, TextArea } from '@silintl/ui-components'
 

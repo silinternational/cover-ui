@@ -1,10 +1,10 @@
 <script lang="ts">
 import { CardsGrid, RecentActivityTable, Row } from 'components'
 import { loading } from 'components/progress'
-import { Claim, statusesAwaitingSignator, statusesAwaitingSteward } from 'data/claims'
-import { ItemCoverageStatus, PolicyItem } from 'data/items'
+import { type Claim, statusesAwaitingSignator, statusesAwaitingSteward } from 'data/claims'
+import { ItemCoverageStatus, type PolicyItem } from 'data/items'
 import { roleSelection } from 'data/role-policy-selection'
-import { isRecentClaim, isRecentItem, loadRecentActivity, RecentChange, recentChanges } from 'data/recent-activity'
+import { isRecentClaim, isRecentItem, loadRecentActivity, type RecentChange, recentChanges } from 'data/recent-activity'
 import { isUserSteward } from 'data/user'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { customerClaimDetails, itemDetails } from 'helpers/routes'

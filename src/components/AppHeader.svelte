@@ -3,7 +3,7 @@ import user from 'data/user'
 import * as routes from 'helpers/routes'
 import Progress from './progress/Progress.svelte'
 import { beforeUrlChange } from '@roxi/routify'
-import { Badge, IconButton, isAboveMobile, Menu, MenuItem } from '@silintl/ui-components'
+import { Badge, IconButton, isAboveMobile, Menu, type MenuItem } from '@silintl/ui-components'
 import { createEventDispatcher, onMount } from 'svelte'
 
 const menuItems: MenuItem[] = [

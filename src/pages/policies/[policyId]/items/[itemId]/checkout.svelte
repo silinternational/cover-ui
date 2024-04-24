@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Checkout } from 'components'
-import { deleteItem, loadItems, PolicyItem, selectedPolicyItems, submitItem } from 'data/items'
+import { deleteItem, loadItems, type PolicyItem, selectedPolicyItems, submitItem } from 'data/items'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { itemDetails, items, itemEdit } from 'helpers/routes'
 import { goto, metatags, params } from '@roxi/routify'

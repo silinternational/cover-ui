@@ -6,11 +6,11 @@ import {
   initialized,
   createClaim,
   createClaimItem,
-  Claim,
+  type Claim,
   submitClaim,
   loadClaimsByPolicyId,
 } from 'data/claims'
-import { loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
+import { loadItems, type PolicyItem, selectedPolicyItems } from 'data/items'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import * as routes from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'

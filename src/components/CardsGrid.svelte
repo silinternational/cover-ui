@@ -1,9 +1,9 @@
 <script lang="ts">
 import ClaimCard from './ClaimCard.svelte'
 import ItemCard from './ItemCard.svelte'
-import { Claim, ClaimItem, incompleteClaimItemStatuses, isClaimItem } from 'data/claims'
-import { incompleteItemCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/items'
-import { isRecentClaim, RecentChange } from 'data/recent-activity'
+import { type Claim, type ClaimItem, incompleteClaimItemStatuses, isClaimItem } from 'data/claims'
+import { incompleteItemCoverageStatuses, ItemCoverageStatus, type PolicyItem } from 'data/items'
+import { isRecentClaim, type RecentChange } from 'data/recent-activity'
 
 type CardItem = { data: ClaimItem | PolicyItem; claim?: Claim }
 

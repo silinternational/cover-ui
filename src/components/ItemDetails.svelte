@@ -1,8 +1,8 @@
 <script lang="ts">
 import ItemBanner from './banners/ItemBanner.svelte'
 import MessageBanner from './banners/MessageBanner.svelte'
-import { ItemCoverageStatus, PolicyItem, itemIsDenied, itemIsNotInactive } from 'data/items'
-import { getPolicyById, loadPolicy, policies, Policy, PolicyType } from 'data/policies'
+import { ItemCoverageStatus, type PolicyItem, itemIsDenied, itemIsNotInactive } from 'data/items'
+import { getPolicyById, loadPolicy, policies, type Policy, PolicyType } from 'data/policies'
 import { getPremiumDescription, getRenewalDate, getStartDate } from 'helpers/coverage'
 import { dateIsInThePast, formatDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'

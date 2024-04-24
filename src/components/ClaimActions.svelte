@@ -2,14 +2,14 @@
 import { UserAppRole } from 'data/user'
 import { MAX_TEXT_AREA_LENGTH as maxlength } from 'components/const'
 import {
-  Claim,
+  type Claim,
   ClaimStatus,
   editableStatuses,
   PayoutOption,
+  ReceiptType,
   statusesAvaitingAdmin,
   statusesAwaitingSignator,
   statusesAwaitingSteward,
-  ReceiptType,
 } from 'data/claims'
 import { roleSelection } from 'data/role-policy-selection'
 import Description from './Description.svelte'

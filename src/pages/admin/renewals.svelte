@@ -4,7 +4,7 @@ import {
   getMonthlyPolicyRenewalStatus,
   processAnnualPolicyRenewals,
   processMonthlyPolicyRenewals,
-  RenewalStatus
+  type RenewalStatus,
 } from 'data/ledger'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { metatags } from '@roxi/routify'
@@ -50,7 +50,7 @@ metatags.title = formatPageTitle('Admin > Renewals')
 <Page>
   <h1>Renewals</h1>
 
-  <Card class="tw-w-96 tw-max-w-full tw-my-6">
+  <Card class="tw-my-6 tw-w-96 tw-max-w-full">
     <h2>Annual</h2>
     <p>Annual process for renewing coverage</p>
     <p>
@@ -64,7 +64,7 @@ metatags.title = formatPageTitle('Admin > Renewals')
     </div>
   </Card>
 
-  <Card class="tw-w-96 tw-max-w-full tw-my-6">
+  <Card class="tw-my-6 tw-w-96 tw-max-w-full">
     <h2>Monthly</h2>
     <p>Monthly process for renewing coverage: This should be done between the 20th and the end of the month.</p>
     <p>

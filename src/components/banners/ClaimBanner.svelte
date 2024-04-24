@@ -1,6 +1,6 @@
 <script lang="ts">
 import StatusBanner from '../banners/StatusBanner.svelte'
-import { getClaimState, SecondaryClaimStatus, State } from 'data/states'
+import { getClaimState, type SecondaryClaimStatus, type State } from 'data/states'
 import type { ClaimStatus, ReceiptType } from 'data/claims'
 import { UserAppRole } from 'data/user'
 

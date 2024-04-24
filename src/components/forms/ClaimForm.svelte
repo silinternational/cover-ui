@@ -12,7 +12,7 @@ import { validateForDraft, validateForFinalSubmission, validateFormOnContinue } 
 import { ItemSelector, LossReasonRadioOptions, PayoutRadioOptions, RepairableRadioOptions } from './claims/_components'
 import { MAX_TEXT_AREA_LENGTH as maxlength } from 'components/const'
 import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
-import { Claim, ClaimItem, PayoutOption } from 'data/claims'
+import { type Claim, type ClaimItem, PayoutOption } from 'data/claims'
 import type { PolicyItem } from 'data/items'
 import { claimIncidentTypes, loadClaimIncidentTypes } from 'data/types/claim-incident-types'
 import Description from '../Description.svelte'

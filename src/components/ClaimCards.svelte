@@ -1,6 +1,6 @@
 <script lang="ts">
 import ClaimCard from './ClaimCard.svelte'
-import { Claim, ClaimItem, incompleteClaimItemStatuses } from '../data/claims'
+import { type Claim, type ClaimItem, incompleteClaimItemStatuses } from '../data/claims'
 
 export let claims: Claim[]
 export let isAdmin: boolean

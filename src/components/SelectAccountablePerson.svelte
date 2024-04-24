@@ -1,8 +1,8 @@
 <script lang="ts">
 import DependentForm from './forms/DependentForm.svelte'
-import { AccountablePersonOptions, selectedAccountablePersonOptions } from 'data/accountablePersons'
-import { addDependent, dependentsByPolicyId, initialized, PolicyDependent } from 'data/dependents'
-import { policies, Policy, PolicyType } from 'data/policies'
+import { type AccountablePersonOptions, selectedAccountablePersonOptions } from 'data/accountablePersons'
+import { addDependent, dependentsByPolicyId, initialized, type PolicyDependent } from 'data/dependents'
+import { policies, type Policy, PolicyType } from 'data/policies'
 import { membersByPolicyId, selectedPolicyMembers } from 'data/policy-members'
 import type { PolicyMember } from 'data/types/policy-members'
 import { Dialog, Select } from '@silintl/ui-components'

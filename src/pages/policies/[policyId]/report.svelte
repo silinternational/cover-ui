@@ -1,8 +1,8 @@
 <script lang="ts">
 import type { Column } from 'components/Datatable/types'
 import { isLoadingById, loading } from 'components/progress'
-import { getLedgerEntriesByPolicyId, PolicyReportData } from 'data/ledger'
-import { getNameOfPolicy, loadPolicy, Policy, PolicyType, selectedPolicy } from 'data/policies'
+import { getLedgerEntriesByPolicyId, type PolicyReportData } from 'data/ledger'
+import { getNameOfPolicy, loadPolicy, type Policy, PolicyType, selectedPolicy } from 'data/policies'
 import { selectedPolicyId } from 'data/role-policy-selection'
 import { formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'

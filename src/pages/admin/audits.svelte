@@ -1,7 +1,7 @@
 <script lang="ts">
 import AuditsOrRepairTable from './_components/AuditsOrRepairTable.svelte'
 import { audits, repairAudits, repairedAudits, runAudits } from 'data/audits'
-import { getUneditableItems, PolicyItem } from 'data/items'
+import { getUneditableItems, type PolicyItem } from 'data/items'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { metatags } from '@roxi/routify'
 import { Button, Page, setNotice } from '@silintl/ui-components'

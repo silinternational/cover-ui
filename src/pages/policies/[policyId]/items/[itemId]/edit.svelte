@@ -7,7 +7,7 @@ import {
   deleteItem,
   ItemCoverageStatus,
   loadItems,
-  PolicyItem,
+  type PolicyItem,
   selectedPolicyItems,
   submitItem,
   updateItem,

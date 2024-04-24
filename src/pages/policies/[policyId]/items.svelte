@@ -7,7 +7,7 @@ import {
   deleteItems,
   itemIsApproved,
   loadItems,
-  PolicyItem,
+  type PolicyItem,
   selectedPolicyItems,
 } from 'data/items'
 import { selectedPolicyId } from 'data/role-policy-selection'

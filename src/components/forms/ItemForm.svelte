@@ -9,13 +9,13 @@ import type { AccountablePersonOptions } from 'data/accountablePersons'
 import {
   itemIsDraft,
   ItemCoverageStatus,
-  NewItemFormData,
-  PolicyItem,
+  type NewItemFormData,
+  type PolicyItem,
   RiskCategoryNames,
-  UpdateItemFormData,
+  type UpdateItemFormData,
 } from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
-import user, { isAdmin, User } from 'data/user'
+import user, { isAdmin, type User } from 'data/user'
 import { isFourDigitYear } from 'helpers/dates'
 import {
   areMakeAndModelRequired,

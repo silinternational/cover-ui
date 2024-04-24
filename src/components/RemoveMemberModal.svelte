@@ -4,7 +4,7 @@ import type { PolicyMember } from 'data/types/policy-members'
 import RadioOptions from './RadioOptions.svelte'
 import { createEventDispatcher } from 'svelte'
 import { Dialog, Select } from '@silintl/ui-components'
-import { AccountablePersonOptions, selectedAccountablePersonOptions } from 'data/accountablePersons'
+import { type AccountablePersonOptions, selectedAccountablePersonOptions } from 'data/accountablePersons'
 
 export let open: boolean = false
 export let policyMember = {} as PolicyMember

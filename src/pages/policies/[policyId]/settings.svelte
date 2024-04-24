@@ -7,13 +7,13 @@ import {
   addDependent,
   deleteDependent,
   loadDependents,
-  PolicyDependent,
+  type PolicyDependent,
   selectedPolicyDependents,
   updateDependent,
 } from 'data/dependents'
 import { entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { assignItems, loadItems } from 'data/items'
-import { updatePolicy, Policy, PolicyType, loadPolicy, selectedPolicy } from 'data/policies'
+import { updatePolicy, type Policy, PolicyType, loadPolicy, selectedPolicy } from 'data/policies'
 import { deletePolicyMember, invitePolicyMember, loadMembersOfPolicy, selectedPolicyMembers } from 'data/policy-members'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
 import type { PolicyMember } from 'data/types/policy-members'
@@ -252,14 +252,21 @@ div {
   <Breadcrumb links={breadcrumbLinks} />
   {#if policy.type === PolicyType.Household && isAdmin($roleSelection)}
     <div>
-      <TextField class="tw-w-72" {maxlength} label="Household ID" required bind:value={householdId} on:blur={updateHouseholdId} />
+      <TextField
+        class="tw-w-72"
+        {maxlength}
+        label="Household ID"
+        required
+        bind:value={householdId}
+        on:blur={updateHouseholdId}
+      />
     </div>
   {/if}
 
   {#if policy.type === PolicyType.Team}
     <div>
       <TextField
-      class="tw-w-72"
+        class="tw-w-72"
         required
         {maxlength}
         description="Appears in your statements"
@@ -282,7 +289,14 @@ div {
     </div>
 
     <div>
-      <TextField class="tw-w-72" label="Cost center" {maxlength} required bind:value={costCenter} on:blur={updateCostCenter} />
+      <TextField
+        class="tw-w-72"
+        label="Cost center"
+        {maxlength}
+        required
+        bind:value={costCenter}
+        on:blur={updateCostCenter}
+      />
     </div>
 
     <div>

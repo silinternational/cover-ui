@@ -4,11 +4,13 @@
     "node": ">=18 <19",
     "comment": "Constrain Node version to match our staging and production environments"
   },
+  "type": "module",
   "scripts": {
+    "dev": "vite --port 8081",
+    "build": "vite build",
+    "preview": "vite preview",
     "prebuild:dev": "npm run clean:build",
-    "build:dev": "rollup -c -w",
     "prebuild:prod": "echo CF_PAGES_BRANCH=${CF_PAGES_BRANCH} >> .env; echo GA_MEASUREMENT_ID=${GA_MEASUREMENT_ID} >> .env; echo FRESHDESK_ID=${FRESHDESK_ID} >> .env; echo API_HOST=${API_HOST}; echo SENTRY_DSN=${SENTRY_DSN} >> .env; npm run clean:build",
-    "build:prod": "rollup -c",
     "check": "npx svelte-check",
     "clean": "conc \"npm run clean:build\" \"npm run clean:deps\"",
     "clean:build": "rimraf dist/bundle* dist/workbox*",
@@ -16,25 +18,15 @@
     "format": "prettier --write ./src/**/*.{ts,svelte}",
     "lint": "eslint ./src/**/*.{ts,svelte}",
     "lint:fix": "eslint --fix ./'src/**/*.{ts,svelte}'",
-    "prelint": "npm run format",
-    "local:dev": "conc \"npm run build:dev\" \"npm run serve:http\"",
-    "local:prod": "conc \"npm run build:prod\" \"npm run serve:http\"",
-    "bun:dev": "conc \"bun run build:dev\" \"bun run serve:http\"",
-    "bun:prod": "conc \"bun run build:prod\" \"bun run serve:http\"",
-    "serve:http": "sirv dist --dev --host 0.0.0.0 --port 8081 --single",
-    "serve:https": "sirv dist --dev --host 0.0.0.0 --port 8443 --single --http2 --key key.pem --cert cert.pem"
+    "prelint": "npm run format"
   },
   "dependencies": {
-    "@rollup/plugin-commonjs": "^19.0.1",
-    "@rollup/plugin-html": "^1.0.2",
-    "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^13.3.0",
-    "@roxi/routify": "^2.18.17",
+    "@roxi/routify": "^3.0.0-next.223",
     "@sentry/svelte": "^7.111.0",
     "@silintl/ui-components": "^11.3.0",
     "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
     "@tailwindcss/typography": "^0.5.10",
-    "@tsconfig/svelte": "^2.0.1",
+    "@tsconfig/svelte": "^5.0.2",
     "autoprefixer": "^10.4.16",
     "concurrently": "^8.2.1",
     "croppie": "^2.6.5",
@@ -46,14 +38,6 @@
     "postcss-import": "^15.1.0",
     "postcss-nesting": "^12.0.1",
     "qs": "^6.11.2",
-    "rollup": "^2.79.1",
-    "rollup-plugin-dotenv": "^0.4.1",
-    "rollup-plugin-includepaths": "^0.2.4",
-    "rollup-plugin-livereload": "^2.0.5",
-    "rollup-plugin-polyfill-node": "^0.13.0",
-    "rollup-plugin-postcss": "^4.0.2",
-    "rollup-plugin-svelte": "^7.1.6",
-    "rollup-plugin-terser": "^7.0.2",
     "svelte": "^4",
     "svelte-preprocess": "^5",
     "tailwind-utopia": "github:domchristie/tailwind-utopia",
@@ -61,11 +45,11 @@
     "typescript": "^4.9.4"
   },
   "devDependencies": {
-    "@rollup/plugin-typescript": "^8.5.0",
+    "@sveltejs/vite-plugin-svelte": "^3.0.2",
     "@types/croppie": "^2.6.1",
     "@types/gtag.js": "^0.0.12",
     "@types/lodash-es": "^4.17.7",
-    "@types/node": "^16.11.6",
+    "@types/node": "^20.12.7",
     "@types/qs": "^6.9.8",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
@@ -77,6 +61,7 @@
     "rimraf": "^3.0.2",
     "sirv-cli": "^2.0.2",
     "svelte-check": "^3.6.4",
-    "tslib": "^2.6.2"
+    "tslib": "^2.6.2",
+    "vite": "^5.2.0"
   }
 }

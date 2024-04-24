@@ -24,7 +24,7 @@ export const login = async (inviteCode = ''): Promise<void> => {
 }
 
 export const logout = async (): Promise<void> => {
-  const logoutUrl = `${process.env.API_HOST}/auth/logout?token=${encodeURIComponent(getToken())}`
+  const logoutUrl = `${import.meta.env.VITE_API_HOST}/auth/logout?token=${encodeURIComponent(getToken())}`
   clearApp()
   clearToken()
   location.replace(logoutUrl)

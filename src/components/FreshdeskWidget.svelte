@@ -1,10 +1,10 @@
 <script lang="ts">
-import user, { User } from 'data/user'
+import user, { type User } from 'data/user'
 import { onMount } from 'svelte'
 
 onMount(() => {
   // Here be dragons
-  window.fwSettings = { widget_id: Number(process.env.FRESHDESK_ID) }
+  window.fwSettings = { widget_id: Number(import.meta.env.VITE_FRESHDESK_ID) }
   // @ts-expect-error since FreshworksWidget snippet is not meant for ts
   // prettier-ignore
   !function(){if("function"!=typeof window.FreshworksWidget){var n=function(){n.q.push(arguments)};n.q=[],window.FreshworksWidget=n}}()
@@ -25,7 +25,7 @@ const setUserData = (user: User) => {
 <svelte:head>
   <script
     type="text/javascript"
-    src="https://widget.freshworks.com/widgets/{process.env.FRESHDESK_ID}.js"
+    src="https://widget.freshworks.com/widgets/{import.meta.env.VITE_FRESHDESK_ID}.js"
     async
     defer
   ></script>

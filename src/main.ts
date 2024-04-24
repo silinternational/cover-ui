@@ -3,9 +3,9 @@ import App from 'components/App.svelte'
 import './components/global.css'
 import * as Sentry from '@sentry/svelte'
 
-const environment = process.env.CF_PAGES_BRANCH
-const dsn = process.env.SENTRY_DSN
-const release = process.env.npm_package_version
+const dsn = import.meta.env.VITE_SENTRY_DSN
+const environment = __EVIRONMENT__
+const release = __APP_VERSION__
 
 console.debug(`Sentry.init ${dsn} ${environment} ${release}`)
 Sentry.init({
@@ -20,6 +20,8 @@ Sentry.init({
   tracesSampleRate: 1.0,
 })
 
-new App({
-  target: document.body,
+const app = new App({
+  target: document.getElementById('app')!,
 })
+
+export default app

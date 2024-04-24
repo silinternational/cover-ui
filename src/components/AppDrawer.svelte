@@ -15,7 +15,7 @@ export let myPolicies: Policy[]
 export let role: UserAppRole
 export let userIsAnonymous: boolean
 
-const isNotProduction = process.env.CF_PAGES_BRANCH !== 'main'
+const isNotProduction = import.meta.env.VITE_CF_PAGES_BRANCH !== 'main'
 
 let drawerEl = {} as any
 let drawerWidth: string

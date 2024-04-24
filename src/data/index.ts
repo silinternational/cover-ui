@@ -44,7 +44,7 @@ async function customFetch<T>(method: FetchMethod, uri: string, body: any = unde
     body = JSON.stringify(body)
   }
 
-  const url = includesHost(uri) ? uri : `${process.env.API_HOST}/${uri}`
+  const url = includesHost(uri) ? uri : `${import.meta.env.VITE_API_HOST}/${uri}`
   let response = {} as Response
   try {
     start(uri)

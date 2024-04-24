@@ -1,4 +1,4 @@
-import { route } from '@roxi/routify'
+// import { route } from '@roxi/routify'
 
 declare global {
   interface Window {
@@ -6,7 +6,7 @@ declare global {
   }
 }
 
-const GA_MEASUREMENT_ID = process.env.GA_MEASUREMENT_ID || ''
+const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID || ''
 
 init()
 
@@ -26,7 +26,7 @@ function init() {
     send_page_view: false,
   })
 
-  route.subscribe(trackPageView)
+  // route.subscribe(trackPageView)
 }
 
 function loadLib() {

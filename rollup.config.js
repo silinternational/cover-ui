@@ -10,7 +10,6 @@ import { terser } from 'rollup-plugin-terser'
 import routify from '@roxi/routify/plugins/rollup.js'
 import autoPreprocess from 'svelte-preprocess'
 import typescript from '@rollup/plugin-typescript'
-import nodePolyfills from 'rollup-plugin-polyfill-node'
 import html from '@rollup/plugin-html'
 
 const production = !process.env.ROLLUP_WATCH
@@ -42,7 +41,6 @@ export default {
     }),
 
     typescript({ sourceMap: !production }),
-    nodePolyfills(),
 
     // If you have external dependencies installed from
     // npm, you'll most likely need these plugins. In

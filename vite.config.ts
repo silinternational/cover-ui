@@ -1,16 +1,16 @@
 import tailwindcssConfig from './tailwind.config'
 import autoprefixer from 'autoprefixer'
 import { resolve } from 'path'
-import postCssNesting from 'postcss-nesting'
 import postcssImport from 'postcss-import'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
 import tailwindcss from 'tailwindcss'
-import tailwindcssNesting from '@tailwindcss/nesting'
+import tailwindcssNesting from 'tailwindcss/nesting'
 import { defineConfig } from 'vite'
 
 const production = process.env.NODE_ENV === 'production'
 
 // https://vitejs.dev/config/
+/** @type {import('vite').UserConfig} */
 export default defineConfig({
   resolve: {
     alias: { components: resolve('src/components'), data: resolve('src/data'), helpers: resolve('src/helpers') },
@@ -28,7 +28,7 @@ export default defineConfig({
   },
   css: {
     postcss: {
-      plugins: [postCssNesting(), postcssImport(), tailwindcssNesting(), tailwindcss(tailwindcssConfig), autoprefixer],
+      plugins: [tailwindcssNesting(), postcssImport(), tailwindcss(tailwindcssConfig), autoprefixer],
     },
   },
   optimizeDeps: {

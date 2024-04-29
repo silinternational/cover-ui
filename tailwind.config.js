@@ -1,5 +1,7 @@
+import typography from '@tailwindcss/typography'
+import utopia from 'tailwind-utopia'
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   prefix: 'tw-',
   content: ['./src/**/*.{html,js,svelte,ts}'],
   theme: {
@@ -8,5 +10,5 @@ module.exports = {
   corePlugins: {
     preflight: false,
   },
-  plugins: [require('@tailwindcss/typography'), require('tailwind-utopia')],
+  plugins: [typography(), utopia()],
 }

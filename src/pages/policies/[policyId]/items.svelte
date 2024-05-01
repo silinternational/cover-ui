@@ -27,7 +27,7 @@ $: policyId && loadItems(policyId)
 $: metatags.title = formatPageTitle('Home')
 $: filteredItems = $selectedPolicyItems.filter((item) => item.name.toLowerCase().includes(searchText.toLowerCase()))
 $: approvedItems = filteredItems.filter(itemIsApproved)
-$: itemsForTable = hideInactive ? approvedItems : $selectedPolicyItems
+$: itemsForTable = hideInactive ? approvedItems : filteredItems
 
 const onDelete = async (event: CustomEvent<any>) => {
   const itemId = event.detail

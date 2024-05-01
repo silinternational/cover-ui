@@ -4,14 +4,21 @@ import BatchItemDelete from './BatchItemDelete.svelte'
 import CopyTableButton from '../CopyTableButton.svelte'
 import { ClaimItem, incompleteClaimItemStatuses, selectedPolicyClaims } from 'data/claims'
 import { getItemState } from 'data/states'
-import { AccountablePerson, editableCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/items'
+import {
+  AccountablePerson,
+  editableCoverageStatuses,
+  ItemCoverageStatus,
+  itemIsVehicle,
+  PolicyItem,
+  selectedPolicyItems,
+} from 'data/items'
 import { isMonthly } from 'helpers/coverage'
 import { formatDate, formatFriendlyDate } from 'helpers/dates'
 import { getItemIcon, hasEnded, willEnd } from './itemTableHelpers'
 import { throwError } from '../../../error'
 import { formatMoney } from 'helpers/money'
 import { itemDetails, itemEdit } from 'helpers/routes'
-import { sortBy } from 'helpers/sort'
+import { sortBy, sortItemsVehiclesFirst } from 'helpers/sort'
 import ItemDeleteModal from '../../ItemDeleteModal.svelte'
 import RowItem from './RowItem.svelte'
 import type { Column } from '../types'
@@ -99,7 +106,7 @@ const columns: Column[] = [
 let numberOfCheckboxes = 0
 let headerId = 'name'
 let ascending = true
-let currentColumn = columns[1]
+let currentColumn: Column
 
 let checkedItems = [] as PolicyItem[]
 let currentItem = {} as PolicyItem
@@ -109,7 +116,9 @@ let shownMenus: { [name: string]: boolean } = {}
 let snMakeAndModelAreVisible = false
 
 $: selectedItemNames = checkedItems.map((item) => item.name)
-$: sortedItemsArray = sortBy(currentColumn.numeric, currentColumn.path, items, ascending) as PolicyItem[]
+$: sortedItemsArray = currentColumn
+  ? sortBy(currentColumn.numeric, currentColumn.path, items, ascending)
+  : items.toSorted(sortItemsVehiclesFirst)
 $: allCheckedItemsAreDraft =
   checkedItems.length > 0 && checkedItems.every((item) => item.coverage_status === ItemCoverageStatus.Draft)
 $: batchActionIsDisabled = checkedItems.length === 0
@@ -242,6 +251,14 @@ const toggleShowSnMakeAndModel = () => {
 }
 const getStatusClass = (status: ItemCoverageStatus) =>
   status === ItemCoverageStatus.Draft ? 'mdc-theme--primary mdc-bold-font' : ''
+
+const hideNonVehicles = () => {
+  items = items.filter(itemIsVehicle)
+}
+
+const showNonVehicles = () => {
+  items = $selectedPolicyItems
+}
 </script>
 
 <style>
@@ -269,6 +286,8 @@ const getStatusClass = (status: ItemCoverageStatus) =>
     on:unchecked={toggleShowSnMakeAndModel}
     label="Show Serial, Make and Model"
   />
+
+  <Checkbox on:checked={hideNonVehicles} on:unchecked={showNonVehicles} label="Hide Non-Vehicles" />
 </div>
 <Datatable
   class={uniqueTableClass}

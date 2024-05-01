@@ -108,3 +108,10 @@ export const isItemActiveByDates = (item: PolicyItem): boolean => {
   const end = item.coverage_end_date ? new Date(item.coverage_end_date) : new Date()
   return start <= today && today <= end
 }
+
+export const isOlderThanDays = (dateString: string, days: number): boolean => {
+  const date = new Date(dateString)
+  const today = new Date()
+  const diff = today.getTime() - date.getTime()
+  return diff > days * day
+}

@@ -3,6 +3,7 @@ import type { MenuItem } from './mdc/types'
 import { UserAppRole } from 'data/user'
 import { getTruncatedNameOfPolicy, Policy, PolicyType } from 'data/policies'
 import { roleSelection, recordRoleSelection, selectedPolicyId } from 'data/role-policy-selection'
+import { isOlderThanDays } from 'helpers/dates'
 import { POLICY_NEW_TEAM } from 'helpers/routes'
 import { Button, Menu } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
@@ -19,6 +20,23 @@ const addTeamPolicyEntry: MenuItem = {
   label: 'Add Team Policy',
   url: POLICY_NEW_TEAM,
 }
+
+const hidePolicyEntry = {
+  icon: 'visibility_off',
+  label: 'Hide Inactive Policies',
+  action: () => {
+    areInactivePoliciesHidden = true
+  },
+}
+
+const showPolicyEntry = {
+  icon: 'visibility',
+  label: 'Show Inactive Policies',
+  action: () => {
+    areInactivePoliciesHidden = false
+  },
+}
+
 const dispatch = createEventDispatcher()
 
 let teamPolicyEntries: MenuItem[]
@@ -28,6 +46,7 @@ let menuItems: MenuItem[]
 let myTeamPolicies: Policy[]
 let myHouseholdPolicies: Policy[]
 let roleEntries: MenuItem[]
+let areInactivePoliciesHidden = true
 
 $: myTeamPolicies = myPolicies.filter(isTeamPolicy)
 $: myHouseholdPolicies = myPolicies.filter(isHouseholdPolicy)
@@ -41,7 +60,15 @@ $: roleEntries = getEntriesForRole(role)
 $: teamPolicyEntries = getTeamPolicyEntries(myTeamPolicies)
 $: householdPolicyEntries = getHouseholdEntries(myHouseholdPolicies)
 
-$: menuItems = [...roleEntries, ...householdPolicyEntries, ...teamPolicyEntries, addTeamPolicyEntry]
+$: showOrHidePolicyEntry = areInactivePoliciesHidden ? showPolicyEntry : hidePolicyEntry
+$: menuItems = [
+  ...roleEntries,
+  ...householdPolicyEntries,
+  ...teamPolicyEntries,
+  addTeamPolicyEntry,
+  showOrHidePolicyEntry,
+]
+$: filteredMenuItems = areInactivePoliciesHidden ? menuItems.filter((item) => !item.isInactive) : menuItems
 
 const selectUserPolicy = (policyId: string) => {
   recordRoleSelection(UserAppRole.Customer)
@@ -54,6 +81,7 @@ const getTeamPolicyEntries = (policies: Policy[]): MenuItem[] => {
       icon: TEAM_POLICY_ICON,
       label: getTruncatedNameOfPolicy(policy, 18),
       action: () => selectUserPolicy(policy.id),
+      isInactive: isOlderThanDays(policy.updated_at, 30),
     }
   })
   return [{ subtitle: 'Team Policies' }, ...policyItems]
@@ -65,6 +93,7 @@ const getHouseholdEntries = (policies: Policy[]): MenuItem[] => {
       icon: HOUSEHOLD_POLICY_ICON,
       label: getTruncatedNameOfPolicy(policy, 18) || 'Household',
       action: () => selectUserPolicy(policy.id),
+      isInactive: isOlderThanDays(policy.updated_at, 30),
     }
   })
   return [{ subtitle: 'Personal Policy' }, ...policyItems]
@@ -152,5 +181,5 @@ const toggleRoleAndPolicyMenu = () => (menuIsOpen = !menuIsOpen)
   {buttonText || ''}
 </Button>
 <div id="role-and-policy-menu-options-container">
-  <Menu bind:menuOpen={menuIsOpen} {menuItems} />
+  <Menu bind:menuOpen={menuIsOpen} menuItems={filteredMenuItems} />
 </div>

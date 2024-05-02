@@ -27,6 +27,7 @@ import {
   policyDetails,
   settingsPolicy,
 } from 'helpers/routes'
+import { sortItemsVehiclesFirst } from 'helpers/sort'
 import { goto, metatags } from '@roxi/routify'
 import {
   Button,
@@ -65,7 +66,7 @@ $: members = policy.members || []
 $: policyId && loadItems(policyId)
 // sort items so inactive is last
 $: items = $selectedPolicyItems
-$: approvedItems = items.filter(itemIsApproved)
+$: approvedItems = items.filter(itemIsApproved).toSorted(sortItemsVehiclesFirst)
 $: itemsForTable = hideInactive ? approvedItems.slice(0, 15) : $selectedPolicyItems.slice(0, 15)
 
 $: recentClaims = $selectedPolicyClaims.filter(isRecent)

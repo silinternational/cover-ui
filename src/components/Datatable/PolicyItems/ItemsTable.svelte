@@ -4,14 +4,7 @@ import BatchItemDelete from './BatchItemDelete.svelte'
 import CopyTableButton from '../CopyTableButton.svelte'
 import { ClaimItem, incompleteClaimItemStatuses, selectedPolicyClaims } from 'data/claims'
 import { getItemState } from 'data/states'
-import {
-  AccountablePerson,
-  editableCoverageStatuses,
-  ItemCoverageStatus,
-  itemIsVehicle,
-  PolicyItem,
-  selectedPolicyItems,
-} from 'data/items'
+import { AccountablePerson, editableCoverageStatuses, ItemCoverageStatus, itemIsVehicle, PolicyItem } from 'data/items'
 import { isMonthly } from 'helpers/coverage'
 import { formatDate, formatFriendlyDate } from 'helpers/dates'
 import { getItemIcon, hasEnded, willEnd } from './itemTableHelpers'

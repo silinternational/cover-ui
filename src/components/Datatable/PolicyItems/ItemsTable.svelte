@@ -18,7 +18,7 @@ import { getItemIcon, hasEnded, willEnd } from './itemTableHelpers'
 import { throwError } from '../../../error'
 import { formatMoney } from 'helpers/money'
 import { itemDetails, itemEdit } from 'helpers/routes'
-import { sortBy, sortItemsVehiclesFirst } from 'helpers/sort'
+import { sortBy } from 'helpers/sort'
 import ItemDeleteModal from '../../ItemDeleteModal.svelte'
 import RowItem from './RowItem.svelte'
 import type { Column } from '../types'
@@ -116,9 +116,7 @@ let shownMenus: { [name: string]: boolean } = {}
 let snMakeAndModelAreVisible = false
 
 $: selectedItemNames = checkedItems.map((item) => item.name)
-$: sortedItemsArray = currentColumn
-  ? sortBy(currentColumn.numeric, currentColumn.path, items, ascending)
-  : items.toSorted(sortItemsVehiclesFirst)
+$: sortedItemsArray = currentColumn ? sortBy(currentColumn.numeric, currentColumn.path, items, ascending) : items
 $: allCheckedItemsAreDraft =
   checkedItems.length > 0 && checkedItems.every((item) => item.coverage_status === ItemCoverageStatus.Draft)
 $: batchActionIsDisabled = checkedItems.length === 0

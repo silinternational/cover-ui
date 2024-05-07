@@ -1,3 +1,5 @@
+import { PolicyItem, itemIsVehicle } from 'data/items'
+
 export const compare = (first: string, second: string, ascending: boolean): number => {
   if (ascending) {
     if (first < second) return -1
@@ -27,6 +29,16 @@ export function sortBy(
   items: any[],
   ascending: boolean
 ): any[] {
-  if (!path) return items || []
+  if (!path || !items.length) return items || []
   return numeric ? sortByNum(path, items, ascending) : sortByString(path, items, ascending)
+}
+
+export function sortItemsVehiclesFirst(a: PolicyItem, b: PolicyItem): number {
+  if (itemIsVehicle(a) && !itemIsVehicle(b)) {
+    return -1
+  }
+  if (!itemIsVehicle(a) && itemIsVehicle(b)) {
+    return 1
+  }
+  return 0
 }

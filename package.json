@@ -30,7 +30,7 @@
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@roxi/routify": "^2.18.17",
-    "@silintl/ui-components": "^11.1.2",
+    "@silintl/ui-components": "^11.3.0",
     "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
     "@tailwindcss/typography": "^0.5.10",
     "@tsconfig/svelte": "^2.0.1",

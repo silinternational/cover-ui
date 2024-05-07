@@ -11,6 +11,8 @@ export let name = ''
 export let autofocus = false
 export let disabled = false
 export let description = ''
+export let required = false
+export let showError = false
 
 const step = '1'
 const labelID = generateRandomID('year-input-')
@@ -49,27 +51,34 @@ const focus = (node: any) => autofocus && node.focus()
 </script>
 
 <style>
-.material-icons {
-  color: rgb(133, 140, 148);
-  position: relative;
-  top: 0.4rem;
-  right: 0.6rem;
-}
-.label-margin {
-  margin-left: 1.1rem;
-}
-.mdc-text-field--label-floating .mdc-floating-label {
-  margin-left: 0;
+.error {
+  color: var(--mdc-theme-error);
 }
 </style>
 
 <label
-  class="mdc-text-field mdc-text-field--outlined {$$props.class || ''} textfield-radius"
+  class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon {$$props.class ||
+    ''} textfield-radius"
   class:mdc-text-field--no-label={!label}
   class:mdc-text-field--disabled={disabled}
-  class:mdc-text-field--invalid={error}
+  class:mdc-text-field--invalid={error || showError}
+  class:mdc-text-field--with-leading-icon={error}
   bind:this={element}
 >
+  <span class="mdc-notched-outline">
+    <span class="mdc-notched-outline__leading" />
+    {#if label}
+      <span class="mdc-notched-outline__notch">
+        <span class="mdc-floating-label" class:error={showError} id={labelID}>
+          {label}
+        </span>
+      </span>
+    {/if}
+    <span class="mdc-notched-outline__trailing" />
+  </span>
+  {#if error}
+    <i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading error" aria-hidden="true">error</i>
+  {/if}
   <input
     {step}
     type="number"
@@ -87,23 +96,8 @@ const focus = (node: any) => autofocus && node.focus()
     on:keyup
     {disabled}
     {name}
+    {required}
   />
-  {#if error}
-    <span class="mdc-text-field__affix mdc-text-field__affix--suffix">
-      <i class="material-icons error" aria-hidden="true">error</i>
-    </span>
-  {/if}
-  <span class="mdc-notched-outline">
-    <span class="mdc-notched-outline__leading" />
-    {#if label}
-      <span class="mdc-notched-outline__notch">
-        <span class="mdc-floating-label label-margin" class:error id={labelID}>
-          {label}
-        </span>
-      </span>
-    {/if}
-    <span class="mdc-notched-outline__trailing" />
-  </span>
 </label>
 <div class="mdc-text-field-helper-line" style="width: {width};">
   <div

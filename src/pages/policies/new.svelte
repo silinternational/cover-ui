@@ -16,6 +16,10 @@ let costCenter = ''
 let policyName = ''
 let entityCode = ''
 let entityOptions: any = {}
+let showNameError = false
+let showEntityError = false
+let showCostCenterError = false
+let showAccountError = false
 
 onMount(() => {
   $entityCodes.length || loadEntityCodes()
@@ -61,15 +65,20 @@ const onCheck = (e: CustomEvent) => {
     setNotice('Please select a valid entity code')
   }
 }
-</script>
 
-<style>
-/* TODO use tailwind classes for this */
-.extra-margin {
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
+const onKeydown = (e: KeyboardEvent) => {
+  if (e.key === 'Enter') {
+    setErrors()
+  }
 }
-</style>
+
+const setErrors = () => {
+  showNameError = !policyName
+  showEntityError = !entityCode
+  showCostCenterError = !costCenter
+  showAccountError = !account
+}
+</script>
 
 <Page>
   <Breadcrumb />
@@ -82,17 +91,21 @@ const onCheck = (e: CustomEvent) => {
         {maxlength}
         required
         bind:value={policyName}
+        showError={showNameError}
+        on:blur={() => (showNameError = false)}
       />
     </div>
 
-    <div class="extra-margin">
+    <div class="tw-my-6">
       <SearchableSelect
         required
         placeholder="Entity"
+        class={showEntityError ? 'error-input' : ''}
         options={entityOptions}
         bind:choice={entityCodeName}
         on:check={onCheck}
         on:chosen={(e) => (entityCode = e.detail)}
+        on:focus={() => (showEntityError = false)}
       />
     </div>
 
@@ -104,11 +117,21 @@ const onCheck = (e: CustomEvent) => {
         description="Use within organization"
         label="Cost center"
         bind:value={costCenter}
+        showError={showCostCenterError}
+        on:blur={() => (showCostCenterError = false)}
       />
     </div>
 
     <div>
-      <TextField class="tw-w-72" {maxlength} required label="Account" bind:value={account} />
+      <TextField
+        class="tw-w-72"
+        {maxlength}
+        required
+        label="Account"
+        bind:value={account}
+        showError={showAccountError}
+        on:blur={() => (showAccountError = false)}
+      />
     </div>
 
     <div>
@@ -121,6 +144,6 @@ const onCheck = (e: CustomEvent) => {
       />
     </div>
 
-    <Button raised>Create policy</Button>
+    <Button on:click={setErrors} on:keydown={onKeydown} raised>Create policy</Button>
   </Form>
 </Page>

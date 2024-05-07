@@ -12,11 +12,17 @@ import {
   NewItemFormData,
   PolicyItem,
   RiskCategoryNames,
-  UpdateItemFormData
+  UpdateItemFormData,
 } from 'data/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
 import user, { isAdmin, User } from 'data/user'
-import { areMakeAndModelRequired, assembleStatementNameDefault, validateForSubmit, validateForSave } from './items/itemFormHelpers'
+import { isFourDigitYear } from 'helpers/dates'
+import {
+  areMakeAndModelRequired,
+  assembleStatementNameDefault,
+  validateForSubmit,
+  validateForSave,
+} from './items/itemFormHelpers'
 import SelectAccountablePerson from '../SelectAccountablePerson.svelte'
 import { debounce } from 'lodash-es'
 import { Button, Card, Form, MoneyInput, Select, TextArea, TextField } from '@silintl/ui-components'
@@ -51,6 +57,16 @@ let riskCategoryId = ''
 let name = ''
 let uniqueIdentifier = ''
 let year: number | undefined
+
+let hasModelWarn = false
+let hasMakeWarn = false
+let hasSerialWarn = false
+let hasNameError = false
+let hasAccountableError = false
+let hasCategoryError = false
+let hasValueError = false
+let hasYearError = false
+let isSavingForLater = false
 
 // Set initial values based on the provided item data.
 $: setInitialValues($user, item)
@@ -126,6 +142,7 @@ const onSubmit = () => {
 }
 
 const saveForLater = (event?: Event, isAutoSaving = false) => {
+  isSavingForLater = true
   const formData = getFormData()
   validateForSave(formData)
   dispatch('save-for-later', { ...formData, isAutoSaving })
@@ -146,12 +163,14 @@ const handleDialog = (event: CustomEvent<string>) => {
 
 const onMakeModelClosed = (event: CustomEvent<string>) => {
   makeModelIsOpen = false
+  hasMakeWarn = !make
+  hasModelWarn = !model
   event.detail === 'submit' && dispatch('submit', formData)
 }
 
 const onStatementNameInput = (event: InputEvent) => {
   const inputElement = event.target as HTMLInputElement
-  userCustomizedStatementName = (inputElement.value !== '');
+  userCustomizedStatementName = inputElement.value !== ''
 }
 
 const setInitialValues = (user: User, item: PolicyItem) => {
@@ -174,6 +193,27 @@ const setInitialValues = (user: User, item: PolicyItem) => {
     userCustomizedStatementName = true
   }
 }
+
+const onKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Enter') {
+    beforeSubmit()
+  }
+}
+
+const onSubmitClick = () => beforeSubmit()
+
+const beforeSubmit = () => {
+  hasNameError = !name
+  hasAccountableError = !accountablePersonId
+  hasCategoryError = !categoryId
+  hasValueError = !Number(coverageAmountUSD)
+  if (selectedCategoryIsVehicle) {
+    hasMakeWarn = !make
+    hasModelWarn = !model
+    hasSerialWarn = !uniqueIdentifier
+    hasYearError = !year || !isFourDigitYear(year)
+  }
+}
 </script>
 
 <style>
@@ -182,19 +222,23 @@ const setInitialValues = (user: User, item: PolicyItem) => {
   margin-right: 1rem;
 }
 </style>
+
 <Form on:submit={onSubmit}>
   <h2>About the item</h2>
   <div class="tw-w-80 tw-max-w-full">
     <Select
+      required
+      showError={hasCategoryError}
       width="100%"
       label="Category"
       options={$categories}
       selectedID={initialCategoryId}
       on:change={onSelectCategory}
       on:populated={onCategorySelectPopulated}
+      on:blur={() => (hasCategoryError = false)}
     />
     {#if selectedCategoryIsStationary}
-      <Card class="tw-w-full mt-1" color="var(--mdc-theme-status-info-bg)">
+      <Card class="mt-1 tw-w-full" color="var(--mdc-theme-status-info-bg)">
         <div class="flex justify-start tw-gap-2">
           <div class="material-icons tw-text-[var(--mdc-theme-status-info)]">info</div>
           <div class="tw-text-[var(--mdc-theme-status-info)]">
@@ -207,6 +251,8 @@ const setInitialValues = (user: User, item: PolicyItem) => {
   </div>
   <div>
     <TextField
+      on:blur={() => (hasMakeWarn = false)}
+      showWarn={hasMakeWarn}
       label="Brand (optional)"
       class="tw-w-80 tw-max-w-full"
       description="e.g., Apple or Toyota"
@@ -216,6 +262,8 @@ const setInitialValues = (user: User, item: PolicyItem) => {
   <div class:side-by-side={selectedCategoryIsVehicle}>
     <div>
       <TextField
+        on:blur={() => (hasModelWarn = false)}
+        showWarn={hasModelWarn}
         label="Model (optional)"
         class="tw-w-80 tw-max-w-full"
         description="e.g., iPhone 10 Max 64 GB, A1921, or Land Cruiser"
@@ -225,6 +273,9 @@ const setInitialValues = (user: User, item: PolicyItem) => {
     {#if selectedCategoryIsVehicle}
       <div>
         <YearInput
+          on:blur={() => (hasYearError = false)}
+          showError={hasYearError}
+          required
           label="Year"
           minValue={1900}
           bind:value={year}
@@ -234,6 +285,8 @@ const setInitialValues = (user: User, item: PolicyItem) => {
   </div>
   <div>
     <TextField
+      on:blur={() => (hasSerialWarn = false)}
+      showWarn={hasSerialWarn}
       label="Serial number (optional for fast approval)"
       class="tw-w-80 tw-max-w-full"
       description="e.g., chassis number, VIN, IMEI, or service tag"
@@ -243,14 +296,19 @@ const setInitialValues = (user: User, item: PolicyItem) => {
   <h2>Coverage</h2>
   <div class="tw-w-80 tw-max-w-full">
     <SelectAccountablePerson
+      showError={hasAccountableError}
       {policyId}
       selectedID={selectedAccountablePersonId}
       on:populated={onAccountablePersonSelectPopulated}
       on:change={onAccountablePersonChange}
+      on:blur={() => (hasAccountableError = false)}
     />
   </div>
   <div>
     <MoneyInput
+      on:blur={() => (hasValueError = false)}
+      required={!isSavingForLater}
+      showError={hasValueError}
       label="Coverage value (USD)"
       bind:value={coverageAmountUSD}
       disabled={coverageAmountIsDisabled}
@@ -262,6 +320,9 @@ const setInitialValues = (user: User, item: PolicyItem) => {
   <h2>For your own use</h2>
   <div>
     <TextField
+      on:blur={() => (hasNameError = false)}
+      required
+      showError={hasNameError}
       label="Statement name"
       class="tw-w-80 tw-max-w-full"
       description="Customize what will appear on your financial statements"
@@ -270,12 +331,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
     />
   </div>
   <div class="tw-max-w-prose">
-    <TextArea
-      label="Notes (optional)"
-      maxlength={MAX_TEXT_AREA_LENGTH}
-      bind:value={itemDescription}
-      rows="4"
-    />
+    <TextArea label="Notes (optional)" maxlength={MAX_TEXT_AREA_LENGTH} bind:value={itemDescription} rows="4" />
   </div>
   <p>
     <Button outlined on:click={saveForLater}>Save for later</Button>
@@ -283,7 +339,7 @@ const setInitialValues = (user: User, item: PolicyItem) => {
       <Button outlined on:click={onDelete}>Delete</Button>
       <ItemDeleteModal {open} {item} on:closed={handleDialog} />
     {/if}
-    <Button raised>{applyBtnLabel}</Button>
+    <Button on:click={onSubmitClick} on:keydown={onKeydown} raised>{applyBtnLabel}</Button>
     <MakeAndModelModal open={makeModelIsOpen} on:closed={onMakeModelClosed} />
   </p>
 </Form>

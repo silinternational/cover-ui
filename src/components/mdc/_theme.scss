@@ -56,3 +56,7 @@
   --mdc-theme-primary: var(--mdc-theme-status-error);
   border: 2px solid !important;
 }
+
+.error-input {
+  border: 2px solid var(--mdc-theme-status-error) !important;
+}

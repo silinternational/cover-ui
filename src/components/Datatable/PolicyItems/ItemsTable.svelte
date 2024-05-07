@@ -114,9 +114,13 @@ let goToItemDetails = true
 let deleteModalIsOpen = false
 let shownMenus: { [name: string]: boolean } = {}
 let snMakeAndModelAreVisible = false
+let onlyShowVehicles = false
 
 $: selectedItemNames = checkedItems.map((item) => item.name)
-$: sortedItemsArray = currentColumn ? sortBy(currentColumn.numeric, currentColumn.path, items, ascending) : items
+$: filteredItems = onlyShowVehicles ? items.filter(itemIsVehicle) : items
+$: sortedItemsArray = currentColumn
+  ? sortBy(currentColumn.numeric, currentColumn.path, filteredItems, ascending)
+  : filteredItems
 $: allCheckedItemsAreDraft =
   checkedItems.length > 0 && checkedItems.every((item) => item.coverage_status === ItemCoverageStatus.Draft)
 $: batchActionIsDisabled = checkedItems.length === 0
@@ -251,11 +255,11 @@ const getStatusClass = (status: ItemCoverageStatus) =>
   status === ItemCoverageStatus.Draft ? 'mdc-theme--primary mdc-bold-font' : ''
 
 const hideNonVehicles = () => {
-  items = items.filter(itemIsVehicle)
+  onlyShowVehicles = true
 }
 
 const showNonVehicles = () => {
-  items = $selectedPolicyItems
+  onlyShowVehicles = false
 }
 </script>
 

@@ -29,7 +29,7 @@ export function sortBy(
   items: any[],
   ascending: boolean
 ): any[] {
-  if (!path) return items || []
+  if (!path || !items.length) return items || []
   return numeric ? sortByNum(path, items, ascending) : sortByString(path, items, ascending)
 }
 

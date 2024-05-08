@@ -372,6 +372,11 @@ export const itemIsDenied = (item: PolicyItem): boolean => {
   return item.coverage_status === ItemCoverageStatus.Denied
 }
 
+export const itemIsVehicle = (item: PolicyItem): boolean => {
+  // saw a vehicle with risk category of 'mobile' so checking category key as well
+  return item.risk_category.name === RiskCategoryNames.Vehicle || item.category.key === 'cars'
+}
+
 export const assignItems = async (
   newMemberId: string,
   policyId: string,

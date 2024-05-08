@@ -46,7 +46,7 @@ let menuItems: MenuItem[]
 let myTeamPolicies: Policy[]
 let myHouseholdPolicies: Policy[]
 let roleEntries: MenuItem[]
-let areInactivePoliciesHidden = true
+let areInactivePoliciesHidden = false
 
 $: myTeamPolicies = myPolicies.filter(isTeamPolicy)
 $: myHouseholdPolicies = myPolicies.filter(isHouseholdPolicy)

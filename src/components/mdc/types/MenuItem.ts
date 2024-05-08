@@ -4,4 +4,5 @@ export class MenuItem {
   url?: string
   subtitle?: string
   action?: VoidFunction
+  isInactive?: boolean
 }

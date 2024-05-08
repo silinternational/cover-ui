@@ -76,7 +76,7 @@ const selectUserPolicy = (policyId: string) => {
 }
 
 const getTeamPolicyEntries = (policies: Policy[]): MenuItem[] => {
-  const policyItems = policies.map((policy: Policy): MenuItem => {
+  const policyListItems = policies.map((policy: Policy): MenuItem => {
     return {
       icon: TEAM_POLICY_ICON,
       label: getTruncatedNameOfPolicy(policy, 18),
@@ -84,19 +84,19 @@ const getTeamPolicyEntries = (policies: Policy[]): MenuItem[] => {
       isInactive: isOlderThanDays(policy.updated_at, 30),
     }
   })
-  return [{ subtitle: 'Team Policies' }, ...policyItems]
+  return [{ subtitle: 'Team Policies' }, ...policyListItems]
 }
 
 const getHouseholdEntries = (policies: Policy[]): MenuItem[] => {
-  const policyItems = policies.map((policy): MenuItem => {
+  const policyListItems = policies.map((policy): MenuItem => {
     return {
       icon: HOUSEHOLD_POLICY_ICON,
       label: getTruncatedNameOfPolicy(policy, 18) || 'Household',
       action: () => selectUserPolicy(policy.id),
-      isInactive: isOlderThanDays(policy.updated_at, 30),
+      isInactive: false,
     }
   })
-  return [{ subtitle: 'Personal Policy' }, ...policyItems]
+  return [{ subtitle: 'Personal Policy' }, ...policyListItems]
 }
 
 const selectRole = (role: UserAppRole) => {

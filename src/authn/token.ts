@@ -1,14 +1,26 @@
-export const getSeed = () => sessionStorage.getItem('seed')
-export const getToken = () => (getAccessToken() ? getSeed() + getAccessToken() : '')
+export const getSeed = () => {
+  const seedCookie = document.cookie.replace(/(?:(?:^|.*;\s*)seed\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+  return seedCookie
+}
+
+export const getToken = () => {
+  const accessToken = getAccessToken()
+  return accessToken ? getSeed() + accessToken : ''
+}
+
 export const clear = () => {
-  sessionStorage.removeItem('seed')
-  sessionStorage.removeItem('access-token')
-  sessionStorage.removeItem('token-type')
+  document.cookie = 'seed=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+  document.cookie = 'access-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+  document.cookie = 'token-type=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
 }
 
 initialize()
+
 function initialize() {
-  sessionStorage.getItem('seed') || sessionStorage.setItem('seed', createSeed())
+  const seed = getSeed()
+  if (!seed) {
+    document.cookie = `seed=${createSeed()}; path=/`
+  }
 
   initializeToken()
 }
@@ -24,7 +36,7 @@ function initializeToken() {
     const value = params.get(name)
 
     if (value !== null) {
-      sessionStorage.setItem(name, value)
+      document.cookie = `${name}=${value}; path=/`
       params.delete(name)
     }
 
@@ -39,11 +51,10 @@ function initializeToken() {
 }
 
 function getAccessToken() {
-  return sessionStorage.getItem('access-token') || ''
+  const accessToken = document.cookie.replace(/(?:(?:^|.*;\s*)access-token\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+  return accessToken || ''
 }
 
 function createSeed() {
-  return Math.random() // doesn't need to be cryptographically strong
-    .toString(36) // convert to base-36 so we get more letters
-    .substring(2) // strip off the leading '0.'
+  return Math.random().toString(36).substring(2) // Convert to base-36 so we get more letters, strip off the leading '0.'
 }

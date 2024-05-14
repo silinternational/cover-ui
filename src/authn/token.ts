@@ -1,7 +1,7 @@
 export const getSeed = () => {
   const seedCookie = document.cookie
-    .split('; ')
-    .find((row) => row.startsWith('seed='))
+    .split(';')
+    .find((row) => row.trim().startsWith('seed='))
     ?.split('=')[1]
   return seedCookie
 }
@@ -54,7 +54,7 @@ function initializeToken() {
 }
 
 function getAccessToken() {
-  const accessToken = document.cookie.split('; ').find((row) => row.startsWith('access-token='))
+  const accessToken = document.cookie.split(';').find((row) => row.trim().startsWith('access-token='))
   return accessToken ? accessToken.split('=')[1] : ''
 }
 

@@ -1,5 +1,8 @@
 export const getSeed = () => {
-  const seedCookie = document.cookie.replace(/(?:(?:^|.*;\s*)seed\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+  const seedCookie = document.cookie
+    .split('; ')
+    .find((row) => row.startsWith('seed='))
+    ?.split('=')[1]
   return seedCookie
 }
 
@@ -19,7 +22,7 @@ initialize()
 function initialize() {
   const seed = getSeed()
   if (!seed) {
-    document.cookie = `seed=${createSeed()}; path=/`
+    document.cookie = `seed=${encodeURIComponent(createSeed())}; path=/`
   }
 
   initializeToken()
@@ -36,7 +39,7 @@ function initializeToken() {
     const value = params.get(name)
 
     if (value !== null) {
-      document.cookie = `${name}=${value}; path=/`
+      document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; path=/`
       params.delete(name)
     }
 
@@ -51,10 +54,12 @@ function initializeToken() {
 }
 
 function getAccessToken() {
-  const accessToken = document.cookie.replace(/(?:(?:^|.*;\s*)access-token\s*\=\s*([^;]*).*$)|^.*$/, '$1')
-  return accessToken || ''
+  const accessToken = document.cookie.split('; ').find((row) => row.startsWith('access-token='))
+  return accessToken ? accessToken.split('=')[1] : ''
 }
 
 function createSeed() {
-  return Math.random().toString(36).substring(2) // Convert to base-36 so we get more letters, strip off the leading '0.'
+  return Math.random()
+    .toString(36) // Convert to base-36 so we get more letters
+    .substring(2) // strip off the leading '0.'
 }

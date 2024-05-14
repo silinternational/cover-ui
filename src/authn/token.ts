@@ -1,8 +1,7 @@
+import Cookies from 'js-cookie'
+
 export const getSeed = () => {
-  const seedCookie = document.cookie
-    .split(';')
-    .find((row) => row.trim().startsWith('seed='))
-    ?.split('=')[1]
+  const seedCookie = Cookies.get('seed')
   return seedCookie
 }
 
@@ -12,9 +11,9 @@ export const getToken = () => {
 }
 
 export const clear = () => {
-  document.cookie = 'seed=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-  document.cookie = 'access-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-  document.cookie = 'token-type=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+  Cookies.remove('seed', { path: '/' })
+  Cookies.remove('access-token', { path: '/' })
+  Cookies.remove('token-type', { path: '/' })
 }
 
 initialize()
@@ -22,7 +21,7 @@ initialize()
 function initialize() {
   const seed = getSeed()
   if (!seed) {
-    document.cookie = `seed=${encodeURIComponent(createSeed())}; path=/`
+    Cookies.set('seed', createSeed(), { expires: 7, path: '/' })
   }
 
   initializeToken()
@@ -39,7 +38,7 @@ function initializeToken() {
     const value = params.get(name)
 
     if (value !== null) {
-      document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; path=/`
+      Cookies.set(name, value, { expires: 7, path: '/' })
       params.delete(name)
     }
 
@@ -54,8 +53,8 @@ function initializeToken() {
 }
 
 function getAccessToken() {
-  const accessToken = document.cookie.split(';').find((row) => row.trim().startsWith('access-token='))
-  return accessToken ? accessToken.split('=')[1] : ''
+  const accessToken = Cookies.get('access-token')
+  return accessToken || ''
 }
 
 function createSeed() {

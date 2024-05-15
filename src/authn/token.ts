@@ -1,5 +1,7 @@
 import Cookies from 'js-cookie'
 
+const secure = process.env.CF_PAGES_BRANCH === 'main' || process.env.CF_PAGES_BRANCH === 'develop'
+
 export const getSeed = () => {
   const seedCookie = Cookies.get('seed')
   return seedCookie
@@ -11,9 +13,9 @@ export const getToken = () => {
 }
 
 export const clear = () => {
-  Cookies.remove('seed', { sameSite: 'strict' })
-  Cookies.remove('access-token', { sameSite: 'strict' })
-  Cookies.remove('token-type', { sameSite: 'strict' })
+  Cookies.remove('seed', { sameSite: 'strict', secure })
+  Cookies.remove('access-token', { sameSite: 'strict', secure })
+  Cookies.remove('token-type', { sameSite: 'strict', secure })
 }
 
 initialize()
@@ -21,7 +23,7 @@ initialize()
 function initialize() {
   const seed = getSeed()
   if (!seed) {
-    Cookies.set('seed', createSeed(), { expires: 7, sameSite: 'strict' })
+    Cookies.set('seed', createSeed(), { expires: 7, sameSite: 'strict', secure })
   }
 
   initializeToken()
@@ -38,7 +40,7 @@ function initializeToken() {
     const value = params.get(name)
 
     if (value !== null) {
-      Cookies.set(name, value, { expires: 7, sameSite: 'strict' })
+      Cookies.set(name, value, { expires: 7, sameSite: 'strict', secure })
       params.delete(name)
     }
 

@@ -11,9 +11,9 @@ export const getToken = () => {
 }
 
 export const clear = () => {
-  Cookies.remove('seed', { path: '/' })
-  Cookies.remove('access-token', { path: '/' })
-  Cookies.remove('token-type', { path: '/' })
+  Cookies.remove('seed', { sameSite: 'strict' })
+  Cookies.remove('access-token', { sameSite: 'strict' })
+  Cookies.remove('token-type', { sameSite: 'strict' })
 }
 
 initialize()
@@ -21,7 +21,7 @@ initialize()
 function initialize() {
   const seed = getSeed()
   if (!seed) {
-    Cookies.set('seed', createSeed(), { expires: 7, path: '/' })
+    Cookies.set('seed', createSeed(), { expires: 7, sameSite: 'strict' })
   }
 
   initializeToken()
@@ -38,7 +38,7 @@ function initializeToken() {
     const value = params.get(name)
 
     if (value !== null) {
-      Cookies.set(name, value, { expires: 7, path: '/' })
+      Cookies.set(name, value, { expires: 7, sameSite: 'strict' })
       params.delete(name)
     }
 

@@ -7,15 +7,13 @@ export const getSeed = () => {
   return seedCookie
 }
 
-export const getToken = () => {
-  const accessToken = getAccessToken()
-  return accessToken ? getSeed() + accessToken : ''
-}
+export const getToken = () => Cookies.get('bearer-token') || ''
 
 export const clear = () => {
   Cookies.remove('seed', { sameSite: 'strict', secure })
   Cookies.remove('access-token', { sameSite: 'strict', secure })
   Cookies.remove('token-type', { sameSite: 'strict', secure })
+  Cookies.remove('bearer-token', { sameSite: 'strict', secure })
 }
 
 initialize()
@@ -41,6 +39,11 @@ function initializeToken() {
 
     if (value !== null) {
       Cookies.set(name, value, { expires: 7, sameSite: 'strict', secure })
+      if (name === 'access-token') {
+        Cookies.set('bearer-token', `Bearer ${getSeed()}${value}`, { expires: 7, sameSite: 'strict', secure })
+        Cookies.remove('seed', { sameSite: 'strict', secure })
+        Cookies.remove('access-token', { sameSite: 'strict', secure })
+      }
       params.delete(name)
     }
 
@@ -52,11 +55,6 @@ function initializeToken() {
 
     location.replace(location.pathname + search)
   }
-}
-
-function getAccessToken() {
-  const accessToken = Cookies.get('access-token')
-  return accessToken || ''
 }
 
 function createSeed() {

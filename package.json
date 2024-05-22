@@ -39,7 +39,6 @@
     "croppie": "^2.6.5",
     "date-fns": "^2.30.0",
     "iconify-icon": "^1.0.8",
-    "js-cookie": "^3.0.5",
     "lodash-es": "^4.17.21",
     "material-components-web": "^14.0.0",
     "postcss": "^8.4.31",

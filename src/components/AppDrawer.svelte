@@ -2,12 +2,12 @@
 import AppFooter from './AppFooter.svelte'
 import AppHeader from './AppHeader.svelte'
 import { showApp } from '../authn'
+import type { Policy } from 'data/policies'
 import type { UserAppRole } from 'data/user'
 import RoleAndPolicyMenu from './RoleAndPolicyMenu.svelte'
-import type { Policy } from 'data/policies'
+import Watermark from './Watermark.svelte'
 import { beforeUrlChange, url } from '@roxi/routify'
 import { Drawer } from '@silintl/ui-components'
-import Watermark from './Watermark.svelte'
 import { onMount } from 'svelte'
 
 export let menuItems: any[]

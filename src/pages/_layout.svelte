@@ -1,5 +1,5 @@
 <script lang="ts">
-import user, { getDefaultPolicyId, isAdmin, isCustomer } from 'data/user'
+import user, { UserAppRole, getDefaultPolicyId, isAdmin, isCustomer } from 'data/user'
 import { AppDrawer } from 'components'
 import { initialized as policiesInitialized, loadPolicies } from 'data/policies'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
@@ -137,10 +137,11 @@ const goToCustomerView = (event: CustomEvent) => {
     $goto(routes.policyDetails(event.detail))
   }
 }
-const goToAdminView = () => {
+const goToAdminView = (e: CustomEvent) => {
+  const role: UserAppRole = e.detail
   if ($params.policyId) {
     return
-  } else {
+  } else if (isAdmin(role)) {
     $goto(routes.ADMIN_HOME)
   }
 }

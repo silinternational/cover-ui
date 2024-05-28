@@ -14,10 +14,10 @@ export const login = async (inviteCode = ''): Promise<void> => {
   const returnUrl = location.pathname
   let url = 'auth/login'
   if (inviteCode) {
-    url += `&invite=${inviteCode}`
+    url += `?invite=${inviteCode}`
   }
   if (returnUrl !== ROOT && returnUrl !== HOME) {
-    url += `?return-to=${returnUrl}`
+    url += returnUrl.includes('?') ? `&return-to=${returnUrl}` : `?return-to=${returnUrl}`
   }
   const responseData = await POST<AuthLoginResponse>(url)
   if (responseData.RedirectURL) {

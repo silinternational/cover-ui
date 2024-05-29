@@ -16,8 +16,8 @@ export const login = async (inviteCode = ''): Promise<void> => {
   if (inviteCode) {
     url += `?invite=${inviteCode}`
   }
-  if (returnUrl !== ROOT && returnUrl !== HOME) {
-    url += returnUrl.includes('?') || inviteCode ? `&return-to=${returnUrl}` : `?return-to=${returnUrl}`
+  if (returnUrl !== ROOT && returnUrl !== HOME && !inviteCode) {
+    url += returnUrl.includes('?') ? `&return-to=${returnUrl}` : `?return-to=${returnUrl}`
   }
   const responseData = await POST<AuthLoginResponse>(url)
   if (responseData.RedirectURL) {

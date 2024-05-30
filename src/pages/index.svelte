@@ -7,7 +7,8 @@ onMount(() => {
   const returnTo = $params['return-to']
   if (returnTo) {
     $redirect(returnTo)
+  } else {
+    $redirect(HOME)
   }
-  $redirect(HOME)
 })
 </script>

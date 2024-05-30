@@ -5,14 +5,12 @@ import * as Sentry from '@sentry/svelte'
 
 const environment = process.env.CF_PAGES_BRANCH
 const dsn = process.env.SENTRY_DSN
-const release = process.env.npm_package_version
 
-console.debug(`Sentry.init ${dsn} ${environment} ${release}`)
+console.debug(`Sentry.init ${dsn} ${environment}`)
 Sentry.init({
   dsn,
-  integrations: [Sentry.browserTracingIntegration()],
+  integrations: [new Sentry.BrowserTracing()],
   environment,
-  release,
 
   // Set tracesSampleRate to 1.0 to capture 100%
   // of transactions for performance monitoring.

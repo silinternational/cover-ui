@@ -37,7 +37,7 @@ const showPolicyEntry = {
   },
 }
 
-const dispatch = createEventDispatcher()
+const dispatch = createEventDispatcher<{ policy: string; role: UserAppRole }>()
 
 let teamPolicyEntries: MenuItem[]
 let householdPolicyEntries: MenuItem[]

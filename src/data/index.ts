@@ -1,6 +1,5 @@
 import { start, stop } from 'components/progress'
 import { throwError } from '../error'
-import { HOME } from 'helpers/routes'
 import { clearApp } from './storage'
 
 type FetchMethod = 'post' | 'get' | 'put' | 'delete'
@@ -69,10 +68,6 @@ async function customFetch<T>(method: FetchMethod, uri: string, body: any = unde
   if (!response.ok) {
     if (response.status === 401) {
       clearApp()
-
-      if (location.pathname !== HOME) {
-        location.replace(`${location.origin}${HOME}`)
-      }
     }
     throwError(results?.message, response.status, response.statusText, results?.key)
   }

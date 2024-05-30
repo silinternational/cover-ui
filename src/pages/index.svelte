@@ -8,7 +8,6 @@ onMount(() => {
   if (returnTo) {
     $redirect(returnTo)
   }
+  $redirect(HOME)
 })
-
-$redirect(HOME)
 </script>

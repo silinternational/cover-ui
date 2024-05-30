@@ -1,4 +1,3 @@
-import { getToken } from '../authn/token'
 import { start, stop } from 'components/progress'
 import { throwError } from '../error'
 import { HOME } from 'helpers/routes'
@@ -32,7 +31,6 @@ export const upload = async (formData: FormData): Promise<any> => await CREATE<U
 // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#Supplying_request_options
 async function customFetch<T>(method: FetchMethod, uri: string, body: any = undefined): Promise<T> {
   const headers: HeadersInit = {
-    Authorization: `Bearer ${getToken()}`,
     'Content-Type': 'application/json',
   }
 

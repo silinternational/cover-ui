@@ -1,6 +1,5 @@
 import { start, stop } from 'components/progress'
 import { throwError } from '../error'
-import { HOME } from 'helpers/routes'
 import { clearApp } from './storage'
 
 type FetchMethod = 'post' | 'get' | 'put' | 'delete'

@@ -3,8 +3,10 @@ import { Breadcrumb } from 'components'
 import { MAX_INPUT_LENGTH as maxlength } from 'components/const'
 import { entityCodes, loadEntityCodes } from 'data/entityCodes'
 import { createPolicy } from 'data/policies'
+import { isAdmin } from 'data/user'
+import { roleSelection } from 'data/role-policy-selection'
 import { formatPageTitle } from 'helpers/pageTitle'
-import { policyDetails } from 'helpers/routes'
+import { POLICIES, POLICY_NEW_TEAM, policyDetails } from 'helpers/routes'
 import { assertHas } from '../../validation/assertions'
 import { goto, metatags } from '@roxi/routify'
 import { Button, SearchableSelect, TextField, Page, setNotice, Form } from '@silintl/ui-components'
@@ -32,6 +34,13 @@ $: $entityCodes
     entityOptions[`${e.code} - ${e.name}`] = e.code
   })
 $: entityCodeName = getEntityChoice(entityCode)
+
+$: links = isAdmin($roleSelection)
+  ? [
+      { name: 'Policies', url: POLICIES },
+      { name: 'New Team Policy', url: POLICY_NEW_TEAM },
+    ]
+  : [{ name: 'New Team Policy', url: POLICY_NEW_TEAM }]
 
 const onCreatePolicy = async () => {
   const formData = {
@@ -81,7 +90,7 @@ const setErrors = () => {
 </script>
 
 <Page>
-  <Breadcrumb />
+  <Breadcrumb hasHome {links} />
   <Form on:submit={onCreatePolicy}>
     <div>
       <TextField

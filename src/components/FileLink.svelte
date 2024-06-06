@@ -15,4 +15,4 @@ $: expiration && setTimeout(() => (expired = true), expiration - Number(new Date
 $: expired && dispatch('expired')
 </script>
 
-<a href={url}>{filename}</a>
+<a target="_blank" href={url}>{filename}</a>

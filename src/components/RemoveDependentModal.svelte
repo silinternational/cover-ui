@@ -35,7 +35,7 @@ const dispatch = createEventDispatcher<{ remove: string }>()
 
 const handleDialog = (e: CustomEvent) => {
   if (e.detail === 'remove') {
-    dispatch('remove', selectedAccountablePersonOption.id)
+    dispatch('remove', selectedAccountablePersonOption?.id)
   }
 }
 const onSelect = (e: CustomEvent) => {

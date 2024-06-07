@@ -1,4 +1,5 @@
 import { CREATE, DELETE, GET, UPDATE } from '.'
+import { noCoverage } from 'components/Datatable/PolicyItems/itemTableHelpers'
 import { throwError } from '../error'
 import { convertToCents } from 'helpers/money'
 import type { ItemCategory } from './itemCategories'
@@ -321,12 +322,16 @@ export async function deleteItem(policyId: string, itemId: string): Promise<any>
 
 export const itemBelongsToPolicy = (policyId: string, item: PolicyItem): boolean => item.policy_id === policyId
 
-export const getItemsAccountablePersonIsOn = (accountablePersonId: string, policyId: string): PolicyItem[] => {
-  return get(itemsByPolicyId)[policyId]?.filter((item) => item.accountable_person?.id === accountablePersonId) || []
+export const getMutableItemsAccountablePersonIsOn = (accountablePersonId: string, policyId: string): PolicyItem[] => {
+  return (
+    get(itemsByPolicyId)[policyId]?.filter(
+      (item) => item.accountable_person?.id === accountablePersonId && !noCoverage(item.coverage_status)
+    ) || []
+  )
 }
 
 export const howManyItemsAccountablePersonIsOn = (accountablePersonId: string, policyId: string): number => {
-  return getItemsAccountablePersonIsOn(accountablePersonId, policyId).length
+  return getMutableItemsAccountablePersonIsOn(accountablePersonId, policyId).length
 }
 
 function updateStoreItem(updatedItem: PolicyItem) {
@@ -383,7 +388,7 @@ export const assignItems = async (
   selectedPolicyMemberId: string
 ): Promise<void> => {
   const promises = []
-  const items = getItemsAccountablePersonIsOn(selectedPolicyMemberId, policyId)
+  const items = getMutableItemsAccountablePersonIsOn(selectedPolicyMemberId, policyId)
   for (const item of items) {
     promises.push(
       updateItem(policyId, item.id, {

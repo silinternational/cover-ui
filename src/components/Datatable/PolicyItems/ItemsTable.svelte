@@ -88,6 +88,7 @@ const columns: Column[] = [
     path: 'annual_premium',
     sortable: true,
   },
+  { title: 'Yearly Rate', headerId: 'premium_rate', numeric: true, path: 'premium_rate', sortable: true },
   {
     title: 'Recent Activity',
     headerId: 'recent_activity',
@@ -339,6 +340,7 @@ const showNonVehicles = () => {
             </div>
           {/if}
         </RowItem>
+        <RowItem status={item.coverage_status} numeric>{100 * item.premium_rate}%</RowItem>
         <RowItem status={item.coverage_status}>{formatDate(item.updated_at)}</RowItem>
         <RowItem>
           <IconButton icon="more_vert" on:click={() => handleMoreVertClick(item.id)} />

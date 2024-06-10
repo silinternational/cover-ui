@@ -87,6 +87,7 @@ export type PolicyItem = {
   status_reason: string
   updated_at: string /*Date*/
   year?: number
+  premium_rate?: number
 }
 
 export type CreatePolicyItemRequestBody = {

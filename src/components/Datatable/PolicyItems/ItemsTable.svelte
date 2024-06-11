@@ -119,7 +119,12 @@ $: allCheckedItemsAreDraft =
 $: batchActionIsDisabled = checkedItems.length === 0
 $: batchDeleteIsDisabled =
   batchActionIsDisabled ||
-  checkedItems.some((item) => item.coverage_end_date || item.coverage_status === ItemCoverageStatus.Inactive)
+  checkedItems.some(
+    (item) =>
+      item.coverage_end_date ||
+      item.coverage_status === ItemCoverageStatus.Inactive ||
+      item.coverage_status === ItemCoverageStatus.Denied
+  )
 $: items && (checkedItems = returnFilteredCheckedItems())
 
 const dispatch = createEventDispatcher()

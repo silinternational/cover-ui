@@ -114,12 +114,21 @@ $: filteredItems = onlyShowVehicles ? items.filter(itemIsVehicle) : items
 $: sortedItemsArray = currentColumn
   ? sortBy(currentColumn.numeric, currentColumn.path, filteredItems, ascending)
   : filteredItems
-$: allCheckedItemsAreDraft =
-  checkedItems.length > 0 && checkedItems.every((item) => item.coverage_status === ItemCoverageStatus.Draft)
+$: showDelete =
+  checkedItems.length > 0 &&
+  checkedItems.every(
+    (item) => item.coverage_status === ItemCoverageStatus.Draft || item.coverage_status === ItemCoverageStatus.Pending
+  )
+$: buttonLabel = showDelete ? 'delete' : 'end coverage'
 $: batchActionIsDisabled = checkedItems.length === 0
 $: batchDeleteIsDisabled =
   batchActionIsDisabled ||
-  checkedItems.some((item) => item.coverage_end_date || item.coverage_status === ItemCoverageStatus.Inactive)
+  checkedItems.some(
+    (item) =>
+      item.coverage_end_date ||
+      item.coverage_status === ItemCoverageStatus.Inactive ||
+      item.coverage_status === ItemCoverageStatus.Denied
+  )
 $: items && (checkedItems = returnFilteredCheckedItems())
 
 const dispatch = createEventDispatcher()
@@ -162,7 +171,7 @@ const handleModalDialog = async (event: CustomEvent<string>) => {
 
 const handleClosed = (e: CustomEvent<string>) => {
   if (e.detail === 'delete') {
-    assertItemsHaveNoOpenClaims(checkedItems)
+    assertItemsCanBeDeleted(checkedItems)
     dispatch('batchDelete', checkedItems)
   }
   if (e.detail === 'clone') {
@@ -225,19 +234,18 @@ const registerNewCheckbox = () => {
 
 const returnFilteredCheckedItems = () => checkedItems.filter((ci) => items.some((i) => i.id === ci.id))
 
-//TODO - use the items flags to determine if the user can delete or end coverage
-const assertItemsHaveNoOpenClaims = (items: PolicyItem[]): void => {
-  const checkClaimItemsForItemAndOpenClaim = (claimItems: ClaimItem[], item: PolicyItem) => {
-    const hasOpenClaim = claimItems.some(
-      (claimItem) => claimItem.item_id === item.id && incompleteClaimItemStatuses.includes(claimItem.status)
-    )
-    if (hasOpenClaim) {
+const assertItemsCanBeDeleted = (items: PolicyItem[]): void => {
+  const assertItemCanBeDeleted = (item: PolicyItem) => {
+    if (!item.can_be_updated) {
       throwError(`${capitalize(item.name)} has an open claim, you cannot end coverage until it is resolved.`)
     }
+    if (!item.can_be_deleted) {
+      throwError(
+        `${capitalize(item.name)} has an unresolved claim or financial transaction, you cannot delete it at this time.`
+      )
+    }
   }
-  $selectedPolicyClaims.forEach((claim) => {
-    items.forEach((item) => checkClaimItemsForItemAndOpenClaim(claim.claim_items, item))
-  })
+  items.forEach((item) => assertItemCanBeDeleted(item))
 }
 
 const toggleShowSnMakeAndModel = () => {
@@ -272,7 +280,7 @@ const showNonVehicles = () => {
 {/if}
 
 <div class="flex align-items-center">
-  <BatchItemDelete isDisabled={batchDeleteIsDisabled} {allCheckedItemsAreDraft} on:closed={handleClosed} />
+  <BatchItemDelete isDisabled={batchDeleteIsDisabled} {buttonLabel} on:closed={handleClosed} />
 
   <BatchItemClone isDisabled={batchActionIsDisabled} {selectedItemNames} on:closed={handleClosed} />
 

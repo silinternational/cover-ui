@@ -28,6 +28,6 @@ export const getDependentOptions = (dependents: PolicyDependent[]): AccountableP
 export const selectedAccountablePersonOptions = derived(
   [selectedPolicyMembers, selectedPolicyDependents],
   ([$selectedPolicyMembers, $selectedPolicyDependents]) => {
-    return [...getPolicyMemberOptions($selectedPolicyMembers), ...getDependentOptions($selectedPolicyDependents)] || []
+    return [...getPolicyMemberOptions($selectedPolicyMembers), ...getDependentOptions($selectedPolicyDependents)]
   }
 )

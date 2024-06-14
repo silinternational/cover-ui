@@ -18,7 +18,7 @@ onMount(() => {
   {:else if $error.key === 'ErrorProcessingAuthInviteCode'}
     <p class="m-0-auto">That invite code is invalid</p>
   {:else if $error.key === 'ErrorInviteExpired'}
-    <p class="m-0-auto">That invite code has expired</p>
+    <p class="m-0-auto">{$error.message}</p>
   {:else if !$error.status}
     <p class="m-0-auto">
       Redirecting to login...

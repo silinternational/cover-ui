@@ -1,5 +1,5 @@
 import type { ClaimStatus } from './claims'
-import type { ItemCoverageStatus } from './items'
+import type { ItemCoverageStatus } from './types/items'
 import { UserAppRole } from './user'
 
 export type State = {

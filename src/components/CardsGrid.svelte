@@ -2,8 +2,8 @@
 import ClaimCard from './ClaimCard.svelte'
 import ItemCard from './ItemCard.svelte'
 import { Claim, ClaimItem, incompleteClaimItemStatuses, isClaimItem } from 'data/claims'
-import { incompleteItemCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/items'
 import { isRecentClaim, RecentChange } from 'data/recent-activity'
+import { incompleteItemCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/types/items'
 
 type CardItem = { data: ClaimItem | PolicyItem; claim?: Claim }
 

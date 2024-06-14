@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Datatable } from '@silintl/ui-components'
 import { noCoverage } from 'components/Datatable/PolicyItems/itemTableHelpers'
-import type { ItemCoverageStatus } from 'data/items'
+import type { ItemCoverageStatus } from 'data/types/items'
 
 export let status = '' as ItemCoverageStatus
 export let numeric = false

@@ -1,10 +1,10 @@
 <script lang="ts">
 import ClaimCardBanner from './ClaimCardBanner.svelte'
-import { ItemCoverageStatus, PolicyItem } from 'data/items'
 import { getItemState, State } from 'data/states'
+import { ItemCoverageStatus, PolicyItem } from 'data/types/items'
+import { differenceInSeconds, formatDistanceToNow } from 'date-fns'
 import { Card, Button } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
-import { differenceInSeconds, formatDistanceToNow } from 'date-fns'
 
 export let item: PolicyItem = {} as PolicyItem
 export let isAdmin: boolean

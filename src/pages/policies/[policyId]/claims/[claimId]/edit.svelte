@@ -12,8 +12,9 @@ import {
   Claim,
   ClaimStatus,
 } from 'data/claims'
-import { loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
+import { loadItems, selectedPolicyItems } from 'data/items'
 import { selectedPolicyId } from 'data/role-policy-selection'
+import type { PolicyItem } from 'data/types/items'
 import { customerClaims, customerClaimDetails, customerClaimEdit } from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'

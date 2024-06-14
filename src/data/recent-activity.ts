@@ -1,6 +1,6 @@
 import { GET } from '.'
 import type { Claim } from './claims'
-import type { PolicyItem } from './items'
+import type { PolicyItem } from './types/items'
 import { derived, writable } from 'svelte/store'
 
 export type RecentClaim = {

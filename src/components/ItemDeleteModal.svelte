@@ -1,6 +1,6 @@
 <script lang="ts">
+import { ItemCoverageStatus, PolicyItem } from 'data/types/items'
 import { Dialog } from '@silintl/ui-components'
-import { ItemCoverageStatus, PolicyItem } from 'data/items'
 import { createEventDispatcher } from 'svelte'
 
 export let open = true

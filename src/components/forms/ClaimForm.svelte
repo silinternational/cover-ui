@@ -13,7 +13,7 @@ import { ItemSelector, LossReasonRadioOptions, PayoutRadioOptions, RepairableRad
 import { MAX_TEXT_AREA_LENGTH as maxlength } from 'components/const'
 import ConvertCurrencyLink from '../ConvertCurrencyLink.svelte'
 import { Claim, ClaimItem, PayoutOption } from 'data/claims'
-import type { PolicyItem } from 'data/items'
+import type { PolicyItem } from 'data/types/items'
 import { claimIncidentTypes, loadClaimIncidentTypes } from 'data/types/claim-incident-types'
 import Description from '../Description.svelte'
 import { formatMoney } from 'helpers/money'

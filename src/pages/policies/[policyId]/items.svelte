@@ -1,16 +1,9 @@
 <script lang="ts">
 import { ItemsTable, Row, SearchForm } from 'components'
 import { isLoadingPolicyItems, loading } from 'components/progress'
-import {
-  cloneItems,
-  deleteItem,
-  deleteItems,
-  itemIsApproved,
-  loadItems,
-  PolicyItem,
-  selectedPolicyItems,
-} from 'data/items'
+import { cloneItems, deleteItem, deleteItems, itemIsApproved, loadItems, selectedPolicyItems } from 'data/items'
 import { selectedPolicyId } from 'data/role-policy-selection'
+import type { PolicyItem } from 'data/types/items'
 import * as routes from 'helpers/routes'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { goto, metatags } from '@roxi/routify'

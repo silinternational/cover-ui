@@ -3,17 +3,10 @@ import { Breadcrumb, CardsGrid, ClaimsTable, InfoDialog, ItemsTable, Row, Strike
 import { isLoadingById, loading } from 'components/progress'
 import CopyTableButton from '../../components/Datatable/CopyTableButton.svelte'
 import { Claim, claimIsOpen, loadClaimsByPolicyId, selectedPolicyClaims } from 'data/claims'
-import {
-  deleteItem,
-  itemIsApproved,
-  loadItems,
-  selectedPolicyItems,
-  PolicyItem,
-  deleteItems,
-  cloneItems,
-} from 'data/items'
+import { deleteItem, itemIsApproved, loadItems, selectedPolicyItems, deleteItems, cloneItems } from 'data/items'
 import { getNameOfPolicy, loadPolicy, Policy, PolicyType, selectedPolicy } from 'data/policies'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
+import type { PolicyItem } from 'data/types/items'
 import { isAdmin } from 'data/user'
 import { isMonthly, isYearly } from 'helpers/coverage'
 import { formatFriendlyDate } from 'helpers/dates'

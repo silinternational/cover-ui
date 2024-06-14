@@ -37,10 +37,10 @@ import {
   deleteClaim,
   updateClaim,
 } from 'data/claims'
-import { addItem, loadItems, parseItemForAddItem, PolicyItem, selectedPolicyItems } from 'data/items'
 import { getNameOfPolicy, getPolicyById, loadPolicy, memberBelongsToPolicy, policies, Policy } from 'data/policies'
 import type { SecondaryClaimStatus } from 'data/states'
 import { roleSelection, selectedPolicyId } from 'data/role-policy-selection'
+import { addItem, loadItems, parseItemForAddItem, selectedPolicyItems } from 'data/items'
 import { formatFriendlyDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 import {
@@ -57,6 +57,7 @@ import { onMount } from 'svelte'
 import { goto, metatags } from '@roxi/routify'
 import { Button, FileDropArea, MoneyInput, Page, setNotice } from '@silintl/ui-components'
 import { formatDistanceToNow } from 'date-fns'
+import type { PolicyItem } from 'data/types/items'
 
 export let claimId: string
 export let policyId = $selectedPolicyId
@@ -296,7 +297,7 @@ const onReCover = async () => {
       <Breadcrumb links={breadcrumbLinks} />
     </Row>
     <Row cols="3">
-      <h2 class="tw-break-words my-1">{item.name || ''}</h2>
+      <h2 class="my-1 tw-break-words">{item.name || ''}</h2>
 
       <b>Covered value</b>
       <div>{formatMoney(claimItem.coverage_amount)}</div>
@@ -343,7 +344,11 @@ const onReCover = async () => {
         <h3>{payoutOption || 'No payout option selected'}</h3>
         {#if payoutOption == PayoutOption.Replacement}
           {#if minimumDeductible}
-            <p>Payout is the item’s covered value or replacement cost, whichever is less, minus the greater of a {formatMoney(minimumDeductible)} minimum or 5% of claimed loss.</p>
+            <p>
+              Payout is the item’s covered value or replacement cost, whichever is less, minus the greater of a {formatMoney(
+                minimumDeductible
+              )} minimum or 5% of claimed loss.
+            </p>
           {:else}
             <p>Payout is the item’s covered value or replacement cost, whichever is less, minus a 5% deductible.</p>
           {/if}

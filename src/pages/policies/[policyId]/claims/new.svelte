@@ -9,8 +9,9 @@ import {
   loadClaimsByPolicyId,
   submitClaim,
 } from 'data/claims'
-import { itemIsApproved, loadItems, PolicyItem, selectedPolicyItems } from 'data/items'
+import { itemIsApproved, loadItems, selectedPolicyItems } from 'data/items'
 import { selectedPolicyId } from 'data/role-policy-selection'
+import type { PolicyItem } from 'data/types/items'
 import { isItemActiveByDates } from 'helpers/dates'
 import { formatPageTitle } from 'helpers/pageTitle'
 import * as routes from 'helpers/routes'

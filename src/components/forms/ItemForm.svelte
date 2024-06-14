@@ -7,13 +7,12 @@ import YearInput from '../YearInput.svelte'
 import { MAX_TEXT_AREA_LENGTH } from 'components/const'
 import type { AccountablePersonOptions } from 'data/accountablePersons'
 import {
-  itemIsDraft,
   ItemCoverageStatus,
   NewItemFormData,
   PolicyItem,
   RiskCategoryNames,
   UpdateItemFormData,
-} from 'data/items'
+} from 'data/types/items'
 import { categories, loadCategories, initialized as catItemsInitialized } from 'data/itemCategories'
 import user, { isAdmin, User } from 'data/user'
 import { isFourDigitYear } from 'helpers/dates'
@@ -27,6 +26,7 @@ import SelectAccountablePerson from '../SelectAccountablePerson.svelte'
 import { debounce } from 'lodash-es'
 import { Button, Card, Form, MoneyInput, Select, TextArea, TextField } from '@silintl/ui-components'
 import { createEventDispatcher } from 'svelte'
+import { itemIsDraft } from 'data/items'
 
 export let item = {} as PolicyItem
 export let policyId: string

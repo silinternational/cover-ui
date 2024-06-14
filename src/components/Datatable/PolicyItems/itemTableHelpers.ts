@@ -1,4 +1,4 @@
-import { ItemCoverageStatus, type PolicyItem } from 'data/items'
+import { ItemCoverageStatus, type PolicyItem } from 'data/types/items'
 
 export function hasEnded(item: PolicyItem): boolean {
   return item.coverage_status === ItemCoverageStatus.Inactive && !!item.coverage_end_date

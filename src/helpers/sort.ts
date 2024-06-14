@@ -1,4 +1,5 @@
-import { PolicyItem, itemIsVehicle } from 'data/items'
+import { itemIsVehicle } from 'data/items'
+import type { PolicyItem } from 'data/types/items'
 
 export const compare = (first: string, second: string, ascending: boolean): number => {
   if (ascending) {

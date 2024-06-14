@@ -1,6 +1,6 @@
 <script lang="ts">
 import { delayLoading, loading } from 'components/progress'
-import type { PolicyItem } from 'data/items'
+import type { PolicyItem } from 'data/types/items'
 import { isMonthly } from 'helpers/coverage'
 import { formatDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'

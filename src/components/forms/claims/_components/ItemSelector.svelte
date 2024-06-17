@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { PolicyItem } from 'data/items'
+import type { PolicyItem } from 'data/types/items'
 import { Select } from '@silintl/ui-components'
 
 export let items: PolicyItem[] = []

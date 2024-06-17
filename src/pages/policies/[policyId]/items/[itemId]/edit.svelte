@@ -3,16 +3,9 @@ import { Breadcrumb, ItemBanner, ItemForm } from 'components'
 import { loading } from 'components/progress'
 import { loadDependents } from 'data/dependents'
 import { loadMembersOfPolicy } from 'data/policy-members'
-import {
-  deleteItem,
-  ItemCoverageStatus,
-  loadItems,
-  PolicyItem,
-  selectedPolicyItems,
-  submitItem,
-  updateItem,
-} from 'data/items'
+import { deleteItem, loadItems, selectedPolicyItems, submitItem, updateItem } from 'data/items'
 import { selectedPolicyId } from 'data/role-policy-selection'
+import { ItemCoverageStatus, PolicyItem } from 'data/types/items'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { HOME, items as itemsRoute, itemDetails, itemEdit, itemsCheckout } from 'helpers/routes'
 import { goto, metatags } from '@roxi/routify'

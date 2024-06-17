@@ -5,7 +5,7 @@ import { createEventDispatcher } from 'svelte'
 
 export let modalIsOpen = false
 export let isDisabled = false
-export let allCheckedItemsAreDraft = false
+export let buttonLabel = 'end coverage'
 
 let infoModalContent = "Items with no coverage, a scheduled end date, or an open claim can't be deleted."
 
@@ -15,8 +15,6 @@ const buttons: Dialog.AlertButton[] = [
   { label: 'yes, delete', action: 'delete', class: 'error-button' },
   { label: 'cancel', action: 'cancel', class: 'mdc-dialog__button' },
 ]
-
-$: buttonLabel = allCheckedItemsAreDraft ? 'delete' : 'end coverage'
 
 const handleDialog = (choice: string) => {
   modalIsOpen = false

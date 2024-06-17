@@ -1,5 +1,5 @@
 import { day } from 'components/const'
-import type { PolicyItem } from 'data/items'
+import type { PolicyItem } from 'data/types/items'
 
 export const formatFriendlyDate = (dateTimeString: string): string => {
   if (dateTimeString?.includes('0001-01-01') || new Date(dateTimeString).toDateString() === 'Invalid Date') {

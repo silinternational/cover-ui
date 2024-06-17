@@ -1,7 +1,7 @@
 <script lang="ts">
 import type { Claim } from 'data/claims'
-import type { PolicyItem } from 'data/items'
 import { isRecentClaim, isRecentItem, RecentChange } from 'data/recent-activity'
+import type { PolicyItem } from 'data/types/items'
 import { isMonthly } from 'helpers/coverage'
 import { formatMoney } from 'helpers/money'
 import { customerClaimDetails, itemDetails } from 'helpers/routes'

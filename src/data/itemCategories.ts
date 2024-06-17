@@ -1,6 +1,6 @@
 import { GET } from '.'
 import { writable } from 'svelte/store'
-import type { RiskCategory } from './items'
+import type { RiskCategory } from './types/items'
 
 export type ItemCategory = {
   billing_period: number /*Number of months*/

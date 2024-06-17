@@ -1,7 +1,7 @@
 <script lang="ts">
 import CheckoutMessage from './CheckoutMessage.svelte'
-import type { PolicyItem } from 'data/items'
 import { selectedPolicy } from 'data/policies'
+import type { PolicyItem } from 'data/types/items'
 import { HOME, TERMS_OF_SERVICE } from 'helpers/routes'
 import ItemDeleteModal from '../ItemDeleteModal.svelte'
 import ItemDetails from '../ItemDetails.svelte'

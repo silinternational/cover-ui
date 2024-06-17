@@ -1,4 +1,5 @@
-import { BillingPeriod, itemIsDraft, itemIsApproved, itemIsPending, MonthlyCutoffDay, PolicyItem } from 'data/items'
+import { itemIsDraft, itemIsApproved, itemIsPending, MonthlyCutoffDay } from 'data/items'
+import { BillingPeriod, type PolicyItem } from 'data/types/items'
 import { formatDate, isMeaningfulDateString, startOfFutureMonth } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 

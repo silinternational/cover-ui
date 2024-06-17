@@ -3,18 +3,9 @@ import user, { UserAppRole } from 'data/user'
 import { Breadcrumb, ItemDeleteModal, ItemDetails } from 'components'
 import { MAX_TEXT_AREA_LENGTH as maxlength } from 'components/const'
 import { loading } from 'components/progress'
-import {
-  approveItem,
-  deleteItem,
-  denyItem,
-  editableCoverageStatuses,
-  ItemCoverageStatus,
-  loadItems,
-  PolicyItem,
-  reviseItem,
-  selectedPolicyItems,
-} from 'data/items'
+import { approveItem, deleteItem, denyItem, loadItems, reviseItem, selectedPolicyItems } from 'data/items'
 import { getNameOfPolicy, loadPolicy, memberBelongsToPolicy, policies, Policy } from 'data/policies'
+import { editableCoverageStatuses, ItemCoverageStatus, PolicyItem } from 'data/types/items'
 import { formatPageTitle } from 'helpers/pageTitle'
 import { items as itemsRoute, itemDetails, itemEdit, itemNewClaim, POLICIES, policyDetails } from 'helpers/routes'
 import { goto, metatags, redirect } from '@roxi/routify'
@@ -154,17 +145,17 @@ const onReviseItem = () => {
     </ItemDetails>
 
     <br />
-    <div class="tw-flex tw-justify-between tw-m-4">
+    <div class="tw-m-4 tw-flex tw-justify-between">
       {#if status === ItemCoverageStatus.Approved && isMemberOfPolicy}
-      <div>
-        <Button class="mdc-theme--secondary-background" on:click={goToNewClaim} raised>File Claim</Button>
-      </div>
+        <div>
+          <Button class="mdc-theme--secondary-background" on:click={goToNewClaim} raised>File Claim</Button>
+        </div>
       {:else if status === ItemCoverageStatus.Pending && isAdmin}
-      <div>
-        <Button class="mdc-theme--secondary-background" on:click={onDenyItem} raised>Deny Item Coverage</Button>
-        <Button class="mdc-theme--primary-variant tw-mx-4" on:click={onReviseItem} raised>Ask for Changes</Button>
-        <Button class="mdc-theme--primary-background" on:click={onApproveItem} raised>Approve Item Coverage</Button>
-      </div>
+        <div>
+          <Button class="mdc-theme--secondary-background" on:click={onDenyItem} raised>Deny Item Coverage</Button>
+          <Button class="mdc-theme--primary-variant tw-mx-4" on:click={onReviseItem} raised>Ask for Changes</Button>
+          <Button class="mdc-theme--primary-background" on:click={onApproveItem} raised>Approve Item Coverage</Button>
+        </div>
       {/if}
       <Button on:click={() => $goto(itemsRoute(policyId))} outlined>Back to Items</Button>
     </div>

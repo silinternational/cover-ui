@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { PolicyItem } from 'data/items'
+import type { PolicyItem } from 'data/types/items'
 import { formatDate } from 'helpers/dates'
 import { formatMoney } from 'helpers/money'
 
